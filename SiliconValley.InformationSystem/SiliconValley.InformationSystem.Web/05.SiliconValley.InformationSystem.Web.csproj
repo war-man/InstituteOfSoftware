@@ -214,6 +214,7 @@
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
@@ -947,8 +948,8 @@
     <Folder Include="Areas\Obtainemployment\Controllers\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
-    <Folder Include="Areas\Personnelmatters\Controllers\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
+    <Folder Include="Areas\Personnelmatters\Views\EmployeesInfo\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
