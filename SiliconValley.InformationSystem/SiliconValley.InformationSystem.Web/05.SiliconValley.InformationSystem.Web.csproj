@@ -217,7 +217,6 @@
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
-    <Compile Include="Areas\Teaching\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
@@ -319,7 +318,6 @@
     <Content Include="Areas\Finance\Views\web.config" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
-    <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
