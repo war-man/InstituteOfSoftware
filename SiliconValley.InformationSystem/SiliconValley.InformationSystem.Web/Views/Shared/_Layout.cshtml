@@ -15,6 +15,9 @@
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
     <!-- Google Fonts-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+@RenderSection("style",false)
+
 </head>
 <body>
     <div id="wrapper">
@@ -245,9 +248,7 @@
         <nav class="navbar-default navbar-side" role="navigation">
             @*<div id="sideNav" href=""><i class="fa fa-caret-right"></i></div>*@
             <div class="sidebar-collapse">
-                <ul class="nav" id="main-menu">
-
-                </ul>
+                <ul class="nav" id="main-menu"></ul>
 
             </div>
 
@@ -262,7 +263,7 @@
         </div>
         <!-- /. PAGE WRAPPER  -->
     </div>
-    
+
     <!-- /. WRAPPER  -->
     <!-- JS Scripts-->
     <!-- jQuery Js -->
@@ -284,6 +285,9 @@
 
     <!-- Custom Js -->
     <script src="~/assets/js/custom-scripts.js"></script>
+
+    <script src="~/Scripts/layui/layui.js"></script>
+    @RenderSection("script", false)
 </body>
 </html>
 
