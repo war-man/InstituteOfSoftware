@@ -1,0 +1,42 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using SiliconValley.InformationSystem.Entity.Base_SysManage
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>show</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div>
+        <table>
+            <tr>
+                <th>姓名</th>
+                <th>生日</th>
+            </tr>
+            @{ 
+
+                foreach (var item in Model as List<Base_User> )
+                {
+            <tr>
+                <td>@item.RealName</td>
+                <td>@item.Birthday</td>
+            </tr>
+                }
+            }
+        </table>
+        <button id="btn" type="button">确定</button>
+
+    </div>
+
+    <script>
+        $.post("/Home/insert", function (result) {
+            console.log(result);
+        });
+    </script>
+</body>
+</html>

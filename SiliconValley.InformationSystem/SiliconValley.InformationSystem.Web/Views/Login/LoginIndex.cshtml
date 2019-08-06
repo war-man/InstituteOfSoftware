@@ -1,0 +1,121 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link href="~/Scripts/vendor/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/css/main.css" rel="stylesheet" />
+    <style>
+        .bntCss {
+            border: none;
+            font-weight: bold;
+            color: #FFF;
+            margin: 25px 0 0 75px;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px;
+            -webkit-box-shadow: #CCC 0px 0px 5px;
+            -moz-box-shadow: #CCC 0px 0px 5px;
+            box-shadow: #CCC 0px 0px 5px;
+            background: #31b6e7;
+            cursor: pointer;
+            padding: 6px 20px;
+        }
+
+            .bntCss:hover {
+                background: #ff9229;
+            }
+
+        .eject {
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form">
+        <div class="login">
+            <div class="box png">
+                <div class="logo png"></div>
+                <div class="input">
+                    <div class="log">
+                        <div class="name">
+                            <label>用户名</label><input type="text" class="text" id="UserName" placeholder="用户名" name="UserName" tabindex="1" lay-verify="required">
+                        </div>
+                        <div class="pwd">
+                            <label>密　码</label><input type="password" class="text" id="Password" placeholder="密码" name="Password" tabindex="2" lay-verify="required">
+                        </div>
+                        <div>
+                            <input type="button" class="submit" tabindex="3" value="登录" lay-submit lay-filter="subone">
+                            @*<input type="button" class="bntCss" tabindex="3" value="注册">*@
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="air-balloon ab-1 png"></div>
+            <div class="air-balloon ab-2 png"></div>
+            <div class="footer"></div>
+        </div>
+    </form>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/vendor/layui/layui.js"></script>
+    <script src="~/Scripts/js/jQuery.js"></script>
+    <script src="~/Scripts/js/fun.base.js"></script>
+    <script src="~/Scripts/js/script.js"></script>
+    <script>
+        //弹出一个注册的弹框
+        //function LINK() {
+        //    layui.use('layer', function () {
+        //        var layer = layui.layer;
+        //        layer.open({
+        //            type: 2,
+        //            skin: 'eject',
+        //            title: '用户注册',
+        //            area: ['400px', '250px'],
+        //            closeBtn: 0,
+        //            anim: 2,
+        //            content: '/tangmin/UsersInfo/EditorInsertView', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+        //        });
+        //    });
+        //}
+        //当弹出层关闭时获取数据并赋值
+        function assignment(name, pwd) {
+            $("#UserName")[0].value = name;
+            $("#Password")[0].value = pwd;
+        }
+        //登陆监听
+        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+            var form = layui.form;
+            var layedit = layui.layedit;
+            var laydate = layui.laydate;
+            var layer = layui.layer;
+            form.on('submit(subone)', function (data) {
+                var myformdata = data.field;//当前容器的全部表单字段，名值对形式：{name: value}
+                $.ajax({
+                    url: "/Login/LoginFunction",
+                    data: myformdata,
+                    type: "POST",
+                    success: function (data) {
+                        if (data.Success == true) {
+                            window.location.href = data.Data;
+                        } else {
+                            //配置一个透明的询问框
+                            layer.msg(data.Msg, {
+                                time: 10000, //10s后自动关闭
+                                btn: ['明白了']
+                            });
+                        }
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+    </script>
+</body>
+</html>
+

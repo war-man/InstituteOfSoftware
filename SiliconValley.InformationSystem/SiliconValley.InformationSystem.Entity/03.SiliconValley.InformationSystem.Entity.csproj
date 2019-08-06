@@ -1,0 +1,278 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{30B32782-C606-4FD3-885A-131C3F22471A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SiliconValley.InformationSystem.Entity</RootNamespace>
+    <AssemblyName>SiliconValley.InformationSystem.Entity</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Elasticsearch.Net, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Elasticsearch.Net.6.6.0\lib\net461\Elasticsearch.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Nest, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEST.6.6.0\lib\net461\Nest.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Base_SysManage\Base_AppSecret.cs" />
+    <Compile Include="Base_SysManage\Base_DatabaseLink.cs" />
+    <Compile Include="Base_SysManage\Base_PermissionAppId.cs" />
+    <Compile Include="Base_SysManage\Base_PermissionRole.cs" />
+    <Compile Include="Base_SysManage\Base_PermissionUser.cs" />
+    <Compile Include="Base_SysManage\Base_SysLog.cs" />
+    <Compile Include="Base_SysManage\Base_SysRole.cs" />
+    <Compile Include="Base_SysManage\Base_UnitTest.cs" />
+    <Compile Include="Base_SysManage\Base_User.cs" />
+    <Compile Include="Base_SysManage\Base_UserRoleMap.cs" />
+    <Compile Include="Base_SysManage\EnumType.cs" />
+    <Compile Include="Entity\Accdationinformation.cs" />
+    <Compile Include="Entity\AddCourse.cs" />
+    <Compile Include="Entity\AdmissArrangement.cs" />
+    <Compile Include="Entity\AnswerQuestionBank.cs" />
+    <Compile Include="Entity\AnswerQuestionPaper.cs" />
+    <Compile Include="Entity\ApplicationDropout.cs" />
+    <Compile Include="Entity\ApplicationRepair.cs" />
+    <Compile Include="Entity\ApplyForFullMember.cs" />
+    <Compile Include="Entity\Assmeetings.cs" />
+    <Compile Include="Entity\AttendanceInfo.cs" />
+    <Compile Include="Entity\Awardwinningtrainees.cs" />
+    <Compile Include="Entity\BaseDataEnum.cs" />
+    <Compile Include="Entity\Basicdat.cs" />
+    <Compile Include="Entity\bedroom.cs" />
+    <Compile Include="Entity\BeOnDuty.cs" />
+    <Compile Include="Entity\BiddingRecord.cs" />
+    <Compile Include="Entity\BookInformation.cs" />
+    <Compile Include="Entity\Break.cs" />
+    <Compile Include="Entity\CancelLeaveApply.cs" />
+    <Compile Include="Entity\CandidateInfo.cs" />
+    <Compile Include="Entity\CardRegistration.cs" />
+    <Compile Include="Entity\CDInterview.cs" />
+    <Compile Include="Entity\ChannelStaff.cs" />
+    <Compile Include="Entity\ChannelYearPlan.cs" />
+    <Compile Include="Entity\Check.cs" />
+    <Compile Include="Entity\CheckGoods.cs" />
+    <Compile Include="Entity\ChoiceQuestionPaper.cs" />
+    <Compile Include="Entity\ChooseAnswerSheet.cs" />
+    <Compile Include="Entity\Classactivities.cs" />
+    <Compile Include="Entity\ClassDynamics.cs" />
+    <Compile Include="Entity\ClassMeeting.cs" />
+    <Compile Include="Entity\ClassMembers.cs" />
+    <Compile Include="Entity\Classroom.cs" />
+    <Compile Include="Entity\Classroomequipment.cs" />
+    <Compile Include="Entity\ClassSchedule.cs" />
+    <Compile Include="Entity\ClassStudyGroup.cs" />
+    <Compile Include="Entity\ClassTeacher.cs" />
+    <Compile Include="Entity\ClassTeacherKeep.cs" />
+    <Compile Include="Entity\Consult.cs" />
+    <Compile Include="Entity\ConsultTeacher.cs" />
+    <Compile Include="Entity\ConversationRecord.cs" />
+    <Compile Include="Entity\ConvertCourse.cs" />
+    <Compile Include="Entity\CooperaEnterprises.cs" />
+    <Compile Include="Entity\Costlist.cs" />
+    <Compile Include="Entity\CourseTime.cs" />
+    <Compile Include="Entity\CourseType.cs" />
+    <Compile Include="Entity\Curriculum.cs" />
+    <Compile Include="Entity\Debit.cs" />
+    <Compile Include="Entity\Department.cs" />
+    <Compile Include="Entity\Detailedmaintenance.cs" />
+    <Compile Include="Entity\Detailedpayment.cs" />
+    <Compile Include="Entity\DetailedStudentIn.cs" />
+    <Compile Include="Entity\Detailsofacquisition.cs" />
+    <Compile Include="Entity\DetailsofCharges.cs" />
+    <Compile Include="Entity\Detailsofconsignments.cs" />
+    <Compile Include="Entity\Dev_Project.cs" />
+    <Compile Include="Entity\Dev_ProjectType.cs" />
+    <Compile Include="Entity\DimissionApply.cs" />
+    <Compile Include="Entity\DisposalofDiscipline.cs" />
+    <Compile Include="Entity\DormInformation.cs" />
+    <Compile Include="Entity\DormitoryCharging.cs" />
+    <Compile Include="Entity\Dormitoryfloor.cs" />
+    <Compile Include="Entity\Dormitoryhygiene.cs" />
+    <Compile Include="Entity\DormitoryMaintenance.cs" />
+    <Compile Include="Entity\Electricitytarifftype.cs" />
+    <Compile Include="Entity\EmpClass.cs" />
+    <Compile Include="Entity\EmployedStudent.cs" />
+    <Compile Include="Entity\EmployeeArea.cs" />
+    <Compile Include="Entity\EmployeesInfo.cs" />
+    <Compile Include="Entity\EmploymentAreas.cs" />
+    <Compile Include="Entity\EmploymentStaff.cs" />
+    <Compile Include="Entity\EmploySituation.cs" />
+    <Compile Include="Entity\EmplSalaryEmbody.cs" />
+    <Compile Include="Entity\EmpQuarterClass.cs" />
+    <Compile Include="Entity\EmpStaffAndStu.cs" />
+    <Compile Include="Entity\EmpTransaction.cs" />
+    <Compile Include="Entity\EnroExamination.cs" />
+    <Compile Include="Entity\Enrollment.cs" />
+    <Compile Include="Entity\EnterpriseInfo.cs" />
+    <Compile Include="Entity\EntSpee.cs" />
+    <Compile Include="Entity\Equipment.cs" />
+    <Compile Include="Entity\Examination.cs" />
+    <Compile Include="Entity\ExaminationPaper.cs" />
+    <Compile Include="Entity\ExaminationRoom.cs" />
+    <Compile Include="Entity\ExamRoomDistributed.cs" />
+    <Compile Include="Entity\ExamType.cs" />
+    <Compile Include="Entity\Fiveroutines.cs" />
+    <Compile Include="Entity\FollwingInfo.cs" />
+    <Compile Include="Entity\Goods.cs" />
+    <Compile Include="Entity\GoodSkill.cs" />
+    <Compile Include="Entity\GoodsProvide.cs" />
+    <Compile Include="Entity\GoodsType.cs" />
+    <Compile Include="Entity\Grand.cs" />
+    <Compile Include="Entity\GroupManagement.cs" />
+    <Compile Include="Entity\Groupmembers.cs" />
+    <Compile Include="Entity\HeadClass.cs" />
+    <Compile Include="Entity\Headmaster.cs" />
+    <Compile Include="Entity\HomeWorkFinishRate.cs" />
+    <Compile Include="Entity\InStock.cs" />
+    <Compile Include="Entity\InStockGoods.cs" />
+    <Compile Include="Entity\InstructorList.cs" />
+    <Compile Include="Entity\Instructorsonduty.cs" />
+    <Compile Include="Entity\InterviewRecordsof.cs" />
+    <Compile Include="Entity\InterviewStudents.cs" />
+    <Compile Include="Entity\IsGoodOrBad.cs" />
+    <Compile Include="Entity\JobTransferApply.cs" />
+    <Compile Include="Entity\LateEntryandExit.cs" />
+    <Compile Include="Entity\LatesubmieCords.cs" />
+    <Compile Include="Entity\LeaveRequest.cs" />
+    <Compile Include="Entity\LeaveType.cs" />
+    <Compile Include="Entity\MachineTestQuestionPaper.cs" />
+    <Compile Include="Entity\MachTestQuesBank.cs" />
+    <Compile Include="Entity\MarketChair.cs" />
+    <Compile Include="Entity\MaterialPriceList.cs" />
+    <Compile Include="Entity\Members.cs" />
+    <Compile Include="Entity\MeritsCheck.cs" />
+    <Compile Include="Entity\MonthlySalaryRecord.cs" />
+    <Compile Include="Entity\Montpowermission.cs" />
+    <Compile Include="Entity\MultipleChoiceQuestion.cs" />
+    <Compile Include="Entity\NetClientRecord.cs" />
+    <Compile Include="Entity\NotreturningLate.cs" />
+    <Compile Include="Entity\NurseTeamInformation.cs" />
+    <Compile Include="Entity\NurseTeamonDuty.cs" />
+    <Compile Include="Entity\NurseTeamPosition.cs" />
+    <Compile Include="Entity\Officebuildingonduty.cs" />
+    <Compile Include="Entity\Outbreaksindormitories.cs" />
+    <Compile Include="Entity\OvertimeRecord.cs" />
+    <Compile Include="Entity\ParticiParticipants.cs" />
+    <Compile Include="Entity\Position.cs" />
+    <Compile Include="Entity\Pricedormitoryarticles.cs" />
+    <Compile Include="Entity\PrintGoodsApply.cs" />
+    <Compile Include="Entity\Professionala.cs" />
+    <Compile Include="Entity\ProjectGroupMember.cs" />
+    <Compile Include="Entity\ProjectTasks.cs" />
+    <Compile Include="Entity\ProjectType.cs" />
+    <Compile Include="Entity\PurchaseApply.cs" />
+    <Compile Include="Entity\PurchaseType.cs" />
+    <Compile Include="Entity\Quarter.cs" />
+    <Compile Include="Entity\QuestionLevel.cs" />
+    <Compile Include="Entity\Rank.cs" />
+    <Compile Include="Entity\ReadSweep.cs" />
+    <Compile Include="Entity\Reconcile.cs" />
+    <Compile Include="Entity\RecruitingDataSummary.cs" />
+    <Compile Include="Entity\RecruitPhoneTrace.cs" />
+    <Compile Include="Entity\Region.cs" />
+    <Compile Include="Entity\RemovalRecords.cs" />
+    <Compile Include="Entity\ReplenishmentRecord.cs" />
+    <Compile Include="Entity\Restudy.cs" />
+    <Compile Include="Entity\RoomPerformance.cs" />
+    <Compile Include="Entity\Roomtype.cs" />
+    <Compile Include="Entity\SalaryRaiseApply.cs" />
+    <Compile Include="Entity\Satisfaction.cs" />
+    <Compile Include="Entity\SatisficingConfig.cs" />
+    <Compile Include="Entity\SatisficingItem.cs" />
+    <Compile Include="Entity\SatisficingResult.cs" />
+    <Compile Include="Entity\SatisficingResultDetail.cs" />
+    <Compile Include="Entity\SatisficingType.cs" />
+    <Compile Include="Entity\ScheduleForTrainees.cs" />
+    <Compile Include="Entity\SchoolYearPlan.cs" />
+    <Compile Include="Entity\SelfObtainRcored.cs" />
+    <Compile Include="Entity\ShppingDetail.cs" />
+    <Compile Include="Entity\SimulatInterview.cs" />
+    <Compile Include="Entity\SocialSecProportion.cs" />
+    <Compile Include="Entity\SocialSecurityDetail.cs" />
+    <Compile Include="Entity\Specialty.cs" />
+    <Compile Include="Entity\StageGrade.cs" />
+    <Compile Include="Entity\StockInfo.cs" />
+    <Compile Include="Entity\StrengthenClass.cs" />
+    <Compile Include="Entity\StrengthenStu.cs" />
+    <Compile Include="Entity\StuBookAcqRecords.cs" />
+    <Compile Include="Entity\StudentAttendance.cs" />
+    <Compile Include="Entity\StudentAwardwinning.cs" />
+    <Compile Include="Entity\StudentFeeRecord.cs" />
+    <Compile Include="Entity\StudentFeeStandard.cs" />
+    <Compile Include="Entity\StudentInformation.cs" />
+    <Compile Include="Entity\Studentmate.cs" />
+    <Compile Include="Entity\StudentPutOnRecord.cs" />
+    <Compile Include="Entity\StudentUnionDepartment.cs" />
+    <Compile Include="Entity\StudentUnionMembers.cs" />
+    <Compile Include="Entity\StudentUnionPosition.cs" />
+    <Compile Include="Entity\StudnetIntention.cs" />
+    <Compile Include="Entity\StuInfomationType.cs" />
+    <Compile Include="Entity\StuStatus.cs" />
+    <Compile Include="Entity\SubjectAchieve.cs" />
+    <Compile Include="Entity\SurveyRecords.cs" />
+    <Compile Include="Entity\TalentDemandPlan.cs" />
+    <Compile Include="Entity\TeacheMitoryonduty.cs" />
+    <Compile Include="Entity\Teacher.cs" />
+    <Compile Include="Entity\TeacherNight.cs" />
+    <Compile Include="Entity\TecharOnstageBearing.cs" />
+    <Compile Include="Entity\TestScore.cs" />
+    <Compile Include="Entity\TextAnswer.cs" />
+    <Compile Include="Entity\Timestamp.cs" />
+    <Compile Include="Entity\TotaleCharges.cs" />
+    <Compile Include="Entity\Transfer.cs" />
+    <Compile Include="Entity\Trialapplication.cs" />
+    <Compile Include="Entity\Undergra.cs" />
+    <Compile Include="Entity\UnemployedStudent.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

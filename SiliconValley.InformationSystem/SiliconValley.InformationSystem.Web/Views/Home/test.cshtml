@@ -1,0 +1,63 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>test</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+    <div>
+        <button id="btn">测试</button>
+        <form action="/Home/DATATEST" id="myform" enctype="multipart/form-data" method="post">
+            <input type="file" name="file" id="myfile" />
+            <button type="submit" id="submitPic">测试</button>
+        </form>
+        <a href="/Home/show">走 看一下</a>
+        <button type="button" id="submitPic">测试</button>
+
+    </div>
+
+    <script>
+        $("#btn").click(function () {
+            $.post("/Home/DataSetToExcel", function (result) {
+                console.log(result);
+            });
+        });
+
+
+        ////选择文件
+        //$("#myfile").change(function (e) {
+        //    var file = e.delegateTarget.files[0];
+        //    //在此可以对选择的文件进行判断:文件类型 文件大小等
+        //    //.....
+
+        //    var reader = new FileReader();
+        //    reader.readAsDataURL(file);
+        //    reader.onload = function (ret) {
+        //        picString = reader.result
+        //        //预览图片
+
+        //    }
+        //});
+
+        //$("#submitPic").click(function () {
+        //    $.ajax("/Home/DATATEST", {
+        //        type: "post",
+        //        datatype: "json",
+        //        data: picString,
+        //        error: function () { },
+        //        success: function (result) {
+        //            if (result) {
+        //                alert(result.msg);
+        //            }
+        //        }
+        //    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+@using SiliconValley.InformationSystem.Entity.Base_SysManage
+@model List<Base_SysRole>
+<h1>后台主页</h1>
+<h2>用户数据</h2>
+<table border="1">
+    <tr>
+        <th>角色名</th>
+       
+       
+       
+    </tr>
+    @{ 
+        foreach (var u in Model)
+        {
+    <tr>
+        <td>@u.RoleName</td>
+        
+       
+       
+    </tr>
+        }
+     }
+</table>
