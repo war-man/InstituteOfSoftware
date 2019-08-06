@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,7 +12,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: Market/ChannelStaff
         public ActionResult Index()
         {
+            var aa = new ChannelStaff();
+           
             return View();
         }
+
+
+       
     }
 }
