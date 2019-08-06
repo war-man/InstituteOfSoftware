@@ -10,10 +10,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     [CheckLogin]
     public class StudentInformationController : Controller
     {
+        public class Student { }
+
         private readonly StudentInformationManeger dbtext;
         public StudentInformationController()
         {
             dbtext = new StudentInformationManeger();
+            
         }
         // GET: Teachingquality/StudentInformation
         public ActionResult Index()
