@@ -211,6 +211,7 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
+    <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
@@ -316,6 +317,7 @@
     <Content Include="Areas\Personnelmatters\Views\web.config" />
     <Content Include="Areas\Finance\Views\web.config" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -828,7 +830,6 @@
     <Folder Include="Areas\Logistics\Controllers\" />
     <Folder Include="Areas\Logistics\Models\" />
     <Folder Include="Areas\Logistics\Views\Shared\" />
-    <Folder Include="Areas\Market\Controllers\" />
     <Folder Include="Areas\Market\Models\" />
     <Folder Include="Areas\Market\Views\Shared\" />
     <Folder Include="Areas\Obtainemployment\Controllers\" />
