@@ -320,6 +320,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
+    <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -955,7 +956,6 @@
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
-    <Folder Include="Areas\Teaching\Views\StudentDataKeep\" />
     <Folder Include="assets\img\" />
     <Folder Include="uploadXLSXfile\" />
   </ItemGroup>
