@@ -211,6 +211,7 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
+    <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
@@ -827,8 +828,8 @@
     <Folder Include="Areas\Logistics\Controllers\" />
     <Folder Include="Areas\Logistics\Models\" />
     <Folder Include="Areas\Logistics\Views\Shared\" />
-    <Folder Include="Areas\Market\Controllers\" />
     <Folder Include="Areas\Market\Models\" />
+    <Folder Include="Areas\Market\Views\ChannelStaff\" />
     <Folder Include="Areas\Market\Views\Shared\" />
     <Folder Include="Areas\Obtainemployment\Controllers\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
