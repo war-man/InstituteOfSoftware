@@ -60,7 +60,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
 
+        public ActionResult GetTeacherByID(int Id)
+        {
+           Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == Id).ToList().FirstOrDefault();
 
+            return Json(teacher, JsonRequestBehavior.AllowGet);
+
+
+        }
 
     }
 }
