@@ -83,6 +83,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
+    <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
+    <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TeachingDepBusiness\TeacherBusiness.cs" />
     <Compile Include="UserManeger\UsersInfoManeger.cs" />
   </ItemGroup>
