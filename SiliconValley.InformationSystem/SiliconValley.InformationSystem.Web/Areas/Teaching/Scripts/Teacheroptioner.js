@@ -54,7 +54,7 @@ layui.use(['table', 'layer'], function () {
 
                 type: 2,
                 area: ["800px", "650px"],
-                content: "/Teaching/Teacher/Operating/"
+                content: "/Teaching/Teacher/Operating/" + id
 
             });     
         }

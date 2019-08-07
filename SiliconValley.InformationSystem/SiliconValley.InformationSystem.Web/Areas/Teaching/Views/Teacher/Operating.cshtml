@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Teacher
 <!DOCTYPE html>
 
 <html>
@@ -14,35 +14,28 @@
 <body>
     <div>
         <form class="layui-form" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label"><button class="layui-btn layui-btn-sm">选择员工</button></label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" readonly lay-verify="title" autocomplete="off" placeholder="" class="layui-input">
-                    <input type="hidden" id="teacherno"/>
-                </div>
-            </div>
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">工作经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="WorkExperience">
+                           @Model.WorkExperience
                     </textarea>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">项目经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="ProjectExperience">
+                           @Model.ProjectExperience
                     </textarea>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">教学经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="TeachingExperience">
+                            @Model.TeachingExperience
                     </textarea>
                 </div>
             </div>
@@ -50,8 +43,8 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">上课风格</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="AttendClassStyle">
+                            @Model.AttendClassStyle
                     </textarea>
                 </div>
             </div>
@@ -59,14 +52,14 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">提交修改</button>
                 </div>
             </div>
         </form>
     </div>
 
     <script src="~/Scripts/layui/layui.js"></script>
-   
+
 
 </body>
 </html>

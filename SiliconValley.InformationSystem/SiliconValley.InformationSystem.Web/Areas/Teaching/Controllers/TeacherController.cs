@@ -56,7 +56,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult Operating(int? ID)
         {
-            return View();
+
+            if (ID == null)
+            {
+                return View();
+
+            }
+            Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == ID).ToList().FirstOrDefault();
+
+            return View(teacher);
+
         }
 
 
