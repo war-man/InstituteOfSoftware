@@ -13,5 +13,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         {
             return View();
         }
+        public ActionResult AA() {
+            return null;
+        }
     }
 }
