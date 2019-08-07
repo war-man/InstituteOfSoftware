@@ -107,5 +107,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
          //  var x= dbtext.GetList();
             return View();
         }
+        //获取1所有数据
+        public ActionResult GetDate()
+        {
+            var x = dbtext.GetList();
+            return Json(x, JsonRequestBehavior.AllowGet);
+        }
     }
 }

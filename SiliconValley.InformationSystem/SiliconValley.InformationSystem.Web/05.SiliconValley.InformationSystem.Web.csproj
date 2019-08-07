@@ -319,12 +319,12 @@
     <Content Include="Areas\Logistics\Views\web.config" />
     <Content Include="Areas\Personnelmatters\Views\web.config" />
     <Content Include="Areas\Finance\Views\web.config" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
     <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
