@@ -12,7 +12,10 @@ layui.use(['table', 'layer'], function () {
             { field: 'TeacherID', width: 80, title: 'ID', sort: true }
             , { field: 'TeacherName', width: 80, title: '姓名' }
             , { field: 'WorkExperience', width: 80, title: '工作经验', sort: true }
-
+            , { field: 'ProjectExperience', width: 80, title: '项目经验', sort: true }
+            , { field: 'TeachingExperience', width: 80, title: '教学经验', sort: true }
+            , { field: 'AttendClassStyle', width: 80, title: '上课风格', sort: true }
+            , { fixed: 'right', title: '操作', toolbar: '#editBar', width: 150 }
         ]]
         , page: true
     });
@@ -47,7 +50,7 @@ layui.use(['table', 'layer'], function () {
                 layer.close(index);
             });
         } else if (obj.event === 'edit') {
-            console.log(obj.data);
+           
             var id=obj.data.TeacherID
 
             layer.open({

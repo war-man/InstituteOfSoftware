@@ -9,6 +9,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+
+
     [CheckLogin]
     public class TeacherController : Controller
     {
@@ -18,9 +21,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         // 教员上下文
         private readonly TeacherBusiness db_teacher;
 
+        private readonly EmployeesInfoManage db_emp;
+
         public TeacherController()
         {
             db_teacher = new TeacherBusiness();
+            db_emp = new EmployeesInfoManage();
         }
         public ActionResult TeachersInfo()
         {
@@ -32,11 +38,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         {
 
 
+
             var list = db_teacher.GetList().Skip((page -1) * limit).Take(limit);
 
-            var returnlist = list.Select(x => new { TeacherID = x.TeacherID, TeacherName = x.TeachingExperience, WorkExperience = x.WorkExperience });
+            var returnlist = new List<object>();
 
-            var obj = new
+            foreach (var item in list)
+            {
+                var emp = db_emp.GetList().Where(t => t.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+                var obj = new {
+                    TeacherID = item.TeacherID,
+                    AttendClassStyle = item.AttendClassStyle,
+                    ProjectExperience = item.ProjectExperience,
+                    TeachingExperience = item.TeachingExperience,
+                    WorkExperience = item.WorkExperience,
+                    TeacherName = emp.EmpName
+
+
+                };
+
+                returnlist.Add(obj);
+
+
+            }
+
+            //var returnlist = list.Select(x => new { TeacherID = x.TeacherID, TeacherName = x.TeachingExperience, WorkExperience = x.WorkExperience });
+
+            var objresult = new
             {
                 code = 0,
                 msg = "",
@@ -44,7 +73,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 data = returnlist
             };
 
-            return Json(obj,JsonRequestBehavior.AllowGet);
+            return Json(objresult, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -62,7 +91,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 return View();
 
             }
+
             Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == ID).ToList().FirstOrDefault();
+
+            var emp = db_emp.GetList().Where(t=>t.EmployeeId==teacher.EmployeeId).FirstOrDefault();
+
+            ViewBag.Emp = emp;
 
             return View(teacher);
 
