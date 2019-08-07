@@ -238,7 +238,7 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Teaching\Javascript.js" />
+    <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\custom-styles.css" />
@@ -324,6 +324,7 @@
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
     <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\Operating.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

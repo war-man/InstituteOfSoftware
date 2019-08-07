@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     public class TeacherController : Controller
     {
         // GET: Teaching/Teacher
-
+        
 
         // 教员上下文
         private readonly TeacherBusiness db_teacher;
@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         public ActionResult TeacherData(int limit,int page)
         {
-
+            
 
             var list = db_teacher.GetList().Skip((page -1) * limit).Take(limit);
 
@@ -45,6 +45,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             };
 
             return Json(obj,JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult Operating(int ? ID)
+        {
+            return View();
         }
     }
 }

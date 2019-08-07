@@ -515,6 +515,7 @@ namespace SiliconValley.InformationSystem.Depository
         public T GetEntity<T>(params object[] keyValue) where T : class, new()
         {
             return Db.Set<T>().Find(keyValue);
+            
         }
 
         /// <summary>
