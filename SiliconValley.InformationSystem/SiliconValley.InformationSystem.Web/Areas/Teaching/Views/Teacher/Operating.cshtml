@@ -8,66 +8,55 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title></title>
-
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Areas/Teaching/Scripts/Teacheroptioner.js"></script>
 </head>
 <body>
     <div>
         <form class="layui-form" action="">
             <div class="layui-form-item">
-                <label class="layui-form-label">输入框</label>
+                <label class="layui-form-label"><button class="layui-btn layui-btn-sm">选择员工</button></label>
                 <div class="layui-input-block">
-                    <input type="text" name="username" lay-verify="title" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                    <input type="text" name="username" readonly lay-verify="title" autocomplete="off" placeholder="" class="layui-input">
+                    <input type="hidden" id="teacherno"/>
                 </div>
             </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">密码框</label>
-                <div class="layui-input-block">
-                    <input type="password" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">选择框</label>
-                <div class="layui-input-block">
-                    <select name="interest" lay-filter="aihao">
-                        <option value=""></option>
-                        <option value="0">kali</option>
-                        <option value="1">Mac</option>
-                        <option value="2">Windows</option>
-                        <option value="3">黑莓</option>
-                        <option value="4">鸿蒙</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">复选框</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="like[write]" title="睡觉">
-                    <input type="checkbox" name="like[read]" title="玩游戏">
-                    <input type="checkbox" name="like[daze]" title="敲键盘">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">开关</label>
-                <div class="layui-input-block">
-                    <input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">单选框</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="sex" value="男" title="男" checked="">
-                    <input type="radio" name="sex" value="女" title="女">
-                </div>
-            </div>
+
             <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">文本域</label>
+                <label class="layui-form-label">工作经验</label>
                 <div class="layui-input-block">
                     <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
                             欢迎加入信息安全屋! 
                     </textarea>
                 </div>
             </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">项目经验</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
+                            欢迎加入信息安全屋! 
+                    </textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">教学经验</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
+                            欢迎加入信息安全屋! 
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">上课风格</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
+                            欢迎加入信息安全屋! 
+                    </textarea>
+                </div>
+            </div>
+
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
@@ -77,14 +66,7 @@
     </div>
 
     <script src="~/Scripts/layui/layui.js"></script>
-    <script>
-        layui.use(['form', 'layedit', 'laydate'], function () {
-            var form = layui.form
-                , layer = layui.layer
-                , layedit = layui.layedit
-                , laydate = layui.laydate;
-        });
-    </script>
+   
 
 </body>
 </html>

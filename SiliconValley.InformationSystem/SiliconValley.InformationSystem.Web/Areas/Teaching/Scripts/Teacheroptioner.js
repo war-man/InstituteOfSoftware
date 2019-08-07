@@ -28,7 +28,7 @@ layui.use(['table', 'layer'], function () {
                 layer.open({
 
                     type: 2,
-                    area: ["800px", "800px"],
+                    area: ["800px", "650px"],
                     content: "/Teaching/Teacher/Operating"
 
                 });
