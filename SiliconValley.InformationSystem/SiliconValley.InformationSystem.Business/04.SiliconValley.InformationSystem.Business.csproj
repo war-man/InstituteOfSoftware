@@ -68,6 +68,7 @@
     <Compile Include="Base_SysManage\Base_SysLogBusiness.cs" />
     <Compile Include="Base_SysManage\Base_SysRoleBusiness.cs" />
     <Compile Include="Base_SysManage\Base_UserBusiness.cs" />
+    <Compile Include="Base_SysManage\ChannelStaffBusiness.cs" />
     <Compile Include="Base_SysManage\CheckSignBusiness.cs" />
     <Compile Include="Base_SysManage\HomeBusiness.cs" />
     <Compile Include="Base_SysManage\PermissionManage.cs" />
