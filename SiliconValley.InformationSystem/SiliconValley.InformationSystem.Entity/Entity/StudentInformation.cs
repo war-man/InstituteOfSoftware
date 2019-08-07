@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table(name: "StudentFeeStandard")]
+    [Table(name: "StudentInformation")]
     public partial class StudentInformation
     {
       

@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table(name: "SocialSecProportion")]
+    [Table(name: "SocialSecurityDetail")]
     public partial class SocialSecurityDetail
     {
         [Key]
