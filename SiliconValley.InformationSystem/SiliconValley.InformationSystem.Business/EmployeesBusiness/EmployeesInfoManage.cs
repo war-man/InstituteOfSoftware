@@ -12,6 +12,6 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     public class EmployeesInfoManage:BaseBusiness<EmployeesInfo>
     {
         
-
+       
     }
 }
