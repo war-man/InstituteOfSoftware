@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.Channel;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
@@ -35,8 +36,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// 加载渠道员工数据
         /// </summary>
         /// <returns></returns>
-        //public ActionResult GetChannelStaffData() {
-            //Base_User base_User = SessionHelper.Session["UserId"] as Base_User;
+        public ActionResult GetChannelStaffData()
+        {
+            //获取登陆用户的信息
+            Base_User base_User = SessionHelper.Session["UserId"] as Base_User;
+            //通过登陆用户找到员工
+
 
             //CocStrategyEntities cocdbcontent = new CocStrategyEntities();
             //var data = cocdbcontent.ArmsInfo.Where(a => a.IsDel == false).ToList();
@@ -54,7 +59,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //    count = newdata.Count(),
             //    data = newdata
             //};
-            //return Json(returnObj, JsonRequestBehavior.AllowGet);
-       // }
+            // return Json(returnObj, JsonRequestBehavior.AllowGet);
+            return null;
+        }
     }
 }
