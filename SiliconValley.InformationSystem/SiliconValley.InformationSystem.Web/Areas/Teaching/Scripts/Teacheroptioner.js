@@ -47,11 +47,14 @@ layui.use(['table', 'layer'], function () {
                 layer.close(index);
             });
         } else if (obj.event === 'edit') {
+            console.log(obj.data);
+            var id=obj.data.TeacherID
+
             layer.open({
 
                 type: 2,
                 area: ["800px", "650px"],
-                content: "/Teaching/Teacher/Operating"
+                content: "/Teaching/Teacher/Operating/"
 
             });     
         }
