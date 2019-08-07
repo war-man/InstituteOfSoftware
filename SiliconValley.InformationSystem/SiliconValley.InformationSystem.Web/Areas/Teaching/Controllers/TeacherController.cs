@@ -9,6 +9,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+
     [CheckLogin]
     public class TeacherController : Controller
     {
@@ -17,10 +19,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         // 教员上下文
         private readonly TeacherBusiness db_teacher;
-
+        private readonly EmployeesInfoManage db_emp;
         public TeacherController()
         {
             db_teacher = new TeacherBusiness();
+            db_emp = new EmployeesInfoManage();
         }
         public ActionResult TeachersInfo()
         {
@@ -47,6 +50,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return Json(obj,JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetTeacherByID(int Id)
+        {
+            Teacher t = db_teacher.GetList().Where(t => t.TeacherID == Id).FirstOrDefault();
+
+            return Json(t, JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 对教员的操作的视图
@@ -54,13 +63,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <param name="ID">教员Id</param>
         /// <returns>视图</returns>
         [HttpGet]
-        public ActionResult Operating(int? ID)
+        public ActionResult Operating(int? Id)
         {
             return View();
         }
-
-
-
 
     }
 }

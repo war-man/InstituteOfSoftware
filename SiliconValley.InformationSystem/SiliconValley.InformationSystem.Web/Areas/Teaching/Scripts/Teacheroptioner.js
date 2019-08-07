@@ -36,4 +36,25 @@ layui.use(['table', 'layer'], function () {
         };
     });
 
+
+    //监听行工具事件
+    table.on('tool(teacherlist_filter)', function (obj) {
+        var data = obj.data;
+        //console.log(obj)
+        if (obj.event === 'del') {
+            layer.confirm('真的删除行么', function (index) {
+                obj.del();
+                layer.close(index);
+            });
+        } else if (obj.event === 'edit') {
+            layer.open({
+
+                type: 2,
+                area: ["800px", "650px"],
+                content: "/Teaching/Teacher/Operating"
+
+            });     
+        }
+    });
+
 });
