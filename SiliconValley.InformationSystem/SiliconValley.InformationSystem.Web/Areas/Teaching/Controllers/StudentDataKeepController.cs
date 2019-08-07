@@ -7,6 +7,7 @@ using SiliconValley.InformationSystem.Entity;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 {
@@ -26,10 +27,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         //往数据库中获取数据备案的信息
         public ActionResult GetStudentPutOnRecordData()
-        {
-            List<StudentPutOnRecord> Get_List_studentPutOnRecord =s_Entity.GetList();//获取了数据库中所有数据备案信息;
-
-            return null;
+        { 
+             
+            try
+            {
+                List<StudentPutOnRecord> Get_List_studentPutOnRecord =s_Entity.GetList();//获取了数据库中所有数据备案信息;
+                var JsonData = new {
+                    code=0, //解析接口状态
+                    msg="", //解析提示文本
+                    count= Get_List_studentPutOnRecord.Count, //解析数据长度
+                    data= Get_List_studentPutOnRecord //解析数据列表
+                };
+                return Json(JsonData,JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+                return Json(Error("加载数据有误，请联系开发人员:唐敏--电话:13204961361"),JsonRequestBehavior.AllowGet);
+            }                 
         }
     }
 }

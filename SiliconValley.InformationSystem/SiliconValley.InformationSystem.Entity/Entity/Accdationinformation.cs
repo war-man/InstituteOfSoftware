@@ -11,11 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("Accdationinformation")]
     public partial class Accdationinformation
-    {
-       
-    
+    {      
+        [Key]
         public int ID { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
         public Nullable<System.DateTime> Endtime { get; set; }
@@ -23,8 +24,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> Bednumber { get; set; }
         public Nullable<int> Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-        public Nullable<int> Dorm { get; set; }
-    
- 
+        public Nullable<int> Dorm { get; set; }   
     }
 }

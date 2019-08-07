@@ -11,10 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("AnswerQuestionBank")]
     public partial class AnswerQuestionBank
     {
-       
+       [Key]
         public int ID { get; set; }
         public string Title { get; set; }
         public string ReferenceAnswer { get; set; }

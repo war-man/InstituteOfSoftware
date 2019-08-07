@@ -11,10 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ClassStudyGroup")]
     public partial class ClassStudyGroup
     {
-    
+        [Key]
         public int ID { get; set; }
         public string Groupleader { get; set; }
         public string Remarks { get; set; }

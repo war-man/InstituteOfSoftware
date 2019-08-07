@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "IsGoodOrBad")]
     public partial class IsGoodOrBad
     {
+        [Key]
         public int Id { get; set; }
         public Nullable<int> Check_Id { get; set; }
         public Nullable<int> Goods_Id { get; set; }

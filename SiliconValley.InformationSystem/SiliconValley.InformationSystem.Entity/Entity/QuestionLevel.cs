@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "QuestionLevel")]
     public partial class QuestionLevel
     {
        
-    
+    [Key]
         public int LevelID { get; set; }
         public string LevelName { get; set; }
     

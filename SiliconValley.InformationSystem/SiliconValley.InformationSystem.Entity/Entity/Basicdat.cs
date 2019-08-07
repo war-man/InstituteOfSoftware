@@ -11,10 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("Basicdat")]
     public partial class Basicdat
-    {
-     
+    {     
+        [Key]
         public int ID { get; set; }
         public string Name { get; set; }
         public string Remarks { get; set; }

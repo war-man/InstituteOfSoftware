@@ -11,9 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "SocialSecProportion")]
     public partial class SocialSecProportion
     {
+        [Key]
         public int Id { get; set; }
         public string PayType { get; set; }
         public Nullable<decimal> EndowmentInsurance { get; set; }

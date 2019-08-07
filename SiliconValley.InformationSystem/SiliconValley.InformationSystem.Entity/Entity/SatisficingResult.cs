@@ -11,11 +11,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "SatisficingResult")]
     public partial class SatisficingResult
     {
         
-    
+    [Key]
         public int ID { get; set; }
         public string Suggest { get; set; }
         public Nullable<System.DateTime> CreateDate { get; set; }

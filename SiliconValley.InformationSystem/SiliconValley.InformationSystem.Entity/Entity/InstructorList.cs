@@ -11,12 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "InstructorList")]
     public partial class InstructorList
     {
-       
-       
-    
+        [Key]
         public int ID { get; set; }
         public string EmployeeNumber { get; set; }
         public string Position { get; set; }
@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> AddTime { get; set; }
         public string Remarks { get; set; }
         public Nullable<System.DateTime> Departmentname { get; set; }
-    
-        
+
+
     }
 }

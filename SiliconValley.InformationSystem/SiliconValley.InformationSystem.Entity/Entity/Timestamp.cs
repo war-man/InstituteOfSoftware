@@ -11,11 +11,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "Timestamp")]
     public partial class Timestamp
     {
         
-    
+    [Key]
         public int ID { get; set; }
         public Nullable<System.DateTime> Starttime { get; set; }
         public Nullable<System.DateTime> Endingtime { get; set; }

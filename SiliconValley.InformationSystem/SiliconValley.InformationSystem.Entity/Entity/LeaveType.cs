@@ -11,15 +11,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "LeaveType")]
     public partial class LeaveType
     {
-       
-    
+
+        [Key]
         public int TypeId { get; set; }
         public string TypeName { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
-       
+
+
     }
 }

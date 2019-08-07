@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "ReadSweep")]
     public partial class ReadSweep
     {
+        [Key]
         public int Id { get; set; }
         public Nullable<int> Tear_Id { get; set; }
         public Nullable<int> kaoc_id { get; set; }

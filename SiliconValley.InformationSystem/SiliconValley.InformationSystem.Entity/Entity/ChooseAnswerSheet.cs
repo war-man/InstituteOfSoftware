@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ChooseAnswerSheet")]
     public partial class ChooseAnswerSheet
     {
+        [Key]
         public int Id { get; set; }
         public string CandidateInfo { get; set; }
         public Nullable<int> Topic { get; set; }

@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "MultipleChoiceQuestion")]
     public partial class MultipleChoiceQuestion
     {
-        
-    
+
+        [Key]
         public int Id { get; set; }
         public string Title { get; set; }
         public string OptionA { get; set; }
@@ -30,7 +32,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsUsing { get; set; }
         public string Remark { get; set; }
         public Nullable<int> Course { get; set; }
-    
-       
+
+
     }
 }

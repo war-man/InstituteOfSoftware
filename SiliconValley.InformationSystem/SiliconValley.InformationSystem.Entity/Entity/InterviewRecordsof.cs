@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "InterviewRecordsof")]
     public partial class InterviewRecordsof
     {
+        [Key]
         public int ID { get; set; }
         public string InterviewTopics { get; set; }
         public string Interviewcontent { get; set; }

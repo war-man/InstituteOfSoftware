@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "RecruitPhoneTrace")]
     public partial class RecruitPhoneTrace
     {
+        [Key]
         public int Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }

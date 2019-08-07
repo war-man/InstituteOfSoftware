@@ -11,17 +11,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Grand")]
     public partial class Grand
     {
-      
-    
+
+        [Key]
         public int Id { get; set; }
         public string GrandName { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public string Reaks { get; set; }
         public Nullable<System.DateTime> AddDate { get; set; }
-    
-        
+
+
     }
 }

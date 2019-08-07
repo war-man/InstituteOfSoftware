@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "InStock")]
     public partial class InStock
     {
-       
-    
+
+        [Key]
         public int Id { get; set; }
         public Nullable<int> Check_ID { get; set; }
         public string Eyee_Id { get; set; }
@@ -23,7 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string InStockState { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
-       
+
+
     }
 }

@@ -11,17 +11,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "SatisficingItem")]
     public partial class SatisficingItem
     {
-        
-    
+
+        [Key]
         public int ItemID { get; set; }
         public string ItemContent { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<int> ItemType { get; set; }
-    
-        
+
+
     }
 }

@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "ProjectTasks")]
     public partial class ProjectTasks
     {
-       
-    
+
+        [Key]
         public int ProjectID { get; set; }
         public Nullable<int> Tutor { get; set; }
         public string ProjectName { get; set; }
@@ -24,7 +26,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }
         public Nullable<int> ProjectType { get; set; }
         public string StudentNO { get; set; }
-    
-       
+
+
     }
 }

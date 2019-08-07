@@ -11,10 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "LeaveRequest")]
     public partial class LeaveRequest
     {
-      
+     
+        [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<int> TypeId { get; set; }

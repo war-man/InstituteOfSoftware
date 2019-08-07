@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ClassDynamics")]
     public partial class ClassDynamics
     {
+        [Key]
         public int ID { get; set; }
         public string Remarks { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }

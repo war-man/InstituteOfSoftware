@@ -11,15 +11,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Region")]
     public partial class Region
     {
-        
-    
+
+        [Key]
         public int ID { get; set; }
         public string RegionName { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
-       
+
+
     }
 }

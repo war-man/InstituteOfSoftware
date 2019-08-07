@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ClassSchedule")]
     public partial class ClassSchedule
     {
         
-    
+      [Key]
         public string ClassNumber { get; set; }
         public Nullable<bool> ClassStatus { get; set; }
         public string ClassRemarks { get; set; }

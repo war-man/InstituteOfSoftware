@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("BeOnDuty")]
     public partial class BeOnDuty
     {
         
-    
+        [Key]
         public int Id { get; set; }
         public string TypeName { get; set; }
         public Nullable<decimal> Cost { get; set; }

@@ -11,10 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("Awardwinningtrainees")]
     public partial class Awardwinningtrainees
     {
-       
+       [Key]
         public int ID { get; set; }
         public string StudentNO { get; set; }
         public string AwardwinningName { get; set; }

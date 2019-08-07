@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("Curriculum")]
     public partial class Curriculum
     {
         
-    
+        [Key]
         public int CurriculumID { get; set; }
         public Nullable<int> Grand_Id { get; set; }
         public Nullable<int> MajorID { get; set; }

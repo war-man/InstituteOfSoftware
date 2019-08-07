@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "JobTransferApply")]
     public partial class JobTransferApply
     {
+        [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<int> PlanTurnDeptId { get; set; }
@@ -22,7 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Reason { get; set; }
         public Nullable<System.DateTime> ApplicationTime { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
+
         public virtual EmployeesInfo EmployeesInfo { get; set; }
     }
 }

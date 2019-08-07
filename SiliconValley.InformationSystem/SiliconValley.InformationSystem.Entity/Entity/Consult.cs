@@ -11,10 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("Consult")]
     public partial class Consult
     {
-    
+        [Key]
         public int Id { get; set; }
         public Nullable<int> TeacherName { get; set; }
         public Nullable<int> StuName { get; set; }
