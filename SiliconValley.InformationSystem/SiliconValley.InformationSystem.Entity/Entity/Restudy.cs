@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Restudy")]
     public partial class Restudy
     {
-       
-    
+
+        [Key]
         public int ID { get; set; }
         public string StudentNO { get; set; }
         public Nullable<int> Reentry { get; set; }
@@ -23,7 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
-    
-       
+
+
     }
 }

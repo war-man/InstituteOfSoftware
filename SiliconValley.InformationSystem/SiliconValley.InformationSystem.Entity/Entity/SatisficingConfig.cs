@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "SatisficingConfig")]
     public partial class SatisficingConfig
     {
-        
-    
+
+        [Key]
         public int ID { get; set; }
         public Nullable<int> CurriculumID { get; set; }
         public string EmployeeId { get; set; }
@@ -24,7 +26,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsPastDue { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
-       
+
+
     }
 }

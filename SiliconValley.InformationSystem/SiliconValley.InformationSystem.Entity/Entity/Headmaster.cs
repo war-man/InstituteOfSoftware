@@ -11,17 +11,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Headmaster")]
     public partial class Headmaster
     {
-        
-    
+
+        [Key]
         public int ID { get; set; }
         public string informatiees_Id { get; set; }
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }
-    
-        
+
+
     }
 }

@@ -11,16 +11,18 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Members")]
     public partial class Members
     {
-       
-    
+
+        [Key]
         public int ID { get; set; }
         public string Nameofmembers { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
-    
-       
+
+
     }
 }

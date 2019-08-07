@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ConvertCourse")]
     public partial class ConvertCourse
     {
+        [Key]
         public int Id { get; set; }
         public Nullable<System.DateTime> ApplyDate { get; set; }
         public Nullable<int> TeacherID { get; set; }

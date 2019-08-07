@@ -11,11 +11,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "Specialty")]
     public partial class Specialty
     {
        
-    
+        [Key]
         public int Id { get; set; }
         public string SpecialtyName { get; set; }
         public string Rmark { get; set; }

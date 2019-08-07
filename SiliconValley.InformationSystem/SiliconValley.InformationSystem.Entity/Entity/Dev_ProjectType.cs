@@ -11,9 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "Dev_ProjectType")]
     public partial class Dev_ProjectType
     {
+        [Key]
         public string Id { get; set; }
         public string ProjectTypeId { get; set; }
         public string ProjectTypeName { get; set; }

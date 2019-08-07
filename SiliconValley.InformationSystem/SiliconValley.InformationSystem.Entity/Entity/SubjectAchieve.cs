@@ -11,9 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "SubjectAchieve")]
     public partial class SubjectAchieve
     {
+        [Key]
         public int ID { get; set; }
         public Nullable<int> Subject { get; set; }
         public Nullable<int> Achievement { get; set; }

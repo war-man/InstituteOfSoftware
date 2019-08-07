@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("CancelLeaveApply")]
     public partial class CancelLeaveApply
     {
+        [Key]
         public int Cid { get; set; }
         public Nullable<int> LeaveId { get; set; }
         public string CancelLeaveReason { get; set; }

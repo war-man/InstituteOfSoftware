@@ -11,10 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "StudentFeeStandard")]
     public partial class StudentFeeStandard
     {
-    
+    [Key]
         public int ID { get; set; }
         public Nullable<decimal> Tuition { get; set; }
         public Nullable<decimal> Foodandlodging { get; set; }

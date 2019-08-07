@@ -11,10 +11,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "Transfer")]
     public partial class Transfer
     {
     
+        [Key]
         public int ID { get; set; }
         public string Student_number { get; set; }
         public string Reasonsforshifting { get; set; }

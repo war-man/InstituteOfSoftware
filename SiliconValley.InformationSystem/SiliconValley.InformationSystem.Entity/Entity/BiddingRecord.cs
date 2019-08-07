@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("BiddingRecord")]
     public partial class BiddingRecord
     {
+        [Key]
         public int Id { get; set; }
         public string Recorder { get; set; }
         public string BiddingOpponent { get; set; }

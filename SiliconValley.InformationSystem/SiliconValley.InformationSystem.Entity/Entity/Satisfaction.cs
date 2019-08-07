@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Satisfaction")]
     public partial class Satisfaction
     {
+        [Key]
         public int Id { get; set; }
         public Nullable<decimal> MaxValue { get; set; }
         public Nullable<decimal> MinValue { get; set; }

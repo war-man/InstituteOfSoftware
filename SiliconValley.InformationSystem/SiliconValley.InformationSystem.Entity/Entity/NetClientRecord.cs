@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "NetClientRecord")]
     public partial class NetClientRecord
     {
+        [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<System.DateTime> NetClientDate { get; set; }

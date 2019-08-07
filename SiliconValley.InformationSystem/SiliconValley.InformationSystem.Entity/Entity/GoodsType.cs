@@ -11,16 +11,18 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "GoodsType")]
     public partial class GoodsType
     {
-        
+        [Key]
         public int Id { get; set; }
         public string GoodsTypeName { get; set; }
         public string Reak { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }
-    
-        
+
+
     }
 }

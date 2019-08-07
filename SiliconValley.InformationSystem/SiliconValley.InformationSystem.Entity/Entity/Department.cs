@@ -11,10 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "Department")]
     public partial class Department
     {
-        
+        [Key]
         public int DeptId { get; set; }
         public string DeptName { get; set; }
         public Nullable<bool> IsDel { get; set; }

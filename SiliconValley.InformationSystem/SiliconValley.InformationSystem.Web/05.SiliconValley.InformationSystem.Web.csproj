@@ -218,6 +218,7 @@
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
+    <Compile Include="Areas\Teaching\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
@@ -237,6 +238,7 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Teaching\Javascript.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\custom-styles.css" />
@@ -317,10 +319,12 @@
     <Content Include="Areas\Logistics\Views\web.config" />
     <Content Include="Areas\Personnelmatters\Views\web.config" />
     <Content Include="Areas\Finance\Views\web.config" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
+    <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -950,6 +954,7 @@
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
+    <Folder Include="Areas\Personnelmatters\Views\EmployeesInfo\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />

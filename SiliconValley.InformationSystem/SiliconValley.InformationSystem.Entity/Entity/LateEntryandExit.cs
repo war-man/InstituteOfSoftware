@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "LateEntryandExit")]
     public partial class LateEntryandExit
     {
+        [Key]
         public int ID { get; set; }
         public string Student_Number { get; set; }
         public Nullable<System.DateTime> Entryandexittime { get; set; }
@@ -21,7 +24,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> Dateofregistration { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public string Remarks { get; set; }
-    
+
         public virtual StudentInformation StudentInformation { get; set; }
     }
 }

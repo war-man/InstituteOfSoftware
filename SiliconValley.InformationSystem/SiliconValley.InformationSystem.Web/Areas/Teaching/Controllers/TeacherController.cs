@@ -17,23 +17,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         // 教员上下文
         private readonly TeacherBusiness db_teacher;
+
+        public TeacherController()
+        {
+            db_teacher = new TeacherBusiness();
+        }
         public ActionResult TeachersInfo()
         {
 
             return View();
         }
 
-        public ActionResult TeacherData()
+        public ActionResult TeacherData(int limit,int page)
         {
 
-            Pagination pagination = new Pagination();
-            pagination.page = 1;
-            pagination.limit = 10;
 
+            var list = db_teacher.GetList().Skip((page -1) * limit).Take(limit);
 
-            var teacherlist = db_teacher.GetPagination<Teacher>(db_teacher.GetIQueryable(), pagination);
+            var returnlist = list.Select(x => new { TeacherID = x.TeacherID, TeacherName = x.TeachingExperience, WorkExperience = x.WorkExperience });
 
-            return null;
+            var obj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = returnlist
+            };
+
+            return Json(obj,JsonRequestBehavior.AllowGet);
         }
     }
 }

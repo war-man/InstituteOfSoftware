@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "LatesubmieCords")]
     public partial class LatesubmieCords
     {
+        [Key]
         public int ID { get; set; }
         public string Student_number { get; set; }
         public Nullable<int> Guarantee { get; set; }

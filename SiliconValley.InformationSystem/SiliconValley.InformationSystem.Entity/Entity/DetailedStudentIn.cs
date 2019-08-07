@@ -11,9 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "DetailedStudentIn")]
     public partial class DetailedStudentIn
     {
+        [Key]
         public int ID { get; set; }
         public Nullable<double> InsurancePremium { get; set; }
         public Nullable<System.DateTime> Payment_time { get; set; }

@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ChannelYearPlan")]
     public partial class ChannelYearPlan
     {
+        [Key]
         public int StaffYearPlanID { get; set; }
         public Nullable<int> SchoolYearPlanID { get; set; }
         public Nullable<int> ChannelStaffID { get; set; }

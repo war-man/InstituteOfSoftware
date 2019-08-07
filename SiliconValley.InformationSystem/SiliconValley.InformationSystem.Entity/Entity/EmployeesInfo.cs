@@ -11,11 +11,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "EmployeesInfo")]
     public partial class EmployeesInfo
     {
         
-    
+        [Key]
         public string EmployeeId { get; set; }
         public Nullable<int> DDAppId { get; set; }
         public string EmpName { get; set; }

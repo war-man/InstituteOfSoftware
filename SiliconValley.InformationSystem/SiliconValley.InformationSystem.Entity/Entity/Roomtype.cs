@@ -10,18 +10,21 @@
 namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
+
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "Roomtype")]
     public partial class Roomtype
     {
-       
-    
+
+        [Key]
         public int ID { get; set; }
         public Nullable<int> Name { get; set; }
         public string Typename { get; set; }
         public Nullable<int> Numberofbeds { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
-       
+
+
     }
 }

@@ -10,8 +10,5 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using SiliconValley.InformationSystem.Entity.MyEntity;
    public class TeacherBusiness:BaseBusiness<Teacher>
     {
-
-        
-
     }
 }

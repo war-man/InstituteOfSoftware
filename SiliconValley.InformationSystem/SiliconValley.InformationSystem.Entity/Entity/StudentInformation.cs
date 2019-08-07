@@ -11,11 +11,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "StudentInformation")]
     public partial class StudentInformation
     {
       
-       
+       [Key]
         public string StudentNumber { get; set; }
         public string Name { get; set; }
         public Nullable<bool> Sex { get; set; }
@@ -26,7 +29,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Picture { get; set; }
         public Nullable<int> State { get; set; }
         public string Hobby { get; set; }
-        public string Family_address { get; set; }
+        public string Familyaddress { get; set; }
         public Nullable<System.DateTime> BirthDate { get; set; }
         public string Nation { get; set; }
         public string Education { get; set; }

@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table(name: "RemovalRecords")]
     public partial class RemovalRecords
     {
+        [Key]
         public int ID { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
         public string FormerClass { get; set; }

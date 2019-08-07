@@ -11,17 +11,18 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ApplyForFullMember")]
     public partial class ApplyForFullMember
     {
+        [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<bool> IsBuySS { get; set; }
         public Nullable<System.DateTime> ProbationEndDate { get; set; }
         public string ProbationPersonalSummary { get; set; }
         public Nullable<System.DateTime> ApplicationDate { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-    
-  
+        public Nullable<bool> IsDel { get; set; } 
     }
 }

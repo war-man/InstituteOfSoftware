@@ -11,9 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("AttendanceInfo")]
     public partial class AttendanceInfo
     {
+        [Key]
         public int AAttendanceId { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<System.DateTime> YearAndMonth { get; set; }

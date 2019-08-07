@@ -11,11 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    [Table("ApplicationDropout")]
     public partial class ApplicationDropout
     {
       
-    
+        [Key]
         public int ID { get; set; }
         public string Reasonofdropout { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }

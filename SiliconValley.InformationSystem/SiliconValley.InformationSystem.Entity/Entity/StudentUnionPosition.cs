@@ -11,10 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+    [Table(name: "StudentUnionPosition")]
     public partial class StudentUnionPosition
     {
-       
+       [Key]
         public int ID { get; set; }
         public Nullable<bool> Dateofregistration { get; set; }
         public Nullable<System.DateTime> Add_time { get; set; }
