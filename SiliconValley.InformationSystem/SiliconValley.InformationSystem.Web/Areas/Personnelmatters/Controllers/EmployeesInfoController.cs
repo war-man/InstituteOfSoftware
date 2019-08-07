@@ -15,10 +15,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
+
+        //获取员工信息数据
         public ActionResult GetData(int page,int limit) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var list = empinfo.GetList();
             var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
+           // var mylist = empinfo.GetPagination(list,page,limit);
             var newlist=from e in mylist select new
                         { empid= e.EmployeeId,
                             e.DDAppId,

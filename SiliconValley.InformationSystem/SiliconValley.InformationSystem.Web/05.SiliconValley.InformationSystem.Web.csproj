@@ -325,6 +325,7 @@
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
     <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -954,7 +955,6 @@
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
-    <Folder Include="Areas\Personnelmatters\Views\EmployeesInfo\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
