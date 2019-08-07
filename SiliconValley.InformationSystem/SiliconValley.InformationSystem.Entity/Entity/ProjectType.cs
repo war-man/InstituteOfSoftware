@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    [Table(name: "ProjectTasks")]
+    [Table(name: "ProjectType")]
     public partial class ProjectType
     {
         [Key]
