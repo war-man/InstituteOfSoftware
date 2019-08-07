@@ -19,10 +19,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //获取员工信息数据
         public ActionResult GetData(int page,int limit) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
-            try
-            {
-                var list = empinfo.GetList();
-                var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
+                var list = empinfo.GetList();//拿到数据集合
+                var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();//拿到分页后的数据集合
                 // var mylist = empinfo.GetPagination(list,page,limit);
                 var newlist = from e in mylist
                               select new
@@ -66,14 +64,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     count = list.Count(),
                     data = newlist
                 };
-            }
-            catch (Exception)
-            {
 
-                empinfo.Error("出错了");
-            }
-         
+
             return Json(newobj,JsonRequestBehavior.AllowGet);
+           
         }
     }
 }
