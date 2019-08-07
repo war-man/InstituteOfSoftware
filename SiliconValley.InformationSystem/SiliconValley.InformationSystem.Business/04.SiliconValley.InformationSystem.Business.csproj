@@ -76,6 +76,7 @@
     <Compile Include="Base_SysManage\UrlPermissionManage.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
+    <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerFactory.cs" />
@@ -102,5 +103,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
