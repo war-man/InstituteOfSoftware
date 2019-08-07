@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using SiliconValley.InformationSystem.Business.StudentManeger;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -12,10 +12,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     {
         public class Student { }
 
-        private readonly StudentInformationManeger dbtext;
+        private readonly StudentInformationBusiness dbtext;
         public StudentInformationController()
         {
-            dbtext = new StudentInformationManeger();
+            dbtext = new StudentInformationBusiness();
             
         }
         // GET: Teachingquality/StudentInformation

@@ -81,6 +81,7 @@
     <Compile Include="Logger\LoggerFactory.cs" />
     <Compile Include="Logger\RDBMSLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
     <Compile Include="TeachingDepBusiness\TeacherBusiness.cs" />
     <Compile Include="UserManeger\UsersInfoManeger.cs" />
