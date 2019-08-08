@@ -3,12 +3,12 @@
     ViewBag.Title = "StudentDataKeepIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 <script type="text/html" id="toolbarDemo1">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
-        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
+            <i class="layui-icon">&#xe608;</i> 添加
+        </button>      
     </div>
 </script>
 
@@ -32,9 +32,9 @@
                     , {
                         field: 'StuSex', title: '性别', templet: function (res) {
                             if (res.StuSex == false) {
-                                return "男";
-                            } else {
                                 return "女";
+                            } else {
+                                return "男";
                             }
                         }}
                     , { field: 'StuPhone', title: '电话号码' }
@@ -62,16 +62,13 @@
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'getCheckData':
-                        var data = checkStatus.data;
-                        layer.alert(JSON.stringify(data));
-                        break;
-                    case 'getCheckLength':
-                        var data = checkStatus.data;
-                        layer.msg('选中了：' + data.length + ' 个');
-                        break;
-                    case 'isAll':
-                        layer.msg(checkStatus.isAll ? '全选' : '未全选');
-                        break;
+                        layer.open({
+                            type: 2,
+                            content: '/Market/StudentDataKeep/AddorEdit/id=0' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                            , area: ['1000px', '650px'],
+                            title:'添加备案信息'
+                        }); 
+                        break;                     
                 };
             });
 

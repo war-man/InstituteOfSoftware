@@ -10,11 +10,13 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生状态实体
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
+//获取岗位信息实体
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: Market/StudentDataKeep
+        // GET: /Market/StudentDataKeep/AddorEdit
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -22,8 +24,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         StuStateManeger Stustate_Entity = new StuStateManeger();
         //创建一个用于查询数据的上门学生信息来源实体
         StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
+        //创建一个用于查询数据的员工信息实体
+        EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
         //这是一个数据备案的主页面
-
         public ActionResult StudentDataKeepIndex()
         {
             return View();
@@ -54,7 +57,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
                     StuIsGoto =s.StuIsGoto,
                     StuVisit =s.StuVisit,
-                    EmployeesInfo_Id =1,
+                    EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
                     StuDateTime =s.StuDateTime,
                     StuEntering =s.StuEntering,
                     Reak =s.Reak
@@ -90,7 +93,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList();
             return Get_List_stuInfomationtype.Where(s => s.Id == id).FirstOrDefault().Name;
         }
-
+        public string GetEmployeeValue(string id)
+        {
+           return Enplo_Entity.GetList().Where(s => s.EmployeeId == id).FirstOrDefault().EmpName;
+        }
         #endregion
+
+        //这是一个添加数据的页面
+        public ActionResult AddorEdit()
+        {
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList();//.Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
+
+            //获取学生状态来源的所有数据
+            ViewBag.state = Stustate_Entity.GetList();//.Select(s=>new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            
+            return View();
+        }
+
+        //将所有员工显示给用户选择
+        public ActionResult ShowEmployeInfomation()
+        {
+            //获取员工表的所有数据
+            var list_Enploy = Enplo_Entity.GetList();
+            return View();
+        }
     }
 }
