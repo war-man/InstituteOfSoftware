@@ -11,7 +11,8 @@ layui.use(['table', 'layer','form'], function () {
         , url: '/Teaching/Teacher/TeacherData/'
         , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
         , cols: [[
-            { field: 'TeacherID', width: 120, title: 'ID', sort: true }
+            { type: 'checkbox' ,fixed:'left'}
+            ,{ field: 'TeacherID', width: 120, title: 'ID', sort: true }
             , { field: 'TeacherName', width: 120, title: '姓名' }
             ,{ field: 'Major', width: 120, title: '专业' }
             , { field: 'WorkExperience', width: 120, title: '工作经验', sort: true }
@@ -28,16 +29,17 @@ layui.use(['table', 'layer','form'], function () {
     table.on('toolbar(teacherlist_filter)', function (obj) {
 
         var checkStatus = table.checkStatus(obj.config.id);
-        console.log(checkStatus);
+       
         switch (obj.event) {
-            case 'AddTeacher':
+            case 'EditMajorAdnGrand':
                 layer.open({
 
                     type: 2,
-                    area: ["800px", "650px"],
-                    content: "/Teaching/Teacher/Operating"
+                    area: ["1000px", "850px"],
+                    content: "/Teaching/Teacher/EditMajorAndGrandView/" + checkStatus.data[0].TeacherID
 
                 });
+                
                 break;
         };
     });
@@ -52,16 +54,10 @@ layui.use(['table', 'layer','form'], function () {
             layer.open({
 
                 type: 2,
-                area: ["1000px", "800px"],
+                area: ["1300px", "1000px"],
                 content: "/Teaching/Teacher/TeacherDetailView/" + id,
                 end: function () {
 
-                    //刷新表格
-                    layer.msg('修改成功');
-
-                    table.reload('Teacherlist', {
-
-                    });
 
                 }
 

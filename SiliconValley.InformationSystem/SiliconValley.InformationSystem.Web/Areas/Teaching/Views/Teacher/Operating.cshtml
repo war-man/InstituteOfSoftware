@@ -42,7 +42,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">工作经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="WorkExperience">
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="WorkExperience">
                            @Model.WorkExperience
                     </textarea>
                 </div>
@@ -50,7 +50,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">项目经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="ProjectExperience">
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="ProjectExperience">
                            @Model.ProjectExperience
                     </textarea>
                 </div>
@@ -58,7 +58,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">教学经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="TeachingExperience">
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200"  class="layui-textarea" name="TeachingExperience">
                             @Model.TeachingExperience
                     </textarea>
                 </div>
@@ -67,7 +67,7 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">上课风格</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="AttendClassStyle">
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200"  class="layui-textarea" name="AttendClassStyle">
                             @Model.AttendClassStyle
                     </textarea>
                 </div>
@@ -108,7 +108,6 @@
                         //当你在iframe页面关闭自身时
                         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                         parent.layer.close(index); //再执行关闭
-
 
                     }
 

@@ -53,15 +53,15 @@
           
                 <div class="layui-container">
                     <fieldset>
-
+                     
                         <legend>基本信息</legend>
 
-                        <div class="layui-row layui-form-item">
+                        <div  class="layui-row layui-form-item">
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">姓名</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextAreaFor(t => t.Name, new { @class = "layui-input" })
+                                    @Html.TextBoxFor(t => t.Name, new { @class = "layui-input" , @readonly="d"})
                                     @*<input tepe="text" name="name" class="layui-input" />*@
                                 </div>
                             </div>
@@ -69,27 +69,26 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">员工编号</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextAreaFor(t => t.EmpNo, new { @class = "layui-input" })
+                                    @Html.TextBoxFor(t => t.EmpNo, new { @class = "layui-input", @readonly = "d" })
                                 </div>
                             </div>
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">电话</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextAreaFor(t => t.Phone, new { @class = "layui-input" })
+                                    @Html.TextBoxFor(t => t.Phone, new { @class = "layui-input", @readonly="d"}
+                                    )
                                 </div>
                             </div>
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">生日</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextAreaFor(t => t.Birthday, new { @class = "layui-input" })
+                                    @Html.TextBoxFor(t => t.Birthday, new { @class = "layui-input" , @readonly="d",type="date"})
                                 </div>
                             </div>
 
-                            <div id="but1">
-                                <i class="layui-icon">&#xe615;</i>
-                            </div>
+                           
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
                                 <label class="layui-form-label">性别</label>
@@ -115,7 +114,11 @@
 
                                 <label class="layui-form-label">专业</label>
                                 <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Major.SpecialtyName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input linu" } })
+                                    @{ foreach (var item in Model.Major)
+                                        {
+                                            <button type="button" class="layui-btn">@item.SpecialtyName</button>
+                                        }
+                                    }
                                 </div>
 
                             </div>
@@ -136,7 +139,7 @@
                             <label class="layui-form-label">项目经验</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(t => t.ProjectExperience, new { @class = "layui-textarea" })
+                                @Html.TextAreaFor(t => t.ProjectExperience, new { @class = "layui-textarea" ,@readonly = "d" })
 
                             </div>
                         </div>
@@ -145,7 +148,7 @@
                             <label class="layui-form-label">工作经验</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(t => t.WorkExperience, new { @class = "layui-textarea" })
+                                @Html.TextAreaFor(t => t.WorkExperience, new { @class = "layui-textarea", @readonly = "d" })
 
                             </div>
                         </div>
@@ -154,7 +157,7 @@
                             <label class="layui-form-label">教学经验</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(t => t.TeachingExperience, new { @class = "layui-textarea" })
+                                @Html.TextAreaFor(t => t.TeachingExperience, new { @class = "layui-textarea", @readonly = "d" })
 
                             </div>
                         </div>
@@ -163,7 +166,7 @@
                             <label class="layui-form-label">带班经验</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(t => t.AttendClassStyle, new { @class = "layui-textarea" })
+                                @Html.TextAreaFor(t => t.AttendClassStyle, new { @class = "layui-textarea", @readonly = "d" })
 
                             </div>
                         </div>

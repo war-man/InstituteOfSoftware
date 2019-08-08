@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 
         public string Birthday { get; set; } //生日
 
-        public Specialty Major { get; set; } //专业
+        public List<Specialty> Major { get; set; } //专业
 
         public List<Grand> Grands { get; set; } //阶段
 

@@ -181,7 +181,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
 
-
+        /// <summary>
+        /// 教员详细
+        /// </summary>
+        /// <param name="id">教员ID</param>
+        /// <returns>教员详细视图</returns>
         public ActionResult TeacherDetailView(int id)
         {
 
@@ -192,16 +196,81 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //获取教员基本信息
              EmployeesInfo emp = db_teacher.GetEmpByEmpNo(t.EmployeeId);
+            teacherResult.EmpNo = emp.EmployeeId;
+            teacherResult.Birthday = emp.Birthday;
+            teacherResult.Name = emp.EmpName;
+            teacherResult.Phone = emp.Phone;
+            teacherResult.Sex = emp.Sex;
+            teacherResult.TeacherID = t.TeacherID;
+            
             //获取教员阶段信息
-            
+             teacherResult.Grands = db_teacher.GetGrandByTeacherID(t.TeacherID);
+
             //获取教员专业信息
+            teacherResult.Major= db_teacher.GetMajorByTeacherID(t.TeacherID);
            
+            //获取技术信息
             teacherResult.AttendClassStyle = t.AttendClassStyle;
-            
+            teacherResult.ProjectExperience = t.ProjectExperience;
+            teacherResult.TeachingExperience = t.TeachingExperience;
+            teacherResult.WorkExperience = t.WorkExperience;
 
+            return View(teacherResult);
 
+        }
+
+        /// <summary>
+        /// 编辑教员专业 阶段视图
+        /// </summary>
+        /// <param name="id">教员Id</param>
+        /// <returns>视图</returns>
+        public ActionResult EditMajorAndGrandView(int id)
+        {
+            //获取教员专业阶段
+
+            Dictionary<Specialty, Grand> dic = db_teacher.GetMajorInGrandByTeacherID(id);
+
+            Dictionary<Specialty, List<Grand>> result = new Dictionary<Specialty, List<Grand>>();
+
+            foreach (var key in dic.Keys)
+            {
+                //List<Grand> s = new List<Grand>();
+                if (ContainDic(result, key))
+                {
+                    result[key].Add(dic[key]);
+                }
+                else
+                {
+                    List<Grand> grandlist = new List<Grand>();
+                    grandlist.Add(dic[key]);
+
+                    result.Add(key, grandlist);
+                }
+            }
+
+            ViewBag.MajorAndGrand_Dic = result;
 
             return View();
+
+        }
+
+        /// <summary>
+        /// 判断key是否在另一个字典包含
+        /// </summary>
+        /// <returns></returns>
+        public bool ContainDic(Dictionary<Specialty, List<Grand>> source, Specialty key)
+        {
+
+            foreach (var item in source.Keys)
+            {
+                if(item==key)
+                {
+
+                    return true;
+                }
+            }
+
+            return false;
 
         }
 
