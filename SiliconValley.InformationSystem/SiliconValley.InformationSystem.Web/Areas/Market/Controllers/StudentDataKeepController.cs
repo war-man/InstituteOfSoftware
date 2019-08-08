@@ -11,7 +11,8 @@ using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生状态实体
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
-//获取岗位信息实体
+using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体
+using SiliconValley.InformationSystem.Entity.Entity;//获取树实体
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
@@ -26,6 +27,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
         //创建一个用于查询数据的员工信息实体
         EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
+        //创建一个用于查询数据的岗位信息实体
+        DepartmentManage Department_Entity = new DepartmentManage();
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
@@ -114,8 +117,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //将所有员工显示给用户选择
         public ActionResult ShowEmployeInfomation()
         {
+            //创建一个树集合
+            List<TreeClass> list_Tree = new List<TreeClass>();
             //获取员工表的所有数据
-            var list_Enploy = Enplo_Entity.GetList();
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
+            //获取岗位表的所有数据
+            List<Department> list_Depart = Department_Entity.GetList();
+            //根据岗位表加载属于这个岗位的的所有员工
+            foreach (EmployeesInfo item1 in list_Enploy)
+            {
+                foreach (Department item2 in list_Depart)
+                {
+                    //if (item1)
+                    //{
+
+                    //}
+                }
+            }
             return View();
         }
     }
