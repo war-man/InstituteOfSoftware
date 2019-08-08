@@ -27,8 +27,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
         //创建一个用于查询数据的员工信息实体
         EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
-        //创建一个用于查询数据的岗位信息实体
+        //创建一个用于查询数据的部门信息实体
         DepartmentManage Department_Entity = new DepartmentManage();
+        //创建一个用于查询岗位信息实体
+
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
