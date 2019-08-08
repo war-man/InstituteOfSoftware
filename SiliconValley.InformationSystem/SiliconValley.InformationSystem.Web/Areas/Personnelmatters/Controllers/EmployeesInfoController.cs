@@ -8,6 +8,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
 
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Business.PositionBusiness;
+    using SiliconValley.InformationSystem.Business.DepartmentBusiness;
+    using SiliconValley.InformationSystem.Entity.MyEntity;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -15,20 +18,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
+       
 
         //获取员工信息数据
         public ActionResult GetData(int page,int limit) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
-                var list = empinfo.GetList();
+            var list = empinfo.GetList();
                 var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
-                // var mylist = empinfo.GetPagination(list,page,limit);
-                var newlist = from e in mylist
-                              select new
-                              {
-                                  empid = e.EmployeeId,
-                                  e.DDAppId,
-                                  e.EmpName,
-                                  Position = e.PositionId,
+            // var mylist = empinfo.GetPagination(list,page,limit);
+            var newlist = from e in mylist
+                          select new
+                          {
+                              e.EmployeeId,
+                              e.DDAppId,
+                              e.EmpName,
+                              Position = GetPosition((int)e.PositionId).PositionName,
+                              Depart = GetDept((int)e.PositionId).DeptName,
                                   e.Sex,
                                   e.Age,
                                   e.Nation,
@@ -67,5 +72,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(newobj,JsonRequestBehavior.AllowGet);
         }
+
+        //获取所属岗位对象
+        public Position GetPosition(int pid) {
+            PositionManage pmanage = new PositionManage();
+            var plist = pmanage.GetList();//获取公司所有岗位的数据集合
+            var str = plist.Where(p => p.Pid == pid).FirstOrDefault();
+            return  str;
+        }
+        //获取所属岗位的所属部门对象
+        public Department GetDept(int pid) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var deptlist = deptmanage.GetList();//获取公司部门数据集
+            ViewBag.DeptList = deptlist;
+            var str = deptlist.Where(d => d.DeptId == GetPosition(pid).DeptId).FirstOrDefault();
+            return str;
+        }
+
+        //添加员工页面显示
+       [HttpGet]
+        public ActionResult AddEmp() {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var deptlist = deptmanage.GetList();//获取公司部门数据集
+            ViewBag.DeptList = deptlist;//将部门表数据用viewbag存储绑定下拉框
+
+            return View();
+        }
+
     }
 }
