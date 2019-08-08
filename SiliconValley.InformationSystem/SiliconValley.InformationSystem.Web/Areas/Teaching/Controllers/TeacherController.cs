@@ -192,9 +192,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //获取教员基本信息
              EmployeesInfo emp = db_teacher.GetEmpByEmpNo(t.EmployeeId);
-            //获取教员阶段信息
+            //获取教员阶段信息所属
             
-            //获取教员专业信息
+            //获取教员专业信息的
            
             teacherResult.AttendClassStyle = t.AttendClassStyle;
             
