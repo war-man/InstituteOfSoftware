@@ -11,6 +11,7 @@ using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生状态实体
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
+//获取岗位信息实体
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
