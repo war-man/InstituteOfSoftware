@@ -170,7 +170,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             {
                 result = new ErrorResult();
                 result.ErrorCode = 500;
-                result.Msg = "服务器错误";
+                result.Msg = "服务器错误1";
 
                
                
