@@ -1,0 +1,277 @@
+﻿
+@{
+    ViewBag.Title = "AddorEdit";
+    Layout = "";
+}
+
+@model SiliconValley.InformationSystem.Entity.MyEntity.StudentPutOnRecord
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+<style>
+    #but1 {
+        position: absolute;
+        top: 13%;
+        left: 35%;
+        width: 36px;
+        height: 36px;
+        text-align: center;
+        line-height: 36px;
+    }
+
+        #but1:hover {
+            background-color: aqua;
+        }
+
+    #Nation {
+        width: 100px;
+    }
+
+    .linu {
+        width: 200px;
+    }
+
+    .mm {
+        border: 1px solid black;
+    }
+
+    .LableCss1 {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right
+    }
+
+    .TextAreCss1 {
+        height: 80px;
+    }
+    .butCss1{
+        float:right;
+        margin-right:100px;
+    }
+    .butCss2{
+        border:0px solid black;
+    }
+</style>
+<div>
+    <form class="layui-form">
+        <div class="layui-container">
+             
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "姓名" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-block">
+                            <input id="StuSex" type="radio" name="Sex" value="1" title="男" checked="checked">
+                            <input id="StuSex" type="radio" name="Sex" value="0" title="女">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">电话</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuPhone, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "学生电话" }, { "class", "layui-input linu" } })
+                        </div>
+
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="LableCss1">出生日期</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy" }, { "class", "layui-input linu" } })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">学校名称</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuSchoolName, new Dictionary<string, object>() { { "placeholder", "学校名称" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                        <label class="layui-form-label">学历</label>
+                        <div class="layui-input-block">
+                            <select style="width:200px;" class="layui-select" id="StuEducational" name="StuEducational">
+                                <option value="初中">初中</option>
+                                <option value="高中">高中</option>
+                                <option value="大专">大专</option>
+                                <option value="二本">二本</option>
+                                <option value="一本">一本</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">家庭住址</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuAddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "家庭住址" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">微信</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuWeiXin, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "微信" }, { "class", "layui-input linu" } })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">QQ</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuQQ, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "QQ" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="LableCss1">信息来源</label>
+                        <div class="layui-input-block">
+                            <select id="StuInfomationType_Id" name="StuInfomationType_Id">
+                                @{
+                                    foreach (StuInfomationType item1 in ViewBag.infomation as List<StuInfomationType>)
+                                    {
+                                        <option id="@item1.Id">@item1.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">备案日期</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuDateTime, new Dictionary<string, object>() { { "lay-verify", "required StuDateTime" }, { " placeholder", "YY- MM-DD" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                        <label class="LableCss1">录入人员</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.StuEntering, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "录入人员" }, { "class", "layui-input linu" }, { "readonly", "true" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+                        <button type="button" class="layui-btn layui-btn-big layui-btn-primary butCss2" id="luruMan"> <i class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;"></i>选择</button>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="LableCss1">是否上门</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="StuVisit" value="1" title="是" checked="checked" lay-filter="radio1">
+                            <input type="radio" name="StuVisit" value="0" title="否" lay-filter="radio2">
+                        </div>
+                        
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6"> 
+                            <label class="LableCss1">上门日期</label>                         
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "required StuDateTime" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" } })
+                            </div>                                                                       
+                    </div>                  
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                        <label class="LableCss1">学生状态</label>
+                        <div class="layui-input-block">
+                            <select id="StuStatus_Id" name="StuStatus_Id">
+                                @{
+                                    foreach (StuStatus item2 in ViewBag.state as List<StuStatus>)
+                                    {
+                                        <option id="@item2.Id">@item2.StatusName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                        <label class="layui-form-label">备案人</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.EmployeesInfo_Id, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "备案人" }, { "class", "layui-input linu" }, { "readonly", "true" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
+                        <button type="button" class="layui-btn layui-btn-big layui-btn-primary butCss2" id="beanMan"> <i class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;"></i>选择</button>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(s => s.Reak, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
+                        </div>
+                    </div>
+                </div>
+       
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                <button class="layui-btn butCss1" lay-filter="quxiao">取消</button>
+            </div>
+        </div>
+        
+    </form>
+</div>
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+        //日期
+        laydate.render({
+            elem: '#StuDateTime'
+        });
+        laydate.render({
+            elem: '#StuVisit'
+        });
+        laydate.render({
+            elem:'#StuBirthy'
+        });
+
+        //监听是否上门单选按钮事件
+        form.on('radio(radio1)', function (data) {
+            $("#StuVisit")[0].removeAttribute("disabled");//可用
+        });  
+        form.on('radio(radio2)', function (data) {
+            $("#StuVisit")[0].setAttribute("disabled", "false");//禁用
+            $("#StuVisit")[0].value = null;
+        });  
+
+        //弹出员工信息页面
+
+    });
+</script>
+
+
+
+
+
+
