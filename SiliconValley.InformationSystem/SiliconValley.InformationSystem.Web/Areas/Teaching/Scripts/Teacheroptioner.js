@@ -1,8 +1,9 @@
 ﻿
-layui.use(['table', 'layer','form'], function () {
+layui.use(['table', 'layer', 'form','element'], function () {
     var table = layui.table;
     var layer = layui.layer;
     var form = layui.form;
+    var element = layui.element;
 
     table.render({
         elem: '#teacherlist'
@@ -87,8 +88,12 @@ layui.use(['table', 'layer','form'], function () {
     });
 
 
-    //修改教员监听表单提交
+  //////教员专业阶段业务  》》》》》》》》》》》》》》》》》》》》》》》》》》》
 
 
+
+
+
+//《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《《教员专业阶段业务  
 
 });

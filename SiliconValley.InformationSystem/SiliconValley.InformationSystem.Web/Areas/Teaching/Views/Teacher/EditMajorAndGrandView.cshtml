@@ -4,14 +4,62 @@
 }
 
 <!DOCTYPE html>
-
+@using SiliconValley.InformationSystem.Entity.MyEntity
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>EditMajorAndGrandView</title>
+
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 </head>
 <body>
-    <div> 
+    <div>
+
+        @{
+            foreach (var item in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>).Keys)
+            {
+
+                <div class="layui-collapse" style="margin-top:50px;">
+                    <div class="layui-colla-item">
+                        <h2 class="layui-colla-title">@item.SpecialtyName</h2>
+                        <div class="layui-colla-content layui-show">
+
+                            <div style="width:100%;text-align:center;">
+                                <button majorid="@item.Id" class="layui-btn layui-btn-warm" type="button">
+                                    @item.SpecialtyName
+                                </button>
+                            </div>
+
+                            @{
+                                foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
+                                {
+
+                                    <button class="layui-btn" grandid="@item1.Id" type="button" style="margin-top:50px;">
+                                        @item1.GrandName
+                                    </button>
+                                }
+                            }
+
+                            <button  majorid="@item.Id" class="layui-btn" type="button" style="margin-top:50px;">
+                                +
+                            </button>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            }
+        }
+
+
+
+
     </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script src="~/Areas/Teaching/Scripts/Teacheroptioner.js"></script>
+
 </body>
 </html>

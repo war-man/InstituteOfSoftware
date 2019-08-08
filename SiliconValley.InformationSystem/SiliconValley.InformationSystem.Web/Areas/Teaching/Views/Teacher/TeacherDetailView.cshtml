@@ -5,13 +5,6 @@
 @model SiliconValley.InformationSystem.Entity.ViewEntity.TeacherDetailView
 <!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>TeacherDetailView</title>
-</head>
-<body>
-
     <html>
     <head>
         <meta name="viewport" content="width=device-width" />
@@ -48,6 +41,7 @@
     <body>
 
 
+        <form class="layui-form"> 
         <h1 style="text-align:center;height:50px;">教员信息</h1>
         <div>
           
@@ -56,12 +50,12 @@
                      
                         <legend>基本信息</legend>
 
-                        <div  class="layui-row layui-form-item">
+                        <div class="layui-row layui-form-item">
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">姓名</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.Name, new { @class = "layui-input" , @readonly="d"})
+                                    @Html.TextBoxFor(t => t.Name, new { @class = "layui-input", @readonly = "d" })
                                     @*<input tepe="text" name="name" class="layui-input" />*@
                                 </div>
                             </div>
@@ -76,30 +70,30 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">电话</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.Phone, new { @class = "layui-input", @readonly="d"}
-                                    )
+                                    @Html.TextBoxFor(t => t.Phone, new { @class = "layui-input", @readonly = "d" }
+     )
                                 </div>
                             </div>
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">生日</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.Birthday, new { @class = "layui-input" , @readonly="d",type="date"})
+                                    @Html.TextBoxFor(t => t.Birthday, new { @class = "layui-input", @readonly = "d", type = "date" })
                                 </div>
                             </div>
 
-                           
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                            <div class="layui-form-item">
 
                                 <label class="layui-form-label">性别</label>
                                 <div class="layui-input-block">
 
-                                    @{string sex = Model.Sex.ToString() == "0" ? "女" : "男";}
-
-                                    @Html.RadioButtonFor(t => t.Sex, Model.Sex, new { title = sex })
+                                    <input type="radio" name="sex" value="@Model.Sex" checked title="@Model.Sex">
 
                                 </div>
                             </div>
+
+
 
                         </div>
 
@@ -180,6 +174,13 @@
         </div>
 
 
+</form>
 
+        <script>
+            layui.use(['form'], function () {
+
+
+            });
+        </script>
     </body>
 </html>
