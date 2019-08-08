@@ -89,6 +89,7 @@
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
     <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
+    <Compile Include="TeachingDepBusiness\GrandBusiness.cs" />
     <Compile Include="TeachingDepBusiness\SpecialtyBusiness.cs" />
     <Compile Include="TeachingDepBusiness\TeacherBusiness.cs" />
     <Compile Include="TeachingDepBusiness\TecharOnstageBearingBusiness.cs" />
