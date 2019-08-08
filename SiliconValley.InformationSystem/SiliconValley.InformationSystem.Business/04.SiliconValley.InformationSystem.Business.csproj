@@ -68,7 +68,7 @@
     <Compile Include="Base_SysManage\Base_SysLogBusiness.cs" />
     <Compile Include="Base_SysManage\Base_SysRoleBusiness.cs" />
     <Compile Include="Base_SysManage\Base_UserBusiness.cs" />
-    <Compile Include="Base_SysManage\ChannelStaffBusiness.cs" />
+    <Compile Include="Channel\ChannelStaffBusiness.cs" />
     <Compile Include="Base_SysManage\CheckSignBusiness.cs" />
     <Compile Include="Base_SysManage\HomeBusiness.cs" />
     <Compile Include="Base_SysManage\PermissionManage.cs" />
@@ -76,6 +76,10 @@
     <Compile Include="Base_SysManage\UrlPermissionManage.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
+    <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
+    <Compile Include="Employment\CooperaEnterprisesBusiness.cs" />
+    <Compile Include="Employment\EmploymentStaffBusiness.cs" />
+    <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerFactory.cs" />
@@ -83,6 +87,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
+    <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
+    <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TeachingDepBusiness\TeacherBusiness.cs" />
     <Compile Include="UserManeger\UsersInfoManeger.cs" />
   </ItemGroup>

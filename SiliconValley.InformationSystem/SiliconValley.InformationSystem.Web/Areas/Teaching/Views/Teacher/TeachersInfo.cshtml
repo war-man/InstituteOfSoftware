@@ -6,19 +6,34 @@
 
 @section script{
 
+<script src="~/Areas/Teaching/Scripts/Teacheroptioner.js"></script>
 
-    <script src="~/Areas/Teaching/Javascript.js"></script>
 }
 
-<script src="~/Areas/Teaching/Javascript.js"></script>
+
 
 <h2>TeachersInfo</h2>
 
 <div class="layui-container">
 
+
     <div>
-        <table class="layui-hide" id="teacherlist"></table>
+        <table class="layui-hide" id="teacherlist" lay-filter="teacherlist_filter"></table>
     </div>
+
+    <script type="text/html" id="topBar">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="AddTeacher">新教员</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+            <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="editBar">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
 
 </div>
 

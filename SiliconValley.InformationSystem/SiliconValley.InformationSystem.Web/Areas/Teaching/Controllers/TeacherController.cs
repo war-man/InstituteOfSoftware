@@ -46,5 +46,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             return Json(obj,JsonRequestBehavior.AllowGet);
         }
+
+
+        /// <summary>
+        /// 对教员的操作的视图
+        /// </summary>
+        /// <param name="ID">教员Id</param>
+        /// <returns>视图</returns>
+        [HttpGet]
+        public ActionResult Operating(int? ID)
+        {
+            return View();
+        }
+
+
+        public ActionResult GetTeacherByID(int Id)
+        {
+           Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == Id).ToList().FirstOrDefault();
+
+            return Json(teacher, JsonRequestBehavior.AllowGet);
+
+
+        }
+
     }
 }
