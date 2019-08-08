@@ -92,12 +92,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //添加员工页面显示
        [HttpGet]
         public ActionResult AddEmp() {
-            DepartmentManage deptmanage = new DepartmentManage();
-            var deptlist = deptmanage.GetList();//获取公司部门数据集
-            ViewBag.DeptList = deptlist;//将部门表数据用viewbag存储绑定下拉框
-
+           
             return View();
         }
 
+        //员工添加的所属部门下拉框绑定
+
+        public ActionResult BindDeptSelect() {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var deptlist = deptmanage.GetList();//获取公司部门数据集
+                                              
+            return Json(deptlist,JsonRequestBehavior.AllowGet);
+        }
+        //员工添加的所属部门下拉框绑定
+        //[HttpPost]
+        public ActionResult BindPositionSelect(int deptid) {
+            PositionManage pmanage = new PositionManage();
+            var plist = pmanage.GetList().Where(d => d.DeptId == deptid);
+            return Json(plist,JsonRequestBehavior.AllowGet);
+        }
     }
 }

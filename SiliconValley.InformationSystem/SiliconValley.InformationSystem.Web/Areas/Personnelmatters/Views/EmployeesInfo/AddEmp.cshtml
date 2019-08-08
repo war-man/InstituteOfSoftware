@@ -82,7 +82,7 @@
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="layui-form-label">所属部门</label>
                             <div class="layui-input-block">
-                                <select id="deptid" name="deptid"  lay-verify="required" lay-search="">
+                                <select id="deptid" name="deptid" lay-verify="required" lay-search="" lay-filter="deptid">
                                     <option value=""></option>
                                 </select>
 
@@ -92,7 +92,7 @@
                         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                             <label class="layui-form-label">所属岗位</label>
                             <div class="layui-input-block">
-                                <select id="deptid" name="deptid" lay-verify="required" lay-search="">
+                                <select id="PositionId" name="PositionId" lay-verify="required" lay-search="" lay-filter="PositionId">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -307,33 +307,46 @@
                 , laydate = layui.laydate;
         });
     </script>
-   
+
     @*下拉框动态赋值*@
-    @*<script>
-        layui.use(['form', 'upload', 'layer'], function () {
+    <script>
+            layui.use(['form', 'upload', 'layer'], function () {
 
-            var form = layui.form;
+                var form = layui.form;
 
-            //检查项目添加到下拉框中
-            $.ajax({
-                url: '../hwjg_App/hwjgApp_ashx/GetXm.ashx',
-                dataType: 'json',
-                type: 'get',
-                success: function (data) {
-                    $.each(data, function (index, item) {
-                        $('#deptid').append(new Option(item.xm, item.id));// 下拉菜单里添加元素
+                //所有部门添加到下拉框中
+                $.ajax({
+                    url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                    dataType: 'json',
+                    type: 'get',
+                    success: function (data) {
+
+                        $.each(data, function (index, item) {
+                            $('#deptid').append(new Option(item.DeptName, item.DeptId));// 下拉菜单里添加元素
+                        });
+                        layui.form.render("select");
+
+                        //重新渲染 固定写法
+                    }
+                });
+                //部门下拉框改变监听事件
+                form.on('select(deptid)', function (data) {
+                    $.ajax({
+                        url: '/Personnelmatters/EmployeesInfo/BindPositionSelect?deptid='+data.value,
+                        dataType: 'json',
+                        type: 'get',
+                        success: function (data) {
+                            $.each(data, function (index, item) {
+                                $('#PositionId').append(new Option(item.PositionName, item.Pid));// 下拉菜单里添加元素
+                            });
+                            form.render('select'); //这个很重要
+                        }
                     });
-                    layui.form.render("select");
+                    
+                });
 
-                    //重新渲染 固定写法
-                }
-            })
-
-        });
-
-         })
-
-    </script>*@
+            });
+        </script>
 
 </body>
 
