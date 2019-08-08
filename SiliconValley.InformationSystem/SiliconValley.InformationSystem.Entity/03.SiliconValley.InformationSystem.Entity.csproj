@@ -172,6 +172,7 @@
     <Compile Include="Entity\InterviewRecordsof.cs" />
     <Compile Include="Entity\InterviewStudents.cs" />
     <Compile Include="Entity\IsGoodOrBad.cs" />
+    <Compile Include="Entity\JobResponsibilities.cs" />
     <Compile Include="Entity\JobTransferApply.cs" />
     <Compile Include="Entity\LateEntryandExit.cs" />
     <Compile Include="Entity\LatesubmieCords.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\RemovalRecords.cs" />
     <Compile Include="Entity\ReplenishmentRecord.cs" />
+    <Compile Include="Entity\Requirements.cs" />
     <Compile Include="Entity\Restudy.cs" />
     <Compile Include="Entity\RoomPerformance.cs" />
     <Compile Include="Entity\Roomtype.cs" />
@@ -266,6 +268,8 @@
     <Compile Include="Entity\Undergra.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewEntity\AddEnterpriseView.cs" />
+    <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -274,8 +278,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ViewEntity\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
