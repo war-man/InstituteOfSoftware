@@ -13,11 +13,14 @@ using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获�
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
 using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体
 using SiliconValley.InformationSystem.Entity.Entity;//获取树实体
+using SiliconValley.InformationSystem.Business.PositionBusiness;//获取岗位实体
+using SiliconValley.InformationSystem.Entity.ViewEntity;//获取员工岗位部门实体
+
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/AddorEdit
+        // GET: /Market/StudentDataKeep/ShowEmployeInfomation
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -30,7 +33,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //创建一个用于查询数据的部门信息实体
         DepartmentManage Department_Entity = new DepartmentManage();
         //创建一个用于查询岗位信息实体
-
+        PositionManage Position_Entity = new PositionManage();
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
@@ -119,24 +122,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //将所有员工显示给用户选择
         public ActionResult ShowEmployeInfomation()
         {
-            //创建一个树集合
-            List<TreeClass> list_Tree = new List<TreeClass>();
-            //获取员工表的所有数据
             List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
-            //获取岗位表的所有数据
             List<Department> list_Depart = Department_Entity.GetList();
-            //根据岗位表加载属于这个岗位的的所有员工
-            foreach (EmployeesInfo item1 in list_Enploy)
+            List<Position> list_Position = Position_Entity.GetList();
+            List<TreeClass> list_Tree = new List<TreeClass>();
+            List<TreeClass> bigTree = new List<TreeClass>();
+            foreach (Department item1 in list_Depart)
             {
-                foreach (Department item2 in list_Depart)
+                TreeClass tcc = new TreeClass();
+                tcc.id = item1.DeptId.ToString();
+                tcc.title = item1.DeptName;
+                foreach (Position item2 in list_Position)
                 {
-                    //if (item1)
-                    //{
-
-                    //}
+                    if (item1.DeptId==item2.DeptId)
+                    {                        
+                        foreach (EmployeesInfo item3 in list_Enploy)
+                        {                                                         
+                            if (item3.PositionId==item2.Pid && item2.DeptId==item1.DeptId)
+                            {
+                                TreeClass tcc2 = new TreeClass();
+                                tcc2.id = item3.EmployeeId;
+                                tcc.title = item3.EmpName;
+                                bigTree.Add(tcc2);
+                                tcc.children = bigTree;
+                            }
+                        }
+                    }
                 }
+                list_Tree.Add(tcc);
             }
             return View();
         }
+
+        
     }
 }

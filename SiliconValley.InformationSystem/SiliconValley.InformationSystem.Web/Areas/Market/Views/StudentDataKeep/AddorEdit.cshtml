@@ -240,6 +240,10 @@
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/layui/layui.js"></script>
 <script>
+    $(function () {
+        //弹出员工信息页面
+          
+    });
     layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form
             , layer = layui.layer
@@ -264,13 +268,11 @@
             $("#StuVisit")[0].setAttribute("disabled", "false");//禁用
             $("#StuVisit")[0].value = null;
         });  
-
-        //弹出员工信息页面
-        //layer.open({
-        //    type: 2,
-        //    content:'' //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-        //});
+       
     });
+
+ 
+
 </script>
 
 

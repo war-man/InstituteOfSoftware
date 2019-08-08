@@ -8,13 +8,18 @@ namespace SiliconValley.InformationSystem.Entity.Entity
 {
    public class TreeClass
     {
+        public string id
+        {
+            get;
+            set;
+        }
         public string title//节点标题
         {
             get;
             set;
         }
 
-        public object children//子节点
+        public List<TreeClass> children//子节点
         {
             get;
             set;
