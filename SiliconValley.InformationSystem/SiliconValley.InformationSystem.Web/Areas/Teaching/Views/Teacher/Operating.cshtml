@@ -18,68 +18,102 @@
 
 
         <hr />
-        <form class="layui-form" lay-filter="editteacher">
+
+        <fieldset>
+            <legend>基本信息</legend>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">员工编号</label>
+
+                    <div class="layui-input-inline">
+                        <input type="tel" value="@ViewBag.Emp.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">员工姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" value="@ViewBag.Emp.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
 
 
             <div class="layui-form-item">
-                <label class="layui-form-label">短输入框</label>
-                <div class="layui-input-inline">
-                    <input type="text" value="@ViewBag.Emp.EmpName" readonly class="layui-input">
-                    <input type="hidden" name="teacherid" value=" @Model.TeacherID" />
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="sex" value="@ViewBag.Emp.Sex" readonly lay-skin="switch" lay-text="男|女">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">入职时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="inputtime" value="@ViewBag.Emp.ProbationEndTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
 
+        </fieldset>
 
 
-            <div class="layui-inline">
-                <label class="layui-form-label">搜索选择框</label>
-                <div class="layui-input-inline">
-                    @Html.DropDownList("major",@ViewBag.Majors as IEnumerable<SelectListItem>)
+        <fieldset>
+            <legend>编辑区域</legend>
+            <form class="layui-form" lay-filter="editteacher">
+
+               @Html.HiddenFor(d=>d.TeacherID)
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">搜索选择框</label>
+                    <div class="layui-input-inline">
+                        @Html.DropDownList("major", @ViewBag.Majors as IEnumerable<SelectListItem>)
+                    </div>
                 </div>
-            </div>
 
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">工作经验</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="WorkExperience">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">工作经验</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="WorkExperience">
                            @Model.WorkExperience
                     </textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">项目经验</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="ProjectExperience">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">项目经验</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="ProjectExperience">
                            @Model.ProjectExperience
                     </textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">教学经验</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200"  class="layui-textarea" name="TeachingExperience">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">教学经验</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="TeachingExperience">
                             @Model.TeachingExperience
                     </textarea>
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item layui-form-text">
-                <label class="layui-form-label">上课风格</label>
-                <div class="layui-input-block">
-                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200"  class="layui-textarea" name="AttendClassStyle">
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">上课风格</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="AttendClassStyle">
                             @Model.AttendClassStyle
                     </textarea>
+                    </div>
                 </div>
-            </div>
 
 
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" id="submit" lay-submit="" lay-filter="editteacher">确定</button>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="submit" lay-submit="" lay-filter="editteacher">确定</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+            </form>
+
+        </fieldset>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>

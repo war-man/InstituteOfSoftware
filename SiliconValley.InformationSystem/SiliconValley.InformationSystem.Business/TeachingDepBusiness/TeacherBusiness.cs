@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns>教员实体</returns>
         public Teacher GetTeacherByID(int id)
         {
-           return  this.GetList().Where(t => t.TeacherID == id).FirstOrDefault();
+           return  this.GetList().Where(t => t.TeacherID == id && t.IsDel ==false).FirstOrDefault();
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns>员工实体</returns>
         public EmployeesInfo GetEmpByEmpNo(string EmpNo)
         {
-           return db_emp.GetList().Where(d => d.EmployeeId == EmpNo).FirstOrDefault();
+           return db_emp.GetList().Where(d => d.EmployeeId == EmpNo && d.IsDel==false).FirstOrDefault();
                
         }
 
@@ -73,7 +73,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in bus)
             {
-                resultList.Add( db_grand.GetList().Where(t => t.Id == item.Stage).FirstOrDefault());
+                resultList.Add( db_grand.GetList().Where(t => t.Id == item.Stage && t.IsDelete==false).FirstOrDefault());
             }
 
             return resultList;
@@ -94,7 +94,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in majors)
             {
-                returnList.Add(db_specialty.GetList().Where(t=>t.Id==item.ID).FirstOrDefault());
+                returnList.Add(db_specialty.GetList().Where(t=>t.Id==item.ID && t.IsDelete==false).FirstOrDefault());
 
             }
 
@@ -117,9 +117,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
            var businesslist = business.GetList().Where(t => t.TeacherID == id).ToList().OrderBy(d=>d.Major).ToList();
 
-            var majorlist = db_specialty.GetList().OrderBy(d=>d.Id).ToList();
+            var majorlist = db_specialty.GetList().Where(d=>d.IsDelete==false).OrderBy(d=>d.Id).ToList();
 
-            var grandlist = db_grand.GetList();
+            var grandlist = db_grand.GetList().Where(d=>d.IsDelete==false);
 
             foreach (var item in majorlist)
             {
@@ -134,7 +134,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                         {
                             Specialty specialty = item;
 
-                            var grand = db_grand.GetList().Where(d => d.Id == item1.Stage).FirstOrDefault();
+                            var grand = db_grand.GetList().Where(d => d.Id == item1.Stage && d.IsDelete==false).FirstOrDefault();
 
                             List<Grand> grandss = new List<Grand>();
                             grandss.Add(grand);
@@ -145,7 +145,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                         }
                         else
                         {
-                            dic[item].Add(db_grand.GetList().Where(d => d.Id == item1.Stage).FirstOrDefault());
+                            dic[item].Add(db_grand.GetList().Where(d => d.Id == item1.Stage &&d.IsDelete==false).FirstOrDefault());
                         }
 
                       
@@ -231,7 +231,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             var haveGrands = baseBusiness.GetList().Where(t => t.TeacherID == teacherId && t.Major == majorId).ToList().OrderBy(t=>t.Stage).ToList();
 
             //获取全部阶段 
-           List<Grand> grands = db_grand.GetList().OrderBy(t=>t.Id).ToList();
+           List<Grand> grands = db_grand.GetList().Where(d=>d.IsDelete==false).OrderBy(t=>t.Id).ToList();
 
             foreach (var item in grands)//1 2 3
             {
@@ -262,7 +262,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             var lsit= baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Major == majorid).ToList();
 
-            var grandlist = db_grand.GetList();
+            var grandlist = db_grand.GetList().Where(d=>d.IsDelete==false);
 
             foreach (var item in grandlist)
             {

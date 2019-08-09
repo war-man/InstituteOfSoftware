@@ -61,7 +61,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         {
 
 
-            var list = db_teacher.employeesInfos();
+            var list = db_teacher.employeesInfos().Where(d=>d.IsDel==false).ToList();
 
 
 
@@ -81,7 +81,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         public ActionResult TeacherData(int limit,int page)
         {
 
-            var list = db_teacher.GetList().Skip((page -1) * limit).Take(limit);
+            var list = db_teacher.GetList().Where(d => d.IsDel == false).ToList().Skip((page -1) * limit).Take(limit);
 
             var returnlist = new List<object>();
 
@@ -89,7 +89,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             //组装返回对象
             foreach (var item in list)
             {
-                var emp = db_emp.GetList().Where(t => t.EmployeeId == item.EmployeeId).FirstOrDefault();
+                var emp = db_emp.GetList().Where(t => t.EmployeeId == item.EmployeeId &&t.IsDel==false).FirstOrDefault();
 
                 //获取专业信息
                 var major = db_teacher_sBearing.GetList().Where(t => t.TeacherID == item.TeacherID).FirstOrDefault();
@@ -139,7 +139,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         public ActionResult AddTeacher(string empid)
         {
-            var emp = db_emp.GetList().Where(d=>d.IsDel==false && d.EmployeeId==empid).ToList().FirstOrDefault();
+            var emp = db_emp.GetList().Where(d=>d.IsDel==false && d.EmployeeId==empid && d.IsDel==false).ToList().FirstOrDefault();
 
             ViewBag.Emp = emp;
 
@@ -194,9 +194,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
 
-            Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == ID).ToList().FirstOrDefault();
+            Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == ID &&t.IsDel==false).ToList().FirstOrDefault();
 
-            var emp = db_emp.GetList().Where(t=>t.EmployeeId==teacher.EmployeeId).FirstOrDefault();
+            var emp = db_emp.GetList().Where(t=>t.EmployeeId==teacher.EmployeeId && t.IsDel==false).FirstOrDefault();
 
 
             //获取专业信息
@@ -218,7 +218,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         public ActionResult GetTeacherByID(int Id)
         {
-           Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == Id).ToList().FirstOrDefault();
+           Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == Id && t.IsDel==false).ToList().FirstOrDefault();
 
             return Json(teacher, JsonRequestBehavior.AllowGet);
 
@@ -235,7 +235,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         {
             AjaxResult result = null;
 
-           var t = db_teacher.GetList().Where(x => x.TeacherID == teacher.TeacherID).FirstOrDefault();
+           var t = db_teacher.GetList().Where(x => x.TeacherID == teacher.TeacherID && x.IsDel==false).FirstOrDefault();
 
             t.AttendClassStyle = teacher.AttendClassStyle.Trim();
             t.ProjectExperience = teacher.ProjectExperience.Trim();
