@@ -213,6 +213,7 @@
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\EmploymentController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
@@ -327,6 +328,9 @@
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\AddorEdit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Employment\AddEnterprise.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Employment\EditEnterprise.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Employment\EnterpriseInfoIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -658,6 +662,7 @@
     <Content Include="Scripts\layui\lay\modules\util.js" />
     <Content Include="Scripts\layui\prefixfree.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\util\easyui-extend.js" />
     <Content Include="Scripts\util\framework-util.js" />
     <Content Include="Scripts\util\upload-time.js" />
@@ -952,7 +957,6 @@
     <Folder Include="Areas\Logistics\Views\Shared\" />
     <Folder Include="Areas\Market\Models\" />
     <Folder Include="Areas\Market\Views\Shared\" />
-    <Folder Include="Areas\Obtainemployment\Controllers\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
