@@ -1,7 +1,7 @@
 ﻿@{
     Layout = null;
 }
-
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Teacher
 <!DOCTYPE html>
 
 <html>
@@ -9,40 +9,57 @@
     <meta name="viewport" content="width=device-width" />
     <title></title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-    <script src="~/Areas/Teaching/Scripts/Teacheroptioner.js"></script>
+
 </head>
 <body>
     <div>
-        <form class="layui-form" action="">
+
+        <h1 style="text-align:center;">修改教员信息</h1>
+
+
+        <hr />
+        <form class="layui-form" lay-filter="editteacher">
+
+
             <div class="layui-form-item">
-                <label class="layui-form-label"><button class="layui-btn layui-btn-sm">选择员工</button></label>
-                <div class="layui-input-block">
-                    <input type="text" name="username" readonly lay-verify="title" autocomplete="off" placeholder="" class="layui-input">
-                    <input type="hidden" id="teacherno"/>
+                <label class="layui-form-label">短输入框</label>
+                <div class="layui-input-inline">
+                    <input type="text" value="@ViewBag.Emp.EmpName" readonly class="layui-input">
+                    <input type="hidden" name="teacherid" value=" @Model.TeacherID" />
                 </div>
             </div>
+
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label">搜索选择框</label>
+                <div class="layui-input-inline">
+                    @Html.DropDownList("major",@ViewBag.Majors as IEnumerable<SelectListItem>)
+                </div>
+            </div>
+
 
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">工作经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="WorkExperience">
+                           @Model.WorkExperience
                     </textarea>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">项目经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="ProjectExperience">
+                           @Model.ProjectExperience
                     </textarea>
                 </div>
             </div>
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">教学经验</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200"  class="layui-textarea" name="TeachingExperience">
+                            @Model.TeachingExperience
                     </textarea>
                 </div>
             </div>
@@ -50,8 +67,8 @@
             <div class="layui-form-item layui-form-text">
                 <label class="layui-form-label">上课风格</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                            欢迎加入信息安全屋! 
+                    <textarea placeholder="请输入内容  长度不超过200" maxlength="200"  class="layui-textarea" name="AttendClassStyle">
+                            @Model.AttendClassStyle
                     </textarea>
                 </div>
             </div>
@@ -59,14 +76,63 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn" id="submit" lay-submit="" lay-filter="editteacher">确定</button>
                 </div>
             </div>
         </form>
     </div>
-
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
-   
+    <script>
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            form.on('submit(editteacher)', function (data) {
+
+
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+                $.post("/Teaching/Teacher/DoEdit", data.field, function (result) {
+
+                    console.log(result)
+
+                    if (result.ErrorCode != 0) {
+
+                        layer.msg('修改成功');
+                    }
+                    else {
+                        //当你在iframe页面关闭自身时
+                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                        parent.layer.close(index); //再执行关闭
+
+                    }
+
+                });
+
+                return false;
+            });
+
+
+            $(document).keydown(function (event) {
+
+                console.log(event.keyCode);
+
+                if (event.keyCode == 13) {
+
+                    $("#submit").click();
+
+                }
+
+            });
+
+        });
+
+
+    </script>
 
 </body>
 </html>

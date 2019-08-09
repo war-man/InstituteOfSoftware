@@ -1,0 +1,64 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ShowTree</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="uldiv">
+        <ul id="ultree"></ul>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                url: "/Market/StudentDataKeep/ShowEmployeInfomation",
+                success: function (Successdata) {
+                    layui.use('tree', function () {
+                        var tree = layui.tree;
+                        //渲染
+                         layui.tree({
+                            elem: '#ultree',
+                            nodes: [{
+                                name: '硅谷大家庭',
+                                id: "-1",
+                                spread: true,
+                                children: Successdata
+                            }],                             
+                            click: function (obj) {
+                                var dataid = obj.id; //得到当前点击的节点数据
+                                $.ajax({
+                                    url: "//",
+                                    success: function () {
+
+                                    }
+                                });
+                            }
+                         });
+                    });
+                },
+                error: function () {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('加载数据有误，请重试', {
+                            icon: 1,
+                            time: 5000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            
+                        });   
+                    });
+                }
+            });
+        });
+        
+    </script>
+</body>
+</html>

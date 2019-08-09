@@ -1,0 +1,180 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@model AddEnterpriseView
+
+
+
+<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/layui/layui.js"></script>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddEnterprise</title>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            width: 200px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <h1 style="text-align:center;height:50px;">添加合作企业信息</h1>
+    <div>
+        <form class="layui-form" action="">
+            <div class="layui-container">
+                <fieldset>
+                    <legend>基础数据</legend>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司名</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入公司名称" }, { "class", "layui-input " },{ "lay-reqtext","公司名称不可为空"} })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司地址</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() {  { "class", "layui-input " },{ "lay-verify", "required" },{ "placeholder", "请输入公司地址" },{ "lay-reqtext","公司名称不可为空"} })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司规模</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="EntScale" value="少于50人" title="少于50人">
+                                <input type="radio" name="EntScale" value="50-100人" title="50-100人">
+                                <input type="radio" name="EntScale" value="150-500人" title="150-500人">
+                                <input type="radio" name="EntScale" value="500-1000人" title="500-1000人">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司性质</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="EntNature" value="国企" title="国企">
+                                <input type="radio" name="EntNature" value="外资（欧美）" title="外资（欧美）">
+                                <input type="radio" name="EntNature" value="外资（非欧美）" title="外资（非欧美）">
+                                <input type="radio" name="EntNature" value="上市公司" title="上市公司">
+                                <input type="radio" name="EntNature" value="合资" title="合资">
+                                <input type="radio" name="EntNature" value="民营公司" title="民营公司">
+                                <input type="radio" name="EntNature" value="外企代表处" title="外企代表处">
+                                <input type="radio" name="EntNature" value="政府机关" title="政府机关">
+                                <input type="radio" name="EntNature" value="事业单位" title="事业单位">
+                                <input type="radio" name="EntNature" value="非营利组织" title="非营利组织">
+                                <input type="radio" name="EntNature" value="创业公司" title="创业公司">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">薪资</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntSalary, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入薪资" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司福利</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntWelfare, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入公司福利" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">联系人姓名</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">联系方式</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            console.log("aaa");
+        });
+
+        //自定义验证规则
+        form.verify({
+            title: function (value) {
+                if (value.length < 5) {
+                    return '标题至少得5个字符啊';
+                }
+            }
+            , pass: [
+                /^[\S]{6,12}$/
+                , '密码必须6到12位，且不能出现空格'
+            ]
+            , content: function (value) {
+                layedit.sync(editIndex);
+            }
+        });
+    </script>
+
+
+</body>
+</html>

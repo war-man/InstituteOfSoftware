@@ -10,11 +10,17 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生状态实体
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
+using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体
+using SiliconValley.InformationSystem.Entity.Entity;//获取树实体
+using SiliconValley.InformationSystem.Business.PositionBusiness;//获取岗位实体
+using SiliconValley.InformationSystem.Entity.ViewEntity;//获取员工岗位部门实体
+
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: Market/StudentDataKeep
+        // GET: /Market/StudentDataKeep/StudentDataKeepIndex
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -22,8 +28,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         StuStateManeger Stustate_Entity = new StuStateManeger();
         //创建一个用于查询数据的上门学生信息来源实体
         StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
+        //创建一个用于查询数据的员工信息实体
+        EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
+        //创建一个用于查询数据的部门信息实体
+        DepartmentManage Department_Entity = new DepartmentManage();
+        //创建一个用于查询岗位信息实体
+        PositionManage Position_Entity = new PositionManage();
         //这是一个数据备案的主页面
-
         public ActionResult StudentDataKeepIndex()
         {
             return View();
@@ -54,7 +65,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
                     StuIsGoto =s.StuIsGoto,
                     StuVisit =s.StuVisit,
-                    EmployeesInfo_Id =1,
+                    EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
                     StuDateTime =s.StuDateTime,
                     StuEntering =s.StuEntering,
                     Reak =s.Reak
@@ -90,7 +101,61 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList();
             return Get_List_stuInfomationtype.Where(s => s.Id == id).FirstOrDefault().Name;
         }
-
+        public string GetEmployeeValue(string id)
+        {
+           return Enplo_Entity.GetList().Where(s => s.EmployeeId == id).FirstOrDefault().EmpName;
+        }
         #endregion
+
+        //这是一个添加数据的页面
+        public ActionResult AddorEdit()
+        {
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList();//.Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
+
+            //获取学生状态来源的所有数据
+            ViewBag.state = Stustate_Entity.GetList();//.Select(s=>new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            
+            return View();
+        }
+
+        //将所有员工显示给用户选择
+        public ActionResult ShowEmployeInfomation()
+        {
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
+            List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),name=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
+            List<Position> list_Position = Position_Entity.GetList();
+            foreach (TreeClass item1 in list_Tree)
+            {
+                List<TreeClass> bigTree = new List<TreeClass>();
+                foreach (Position item2 in list_Position)
+                {
+                    if (item1.id==item2.DeptId.ToString())
+                    {                        
+                        foreach (EmployeesInfo item3 in list_Enploy)
+                        {                                                         
+                            if (item3.PositionId==item2.Pid)
+                            {
+                                TreeClass tcc2 = new TreeClass();
+                                tcc2.id = item3.EmployeeId;
+                                tcc2.name = item3.EmpName;
+                                bigTree.Add(tcc2);
+                            }
+                        }
+                        item1.children = bigTree;
+                    }                     
+                }
+            }
+            return Json(list_Tree,JsonRequestBehavior.AllowGet);
+        }
+
+        //树形图
+        public ActionResult ShowTree()
+        {
+            return View();
+        }
+
+        //查看是否是选中员工
+
     }
 }
