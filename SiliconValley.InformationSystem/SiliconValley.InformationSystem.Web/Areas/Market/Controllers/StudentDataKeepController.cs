@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/ShowEmployeInfomation
+        // GET: /Market/StudentDataKeep/StudentDataKeepIndex
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -123,44 +123,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult ShowEmployeInfomation()
         {
             List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
-            List<Department> list_Depart = Department_Entity.GetList();
+            List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),name=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
             List<Position> list_Position = Position_Entity.GetList();
-            List<TreeClass> list_Tree = new List<TreeClass>();
-            List<TreeClass> bigTree = new List<TreeClass>();
-            foreach (Department item1 in list_Depart)
+            foreach (TreeClass item1 in list_Tree)
             {
-                TreeClass tcc = new TreeClass();
-                tcc.id = item1.DeptId.ToString();
-                tcc.title = item1.DeptName;
+                List<TreeClass> bigTree = new List<TreeClass>();
                 foreach (Position item2 in list_Position)
                 {
-                    if (item1.DeptId==item2.DeptId)
+                    if (item1.id==item2.DeptId.ToString())
                     {                        
                         foreach (EmployeesInfo item3 in list_Enploy)
                         {                                                         
-                            if (item3.PositionId==item2.Pid && item2.DeptId==item1.DeptId)
+                            if (item3.PositionId==item2.Pid)
                             {
                                 TreeClass tcc2 = new TreeClass();
                                 tcc2.id = item3.EmployeeId;
-                                tcc.title = item3.EmpName;
-                                foreach (TreeClass item4 in bigTree)
-                                {
-                                    if (item4.id!=item3.EmployeeId)
-                                    {
-                                       bigTree.Add(tcc2);
-                                    }
-                                }
-                              
-                                tcc.children = bigTree;
+                                tcc2.name = item3.EmpName;
+                                bigTree.Add(tcc2);
                             }
                         }
-                    }
+                        item1.children = bigTree;
+                    }                     
                 }
-                list_Tree.Add(tcc);
             }
+            return Json(list_Tree,JsonRequestBehavior.AllowGet);
+        }
+
+        //树形图
+        public ActionResult ShowTree()
+        {
             return View();
         }
 
-        
+        //查看是否是选中员工
+
     }
 }

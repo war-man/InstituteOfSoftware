@@ -57,6 +57,25 @@
     .butCss2{
         border:0px solid black;
     }
+    .layButCss1 {
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        background-color: #009688;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        border: 0px solid #C9C9C9;
+        background-color: #fff;
+        color: #555;
+        height: 18px;
+        line-height: 18px
+    }
 </style>
 <div>
     <form class="layui-form">
@@ -213,7 +232,7 @@
                         </div>
                     </div>
                     <div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
-                        <button type="button" class="layui-btn layui-btn-big layui-btn-primary butCss2" id="beanMan"> <i class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;"></i>选择</button>
+                        <button type="button" class="layButCss1 butCss2"> <i id="beanMan" class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;"></i>选择</button>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
@@ -241,8 +260,17 @@
 <script src="~/Scripts/layui/layui.js"></script>
 <script>
     $(function () {
-        //弹出员工信息页面
-          
+        $("#beanMan").click(function () {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: '/Market/StudentDataKeep/ShowTree' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    ,area: ['350px', '300px'],
+                     title: '请选择备案人'
+                });
+            });             
+        });
     });
     layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form
@@ -268,10 +296,8 @@
             $("#StuVisit")[0].setAttribute("disabled", "false");//禁用
             $("#StuVisit")[0].value = null;
         });  
-       
+        
     });
-
- 
 
 </script>
 

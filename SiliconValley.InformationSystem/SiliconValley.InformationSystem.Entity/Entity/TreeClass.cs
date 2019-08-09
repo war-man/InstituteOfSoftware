@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
             get;
             set;
         }
-        public string title//节点标题
+        public string name//节点标题
         {
             get;
             set;
@@ -47,6 +47,6 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         {
             get;
             set;
-        }
+        }         
     }
 }
