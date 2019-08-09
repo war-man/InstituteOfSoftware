@@ -225,14 +225,16 @@
                             </select>
                         </div>
                     </div>
-                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">                 
                         <label class="layui-form-label">备案人</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.EmployeesInfo_Id, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "备案人" }, { "class", "layui-input linu" }, { "readonly", "true" } })
+                        <div class="layui-input-block">                            
+                           <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />                                                                
+                      
+                            <input name="e_Name" id="e_Name" lay-verify="required" class="layui-input linu" readonly="readonly" placeholder="备案人"/>
                         </div>
                     </div>
                     <div class="layui-col-xs1 layui-col-sm1 layui-col-md1">
-                        <button type="button" class="layButCss1 butCss2"> <i id="beanMan" class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;"></i>选择</button>
+                        <button type="button" class="layButCss1 butCss2" id="beanMan" > <i class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;"></i>选择</button>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
@@ -259,6 +261,12 @@
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/layui/layui.js"></script>
 <script>
+    //给备案人赋值
+    function BeanValue(Setvalues) {
+        console.log(Setvalues);
+        $("#e_Name")[0].value = Setvalues.name//(Setvalues.name);
+        $("#EmployeesInfo_Id")[0].value =Setvalues.id;
+    }
     $(function () {
         $("#beanMan").click(function () {
             layui.use(['layer'], function () {
@@ -298,7 +306,6 @@
         });  
         
     });
-
 </script>
 
 

@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/StudentDataKeepIndex
+        // GET: /Market/StudentDataKeep/AddorEdit
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -108,14 +108,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
         //这是一个添加数据的页面
-        public ActionResult AddorEdit()
+        public ActionResult AddorEdit(string id)
         {
             //获取信息来源的所有数据
             ViewBag.infomation = StuInfomationType_Entity.GetList();//.Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
 
             //获取学生状态来源的所有数据
-            ViewBag.state = Stustate_Entity.GetList();//.Select(s=>new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
-            
+            ViewBag.state = Stustate_Entity.GetList();//.Select(s=>new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();             
             return View();
         }
 
@@ -156,6 +155,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         //查看是否是选中员工
+        public ActionResult FindEmply(string id)
+        {
+            EmployeesInfo finde= Enplo_Entity.GetList().Where(s => s.EmployeeId==id).FirstOrDefault();
+            if (finde!=null)
+            {                 
+                return Json(finde, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("no", JsonRequestBehavior.AllowGet);
+            }
+             
+        }
 
+        //获取录入人员
+        public ActionResult FindInfoEmply()
+        {
+           List<Department> list_e1= Department_Entity.GetList().Where(d=>d.DeptName=="咨询部" || d.DeptName=="网络部").ToList();
+           
+            return View();
+        }
+
+        //将网络部的员工与咨询部的员工加载出来
+        public ActionResult ShowSeekNet()
+        {
+            return View();
+        }
     }
 }

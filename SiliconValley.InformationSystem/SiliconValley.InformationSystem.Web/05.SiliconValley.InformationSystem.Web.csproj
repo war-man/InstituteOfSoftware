@@ -330,6 +330,7 @@
     <Content Include="Areas\Teaching\Views\Teacher\Operating.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeacherDetailView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowSeekNet.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
