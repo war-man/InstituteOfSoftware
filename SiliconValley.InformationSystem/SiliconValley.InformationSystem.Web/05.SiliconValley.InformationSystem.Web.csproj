@@ -238,6 +238,8 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
+    <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
     <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
@@ -329,6 +331,8 @@
     <Content Include="Areas\Teaching\Views\Teacher\TeacherDetailView.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\Operating.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\EditMajorAndGrandView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\AddTeacher.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

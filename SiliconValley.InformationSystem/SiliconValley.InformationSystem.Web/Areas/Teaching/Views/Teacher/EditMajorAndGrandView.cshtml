@@ -5,16 +5,30 @@
 
 <!DOCTYPE html>
 @using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.ViewEntity
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>EditMajorAndGrandView</title>
 
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+
+        .backcolor {
+        
+                background-color:#67d0aa !important; 
+        }
+
+    </style>
 </head>
 <body>
     <div>
 
+
+        <h1>@ViewBag.TeacherView.Name </h1>
+
+        <input type="hidden"  id="teacherid" value="@ViewBag.TeacherView.TeacherID"/>
         @{
             foreach (var item in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>).Keys)
             {
@@ -22,7 +36,7 @@
                 <div class="layui-collapse" style="margin-top:50px;">
                     <div class="layui-colla-item">
                         <h2 class="layui-colla-title">@item.SpecialtyName</h2>
-                        <div class="layui-colla-content layui-show">
+                        <div style="" class="layui-colla-content layui-show">
 
                             <div style="width:100%;text-align:center;">
                                 <button majorid="@item.Id" class="layui-btn layui-btn-warm" type="button">
@@ -30,19 +44,29 @@
                                 </button>
                             </div>
 
-                            @{
-                                foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
-                                {
 
-                                    <button class="layui-btn" grandid="@item1.Id" type="button" style="margin-top:50px;">
-                                        @item1.GrandName
-                                    </button>
+                            <div id="showGrand" style="height:80px;text-align:center;" >
+
+
+                            </div>
+
+                            <div id="sethaveGrand" style="margin-top:10px;">
+                                @{
+                                    foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
+                                    {
+
+                                        <button class="layui-btn grand" grandid="@item1.Id" type="button" style="margin-top:50px;">
+                                            @item1.GrandName
+                                        </button>
+                                    }
                                 }
-                            }
 
-                            <button  majorid="@item.Id" class="layui-btn" type="button" style="margin-top:50px;">
-                                +
-                            </button>
+                                <button majorid="@item.Id" id="add1" select="false" class="layui-btn" type="button" style="margin-top:50px;">
+                                    +
+                                </button>
+
+                            </div>
+
 
                         </div>
                     </div>
@@ -51,15 +75,12 @@
 
             }
         }
-
-
-
-
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
 
-    <script src="~/Areas/Teaching/Scripts/Teacheroptioner.js"></script>
+
+    <script src="~/Areas/Teaching/Scripts/MajorAndGrand.js"></script>
 
 </body>
 </html>

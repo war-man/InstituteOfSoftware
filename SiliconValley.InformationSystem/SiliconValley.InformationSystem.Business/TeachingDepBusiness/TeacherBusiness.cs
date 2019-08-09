@@ -9,7 +9,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using Base_SysManage;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using EmployeesBusiness;
-   public class TeacherBusiness:BaseBusiness<Teacher>
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
+    using System.Linq.Dynamic;
+
+    public class TeacherBusiness:BaseBusiness<Teacher>
     {
 
         //员工 业务上下文
@@ -106,53 +109,208 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Dictionary<Specialty,Grand> GetMajorInGrandByTeacherID(int id)
+        public Dictionary<Specialty,List<Grand>> GetMajorInGrandByTeacherID(int id)
         {
-            Dictionary<Specialty, Grand> dic = new Dictionary<Specialty, Grand>();
+            Dictionary<Specialty, List<Grand>> dic = new Dictionary<Specialty, List<Grand>>();
 
             BaseBusiness<TecharOnstageBearing> business = new BaseBusiness<TecharOnstageBearing>();
 
-           var businesslist = business.GetList().Where(t => t.TeacherID == id).ToList();
+           var businesslist = business.GetList().Where(t => t.TeacherID == id).ToList().OrderBy(d=>d.Major).ToList();
 
-            var majorlist = db_specialty.GetList();
+            var majorlist = db_specialty.GetList().OrderBy(d=>d.Id).ToList();
 
             var grandlist = db_grand.GetList();
 
-            foreach (var item in businesslist)
+            foreach (var item in majorlist)
             {
 
-                Specialty specialty = new Specialty();
-
-                foreach (var item1 in majorlist)
+                foreach (var item1 in businesslist)
                 {
-                    if (item1.Id == item.Major)
-                    {
-                        specialty = item1;
 
-                        break;
-                       
+                    if (item1.Major == item.Id)
+                    {
+
+                        if (!ContainDic(dic, item))
+                        {
+                            Specialty specialty = item;
+
+                            var grand = db_grand.GetList().Where(d => d.Id == item1.Stage).FirstOrDefault();
+
+                            List<Grand> grandss = new List<Grand>();
+                            grandss.Add(grand);
+
+                            dic.Add(specialty, grandss);
+
+
+                        }
+                        else
+                        {
+                            dic[item].Add(db_grand.GetList().Where(d => d.Id == item1.Stage).FirstOrDefault());
+                        }
+
+                      
+
                     }
+
                 }
 
-                Grand g = new Grand();
-
-                foreach (var item2 in grandlist)
-                {
-                    if (item2.Id == item.Stage)
-                    {
-                        g = item2;
-
-                        break;
-
-                    }
-                }
-
-                dic.Add(specialty,g);
 
             }
 
+        
+
 
             return dic;
+        }
+
+        public bool ContainDic(Dictionary<Specialty, List<Grand>> source, Specialty key)
+        {
+
+            foreach (var item in source.Keys)
+            {
+                if (item == key)
+                {
+
+                    return true;
+                }
+            }
+
+            return false;
+
+        }
+
+        public TeacherDetailView GetTeacherView(int id)
+        {
+            TeacherDetailView teacherResult = new TeacherDetailView();
+
+            //获取教员信息
+            Teacher t = this.GetTeacherByID(id);
+
+            //获取教员基本信息
+            EmployeesInfo emp = this.GetEmpByEmpNo(t.EmployeeId);
+            teacherResult.EmpNo = emp.EmployeeId;
+            teacherResult.Birthday = emp.Birthday;
+            teacherResult.Name = emp.EmpName;
+            teacherResult.Phone = emp.Phone;
+            teacherResult.Sex = emp.Sex;
+            teacherResult.TeacherID = t.TeacherID;
+
+            //获取教员阶段信息
+            teacherResult.Grands = this.GetGrandByTeacherID(t.TeacherID);
+
+            //获取教员专业信息
+            teacherResult.Major = this.GetMajorByTeacherID(t.TeacherID);
+
+            //获取技术信息
+            teacherResult.AttendClassStyle = t.AttendClassStyle;
+            teacherResult.ProjectExperience = t.ProjectExperience;
+            teacherResult.TeachingExperience = t.TeachingExperience;
+            teacherResult.WorkExperience = t.WorkExperience;
+
+            return teacherResult;
+
+        }
+
+
+
+        /// <summary>
+        /// 获取教员的专业没有阶段
+        /// </summary>
+        /// <param name="teacherId"></param>
+        /// <param name="marjorId"></param>
+        /// <returns></returns>
+        public List<Grand> GetNoGrand(int teacherId,int majorId)
+        {
+
+
+            List<Grand> resultList = new List<Grand>();
+
+            Specialty Major = db_specialty.GetSpecialtyByID(majorId);
+            BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
+
+            var haveGrands = baseBusiness.GetList().Where(t => t.TeacherID == teacherId && t.Major == majorId).ToList().OrderBy(t=>t.Stage).ToList();
+
+            //获取全部阶段 
+           List<Grand> grands = db_grand.GetList().OrderBy(t=>t.Id).ToList();
+
+            foreach (var item in grands)//1 2 3
+            {
+                if (!contains(item.Id, haveGrands))
+                {
+                    resultList.Add(item);
+
+                }
+            }
+
+            //var ss = resultList.Distinct() as List<Grand>;
+
+            return resultList;
+        }
+
+        public bool contains(int id, List<TecharOnstageBearing> grands)
+        {
+           return  grands.Where(e=>e.Stage==id).ToList().Count > 0 ;
+
+        }
+
+        public List<Grand> GetHaveGrand(int teacherid,int majorid)
+        {
+
+            List<Grand> grands = new List<Grand>();
+
+            BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
+
+            var lsit= baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Major == majorid).ToList();
+
+            var grandlist = db_grand.GetList();
+
+            foreach (var item in grandlist)
+            {
+                foreach (var item1 in lsit)
+                {
+                    if (item.Id == item1.Stage)
+                    {
+                        grands.Add(item);
+                    }
+                }
+            }
+
+            return grands;
+
+        }
+
+        
+        public List<EmployeesInfo> employeesInfos()
+        {
+
+            BaseBusiness<Department> DepbaseBusiness = new BaseBusiness<Department>();
+
+            var deplist= DepbaseBusiness.GetList().Where(d=>d.IsDel==false).ToList();
+
+           var emps = db_emp.GetList().Where(d => d.IsDel == false).OrderBy(d=>d.PositionId).ToList();
+
+            BaseBusiness<Position> PobaseBusiness = new BaseBusiness<Position>();
+
+            var ind= PobaseBusiness.GetList().Where(d => d.IsDel == false).Where(d=>d.DeptId==2).ToList().OrderBy(d=>d.Pid).ToList();
+
+
+            List<EmployeesInfo> result = new List<EmployeesInfo>();
+
+            foreach (var item in emps)
+            {
+                foreach (var item1 in ind)
+                {
+                    if (item.PositionId == item1.Pid)
+                    {
+                        result.Add(item);
+                    }
+                }
+            }
+
+            return result;
+
+           
+
         }
     }
 }

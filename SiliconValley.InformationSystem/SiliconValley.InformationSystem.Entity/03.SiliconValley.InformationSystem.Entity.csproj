@@ -266,6 +266,7 @@
     <Compile Include="Entity\Undergra.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
   </ItemGroup>
   <ItemGroup>

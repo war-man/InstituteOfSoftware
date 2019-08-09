@@ -14,5 +14,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
    public class SpecialtyBusiness:BaseBusiness<Specialty>
     {
 
+        public Specialty GetSpecialtyByID(int SpecialtyId)
+        {
+
+            return this.GetList().Where(t=>t.Id==SpecialtyId).FirstOrDefault();
+        }
+
     }
 }

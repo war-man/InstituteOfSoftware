@@ -1,0 +1,120 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.Teacher
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddTeacher</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+   
+</head>
+<body>
+    <div class="layui-container">
+
+
+        <fieldset>
+            <legend>基本信息</legend>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">员工编号</label>
+
+                    <div class="layui-input-inline">
+                        <input type="tel" value="@ViewBag.Emp.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">员工姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" value="@ViewBag.Emp.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-inline">
+                        <input type="checkbox" name="sex" value="@ViewBag.Emp.Sex" readonly lay-skin="switch" lay-text="男|女">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">入职时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="inputtime" value="@ViewBag.Emp.ProbationEndTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+
+
+        </fieldset>
+        <form class="layui-form" lay-filter="addteacher">
+            <fieldset >
+
+                <legend>需添加的信息</legend>
+
+                <div class="layui-form-item layui-form-text">
+                    @*@Html.DisplayFor(d => d.AttendClassStyle)*@
+                    <label class="layui-form-label">带班风格</label>
+                    <div class="layui-input-block">
+
+                        @Html.TextAreaFor(d => d.AttendClassStyle, new { @class = "layui-textarea" })
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    @*@Html.DisplayFor(d => d.ProjectExperience)*@
+                    <label class="layui-form-label">经验</label>
+                    <div class="layui-input-block">
+
+                        @Html.TextAreaFor(d => d.ProjectExperience, new { @class = "layui-textarea" })
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    @*@Html.DisplayFor(d => d.TeachingExperience)*@
+                    <label class="layui-form-label">教学经验</label>
+                    <div class="layui-input-block">
+
+                        @Html.TextAreaFor(d => d.TeachingExperience, new { @class = "layui-textarea" })
+                    </div>
+                </div>
+
+                <div class="layui-form-item layui-form-text">
+                    @*@Html.DisplayFor(d => d.WorkExperience)*@
+                    <label class="layui-form-label">工作经验</label>
+                    <div class="layui-input-block">
+
+                        @Html.TextAreaFor(d => d.WorkExperience, new { @class = "layui-textarea" })
+                    </div>
+                </div>
+                <div style="text-align:center;">
+                    <button class="layui-btn" id="submit" lay-submit="" lay-filter="addteacher">提交</button>
+                    <button class="layui-btn" type="button">
+
+                        关闭
+
+                    </button>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+   
+    <script src="~/Scripts/layui/layui.js"></script>
+   
+
+    <script src="~/Areas/Teaching/Scripts/TeacherEdit.js"></script>
+
+
+
+
+
+</body>
+</html>
