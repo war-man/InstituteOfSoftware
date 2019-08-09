@@ -143,7 +143,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                                 TreeClass tcc2 = new TreeClass();
                                 tcc2.id = item3.EmployeeId;
                                 tcc.title = item3.EmpName;
-                                bigTree.Add(tcc2);
+                                foreach (TreeClass item4 in bigTree)
+                                {
+                                    if (item4.id!=item3.EmployeeId)
+                                    {
+                                       bigTree.Add(tcc2);
+                                    }
+                                }
+                              
                                 tcc.children = bigTree;
                             }
                         }
