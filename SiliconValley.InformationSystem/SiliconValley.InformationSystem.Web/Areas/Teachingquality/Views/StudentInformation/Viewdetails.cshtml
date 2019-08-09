@@ -1,0 +1,148 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Viewdetails</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <input type="text" style="display:none;" value="@ViewBag.stuid" id="stuid" />
+    <div class="layui-container">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="StudentNumber" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" i>
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Name" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Sex" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">年龄</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Sex" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学历</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Education" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Telephone" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">QQ号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="qq" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">微信号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="WeChat" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">身份证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="identitydocument" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">性格</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Traine" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">兴趣爱好</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Hobby" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">入校日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="InsitDate" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Reack" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+         
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+
+        var id = $("#stuid").val();
+        console.log(id);
+        $.post("/Teachingquality/StudentInformation/Select?stuid=" + id, function (data) {
+            $("#StudentNumber").val(data.StudentNumber);//学号
+            $("#Name").val(data.Name);//姓名
+            $("#Telephone").val(data.Telephone);//电话
+            $("#Familyaddress").val(data.Familyaddress);//家庭住址
+            $("#WeChat").val(data.WeChat);//微信
+            $("#qq").val(data.qq);//qq
+            $("#BirthDate").val(TimeChange(data.BirthDate));//出生日期
+            $("#identitydocument").val(data.identitydocument);//身份证号码
+            $("#Reack").val(data.Reack)//备注
+            $("#Traine").val(data.Traine)//学员性格
+            $("#Hobby").val(data.Hobby)//兴趣爱好
+            $("#Nation").val(data.Nation)//民族
+            $("#Reack").val(data.Reack)//备注
+            $("#InsitDate").val(data.InsitDate)//入校日期
+
+            StudentNumber	19081997072400005
+            Name	赵六
+            Sex	true
+            identitydocument	431124199707241231
+            Telephone	13204961414
+            qq	1264712988
+            WeChat	1245249261
+            Picture	null
+            State	null
+            Hobby	null
+            Familyaddress	湖南省永州市零陵区
+            BirthDate / Date(931276800000) /
+                Nation	汉
+            Education	高中
+            Traine	null
+            Password	000000
+            StudentPutOnRecord_Id	11
+            IsDelete	null
+            InsitDate / Date(1565280000000) /
+                Reack	null
+          
+        });
+    });
+</script>

@@ -5,6 +5,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -12,6 +15,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     public class StudentInformationController : Controller
     {
         public static int cou = 0;
+        //备案id
+        private static int NameKeysid = 0;
         public class Student { }
 
         private readonly StudentInformationBusiness dbtext;
@@ -101,17 +106,180 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             cou = 0;
            
         }
-        //学员注册
+        //复杂日期截取
+        public string Datetimes(DateTime InsitDate)
+        {
+            string[] dat =InsitDate.ToString().Split('/');
+            string c = Month(int.Parse(dat[1]));
+            string ri = dat[2];
+            string[] ri1 = ri.Split(' ');
+            string riqi = Month(int.Parse(ri1[0]));
+            string data = dat[0] + "/" + c + "/" + riqi;
+            return data;
+        }
+        //学员注册编辑
         public ActionResult Registeredtrainees()
         {
-         //  var x= dbtext.GetList();
-            return View();
+
+            string id = Request.QueryString["id"];
+            if (!string.IsNullOrEmpty(id)&&id!= "undefined")
+            {
+
+                ViewBag.Name = "编辑学员信息";
+                ViewBag.StudentID = id;
+             
+            
+                return View();
+
+            }
+            else
+            {
+               
+                ViewBag.Name = "注册学员信息";
+                ViewBag.StudentID = false;
+                return View();
+            }
+           
         }
         //获取1所有数据
         public ActionResult GetDate()
         {
             var x = dbtext.GetList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = x
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        //学员备案查询赋值信息
+        [HttpGet]
+        public ActionResult DataKey()
+        {
+           ViewBag.Name = Request.QueryString["Name"];
+            StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
+
+            return View();
+        }
+        //备案查询
+        public ActionResult DataKeys()
+        {
+            string Name = Request.QueryString["Name"];
+            StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
+         var x=   dbctext.GetList().Where(a => a.StuName == Name).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = x
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+
+        }
+        //查询赋值
+        public  ActionResult NameKeys(int id)
+        {
+            NameKeysid = id;
+            StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
+          var x=  dbctext.GetList().Where(a => a.Id == id).FirstOrDefault();
             return Json(x, JsonRequestBehavior.AllowGet);
+        }
+        //以身份证查询是否有重复学员
+        public bool Isidentitydocument(string identitydocument)
+        {
+           var x= dbtext.GetList().Where(a => a.identitydocument == identitydocument).ToList();
+            if (x.Count>0)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            
+        }
+        //注册学员编辑学员
+        public ActionResult Enti(StudentInformation studentInformation)
+        {
+           
+            
+              AjaxResult result = null;
+            if (studentInformation.StudentNumber == null)
+            {
+                if (Isidentitydocument(studentInformation.identitydocument))
+                {
+
+                    try
+                    {
+                        studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
+                        studentInformation.InsitDate = Convert.ToDateTime(Date());
+                        studentInformation.Password = "000000";
+                        studentInformation.StudentPutOnRecord_Id = NameKeysid;
+                        dbtext.Insert(studentInformation);
+                        result = new SuccessResult();
+                        result.Msg = "注册成功";
+                        result.Success = true;
+                        result.Data = StudentID(studentInformation.identitydocument);
+                    }
+                    catch (Exception)
+                    {
+                        result = new ErrorResult();
+                        result.ErrorCode = 500;
+                        result.Msg = "服务器错误1";
+
+
+                    }
+                }
+                else
+                {
+                    result = new SuccessResult();
+                    result.Success = false;
+                    result.Msg = "身份证重复";
+                }
+            }
+            else
+            {
+             
+
+                    try
+                    {
+
+                        dbtext.Update(studentInformation);
+                        result = new SuccessResult();
+                        result.Msg = "修改成功";
+                        result.Success = true;
+                        result.Data = StudentID(studentInformation.identitydocument);
+                    }
+                    catch (Exception)
+                    {
+                        result = new ErrorResult();
+                        result.ErrorCode = 500;
+                        result.Msg = "服务器错误";
+
+
+                    }
+                }
+             
+           
+       
+            return Json( result,JsonRequestBehavior.AllowGet);
+        }
+        //按学号查询单个学员
+        public ActionResult Select()
+        {
+            string stuid = Request.QueryString["stuid"];
+           var x= dbtext.GetList().Where(a => a.StudentNumber == stuid).FirstOrDefault();
+            return Json(x, JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult Viewdetails()
+        {
+            string stuid = Request.QueryString["id"];
+            @ViewBag.stuid = stuid;
+            return View();
         }
     }
 }
