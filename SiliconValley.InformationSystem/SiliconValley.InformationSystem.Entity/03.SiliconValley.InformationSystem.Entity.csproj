@@ -172,7 +172,6 @@
     <Compile Include="Entity\InterviewRecordsof.cs" />
     <Compile Include="Entity\InterviewStudents.cs" />
     <Compile Include="Entity\IsGoodOrBad.cs" />
-    <Compile Include="Entity\JobResponsibilities.cs" />
     <Compile Include="Entity\JobTransferApply.cs" />
     <Compile Include="Entity\LateEntryandExit.cs" />
     <Compile Include="Entity\LatesubmieCords.cs" />
@@ -215,7 +214,6 @@
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\RemovalRecords.cs" />
     <Compile Include="Entity\ReplenishmentRecord.cs" />
-    <Compile Include="Entity\Requirements.cs" />
     <Compile Include="Entity\Restudy.cs" />
     <Compile Include="Entity\RoomPerformance.cs" />
     <Compile Include="Entity\Roomtype.cs" />

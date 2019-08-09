@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> AreaName { get; set; }
+        public string AreaName { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public string Remark { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
