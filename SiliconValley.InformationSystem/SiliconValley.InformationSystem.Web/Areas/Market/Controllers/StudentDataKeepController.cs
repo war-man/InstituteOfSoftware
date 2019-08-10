@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/AddorEdit
+        // GET: /Market/StudentDataKeep/ShowSeekNet
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -48,7 +48,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 int SunLimit = s_Entity.GetList().Count;//总行数
                 int SunPage = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(SunLimit / limit)));//总页数
-                IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable();              
+                IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s=>s.Id);              
                 List<StudentPutOnRecord> PageData= s_Entity.GetPagination<StudentPutOnRecord>(stu_IQueryable, page,limit,"Id","desc",ref SunLimit, ref SunPage); //分页
                 var Get_List_studentPutOnRecord = PageData.Select(s => new {
                     Id = s.Id,
@@ -177,10 +177,65 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
 
+        //加载网络部跟咨询部员工供用户选择
+        public List<EmployeesInfo> loadNetSeekData1()
+        {
+            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "咨询部").ToList();
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
+            List<Position> list_Position = Position_Entity.GetList();
+            List<EmployeesInfo> ee = new List<EmployeesInfo>();
+            foreach (Department item1 in d_list)
+            {
+                List<TreeClass> bigTree = new List<TreeClass>();
+                foreach (Position item2 in list_Position)
+                {
+                    if (item1.DeptId == item2.DeptId)
+                    {
+                        foreach (EmployeesInfo item3 in list_Enploy)
+                        {
+                            if (item3.PositionId == item2.Pid)
+                            {
+                                ee.Add(item3);
+                            }
+                        }                        
+                    }
+                }
+            }
+            return ee;
+        }
+        public List<EmployeesInfo> loadNetSeekData2()
+        {
+            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "网络部").ToList();
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
+            List<Position> list_Position = Position_Entity.GetList();
+            List<EmployeesInfo> ee = new List<EmployeesInfo>();
+            foreach (Department item1 in d_list)
+            {
+                List<TreeClass> bigTree = new List<TreeClass>();
+                foreach (Position item2 in list_Position)
+                {
+                    if (item1.DeptId == item2.DeptId)
+                    {
+                        foreach (EmployeesInfo item3 in list_Enploy)
+                        {
+                            if (item3.PositionId == item2.Pid)
+                            {
+                                ee.Add(item3);
+                            }
+                        }
+                    }
+                }
+            }
+            return ee;
+        }
         //将网络部的员工与咨询部的员工加载出来
         public ActionResult ShowSeekNet()
         {
-            return View();
+            List<EmployeesInfo> ee1 = loadNetSeekData1();
+            List<EmployeesInfo> ee2 = loadNetSeekData2();
+            ViewBag.ee1 = ee1;
+            ViewBag.ee2 = ee2;
+            return View(ee1);
         }
     }
 }
