@@ -12,6 +12,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.DepartmentBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using System.Net;
+    using SiliconValley.InformationSystem.Util;
+    using System.ComponentModel.DataAnnotations;
 
     public class EmployeesInfoController : Controller
     {
@@ -24,7 +26,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         int num;
 
         //获取员工信息数据
-        public ActionResult GetData(int page,int limit) {
+        public ActionResult GetData(int page,int limit){
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var list = empinfo.GetList();
                 var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
@@ -131,17 +133,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         [HttpPost]
         public ActionResult AddEmpInfo(EmployeesInfo emp) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
             try
             {
+                emp.EmployeeId = EmpId();
+                emp.Age =int.Parse(GetAge((DateTime)emp.Birthdate,DateTime.Now));
                 empinfo.Insert(emp);
-
+                AjaxResultxx= empinfo.Success();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                AjaxResultxx = empinfo.Success(ex.Message);
             }
-            return View();
+          
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -205,6 +210,62 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 mingci = "0000" + count;
             string EmpidResult = n + y + d + mingci;
             return EmpidResult;
+        }
+
+
+        //计算员工年龄
+        public static string GetAge(DateTime dtBirthday, DateTime dtNow)
+        {
+            string strAge = string.Empty; // 年龄的字符串表示
+            int intYear = 0; // 岁
+            int intMonth = 0; // 月
+            int intDay = 0; // 天
+
+            // 如果没有设定出生日期, 返回空
+            if (dtBirthday==null)
+            {
+                return string.Empty;
+            }
+
+            // 计算天数
+            intDay = dtNow.Day - dtBirthday.Day;
+            if (intDay < 0)
+            {
+                dtNow = dtNow.AddMonths(-1);
+                intDay += DateTime.DaysInMonth(dtNow.Year, dtNow.Month);
+            }
+
+            // 计算月数
+            intMonth = dtNow.Month - dtBirthday.Month;
+            if (intMonth < 0)
+            {
+                intMonth += 12;
+                dtNow = dtNow.AddYears(-1);
+            }
+
+            // 计算年数
+            intYear = dtNow.Year - dtBirthday.Year;
+
+            // 格式化年龄输出
+            if (intYear >= 1) // 年份输出
+            {
+                strAge = intYear.ToString() + "岁";
+            }
+
+            if (intMonth > 0 && intYear <= 5) // 五岁以下可以输出月数
+            {
+                strAge += intMonth.ToString() + "月";
+            }
+
+            if (intDay >= 0 && intYear < 1) // 一岁以下可以输出天数
+            {
+                if (strAge.Length == 0 || intDay > 0)
+                {
+                    strAge += intDay.ToString() + "日";
+                }
+            }
+
+            return strAge;
         }
     }
 }
