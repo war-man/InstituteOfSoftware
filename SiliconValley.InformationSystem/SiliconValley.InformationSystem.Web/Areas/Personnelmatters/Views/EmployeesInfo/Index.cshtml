@@ -7,81 +7,80 @@
 <h2>Index</h2>
 
 
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="AddEmps">添加员工</button>
+        <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>
+    </div>
+</script>
 
-<table id="emptab" class="layui-hide" lay-filter="test"></table>
+@*操作栏*@
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<table id="emptab" lay-filter="emptest"></table>
 
 @section script{
-    @*头部工具栏*@
-    <script type="text/html" id="toolbarDemo">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="AddEmps">添加员工</button>
-        </div>
-    </script>
-
-    @*操作栏*@
-    <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
-
-
 
     <script>
-        layui.use(['table','layer'], function () {
+        layui.use(['table', 'layer'], function () {
             var table = layui.table;
             var layer = layui.layer;
             table.render({
                 elem: '#emptab'
-                , height: 280
                 , url: '/Personnelmatters/EmployeesInfo/GetData'
                 , id: "myEmpInfo"
                 , toolbar: '#toolbarDemo'
                 , limits: [1, 3, 6, 9, 12, 15, 18]
                 , limit: 3
                 , cols: [[
-                    , { field: 'EmployeeId', title: '员工编号', width: 100, fixed: 'left' }
-                    , { field: 'DDAppId', title: '钉钉工号', sort: true, fixed: 'center' }
-                    , { field: 'EmpName', title: '姓名', sort: true, fixed: 'center' }
-                    , { field: 'Depart', title: '所属部门', sort: true, fixed: 'center' }
-                    , { field: 'Position', title: '所属岗位', sort: true, fixed: 'center' }
-                    , { field: 'Sex', title: '性别', sort: true, fixed: 'center', templet: '#mysex' }
-                    , { field: 'Age', title: '年龄', sort: true, fixed: 'center' }
-                    , { field: 'Nation', title: '民族', sort: true, fixed: 'center' }
-                    , { field: 'Phone', title: '电话号码', sort: true, fixed: 'center' }
-                    , { field: 'IdCardNum', title: '身份证号码', sort: true, fixed: 'center' }
-                    , { field: 'ContractStartTime', title: '合同起始时间', sort: true, fixed: 'center' }
-                    , { field: 'ContractEndTime', title: '合同终止时间', sort: true, fixed: 'center' }
-                    , { field: 'EntryTime', title: '入职时间', sort: true, fixed: 'center' }
-                    , { field: 'Birthdate', title: '出生日期', sort: true, fixed: 'center' }
-                    , { field: 'Birthday', title: '生日', sort: true, fixed: 'center' }
-                    , { field: 'PositiveDate', title: '转正日期', sort: true, fixed: 'center' }
-                    , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, fixed: 'center' }
-                    , { field: 'DomicileAddress', title: '户籍地址', sort: true, fixed: 'center' }
-                    , { field: 'Address', title: '现居地址', sort: true, fixed: 'center' }
-                    , { field: 'Education', title: '学历', sort: true, fixed: 'center' }
-                    , { field: 'MaritalStatus', title: '婚姻状态', sort: true, fixed: 'center' }
-                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, fixed: 'center' }
-                    , { field: 'PoliticsStatus', title: '政治面貌', sort: true, fixed: 'center' }
-                    , { field: 'WorkExperience', title: '工作经验', sort: true, fixed: 'center' }
-                    , { field: 'ProbationSalary', title: '试用期工资', sort: true, fixed: 'center' }
-                    , { field: 'Salary', title: '转给工资', sort: true, fixed: 'center' }
-                    , { field: 'WorkingState', title: '在职状态', sort: true, fixed: 'center' }
-                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, fixed: 'center' }
-                    , { field: 'BCNum', title: '银行卡号', sort: true, fixed: 'center' }
-                    , { field: 'Material', title: '材料', sort: true, fixed: 'center' }
-                    , { field: 'Remark', title: '备注', sort: true, fixed: 'center' }
+                    , { field: 'EmployeeId', title: '员工编号', width: 126 }
+                    , { field: 'DDAppId', title: '钉钉工号', width: 108, sort: true }
+                    , { field: 'EmpName', title: '姓名', width: 110, sort: true }
+                    , { field: 'Depart', title: '所属部门', width: 110, sort: true }
+                    , { field: 'Position', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'Sex', title: '性别', sort: true, width: 90, templet: '#mysex' }
+                    , { field: 'Age', title: '年龄', sort: true, width: 90 }
+                    , { field: 'Nation', title: '民族', sort: true, width: 100 }
+                    , { field: 'Phone', title: '电话号码', sort: true, width: 110 }
+                    , { field: 'IdCardNum', title: '身份证号码', sort: true, width: 120 }
+                    , { field: 'EntryTime', title: '入职时间', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.EntryTime) } }
+                    , { field: 'ContractStartTime', title: '合同起始时间', templet: function (d) { return changeDateTimeFormat(d.ContractStartTime) } }
+                    , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 125, templet: function (d) { return changeDateTimeFormat(d.ContractEndTime) } }
+                    , { field: 'Birthdate', title: '出生日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.Birthdate) } }
+                    , { field: 'Birthday', title: '生日', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '转正日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.PositiveDate) } }
+                    , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 120 }
+                    , { field: 'DomicileAddress', title: '户籍地址', sort: true, width: 110 }
+                    , { field: 'Address', title: '现居地址', sort: true, width: 110 }
+                    , { field: 'Education', title: '学历', sort: true, width: 110 }
+                    , { field: 'MaritalStatus', title: '婚姻状态', sort: true, width: 110, templet:'#myMaritalStatus' }
+                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.IdCardIndate) } }
+                    , { field: 'PoliticsStatus', title: '政治面貌', sort: true, width: 110 }
+                    , { field: 'WorkExperience', title: '工作经验', sort: true, width: 110 }
+                    , { field: 'ProbationSalary', title: '试用期工资', sort: true, width: 110 }
+                    , { field: 'Salary', title: '转给工资', sort: true, width: 110 }
+                    , { field: 'WorkingState', title: '在职状态', sort: true, width: 110, templet: '#myworkstate' }
+                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 120 }
+                    , { field: 'BCNum', title: '银行卡号', sort: true, width: 110 }
+                    , { field: 'Material', title: '材料', sort: true, width: 110 }
+                    , { field: 'Remark', title: '备注', sort: true, width: 110 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
                 ]]
                 , page: true
             });
 
             //头工具栏事件
-            table.on('toolbar(test)', function (obj) {
+            table.on('toolbar(emptest)', function (obj) {
                 //var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'AddEmps':
-                  
                         AddEmployee();
-                      
+                        break;
+                    case 'DeptAndPositionOperation':
+                        DeptAndPositionOperation();
                         break;
                 };
             });
@@ -92,7 +91,7 @@
                 //console.log(obj)
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
-                        $.get("/EmployeesInfo/DelBill/" + data.id, function (da) {
+                        $.get("/Personnelmatters/EmployeesInfo/GetData" + data.id, function (da) {
                             if (da > 0) {
                                 layer.alert("删除成功!", { icon: 1 }, function (index) {
                                     layui.use(['table'], function () {
@@ -109,7 +108,7 @@
                     });
                 }
                 else if (obj.event === 'edit') {
-                    addOrUpdate(data.id);
+                    UpdateEmp(data.id);
                 }
             });
         });
@@ -121,15 +120,57 @@
 
                 layer.open({
                     type: 2
-                    , area: ["1400px", "800px"]
+                    , area: ["1200px", "800px"]
                     , title: "添加员工"
                     , content: '/Personnelmatters/EmployeesInfo/AddEmp'
+                    , anim: 1
                 });
 
             })
+
         }
 
+        //部门和岗位的管理
+        function DeptAndPositionOperation() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+
+                layer.open({
+                    type: 2
+                    , area: ["1100px", "600px"]
+                    , title: "部门及岗位管理"
+                    , content: '/Personnelmatters/EmployeesInfo/DeptOperation'
+                    , anim: 2
+                });
+
+            })
+
+        }
+
+
+        //格式化时间
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            }
+        }
     </script>
+
+    @*性别*@
     <script type="text/html" id="mysex">
         {{# if(d.Sex==0){ }}
         {{ d.Sex="女" }}
@@ -137,5 +178,20 @@
         {{ d.Sex="男" }}
         {{# } }}
     </script>
-
+    @*工作状态*@
+    <script type="text/html" id="myworkstate">
+        {{# if(d.WorkingState==true){ }}
+        {{ d.WorkingState="在职" }}
+        {{# }else{ }}
+        {{ d.WorkingState="离职" }}
+        {{# } }}
+    </script>
+    @*婚姻状态*@
+    <script type="text/html" id="myMaritalStatus">
+        {{# if(d.MaritalStatus==false){ }}
+        {{ d.MaritalStatus="未婚" }}
+        {{# }else{ }}
+        {{ d.MaritalStatus="已婚" }}
+        {{# } }}
+    </script>
 }
