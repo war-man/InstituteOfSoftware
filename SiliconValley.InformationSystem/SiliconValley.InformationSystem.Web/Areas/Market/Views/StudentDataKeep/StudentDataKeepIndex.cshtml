@@ -45,6 +45,38 @@
             var result = year + '-' + month + '-' + day;
             return result;
         }
+        //table重载的方法
+        function LoadTable() {
+            layui.use('table', function () {
+               var table = layui.table; 
+                table.reload('tabletest1', {});
+            });
+             
+        }
+
+        $(function () {
+            //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面                      
+            $(document).keydown(function (event) {
+                //console.log(event.ctrlKey);//是否是Ctrl键
+                //console.log(event.keyCode);
+                //console.log(event);
+                if (event.keyCode === 90 && event.ctrlKey === true) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.open({
+                            type: 2,
+                            content: '/Market/StudentDataKeep/AddorEdit/id0' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                            , area: ['1000px', '650px'],
+                            title: '添加备案信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                    });
+                    }
+                });            
+               
+        });
         layui.use('table', function () {
             var table = layui.table;
             table.render({
@@ -69,7 +101,7 @@
                     , { field: 'StuStatus_Id', title: '学生状态' }
                     , {
                         field: 'StuIsGoto', title: '是否上门', templet: function (res) {
-                            if (res.StuIsGoto == false) {
+                            if (res.StuIsGoto == false || res.StuIsGoto==null ) {
                                 return "未上门";
                             } else {
                                 return "已上门";

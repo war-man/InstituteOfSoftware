@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/ShowSeekNet
+        // GET: /Market/StudentDataKeep/FindStudent
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -84,7 +84,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {                            
                 //将错误填写到日志中     
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
-                return Json(Error("加载数据有误，请联系开发人员:唐敏--电话:13204961361"),JsonRequestBehavior.AllowGet);
+                return Json(Error("加载数据有误"),JsonRequestBehavior.AllowGet);
             }                            
         }                                
                                          
@@ -93,13 +93,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public string GetStuStatuValue(int? id)
         {
             List<StuStatus> Get_List_stustate = Stustate_Entity.GetList();//获取上门学生状态所有数据
-            return Get_List_stustate.Where(s => s.Id == id).FirstOrDefault().StatusName;
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                return Get_List_stustate.Where(s => s.Id == id).FirstOrDefault().StatusName;
+            }
+ 
+            return "未填写";
         }
 
         public string GetStuInfomationTypeValue(int? id)
         {
             List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList();
-            return Get_List_stuInfomationtype.Where(s => s.Id == id).FirstOrDefault().Name;
+           
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                return Get_List_stuInfomationtype.Where(s => s.Id == id).FirstOrDefault().Name;
+            }
+            return "未填写";
         }
         public string GetEmployeeValue(string id)
         {
@@ -111,10 +121,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult AddorEdit(string id)
         {
             //获取信息来源的所有数据
-            ViewBag.infomation = StuInfomationType_Entity.GetList();//.Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
 
             //获取学生状态来源的所有数据
-            ViewBag.state = Stustate_Entity.GetList();//.Select(s=>new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();             
+            ViewBag.state = Stustate_Entity.GetList().Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();             
             return View();
         }
 
@@ -236,6 +246,50 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.ee1 = ee1;
             ViewBag.ee2 = ee2;
             return View(ee1);
+        }
+
+        //添加备案数据
+        public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
+        {
+             
+            try
+            {
+               StudentPutOnRecord er= s_Entity.GetList().Where(s => s.StuName == news.StuName || s.StuPhone == news.StuPhone).FirstOrDefault();
+                if (er==null)
+                {
+                    news.StuDateTime = DateTime.Now;
+                    news.IsDelete = false;
+                    s_Entity.Insert(news);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("error", JsonRequestBehavior.AllowGet);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中     
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
+            }
+            
+            
+        }
+
+        //查看是否有重复的学员信息名称
+        public ActionResult FindStudent(string id)
+        {
+           List<StudentPutOnRecord> fins= s_Entity.GetList().Where(s=>s.StuName==id).ToList();
+            if (fins!=null)
+            {
+                return Json(fins,JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("ok");
+            }          
         }
     }
 }
