@@ -327,6 +327,7 @@
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddEmp.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptOperation.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

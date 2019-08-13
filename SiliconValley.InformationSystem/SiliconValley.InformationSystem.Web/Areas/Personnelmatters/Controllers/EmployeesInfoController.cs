@@ -22,8 +22,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
-        //给员工编号最后几位常数的生成定义一个全局变量
-        int num;
 
         //获取员工信息数据
         public ActionResult GetData(int page,int limit){
@@ -101,7 +99,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
 
-        //员工添加的所属部门下拉框绑定
+        //添加部门
+        [HttpGet]
+        public ActionResult DeptOperation()
+        {
+            return View();
+        }
+
+        //部门信息获取
         public ActionResult BindDeptSelect() {
             DepartmentManage deptmanage = new DepartmentManage();
             var deptlist = deptmanage.GetList();//获取公司部门数据集
@@ -137,13 +142,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 emp.EmployeeId = EmpId();
-                emp.Age =int.Parse(GetAge((DateTime)emp.Birthdate,DateTime.Now));
+                if (emp.Birthdate!=null) {
+                emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate,DateTime.Now));
+                }
+                emp.IsDel = false;
+                emp.WorkingState =true;
                 empinfo.Insert(emp);
                 AjaxResultxx= empinfo.Success();
             }
             catch (Exception ex)
             {
-                AjaxResultxx = empinfo.Success(ex.Message);
+                AjaxResultxx = empinfo.Error(ex.Message);
             }
           
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
@@ -196,18 +205,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //生成员工编号
         public string EmpId()
         {
-            num++;
+            
             string mingci = string.Empty;
-            DateTime date = Convert.ToDateTime(Date());
+            //DateTime date = Convert.ToDateTime(Date());
             //string sfz = IDnumber.Substring(6, 8);
+            DateTime date = DateTime.Now;
             string n = date.Year.ToString();//获取年份
             string y = MonthAndDay(Convert.ToInt32(date.Month)).ToString();//获取月份
-            string d = MonthAndDay(Convert.ToInt32(date.Date)).ToString();//互殴年份
+            string d = MonthAndDay(Convert.ToInt32(date.Day)).ToString();//获取日期
 
             // string count = Count().ToString();
-            string count = num.ToString();
-            if (count.Length < 2)
-                mingci = "0000" + count;
+           // string count = num.ToString();
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            string laststr = empinfo.GetList().LastOrDefault().EmployeeId;
+            string startfournum= laststr.Substring(0, 4);
+            string endfournum= laststr.Substring(laststr.Length - 4, 4);
+
+            if (int.Parse(n) > int.Parse(startfournum))
+            {
+                mingci = "0001";
+            }
+            else {
+                string newstr = (int.Parse(endfournum) + 1).ToString();
+                if (newstr.Length < 10)
+                {
+                    mingci = "000" + newstr;
+                }
+                else if (newstr.Length >= 10 && newstr.Length < 100)
+                {
+                    mingci = "00" + newstr;
+                }
+                else if (newstr.Length >= 100 && newstr.Length < 1000)
+                {
+                    mingci = "0" + newstr;
+                }
+                else {
+                    mingci= newstr;
+                }
+            }
+ 
             string EmpidResult = n + y + d + mingci;
             return EmpidResult;
         }
@@ -249,23 +285,47 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             // 格式化年龄输出
             if (intYear >= 1) // 年份输出
             {
-                strAge = intYear.ToString() + "岁";
+                strAge = intYear.ToString();
             }
 
-            if (intMonth > 0 && intYear <= 5) // 五岁以下可以输出月数
-            {
-                strAge += intMonth.ToString() + "月";
-            }
+            //if (intMonth > 0 && intYear <= 5) // 五岁以下可以输出月数
+            //{
+            //    strAge += intMonth.ToString() + "月";
+            //}
 
-            if (intDay >= 0 && intYear < 1) // 一岁以下可以输出天数
-            {
-                if (strAge.Length == 0 || intDay > 0)
-                {
-                    strAge += intDay.ToString() + "日";
-                }
-            }
+            //if (intDay >= 0 && intYear < 1) // 一岁以下可以输出天数
+            //{
+            //    if (strAge.Length == 0 || intDay > 0)
+            //    {
+            //        strAge += intDay.ToString() + "日";
+            //    }
+            //}
 
             return strAge;
         }
+
+
+
+        //岗位信息获取
+        public ActionResult GetPositions() {
+            PositionManage deptmanage = new PositionManage();
+            var deptlist = deptmanage.GetList();//获取公司部门数据集
+            var newlist=from p in deptlist 
+                        select new {
+                            p.Pid,
+                            deptname=GetDept(p.Pid).DeptName,
+                            p.PositionName,
+                            p.IsDel
+                        };
+            var newstr = new
+            {
+                code = 0,
+                msg = "",
+                count = deptlist.Count(),
+                data = newlist
+            };
+            return Json(newstr, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
