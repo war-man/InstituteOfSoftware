@@ -57,7 +57,7 @@
                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
                                 <label class="layui-form-label">学号</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" name="StudentNumber" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                                    <input type="text" name="StudentNumber"  readonly="readonly"  style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
                                  
 
                                 </div>
@@ -199,7 +199,7 @@
         </div>
 
         <script>
-        
+           
             if ($("#StudentID").val() != false) {
                 $("#liden").css("display", "none");
                 $("#Name").attr("readonly", "readonly");
@@ -233,6 +233,7 @@
                 $("#nba").css("display", "none");
             }
             layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+             
                 var form = layui.form
                     , layer = layui.layer
                     , layedit = layui.layedit
@@ -240,6 +241,7 @@
                 laydate.render({
                     elem: '#BirthDate'
                 });
+                //搜索名字
                 $("#liden").click(function () {
                     var name = $("#Name").val();
                     if (name == "") {
@@ -253,8 +255,6 @@
                             btnAlign: 'c'
                             , area: ['400px', '200px']
                             , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
-
-
                         });
                     }
 
@@ -270,6 +270,19 @@
                     }
                 });
 
+                //正在执行中
+                function showLoad() {
+
+                    return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+
+                }
+                //关闭执行中的窗体
+                function closeLoad(index) {
+                    layer.close(index);
+
+                }
+              
+                  
                 //监听提交
                 form.on('submit(demo1)', function (data) {
                     //layer.alert(JSON.stringify(data.field), {
@@ -278,44 +291,20 @@
                     //return false;
                     var id = $("#textid").val();
                     if ($("#StudentID").val() != false) {
-                        console.log(data.field);
-                        $.post("/Teachingquality/StudentInformation/Enti", data.field, function (data) {
-                            if (data.Success == true) {
-                                layer.open({
-                                    type: 1
-                                    , title: false //不显示标题栏
-                                    , closeBtn: false
-                                    , area: '300px;'
-                                    , shade: 0.8
-                                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                                    , btn: [ '确认']
-                                    , btnAlign: 'c'
-                                    , moveType: 1 //拖拽模式，0或者1
-                                    , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改成功！！！</div>'
-
-                                    , success: function (layero) {
-                                        
-                                        var btn = layero.find('.layui-layer-btn');
-                                     
-                                        btn.find('.layui-layer-btn0').click(function () {
-                                            var index = parent.layer.getFrameIndex(window.name);
-                                            parent.layer.close(index);
-                                        });
-                                    }
-
-                                });
-                            } else {
-                                layer.msg(data.Msg, {
-                                    time: 5000, //20s后自动关闭
-
-                                    btn: ['确定']
-                                });
-                            }
-                        });
-                    } else {
-                        if (id != "") {
-                            $("#Name").removeAttr("readonly");
-                            $.post("/Teachingquality/StudentInformation/Enti", data.field, function (data) {
+                     
+                        $.ajax({
+                            url: '/Teachingquality/StudentInformation/Enti',
+                            type: 'POST',
+                            async: true,
+                            cache: false,
+                            timeout: 2000,
+                            data: data.field,
+                            timeout: 1000,
+                            beforeSend: function () {//执行中
+                                i = showLoad();
+                            },
+                            success: function (data) {//执行成功
+                                closeLoad(i);
                                 if (data.Success == true) {
                                     layer.open({
                                         type: 1
@@ -324,28 +313,16 @@
                                         , area: '300px;'
                                         , shade: 0.8
                                         , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                                        , btn: ['继续注册', '返回上一层']
+                                        , btn: ['确认']
                                         , btnAlign: 'c'
                                         , moveType: 1 //拖拽模式，0或者1
-                                        , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册成功<br><br>学号为：' + data.Data + '<br><br>初始密码为：000000<br><br>请牢记学号及密码！！！</div>'
+                                        , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改成功！！！</div>'
 
                                         , success: function (layero) {
-                                            $("#textid").val("");
+
                                             var btn = layero.find('.layui-layer-btn');
+
                                             btn.find('.layui-layer-btn0').click(function () {
-                                                $("#Name").val("");//姓名
-                                                $("#Telephone").val("");//电话
-                                                $("#Reack").val("");//备注
-                                                $("#identitydocument").val("");//身份证
-                                                $("#Nation").val("");//民族
-                                                $("#Traine").val("");//学员性格
-                                                $("#Hobby").val("");//兴趣爱好
-                                                $("#Familyaddress").val("");//家庭住址
-                                                $("#WeChat").val("");//微信
-                                                $("#qq").val("");//qq
-                                                $("#BirthDate").val("");//出生日期
-                                            });
-                                            btn.find('.layui-layer-btn1').click(function () {
                                                 var index = parent.layer.getFrameIndex(window.name);
                                                 parent.layer.close(index);
                                             });
@@ -359,6 +336,100 @@
                                         btn: ['确定']
                                     });
                                 }
+                            }
+                            , error: function (xmlhttprequest, textstatus, message) {
+                                closeLoad(i);
+                                layer.msg("您的网络出现问题，请稍后再试！！！", {
+                                    time: 5000, //20s后自动关闭
+
+                                    btn: ['确定']
+                                });
+                            }
+                        });
+                     
+                    } else {
+                        if (id != "") {
+                            $("#Name").removeAttr("readonly");
+                          
+                            var i;
+                            $.ajax({
+                                url: '/Teachingquality/StudentInformation/Enti',
+                                type: 'POST',
+                                async: true,
+                                cache: false,
+                                timeout: 2000,
+                                data: data.field,
+                                beforeSend: function () {
+                                    i = showLoad();
+                                },
+                                success: function (data) {
+                                  //  closeLoad(i);
+                                    //    closeLoad(i);
+                                    if (data.Success == true) {
+                                        closeLoad(i);
+                                            layer.open({
+                                                type: 1
+                                                , title: false //不显示标题栏
+                                                , closeBtn: false
+                                                , area: '300px;'
+                                                , shade: 0.8
+                                                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                                , btn: ['继续注册', '返回上一层']
+                                                , btnAlign: 'c'
+                                                , moveType: 1 //拖拽模式，0或者1
+                                                , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册成功<br><br>学号为：' + data.Data + '<br><br>初始密码为：000000<br><br>请牢记学号及密码！！！</div>'
+
+                                                , success: function (layero) {
+                                                    $("#textid").val("");
+                                                    var btn = layero.find('.layui-layer-btn');
+                                                    btn.find('.layui-layer-btn0').click(function () {
+                                                        $("#Name").val("");//姓名
+                                                        $("#Telephone").val("");//电话
+                                                        $("#Reack").val("");//备注
+                                                        $("#identitydocument").val("");//身份证
+                                                        $("#Nation").val("");//民族
+                                                        $("#Traine").val("");//学员性格
+                                                        $("#Hobby").val("");//兴趣爱好
+                                                        $("#Familyaddress").val("");//家庭住址
+                                                        $("#WeChat").val("");//微信
+                                                        $("#qq").val("");//qq
+                                                        $("#BirthDate").val("");//出生日期
+                                                    });
+                                                    btn.find('.layui-layer-btn1').click(function () {
+                                                        var index = parent.layer.getFrameIndex(window.name);
+                                                        parent.layer.close(index);
+                                                    });
+                                                }
+
+                                            });
+                                    } else {
+                                        closeLoad(i);
+                                            layer.msg(data.Msg, {
+                                                time: 5000, //20s后自动关闭
+
+                                                btn: ['确定']
+                                            });
+                                        }
+                                   
+                                   
+
+                                }
+                                , error: function (xmlhttprequest, textstatus, message) {
+                                    closeLoad(i);
+                                    layer.msg("您的网络出现问题，请稍后再试！！！", {
+                                        time: 5000, //20s后自动关闭
+
+                                        btn: ['确定']
+                                    });
+                                }
+                            })
+
+                        } else {
+                           // layer.alert('请', { icon: 0 });
+                            layer.msg("请点击小图标进行注册！！！", {
+                                time: 5000, //20s后自动关闭
+
+                                btn: ['确定']
                             });
                         }
                     }

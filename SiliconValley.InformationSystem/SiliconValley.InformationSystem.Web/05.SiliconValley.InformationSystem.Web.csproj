@@ -216,6 +216,7 @@
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
@@ -325,6 +326,9 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Viewdetails.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Password.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\AddClassSchedule.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

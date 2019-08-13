@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+@section script{
+    @*头部工具栏*@
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>开设班级</button>
+         
+
+        </div>
+    </script>
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="select">详细</a>
+
+    </script>
+    <script>
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + (parseInt(month) + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+        ``
+        layui.use(['table', 'layer', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+         
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/Teachingquality/ClassSchedule/GetDate'
+                , toolbar: '#toolbarDemo'
+                , id: 'idTest'
+                , page: true
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' }
+                    , { field: 'ClassNumber',  title: '班级编号', sort: true }
+                    , { field: 'StageGradeID', title: '阶段' }
+                    , {
+                        field: 'ClassStatus',  title: '班级状态', templet: function (c) {
+                            if (c.ClassStatus == true) {
+                                return "正常";
+                            } else { return "禁用"; }
+                        }
+                    }
+                    , {
+                        field: 'ClassRemarks', title: '班级备注', templet: function (c) {
+                            return Age(TimeChange(c.BirthDate));
+                        }
+                    }
+                    , { field: 'BaseDataEnum_Id', title: '专业课时段 ' }
+                ]]
+                , page: true
+                , limit: 8
+                , limits: [8, 10, 15]
+            });
+            //注册或编辑学员信息
+            function Registeredtrainees(name, id) {
+
+                layer.open({
+                    title: name,
+                    type: 2,
+                    area: ['1000px', '800px']
+                    , content: "/Teachingquality/StudentInformation/Registeredtrainees?id=" + id
+                    , end: function () { table.reload('idTest'); select(); }
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            }
+            //监听头部工具栏
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getAdd':
+                        var a = "注册学员";
+                        Registeredtrainees(a);
+                        break;
+                    case 'getUpdate':
+
+
+                        if (checkStatus.data.length > 0) {
+                            var a = "编辑学员信息"
+                            var id = checkStatus.data[0].StudentNumber;
+                            Registeredtrainees(a, id);
+                        } else {
+                            layer.alert('请选择一条数据', { icon: 0 });
+                        }
+                        break;
+                    case "getpaswwd":
+
+                        if (checkStatus.data.length > 0) {
+
+                            var id = checkStatus.data[0].StudentNumber;
+                            layer.open({
+                                type: 1
+                                , title: false //不显示标题栏
+                                , closeBtn: false
+                                , area: '300px;'
+                                , shade: 0.8
+                                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                , btn: ['确认', '取消']
+                                , btnAlign: 'c'
+                                , moveType: 1 //拖拽模式，0或者1
+                                , content: '<div style="padding: 30px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;您更改密码的学号为:<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<lable style="color:red;">' + id + '</lable></div>'
+
+                                , success: function (layero) {
+
+                                    var btn = layero.find('.layui-layer-btn');
+
+                                    btn.find('.layui-layer-btn0').click(function () {
+                                        console.log(id);
+                                        layer.open({
+                                            title: name,
+                                            type: 2,
+                                            area: ['400px', '300px']
+                                            , content: "/Teachingquality/StudentInformation/Password?stuid=" + id
+                                            , end: function () { table.reload('idTest'); select(); }
+                                            , anim: 1,
+                                            //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                                        });
+                                    });
+                                }
+
+                            });
+                        } else {
+                            layer.alert('请选择一条数据', { icon: 0 });
+                        }
+                        break;
+
+
+                };
+            });
+            //监听工作条
+            table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if (layEvent === 'select') { //查看
+
+                    layer.open({
+                        title: name,
+                        type: 2,
+                        area: ['500px', '750px']
+                        , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + data.StudentNumber
+
+                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    });
+                }
+
+            });
+
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+
+                var x = data.field;
+                console.log(x);
+                table.reload('idTest', {
+                    where: {
+                        Name: x.Name,
+                        Sex: x.Sex,
+                        StudentNumber: x.StudentNumber,
+                        identitydocument: x.identitydocument
+                    }, page: {
+                        curr: 1
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+
+}

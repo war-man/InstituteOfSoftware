@@ -141,18 +141,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
            
         }
-        //获取1所有数据
-        public ActionResult GetDate()
+        //获取所有数据
+        public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
-            var x = dbtext.GetList();
+            //    List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
+            List<StudentInformation> list = dbtext.GetList();
+            if (!string.IsNullOrEmpty(Name))
+            {
+                list = list.Where(a => a.Name.Contains(Name)).ToList();
+            }
+            if (!string.IsNullOrEmpty(Sex))
+            {
+                bool sex = Convert.ToBoolean(Sex);
+                list = list.Where(a => a.Sex== sex).ToList();
+            }
+            if (!string.IsNullOrEmpty(StudentNumber))
+            {
+                list = list.Where(a => a.StudentNumber.Contains(StudentNumber)).ToList();
+            }
+            if (!string.IsNullOrEmpty(identitydocument))
+            {
+                list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
+            }
+
+            var dataList = list.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
+          //  var x = dbtext.GetList();
             var data = new
             {
                 code = "",
                 msg = "",
-                count = x.Count,
-                data = x
+                count = list.Count,
+                data = dataList
             };
             return Json(data, JsonRequestBehavior.AllowGet);
+
         }
 
         //学员备案查询赋值信息
@@ -216,14 +238,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     try
                     {
                         studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
-                        studentInformation.InsitDate = Convert.ToDateTime(Date());
+                        studentInformation.InsitDate = DateTime.Now; ;
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         dbtext.Insert(studentInformation);
                         result = new SuccessResult();
                         result.Msg = "注册成功";
                         result.Success = true;
-                        result.Data = StudentID(studentInformation.identitydocument);
+                        result.Data = studentInformation.StudentNumber;
                     }
                     catch (Exception)
                     {
@@ -248,11 +270,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     try
                     {
 
-                        dbtext.Update(studentInformation);
-                        result = new SuccessResult();
+
+                    StudentInformation x = Finds(studentInformation.StudentNumber);
+                    studentInformation.Password = x.Password;
+                    studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
+                    studentInformation.InsitDate = x.InsitDate;
+                    dbtext.Update(studentInformation);
+                    result = new SuccessResult();
                         result.Msg = "修改成功";
                         result.Success = true;
-                        result.Data = StudentID(studentInformation.identitydocument);
+                    
                     }
                     catch (Exception)
                     {
@@ -268,18 +295,55 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
        
             return Json( result,JsonRequestBehavior.AllowGet);
         }
-        //按学号查询单个学员
+        //按学号查询单个学员 find
+        public StudentInformation Finds(string id)
+        {
+            var x = dbtext.GetList().Where(a => a.StudentNumber == id).FirstOrDefault();
+            return x;
+        }
+        //按学号查询单个学员返回json格式
         public ActionResult Select()
         {
             string stuid = Request.QueryString["stuid"];
-           var x= dbtext.GetList().Where(a => a.StudentNumber == stuid).FirstOrDefault();
-            return Json(x, JsonRequestBehavior.AllowGet);
+        
+            return Json(Finds(stuid), JsonRequestBehavior.AllowGet);
         }
         public ActionResult Viewdetails()
         {
             string stuid = Request.QueryString["id"];
             @ViewBag.stuid = stuid;
             return View();
+        }
+        //修改密码视图
+        [HttpGet]
+        public ActionResult Password()
+        {
+            string stuid = Request.QueryString["stuid"];
+            ViewBag.Password = stuid;
+            return View();
+        }
+        //修改密码方法
+        [HttpPost]
+        public ActionResult Password(StudentInformation student)
+        {
+          var x=  dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber).FirstOrDefault();
+            x.Password = student.Password;
+            AjaxResult result = null;
+            try
+            {
+                dbtext.Update(x);
+                result = new SuccessResult();
+                result.Success = true;
+                result.Msg = "修改成功";
+            }
+            catch (Exception)
+            {
+
+                result = new ErrorResult();
+                result.ErrorCode = 500;
+                result.Msg = "服务器错误";
+            }
+          return Json(result, JsonRequestBehavior.AllowGet);
         }
     }
 }
