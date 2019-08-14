@@ -92,7 +92,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #region
         public string GetStuStatuValue(int? id)
         {
-            List<StuStatus> Get_List_stustate = Stustate_Entity.GetList();//获取上门学生状态所有数据
+            List<StuStatus> Get_List_stustate = Stustate_Entity.GetList().Where(sta=>sta.IsDelete==false).ToList();//获取上门学生状态所有数据
             if (!string.IsNullOrEmpty(id.ToString()))
             {
                 return Get_List_stustate.Where(s => s.Id == id).FirstOrDefault().StatusName;
@@ -103,7 +103,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         public string GetStuInfomationTypeValue(int? id)
         {
-            List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList();
+            List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList().Where(info=>info.IsDelete==false).ToList();
            
             if (!string.IsNullOrEmpty(id.ToString()))
             {
@@ -113,7 +113,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         public string GetEmployeeValue(string id)
         {
-           return Enplo_Entity.GetList().Where(s => s.EmployeeId == id).FirstOrDefault().EmpName;
+           return Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel==false).FirstOrDefault().EmpName;
         }
         #endregion
 
@@ -121,19 +121,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult AddorEdit(string id)
         {
             //获取信息来源的所有数据
-            ViewBag.infomation = StuInfomationType_Entity.GetList().Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s=>s.IsDelete==false).Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
 
             //获取学生状态来源的所有数据
-            ViewBag.state = Stustate_Entity.GetList().Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();             
+            ViewBag.state = Stustate_Entity.GetList().Where(s=>s.IsDelete==false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();             
             return View();
         }
 
         //将所有员工显示给用户选择
         public ActionResult ShowEmployeInfomation()
         {
-            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有在职员工
             List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),name=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
-            List<Position> list_Position = Position_Entity.GetList();
+            List<Position> list_Position = Position_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有岗位有用的数据
             foreach (TreeClass item1 in list_Tree)
             {
                 List<TreeClass> bigTree = new List<TreeClass>();
@@ -167,7 +167,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //查看是否是选中员工
         public ActionResult FindEmply(string id)
         {
-            EmployeesInfo finde= Enplo_Entity.GetList().Where(s => s.EmployeeId==id).FirstOrDefault();
+            EmployeesInfo finde= Enplo_Entity.GetList().Where(s => s.EmployeeId==id && s.IsDel==false).FirstOrDefault();
             if (finde!=null)
             {                 
                 return Json(finde, JsonRequestBehavior.AllowGet);
@@ -182,7 +182,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取录入人员
         public ActionResult FindInfoEmply()
         {
-           List<Department> list_e1= Department_Entity.GetList().Where(d=>d.DeptName=="咨询部" || d.DeptName=="网络部").ToList();
+           List<Department> list_e1= Department_Entity.GetList().Where(d=>(d.DeptName=="咨询部" || d.DeptName=="网络部")&& d.IsDel==false).ToList();
            
             return View();
         }
@@ -190,9 +190,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //加载网络部跟咨询部员工供用户选择
         public List<EmployeesInfo> loadNetSeekData1()
         {
-            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "咨询部").ToList();
-            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
-            List<Position> list_Position = Position_Entity.GetList();
+            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "咨询部" && d.IsDel==false).ToList();//获取可用的所有部门信息
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有在职员工信息
+            List<Position> list_Position = Position_Entity.GetList().Where(p=>p.IsDel==false).ToList();//获取可用的岗位信息
             List<EmployeesInfo> ee = new List<EmployeesInfo>();
             foreach (Department item1 in d_list)
             {
@@ -215,9 +215,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         public List<EmployeesInfo> loadNetSeekData2()
         {
-            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "网络部").ToList();
-            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList();
-            List<Position> list_Position = Position_Entity.GetList();
+            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "网络部" && d.IsDel==false).ToList();//获取可用部门信息
+            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(e=>e.IsDel==false).ToList();//获取在职员工信息
+            List<Position> list_Position = Position_Entity.GetList().Where(p=>p.IsDel==false).ToList();//获取可用岗位信息
             List<EmployeesInfo> ee = new List<EmployeesInfo>();
             foreach (Department item1 in d_list)
             {
@@ -254,7 +254,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
              
             try
             {
-               StudentPutOnRecord er= s_Entity.GetList().Where(s => s.StuName == news.StuName || s.StuPhone == news.StuPhone).FirstOrDefault();
+               StudentPutOnRecord er= s_Entity.GetList().Where(s => s.StuName == news.StuName && s.StuPhone == news.StuPhone).FirstOrDefault();
                 if (er==null)
                 {
                     news.StuDateTime = DateTime.Now;
@@ -282,7 +282,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult FindStudent(string id)
         {
            List<StudentPutOnRecord> fins= s_Entity.GetList().Where(s=>s.StuName==id).ToList();
-            if (fins!=null)
+            if (fins.Count>0)
             {
                 return Json(fins,JsonRequestBehavior.AllowGet);
             }
@@ -290,6 +290,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 return Json("ok");
             }          
+        }
+
+        //创建一个编辑页面
+        public ActionResult EditView()
+        {
+            return View();
         }
     }
 }

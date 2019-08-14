@@ -212,6 +212,7 @@
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
+    <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
@@ -329,6 +330,11 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Password.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\AddClassSchedule.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\AddorEdit.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowSeekNet.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
