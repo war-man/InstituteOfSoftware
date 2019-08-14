@@ -331,6 +331,8 @@
     <Content Include="Areas\Obtainemployment\Views\Employment\AddEnterprise.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\Employment\EditEnterprise.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\Employment\EnterpriseInfoIndex.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Viewdetails.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

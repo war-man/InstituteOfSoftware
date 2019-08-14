@@ -55,7 +55,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司名</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "lay-verify", "required|EntNameZz|EntNameOnly" }, { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
+                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { @*{ "lay-verify", "required|EntNameZz|EntNameOnly" },*@ { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
                             </div>
                         </div>
                     </div>
@@ -98,15 +98,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">薪资</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntSalary, new Dictionary<string, object>() { @*{ "lay-verify", "required" },*@ { "placeholder", "请输入薪资" }, { "class", "layui-input linu" } })
-                            </div>
-                        </div>
 
-                    </div>
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司福利</label>
@@ -155,7 +147,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">联系方式</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { @*{ "lay-verify", "required|phone" }, *@{ "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { @*{ "lay-verify", "required|phone|EntPhoneOnly" },*@ { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>
@@ -174,6 +166,16 @@
         <fieldset class="fieldset">
             <legend class="major">{{=content}}</legend>
             <div class="layui-row layui-form-item">
+                <div class="layui-inline">
+                    <fieldset>
+                        <legend class="title">薪资</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="text" placeholder="请输入薪资" class="layui-input EntSalary" name="EntSalary{{=content}}">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
                 <div class="layui-inline">
                     <fieldset>
                         <legend class="title">岗位职责</legend>
@@ -195,6 +197,8 @@
                         </div>
                     </fieldset>
                 </div>
+
+
             </div>
         </fieldset>
     </script>
@@ -274,7 +278,6 @@
                             resultobj.mes = data.Msg;
                         },
                         error: function () {
-
                         }
                     });
 
@@ -283,8 +286,25 @@
                     }
 
                 }
-                , EntPhonePnly: function (value) {
+                , EntPhoneOnly: function (value) {
+                    var resultobj = new Object();
+                    $.ajax({
+                        type: "get",
+                        url: "/Employment/EntPhoneOnly",
+                        async: false,
+                        data: { EntPhone: value },
+                        success: function (data) {
+                            console.log(data);
+                            resultobj.isno = data.Success;
+                            resultobj.mes = data.Msg;
+                        },
+                        error: function () {
+                        }
+                    });
 
+                    if (resultobj.isno) {
+                        return resultobj.mes;
+                    }
                 }
             });
             //监听提交
@@ -296,17 +316,31 @@
                 $(".JobResponsibilities").each(function (i) {
                     EntSpeeArry[i].JobResponsibilities = $(this).val();
                 });
-                //准备jquery的Ajax（$.Ajax({})）
+                $(".EntSalary").each(function (i) {
+                    EntSpeeArry[i].EntSalary = $(this).val();
+                });
 
-                //$.post("/Employment/AddEnterprise", { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) }, function (data) {
-                //    if (data.code > 0) {
-                //        layer.alert(data.msg, { icon: 1 }, function () {
-                //            //先得到当前iframe层的索引
-                //            var index = parent.layer.getFrameIndex(window.name);
-                //            parent.layer.close(index); //再执行关闭
-                //        })
-                //    }
-                //});
+                //准备jquery的Ajax（$.Ajax({})）
+                $.post("/Employment/AddEnterprise", { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) }, function (data) {
+                    console.log(data);
+                    if (data.Success) {
+                        console.log("11");
+                        layer.msg(data.Msg, { icon: 1 }, function () {
+                            //先得到当前iframe层的索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index); //再执行关闭
+                        })
+                    }
+                    //else {
+                    //    //配置一个透明的询问框
+                    //    layer.msg(data.Msg, {
+                    //        time: 2000, //2s后自动关闭
+                    //        btn: ['明白了', '知道了', '哦']
+                    //    }, function() {
+
+                    //    });
+                    //}
+                });
                 return false;
             });
         });

@@ -24,7 +24,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string EntAddress { get; set; }
         public string EntScale { get; set; }
         public string EntNature { get; set; }
-        public string EntSalary { get; set; }
         public string EntWelfare { get; set; }
         public Nullable<System.DateTime> EntDate { get; set; }
         public int EmpStaffID { get; set; }
