@@ -57,6 +57,9 @@
                             <div class="layui-input-inline">
                                 @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { @*{ "lay-verify", "required|EntNameZz|EntNameOnly" },*@ { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
                                 @Html.HiddenFor(a => a.EntID)
+                                @Html.HiddenFor(a => a.CooID)
+                                @Html.HiddenFor(a => a.EntScale)
+                                @Html.HiddenFor(a => a.EntNature)
 
                             </div>
                         </div>
@@ -74,10 +77,10 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司规模</label>
                             <div class="layui-input-block">
-                                <input type="radio" name="EntScale" value="少于50人" title="少于50人" checked="">
-                                <input type="radio" name="EntScale" value="50-100人" title="50-100人">
-                                <input type="radio" name="EntScale" value="150-500人" title="150-500人">
-                                <input type="radio" name="EntScale" value="500-1000人" title="500-1000人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="少于50人" title="少于50人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="50-100人" title="50-100人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="150-500人" title="150-500人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="500-1000人" title="500-1000人">
                             </div>
                         </div>
 
@@ -86,17 +89,17 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司性质</label>
                             <div class="layui-input-block">
-                                <input type="radio" name="EntNature" value="国企" title="国企">
-                                <input type="radio" name="EntNature" value="外资（欧美）" title="外资（欧美）">
-                                <input type="radio" name="EntNature" value="外资（非欧美）" title="外资（非欧美）">
-                                <input type="radio" name="EntNature" value="上市公司" title="上市公司">
-                                <input type="radio" name="EntNature" value="合资" title="合资">
-                                <input type="radio" name="EntNature" value="民营公司" title="民营公司" checked="">
-                                <input type="radio" name="EntNature" value="外企代表处" title="外企代表处">
-                                <input type="radio" name="EntNature" value="政府机关" title="政府机关">
-                                <input type="radio" name="EntNature" value="事业单位" title="事业单位">
-                                <input type="radio" name="EntNature" value="非营利组织" title="非营利组织">
-                                <input type="radio" name="EntNature" value="创业公司" title="创业公司">
+                                <input type="radio" class="radiolala" name="EntNature" value="国企" title="国企">
+                                <input type="radio" class="radiolala" name="EntNature" value="外资（欧美）" title="外资（欧美">
+                                <input type="radio" class="radiolala" name="EntNature" value="外资（非欧美）" title="外资（非欧美）">
+                                <input type="radio" class="radiolala" name="EntNature" value="上市公司" title="上市公司">
+                                <input type="radio" class="radiolala" name="EntNature" value="合资" title="合资">
+                                <input type="radio" class="radiolala" name="EntNature" value="民营公司" title="民营公司">
+                                <input type="radio" class="radiolala" name="EntNature" value="外企代表处" title="外企代表处">
+                                <input type="radio" class="radiolala" name="EntNature" value="政府机关" title="政府机关">
+                                <input type="radio" class="radiolala" name="EntNature" value="事业单位" title="事业单位">
+                                <input type="radio" class="radiolala" name="EntNature" value="非营利组织" title="非营利组织">
+                                <input type="radio" class="radiolala" name="EntNature" value="创业公司" title="创业公司">
                             </div>
                         </div>
                     </div>
@@ -227,9 +230,9 @@
                     url: "/Employment/GetEntSpeeInfo",
                     data: { SpecID: specid, EntID: entid },
                     timeout: "10000",
+                    async: false,
                     success: function (Result) {
                         var ViewData = Result.Data;
-                        console.log(ViewData.JobResponsibilities);
                         if (Result.Success) {
                             EntSpeeArry[i].Requirements = ViewData.Requirements;
                             EntSpeeArry[i].EntSalary = ViewData.EntSalary;
@@ -237,7 +240,6 @@
                             var compiled = _.template($("#muban").html());
                             var html = compiled({ content: ViewData.SpecialtyName, EntSalaryVal: ViewData.EntSalary, JobResponsibilitiesVal: ViewData.JobResponsibilities, RequirementsVal: ViewData.Requirements });
                             $("#list").append($(html));
-                            console.log(EntSpeeArry);
                         }
                     },
                     error: function () {
@@ -245,6 +247,18 @@
                     }
                 });
             });
+            $(".raddiobibi").each(function (i) {
+                var MrDEntScale = $("#EntScale").val();
+                if ($(this).val() == MrDEntScale) {
+                    $(this).attr("checked", "checked");
+                }
+            })
+            $(".radiolala").each(function (i) {
+                var MrDEntNature = $("#EntNature").val();
+                if ($(this).val() == MrDEntNature) {
+                    $(this).attr("checked", "checked");
+                }
+            })
         });
 
         layui.use(['form', 'layedit', 'laydate'], function () {
@@ -371,10 +385,11 @@
                 //准备jquery的Ajax（$.Ajax({})）
                 $.ajax({
                     type: "POST",
-                    url: "/Employment/AddEnterprise",
-                    data: { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) },
+                    url: "/Employment/EditEnterprise",
+                    data: { editEnterpriseView: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) },
                     timeout: 5000,
-                    success: function () {
+                    success: function (data) {
+                        console.log(data);
                         if (data.Success) {
                             console.log("11");
                             layer.msg(data.Msg, { icon: 1 }, function () {

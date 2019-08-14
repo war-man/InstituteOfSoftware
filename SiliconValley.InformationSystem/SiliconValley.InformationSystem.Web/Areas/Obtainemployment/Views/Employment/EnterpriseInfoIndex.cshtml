@@ -13,19 +13,17 @@
 
 <!-- Single button -->
 <div class="btn-group">
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Action <span class="caret"></span>
+    <button type="button"  id="selectGrand"class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        显示全部 <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu">
-        <li><a href="#">Action</a></li>
-        <li><a href="#">Another action</a></li>
-        <li><a href="#">Something else here</a></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">Separated link</a></li>
+    <ul class="dropdown-menu" id="grandlist">
+        <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
+        <li><a whyshow="ShowCoop" href="javascript:void(0);">显示合作企业</a></li>
+        <li><a whyshow="ShowNoCoop" href="javascript:void(0);">显示未合作企业</a></li>
     </ul>
 </div>
 
-<div style="display:inline-block;width:500px;" class="form-inline">
+<div style="display:inline-block;width:600px;" class="form-inline">
 
     <div class="form-group">
         <input type="text" class="form-control" id="name" placeholder="输入姓名">
@@ -36,7 +34,7 @@
     </div>
 
     <button class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-
+    <button class="layui-btn layui-btn-radius layui-btn-primary">添加合作企业</button>
 </div>
 <table class="layui-hide" id="Enterprise" lay-filter="EnterpriseInfo"></table>
 
@@ -110,18 +108,25 @@
             //监听工具条
             table.on('tool(EnterpriseInfo)', function (obj) {
                 var data = obj.data;
-
                 if (obj.event === 'detail') {
-                    layer.msg('ID：' + data.ID + ' 的查看操作');
-                } else if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
-
-                        $.post("/Employment/DelEnterpriseInfo/" + data.ID, function (data) {
-                            table.reload('Enterprise', {
-                                page: {
-                                    curr: 1 //重新从第 1 页开始
-                                }
-                            });
+                    layer.msg('合作企业ID：' + data.CooperaEnterprisesID + ' 的查看操作');
+                }
+                else if (obj.event === 'del') {
+                    layer.confirm('真的解除合作关系么', function (index) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Employment/DelEnterpriseInfo/",
+                            async: false,
+                            data: { CooID: data.CooperaEnterprisesID },
+                            success: function (data) {
+                                table.reload('Enterprise', {
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                            },
+                            error: function () {
+                            }
                         });
                         layer.close(index);
                     });
@@ -205,13 +210,15 @@
             });
         });
         $("#grandlist li a").click(function () {
+            
+            var grand = $(this).text();
+            $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
+            var grandid = $(this).attr("grandid");
+            $("#selectGrand").attr("grandid", grandid);
 
-                var grand = $(this).text();
+            var a = $(this).attr("whyshow");
+            alert(a);
 
-                $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-
-                var grandid = $(this).attr("grandid");
-                $("#selectGrand").attr("grandid", grandid);
-            });
+        });
     </script>
 }

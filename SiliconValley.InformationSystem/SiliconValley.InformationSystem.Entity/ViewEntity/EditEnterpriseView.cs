@@ -8,7 +8,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
     public class EditEnterpriseView
     {
+        //公司id
         public int EntID { get; set; }
+        //合作id
+        public int CooID { get; set; }
         public string EntName { get; set; }
 
         public string EntAddress { get; set; }
