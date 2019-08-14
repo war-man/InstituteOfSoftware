@@ -113,10 +113,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         public string GetEmployeeValue(string id)
         {
-           return Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel==false).FirstOrDefault().EmpName;
+            EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel == false).FirstOrDefault();
+            if (finde!=null)
+            {
+                return finde.EmpName;
+            }
+            else
+            {
+                return "无";
+            }
+           
         }
         #endregion
-
+        #region
         //这是一个添加数据的页面
         public ActionResult AddorEdit(string id)
         {
@@ -293,9 +302,82 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         //创建一个编辑页面
-        public ActionResult EditView()
+        public ActionResult EditView(string id)
         {
+            ViewBag.id = id;
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            //获取学生状态来源的所有数据
+            ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
             return View();
+        }
+
+        //创建一个用于编辑的处理方法
+        public ActionResult EditFunction(StudentPutOnRecord olds)
+        {
+            //需要判断是咨询部人员修改还是网络部人员修改  SessionHelper.Session["UserId"]=""
+            try
+            {
+                StudentPutOnRecord fins = s_Entity.GetList().Where(s => s.Id == olds.Id).FirstOrDefault();//找到要修改的实体
+                fins.StuSex = olds.StuSex;
+                fins.StuPhone = olds.StuPhone;
+                fins.StuBirthy = olds.StuBirthy;
+                fins.StuSchoolName = olds.StuSchoolName;
+                fins.StuEducational = olds.StuEducational;
+                fins.StuAddress = olds.StuAddress;
+                fins.StuWeiXin = olds.StuWeiXin;
+                fins.StuQQ = olds.StuQQ;
+                fins.StuIsGoto = olds.StuIsGoto;
+                fins.StuVisit = olds.StuVisit;
+                fins.StuInfomationType_Id = olds.StuInfomationType_Id;
+                s_Entity.Update(fins);
+                return Json("ok", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中     
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+                return Json(Error("数据编辑有误"), JsonRequestBehavior.AllowGet);
+            }            
+        }
+        #endregion
+        //根据ID找到学生信息并赋值
+        public ActionResult FindStudentInfomation(string id)
+        {
+            if (!string.IsNullOrEmpty(id) && id!="undifind")
+            {
+               StudentPutOnRecord finds = s_Entity.GetList().Where(s=>s.Id==Convert.ToInt32(id)).FirstOrDefault();
+                var newdata = new {
+                    EmployeesInfo_Id = finds.EmployeesInfo_Id,
+                    Id = finds.Id,
+                    IsDelete = finds.IsDelete,
+                    Reak = finds.Reak,
+                    StuAddress = finds.StuAddress,
+                    StuBirthy = finds.StuBirthy,
+                    StuDateTime = finds.StuDateTime,
+                    StuEducational = finds.StuEducational,
+                    StuEntering = finds.StuEntering,
+                    StuInfomationType_Id = finds.StuInfomationType_Id,
+                    StuIsGoto = finds.StuIsGoto,
+                    StuName = finds.StuName,
+                    StuPhone = finds.StuPhone,
+                    StuQQ = finds.StuQQ,
+                    StuSchoolName = finds.StuSchoolName,
+                    StuSex = finds.StuSex,
+                    StuStatus_Id = finds.StuStatus_Id,
+                    StuVisit = finds.StuVisit,
+                    StuWeiXin = finds.StuWeiXin,
+                    e_Name = GetEmployeeValue(finds.EmployeesInfo_Id),
+                    StuEntering_1 = GetEmployeeValue(finds.StuEntering)
+                };
+                return Json(newdata, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("学生ID未拿到", JsonRequestBehavior.AllowGet);
+            }
+            
         }
     }
 }
