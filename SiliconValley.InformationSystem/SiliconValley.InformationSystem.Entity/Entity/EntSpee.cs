@@ -26,6 +26,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }
         public string JobResponsibilities { get; set; }
         public string Requirements { get; set; }
+        public string EntSalary { get; set; }
         public Nullable<bool> IsDel { get; set; }
     
     }

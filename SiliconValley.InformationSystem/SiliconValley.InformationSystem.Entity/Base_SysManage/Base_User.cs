@@ -46,5 +46,10 @@ namespace SiliconValley.InformationSystem.Entity.Base_SysManage
         /// 出生日期
         /// </summary>
         public DateTime? Birthday { get; set; }
+
+        /// <summary>
+        /// 员工编号
+        /// </summary>
+        public string EmpNumber { get; set; }
     }
 }

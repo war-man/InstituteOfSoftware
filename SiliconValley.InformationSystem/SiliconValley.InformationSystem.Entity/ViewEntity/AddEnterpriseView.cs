@@ -17,8 +17,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string EntScale { get; set; }
         //性质
         public string EntNature { get; set; }
-        //薪资
-        public string EntSalary { get; set; }
+  
         //福利
         public string EntWelfare { get; set; }
         //企业备注
