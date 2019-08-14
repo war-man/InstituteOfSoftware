@@ -243,7 +243,6 @@
         </div>
         
     </form>
-
 </div>
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/layui/layui.js"></script>
@@ -337,7 +336,7 @@
         //监听是否上门单选按钮事件
         form.on('radio(radio1)', function (data) {
             ityy = data.value;
-            if (data.value=="1") {
+            if (data.value =="true") {
                 $("#StuVisit")[0].removeAttribute("disabled");//可用
             } else {
                 $("#StuVisit")[0].setAttribute("disabled", "false");//禁用
@@ -357,7 +356,7 @@
             IsVisit: function (value) {                               
                 var reg = /^ *$/;  //这里^和*之间有一个空格
                 var Is = reg.test(value);                
-                if (ityy != "0") {
+                if (ityy != "false") {
                     if (Is == true) {
                         return "上门日期不能为空";
                     }
