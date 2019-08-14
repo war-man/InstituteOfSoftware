@@ -1,0 +1,70 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DataKey</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+        <input type="text" style="display:none" value="@ViewBag.Name" id="text1" />
+        
+           
+    
+      
+    </div>
+</body>
+</html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var Name = $("#text1").val();
+
+        table.render({
+            elem: '#test'
+            , url: '/Teachingquality/StudentInformation/DataKeys?Name=' + Name
+          
+            , cols: [[
+
+                , { field: 'StuName',title: '姓名' }
+               
+                , {
+                    field: 'StuSex', title: '性别', templet: function (c) {
+                        if (c.StuSex == 0) {
+                            return "女";
+                        } else { return "男"; }
+                    }
+                }
+                , { field: 'StuPhone',title: '电话号码'}
+            ]]
+        });
+        //双击一条数据进行操作
+        table.on('rowDouble(test)', function (obj) {
+        
+            var id = obj.data.Id;
+            layer.confirm('您真的要选择吗?', function (index) {
+                parent.GetPartsItme(id);
+                parent.layer.close(parent.layer.index);
+            });
+          
+            //得到当前行数据
+            //obj.del(); //删除当前行
+            //obj.update(fields) //修改当前行数据
+        });
+        //单击一行数据选中
+     
+       
+  
+    });
+</script>

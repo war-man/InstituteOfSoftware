@@ -1,0 +1,218 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Viewdetails</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .layui-col-xs12 {
+            border: 1px;
+            border-bottom-style: solid;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" style="display:none;" value="@ViewBag.stuid" id="stuid" />
+    <div style="text-align:center;margin-top:30px;height:30px;">
+        <h3>详细资料</h3>
+    </div>
+    <div class="layui-container" style="text-align:center;">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="StudentNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" i>
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Name" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Sex" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">年龄</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="BirthDate" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学历</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Education" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Telephone" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">QQ号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="qq" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">微信号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="WeChat" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">身份证号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="identitydocument" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">家庭住址</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Familyaddress" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">性格</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Traine" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">兴趣爱好</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Hobby" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">入校日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="InsitDate" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Reack" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div style="text-align:center;margin-top:30px;height:30px;">
+        <button class="layui-btn"  type="button" id="but1" >确认</button>
+    </div>
+</body>
+</html>
+<script>
+    //计算年龄
+    function Age(strBirthday) { //传入形式yyyy-MM-dd
+        //strBirthday = util.formatTime(strBirthday);转换成yyyy-MM-dd形式
+        var returnAge
+        var strBirthdayArr = strBirthday.split('-')
+        var birthYear = strBirthdayArr[0]
+        var birthMonth = strBirthdayArr[1]
+        var birthDay = strBirthdayArr[2]
+        var d = new Date()
+        var nowYear = d.getFullYear()
+        var nowMonth = d.getMonth() + 1
+        var nowDay = d.getDate()
+        if (nowYear == birthYear) {
+            returnAge = 0 //同年 则为0岁
+        } else {
+            var ageDiff = nowYear - birthYear //年之差
+            if (ageDiff > 0) {
+                if (nowMonth == birthMonth) {
+                    var dayDiff = nowDay - birthDay //日之差
+                    if (dayDiff < 0) {
+                        returnAge = ageDiff - 1
+                    } else {
+                        returnAge = ageDiff
+                    }
+                } else {
+                    var monthDiff = nowMonth - birthMonth //月之差
+                    if (monthDiff < 0) {
+                        returnAge = ageDiff - 1
+                    } else {
+                        returnAge = ageDiff
+                    }
+                }
+            } else {
+                returnAge = -1 //返回-1 表示出生日期输入错误 晚于今天
+            }
+        }
+        return returnAge //返回周岁年龄
+    }
+    //时间转换方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if (month < 10) {
+            month = "0" + (parseInt(month) + 1);
+        }
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var layer = layui.layer;
+       
+        var id = $("#stuid").val();
+     
+        $.post("/Teachingquality/StudentInformation/Select?stuid=" + id, function (data) {
+            $("#StudentNumber").val(data.StudentNumber);//学号
+            $("#Name").val(data.Name);//姓名
+           //性别
+            data.Sex == true ? $("#Sex").val("男") : $("#Sex").val("女");
+            $("#Telephone").val(data.Telephone);//电话
+            $("#Familyaddress").val(data.Familyaddress);//家庭住址
+            $("#WeChat").val(data.WeChat);//微信
+            $("#qq").val(data.qq);//qq
+            $("#BirthDate").val(Age(TimeChange(data.BirthDate)));//出生日期
+            $("#identitydocument").val(data.identitydocument);//身份证号码
+            $("#Reack").val(data.Reack)//备注
+            $("#Traine").val(data.Traine)//学员性格
+            $("#Hobby").val(data.Hobby)//兴趣爱好
+            $("#Nation").val(data.Nation)//民族
+            $("#Reack").val(data.Reack)//备注
+            //Education
+            $("#Education").val(data.Education)//学历
+            $("#InsitDate").val(TimeChange(data.InsitDate))//入校日期
+            console.log(Age(TimeChange(data.BirthDate)));
+
+        
+          
+        });
+
+        //关闭详细宽
+        $("#but1").click(function () {
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭 
+           
+        });
+    });
+
+   
+</script>

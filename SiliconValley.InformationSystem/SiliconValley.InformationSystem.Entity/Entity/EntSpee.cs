@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    //企业专业表
     [Table(name: "EntSpee")]
     public partial class EntSpee
     {
@@ -23,6 +24,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> SpeID { get; set; }
         public Nullable<System.DateTime> SpeeDate { get; set; }
         public string Remark { get; set; }
+        public string JobResponsibilities { get; set; }
+        public string Requirements { get; set; }
+        public string EntSalary { get; set; }
         public Nullable<bool> IsDel { get; set; }
     
     }

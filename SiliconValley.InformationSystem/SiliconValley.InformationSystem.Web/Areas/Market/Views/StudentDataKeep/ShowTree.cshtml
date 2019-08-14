@@ -1,0 +1,83 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ShowTree</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .MydivCss1 {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        a:hover{
+            color:black;
+        }
+    </style>
+</head>
+<body>
+    <div id="uldiv">
+        <ul id="ultree"></ul>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                url: "/Market/StudentDataKeep/ShowEmployeInfomation",
+                success: function (Successdata) {
+                    layui.use(['tree','layer'], function () {
+                        var tree = layui.tree;
+                        var layer = layui.layer;
+                        //渲染
+                         layui.tree({
+                            elem: '#ultree',
+                            nodes: [{
+                                name: '硅谷大家庭',
+                                id: "-1",
+                                spread: true,
+                                children: Successdata
+                            }],                             
+                            click: function (obj) {
+                                var dataid = obj.id; //得到当前点击的节点数据
+                                $.ajax({
+                                    url: "/Market/StudentDataKeep/FindEmply/" + dataid,
+                                    success: function (mydatas) {
+                                        if (mydatas == "no") {
+                                            layer.msg('请选择员工', {
+                                                icon: 2,
+                                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                            });
+                                        } else {
+                                            var Setvalues = { "id": mydatas.EmployeeId, "name": mydatas.EmpName };                                             
+                                            window.parent.BeanValue(Setvalues);                                              
+                                                 //当你在iframe页面关闭自身时
+                                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                            parent.layer.close(index); //再执行关闭                                                    
+                                        }
+                                    }
+                                });
+                            }
+                         });
+                    });
+                },
+                error: function () {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('加载数据有误，请重试', {
+                            icon: 1,
+                            time: 5000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+                            
+                        });   
+                    });
+                }
+            });
+        });        
+    </script>
+</body>
+</html>

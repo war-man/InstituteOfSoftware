@@ -1,0 +1,104 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ShowSeekNet</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .MydivCss2 {
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        a:hover {
+            color: black;
+        }
+        .mm{
+            
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form">
+            <fieldset>
+                <legend>咨询部成员</legend>
+                <div class="layui-row">
+                    @{
+                            List<EmployeesInfo> e1 = ViewBag.ee1 as List<EmployeesInfo>;
+                            int i = 0;
+                            foreach (EmployeesInfo item1 in e1)
+                            {
+                                i++;
+                                if (i==1)
+                                {
+                                    <div class="layui-col-sm4">
+                                        <div class="layui-form-item">
+                                            <input type="radio" name="id" title="@item1.EmpName" checked="checked" value="@item1.EmployeeId"/>  
+                                        </div>
+                                    </div>
+                            }
+                            else
+                            {
+                                    <div class="layui-col-sm4">
+                                        <div class="layui-form-item">
+                                            <input type="radio" name="id" title="@item1.EmpName"  value="@item1.EmployeeId" /> 
+                                        </div>
+                                    </div>
+                            }
+
+                        }
+                    }
+
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>网络部成员</legend>
+                <div class="layui-row">
+                    @{
+                        List<EmployeesInfo> e2 = ViewBag.ee2 as List<EmployeesInfo>;
+                        foreach (EmployeesInfo item2 in e2)
+                        {
+                            <div class="layui-col-sm4">
+                                <div class="layui-form-item">
+                                     <input type="radio" name="id" title="@item2.EmpName" value="@item2.EmployeeId" /> 
+                                </div>
+                            </div>
+                        }
+                    }
+
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        $(function () {
+            layui.use('form', function () {
+                var form = layui.form;
+                //刷新界面 所有元素
+                form.render();
+
+                // 当单选按钮被选择时
+                form.on('radio()', function (data) {                   
+                   // console.log(data.value); //被点击的radio的value值
+                    var SetVlue = { 'name': data.elem.title, 'id': data.value }
+                     
+                    window.parent.LuruValue(SetVlue);   
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭   
+                });  
+            });
+
+            
+        })
+       
+    </script>
+</body>
+</html>

@@ -22,7 +22,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> ClassStatus { get; set; }
         public string ClassRemarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-        public Nullable<int> StageGradeID { get; set; }
+        public Nullable<int> Major_Id { get; set; }
+        public Nullable<int> grade_Id { get; set; }
         public Nullable<int> BaseDataEnum_Id { get; set; }
     }
 }
+

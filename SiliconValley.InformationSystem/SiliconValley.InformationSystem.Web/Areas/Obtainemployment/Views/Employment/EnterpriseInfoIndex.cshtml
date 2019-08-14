@@ -1,0 +1,224 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+}
+
+
+
+<!-- Single button -->
+<div class="btn-group">
+    <button type="button"  id="selectGrand"class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        显示全部 <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" id="grandlist">
+        <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
+        <li><a whyshow="ShowCoop" href="javascript:void(0);">显示合作企业</a></li>
+        <li><a whyshow="ShowNoCoop" href="javascript:void(0);">显示未合作企业</a></li>
+    </ul>
+</div>
+
+<div style="display:inline-block;width:600px;" class="form-inline">
+
+    <div class="form-group">
+        <input type="text" class="form-control" id="name" placeholder="输入姓名">
+    </div>
+
+    <div class="form-group">
+        <input type="tel" class="form-control" id="phone" lay-verify="phone" placeholder="电话">
+    </div>
+
+    <button class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+    <button class="layui-btn layui-btn-radius layui-btn-primary">添加合作企业</button>
+</div>
+<table class="layui-hide" id="Enterprise" lay-filter="EnterpriseInfo"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">解除合作</a>
+</script>
+
+@section script{
+    <script>
+
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer; //layui对象
+
+            //监听表格复选框选择
+            table.on('checkbox(EnterpriseInfo)', function (obj) {
+                console.log(obj)
+            });
+
+            //展示已知数据
+            var tableIns = table.render({
+                elem: '#Enterprise'
+                , url: '/Employment/SearchEnterpriseInfo' //数据接口
+                , page: true //开启分页
+                //, skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 5
+                , limits: [5, 10, 45, 60, 75]
+                , cols: [[ //标题栏
+                    , { type: 'checkbox' }
+                    , { field: 'EnterpriseInfoID', title: '企业信息ID', width: 80, sort: true, hide: true }
+                    , { field: 'EntName', title: '企业名称', width: 165 }
+                    , { field: 'EntAddress', title: '企业地址', width: 165 }
+                    , { field: 'EntScale', title: '规模', width: 100 }
+                    , { field: 'EntNature', title: '性质', width: 178 }
+                    , { field: 'EntWelfare', title: '福利', width: 178 }
+                    , { field: 'EmploymentStaffName', title: '录入人姓名', width: 165 }
+                    , { field: 'CooperaEnterprisesID', title: '合作企业ID', hide: true }
+                    , { field: 'EntContacts', title: '联系人', width: 165 }
+                    , { field: 'EntPhone', title: '联系电话', width: 165 }
+                    , {
+                        field: 'EntDate', title: '时间', width: 165, templet: function (v) {
+                            return TimeChange(v.EntDate);
+                        }
+                    }
+                    , { field: 'Remark', title: '备注', width: 165 }
+                    , { fixed: 'right', width: 198, align: 'center', toolbar: '#barDemo' }
+                ]]
+
+            });
+            //监听工具条
+            table.on('tool(EnterpriseInfo)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'detail') {
+                    layer.msg('合作企业ID：' + data.CooperaEnterprisesID + ' 的查看操作');
+                }
+                else if (obj.event === 'del') {
+                    layer.confirm('真的解除合作关系么', function (index) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/Employment/DelEnterpriseInfo/",
+                            async: false,
+                            data: { CooID: data.CooperaEnterprisesID },
+                            success: function (data) {
+                                table.reload('Enterprise', {
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                            },
+                            error: function () {
+                            }
+                        });
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    var EnterpriseInfoID = data.EnterpriseInfoID;
+                    layer.open({
+                        type: 2
+                        , area: ["800px", "620px"]
+                        , title: "弹出层"
+                        , content: '/Obtainemployment/Employment/EditEnterprise/' + EnterpriseInfoID
+                        , anim: "2" /* 改变弹出层弹出方式*/
+                        , end: function () {
+                            table.reload('Enterprise', {
+                                page: {
+                                    curr: 1
+                                }
+                            });
+
+                        }
+                    });
+                }
+            });
+
+            var $ = layui.$, active = {
+                //显示全部的企业信息
+                ShowAllEnter: function () {
+                    tableIns.reload({
+                        where: { //设定异步数据接口的额外参数，任意设
+                            whyshow: "ShowAllEnter"
+                        }
+                        , page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                }
+                //显示合作企业
+                , ShowCoop: function () {
+                    tableIns.reload({
+                        where: {
+                            whyshow: "ShowCoop"
+                        }
+                        , page: {
+                            curr: 1
+                        }
+                    });
+                }
+                //显示没有合作的企业ShowNoCoop
+                , ShowNoCoop: function () {
+                    tableIns.reload({
+                        where: {
+                            whyshow: "ShowNoCoop"
+                        }
+                        , page: {
+                            curr: 1
+                        }
+                    });
+                }
+                //添加合作企业
+                , AddCooperaEnterprises: function () {
+                    layer.open({
+                        type: 2
+                        , area: ["800px", "620px"]
+                        , title: "添加合作企业信息"
+                        , content: '/Obtainemployment/Employment/AddEnterprise'
+                        , anim: "2" /* 改变弹出层弹出方式*/
+                        , end: function () {
+                            table.reload('Enterprise', {
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
+                        }
+                    });
+
+                }
+            };
+
+            $('.demoTable .layui-btn').on('click', function () {
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+        });
+        $("#grandlist li a").click(function () {
+            
+            var grand = $(this).text();
+            $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
+            var grandid = $(this).attr("grandid");
+            $("#selectGrand").attr("grandid", grandid);
+
+            var a = $(this).attr("whyshow");
+            alert(a);
+
+        });
+    </script>
+}

@@ -24,12 +24,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string EntAddress { get; set; }
         public string EntScale { get; set; }
         public string EntNature { get; set; }
-        public string EntSalary { get; set; }
         public string EntWelfare { get; set; }
         public Nullable<System.DateTime> EntDate { get; set; }
-        public Nullable<int> EmpStaffID { get; set; }
+        public int EmpStaffID { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public Nullable<int> CooID { get; set; }
     }
 }

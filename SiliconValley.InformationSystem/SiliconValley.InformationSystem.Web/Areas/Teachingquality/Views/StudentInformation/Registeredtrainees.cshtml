@@ -41,19 +41,27 @@
 </head>
 <body>
 
-
     
       
-        <h1 style="text-align:center;height:50px;">学员信息注册</h1>
+        <h1 style="text-align:center;height:50px;">@ViewBag.Name</h1>
+    <input type="text" id="StudentID"  value="@ViewBag.StudentID" style="display:none;"/>
         <div>
-            <form class="layui-form" action="">
+            <form class="layui-form" action="" lay-filter="example">
                 <div class="layui-container">
                     <fieldset>
 
                         <legend>基础信息</legend>
+                      
 
                         <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
+                                <label class="layui-form-label">学号</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="StudentNumber"  readonly="readonly"  style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                                 
 
+                                </div>
+                            </div>
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">姓名</label>
                                 <div class="layui-input-inline">
@@ -61,15 +69,14 @@
                                 </div>
                             </div>
                             <div id="but1">
-                                <i class="layui-icon">&#xe615;</i>
+                                <i class="layui-icon" id="liden">&#xe615;</i>
                             </div>
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
                                 <label class="layui-form-label">性别</label>
                                 <div class="layui-input-block">
-                                    <input type="radio" name="Sex" value="1" title="男">
-                                    <input type="radio" name="Sex" value="0" title="女">
-
+                                    <input type="radio" name="Sex" value="false" title="女">
+                                    <input type="radio" name="Sex" value="true" title="男" checked="checked">
                                 </div>
 
                             </div>
@@ -81,7 +88,7 @@
 
                                 <label class="layui-form-label">身份证号</label>
                                 <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入身份证" }, { "class", "layui-input linu" } })
+                                    @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required|identity" }, { "placeholder", "请输入身份证" }, { "class", "layui-input linu" } })
                                 </div>
 
                             </div>
@@ -96,7 +103,7 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">电话号</label>
                                 <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
+                                    @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
                                 </div>
                             </div>
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -130,7 +137,7 @@
 
                     </fieldset>
                     <fieldset>
-
+                        <input type="text" id="textid"  style="display:none;"/>
                         <legend>详细信息</legend>
                         <div class="layui-row layui-form-item">
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -156,7 +163,7 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">学员性格</label>
                                 <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "placeholder", "请输入学员性格" }, { "class", "layui-input linu" } })
+                                    @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
                                 </div>
                             </div>
                         </div>
@@ -174,8 +181,9 @@
                     <div class="layui-row layui-form-item" style="margin-top:20px;">
                         <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
                             <div class="layui-input-block">
+                                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
                                 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                                <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+
 
                             </div>
                         </div>
@@ -191,7 +199,41 @@
         </div>
 
         <script>
-            layui.use(['form', 'layedit', 'laydate'], function () {
+           
+            if ($("#StudentID").val() != false) {
+                $("#liden").css("display", "none");
+                $("#Name").attr("readonly", "readonly");
+                layui.use(['form'], function () {
+                    var form = layui.form;
+                    $.post("/Teachingquality/StudentInformation/Select?stuid=" + $("#StudentID").val(), function (data) {
+                        $("input[name=Sex][value=false]").attr("checked", data.Sex == false ? true : false);
+                        $("input[name=Sex][value=true]").attr("checked", data.Sex == true ? true : false);
+                        form.render();
+                        $("input[name=Education][value=初中]").attr("checked", data.Education == "初中" ? true : false);
+                        $("input[name=Education][value=高中]").attr("checked", data.Education == "高中" ? true : false);
+                        $("input[name=Education][value=大专]").attr("checked", data.Education == "大专" ? true : false);
+                        form.render();
+                        //
+                        $("#StudentNumber").val(data.StudentNumber);//学号
+                        $("#Name").val(data.Name);//姓名
+                        $("#Telephone").val(data.Telephone);//电话
+                        $("#Familyaddress").val(data.Familyaddress);//家庭住址
+                        $("#WeChat").val(data.WeChat);//微信
+                        $("#qq").val(data.qq);//qq
+                        $("#BirthDate").val(TimeChange(data.BirthDate));//出生日期
+                        $("#identitydocument").val(data.identitydocument);//身份证号码
+                        $("#Reack").val(data.Reack)//备注
+                        $("#Traine").val(data.Traine)//学员性格
+                        $("#Hobby").val(data.Hobby)//兴趣爱好
+                        $("#Nation").val(data.Nation)//民族
+
+                    });
+                });
+            } else {
+                $("#nba").css("display", "none");
+            }
+            layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+             
                 var form = layui.form
                     , layer = layui.layer
                     , layedit = layui.layedit
@@ -199,7 +241,258 @@
                 laydate.render({
                     elem: '#BirthDate'
                 });
+                //搜索名字
+                $("#liden").click(function () {
+                    var name = $("#Name").val();
+                    if (name == "") {
+                        layer.alert('姓名不能为空！！！');
+
+                    } else {
+                        layer.open({
+                            title: "备案学员",
+                            type: 2,
+
+                            btnAlign: 'c'
+                            , area: ['400px', '200px']
+                            , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
+                        });
+                    }
+
+                });
+
+                //正则表达式
+                form.verify({
+                    Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                            return '用户名不能有特殊字符';
+                        }
+
+                    }
+                });
+
+                //正在执行中
+                function showLoad() {
+
+                    return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+
+                }
+                //关闭执行中的窗体
+                function closeLoad(index) {
+                    layer.close(index);
+
+                }
+              
+                  
+                //监听提交
+                form.on('submit(demo1)', function (data) {
+                    //layer.alert(JSON.stringify(data.field), {
+                    //    title: '最终的提交信息'
+                    //})
+                    //return false;
+                    var id = $("#textid").val();
+                    if ($("#StudentID").val() != false) {
+                     
+                        $.ajax({
+                            url: '/Teachingquality/StudentInformation/Enti',
+                            type: 'POST',
+                            async: true,
+                            cache: false,
+                            timeout: 2000,
+                            data: data.field,
+                            timeout: 1000,
+                            beforeSend: function () {//执行中
+                                i = showLoad();
+                            },
+                            success: function (data) {//执行成功
+                                closeLoad(i);
+                                if (data.Success == true) {
+                                    layer.open({
+                                        type: 1
+                                        , title: false //不显示标题栏
+                                        , closeBtn: false
+                                        , area: '300px;'
+                                        , shade: 0.8
+                                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                        , btn: ['确认']
+                                        , btnAlign: 'c'
+                                        , moveType: 1 //拖拽模式，0或者1
+                                        , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改成功！！！</div>'
+
+                                        , success: function (layero) {
+
+                                            var btn = layero.find('.layui-layer-btn');
+
+                                            btn.find('.layui-layer-btn0').click(function () {
+                                                var index = parent.layer.getFrameIndex(window.name);
+                                                parent.layer.close(index);
+                                            });
+                                        }
+
+                                    });
+                                } else {
+                                    layer.msg(data.Msg, {
+                                        time: 5000, //20s后自动关闭
+
+                                        btn: ['确定']
+                                    });
+                                }
+                            }
+                            , error: function (xmlhttprequest, textstatus, message) {
+                                closeLoad(i);
+                                layer.msg("您的网络出现问题，请稍后再试！！！", {
+                                    time: 5000, //20s后自动关闭
+
+                                    btn: ['确定']
+                                });
+                            }
+                        });
+                     
+                    } else {
+                        if (id != "") {
+                            $("#Name").removeAttr("readonly");
+                          
+                            var i;
+                            $.ajax({
+                                url: '/Teachingquality/StudentInformation/Enti',
+                                type: 'POST',
+                                async: true,
+                                cache: false,
+                                timeout: 2000,
+                                data: data.field,
+                                beforeSend: function () {
+                                    i = showLoad();
+                                },
+                                success: function (data) {
+                                  //  closeLoad(i);
+                                    //    closeLoad(i);
+                                    if (data.Success == true) {
+                                        closeLoad(i);
+                                            layer.open({
+                                                type: 1
+                                                , title: false //不显示标题栏
+                                                , closeBtn: false
+                                                , area: '300px;'
+                                                , shade: 0.8
+                                                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                                , btn: ['继续注册', '返回上一层']
+                                                , btnAlign: 'c'
+                                                , moveType: 1 //拖拽模式，0或者1
+                                                , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册成功<br><br>学号为：' + data.Data + '<br><br>初始密码为：000000<br><br>请牢记学号及密码！！！</div>'
+
+                                                , success: function (layero) {
+                                                    $("#textid").val("");
+                                                    var btn = layero.find('.layui-layer-btn');
+                                                    btn.find('.layui-layer-btn0').click(function () {
+                                                        $("#Name").val("");//姓名
+                                                        $("#Telephone").val("");//电话
+                                                        $("#Reack").val("");//备注
+                                                        $("#identitydocument").val("");//身份证
+                                                        $("#Nation").val("");//民族
+                                                        $("#Traine").val("");//学员性格
+                                                        $("#Hobby").val("");//兴趣爱好
+                                                        $("#Familyaddress").val("");//家庭住址
+                                                        $("#WeChat").val("");//微信
+                                                        $("#qq").val("");//qq
+                                                        $("#BirthDate").val("");//出生日期
+                                                    });
+                                                    btn.find('.layui-layer-btn1').click(function () {
+                                                        var index = parent.layer.getFrameIndex(window.name);
+                                                        parent.layer.close(index);
+                                                    });
+                                                }
+
+                                            });
+                                    } else {
+                                        closeLoad(i);
+                                            layer.msg(data.Msg, {
+                                                time: 5000, //20s后自动关闭
+
+                                                btn: ['确定']
+                                            });
+                                        }
+                                   
+                                   
+
+                                }
+                                , error: function (xmlhttprequest, textstatus, message) {
+                                    closeLoad(i);
+                                    layer.msg("您的网络出现问题，请稍后再试！！！", {
+                                        time: 5000, //20s后自动关闭
+
+                                        btn: ['确定']
+                                    });
+                                }
+                            })
+
+                        } else {
+                           // layer.alert('请', { icon: 0 });
+                            layer.msg("请点击小图标进行注册！！！", {
+                                time: 5000, //20s后自动关闭
+
+                                btn: ['确定']
+                            });
+                        }
+                    }
+                 
+                  
+                });
             });
+           
+            //输入姓名查询备案数据赋值
+            function GetPartsItme(id) {
+                $("#textid").val(id);
+                $("#Name").attr("readonly", "readonly");
+                //readonly="readonly"
+                layui.use(['form'], function () {
+                    var form = layui.form;
+                    $.post("/Teachingquality/StudentInformation/NameKeys/" + id, function (data) {
+                     
+                        $("input[name=Sex][value=false]").attr("checked", data.StuSex == false ? true : false);
+                        $("input[name=Sex][value=true]").attr("checked", data.StuSex == true ? true : false);
+
+                        form.render();
+                        $("input[name=Education][value=初中]").attr("checked", data.StuEducational == "初中" ? true : false);
+                        $("input[name=Education][value=高中]").attr("checked", data.StuEducational == "高中" ? true : false);
+                        $("input[name=Education][value=大专]").attr("checked", data.StuEducational == "大专"? true : false);
+                        form.render();
+                        //$("Sex").val(data.StuSex);
+
+                        $("#Name").val(data.StuName);//姓名
+
+                        $("#Telephone").val(data.StuPhone);//电话
+              
+                        $("#Familyaddress").val(data.StuAddress);//家庭住址
+                        $("#WeChat").val(data.StuWeiXin);//微信
+                        $("#qq").val(data.StuQQ);//qq
+                        $("#BirthDate").val(TimeChange(data.StuBirthy));//出生日期
+
+
+
+                    })
+                });
+               
+            };
+
+
+            //时间转换方法
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = "0" + (parseInt(month) + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+
+           
         </script>
 
 
