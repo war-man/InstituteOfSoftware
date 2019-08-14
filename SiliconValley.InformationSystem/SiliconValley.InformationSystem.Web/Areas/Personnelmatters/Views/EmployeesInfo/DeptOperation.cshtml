@@ -35,14 +35,14 @@
             width: 200px;
         }
         #left {
-        width:500px;
+        width:400px;
         height:400px;
         float:left;
         }
         #right {
-            width: 500px;
+            width: 560px;
             height: 400px;
-            margin-left:40px;
+            margin-left:80px;
             float:left;
         }
     </style>
@@ -50,6 +50,7 @@
 </head>
 <body>
     <div id="left">
+        <h2 style="text-align:center;">部门管理</h2>
         <table id="deptTab" lay-filter="test1"></table>
 
         @*头部工具栏*@
@@ -60,15 +61,11 @@
             </div>
         </script>
 
-        @*操作栏*@
-        <script type="text/html" id="barDemo1">
-            <a class="layui-btn layui-btn-xs" lay-event="editDept">编辑</a>
-        </script>
-
     </div>
-  
+
 
     <div id="right">
+        <h2 style="text-align:center;">岗位管理</h2>
         <table id="positionTab" lay-filter="test2"></table>
 
         @*头部工具栏*@
@@ -79,87 +76,87 @@
             </div>
         </script>
 
-        @*操作栏*@
-        <script type="text/html" id="barDemo2">
-            <a class="layui-btn layui-btn-xs" lay-event="editPosition">编辑</a>
-        </script>
-
     </div>
 
+    <!-- 部门是否禁用修改-->
+    <script type="text/html" id="checkboxTpl">
+        <input type="checkbox" name="IsDel" value="{{d.DeptId}}" title="禁用" lay-filter="lockDemo" {{d.IsDel == true ? 'checked' : ''}}>
+    </script>
+    <!-- 岗位是否禁用修改-->
+    <script type="text/html" id="checkboxTp2">
+        <input type="checkbox" name="IsDel" value="{{d.Pid}}" title="禁用" lay-filter="lockDemo2" {{d.IsDel == true ? 'checked' : ''}}>
+    </script>
 
     <script>
-        layui.use(['form', 'layedit', 'laydate','table'], function () {
+        layui.use(['form', 'layedit', 'laydate', 'table'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate
-                , table =layui.table;
-                table.render({
-                    elem: '#deptTab'
-                    , url: '/Personnelmatters/EmployeesInfo/BindDeptSelect'
-                    , id: "myDept"
-                    , toolbar: '#toolbarDemo1'
-                    , cols: [[
-                        { type: 'checkbox', fixed: 'left' }
-                        , { field: 'DeptId', title: '部门编号', width: 110, fixed: 'left' }
-                        , { field: 'DeptName', title: '部门名称', width: 110, sort: true, fixed: 'center' }
-                        , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, fixed: 'center' }
-                        , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 150 }
-                    ]]
+                , table = layui.table;
+            table.render({
+                elem: '#deptTab'
+                , url: '/Personnelmatters/EmployeesInfo/GetDepts'
+                , id: "myDept"
+                , toolbar: '#toolbarDemo1'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'DeptId', title: '部门编号', width: 90 }
+                    , { field: 'DeptName', title: '部门名称', width: 140, sort: true }
+                    , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, templet: '#checkboxTpl', unresize: true }
+                ]]
 
-                });
+            });
 
-                //头工具栏事件
-                table.on('toolbar(test1)', function (obj) {
-                    //var checkStatus = table.checkStatus(obj.config.id);
-                    switch (obj.event) {
-                        case 'addDept':
-                            AddDept();
-                            break;
-                        case 'editDept':
-                            EditDept();
-                            break;
-                    };
-                });
+            //头工具栏事件
+            table.on('toolbar(test1)', function (obj) {
+                //var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addDept':
+                        EditDept();
+                        break;
+                    case 'delDept':
+                        DelDept();
+                        break;
+                };
+            });
 
-                //监听行工具事件
-                table.on('tool(test1)', function (obj) {
-                    var data = obj.data;
-                    //console.log(obj)
-                    if (obj.event === 'del') {
-                        layer.confirm('真的删除行么', function (index) {
-                            $.get("/EmployeesInfo/DelBill/" + data.id, function (da) {
-                                if (da > 0) {
-                                    layer.alert("删除成功!", { icon: 1 }, function (index) {
-                                        layui.use(['table'], function () {
-                                            var table = layui.table;
-                                            table.reload("myBill");
-                                        });
-                                        layer.close(index);
-                                    });
-                                }
-                                else {
-                                    layer.alert("删除失败!");
-                                }
-                            })
-                        });
-                    }
-                    else if (obj.event === 'edit') {
-                        addOrUpdate(data.id);
+            //监听锁定操作
+            form.on('checkbox(lockDemo)', function (obj) {
+                var id = this.value; var name = this.name;
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/Personnelmatters/EmployeesInfo/EditDeptIsDel",
+                        data: { id: id, isdel: obj.elem.checked },
+                    success: function (data) {
+                        if (data.Success) {
+                           
+                            if (obj.elem.checked == true) {
+                                layer.tips( '已禁用 ' , obj.othis);
+                            }
+                            else {
+                                layer.tips( '已启用', obj.othis);
+                            }
+                           
+                        } else {
+                            layer.alert("修改失败!");
+                        }
                     }
                 });
 
-            //添加员工的方法
-            function AddDept() {
+            });
+
+            //添加部门的方法
+            function EditDept() {
                 layui.use(['layer'], function (args) {
                     var layer = layui.layer;      //layui对象
-
                     layer.open({
                         type: 2
-                        , area: ["1200px", "700px"]
-                        , title: "添加员工"
-                        , content: '/Personnelmatters/EmployeesInfo/AddEmp'
-                        , anim: 1
+                        , area: ["400px", "300px"]
+                        , title: "添加部门"
+                        , content: '/Personnelmatters/EmployeesInfo/DeptUpdate'
+                        , anim: 2
                     });
 
                 })
@@ -177,69 +174,68 @@
             table.render({
                 elem: '#positionTab'
                 , url: '/Personnelmatters/EmployeesInfo/GetPositions'
-                , id: "myEmpInfo"
+                , id: "myPosition"
                 , toolbar: '#toolbarDemo2'
                 , cols: [[
                     { type: 'checkbox', fixed: 'left' }
-                    , { field: 'Pid', title: '岗位编号', width: 110, fixed: 'left' }
-                    , { field: 'deptname', title: '所属部门', width: 110, fixed: 'left' }
-                    , { field: 'PositionName', title: '部门名称', width: 110, sort: true, fixed: 'center' }
-                    , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, fixed: 'center' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo2', width: 150 }
+                    , { field: 'Pid', title: '岗位编号', width: 110 }
+                    , { field: 'deptname', title: '所属部门', width: 110 }
+                    , { field: 'PositionName', title: '岗位名称', width: 140, sort: true }
+                    , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, templet: '#checkboxTp2', unresize: true }
                 ]]
             });
 
             //头工具栏事件
-            table.on('toolbar(test1)', function (obj) {
+            table.on('toolbar(test2)', function (obj) {
                 //var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
-                    case 'addDept':
-                        AddDept();
+                    case 'AddPosition':
+                        addPosition();
                         break;
-                    case 'editDept':
+                    case 'delPosition':
                         EditDept();
                         break;
                 };
             });
 
-            //监听行工具事件
-            table.on('tool(test1)', function (obj) {
-                var data = obj.data;
-                //console.log(obj)
-                if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
-                        $.get("/EmployeesInfo/DelBill/" + data.id, function (da) {
-                            if (da > 0) {
-                                layer.alert("删除成功!", { icon: 1 }, function (index) {
-                                    layui.use(['table'], function () {
-                                        var table = layui.table;
-                                        table.reload("myBill");
-                                    });
-                                    layer.close(index);
-                                });
+            //监听锁定操作
+            form.on('checkbox(lockDemo2)', function (obj) {
+                var id = this.value;
+                var name = this.name;
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: "/Personnelmatters/EmployeesInfo/EditPositionIsDel",
+                    data: { id: id, isdel: obj.elem.checked },
+                    success: function (data) {
+                        if (data.Success) {
+                            if (obj.elem.checked == true) {
+                                layer.tips('已禁用 ', obj.othis);
                             }
                             else {
-                                layer.alert("删除失败!");
+                                layer.tips('已启用', obj.othis);
                             }
-                        })
-                    });
-                }
-                else if (obj.event === 'edit') {
-                    addOrUpdate(data.id);
-                }
+
+                        } else {
+                            layer.alert("修改失败!");
+                        }
+                    }
+                });
+
             });
 
-            //添加部门的方法
-            function AddDept() {
+
+            //添加岗位的方法
+            function addPosition() {
                 layui.use(['layer'], function (args) {
                     var layer = layui.layer;      //layui对象
 
                     layer.open({
                         type: 2
-                        , area: ["400px", "400px"]
-                        , title: "添加部门"
-                        , content: '/Personnelmatters/EmployeesInfo/AddEmp'
-                        , anim: 1
+                        , area: ["400px", "300px"]
+                        , title: "添加岗位"
+                        , content: '/Personnelmatters/EmployeesInfo/AddPosition'
+                        , anim: 2
                     });
 
                 })
