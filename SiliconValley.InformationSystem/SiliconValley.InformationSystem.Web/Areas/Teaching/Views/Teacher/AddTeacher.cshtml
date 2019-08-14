@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-@model SiliconValley.InformationSystem.Entity.MyEntity.Teacher
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Teacher
 <!DOCTYPE html>
 
 <html>
@@ -11,60 +11,62 @@
     <title>AddTeacher</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-   
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
 </head>
 <body>
     <div class="layui-container">
 
+        <form class="layui-form">
+            <fieldset>
+                <legend>基本信息</legend>
 
-        <fieldset>
-            <legend>基本信息</legend>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">员工编号</label>
 
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">员工编号</label>
-
-                    <div class="layui-input-inline">
-                        <input type="tel" value="@ViewBag.Emp.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                        <div class="layui-input-inline">
+                            <input type="tel" value="@ViewBag.Emp.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">员工姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value="@ViewBag.Emp.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">员工姓名</label>
-                    <div class="layui-input-inline">
-                        <input type="text" value="@ViewBag.Emp.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+
+                            <input type="radio" name="sex" value="@ViewBag.Emp.Sex" checked title="@ViewBag.Emp.Sex">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">入职时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="inputtime" value="@ViewBag.Emp.EntryTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">性别</label>
-                    <div class="layui-input-inline">
-                        <input type="checkbox" name="sex" value="@ViewBag.Emp.Sex" readonly lay-skin="switch" lay-text="男|女">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">入职时间</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="inputtime" value="@ViewBag.Emp.ProbationEndTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div>
 
 
 
-        </fieldset>
+            </fieldset>
+        </form>
         <form class="layui-form" lay-filter="addteacher">
-            <fieldset >
+            <fieldset>
 
-                <legend>需添加的信息</legend>
-
+                <legend>可添加的信息</legend>
+                <input type="hidden" value="@ViewBag.Emp.EmployeeId" name="EmployeeId" />
                 <div class="layui-form-item layui-form-text">
                     @*@Html.DisplayFor(d => d.AttendClassStyle)*@
                     <label class="layui-form-label">带班风格</label>
                     <div class="layui-input-block">
-
                         @Html.TextAreaFor(d => d.AttendClassStyle, new { @class = "layui-textarea" })
                     </div>
                 </div>
@@ -97,18 +99,17 @@
                 </div>
                 <div style="text-align:center;">
                     <button class="layui-btn" id="submit" lay-submit="" lay-filter="addteacher">提交</button>
-                    <button class="layui-btn" type="button">
 
+                    <button class="layui-btn" id="close" type="button">
                         关闭
-
                     </button>
                 </div>
             </fieldset>
         </form>
     </div>
-   
+
     <script src="~/Scripts/layui/layui.js"></script>
-   
+
 
     <script src="~/Areas/Teaching/Scripts/TeacherEdit.js"></script>
 

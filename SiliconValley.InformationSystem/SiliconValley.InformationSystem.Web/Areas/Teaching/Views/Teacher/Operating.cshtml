@@ -10,6 +10,15 @@
     <title></title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 
+    <style>
+
+        #jiben input {
+            
+            border:0px solid #ffffff;
+        }
+
+    </style>
+
 </head>
 <body>
     <div>
@@ -18,58 +27,51 @@
 
 
         <hr />
+        <form class="layui-form">
+            <fieldset id="jiben">
+                <legend>基本信息</legend>
 
-        <fieldset>
-            <legend>基本信息</legend>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">员工编号</label>
 
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">员工编号</label>
-
-                    <div class="layui-input-inline">
-                        <input type="tel" value="@ViewBag.Emp.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                        <div class="layui-input-inline">
+                            <input type="tel" value="@ViewBag.Emp.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">员工姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value="@ViewBag.Emp.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+                        </div>
                     </div>
                 </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">员工姓名</label>
-                    <div class="layui-input-inline">
-                        <input type="text" value="@ViewBag.Emp.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+
+                            <input type="radio" name="sex" value="@ViewBag.Emp.Sex" checked title="@ViewBag.Emp.Sex">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">入职时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="inputtime" value="@ViewBag.Emp.EntryTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
                     </div>
                 </div>
-            </div>
 
-
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">性别</label>
-                    <div class="layui-input-inline">
-                        <input type="checkbox" name="sex" value="@ViewBag.Emp.Sex" readonly lay-skin="switch" lay-text="男|女">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">入职时间</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="inputtime" value="@ViewBag.Emp.ProbationEndTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div>
-
-        </fieldset>
-
+            </fieldset>
+        </form>
 
         <fieldset>
             <legend>编辑区域</legend>
             <form class="layui-form" lay-filter="editteacher">
 
                @Html.HiddenFor(d=>d.TeacherID)
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">搜索选择框</label>
-                    <div class="layui-input-inline">
-                        @Html.DropDownList("major", @ViewBag.Majors as IEnumerable<SelectListItem>)
-                    </div>
-                </div>
-
 
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">工作经验</label>
@@ -107,7 +109,7 @@
 
 
                 <div class="layui-form-item">
-                    <div class="layui-input-block">
+                    <div class="layui-input-block" style="text-align:center;">
                         <button class="layui-btn" id="submit" lay-submit="" lay-filter="editteacher">确定</button>
                     </div>
                 </div>
@@ -117,6 +119,7 @@
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
     <script>
 
         layui.use(['form', 'layer'], function () {
@@ -130,22 +133,24 @@
                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
                 //阻止表单跳转。如果需要表单跳转，去掉这段即可。
 
-                $.post("/Teaching/Teacher/DoEdit", data.field, function (result) {
 
-                    console.log(result)
+                Ajax("/Teaching/Teacher/DoEdit", data.field, "post", function (result) {
 
-                    if (result.ErrorCode != 0) {
+                    layer.msg(result.Msg, { time: 1000 }, function () {
 
-                        layer.msg('修改成功');
-                    }
-                    else {
                         //当你在iframe页面关闭自身时
                         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                         parent.layer.close(index); //再执行关闭
+                    });
 
-                    }
+                   
 
-                });
+                }, function (error) {
+
+                    layer.msg("网络链接失败！");
+
+                    });
+
 
                 return false;
             });

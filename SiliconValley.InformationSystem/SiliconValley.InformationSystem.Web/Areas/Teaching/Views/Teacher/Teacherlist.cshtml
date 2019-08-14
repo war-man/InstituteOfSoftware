@@ -12,7 +12,7 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 </head>
 <body>
-    <div class="lay">
+    <div class="">
         <div>
             <table class="layui-hide" id="teacherlist" lay-filter="teacherlist_filter"></table>
         </div>
@@ -25,7 +25,7 @@
 
 
         function callbackdata() {
-            var checkStatus = layui.table.checkStatus('teacherlist'); //idTest 即为基础参数 id 对应的值
+            var checkStatus = layui.table.checkStatus('Teacherlist'); //idTest 即为基础参数 id 对应的值
             return checkStatus;
         }
 
@@ -42,19 +42,38 @@
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                         { type: 'radio' }
-                    , { field: 'EmpName', width: 120, title: '姓名' }
-                    , { field: 'Number', width: 120, title: '员工编号' }
-                    , { field: 'Sex', width: 120, title: '性别' }
+                    , { field: 'EmpName',  title: '姓名' }
+                    , { field: 'Number', title: '员工编号' }
+                    , { field: 'Sex',  title: '性别' }
                 ]]
                 , page: true
 
                 , yes: function (index) {
-                    alert("fd");
+                  
                 }, done: function (res) {   //返回数据执行回调函数
                     layer.close(index);    //返回数据关闭loading
 
                 }
             });
+
+
+            //$(document).keydown(function (event) {
+
+            //    console.log(event.keyCode);
+               
+            //    if (event.keyCode == 13) {
+                   
+            //        $($(".layui-layer-btn0")[0]).click();
+
+            //    }
+
+            //    if (event.keyCode == 27) {
+
+            //        $($(".layui-layer-btn1")[0]).click();
+
+            //    }
+
+            //});
 
         });
     </script>

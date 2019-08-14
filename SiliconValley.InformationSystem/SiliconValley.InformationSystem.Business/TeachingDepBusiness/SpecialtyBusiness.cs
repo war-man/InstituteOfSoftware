@@ -20,5 +20,17 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return this.GetList().Where(t=>t.Id==SpecialtyId).FirstOrDefault();
         }
 
+        public bool IsInList(List<Specialty> souces, Specialty specialty)
+        {
+
+            foreach (var item in souces)
+            {
+                if (item.Id == specialty.Id)
+                    return true;
+            }
+
+            return false;
+
+        }
     }
 }

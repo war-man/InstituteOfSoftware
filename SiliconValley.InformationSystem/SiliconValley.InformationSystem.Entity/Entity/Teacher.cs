@@ -27,6 +27,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string AttendClassStyle { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<int> MinimumCourseHours { get; set; }
+
+       
     
     }
+
+    
 }

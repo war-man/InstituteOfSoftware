@@ -26,7 +26,7 @@
     <div>
 
 
-        <h1>@ViewBag.TeacherView.Name </h1>
+        <h1 style="text-align:center">@ViewBag.TeacherView.Name </h1>
 
         <input type="hidden"  id="teacherid" value="@ViewBag.TeacherView.TeacherID"/>
         @{
@@ -50,19 +50,22 @@
 
                             </div>
 
-                            <div id="sethaveGrand" style="margin-top:10px;">
-                                @{
-                                    foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
-                                    {
+                            <div class="row" id="sethaveGrand" style="margin-top:10px;">
 
-                                        <button class="layui-btn grand" grandid="@item1.Id" type="button" style="margin-top:50px;">
-                                            @item1.GrandName
-                                        </button>
+                             
+
+                                    @{
+                                        foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
+                                        {
+
+                                            <button class="layui-btn grand" grandid="@item1.Id" type="button" style="margin-top:50px;">
+                                                @item1.GrandName
+                                            </button>
+                                        }
                                     }
-                                }
-
+                               
                                 <button majorid="@item.Id" id="add1" select="false" class="layui-btn" type="button" style="margin-top:50px;">
-                                    +
+                                    + 添加阶段
                                 </button>
 
                             </div>

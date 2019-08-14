@@ -35,6 +35,18 @@
             .linu {
                 width: 200px;
             }
+
+
+          
+
+            #jiben input {
+                border: 0px solid #ffffff;
+            }
+
+            label {
+                font-size:18px;
+            }
+      
         </style>
 
     </head>
@@ -46,49 +58,72 @@
         <div>
           
                 <div class="layui-container">
-                    <fieldset>
+                    <fieldset id="jiben">
                      
                         <legend>基本信息</legend>
 
                         <div class="layui-row layui-form-item">
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">姓名</label>
+                                <label class="layui-form-label">姓名:</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.Name, new { @class = "layui-input", @readonly = "d" })
+                                    @Html.TextBoxFor(t => t.emp.EmpName, new { @class = "layui-input", @readonly = "d" })
                                     @*<input tepe="text" name="name" class="layui-input" />*@
                                 </div>
                             </div>
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">员工编号</label>
+                                <label class="layui-form-label">员工编号:</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.EmpNo, new { @class = "layui-input", @readonly = "d" })
+                                    @Html.TextBoxFor(t => t.emp.PositionId, new { @class = "layui-input", @readonly = "d" })
                                 </div>
                             </div>
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">电话</label>
+                                <label class="layui-form-label">电话:</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.Phone, new { @class = "layui-input", @readonly = "d" }
+                                    @Html.TextBoxFor(t => t.emp.Phone, new { @class = "layui-input", @readonly = "d" }
      )
                                 </div>
                             </div>
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">生日</label>
+                                <label class="layui-form-label">生日:</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.Birthday, new { @class = "layui-input", @readonly = "d", type = "date" })
+                                    @*@Html.TextBoxFor(t => t.emp.Birthdate, new { @class = "layui-input", @readonly = "d", type = "date" })*@
+
+                                    <input type="date" name="birhday" value="@Model.emp.Birthdate"  >
                                 </div>
                             </div>
 
 
-                            <div class="layui-form-item">
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
-                                <label class="layui-form-label">性别</label>
-                                <div class="layui-input-block">
+                                <label class="layui-form-label">性别:</label>
+                                <div class="layui-input-inline">
 
-                                    <input type="radio" name="sex" value="@Model.Sex" checked title="@Model.Sex">
+                                    <input type="radio" name="sex" value="@Model.emp.Sex" checked title="@Model.emp.Sex">
+
+                                </div>
+                            </div>
+
+
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                <label class="layui-form-label">部门:</label>
+                                <div class="layui-input-inline">
+
+                                    <input class="layui-input" type="text" name="sex" value="@Model.Department.DeptName">
+
+                                </div>
+                            </div>
+
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                <label class="layui-form-label">岗位:</label>
+                                <div class="layui-input-inline">
+
+                                    <input class="layui-input" type="text" name="sex" value="@Model.Position.PositionName">
 
                                 </div>
                             </div>
@@ -106,7 +141,7 @@
 
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
-                                <label class="layui-form-label">专业</label>
+                                <label class="layui-form-label">专业:</label>
                                 <div class="layui-input-block">
                                     @{ foreach (var item in Model.Major)
                                         {
@@ -116,21 +151,11 @@
                                 </div>
 
                             </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">阶段</label>
 
-                                @{ foreach (var item in Model.Grands)
-                                    {
-                                        <button type="button" class="layui-btn">@item.GrandName</button>
-                                    }
-
-                                }
-
-                            </div>
                         </div>
 
                         <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">项目经验</label>
+                            <label class="layui-form-label">项目经验:</label>
                             <div class="layui-input-block">
 
                                 @Html.TextAreaFor(t => t.ProjectExperience, new { @class = "layui-textarea" ,@readonly = "d" })
@@ -139,7 +164,7 @@
                         </div>
 
                         <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">工作经验</label>
+                            <label class="layui-form-label">工作经验:</label>
                             <div class="layui-input-block">
 
                                 @Html.TextAreaFor(t => t.WorkExperience, new { @class = "layui-textarea", @readonly = "d" })
@@ -148,7 +173,7 @@
                         </div>
 
                         <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">教学经验</label>
+                            <label class="layui-form-label">教学经验:</label>
                             <div class="layui-input-block">
 
                                 @Html.TextAreaFor(t => t.TeachingExperience, new { @class = "layui-textarea", @readonly = "d" })
@@ -157,7 +182,7 @@
                         </div>
 
                         <div class="layui-form-item layui-form-text">
-                            <label class="layui-form-label">带班经验</label>
+                            <label class="layui-form-label">带班经验:</label>
                             <div class="layui-input-block">
 
                                 @Html.TextAreaFor(t => t.AttendClassStyle, new { @class = "layui-textarea", @readonly = "d" })
