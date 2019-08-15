@@ -39,7 +39,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> InsitDate { get; set; }
         public string Reack { get; set; }
-    
-       
+        public string Guardian { get; set; }
+
+
+
     }
 }
