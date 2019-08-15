@@ -31,7 +31,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> ContractStartTime { get; set; }
         public Nullable<System.DateTime> ContractEndTime { get; set; }
         public Nullable<System.DateTime> EntryTime { get; set; }
-        public Nullable<System.DateTime> ProbationEndTime { get; set; }
         public Nullable<System.DateTime> Birthdate { get; set; }
         public string Birthday { get; set; }
         public Nullable<System.DateTime> PositiveDate { get; set; }
@@ -45,8 +44,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string WorkExperience { get; set; }
         public Nullable<decimal> ProbationSalary { get; set; }
         public Nullable<decimal> Salary { get; set; }
-        public Nullable<bool> WorkingState { get; set; }
-        public string SSStartMonth { get; set; }
+        public Nullable<System.DateTime> SSStartMonth { get; set; }
         public string BCNum { get; set; }
         public string Material { get; set; }
         public string Remark { get; set; }
