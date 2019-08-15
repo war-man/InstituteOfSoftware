@@ -202,7 +202,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             ajaxResult.Success = true;
             ajaxResult.Msg = "取消合作";
-            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
@@ -322,41 +322,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             //var EmpStaffNo = user.EmpNumber;
 
             Enter = new EnterpriseInfoBusiness();
-            
+
             //EmployStaff = new EmploymentStaffBusiness();
             //var MrDEmployStaff = EmployStaff.GetIQueryable().Where(a => a.EmployeesInfo_Id == EmpStaffNo).FirstOrDefault();
-            
+
             int ID = int.Parse(id);
             var entdata = Enter.GetIQueryable().Where(a => a.ID == ID).FirstOrDefault();
             //if (entdata.EmpStaffID== MrDEmployStaff.ID)
             //{
-                coo = new CooperaEnterprisesBusiness();
-                EntSpeeBus = new EntSpeeBusiness();
-                SpecBus = new SpecialtyBusiness();
-                var coodata = coo.GetIQueryable().Where(a => a.ID == entdata.CooID).FirstOrDefault();
-                var modeldata = new EditEnterpriseView();
-                modeldata.EntID = entdata.ID;
-                modeldata.EntName = entdata.EntName;
-                modeldata.EntAddress = entdata.EntAddress;
-                modeldata.EntScale = entdata.EntScale;
-                modeldata.EntNature = entdata.EntNature;
-                modeldata.EntWelfare = entdata.EntWelfare;
-                modeldata.Remark = entdata.Remark;
-                modeldata.EntContacts = coodata.EntContacts;
-                modeldata.EntPhone = coodata.EntPhone;
-                modeldata.CooID = coodata.ID;
+            coo = new CooperaEnterprisesBusiness();
+            EntSpeeBus = new EntSpeeBusiness();
+            SpecBus = new SpecialtyBusiness();
 
-                ViewBag.EntSpeelist = EntSpeeBus.GetIQueryable().Where(a => a.EntID == entdata.ID).ToList();
+            var modeldata = new EditEnterpriseView();
+            modeldata.EntID = entdata.ID;
+            modeldata.EntName = entdata.EntName;
+            modeldata.EntAddress = entdata.EntAddress;
+            modeldata.EntScale = entdata.EntScale;
+            modeldata.EntNature = entdata.EntNature;
+            modeldata.EntWelfare = entdata.EntWelfare;
+            modeldata.Remark = entdata.Remark;
+            modeldata.EntContacts = entdata.CooID == null ? "" : GetCooperaEnterprisesByID(entdata.CooID).EntContacts;
+            modeldata.EntPhone = entdata.CooID == null ? "" : GetCooperaEnterprisesByID(entdata.CooID).EntPhone;
+            modeldata.CooID = entdata.CooID == null ? -1 : GetCooperaEnterprisesByID(entdata.CooID).ID;
 
-                var Sepclist = SpecBus.GetIQueryable().Where(a => a.IsDelete == false).ToList();
-                var SepclistView = Sepclist.Select(a => new MrDSpecialtyView
-                {
-                    Id = a.Id,
-                    SpecialtyName = a.SpecialtyName,
-                    IsCheack = Existence(id, a.Id)
-                }).ToList();
-                ViewBag.SepclistView = SepclistView;
-                return View(modeldata);
+            ViewBag.EntSpeelist = EntSpeeBus.GetIQueryable().Where(a => a.EntID == entdata.ID).ToList();
+
+            var Sepclist = SpecBus.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+            var SepclistView = Sepclist.Select(a => new MrDSpecialtyView
+            {
+                Id = a.Id,
+                SpecialtyName = a.SpecialtyName,
+                IsCheack = Existence(id, a.Id)
+            }).ToList();
+            ViewBag.SepclistView = SepclistView;
+            return View(modeldata);
             //}
             //else
             //{
@@ -366,54 +366,90 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             //    return Json(AjaxResult, JsonRequestBehavior.AllowGet);
             //}
 
-           
+
         }
 
         [HttpPost]
         public ActionResult EditEnterprise(EditEnterpriseView editEnterpriseView, string EntSpeeList)
         {
             coo = new CooperaEnterprisesBusiness();
-            Enter = new EnterpriseInfoBusiness();
-            EntSpeeBus = new EntSpeeBusiness();
-            int EetID = editEnterpriseView.EntID;
             int CooID = editEnterpriseView.CooID;
-            var EnterOld = Enter.GetIQueryable().Where(a => a.ID == EetID).FirstOrDefault();
-            var CooOld = coo.GetIQueryable().Where(a => a.ID == CooID).FirstOrDefault();
-            CooOld.EntContacts = editEnterpriseView.EntContacts;
-            CooOld.EntPhone = editEnterpriseView.EntPhone;
             var AjaxResultss = new AjaxResult();
-            try
+            switch (CooID)
             {
-                coo.Update(CooOld);
-                AjaxResultss.Success = true;
-                AjaxResultss.Msg = "修改合作企业成功";
-                EnterOld.EntAddress = editEnterpriseView.EntAddress;
-                EnterOld.EntName = editEnterpriseView.EntName;
-                EnterOld.EntNature = editEnterpriseView.EntNature;
-                EnterOld.EntScale = editEnterpriseView.EntScale;
-                EnterOld.EntWelfare = editEnterpriseView.EntWelfare;
-                EnterOld.Remark = editEnterpriseView.Remark;
-                try
-                {
-                    Enter.Update(EnterOld);
-                    AjaxResultss.Success = true;
-                    AjaxResultss.Msg = "修改企业成功";
-                    JArray jArray = JArray.Parse(EntSpeeList);
-
-                    List<EntSpee> entspeeList = EntSpeeBus.GetIQueryable().Where(a => a.EntID == EetID).ToList();
+                //作为添加
+                case 0:
+                    var newcoo = new CooperaEnterprises();
+                    newcoo.EntContacts = editEnterpriseView.EntContacts;
+                    newcoo.EntPhone = editEnterpriseView.EntPhone;
                     try
                     {
-                        EntSpeeBus.Delete(entspeeList);
+                        coo.Insert(newcoo);
                         AjaxResultss.Success = true;
-                        AjaxResultss.Msg = "删除企业专业成功";
+                        AjaxResultss.Msg = "修改合作企业成功";
+                        AjaxResultss.Success = Operation(editEnterpriseView, EntSpeeList).Success;
+                        AjaxResultss.Msg = Operation(editEnterpriseView, EntSpeeList).Msg;
                     }
                     catch (Exception ex)
                     {
 
-                        AjaxResultss.Success = true;
-                        AjaxResultss.Msg = "删除企业专业失败";
+                        AjaxResultss.Success = false;
+                        AjaxResultss.Msg = ex.Message;
                     }
 
+                    break;
+                //作为跟以前一样没有合作企业
+                case -1:
+                    AjaxResultss.Success = Operation(editEnterpriseView, EntSpeeList).Success;
+                    AjaxResultss.Msg = Operation(editEnterpriseView, EntSpeeList).Msg;
+                    break;
+                default:
+                    var CooOld = GetCooperaEnterprisesByID(CooID);
+                    CooOld.EntContacts = editEnterpriseView.EntContacts;
+                    CooOld.EntPhone = editEnterpriseView.EntPhone;
+                    try
+                    {
+                        coo.Update(CooOld);
+                        AjaxResultss.Success = true;
+                        AjaxResultss.Msg = "修改合作企业成功";
+                        AjaxResultss.Success = Operation(editEnterpriseView, EntSpeeList).Success;
+                        AjaxResultss.Msg = Operation(editEnterpriseView, EntSpeeList).Msg;
+                    }
+                    catch (Exception ex)
+                    {
+                        AjaxResultss.Success = false;
+                        AjaxResultss.Msg = ex.Message;
+                    }
+                    break;
+            }
+            return Json(AjaxResultss,JsonRequestBehavior.AllowGet);
+        }
+
+        private AjaxResult Operation(EditEnterpriseView editEnterpriseView, string EntSpeeList) {
+            AjaxResult AjaxResultss = new AjaxResult();
+            EntSpeeBus = new EntSpeeBusiness();
+            Enter = new EnterpriseInfoBusiness();
+            int EetID = editEnterpriseView.EntID;
+            var EnterOld = Enter.GetIQueryable().Where(a => a.ID == EetID).FirstOrDefault();
+            EnterOld.EntAddress = editEnterpriseView.EntAddress;
+            EnterOld.EntName = editEnterpriseView.EntName;
+            EnterOld.EntNature = editEnterpriseView.EntNature;
+            EnterOld.EntScale = editEnterpriseView.EntScale;
+            EnterOld.EntWelfare = editEnterpriseView.EntWelfare;
+            EnterOld.Remark = editEnterpriseView.Remark;
+            try
+            {
+                Enter.Update(EnterOld);
+                AjaxResultss.Success = true;
+                AjaxResultss.Msg = "修改企业成功";
+                JArray jArray = JArray.Parse(EntSpeeList);
+
+                List<EntSpee> entspeeList = EntSpeeBus.GetIQueryable().Where(a => a.EntID == EetID).ToList();
+                try
+                {
+                    EntSpeeBus.Delete(entspeeList);
+                    AjaxResultss.Success = true;
+                    AjaxResultss.Msg = "删除企业专业成功";
                     List<EntSpee> entSpees = new List<EntSpee>();
                     foreach (var item in jArray)
                     {
@@ -445,18 +481,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 catch (Exception ex)
                 {
 
-                    AjaxResultss.Success = false;
-                    AjaxResultss.Msg = "修改企业失败";
+                    AjaxResultss.Success = true;
+                    AjaxResultss.Msg = "删除企业专业失败";
                 }
+
+                
             }
             catch (Exception ex)
             {
 
                 AjaxResultss.Success = false;
-                AjaxResultss.Msg = "修改合作企业失败";
+                AjaxResultss.Msg = "修改企业失败";
             }
-            return Json(AjaxResultss, JsonRequestBehavior.AllowGet);
+            return AjaxResultss;
         }
+
         /// <summary>
         /// 用来显示企业专业的信息
         /// </summary>
@@ -566,8 +605,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(AjaxResultss, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Enterdetail(int EnterpriseInfoID,int CooperaEnterprisesID) {
-            return null;
+        public ActionResult Enterdetail(int id) {
+
+            Enter = new EnterpriseInfoBusiness();
+            coo = new CooperaEnterprisesBusiness();
+            EntSpeeBus = new EntSpeeBusiness();
+            SpecBus = new SpecialtyBusiness();
+            var enterobj = Enter.GetEnterByID(id);
+            EnterdetailView enterdetailView = new EnterdetailView();
+            enterdetailView.EntAddress = enterobj.EntAddress;
+            enterdetailView.EntName = enterobj.EntName;
+            enterdetailView.EntNature = enterobj.EntNature;
+            enterdetailView.EntScale = enterobj.EntScale;
+            enterdetailView.EntWelfare = enterobj.EntWelfare;
+            enterdetailView.Remark = enterobj.Remark;
+            enterdetailView.EntContacts = enterobj.CooID == null ? "可待合作企业" : GetCooperaEnterprisesByID(enterobj.CooID).EntContacts;
+            enterdetailView.EntPhone = enterobj.CooID == null ? "可待合作企业" : GetCooperaEnterprisesByID(enterobj.CooID).EntContacts;
+
+            var ListEntSpee = EntSpeeBus.GetIQueryable().Where(a => a.EntID == id).ToList().Select(a => new MrDDetailSpecView
+            {
+                JobResponsibilities = a.JobResponsibilities,
+                Requirements = a.Requirements,
+                EntSalary = a.EntSalary,
+                SpecialtyName = GetSpecialtyById(a.SpeID).SpecialtyName
+            }).ToList();
+
+            ViewBag.NowSpee = Newtonsoft.Json.JsonConvert.SerializeObject(ListEntSpee);
+
+            return View(enterdetailView);
         }
         #endregion
     }
