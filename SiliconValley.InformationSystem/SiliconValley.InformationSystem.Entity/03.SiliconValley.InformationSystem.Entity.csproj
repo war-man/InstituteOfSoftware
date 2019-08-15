@@ -263,6 +263,7 @@
     <Compile Include="Entity\Timestamp.cs" />
     <Compile Include="Entity\TotaleCharges.cs" />
     <Compile Include="Entity\Transfer.cs" />
+    <Compile Include="Entity\TreeClass.cs" />
     <Compile Include="Entity\Trialapplication.cs" />
     <Compile Include="Entity\Undergra.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />

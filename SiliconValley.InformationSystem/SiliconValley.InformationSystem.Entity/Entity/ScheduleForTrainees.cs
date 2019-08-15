@@ -22,7 +22,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string ClassID { get; set; }
         public string StudentID { get; set; }
         public Nullable<bool> CurrentClass { get; set; }
-    
-      
+    public DateTime AddDate { get; set; }
+
+
     }
 }
