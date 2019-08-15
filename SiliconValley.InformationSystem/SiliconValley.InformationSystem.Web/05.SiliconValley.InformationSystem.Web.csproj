@@ -216,6 +216,8 @@
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
@@ -336,6 +338,8 @@
     <Content Include="Areas\Teaching\Views\Teacher\AddTeacher.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\goodmajor.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\AddClassSchedule.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -968,6 +972,7 @@
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
+    <Folder Include="Areas\Teachingquality\Views\StudentAttendanc\" />
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
     <Folder Include="Areas\Teaching\Views\StudentHomeWork\" />
