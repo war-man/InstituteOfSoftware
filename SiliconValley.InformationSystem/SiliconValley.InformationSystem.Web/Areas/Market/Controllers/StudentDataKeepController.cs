@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/FindStudent
+        // GET: /Market/StudentDataKeep/GetStudentPutOnRecordData
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -39,19 +39,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult StudentDataKeepIndex()
         {
             //获取信息来源的所有数据
-            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            List<SelectListItem> se=  StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            SelectListItem e = new SelectListItem();
+            e.Selected = true;
+            e.Text = "请选择";
+            e.Value = "请选择";
+            se.Add(e);
+            ViewBag.infomation = se;
             return View();
         }
 
         //往数据库中获取数据备案的信息
         public ActionResult GetStudentPutOnRecordData(int limit,int page)
-        { 
-             
+        {
+            string findNamevalue = Request.QueryString["findNamevalue"];
+            string findPhonevalue = Request.QueryString["findPhonevalue"];
+            string findInformationvalue = Request.QueryString["findInformationvalue"];
+            IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s => s.Id);
+            if (!string.IsNullOrEmpty(findNamevalue))
+            {
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuName.Contains(findNamevalue));
+            }
+            if (!string.IsNullOrEmpty(findPhonevalue))
+            {
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuPhone.Contains(findPhonevalue));
+            }
+            if (!string.IsNullOrEmpty(findInformationvalue) && findInformationvalue!="请选择")
+            {
+                int type_id = Convert.ToInt32(findInformationvalue);
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuInfomationType_Id== type_id);
+            }
             try
             {
                 int SunLimit = s_Entity.GetList().Count;//总行数
                 int SunPage = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(SunLimit / limit)));//总页数
-                IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s=>s.Id);              
+              
                 List<StudentPutOnRecord> PageData= s_Entity.GetPagination<StudentPutOnRecord>(stu_IQueryable, page,limit,"Id","desc",ref SunLimit, ref SunPage); //分页
                 var Get_List_studentPutOnRecord = PageData.Select(s => new {
                     Id = s.Id,
