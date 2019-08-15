@@ -29,25 +29,69 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         private readonly SpecialtyBusiness db_specialty;
 
+        private readonly GrandBusiness db_grand;
+
         public TeacherController()
         {
             db_teacher = new TeacherBusiness();
             db_emp = new EmployeesInfoManage();
             db_teacher_sBearing = new TecharOnstageBearingBusiness();
             db_specialty = new SpecialtyBusiness();
+            db_grand = new GrandBusiness();
         }
         public ActionResult TeachersInfo()
         {
 
+           var majorlist = db_specialty.GetList();
+
+            ViewBag.majors = majorlist;
+
+            var grandlist = db_grand.GetList();
+            ViewBag.grands = grandlist;
+
             return View();
         }
 
-        public ActionResult TeacherData(int limit,int page)
+
+        /// <summary>
+        /// 教员列表
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Teacherlist()
         {
 
 
 
-            var list = db_teacher.GetList().Skip((page -1) * limit).Take(limit);
+            return View();
+
+        }
+
+        public ActionResult GetEmpData(int limit, int page)
+        {
+
+
+            var list = db_teacher.employeesInfos().Where(d=>d.IsDel==false).ToList();
+
+
+
+            var returnlist = list.Skip((page - 1) * limit).Take(limit).ToList().Select(x => new { EmpName = x.EmpName, Number = x.EmployeeId, Sex = x.Sex });
+
+            var objresult = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = returnlist
+            };
+
+            return Json(objresult,JsonRequestBehavior.AllowGet);
+        }
+ 
+        public ActionResult TeacherData(int limit,int page)
+        {
+
+            var list = db_teacher.GetList().Where(d => d.IsDel == false).ToList().Skip((page -1) * limit).Take(limit);
 
             var returnlist = new List<object>();
 
@@ -55,22 +99,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             //组装返回对象
             foreach (var item in list)
             {
-                var emp = db_emp.GetList().Where(t => t.EmployeeId == item.EmployeeId).FirstOrDefault();
+                var emp = db_emp.GetList().Where(t => t.EmployeeId == item.EmployeeId &&t.IsDel==false).FirstOrDefault();
 
                 //获取专业信息
-                var major = db_teacher_sBearing.GetList().Where(t => t.TeacherID == item.TeacherID).FirstOrDefault();
+                //var major = db_teacher_sBearing.GetList().Where(t => t.TeacherID == item.TeacherID).FirstOrDefault();
 
-               var majorresult = db_specialty.GetList().Where(t => t.Id == major.Major).FirstOrDefault(); ;
+                //var majorresult = db_specialty.GetList().Where(t => t.Id == major.Major).FirstOrDefault(); ;
 
 
                 var obj = new {
+
+                    EmployeeId = emp.EmployeeId,
+                    Sex = emp.Sex,
                     TeacherID = item.TeacherID,
                     AttendClassStyle = item.AttendClassStyle,
                     ProjectExperience = item.ProjectExperience,
                     TeachingExperience = item.TeachingExperience,
                     WorkExperience = item.WorkExperience,
                     TeacherName = emp.EmpName,
-                    Major = majorresult.SpecialtyName
+                   
+
                 };
 
                 returnlist.Add(obj);
@@ -92,6 +140,55 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
 
+
+        /// <summary>
+        /// 添加教员视图
+        /// </summary>
+        /// <returns>返回视图</returns>
+        [HttpGet]
+
+        public ActionResult AddTeacher(string empid)
+        {
+            var emp = db_emp.GetList().Where(d=>d.IsDel==false && d.EmployeeId==empid && d.IsDel==false).ToList().FirstOrDefault();
+
+            ViewBag.Emp = emp;
+
+            return View();
+
+        }
+        /// <summary>
+        /// 添加教员
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddTeacher(Teacher teacher)
+        {
+
+            teacher.IsDel = false;
+            teacher.MinimumCourseHours = 0;
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_teacher.Insert(teacher);
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+            catch (Exception)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "错误";
+                result.Data = null;
+            }
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+
+
+        }
+
         /// <summary>
         /// 对教员的操作的视图
         /// </summary>
@@ -109,9 +206,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
 
-            Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == ID).ToList().FirstOrDefault();
+            Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == ID &&t.IsDel==false).ToList().FirstOrDefault();
 
-            var emp = db_emp.GetList().Where(t=>t.EmployeeId==teacher.EmployeeId).FirstOrDefault();
+            var emp = db_emp.GetList().Where(t=>t.EmployeeId==teacher.EmployeeId && t.IsDel==false).FirstOrDefault();
 
 
             //获取专业信息
@@ -129,10 +226,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
+        [HttpPost]
 
         public ActionResult GetTeacherByID(int Id)
         {
-           Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == Id).ToList().FirstOrDefault();
+           Teacher teacher = db_teacher.GetList().Where(t => t.TeacherID == Id && t.IsDel==false).ToList().FirstOrDefault();
 
             return Json(teacher, JsonRequestBehavior.AllowGet);
 
@@ -149,7 +247,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         {
             AjaxResult result = null;
 
-           var t = db_teacher.GetList().Where(x => x.TeacherID == teacher.TeacherID).FirstOrDefault();
+           var t = db_teacher.GetList().Where(x => x.TeacherID == teacher.TeacherID && x.IsDel==false).FirstOrDefault();
 
             t.AttendClassStyle = teacher.AttendClassStyle.Trim();
             t.ProjectExperience = teacher.ProjectExperience.Trim();
@@ -162,7 +260,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 result = new SuccessResult();
                 result.Msg = "修改成功";
-
                 result.Success = true;
 
             }
@@ -186,34 +283,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// </summary>
         /// <param name="id">教员ID</param>
         /// <returns>教员详细视图</returns>
+        /// 
+        [HttpGet]
         public ActionResult TeacherDetailView(int id)
         {
 
-            TeacherDetailView teacherResult = new TeacherDetailView();
-
-            //获取教员信息
-             Teacher t = db_teacher.GetTeacherByID(id);
-
-            //获取教员基本信息
-             EmployeesInfo emp = db_teacher.GetEmpByEmpNo(t.EmployeeId);
-            teacherResult.EmpNo = emp.EmployeeId;
-            teacherResult.Birthday = emp.Birthday;
-            teacherResult.Name = emp.EmpName;
-            teacherResult.Phone = emp.Phone;
-            teacherResult.Sex = emp.Sex;
-            teacherResult.TeacherID = t.TeacherID;
-            
-            //获取教员阶段信息
-             teacherResult.Grands = db_teacher.GetGrandByTeacherID(t.TeacherID);
-
-            //获取教员专业信息
-            teacherResult.Major= db_teacher.GetMajorByTeacherID(t.TeacherID);
-           
-            //获取技术信息
-            teacherResult.AttendClassStyle = t.AttendClassStyle;
-            teacherResult.ProjectExperience = t.ProjectExperience;
-            teacherResult.TeachingExperience = t.TeachingExperience;
-            teacherResult.WorkExperience = t.WorkExperience;
+           TeacherDetailView teacherResult = db_teacher.GetTeacherView(id);
 
             return View(teacherResult);
 
@@ -224,31 +299,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// </summary>
         /// <param name="id">教员Id</param>
         /// <returns>视图</returns>
+        /// 
+        [HttpGet]
         public ActionResult EditMajorAndGrandView(int id)
         {
             //获取教员专业阶段
 
-            Dictionary<Specialty, Grand> dic = db_teacher.GetMajorInGrandByTeacherID(id);
+            Dictionary<Specialty, List<Grand>> dic = db_teacher.GetMajorInGrandByTeacherID(id);
 
-            Dictionary<Specialty, List<Grand>> result = new Dictionary<Specialty, List<Grand>>();
+           // Dictionary<Specialty, List<Grand>> result = new Dictionary<Specialty, List<Grand>>();
 
-            foreach (var key in dic.Keys)
-            {
-                //List<Grand> s = new List<Grand>();
-                if (ContainDic(result, key))
-                {
-                    result[key].Add(dic[key]);
-                }
-                else
-                {
-                    List<Grand> grandlist = new List<Grand>();
-                    grandlist.Add(dic[key]);
+            //foreach (var key in dic.Keys)
+            //{
+            //    //List<Grand> s = new List<Grand>();
+            //    if (ContainDic(result, key))
+            //    {
+            //        result[key].Add(dic[key]);
+            //    }
+            //    else
+            //    {
+            //        List<Grand> grandlist = new List<Grand>();
+            //        grandlist.Add(dic[key]);
 
-                    result.Add(key, grandlist);
-                }
-            }
+            //        result.Add(key, grandlist);
+            //    }
+            //}
 
-            ViewBag.MajorAndGrand_Dic = result;
+            ViewBag.MajorAndGrand_Dic = dic;
+
+
+            ViewBag.TeacherView = db_teacher.GetTeacherView(id);
 
             return View();
 
@@ -273,6 +353,311 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return false;
 
         }
+
+        [HttpPost]
+        public ActionResult GetNoGrandOnMajor(int teacherId, int majorId)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            if (teacherId != 0 && majorId != 0)
+            {
+                try
+                {
+                    var grandlist = db_teacher.GetNoGrand(teacherId, majorId);
+
+
+                    result.ErrorCode = 200;
+                    result.Data = grandlist;
+                    result.Msg = "成功！";
+
+                }
+                catch (Exception ex)
+                {
+
+                    result.ErrorCode = 500;
+                    result.Data = null;
+                    result.Msg = "服务器错误！";
+                }
+                
+            }
+            else
+            {
+                result.ErrorCode = 401;
+                result.Data = null;
+                result.Msg = "此请求缺少参数！";
+            }
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        [HttpPost]
+        public ActionResult AddGrandOnMajor(int teacherid, int majorid, int grandid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+
+            TecharOnstageBearing onstageBearing = new TecharOnstageBearing();
+            onstageBearing.Major = majorid;
+            onstageBearing.Stage = grandid;
+            onstageBearing.TeacherID = teacherid;
+            onstageBearing.Remark = "测试数据";
+
+
+
+            if (db_teacher_sBearing.GetList().Where(d => d.Major == majorid && d.Stage == grandid && d.TeacherID==teacherid).ToList().Count > 0)
+            {
+                result.ErrorCode = 501;
+                result.Data = null;
+                result.Msg = "数据错误";
+            }
+            else
+            {
+                try
+                {
+                    db_teacher_sBearing.Insert(onstageBearing);
+
+                    result.ErrorCode = 200;
+                    result.Data = null;
+                    result.Msg = "成功";
+
+                }
+                catch (Exception)
+                {
+
+                    result.ErrorCode = 500;
+                    result.Data = null;
+                    result.Msg = "服务器错误";
+                }
+
+            }
+
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet); ;
+
+
+        }
+
+
+        /// <summary>
+        /// 获取教员专业所在那些阶段
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetHaveGrandData(int teacherid, int majorid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var list = db_teacher.GetHaveGrand(teacherid, majorid);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = list;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        public ActionResult GetTeacherByMajorOrGrand(int majorid, int grandid, int limit, int page)
+        {
+
+            List<Teacher> Teacherlist = new List<Teacher>();
+
+
+            List<TeacherDetailView> resultlist = new List<TeacherDetailView>();
+
+            if (majorid == 0 && grandid == 0)
+            {
+
+                Teacherlist = db_teacher.GetList();
+            }
+
+            if (grandid == 0 && majorid != 0)
+            {
+
+                Teacherlist = db_teacher.BrushSelectionByMajor(majorid);
+            }
+
+            if (grandid != 0 && majorid == 0)
+            {
+                Teacherlist = db_teacher.BrushSelectionByGrand(grandid);
+            }
+
+            if (grandid != 0 && majorid != 0)
+            {
+                Teacherlist = db_teacher.getTeacherByMajorAndGrand(majorid, grandid);
+            }
+
+            //转为详细teacher模型
+
+            foreach (var item in Teacherlist)
+            {
+                resultlist.Add(db_teacher.GetTeacherView(item.TeacherID));
+            }
+
+
+            var returnlist = new List<object>();
+
+            foreach (var item in resultlist)
+            {
+                var obj1 = new
+                {
+
+                    EmployeeId = item.emp.EmployeeId,
+                    Sex = item.emp.Sex,
+                    TeacherID = item.TeacherID,
+                    AttendClassStyle = item.AttendClassStyle,
+                    ProjectExperience = item.ProjectExperience,
+                    TeachingExperience = item.TeachingExperience,
+                    WorkExperience = item.WorkExperience,
+                    TeacherName = item.emp.EmpName,
+
+                };
+
+                returnlist.Add(obj1);
+
+
+            }
+
+
+            var obj = new {
+
+                code = 0,
+                msg = "",
+                count = returnlist.Count(),
+                data = returnlist.Skip((page - 1) * limit).Take(limit)
+
+            };
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 根据电话姓名获取老师
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="phone"></param>
+        /// <param name="limit"></param>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public ActionResult BrushSelectionTeacher(string name, string phone, int limit, int page)
+        {
+            var resultlist = new List<TeacherDetailView> ();
+
+            var list = db_teacher.GetList();
+
+            foreach (var item in list)
+            {
+                resultlist.Add( db_teacher.GetTeacherView(item.TeacherID));
+            }
+            var returnlist = new List<object>();
+
+            foreach (var item in resultlist)
+            {
+
+                if (item.emp.EmpName.Contains(name) && item.emp.Phone.Contains(phone))
+                {
+                    var obj1 = new
+                    {
+
+                        EmployeeId = item.emp.EmployeeId,
+                        Sex = item.emp.Sex,
+                        TeacherID = item.TeacherID,
+                        AttendClassStyle = item.AttendClassStyle,
+                        ProjectExperience = item.ProjectExperience,
+                        TeachingExperience = item.TeachingExperience,
+                        WorkExperience = item.WorkExperience,
+                        TeacherName = item.emp.EmpName,
+
+                    };
+
+                    returnlist.Add(obj1);
+                }
+            }
+
+
+            var obj = new
+            {
+
+                code = 0,
+                msg = "",
+                count = returnlist.Count(),
+                data = returnlist.Skip((page - 1) * limit).Take(limit)
+
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        /// <summary>
+        /// 编辑教员擅长的技术
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult goodmajor(int id)
+        {
+
+            //提供专业
+
+           ViewBag.majors =  db_specialty.GetList().Where(d=>d.IsDelete==false).ToList();
+
+
+            ViewBag.Teacher = db_teacher.GetTeacherByID(id);
+            return View();
+
+        }
+
+        /// <summary>
+        /// 获取教员擅长的技术
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        [HttpPost]
+       
+        public ActionResult GetCurcousData(int teacherid, int majorid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                List<Curriculum> currlist = db_teacher.GetTeacherGoodCurriculum(teacherid, majorid);
+
+                result.Data = currlist;
+                result.ErrorCode = 200;
+                result.Data = "成功";
+            }
+            catch (Exception ex)
+            {
+
+
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Data = "失败";
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
 
     }
 }

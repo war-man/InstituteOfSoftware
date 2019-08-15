@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Data.SqlClient;
+using System.Configuration;
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
     using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -12,15 +13,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 
         public int TeacherID { get; set; }//教员ID
 
-        public string Name { get; set; }//姓名
+        public EmployeesInfo emp { get; set; }
 
-        public string Sex { get; set; }//性别
+        public Department Department { get; set; }
+       
 
-        public string EmpNo { get; set; } //员工编号
-
-        public string Phone { get; set; }//电话
-
-        public string Birthday { get; set; } //生日
+        public Position Position { get; set; }
+       
 
         public List<Specialty> Major { get; set; } //专业
 
@@ -36,4 +35,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 
 
     }
+
+
+
 }

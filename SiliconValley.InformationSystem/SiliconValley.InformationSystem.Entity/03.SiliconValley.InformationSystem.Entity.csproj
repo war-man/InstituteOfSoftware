@@ -45,6 +45,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -262,14 +263,11 @@
     <Compile Include="Entity\Timestamp.cs" />
     <Compile Include="Entity\TotaleCharges.cs" />
     <Compile Include="Entity\Transfer.cs" />
-    <Compile Include="Entity\TreeClass.cs" />
     <Compile Include="Entity\Trialapplication.cs" />
     <Compile Include="Entity\Undergra.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewEntity\AddEnterpriseView.cs" />
-    <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
-    <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
+    <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
   </ItemGroup>
   <ItemGroup>

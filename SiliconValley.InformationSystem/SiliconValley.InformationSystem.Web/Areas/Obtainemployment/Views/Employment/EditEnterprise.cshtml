@@ -5,15 +5,19 @@
 
 <!DOCTYPE html>
 
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@model EditEnterpriseView
 
+
+
+<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/layui/layui.js"></script>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Registeredtrainees</title>
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <title>AddEnterprise</title>
 
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui/layui.js"></script>
     <style>
         #but1 {
             position: absolute;
@@ -37,124 +41,131 @@
             width: 200px;
         }
     </style>
-
+    <script src="~/Scripts/underscore.js"></script>
 </head>
 <body>
 
-
-
-
-    <h1 style="text-align:center;height:50px;">学员信息注册</h1>
+    <h1 style="text-align:center;height:50px;">添加合作企业信息</h1>
     <div>
         <form class="layui-form" action="">
             <div class="layui-container">
                 <fieldset>
-
                     <legend>基础数据</legend>
-
                     <div class="layui-row layui-form-item">
-
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">姓名</label>
+                            <label class="layui-form-label">公司名</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
-                            </div>
-                        </div>
-                        <div id="but1">
-                            <i class="layui-icon">&#xe615;</i>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { @*{ "lay-verify", "required|EntNameZz|EntNameOnly" },*@ { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
+                                @Html.HiddenFor(a => a.EntID)
+                                @Html.HiddenFor(a => a.CooID)
+                                @Html.HiddenFor(a => a.EntScale)
+                                @Html.HiddenFor(a => a.EntNature)
 
-                            <label class="layui-form-label">性别</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="Sex" value="1" title="男">
-                                <input type="radio" name="Sex" value="0" title="女">
-
-                            </div>
-
-                        </div>
-
-                    </div>
-                    <div class="layui-row layui-form-item">
-
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                            <label class="layui-form-label">身份证号</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入身份证" }, { "class", "layui-input linu" } })
-                            </div>
-
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">民族</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">电话号</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
+                            <label class="layui-form-label">公司地址</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() { { "class", "layui-input " }, @*{ "lay-verify", "required" },*@ { "placeholder", "请输入公司地址" }, { "lay-reqtext", "公司名称不可为空" } })
                             </div>
                         </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">家庭住址</label>
+                            <label class="layui-form-label">公司规模</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.BirthDate, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" } })
+                                <input type="radio" class="raddiobibi" name="EntScale" value="少于50人" title="少于50人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="50-100人" title="50-100人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="150-500人" title="150-500人">
+                                <input type="radio" class="raddiobibi" name="EntScale" value="500-1000人" title="500-1000人">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司性质</label>
+                            <div class="layui-input-block">
+                                <input type="radio" class="radiolala" name="EntNature" value="国企" title="国企">
+                                <input type="radio" class="radiolala" name="EntNature" value="外资（欧美）" title="外资（欧美">
+                                <input type="radio" class="radiolala" name="EntNature" value="外资（非欧美）" title="外资（非欧美）">
+                                <input type="radio" class="radiolala" name="EntNature" value="上市公司" title="上市公司">
+                                <input type="radio" class="radiolala" name="EntNature" value="合资" title="合资">
+                                <input type="radio" class="radiolala" name="EntNature" value="民营公司" title="民营公司">
+                                <input type="radio" class="radiolala" name="EntNature" value="外企代表处" title="外企代表处">
+                                <input type="radio" class="radiolala" name="EntNature" value="政府机关" title="政府机关">
+                                <input type="radio" class="radiolala" name="EntNature" value="事业单位" title="事业单位">
+                                <input type="radio" class="radiolala" name="EntNature" value="非营利组织" title="非营利组织">
+                                <input type="radio" class="radiolala" name="EntNature" value="创业公司" title="创业公司">
                             </div>
                         </div>
                     </div>
 
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">公司福利</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntWelfare, new Dictionary<string, object>() { @*{ "lay-verify", "required" },*@ { "placeholder", "请输入公司福利" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                    <div class="layui-row layui-form-item" id="Specialty">
+                        <label class="layui-form-label">公司所需要专业选择</label>
+                        <div class="layui-input-block">
+                            @{
+                                foreach (var item in ViewBag.SepclistView)
+                                {
+                                    if (item.IsCheack)
+                                    {
+                                        <input type="checkbox" lay-filter="checks" class="MrDSpecCheck" name="@item.SpecialtyName" value="@item.Id" checked="checked" title="@item.SpecialtyName">
+                                    }
+                                    else
+                                    {
+                                        <input type="checkbox" lay-filter="checks" class="MrDSpecCheck" name="@item.SpecialtyName" value="@item.Id" title="@item.SpecialtyName">
+                                    }
+
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div id="list" class="layui-row layui-form-item">
+
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">联系人姓名</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { @*{ "lay-verify", "required" },*@ { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">联系方式</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { @*{ "lay-verify", "required|phone|EntPhoneOnly" },*@ { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
                 </fieldset>
             </div>
-
-
-
-
-            @*<div class="layui-form-item">
-                    <label class="layui-form-label">选择框</label>
-                    <div class="layui-input-block">
-                        <select name="interest" lay-filter="aihao">
-                            <option value=""></option>
-                            <option value="0">kali</option>
-                            <option value="1">Mac</option>
-                            <option value="2">Windows</option>
-                            <option value="3">黑莓</option>
-                            <option value="4">鸿蒙</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">复选框</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" name="like[write]" title="睡觉">
-                        <input type="checkbox" name="like[read]" title="玩游戏">
-                        <input type="checkbox" name="like[daze]" title="敲键盘">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">开关</label>
-                    <div class="layui-input-block">
-                        <input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF">
-                    </div>
-                </div>
-                <div class="layui-form-item">
-                    <label class="layui-form-label">单选框</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="sex" value="男" title="男" checked="">
-                        <input type="radio" name="sex" value="女" title="女">
-                    </div>
-                </div>
-                <div class="layui-form-item layui-form-text">
-                    <label class="layui-form-label">文本域</label>
-                    <div class="layui-input-block">
-                        <textarea placeholder="请输入内容" class="layui-textarea" name="desc">
-                        欢迎加入信息安全屋!
-                </textarea>
-                    </div>
-                </div>*@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
@@ -163,14 +174,238 @@
         </form>
     </div>
 
+    @*使用的模板*@
+    <script type="text/template" id="muban">
+        <fieldset class="fieldset">
+            <legend class="major">{{=content}}</legend>
+            <div class="layui-row layui-form-item">
+                <div class="layui-inline">
+                    <fieldset>
+                        <legend class="title">薪资</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="text" placeholder="请输入薪资" value="{{=EntSalaryVal}}" class="layui-input EntSalary" name="EntSalary{{=content}}">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="layui-inline">
+                    <fieldset>
+                        <legend class="title">岗位职责</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <textarea placeholder="请输入内容" class="layui-textarea JobResponsibilities " name="JobResponsibilities{{=content}}">{{=JobResponsibilitiesVal}}</textarea>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="layui-inline">
+                    <fieldset>
+                        <legend class="title">任职要求</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <textarea placeholder="请输入内容" class="layui-textarea Requirements" name="Requirements{{=content}}">{{=RequirementsVal}}</textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+            </div>
+        </fieldset>
+    </script>
+
     <script>
-            layui.use(['form', 'layedit', 'laydate'], function () {
-                var form = layui.form
-                    , layer = layui.layer
-                    , layedit = layui.layedit
-                    , laydate = layui.laydate;
-                console.log("aaa");
+        var EntSpeeArry = new Array();
+        jQuery(function () {
+            $(".MrDSpecCheck:checked").each(function (i) {
+                var specid = $(this).val();
+                var entid = $("#EntID").val();
+                var EntSpee = new Object();
+                EntSpee.SpeID = specid;
+                EntSpeeArry.push(EntSpee);
+                $.ajax({
+                    type: "get",
+                    url: "/Employment/GetEntSpeeInfo",
+                    data: { SpecID: specid, EntID: entid },
+                    timeout: "10000",
+                    async: false,
+                    success: function (Result) {
+                        var ViewData = Result.Data;
+                        if (Result.Success) {
+                            EntSpeeArry[i].Requirements = ViewData.Requirements;
+                            EntSpeeArry[i].EntSalary = ViewData.EntSalary;
+                            EntSpeeArry[i].JobResponsibilities = ViewData.JobResponsibilities;
+                            var compiled = _.template($("#muban").html());
+                            var html = compiled({ content: ViewData.SpecialtyName, EntSalaryVal: ViewData.EntSalary, JobResponsibilitiesVal: ViewData.JobResponsibilities, RequirementsVal: ViewData.Requirements });
+                            $("#list").append($(html));
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
             });
+            $(".raddiobibi").each(function (i) {
+                var MrDEntScale = $("#EntScale").val();
+                if ($(this).val() == MrDEntScale) {
+                    $(this).attr("checked", "checked");
+                }
+            })
+            $(".radiolala").each(function (i) {
+                var MrDEntNature = $("#EntNature").val();
+                if ($(this).val() == MrDEntNature) {
+                    $(this).attr("checked", "checked");
+                }
+            })
+        });
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+            //监听复选框事件
+            form.on('checkbox(checks)', function (data) {
+                var name = data.elem.name;
+                if (data.elem.checked) {
+
+                    var have = false;
+                    $("#list legend").each(function () {
+                        if ($(this).text() == name) {
+                            have = true
+                        }
+                    });
+                    if (!have) {
+                        var compiled = _.template($("#muban").html());
+
+                        var html = compiled({ content: name, EntSalaryVal: "", JobResponsibilitiesVal: "", RequirementsVal: "" });
+
+                        $("#list").append($(html));
+                        var EntSpee = new Object();
+                        EntSpee.SpeID = data.elem.value;
+                        EntSpee.SpeName = name;
+                        EntSpeeArry.push(EntSpee);
+
+                    }
+                } else {
+                    $("#list legend").each(function () {
+                        if ($(this).text() == name) {
+                            $(this).parent().remove();
+                            for (var i = 0; i < EntSpeeArry.length; i++) {
+                                if (EntSpeeArry[i].SpeName == name) {
+                                    EntSpeeArry.splice(i, 1);
+                                }
+                            }
+                        }
+                    });
+
+                }
+            });
+            //自定义验证规则
+            form.verify({
+                title: function (value) {
+                    if (value.length < 5) {
+                        return '标题至少得5个字符啊';
+                    }
+                }
+                , pass: [
+                    /^[\S]{6,12}$/
+                    , '密码必须6到12位，且不能出现空格'
+                ]
+                , content: function (value) {
+                    layedit.sync(editIndex);
+                }
+                , EntNameZz: [/^[\u4E00-\u9FA5A-Za-z]+$/, "不得输入数字，空格等特殊符号"]
+                , EntNameOnly: function (value) {
+                    var resultobj = new Object();
+                    var entid = $("#EntID").val();
+                    $.ajax({
+                        type: "get",
+                        url: "/Employment/EntNameOnly",
+                        async: false,
+                        data: { EntName: value, EntID: entid },
+                        success: function (data) {
+                            console.log(data);
+                            resultobj.isno = data.Success;
+                            resultobj.mes = data.Msg;
+                            if (data.ErrorCode == 1)
+                                resultobj.isSelf = true;
+                            else
+                                resultobj.isSelf = false;
+                        },
+                        error: function () {
+                        }
+                    });
+                    if (resultobj.isno && !resultobj.isSelf) {
+                        return resultobj.mes;
+                    }
+
+                }
+                , EntPhoneOnly: function (value) {
+                    var resultobj = new Object();
+                    var entid = $("#EntID").val();
+                    $.ajax({
+                        type: "get",
+                        url: "/Employment/EntPhoneOnly",
+                        async: false,
+                        data: { EntPhone: value, EntID: entid },
+                        success: function (data) {
+                            console.log(data);
+                            resultobj.isno = data.Success;
+                            resultobj.mes = data.Msg;
+                            if (data.ErrorCode == 1)
+                                resultobj.isSelf = true;
+                            else
+                                resultobj.isSelf = false;
+                        },
+                        error: function () {
+                        }
+                    });
+                    if (resultobj.isno && !resultobj.isSelf) {
+                        return resultobj.mes;
+                    }
+                }
+            });
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field;
+                $(".Requirements").each(function (i) {
+                    EntSpeeArry[i].Requirements = $(this).val();
+                });
+                $(".JobResponsibilities").each(function (i) {
+                    EntSpeeArry[i].JobResponsibilities = $(this).val();
+                });
+                $(".EntSalary").each(function (i) {
+                    EntSpeeArry[i].EntSalary = $(this).val();
+                });
+
+                //准备jquery的Ajax（$.Ajax({})）
+                $.ajax({
+                    type: "POST",
+                    url: "/Employment/EditEnterprise",
+                    data: { editEnterpriseView: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) },
+                    timeout: 5000,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            console.log("11");
+                            layer.msg(data.Msg, { icon: 1 }, function () {
+                                //先得到当前iframe层的索引
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index); //再执行关闭
+                            })
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+                return false;
+            });
+        });
     </script>
 
 

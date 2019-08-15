@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table(name: "Specialty")]
-    public partial class Specialty
+    public partial class Specialty: IEqualityComparer<Specialty>
     {
        
         [Key]
@@ -23,7 +23,36 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string SpecialtyName { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
-        
+
+        public bool Equals(Specialty x, Specialty y)
+        {
+            if (x.Id == y.Id)
+                return true;
+
+            return false;
+        }
+
+        public int GetHashCode(Specialty obj)
+        {
+            if (this.Id == obj.Id)
+                return 1;
+
+            return 0;
+        }
+
+
+        public override bool Equals(object obj)
+        {
+            Specialty specialty = obj as Specialty;
+
+            if (specialty.Id == this.Id)
+                return true;
+
+            return false;
+
+        }
+
+
+       
     }
 }

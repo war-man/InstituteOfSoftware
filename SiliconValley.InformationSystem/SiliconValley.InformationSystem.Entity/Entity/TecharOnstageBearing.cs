@@ -23,7 +23,35 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> Stage { get; set; }
         public Nullable<int> Major { get; set; }
         public string Remark { get; set; }
-    
+
+
+        public static bool IsContentMajor(List<TecharOnstageBearing>  source, int ? majorid)
+        {
+            foreach (var item in source)
+            {
+                if (item.Major == majorid)
+                {
+                    return true;
+                }
+               
+            }
+            return false;
+        }
+        public static bool ISContainTeacher(List<TecharOnstageBearing> source, int? teacherid)
+        {
+
+
+            foreach (var item in source)
+            {
+                if (item.TeacherID == teacherid)
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
     
     }
+
 }
