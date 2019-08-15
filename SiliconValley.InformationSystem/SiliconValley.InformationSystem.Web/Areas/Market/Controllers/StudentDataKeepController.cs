@@ -37,6 +37,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
             return View();
         }
 
@@ -111,6 +113,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             return "未填写";
         }
+        //这个方法是过滤的未在职员工的
         public string GetEmployeeValue(string id)
         {
             EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel == false).FirstOrDefault();
@@ -123,6 +126,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return "无";
             }
            
+        }
+        //这个方法是查询所有员工，无论在职或辞职都可以查询
+        public string GetEmployeeValueAll(string id)
+        {
+            EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id).FirstOrDefault();
+            if (finde != null)
+            {
+                return finde.EmpName;
+            }
+            else
+            {
+                return "无";
+            }
         }
         #endregion
         #region
@@ -321,7 +337,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 StudentPutOnRecord fins = s_Entity.GetList().Where(s => s.Id == olds.Id).FirstOrDefault();//找到要修改的实体
                 fins.StuSex = olds.StuSex;
-                fins.StuPhone = olds.StuPhone;
                 fins.StuBirthy = olds.StuBirthy;
                 fins.StuSchoolName = olds.StuSchoolName;
                 fins.StuEducational = olds.StuEducational;
@@ -331,6 +346,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 fins.StuIsGoto = olds.StuIsGoto;
                 fins.StuVisit = olds.StuVisit;
                 fins.StuInfomationType_Id = olds.StuInfomationType_Id;
+                fins.StuStatus_Id = olds.StuStatus_Id;
                 s_Entity.Update(fins);
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
@@ -369,7 +385,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuVisit = finds.StuVisit,
                     StuWeiXin = finds.StuWeiXin,
                     e_Name = GetEmployeeValue(finds.EmployeesInfo_Id),
-                    StuEntering_1 = GetEmployeeValue(finds.StuEntering)
+                    StuEntering_1 = GetEmployeeValueAll(finds.StuEntering),
                 };
                 return Json(newdata, JsonRequestBehavior.AllowGet);
             }
@@ -378,6 +394,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json("学生ID未拿到", JsonRequestBehavior.AllowGet);
             }
             
+        }
+
+        //数据详情查看页面
+        public ActionResult LookDetailsView(string id)
+        {
+            ViewBag.id = id;
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            //获取学生状态来源的所有数据
+            ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            return View();
         }
     }
 }

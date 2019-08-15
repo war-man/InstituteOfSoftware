@@ -214,7 +214,6 @@
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\EmploymentController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
@@ -336,10 +335,7 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Employment\AddEnterprise.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Employment\EditEnterprise.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Employment\EnterpriseInfoIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Employment\Enterdetail.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -965,6 +961,7 @@
     <Folder Include="Areas\Logistics\Views\Shared\" />
     <Folder Include="Areas\Market\Models\" />
     <Folder Include="Areas\Market\Views\Shared\" />
+    <Folder Include="Areas\Obtainemployment\Controllers\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />

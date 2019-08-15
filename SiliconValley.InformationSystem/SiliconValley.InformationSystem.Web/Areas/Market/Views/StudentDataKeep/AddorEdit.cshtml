@@ -386,7 +386,7 @@
                     if (successdata == "ok") {
                         layer.msg("添加成功", {
                             icon: 1,
-                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭   
@@ -395,13 +395,13 @@
                     } else if (successdata == "error") {
                         layer.msg("已有该学员信息", {
                             icon: 1,
-                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         });
                     }
                     else {
                         layer.msg("添加失败，请重试!", {
                             icon: 2,
-                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         });
                     }
                      
