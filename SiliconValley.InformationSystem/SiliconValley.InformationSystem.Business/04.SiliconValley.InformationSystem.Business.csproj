@@ -75,6 +75,7 @@
     <Compile Include="Base_SysManage\PermissionManage.cs" />
     <Compile Include="Base_SysManage\RapidDevelopmentBusiness.cs" />
     <Compile Include="Base_SysManage\UrlPermissionManage.cs" />
+    <Compile Include="ClassesBusiness\ScheduleForTraineesBusiness.cs" />
     <Compile Include="ClassSchedule_Business\ClassScheduleBusiness.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
+    <Compile Include="StudentmanagementBusinsess\StudentAttendanceBusiness.cs" />
     <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
     <Compile Include="StudentManeger\StudentInformationManeger.cs" />
     <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />

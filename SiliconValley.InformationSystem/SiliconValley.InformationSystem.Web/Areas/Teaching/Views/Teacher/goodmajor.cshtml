@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-    <div style=" position:relative; " id="contein">
+    <div style=" position:relative; width:800px;margin: auto;" id="contein">
         <input type="hidden" id="teacherid" value="@ViewBag.Teacher.TeacherID" />
         @{
 
@@ -139,8 +139,6 @@
                 Ajax("/teaching/teacher/GetNewSkill", { majorid: majorid, teacherid: teacherid }, "post", function (result) {
 
 
-                    console.log(result);
-
                     if (result.Data.length == 0) {
 
                         layer.msg("没有新技能了....");
@@ -155,6 +153,8 @@
 
                         //创建一个按钮
 
+                        
+
                         var btn = $('<button class="layui-btn layui-btn-primary currbtn"></button>');
 
 
@@ -162,11 +162,10 @@
 
                         btn.attr("currId", result.Data[i].CurriculumID);
 
-                        $(document).on('click', '.currbtn', function () {
 
-                           
+
+                        $(document).off("click", ".currbtn").on('click', '.currbtn', function () {
                             $(this).toggleClass("select");
-
 
                         });
 
@@ -187,7 +186,7 @@
                         type: 1,
                         title:"技能",
                         area: ['600px', '300px'],
-                        btn: ['确定','去给教员增加专业' ,'关闭'],
+                        btn: ['确定','关闭'],
 
                         content: html
                         , yes: function (index) {
