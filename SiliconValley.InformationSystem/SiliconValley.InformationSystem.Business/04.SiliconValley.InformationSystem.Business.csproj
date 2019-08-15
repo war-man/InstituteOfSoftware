@@ -94,6 +94,7 @@
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
+    <Compile Include="StudentmanagementBusinsess\StudentAttendanceBusiness.cs" />
     <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
     <Compile Include="StudentManeger\StudentInformationManeger.cs" />
     <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />
