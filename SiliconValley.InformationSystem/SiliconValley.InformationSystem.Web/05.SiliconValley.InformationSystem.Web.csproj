@@ -336,6 +336,7 @@
     <Content Include="Areas\Teaching\Views\Teacher\AddTeacher.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\goodmajor.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\GetNewSkill.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -667,6 +668,7 @@
     <Content Include="Scripts\layui\lay\modules\util.js" />
     <Content Include="Scripts\layui\prefixfree.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\util\easyui-extend.js" />
     <Content Include="Scripts\util\framework-util.js" />
     <Content Include="Scripts\util\upload-time.js" />

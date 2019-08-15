@@ -8,6 +8,13 @@
 @section style{
 
     <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        body.backcolor.layui-layer-title {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
 
 }
 
@@ -87,7 +94,7 @@
     <script type="text/html" id="editBar">
         <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editgoodmajor">擅长的技术</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editgoodmajor">擅长的课程</a>
     </script>
 
 
@@ -128,7 +135,7 @@
                     , { field: 'ProjectExperience', title: '项目经验', sort: true }
                     , { field: 'TeachingExperience', title: '教学经验', sort: true }
                     , { field: 'AttendClassStyle', title: '上课风格', sort: true }
-                    , { field: 'right', title: '操作', toolbar: '#editBar', width: 150 }
+                    , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }
                 ]]
                 , page: true
             });
@@ -144,12 +151,9 @@
 
                     case 'EditMajorAdnGrand':
 
-
-
                         if (checkStatus.data.length > 0) {
 
                             layer.open({
-
                                 title: "专业-阶段信息",
                                 type: 2,
                                 area: ["1000px", "850px"],
@@ -250,15 +254,16 @@
                             table.reload('Teacherlist', {
 
                             });
-
                         }
-
                     });
                 }else if (obj.event === 'editgoodmajor') {
 
                     layer.open({
                         type: 2,
-                        area: ["800px", "600px"],
+                        skin: "backcolor",
+                        btn: ['关闭'],
+                        area: ["1000px", "300px"],
+                        title:"教员擅长的课程",
                         content: "/Teaching/Teacher/goodmajor/" + id,
                         end: function () {
 

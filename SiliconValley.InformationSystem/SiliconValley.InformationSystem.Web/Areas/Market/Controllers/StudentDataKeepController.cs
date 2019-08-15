@@ -12,9 +12,10 @@ using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生�
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
 using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体
-using SiliconValley.InformationSystem.Entity.Entity;//获取树实体
+using SiliconValley.InformationSystem.Entity.MyEntity;//获取树实体
 using SiliconValley.InformationSystem.Business.PositionBusiness;//获取岗位实体
 using SiliconValley.InformationSystem.Entity.ViewEntity;//获取员工岗位部门实体
+using SiliconValley.InformationSystem.Entity.Entity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {

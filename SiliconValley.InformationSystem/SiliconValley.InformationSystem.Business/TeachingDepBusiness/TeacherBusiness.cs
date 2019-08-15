@@ -11,6 +11,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using EmployeesBusiness;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System.Linq.Dynamic;
+    using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
 
     public class TeacherBusiness:BaseBusiness<Teacher>
     {
@@ -59,6 +60,30 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
 
             return teacher;
+        }
+
+
+        /// <summary>
+        /// 获取所有教员
+        /// </summary>
+        /// <returns></returns>
+        public List<Teacher> GetTeachers()
+        {
+
+            List<Teacher> resultlist = new List<Teacher>();
+
+          var temp =  this.GetList().Where(d => d.IsDel == false).ToList() ;
+
+            foreach (var item in temp)
+            {
+                if (!EmpIsDel(item))
+                {
+                    resultlist.Add(item);
+                }
+            }
+
+            return resultlist;
+
         }
 
         /// <summary>
@@ -302,7 +327,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in result)
             {
-               var ss =  this.GetList().Where(d => d.EmployeeId == item.EmployeeId).ToList();
+               var ss =  this.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).ToList();
 
                 if (ss.Count <= 0 || ss == null)
                 {
@@ -346,7 +371,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
            var emps = db_emp.GetList().Where(d=>d.PositionId==positionId && d.IsDel==false).ToList();
 
-            var teachers = this.GetList();
+            var teachers = this.GetTeachers();
 
             foreach (var e in emps)
             {
@@ -392,7 +417,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in onstageBearings)
             {
-                resultlist.Add(this.GetList().Where(d => d.TeacherID == item.TeacherID).FirstOrDefault());
+                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID).FirstOrDefault());
             }
 
             return resultlist;
@@ -426,7 +451,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in onstageBearings)
             {
-                resultlist.Add(this.GetList().Where(d => d.TeacherID == item.TeacherID && d.IsDel==false).FirstOrDefault());
+                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel==false).FirstOrDefault());
             }
 
             return resultlist;
@@ -445,7 +470,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in ss)
             {
-                resultlist.Add(this.GetList().Where(d => d.TeacherID == item.TeacherID && d.IsDel==false).FirstOrDefault());
+                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel==false).FirstOrDefault());
             }
 
             return resultlist;
@@ -464,20 +489,102 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
             BaseBusiness<Curriculum> Curriculum_db = new BaseBusiness<Curriculum>();
-            var temp = goodskill_db.GetList();
+            var temp = goodskill_db.GetList().Where(d=>d.TearchID==teacherid).ToList();
 
 
             foreach (var item in temp)
             {
-                if (this.GetTeacherByID(item.TearchID) != null)
+               var curr = Curriculum_db.GetList().Where(d=>d.IsDelete==false && d.CurriculumID==item.Curriculum).FirstOrDefault();
+
+                if (curr.MajorID == majorid)
                 {
 
-                    resultlist.Add(Curriculum_db.GetList().Where(d=>d.IsDelete==false && d.CurriculumID==item.Curriculum).FirstOrDefault());
-
+                    resultlist.Add(curr);
                 }
+
             }
 
             return resultlist;
+        }
+
+
+        public List<Curriculum> GetCurriculaOnTeacherNoHave(int teacherid, int majorid)
+        {
+
+
+
+            var resultlist = new List<Curriculum>();
+
+            BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
+
+            BaseBusiness<Curriculum> curr_db = new BaseBusiness<Curriculum>();
+
+            var temp1 = goodskill_db.GetList().Where(d => d.TearchID == teacherid).ToList().OrderBy(d=>d.Curriculum).ToList() ;
+
+            var temp2 = db_specialty.GetList().Where(d => d.IsDelete == false && d.Id == majorid).FirstOrDefault();
+
+            var temp3 = curr_db.GetList().Where(d=>d.IsDelete==false && d.MajorID == majorid).ToList();
+
+
+            var all = new List<Curriculum>();
+
+            foreach (var item in temp1)
+            {
+                var cur = temp3.Where(d => d.CurriculumID == item.Curriculum).FirstOrDefault();
+
+                if (cur.MajorID == majorid)
+                {
+
+                    all.Add(cur);
+
+                }   
+            }
+            CurriculumBusiness curriculumBusiness = new CurriculumBusiness();
+
+            //这个专业的技能
+
+            all = all.OrderBy(d => d.CurriculumID).ToList();
+
+
+            foreach (var item in temp3)
+            {
+
+                if (!curriculumBusiness.IsHave(all, item.CurriculumID))
+                {
+                    resultlist.Add(item);
+
+                }
+
+            }
+
+            return resultlist;
+        }
+
+        /// <summary>
+        /// 给教员添加新的技能
+        /// </summary>
+        /// <param name="teacherid"></param>
+        /// <param name="currid"></param>
+        public void SetNewSkillToTeacher(int teacherid, string [] currid)
+        {
+
+            BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
+
+
+            foreach (var item in currid)
+            {
+                if (goodskill_db.GetList().Where(d => d.TearchID == teacherid && d.Curriculum == int.Parse(item)).FirstOrDefault() == null)
+                {
+
+                    GoodSkill goodSkill = new GoodSkill();
+                    goodSkill.Curriculum = int.Parse(item);
+                    goodSkill.TearchID = teacherid;
+
+                    goodskill_db.Insert(goodSkill);
+                    
+                }
+            }
+
         }
     }
 }

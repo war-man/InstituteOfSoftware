@@ -78,6 +78,7 @@
     <Compile Include="ClassSchedule_Business\ClassScheduleBusiness.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
+    <Compile Include="CourseSchedulingSysBusiness\CurriculumBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CooperaEnterprisesBusiness.cs" />
@@ -93,6 +94,9 @@
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
+    <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
+    <Compile Include="StudentManeger\StudentInformationManeger.cs" />
+    <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />
     <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TeachingDepBusiness\GrandBusiness.cs" />

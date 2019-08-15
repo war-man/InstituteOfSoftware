@@ -89,7 +89,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
  
         public ActionResult TeacherData(int limit,int page)
-        {
+       {
 
             var list = db_teacher.GetList().Where(d => d.IsDel == false).ToList().Skip((page -1) * limit).Take(limit);
 
@@ -614,10 +614,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult goodmajor(int id)
         {
+           
+
 
             //提供专业
 
-           ViewBag.majors =  db_specialty.GetList().Where(d=>d.IsDelete==false).ToList();
+           ViewBag.majors = db_teacher.GetMajorByTeacherID(id);
 
 
             ViewBag.Teacher = db_teacher.GetTeacherByID(id);
@@ -642,19 +644,90 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 result.Data = currlist;
                 result.ErrorCode = 200;
-                result.Data = "成功";
+                result.Msg = "成功";
             }
             catch (Exception ex)
             {
-
-
                 result.Data = null;
                 result.ErrorCode = 500;
-                result.Data = "失败";
+                result.Msg = "失败";
             }
 
 
             return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        /// <summary>
+        /// 获取教员没有的技能
+        /// </summary>
+        /// <param name="majorid">专业id</param>
+        /// <param name="teacherid">老师id</param>
+        /// <returns></returns>
+        /// 
+        [HttpPost]
+        public ActionResult GetNewSkill(int majorid , int teacherid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            var temp = new List<Curriculum>();
+            try
+            {
+                 temp = db_teacher.GetCurriculaOnTeacherNoHave(teacherid, majorid);
+
+                result.Msg = "成功";
+                result.Data = temp;
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Msg = "失败";
+                result.Data = temp;
+                result.ErrorCode = 500;
+            }
+          
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 给教员添加擅长的技术
+        /// </summary>
+        /// <param name="ids">课程ID</param>
+        /// <param name="teacherid">教员ID</param>
+        /// <returns></returns>
+        public ActionResult SetNewSkillToTeacher(string ids, int teacherid)
+        {
+
+           var arry = ids.Split(',');
+
+            var arry1 = arry.ToList();
+            arry1.RemoveAt(arry.Length - 1);
+
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_teacher.SetNewSkillToTeacher(teacherid, arry1.ToArray());
+
+                result.Data = null;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+            }
+           
+            return Json(result,JsonRequestBehavior.AllowGet);
 
         }
 
