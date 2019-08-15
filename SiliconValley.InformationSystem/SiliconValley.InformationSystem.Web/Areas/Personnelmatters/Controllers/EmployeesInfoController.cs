@@ -58,7 +58,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                   e.WorkExperience,
                                   e.ProbationSalary,
                                   e.Salary,
-                                  e.WorkingState,
                                   e.SSStartMonth,
                                   e.BCNum,
                                   e.Material,
@@ -146,7 +145,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate,DateTime.Now));
                 }
                 emp.IsDel = false;
-                emp.WorkingState =true;
                 empinfo.Insert(emp);
                 AjaxResultxx= empinfo.Success();
             }
@@ -298,7 +296,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return strAge;
         }
-
 
         //部门信息获取
         public ActionResult GetDepts()
@@ -461,6 +458,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
 
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
+        //员工婚姻状态的修改 
+        public ActionResult EditEmphunyin(string id, bool ismarry) {
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var emp = empinfo.GetEntity(id);
+                if (ismarry == false)
+                {
+                    emp.MaritalStatus = true;
+                }
+                else {
+                    emp.MaritalStatus = false;
+                }
+                AjaxResultxx = empinfo.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = empinfo.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
     }
 }

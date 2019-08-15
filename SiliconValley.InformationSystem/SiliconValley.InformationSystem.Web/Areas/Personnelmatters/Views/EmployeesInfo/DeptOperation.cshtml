@@ -124,6 +124,9 @@
             //监听锁定操作
             form.on('checkbox(lockDemo)', function (obj) {
                 var id = this.value; var name = this.name;
+                console.log(id);
+                console.log(name);
+                console.log(obj.elem.checked);
                 $.ajax({
                     type: "POST",
                     dataType: "json",
@@ -131,7 +134,7 @@
                         data: { id: id, isdel: obj.elem.checked },
                     success: function (data) {
                         if (data.Success) {
-                           
+                            console.log(obj.elem.checked);
                             if (obj.elem.checked == true) {
                                 layer.tips( '已禁用 ' , obj.othis);
                             }
