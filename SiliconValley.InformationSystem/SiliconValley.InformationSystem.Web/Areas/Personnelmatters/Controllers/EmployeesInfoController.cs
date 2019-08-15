@@ -58,7 +58,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                   e.WorkExperience,
                                   e.ProbationSalary,
                                   e.Salary,
-                                  e.WorkingState,
                                   e.SSStartMonth,
                                   e.BCNum,
                                   e.Material,
@@ -99,17 +98,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
 
-        //添加部门
+        //部门及岗位管理页面显示
         [HttpGet]
         public ActionResult DeptOperation()
         {
             return View();
         }
 
-        //部门信息获取
+
+        //添加员工时获取未禁用的部门信息
         public ActionResult BindDeptSelect() {
             DepartmentManage deptmanage = new DepartmentManage();
-            var deptlist = deptmanage.GetList();//获取公司部门数据集
+            var deptlist = deptmanage.GetList().Where(d=>d.IsDel==false);//获取公司部门数据集
             var newstr = new
             {
                 code = 0,
@@ -117,13 +117,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 count = deptlist.Count(),
                 data = deptlist
             };
-            return Json(newstr,JsonRequestBehavior.AllowGet);
+            return Json(newstr, JsonRequestBehavior.AllowGet);
         }
-        //员工添加的所属部门下拉框绑定
+        //员工添加的所属岗位下拉框绑定且是未禁用的
         //[HttpPost]
         public ActionResult BindPositionSelect(int deptid) {
             PositionManage pmanage = new PositionManage();
-            var plist = pmanage.GetList().Where(d => d.DeptId == deptid);
+            var plist = pmanage.GetList().Where(d => d.DeptId == deptid && d.IsDel==false);
             var newstr = new
             {
                 code = 0,
@@ -133,7 +133,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newstr,JsonRequestBehavior.AllowGet);
         }
-
         //添加员工
         [HttpPost]
         public ActionResult AddEmpInfo(EmployeesInfo emp) {
@@ -146,7 +145,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate,DateTime.Now));
                 }
                 emp.IsDel = false;
-                emp.WorkingState =true;
                 empinfo.Insert(emp);
                 AjaxResultxx= empinfo.Success();
             }
@@ -157,9 +155,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
           
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-
-
-       
         //获取网络时间
         public string Date()
         {
@@ -205,7 +200,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //生成员工编号
         public string EmpId()
         {
-            
             string mingci = string.Empty;
             //DateTime date = Convert.ToDateTime(Date());
             //string sfz = IDnumber.Substring(6, 8);
@@ -221,9 +215,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string startfournum= laststr.Substring(0, 4);
             string endfournum= laststr.Substring(laststr.Length - 4, 4);
 
-            if (int.Parse(n) > int.Parse(startfournum))
+            if (laststr == null || int.Parse(n) > int.Parse(startfournum))
             {
                 mingci = "0001";
+
             }
             else {
                 string newstr = (int.Parse(endfournum) + 1).ToString();
@@ -247,8 +242,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string EmpidResult = n + y + d + mingci;
             return EmpidResult;
         }
-
-
         //计算员工年龄
         public static string GetAge(DateTime dtBirthday, DateTime dtNow)
         {
@@ -304,8 +297,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return strAge;
         }
 
-
-
+        //部门信息获取
+        public ActionResult GetDepts()
+        {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var deptlist = deptmanage.GetList();//获取公司部门数据集
+            var newstr = new
+            {
+                code = 0,
+                msg = "",
+                count = deptlist.Count(),
+                data = deptlist
+            };
+            return Json(newstr, JsonRequestBehavior.AllowGet);
+        }
         //岗位信息获取
         public ActionResult GetPositions() {
             PositionManage deptmanage = new PositionManage();
@@ -327,5 +332,155 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newstr, JsonRequestBehavior.AllowGet);
         }
 
+        //部门增加显示页
+        public ActionResult DeptUpdate() {
+             return View();
+        }
+        //验证添加的部门是否已存在
+        [HttpPost]
+        public ActionResult VerifyDname(string dname) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                foreach (var d in deptmanage.GetList())
+                {
+                    if (dname==d.DeptName) {
+                        AjaxResultxx = deptmanage.Success();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult AddDept(Department dept) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                dept.IsDel = false;
+                deptmanage.Insert(dept);
+                AjaxResultxx = deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+        //修改部门表的IsDel属性
+        [HttpPost]
+        public ActionResult EditDeptIsDel(int id,bool isdel) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var dept = deptmanage.GetEntity(id);
+                dept.IsDel = isdel;
+                deptmanage.Update(dept);
+                AjaxResultxx = deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+
+        //岗位表添加显示页
+        public ActionResult AddPosition() {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var deptlist = deptmanage.GetList();//获取公司部门数据集
+            ViewBag.mydept = new SelectList(deptlist, "DeptId", "DeptName");
+            return View();
+        }
+        //验证输入的岗位是否已存在
+        [HttpPost]
+        public ActionResult VerifyPosition(int deptid,string pname)
+        {
+            PositionManage deptmanage = new PositionManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                foreach (var d in deptmanage.GetList().Where(s=>s.DeptId==deptid))
+                {
+                    if (pname == d.PositionName)
+                    {
+                        AjaxResultxx = deptmanage.Success();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult AddPosition(Position p) {
+
+            PositionManage deptmanage = new PositionManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                p.IsDel = false;
+                deptmanage.Insert(p);
+                AjaxResultxx = deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+        //修改岗位表的IsDel属性
+        [HttpPost]
+        public ActionResult EditPositionIsDel(int id, bool isdel)
+        {
+            PositionManage deptmanage = new PositionManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var dept = deptmanage.GetEntity(id);
+                dept.IsDel = isdel;
+                deptmanage.Update(dept);
+                AjaxResultxx = deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
+        //员工婚姻状态的修改 
+        public ActionResult EditEmphunyin(string id, bool ismarry) {
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var emp = empinfo.GetEntity(id);
+                if (ismarry == false)
+                {
+                    emp.MaritalStatus = true;
+                }
+                else {
+                    emp.MaritalStatus = false;
+                }
+                AjaxResultxx = empinfo.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = empinfo.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
     }
 }

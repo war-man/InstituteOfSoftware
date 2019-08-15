@@ -4,17 +4,23 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
     [CheckLogin]
     public class StudentInformationController : Controller
     {
-        public static int cou = 0;
+        //班级表
+        ClassScheduleBusiness classschedu = new ClassScheduleBusiness();
+        //学员班级表
+        ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
         //备案id
         private static int NameKeysid = 0;
         public class Student { }
@@ -73,20 +79,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string c = a.ToString();
             return c;
         }
+       
         //生成学号
         public string StudentID(string IDnumber)
+
         {
-             cou++;
+           
             string mingci = string.Empty;
             DateTime date = Convert.ToDateTime(Date());
+            //当前年份
+            string n = date.Year.ToString().Substring(2);//获取年份
+
+            //学员总数
+            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count()+1;
             string sfz = IDnumber.Substring(6,8);
-             string n=  date.Year.ToString().Substring(2);//获取年份
-   
+
             string y = Month(Convert.ToInt32(date.Month)).ToString();
-
-
             // string count = Count().ToString();
-            string count = cou.ToString();
+            string count = laststr.ToString();
             if (count.Length<2)
                 mingci = "0000" + count;
             else if (count.Length < 3)
@@ -100,12 +110,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string xuehao = n + y + sfz+mingci;
             return xuehao;
         }
-        //清除学号尾数
-        public void myche()
-        {
-            cou = 0;
-           
-        }
+        
         //复杂日期截取
         public string Datetimes(DateTime InsitDate)
         {
@@ -117,18 +122,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string data = dat[0] + "/" + c + "/" + riqi;
             return data;
         }
+
+      
         //学员注册编辑
         public ActionResult Registeredtrainees()
         {
-
+            ViewBag.List = classschedu.GetList().Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id)&&id!= "undefined")
             {
-
+                
                 ViewBag.Name = "编辑学员信息";
                 ViewBag.StudentID = id;
-             
-            
                 return View();
 
             }
@@ -225,7 +230,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
         }
         //注册学员编辑学员
-        public ActionResult Enti(StudentInformation studentInformation)
+        public ActionResult Enti(StudentInformation studentInformation,string List)
         {
            
             
@@ -237,11 +242,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
                     try
                     {
+                        
                         studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
                         studentInformation.InsitDate = DateTime.Now; ;
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         dbtext.Insert(studentInformation);
+                        ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                        scheduleForTrainees.ClassID = List;//班级名称
+                        scheduleForTrainees.CurrentClass = true;
+                        scheduleForTrainees.StudentID = studentInformation.StudentNumber;
+                        scheduleForTrainees.AddDate = DateTime.Now;
+                        Stuclass.Insert(scheduleForTrainees);
                         result = new SuccessResult();
                         result.Msg = "注册成功";
                         result.Success = true;
@@ -265,16 +277,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             else
             {
-             
-
-                    try
+             try
                     {
-
-
                     StudentInformation x = Finds(studentInformation.StudentNumber);
                     studentInformation.Password = x.Password;
                     studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
                     studentInformation.InsitDate = x.InsitDate;
+                   
                     dbtext.Update(studentInformation);
                     result = new SuccessResult();
                         result.Msg = "修改成功";
@@ -305,8 +314,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult Select()
         {
             string stuid = Request.QueryString["stuid"];
-        
-            return Json(Finds(stuid), JsonRequestBehavior.AllowGet);
+            var a = Finds(stuid);
+            var x = new
+            {
+                StudentNumber = a.StudentNumber,//学号
+                Name = a.Name,//姓名
+                InsitDate = a.InsitDate,//入校时间
+                Education = a.Education,//学历
+                Telephone = a.Telephone,//电话
+                Familyaddress = a.Familyaddress,//家庭住址
+                WeChat = a.WeChat,//微信
+                qq = a.qq,//qq
+                BirthDate = a.BirthDate,//出生日期
+                identitydocument = a.identitydocument,//身份证号码
+                Reack = a.Reack,//备注
+                Traine = a.Traine,//学员性格
+                Hobby = a.Hobby,//兴趣爱好
+                Nation = a.Nation,//民族
+                Sex = a.Sex,//性别,
+                Guardian=a.Guardian,//亲属
+                AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().AddDate,//入班时间
+               classa = classschedu.GetEntity( Stuclass.GetList().Where(c=>c.StudentID==a.StudentNumber&&c.CurrentClass==true).First().ClassID).ClassNumber//班级号
+            };
+            
+            return Json(x, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Viewdetails()
         {
@@ -345,5 +376,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
           return Json(result, JsonRequestBehavior.AllowGet);
         }
+
     }
 }

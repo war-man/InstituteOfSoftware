@@ -15,59 +15,60 @@
     </div>
 </script>
 
-@*操作栏*@
-<script type="text/html" id="barDemo">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-</script>
 <table id="emptab" lay-filter="emptest"></table>
+
+
+@*员工婚姻状态改变*@
+<script type="text/html" id="switchTpl">
+    <input type="checkbox" name="MaritalStatus" value="{{d.EmployeeId}}" lay-skin="switch" lay-text="未婚|已婚" lay-filter="hunyinDemo" {{d.IsDel == false ? 'checked' : ''}}>
+</script>
 
 @section script{
 
     <script>
-        layui.use(['table', 'layer'], function () {
+        layui.use(['table', 'layer', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
+            var form = layui.form;
             table.render({
                 elem: '#emptab'
                 , url: '/Personnelmatters/EmployeesInfo/GetData'
                 , id: "myEmpInfo"
                 , toolbar: '#toolbarDemo'
                 , limits: [1, 3, 6, 9, 12, 15, 18]
-                , limit: 3
+                , limit: 6
                 , cols: [[
                     , { field: 'EmployeeId', title: '员工编号', width: 126 }
                     , { field: 'DDAppId', title: '钉钉工号', width: 108, sort: true }
                     , { field: 'EmpName', title: '姓名', width: 110, sort: true }
                     , { field: 'Depart', title: '所属部门', width: 110, sort: true }
                     , { field: 'Position', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'Phone', title: '电话号码', sort: true, width: 110 }
+                    , { field: 'IsDel', title: '在职状态', width: 100, templet: '#myworkstate' }
                     , { field: 'Sex', title: '性别', sort: true, width: 90, templet: '#mysex' }
                     , { field: 'Age', title: '年龄', sort: true, width: 90 }
                     , { field: 'Nation', title: '民族', sort: true, width: 100 }
-                    , { field: 'Phone', title: '电话号码', sort: true, width: 110 }
                     , { field: 'IdCardNum', title: '身份证号码', sort: true, width: 120 }
                     , { field: 'EntryTime', title: '入职时间', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.EntryTime) } }
-                    , { field: 'ContractStartTime', title: '合同起始时间', templet: function (d) { return changeDateTimeFormat(d.ContractStartTime) } }
-                    , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 125, templet: function (d) { return changeDateTimeFormat(d.ContractEndTime) } }
+                    , { field: 'ContractStartTime', title: '合同起始时间', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.ContractStartTime) } }
+                    , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.ContractEndTime) } }
                     , { field: 'Birthdate', title: '出生日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.Birthdate) } }
                     , { field: 'Birthday', title: '生日', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '转正日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.PositiveDate) } }
-                    , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 120 }
+                    , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 135 }
                     , { field: 'DomicileAddress', title: '户籍地址', sort: true, width: 110 }
                     , { field: 'Address', title: '现居地址', sort: true, width: 110 }
                     , { field: 'Education', title: '学历', sort: true, width: 110 }
-                    , { field: 'MaritalStatus', title: '婚姻状态', sort: true, width: 110, templet:'#myMaritalStatus' }
-                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.IdCardIndate) } }
+                    , { field: 'MaritalStatus', title: '婚姻状态', sort: true, width: 110, templet: '#switchTpl', unresize: true }
+                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.IdCardIndate) } }
                     , { field: 'PoliticsStatus', title: '政治面貌', sort: true, width: 110 }
                     , { field: 'WorkExperience', title: '工作经验', sort: true, width: 110 }
-                    , { field: 'ProbationSalary', title: '试用期工资', sort: true, width: 110 }
+                    , { field: 'ProbationSalary', title: '试用期工资', sort: true, width: 120 }
                     , { field: 'Salary', title: '转给工资', sort: true, width: 110 }
-                    , { field: 'WorkingState', title: '在职状态', sort: true, width: 110, templet: '#myworkstate' }
-                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 120 }
+                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 135 }
                     , { field: 'BCNum', title: '银行卡号', sort: true, width: 110 }
                     , { field: 'Material', title: '材料', sort: true, width: 110 }
                     , { field: 'Remark', title: '备注', sort: true, width: 110 }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
                 ]]
                 , page: true
             });
@@ -88,28 +89,29 @@
             //监听行工具事件
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
-                //console.log(obj)
-                if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
-                        $.get("/Personnelmatters/EmployeesInfo/GetData" + data.id, function (da) {
-                            if (da > 0) {
-                                layer.alert("删除成功!", { icon: 1 }, function (index) {
-                                    layui.use(['table'], function () {
-                                        var table = layui.table;
-                                        table.reload("myBill");
-                                    });
-                                    layer.close(index);
-                                });
-                            }
-                            else {
-                                layer.alert("删除失败!");
-                            }
-                        })
-                    });
-                }
-                else if (obj.event === 'edit') {
+                if (obj.event === 'edit') {
                     UpdateEmp(data.id);
                 }
+            });
+
+            //监听婚姻状态操作
+            form.on('switch(hunyinDemo)', function (obj) {
+               
+                var id = this.value; var name = this.name;
+                console.log(id); console.log(name); console.log(obj.elem.checked);
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "/Personnelmatters/EmployeesInfo/EditEmphunyin",
+                    data: { id: id, ismarry: obj.elem.checked },
+                    success: function (data) {
+                        if (data.Success) {
+                            layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+                        } else {
+                            layer.alert("修改失败!");
+                        }
+                    }
+                });
             });
         });
 
@@ -166,6 +168,8 @@
                 var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
 
                 return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
+                return "";
             }
         }
     </script>
@@ -180,18 +184,10 @@
     </script>
     @*工作状态*@
     <script type="text/html" id="myworkstate">
-        {{# if(d.WorkingState==true){ }}
-        {{ d.WorkingState="在职" }}
+        {{# if(d.IsDel==false){ }}
+        {{ d.IsDel="在职" }}
         {{# }else{ }}
-        {{ d.WorkingState="离职" }}
-        {{# } }}
-    </script>
-    @*婚姻状态*@
-    <script type="text/html" id="myMaritalStatus">
-        {{# if(d.MaritalStatus==false){ }}
-        {{ d.MaritalStatus="未婚" }}
-        {{# }else{ }}
-        {{ d.MaritalStatus="已婚" }}
+        {{ d.IsDel="离职" }}
         {{# } }}
     </script>
 }

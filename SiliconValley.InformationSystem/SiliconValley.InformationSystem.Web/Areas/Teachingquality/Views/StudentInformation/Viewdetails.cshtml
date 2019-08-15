@@ -51,6 +51,25 @@
                     <input type="text" id="BirthDate" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
                 </div>
             </div>
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">班级</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="classa" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label" id="Sexs"></label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Guardian" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">入班日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="AddDate" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">学历</label>
                 <div class="layui-input-inline">
@@ -93,6 +112,7 @@
                     <input type="text" id="Traine" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
                 </div>
             </div>
+
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">兴趣爱好</label>
                 <div class="layui-input-inline">
@@ -196,10 +216,16 @@
             $("#Traine").val(data.Traine)//学员性格
             $("#Hobby").val(data.Hobby)//兴趣爱好
             $("#Nation").val(data.Nation)//民族
-            $("#Reack").val(data.Reack)//备注
+            $("#classa").val(data.classa)//班级号
+            $("#AddDate").val(TimeChange(data.InsitDate))//入班日期
             //Education
             $("#Education").val(data.Education)//学历
             $("#InsitDate").val(TimeChange(data.InsitDate))//入校日期
+            //
+            var GuaSex = data.Guardian.split(',')
+            $("#Sexs").text(GuaSex[1]+"姓名")//亲属关系
+
+            $("#Guardian").val(GuaSex[0])//亲属姓名
             console.log(Age(TimeChange(data.BirthDate)));
 
         
