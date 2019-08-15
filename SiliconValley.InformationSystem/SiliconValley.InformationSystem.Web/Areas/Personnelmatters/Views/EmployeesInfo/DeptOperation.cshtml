@@ -110,13 +110,45 @@
 
             //头工具栏事件
             table.on('toolbar(test1)', function (obj) {
-                //var checkStatus = table.checkStatus(obj.config.id);
+                var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'addDept':
                         EditDept();
                         break;
                     case 'delDept':
-                        DelDept();
+                        var data = checkStatus.data;
+                        console.log("勾选数据"+data);
+                        var list = "";
+                        for (var i = 0; i < data.length; i++) {
+                            list += data[i].ID + ',';
+                        }
+                        console.log("数组"+list);
+                        if (data.length >= 1) {
+                            layer.open({
+                                content: '确定删除？',
+                                btn: ['确认', '取消'],
+                                yes: function (index, layero) {
+                                    $.post("/Personnelmatters/EmployeesInfo/DelDepts", { 'list': list }, function (data) {
+                                        if (data.Success) {
+                                            layer.alert("删除成功", { icon: 1 }, function (index) {
+                                                layui.use(['table'], function () {
+                                                    var table = layui.table;
+                                                    table.reload("myDept");
+                                                });
+                                                layer.close(index);
+                                            });
+                                        }  else {
+                                            layer.alert("删除失败");
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            layer.open({
+                                title: '提示'
+                                , content: '请至少选中一条数据进行删除'
+                            });
+                        }
                         break;
                 };
             });
@@ -190,13 +222,45 @@
 
             //头工具栏事件
             table.on('toolbar(test2)', function (obj) {
-                //var checkStatus = table.checkStatus(obj.config.id);
+                var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'AddPosition':
                         addPosition();
                         break;
                     case 'delPosition':
-                        EditDept();
+                        var data = checkStatus.data;
+                        console.log("岗位勾选数据" + data);
+                        var list = "";
+                        for (var i = 0; i < data.length; i++) {
+                            list += data[i].ID + ',';
+                        }
+                        console.log("岗位数组" + list);
+                        if (data.length >= 1) {
+                            layer.open({
+                                content: '确定删除？',
+                                btn: ['确认', '取消'],
+                                yes: function (index, layero) {
+                                    $.post("/Personnelmatters/EmployeesInfo/DelPositions", { 'list': list }, function (data) {
+                                        if (data.Success) {
+                                            layer.alert("删除成功", { icon: 1 }, function (index) {
+                                                layui.use(['table'], function () {
+                                                    var table = layui.table;
+                                                    table.reload("myPosition");
+                                                });
+                                                layer.close(index);
+                                            });
+                                        } else {
+                                            layer.alert("删除失败");
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            layer.open({
+                                title: '提示'
+                                , content: '请至少选中一条数据进行删除'
+                            });
+                        }
                         break;
                 };
             });
