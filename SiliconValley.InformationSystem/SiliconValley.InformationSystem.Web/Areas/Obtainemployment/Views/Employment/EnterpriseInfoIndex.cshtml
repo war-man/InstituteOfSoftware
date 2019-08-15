@@ -26,15 +26,15 @@
 <div style="display:inline-block;width:600px;" class="form-inline">
 
     <div class="form-group">
-        <input type="text" class="form-control" id="name" placeholder="输入姓名">
+        <input type="text" class="form-control" id="EntName" placeholder="请输入查询的公司名称">
     </div>
 
     <div class="form-group">
-        <input type="tel" class="form-control" id="phone" lay-verify="phone" placeholder="电话">
+        <input type="tel" class="form-control" id="EntPhone"  placeholder="请输入查询的电话号码">
     </div>
 
     <button class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-    <button class="layui-btn layui-btn-radius layui-btn-primary">添加合作企业</button>
+    <button class="layui-btn layui-btn-radius layui-btn-primary" id="AddCooper">添加合作企业</button>
 </div>
 <table class="layui-hide" id="Enterprise" lay-filter="EnterpriseInfo"></table>
 
@@ -47,6 +47,8 @@
 @section script{
     <script>
 
+        var MrDtableIns;
+        var MrDLayer;
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -64,18 +66,46 @@
             var result = year + '-' + month + '-' + day;
             return result;
         }
-
+        //添加合作企业
+        function AddCooperaEnterprises() {
+             MrDLayer.open({
+                        type: 2
+                        , area: ["800px", "620px"]
+                        , title: "添加合作企业信息"
+                        , content: '/Obtainemployment/Employment/AddEnterprise'
+                        , anim: "2" /* 改变弹出层弹出方式*/
+                        , end: function () {
+                            MrDtableIns.reload('Enterprise', {
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }
+                            });
+                        }
+                    });
+        }
+          
+         //显示条件查询
+        function WhyShow(value) {
+            MrDtableIns.reload({
+                        where: {
+                            whyshow: value
+                        }
+                        , page: {
+                            curr: 1
+                        }
+                    });
+        }
         layui.use(['table', 'layer'], function () {
             var table = layui.table;
             var layer = layui.layer; //layui对象
-
+             MrDLayer = layer;
             //监听表格复选框选择
             table.on('checkbox(EnterpriseInfo)', function (obj) {
                 console.log(obj)
             });
 
             //展示已知数据
-            var tableIns = table.render({
+           var  tableIns = table.render({
                 elem: '#Enterprise'
                 , url: '/Employment/SearchEnterpriseInfo' //数据接口
                 , page: true //开启分页
@@ -104,12 +134,28 @@
                     , { fixed: 'right', width: 198, align: 'center', toolbar: '#barDemo' }
                 ]]
 
-            });
+           });
+            MrDtableIns = tableIns;
             //监听工具条
             table.on('tool(EnterpriseInfo)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'detail') {
-                    layer.msg('合作企业ID：' + data.CooperaEnterprisesID + ' 的查看操作');
+                    layer.open({
+                        type: 2
+                        , area: ["800px", "620px"]
+                        , title: "弹出层"
+                        , content: '/Obtainemployment/Employment/Enterdetail/' + data.EnterpriseInfoID
+                        , anim: "2" /* 改变弹出层弹出方式*/
+                        , end: function () {
+                            table.reload('Enterprise', {
+                                page: {
+                                    curr: 1
+                                }
+                            });
+
+                        }
+                    });
+                   
                 }
                 else if (obj.event === 'del') {
                     layer.confirm('真的解除合作关系么', function (index) {
@@ -150,75 +196,26 @@
                 }
             });
 
-            var $ = layui.$, active = {
-                //显示全部的企业信息
-                ShowAllEnter: function () {
-                    tableIns.reload({
-                        where: { //设定异步数据接口的额外参数，任意设
-                            whyshow: "ShowAllEnter"
-                        }
-                        , page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
-                    });
-                }
-                //显示合作企业
-                , ShowCoop: function () {
-                    tableIns.reload({
-                        where: {
-                            whyshow: "ShowCoop"
-                        }
-                        , page: {
-                            curr: 1
-                        }
-                    });
-                }
-                //显示没有合作的企业ShowNoCoop
-                , ShowNoCoop: function () {
-                    tableIns.reload({
-                        where: {
-                            whyshow: "ShowNoCoop"
-                        }
-                        , page: {
-                            curr: 1
-                        }
-                    });
-                }
-                //添加合作企业
-                , AddCooperaEnterprises: function () {
-                    layer.open({
-                        type: 2
-                        , area: ["800px", "620px"]
-                        , title: "添加合作企业信息"
-                        , content: '/Obtainemployment/Employment/AddEnterprise'
-                        , anim: "2" /* 改变弹出层弹出方式*/
-                        , end: function () {
-                            table.reload('Enterprise', {
-                                page: {
-                                    curr: 1 //重新从第 1 页开始
-                                }
-                            });
-                        }
-                    });
-
-                }
-            };
-
+            
             $('.demoTable .layui-btn').on('click', function () {
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
         });
         $("#grandlist li a").click(function () {
-            
             var grand = $(this).text();
             $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
             var grandid = $(this).attr("grandid");
             $("#selectGrand").attr("grandid", grandid);
-
             var a = $(this).attr("whyshow");
-            alert(a);
-
+            console.log(MrDtableIns);
+             WhyShow(a);
+            if (a == "ShowNoCoop") {
+                $("#EntPhone").attr("disabled","disabled");
+            }
+        });
+        $("#AddCooper").click(function () {
+            AddCooperaEnterprises();
         });
     </script>
 }

@@ -270,6 +270,8 @@
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
+    <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\MrDDetailSpecView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />

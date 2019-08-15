@@ -20,8 +20,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int Id { get; set; }
-        public Nullable<int> EntID { get; set; }
-        public Nullable<int> SpeID { get; set; }
+        public int EntID { get; set; }
+        public int SpeID { get; set; }
         public Nullable<System.DateTime> SpeeDate { get; set; }
         public string Remark { get; set; }
         public string JobResponsibilities { get; set; }
