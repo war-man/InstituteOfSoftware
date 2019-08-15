@@ -81,7 +81,12 @@
         color: #fff;
         border: none;
     }
- 
+    body .demo-class2 .layui-layer-title {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
 </style>
 <div>
     <form class="layui-form">
@@ -135,12 +140,11 @@
                         <label class="layui-form-label">学历</label>
                         <div class="layui-input-block">
                             <select style="width:200px;" class="layui-select" id="StuEducational" name="StuEducational">
-                                <option value="初中">小学</option>
                                 <option value="初中">初中</option>
                                 <option value="高中">高中</option>
                                 <option value="大专">大专</option>
-                                <option value="二本">二本</option>
-                                <option value="一本">一本</option>
+                                <option value="本科">本科</option>
+                                <option value="中专">中专</option>
                             </select>
                         </div>
 
@@ -293,7 +297,7 @@
         //姓名失去焦点事件
         $("#StuName").blur(function () {
             var name = $("#StuName").val();
-            console.log(name);
+           // console.log(name);
             $.ajax({
                 url: "/Market/StudentDataKeep/FindStudent/" + name,
                 success: function (successdata) {
@@ -301,12 +305,15 @@
                         //有相同的名称
                         layui.use('layer', function () {
                             var layer = layui.layer;
-                            layer.confirm('已有该学员名称', { icon: 3, title: '提示', btn: ['去看看', '关闭']}, function (index) {
+                            layer.confirm('已有该学员名称', { icon: 3, title: '提示', btn: ['去看看', '关闭'], skin: 'demo-class2'}, function (index) {
                                 //do something
                                 layer.close(index);
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭   
+                                window.parent.LoadTableSeache(name);  
                             }, function (index) {
                                 //将名字相同的数据加载给用户看
-                                layer.close(index);
+                                layer.close(index);                                 
                             });
                         })
                     }
