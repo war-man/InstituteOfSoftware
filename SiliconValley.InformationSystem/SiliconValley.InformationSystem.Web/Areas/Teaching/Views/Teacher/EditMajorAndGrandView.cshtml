@@ -23,66 +23,38 @@
     </style>
 </head>
 <body>
-    <div>
-
-
-        <h1 style="text-align:center">@ViewBag.TeacherView.Name </h1>
-
-        <input type="hidden"  id="teacherid" value="@ViewBag.TeacherView.TeacherID"/>
+    <div style=" position:relative; width:800px;margin: auto;" id="contein">
+        <input type="hidden" id="teacherid" value="@ViewBag.Teacher.TeacherID" />
         @{
-            foreach (var item in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>).Keys)
+
+            foreach (var item in ViewBag.majors)
             {
-
-                <div class="layui-collapse" style="margin-top:50px;">
+                <div class="layui-collapse" lay-filter="filter">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title">@item.SpecialtyName</h2>
-                        <div style="" class="layui-colla-content layui-show">
+                        <h2 class="layui-colla-title" majorid="@item.Id">@item.SpecialtyName  </h2>
 
-                            <div style="width:100%;text-align:center;">
-                                <button majorid="@item.Id" class="layui-btn layui-btn-warm" type="button">
-                                    @item.SpecialtyName
-                                </button>
+                        <div id="opinionContent" class="layui-colla-content coll" style="position:relative;">
+                            <div id="adddiv" style="display:inline-block;">
+                                <a majorid="@item.Id" class="layui-btn layui-btn-primary addgrandbtn" href="javascript:void(0);">  <i class="layui-icon">&#xe654;</i> 阶段</a>
                             </div>
 
-
-                            <div id="showGrand" style="height:80px;text-align:center;" >
-
+                            <div id="content" style="display:inline-block;  ">
 
                             </div>
-
-                            <div class="row" id="sethaveGrand" style="margin-top:10px;">
-
-                             
-
-                                    @{
-                                        foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
-                                        {
-
-                                            <button class="layui-btn grand" grandid="@item1.Id" type="button" style="margin-top:50px;">
-                                                @item1.GrandName
-                                            </button>
-                                        }
-                                    }
-                               
-                                <button majorid="@item.Id" id="add1" select="false" class="layui-btn" type="button" style="margin-top:50px;">
-                                    + 添加阶段
-                                </button>
-
-                            </div>
-
-
                         </div>
+
+
                     </div>
-
                 </div>
-
             }
         }
+        <button style="margin-top:10px; width:100%;" class="layui-btn layui-btn-normal">  <i class="layui-icon">&#xe654;</i> 专业</button>
+
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
-
-
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
     <script src="~/Areas/Teaching/Scripts/MajorAndGrand.js"></script>
 
 </body>

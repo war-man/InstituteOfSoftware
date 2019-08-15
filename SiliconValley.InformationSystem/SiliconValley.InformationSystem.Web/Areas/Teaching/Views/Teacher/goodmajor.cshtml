@@ -10,9 +10,15 @@
     <meta name="viewport" content="width=device-width" />
     <title>goodmajor</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        .select {
+             background-color:aqua;
+        }
+    </style>
 </head>
 <body>
-    <div>
+    <div style=" position:relative; width:800px;margin: auto;" id="contein">
         <input type="hidden" id="teacherid" value="@ViewBag.Teacher.TeacherID" />
         @{
 
@@ -20,12 +26,16 @@
             {
                 <div class="layui-collapse" lay-filter="filter">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title" majorid="@item.Id">@item.SpecialtyName</h2>
+                        <h2 class="layui-colla-title"  majorid="@item.Id">@item.SpecialtyName  </h2>
 
-                        <div class="layui-colla-content">
+                        <div  id="opinionContent" class="layui-colla-content coll" style="position:relative;">
+                            <div id="adddiv" style="display:inline-block;">
+                                <a   majorid="@item.Id"  class="layui-btn layui-btn-primary addbtn"  href="javascript:void(0);">  <i class="layui-icon">&#xe654;</i> 新技能</a>
+                            </div>
 
-                            <button class="layui-btn layui-btn-primary">课程名称</button>
-
+                            <div id="content" style="display:inline-block;  ">
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -37,49 +47,229 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
 
+    <script type="text/template" id="muban1">
+
+
+
+
+    </script>
 
     <script>
+
+
         layui.use(['element', 'layer'], function () {
 
             var element = layui.element;
             var layer = layui.layer;
             element.on('collapse(filter)', function (data) {
-                console.log(data.show); //得到当前面板的展开状态，true或者false
-                console.log(data.title); //得到当前点击面板的标题区域DOM对象
-                console.log(data.content); //得到当前点击面板的内容区域DOM对象
+                //console.log(data.show); //得到当前面板的展开状态，true或者false
+                //console.log(data.title); //得到当前点击面板的标题区域DOM对象
+                //console.log(data.content); //得到当前点击面板的内容区域DOM对象
 
 
-                //获取专业id
-                var majorid = data.title[0].attributes["majorid"].nodeValue;
+                if (data.show) {
+                    //获取专业id
+                    var majorid = data.title[0].attributes["majorid"].nodeValue;
 
+                    var teacherid = $("#teacherid").val();
+                    //发送请求
+
+                    Ajax("/teaching/teacher/GetCurcousData", { teacherid: teacherid, majorid: majorid }, "post", function (result) {
+
+                        if (result.ErrorCode == 200) {
+
+                            $($(data.content).children()[1]).html("");
+
+                           
+
+                            ///成功 渲染数据
+
+                            if (result.Data.length == 0) {
+
+                                return;
+
+                            }
+
+                            console.log(result);
+
+                            for (var i = 0; i < result.Data.length; i++) {
+
+                                var btn = $('<button class="layui-btn layui-btn-primary"></button>');
+
+                                btn.text(result.Data[i].CourseName);
+           
+                                $($(data.content).children()[1]).append(btn);
+
+
+                                //console.log($($(data.content).children()[1]));
+                            }
+
+
+
+
+
+                        } else {
+                            layer.msg("抱歉！系统繁忙.......");
+                        }
+
+
+                    }, function (error) {
+
+                        layer.msg("抱歉！网络好像出现了一点小问题......");
+
+                    });
+                }
+
+                
+            });
+
+
+            //新增技能事件
+
+            $(".addbtn").click(function () {
+
+                //获取teacherid
                 var teacherid = $("#teacherid").val();
-                //发送请求
 
-                Ajax("/teaching/teacher/GetCurcousData", { teacherid: teacherid, majorid: majorid }, "post", function (result) {
-
-                    if (result.ErrorCode == 200) {
-
-                        ///成功 渲染数据
+                var majorid = $(this).attr("majorid");
 
 
+                Ajax("/teaching/teacher/GetNewSkill", { majorid: majorid, teacherid: teacherid }, "post", function (result) {
 
 
+                    if (result.Data.length == 0) {
 
-                    } else {
-                        layer.msg("抱歉！系统繁忙.......");
+                        layer.msg("没有新技能了....");
+
+                        return
                     }
+                   
+                    $("#muban1").html("");
+
+
+                    for (var i = 0; i < result.Data.length; i++) {
+
+                        //创建一个按钮
+
+                        
+
+                        var btn = $('<button class="layui-btn layui-btn-primary currbtn"></button>');
+
+
+                        btn.text(result.Data[i].CourseName);
+
+                        btn.attr("currId", result.Data[i].CurriculumID);
+
+
+
+                        $(document).off("click", ".currbtn").on('click', '.currbtn', function () {
+                            $(this).toggleClass("select");
+
+                        });
+
+                       
+                        $("#muban1").append(btn);
+
+                    }
+
+                 
+
+                    var html = $("#muban1").html();
+
+
+
+                    //弹出层
+
+                    layer.open({
+                        type: 1,
+                        title:"技能",
+                        area: ['600px', '300px'],
+                        btn: ['确定','关闭'],
+
+                        content: html
+                        , yes: function (index) {
+
+                            var ids = "";
+
+
+                            //获取选择的课程id
+
+                            $(".currbtn").each(function () {
+
+                                //console.log($(this).hasClass("select"));
+
+                                if ($(this).hasClass("select") != false) {
+
+
+                                    //list.push($(this).attr("currId"));
+
+                                    ids += $(this).attr("currId") +",";
+                                }
+                               
+                            });
+
+                            //var parm = { ids: list }
+
+                            //var p = $.param(parm, true);
+
+
+                            if (ids!="") {
+
+                                layer.confirm('确定?', function (index) {
+                                    //发送请求
+
+                                    //获取教员id
+                                    var teacherid = $("#teacherid").val();
+
+                                    Ajax("/teaching/teacher/SetNewSkillToTeacher", {  ids:ids, teacherid: teacherid }, "post", function (result) {
+
+
+
+                                        if (result.Data.ErrorCode == 200) {
+
+                                            layer.msg("成功");
+
+                                        }
+
+
+
+                                    }, function (error) {
+
+                                        layer.msg("抱歉！网络好像出现了一点小问题......");
+
+
+                                    });
+
+                                    layer.close(index);
+                                });
+
+                            }
+
+
+
+                          
+                            layer.close(index);
+
+
+                            //收起折叠面板
+                            $(".coll").removeClass("layui-show");
+                            
+                        }
+                    }); 
+                    
 
 
                 }, function (error) {
+
 
                     layer.msg("抱歉！网络好像出现了一点小问题......");
 
                     });
 
-                
-            });
 
+            });
 
         });
 
