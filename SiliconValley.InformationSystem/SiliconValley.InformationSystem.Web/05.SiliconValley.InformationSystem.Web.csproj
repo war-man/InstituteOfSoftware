@@ -335,6 +335,7 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
