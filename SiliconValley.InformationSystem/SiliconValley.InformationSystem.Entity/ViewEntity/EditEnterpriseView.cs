@@ -12,6 +12,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public int EntID { get; set; }
         //合作id
         public int CooID { get; set; }
+        /// <summary>
+        /// 操作标号
+        /// </summary>
+        public int OperNO { get; set; }
         public string EntName { get; set; }
 
         public string EntAddress { get; set; }

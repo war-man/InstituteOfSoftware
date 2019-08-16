@@ -29,6 +29,5 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int EmpStaffID { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-        public Nullable<int> CooID { get; set; }
     }
 }

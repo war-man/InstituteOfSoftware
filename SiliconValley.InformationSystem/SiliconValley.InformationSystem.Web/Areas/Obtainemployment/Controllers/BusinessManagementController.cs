@@ -14,7 +14,8 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    public class EmploymentController : Controller
+   
+    public class BusinessManagementController : Controller
     {
         /// <summary>
         /// 合作企业业务类
@@ -64,16 +65,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             EmployStaff = new EmploymentStaffBusiness();
             return EmployStaff.GetIQueryable().Where(a => a.ID == EmpStaffID).FirstOrDefault();
 
-        }
-        /// <summary>
-        /// 根据id获取合作企业对象
-        /// </summary>
-        /// <param name="CooID"></param>
-        /// <returns></returns>
-        public CooperaEnterprises GetCooperaEnterprisesByID(int? CooID)
-        {
-            coo = new CooperaEnterprisesBusiness();
-            return coo.GetIQueryable().Where(a => a.ID == CooID).FirstOrDefault();
         }
 
         /// <summary>
@@ -141,15 +132,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult SearchEnterpriseInfo(int page, int limit, string whyshow, string EntName, string EntContacts)
         {
             Enter = new EnterpriseInfoBusiness();
+            coo = new CooperaEnterprisesBusiness();
+            var coolist = coo.GetIQueryable().Where(a => a.IsCooper == true).ToList();
             //企业信息
             var EnterList = Enter.GetIQueryable().OrderByDescending(a => a.ID).Where(a => a.IsDel == false).ToList();
+
             switch (whyshow)
             {
                 case "ShowCoop":
-                    EnterList = EnterList.Where(a => a.CooID != null).ToList();
+
+                    if (coolist.Count!=0)
+                    {
+                        foreach (var coo in coolist)
+                        {
+                            foreach (var enter in EnterList)
+                            {
+                                if (coo.EnterID != enter.ID)
+                                {
+                                    EnterList.Remove(enter);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        EnterList =new List<EnterpriseInfo>();
+                    }
                     break;
                 case "ShowNoCoop":
-                    EnterList = EnterList.Where(a => a.CooID == null).ToList();
+                    foreach (var coo in coolist)
+                    {
+                        foreach (var enter in EnterList)
+                        {
+                            if (coo.EnterID == enter.ID)
+                            {
+                                EnterList.Remove(enter);
+                            }
+                        }
+                    }
                     break;
                 default:
                     break;
@@ -164,9 +184,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 EntScale = a.EntScale,
                 EmploymentStaffName = GetEmployeesInfoByID(GetEmploymentStaffByID(a.EmpStaffID).EmployeesInfo_Id).EmpName,
                 Remark = a.Remark,
-                CooperaEnterprisesID = a.CooID == null ? 0 : a.CooID,
-                EntContacts = a.CooID == null ? "可待合作企业" : GetCooperaEnterprisesByID(a.CooID).EntContacts,
-                EntPhone = a.CooID == null ? "可待合作企业" : GetCooperaEnterprisesByID(a.CooID).EntPhone,
+
+                CooperaEnterprisesID = coo.GetCooByEnterID(a.ID)==null?-1:coo.GetCooByEnterID(a.ID).ID,
+                EntContacts = coo.GetCooByEnterID(a.ID) == null ? "" : coo.GetCooByEnterID(a.ID).EntContacts,
+                EntPhone = coo.GetCooByEnterID(a.ID) == null ? "" : coo.GetCooByEnterID(a.ID).EntPhone,
                 EntDate = a.EntDate
             }).ToList();
             if (EntName != null)
@@ -197,11 +218,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         {
             //没有进行验证处理。
             coo = new CooperaEnterprisesBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
             var cooOld = coo.GetIQueryable().Where(a => a.ID == CooID).FirstOrDefault();
             cooOld.IsCooper = false;
-            AjaxResult ajaxResult = new AjaxResult();
-            ajaxResult.Success = true;
-            ajaxResult.Msg = "取消合作";
+            try
+            {
+                coo.Update(cooOld);
+                ajaxResult.Success = true;
+                ajaxResult.Msg = "取消合作";
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = ex.Message;
+            }
+            
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 
@@ -223,43 +254,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         [HttpPost]
         public ActionResult AddEnterprise(AddEnterpriseView jsonStr, string EntSpeeList)
         {
-            //现在只采用周炯这个员工  员工编号190809006  专员id 1
+            //现在只采用周炯这个员工  员工编号201908150003  专员id 2 区域id 1
             Enter = new EnterpriseInfoBusiness();
             coo = new CooperaEnterprisesBusiness();
             CooperaEnterprises cooperaEnterprises = new CooperaEnterprises();
             EnterpriseInfo enterpriseInfo = new EnterpriseInfo();
-            cooperaEnterprises.Date = DateTime.Now;
-            cooperaEnterprises.EntContacts = jsonStr.EntContacts;
-            cooperaEnterprises.EntPhone = jsonStr.EntPhone;
-            cooperaEnterprises.IsCooper = true;
-            cooperaEnterprises.Remark = string.Empty;
             var AjaxResultss = new AjaxResult();
+
+            //添加企业基础信息
+            enterpriseInfo.EmpStaffID = 2;
+            enterpriseInfo.EntAddress = jsonStr.EntAddress;
+            enterpriseInfo.EntDate = DateTime.Now;
+            enterpriseInfo.EntName = jsonStr.EntName;
+            enterpriseInfo.EntNature = jsonStr.EntNature;
+            enterpriseInfo.EntScale = jsonStr.EntScale;
+            enterpriseInfo.EntWelfare = jsonStr.EntWelfare;
+            enterpriseInfo.IsDel = false;
+            enterpriseInfo.Remark = jsonStr.Remark;
+           
             try
             {
-                coo.Insert(cooperaEnterprises);
+                Enter.Insert(enterpriseInfo);
                 AjaxResultss.Success = true;
-                AjaxResultss.Msg = "添加成功";
-                coo = new CooperaEnterprisesBusiness();
-                var newCoop = coo.GetIQueryable().Where(a => a.EntPhone == jsonStr.EntPhone).FirstOrDefault();
-                var CoopID = newCoop.ID;
-                enterpriseInfo.CooID = CoopID;
-                enterpriseInfo.EmpStaffID = 1;
-                enterpriseInfo.EntAddress = jsonStr.EntAddress;
-                enterpriseInfo.EntDate = DateTime.Now;
-                enterpriseInfo.EntName = jsonStr.EntName;
-                enterpriseInfo.EntNature = jsonStr.EntNature;
-                enterpriseInfo.EntScale = jsonStr.EntScale;
-                enterpriseInfo.EntWelfare = jsonStr.EntWelfare;
-                enterpriseInfo.IsDel = false;
-                enterpriseInfo.Remark = jsonStr.Remark;
+                AjaxResultss.Msg = "添加企业基础信息成功";
+                Enter = new EnterpriseInfoBusiness();
+
+                var newEnt = Enter.GetIQueryable().Where(a => a.EntName == jsonStr.EntName).FirstOrDefault();
+                var EnterID = newEnt.ID;
+                cooperaEnterprises.Date = DateTime.Now;
+                cooperaEnterprises.EntContacts = jsonStr.EntContacts;
+                cooperaEnterprises.EntPhone = jsonStr.EntPhone;
+                cooperaEnterprises.IsCooper = true;
+                cooperaEnterprises.Remark = string.Empty;
+                cooperaEnterprises.EnterID = EnterID;
                 try
                 {
-                    Enter.Insert(enterpriseInfo);
+                    coo.Insert(cooperaEnterprises);
                     AjaxResultss.Success = true;
-                    AjaxResultss.Msg = "添加成功";
-                    Enter = new EnterpriseInfoBusiness();
-                    var newEnterpriseInfo = Enter.GetIQueryable().Where(a => a.CooID == CoopID).FirstOrDefault();
-                    var EnterID = newEnterpriseInfo.ID;
+                    AjaxResultss.Msg = "添加合作企业成功";
                     JArray jArray = JArray.Parse(EntSpeeList);
                     foreach (var item in jArray)
                     {
@@ -334,6 +366,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             EntSpeeBus = new EntSpeeBusiness();
             SpecBus = new SpecialtyBusiness();
 
+            var CooByEnterID = coo.GetCooByEnterID(entdata.ID);
             var modeldata = new EditEnterpriseView();
             modeldata.EntID = entdata.ID;
             modeldata.EntName = entdata.EntName;
@@ -342,9 +375,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             modeldata.EntNature = entdata.EntNature;
             modeldata.EntWelfare = entdata.EntWelfare;
             modeldata.Remark = entdata.Remark;
-            modeldata.EntContacts = entdata.CooID == null ? "" : GetCooperaEnterprisesByID(entdata.CooID).EntContacts;
-            modeldata.EntPhone = entdata.CooID == null ? "" : GetCooperaEnterprisesByID(entdata.CooID).EntPhone;
-            modeldata.CooID = entdata.CooID == null ? -1 : GetCooperaEnterprisesByID(entdata.CooID).ID;
+            modeldata.OperNO = CooByEnterID == null ? 0 : 1;
+            modeldata.EntContacts = CooByEnterID == null ? "" : CooByEnterID.EntContacts;
+            modeldata.EntPhone = CooByEnterID == null ? "" : CooByEnterID.EntPhone;
+            modeldata.CooID = CooByEnterID == null ? -1 : CooByEnterID.ID;
 
             ViewBag.EntSpeelist = EntSpeeBus.GetIQueryable().Where(a => a.EntID == entdata.ID).ToList();
 
@@ -372,53 +406,89 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         [HttpPost]
         public ActionResult EditEnterprise(EditEnterpriseView editEnterpriseView, string EntSpeeList)
         {
-            coo = new CooperaEnterprisesBusiness();
             int CooID = editEnterpriseView.CooID;
+            int OperNo = editEnterpriseView.OperNO;
             var AjaxResultss = new AjaxResult();
             switch (CooID)
             {
-                //作为添加
-                case 0:
-                    var newcoo = new CooperaEnterprises();
-                    newcoo.EntContacts = editEnterpriseView.EntContacts;
-                    newcoo.EntPhone = editEnterpriseView.EntPhone;
-                    try
-                    {
-                        coo.Insert(newcoo);
-                        AjaxResultss.Success = true;
-                        AjaxResultss.Msg = "修改合作企业成功";
-                        AjaxResultss.Success = Operation(editEnterpriseView, EntSpeeList).Success;
-                        AjaxResultss.Msg = Operation(editEnterpriseView, EntSpeeList).Msg;
-                    }
-                    catch (Exception ex)
-                    {
-
-                        AjaxResultss.Success = false;
-                        AjaxResultss.Msg = ex.Message;
-                    }
-
-                    break;
-                //作为跟以前一样没有合作企业
+                //没有合作企业信息的
                 case -1:
-                    AjaxResultss.Success = Operation(editEnterpriseView, EntSpeeList).Success;
-                    AjaxResultss.Msg = Operation(editEnterpriseView, EntSpeeList).Msg;
-                    break;
-                default:
-                    var CooOld = GetCooperaEnterprisesByID(CooID);
-                    CooOld.EntContacts = editEnterpriseView.EntContacts;
-                    CooOld.EntPhone = editEnterpriseView.EntPhone;
-                    try
+                    switch (OperNo)
                     {
-                        coo.Update(CooOld);
-                        AjaxResultss.Success = true;
-                        AjaxResultss.Msg = "修改合作企业成功";
-                        AjaxResultss.Success = Operation(editEnterpriseView, EntSpeeList).Success;
-                        AjaxResultss.Msg = Operation(editEnterpriseView, EntSpeeList).Msg;
+                        //也不添加合作企业跟往常一样，只是修改了公司基础信息，以及公司跟专业表
+                        case 0:
+                            var aa=  Operation( editEnterpriseView,  EntSpeeList);
+                            AjaxResultss.Msg = aa.Msg;
+                            AjaxResultss.Success = aa.Success;
+                            break;
+                        //添加合作企业，也修改了公司基础信息，以及公司跟专业表
+                        case 1:
+                            var newcoo = new CooperaEnterprises();
+                            newcoo.EntContacts = editEnterpriseView.EntContacts;
+                            newcoo.EntPhone = editEnterpriseView.EntPhone;
+                            newcoo.EnterID = editEnterpriseView.EntID;
+                            newcoo.IsCooper = true;
+                            newcoo.Date = DateTime.Now;
+                            newcoo.Remark = string.Empty;
+                            try
+                            {
+                                coo = new CooperaEnterprisesBusiness();
+                                coo.Insert(newcoo);
+                                var bb = Operation(editEnterpriseView, EntSpeeList);
+                                AjaxResultss.Msg = bb.Msg;
+                                AjaxResultss.Success = bb.Success;
+                            }
+                            catch (Exception ex)
+                            {
+                                AjaxResultss.Success = false;
+                                AjaxResultss.Msg = ex.Message;
+                            }
+                            break;
                     }
-                    catch (Exception ex)
+                    break;
+                //有合作企业信息的
+                default:
+                    switch (OperNo)
                     {
-                        AjaxResultss.Success = false;
-                        AjaxResultss.Msg = ex.Message;
+                        //删除合作企业信息。
+                        case 0:
+                            coo = new CooperaEnterprisesBusiness();
+                            var CooOld=coo.GetCooByID(CooID);
+                            CooOld.IsCooper = false;
+                            try
+                            {
+                                coo.Update(CooOld);
+                                var cc = Operation(editEnterpriseView, EntSpeeList);
+                                AjaxResultss.Msg = cc.Msg;
+                                AjaxResultss.Success = cc.Success;
+                            }
+                            catch (Exception ex)
+                            {
+
+                                AjaxResultss.Success = false;
+                                AjaxResultss.Msg = ex.Message;
+                            }
+                            break;
+                        //修改合作企业信息。
+                        case 1:
+                            coo = new CooperaEnterprisesBusiness();
+                            var caseonCooOld = coo.GetCooByID(CooID);
+                            caseonCooOld.EntContacts = editEnterpriseView.EntContacts;
+                            caseonCooOld.EntPhone  = editEnterpriseView.EntPhone;
+                            try
+                            {
+                                coo.Update(caseonCooOld);
+                                var dd = Operation(editEnterpriseView, EntSpeeList);
+                                AjaxResultss.Msg = dd.Msg;
+                                AjaxResultss.Success = dd.Success;
+                            }
+                            catch (Exception ex)
+                            {
+
+                                AjaxResultss.Success = false;
+                                AjaxResultss.Msg = ex.Message;
+                            }
+                            break;
                     }
                     break;
             }
@@ -481,7 +551,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 catch (Exception ex)
                 {
 
-                    AjaxResultss.Success = true;
+                    AjaxResultss.Success = false;
                     AjaxResultss.Msg = "删除企业专业失败";
                 }
 
@@ -572,11 +642,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult EntPhoneOnly(string EntPhone, int? EntID)
         {
             coo = new CooperaEnterprisesBusiness();
-            Enter = new EnterpriseInfoBusiness();
+           
             var AjaxResultss = new AjaxResult();
-            var Enterdata = Enter.GetIQueryable().Where(a => a.ID == EntID).FirstOrDefault();
-            var enterobj = coo.GetIQueryable().Where(a => a.ID == Enterdata.CooID).FirstOrDefault();
-            if (enterobj != null && enterobj.EntPhone == EntPhone)
+ 
+            var MrDCoo= coo.GetCooByEnterID(EntID);
+            if (MrDCoo != null && MrDCoo.EntPhone == EntPhone)
             {
                 AjaxResultss.Success = true;
                 AjaxResultss.ErrorCode = 1;
@@ -586,7 +656,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 try
                 {
-                    var enterobjj = coo.GetIQueryable().Where(a => a.EntPhone == EntPhone).FirstOrDefault();
+                    var enterobjj = coo.GetIQueryable().Where(a => a.EntPhone == EntPhone&&a.IsCooper==true).FirstOrDefault();
                     if (enterobjj != null)
                     {
                         AjaxResultss.Success = true;
@@ -609,9 +679,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             Enter = new EnterpriseInfoBusiness();
             coo = new CooperaEnterprisesBusiness();
+            
             EntSpeeBus = new EntSpeeBusiness();
             SpecBus = new SpecialtyBusiness();
             var enterobj = Enter.GetEnterByID(id);
+            var MrDCoo = coo.GetCooByEnterID(enterobj.ID);
             EnterdetailView enterdetailView = new EnterdetailView();
             enterdetailView.EntAddress = enterobj.EntAddress;
             enterdetailView.EntName = enterobj.EntName;
@@ -619,8 +691,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             enterdetailView.EntScale = enterobj.EntScale;
             enterdetailView.EntWelfare = enterobj.EntWelfare;
             enterdetailView.Remark = enterobj.Remark;
-            enterdetailView.EntContacts = enterobj.CooID == null ? "可待合作企业" : GetCooperaEnterprisesByID(enterobj.CooID).EntContacts;
-            enterdetailView.EntPhone = enterobj.CooID == null ? "可待合作企业" : GetCooperaEnterprisesByID(enterobj.CooID).EntContacts;
+            enterdetailView.EntContacts = MrDCoo == null ? "" : MrDCoo.EntContacts;
+            enterdetailView.EntPhone = MrDCoo == null ? "" : MrDCoo.EntPhone;
 
             var ListEntSpee = EntSpeeBus.GetIQueryable().Where(a => a.EntID == id).ToList().Select(a => new MrDDetailSpecView
             {

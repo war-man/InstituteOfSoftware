@@ -25,7 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<bool> IsCooper { get; set; }
         public string Remark { get; set; }
-
+        public int EnterID { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     }
 }
