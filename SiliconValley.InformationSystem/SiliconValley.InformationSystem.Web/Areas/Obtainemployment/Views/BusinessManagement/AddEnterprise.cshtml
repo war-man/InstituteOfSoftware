@@ -274,7 +274,7 @@
                     var resultobj = new Object();
                     $.ajax({
                         type: "get",
-                        url: "/Employment/EntNameOnly",
+                        url: "/BusinessManagement/EntNameOnly",
                         async: false,
                         data: { EntName: value },
                         success: function (data) {
@@ -295,7 +295,7 @@
                     var resultobj = new Object();
                     $.ajax({
                         type: "get",
-                        url: "/Employment/EntPhoneOnly",
+                        url: "/BusinessManagement/EntPhoneOnly",
                         async: false,
                         data: { EntPhone: value },
                         success: function (data) {
@@ -326,7 +326,7 @@
                 });
 
                 //准备jquery的Ajax（$.Ajax({})）
-                $.post("/Employment/AddEnterprise", { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) }, function (data) {
+                $.post("/BusinessManagement/AddEnterprise", { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) }, function (data) {
                     console.log(data);
                     if (data.Success) {
                         console.log("11");

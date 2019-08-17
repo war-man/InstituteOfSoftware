@@ -75,7 +75,7 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">员工编号:</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(t => t.emp.PositionId, new { @class = "layui-input", @readonly = "d" })
+                                    @Html.TextBoxFor(t => t.emp.EmployeeId, new { @class = "layui-input", @readonly = "d" })
                                 </div>
                             </div>
 
@@ -90,9 +90,9 @@
                             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                 <label class="layui-form-label">生日:</label>
                                 <div class="layui-input-inline">
-                                    @*@Html.TextBoxFor(t => t.emp.Birthdate, new { @class = "layui-input", @readonly = "d", type = "date" })*@
+                                    <input type="tel" name="birhday" readonly  id="birhday" class="layui-input" value="@Model.emp.Birthdate"  >
 
-                                    <input type="date" name="birhday" value="@Model.emp.Birthdate"  >
+                                   
                                 </div>
                             </div>
 
@@ -202,7 +202,23 @@
 </form>
 
         <script>
-            layui.use(['form'], function () {
+            layui.use(['form','laydate'], function () {
+
+                var birhday = $("#birhday").val();
+
+                var  date = new Date(birhday);
+
+                var year = date.getFullYear();
+
+                var mouth = date.getMonth() + 1;
+
+                var day = date.getDate();
+
+                var birhday = $("#birhday").val(year + '年' + mouth + '月' + day + '日');
+
+                var form = layui.form;
+                var laydate = layui.laydate;
+
 
 
             });

@@ -79,9 +79,11 @@
     <Compile Include="ClassSchedule_Business\ClassScheduleBusiness.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
+    <Compile Include="CourseSchedulingSysBusiness\CurriculumBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CooperaEnterprisesBusiness.cs" />
+    <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />

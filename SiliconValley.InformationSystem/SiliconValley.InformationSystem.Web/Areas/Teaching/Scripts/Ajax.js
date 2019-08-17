@@ -1,5 +1,5 @@
 ﻿
-
+ 
 function Ajax(url, dataJson, methd, successcallback,errorcallback) {
 
 
@@ -13,12 +13,14 @@ function Ajax(url, dataJson, methd, successcallback,errorcallback) {
         dataType: 'json',
         success: function (successResult) {
 
+          
+
             layer.close(loadindex);   
 
             successcallback(successResult);
         },
         error: function (errorResult) {
-
+           
             layer.close(loadindex);   
 
             errorcallback(errorResult);

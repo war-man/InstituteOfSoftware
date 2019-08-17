@@ -34,7 +34,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> RecruitPercentage { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
+    public Nullable<System.DateTime> YearAndMonth { get; set; }
         
     }
 }

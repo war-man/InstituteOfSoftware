@@ -36,12 +36,11 @@
         }
         #left {
         width:400px;
-        height:400px;
+      margin-left:20px;
         float:left;
         }
         #right {
-            width: 560px;
-            height: 400px;
+            width: 520px;
             margin-left:80px;
             float:left;
         }
@@ -49,34 +48,37 @@
 
 </head>
 <body>
-    <div id="left">
-        <h2 style="text-align:center;">部门管理</h2>
-        <table id="deptTab" lay-filter="test1"></table>
+    <fieldset id="left">
+        <legend>部门管理</legend>
+        <div >
+            <table id="deptTab" lay-filter="test1"></table>
 
-        @*头部工具栏*@
-        <script type="text/html" id="toolbarDemo1">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="addDept">部门添加</button>
-                <button class="layui-btn layui-btn-sm" lay-event="delDept">部门删除</button>
-            </div>
-        </script>
+            @*头部工具栏*@
+            <script type="text/html" id="toolbarDemo1">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="addDept">部门添加</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="delDept">部门删除</button>
+                </div>
+            </script>
 
-    </div>
+        </div>
+    </fieldset>
+ 
+    <fieldset id="right">
+        <legend>岗位管理</legend>
+        <div >
+            <table id="positionTab" lay-filter="test2"></table>
+            @*头部工具栏*@
+            <script type="text/html" id="toolbarDemo2">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="AddPosition">岗位添加</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="delPosition">岗位删除</button>
+                </div>
+            </script>
 
-
-    <div id="right">
-        <h2 style="text-align:center;">岗位管理</h2>
-        <table id="positionTab" lay-filter="test2"></table>
-
-        @*头部工具栏*@
-        <script type="text/html" id="toolbarDemo2">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="AddPosition">岗位添加</button>
-                <button class="layui-btn layui-btn-sm" lay-event="delPosition">岗位删除</button>
-            </div>
-        </script>
-
-    </div>
+        </div>
+    </fieldset>
+  
 
     <!-- 部门是否禁用修改-->
     <script type="text/html" id="checkboxTpl">
@@ -110,13 +112,45 @@
 
             //头工具栏事件
             table.on('toolbar(test1)', function (obj) {
-                //var checkStatus = table.checkStatus(obj.config.id);
+                var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'addDept':
                         EditDept();
                         break;
                     case 'delDept':
-                        DelDept();
+                        var data = checkStatus.data;
+
+                        var list = "";
+                        for (var i = 0; i < data.length; i++) {
+                            list += data[i].DeptId + ',';
+                        }
+                        if (data.length >= 1) {
+                            layer.open({
+                                content: '确定删除？',
+                                btn: ['确认', '取消'],
+                                yes: function (index, layero) {
+                                    $.post("/Personnelmatters/EmployeesInfo/DelDepts", { 'list': list }, function (data) {
+                                        if (data.Success) {
+                                            layer.alert("删除成功", { icon: 1 }, function (index) {
+                                                layui.use(['table'], function () {
+                                                    var table = layui.table;
+                                                    table.reload("myDept");
+                                                    table.reload("myPosition");
+                                                });
+                                                layer.close(index);
+                                            });
+                                        } else {
+                                            layer.alert("删除失败");
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            layer.open({
+                                title: '提示'
+                                , content: '请至少选中一条数据进行删除'
+                            });
+                        }
                         break;
                 };
             });
@@ -131,17 +165,18 @@
                     type: "POST",
                     dataType: "json",
                     url: "/Personnelmatters/EmployeesInfo/EditDeptIsDel",
-                        data: { id: id, isdel: obj.elem.checked },
+                    data: { id: id, isdel: obj.elem.checked },
                     success: function (data) {
                         if (data.Success) {
                             console.log(obj.elem.checked);
                             if (obj.elem.checked == true) {
-                                layer.tips( '已禁用 ' , obj.othis);
+                                table.reload("myPosition");
+                                // layer.tips( '已禁用 ' , obj.othis);
                             }
                             else {
-                                layer.tips( '已启用', obj.othis);
+                                layer.tips('已启用', obj.othis);
                             }
-                           
+
                         } else {
                             layer.alert("修改失败!");
                         }
@@ -185,18 +220,50 @@
                     , { field: 'deptname', title: '所属部门', width: 110 }
                     , { field: 'PositionName', title: '岗位名称', width: 140, sort: true }
                     , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, templet: '#checkboxTp2', unresize: true }
-                ]]
+                ]],
             });
 
             //头工具栏事件
             table.on('toolbar(test2)', function (obj) {
-                //var checkStatus = table.checkStatus(obj.config.id);
+                var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'AddPosition':
                         addPosition();
                         break;
                     case 'delPosition':
-                        EditDept();
+                        var data = checkStatus.data;
+                        console.log("岗位勾选数据" + data);
+                        var list = "";
+                        for (var i = 0; i < data.length; i++) {
+                            list += data[i].Pid + ',';
+                        }
+                        if (data.length >= 1) {
+                            layer.open({
+                                content: '确定删除？',
+                                btn: ['确认', '取消'],
+                                yes: function (index, layero) {
+                                    $.post("/Personnelmatters/EmployeesInfo/DelPositions", { 'list': list }, function (data) {
+                                        if (data.Success) {
+                                            layer.alert("删除成功", { icon: 1 }, function (index) {
+                                                layui.use(['table'], function () {
+                                                    var table = layui.table;
+
+                                                    table.reload("myPosition");
+                                                });
+                                                layer.close(index);
+                                            });
+                                        } else {
+                                            layer.alert("删除失败");
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            layer.open({
+                                title: '提示'
+                                , content: '请至少选中一条数据进行删除'
+                            });
+                        }
                         break;
                 };
             });
@@ -214,6 +281,9 @@
                         if (data.Success) {
                             if (obj.elem.checked == true) {
                                 layer.tips('已禁用 ', obj.othis);
+                            } else if (data.Msg == "不能启用") {
+                                layer.tips('该岗位所属部门已禁用，则无法启用该岗位 ', obj.othis);
+                                table.reload("myPosition");
                             }
                             else {
                                 layer.tips('已启用', obj.othis);

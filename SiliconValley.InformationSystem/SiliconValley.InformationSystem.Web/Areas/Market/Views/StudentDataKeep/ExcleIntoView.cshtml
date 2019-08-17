@@ -1,0 +1,101 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExcleIntoView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .fieldsetCssTwo1 {
+            margin-top: 40px;
+            border: 1px solid #009688;
+        }
+        .legendCssTwo1 {
+            border: 1px solid #009688;
+            background-color:#009688;
+            color:#fff;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form action="/Market/StudentDataKeep/IntoFunction" method="post" enctype="multipart/form-data">
+            <fieldset class="fieldsetCssTwo1">
+                <legend class="legendCssTwo1">文件选择区</legend>
+                <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>选择Excel文件</button>
+            </fieldset>
+            <fieldset class="fieldsetCssTwo1">
+                <legend class="legendCssTwo1">文件内容显示区</legend>
+                <table id="tabletest2" lay-filter="tabletest2"></table>
+            </fieldset>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use('upload', function () {
+            var $ = layui.jquery
+                , upload = layui.upload;
+
+            //指定允许上传的文件类型
+            upload.render({
+                elem: '#test3'
+                , url: '/Market/StudentDataKeep/IntoFunction'
+                , accept: 'file' //普通文件
+                , exts: 'xls|xlsx'//只允许上传Excle文件
+                , done: function (res) {
+                    if (res.msg == "成功") {
+                        layui.use('table', function () {
+                            var table = layui.table;
+                            table.render({
+                                elem: '#tabletest2'
+                                , url: '/Market/StudentDataKeep/GetExcelValue'
+                                , toolbar: '#toolbarDemo1'
+                                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                                , cols: [[
+                                    { type: 'checkbox', fixed: 'left' }
+                                    , { field: 'StuName', title: '姓名' }
+                                    , {
+                                        field: 'StuSex', title: '性别', templet: function (res) {
+                                            if (res.StuSex == false) {
+                                                return "女";
+                                            } else {
+                                                return "男";
+                                            }
+                                        }
+                                    }
+                                    , { field: 'StuPhone', title: '联系电话' }
+                                    , { field: 'StuInfomationType_Id', title: '信息来源' }
+                                    , { field: 'StuStatus_Id', title: '学生状态' }
+                                    , {
+                                        field: 'StuIsGoto', title: '是否上门', templet: function (res) {
+                                            if (res.StuIsGoto == false || res.StuIsGoto == null) {
+                                                return "未上门";
+                                            } else {
+                                                return "已上门";
+                                            }
+                                        }
+                                    }
+                                    , { field: 'EmployeesInfo_Id', title: '备案人' }
+                                    , {
+                                        field: 'StuDateTime', title: '备案日期', templet: function (res) {
+                                            return TimeChange(res.StuDateTime);
+                                        }
+                                    }
+                                    , { field: 'Reak', title: '说明' }
+                                ]]
+                                , page: true
+                            });                           
+                        });
+                    }
+                }
+            });               
+        });
+    </script>
+</body>
+</html>

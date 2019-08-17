@@ -24,11 +24,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         //获取员工信息数据
-        public ActionResult GetData(int page,int limit){
+        public ActionResult GetData(int page,int limit,string AppCondition)
+        {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            PositionManage pmanage = new PositionManage();
             var list = empinfo.GetList();
-                var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
-            // var mylist = empinfo.GetPagination(list,page,limit);
+            var plist = pmanage.GetList();
+            if (!string.IsNullOrEmpty(AppCondition)) {
+                string[] str = AppCondition.Split(',');
+                string ename = str[0];
+                string deptname = str[1];
+                string pname = str[2];
+                string IsDel = str[3];
+                string start_time = str[4];
+                string end_time = str[5];
+                list = list.Where(e => e.EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(deptname)) {
+                   
+                    list = list.Where(e => GetDept((int)e.PositionId).DeptId== int.Parse(deptname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(pname)) {
+                    list = list.Where(e => e.PositionId==int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(IsDel)) {
+                    list = list.Where(e => e.IsDel.Equals(bool.Parse(IsDel))).ToList();
+                }
+               
+                if (!string.IsNullOrEmpty(start_time))
+                {
+                    DateTime stime = Convert.ToDateTime(start_time + " 00:00:00.000");
+                    list = list.Where(a => a.EntryTime >= stime).ToList();
+                }
+                if (!string.IsNullOrEmpty(end_time))
+                {
+                    DateTime etime = Convert.ToDateTime(end_time + " 23:59:59.999");
+                    list = list.Where(a => a.EntryTime <= etime).ToList();
+                }
+            }
+            var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
             var newlist = from e in mylist
                           select new
                           {
@@ -71,10 +104,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     count = list.Count(),
                     data = newlist
                 };
-
             return Json(newobj,JsonRequestBehavior.AllowGet);
-        }
-
+       }
         //获取所属岗位对象
         public Position GetPosition(int pid) {
             PositionManage pmanage = new PositionManage();
@@ -315,7 +346,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetPositions() {
             PositionManage deptmanage = new PositionManage();
             var deptlist = deptmanage.GetList();//获取公司部门数据集
-            var newlist=from p in deptlist 
+          
+            var newlist=from p in deptlist
                         select new {
                             p.Pid,
                             deptname=GetDept(p.Pid).DeptName,
@@ -376,12 +408,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         [HttpPost]
         public ActionResult EditDeptIsDel(int id,bool isdel) {
             DepartmentManage deptmanage = new DepartmentManage();
+            PositionManage pmanage = new PositionManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
                 var dept = deptmanage.GetEntity(id);
                 dept.IsDel = isdel;
                 deptmanage.Update(dept);
+                var plist = pmanage.GetList().Where(p => p.DeptId == id);
+                foreach (var p in plist)
+                {
+                    p.IsDel = true;
+                    pmanage.Update(p);
+                }
                 AjaxResultxx = deptmanage.Success();
             }
             catch (Exception ex)
@@ -389,6 +428,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 AjaxResultxx = deptmanage.Error(ex.Message);
             }
             
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+        //部门伪删除即,将部门禁用
+        [HttpPost]
+        public ActionResult DelDepts(string list) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            PositionManage pmanage = new PositionManage();
+            var AjaxResultxx = new AjaxResult();
+            string [] str = list.Split(',');
+            try
+            {
+                for (int i = 0; i < str.Length-1; i++)
+                {
+                    int id = int.Parse(str[i]);
+                  var dept=  deptmanage.GetEntity(id);
+                    dept.IsDel = true;
+                    deptmanage.Update(dept);
+                    var plist = pmanage.GetList().Where(p => p.DeptId == id);
+                    foreach (var p in plist)
+                    {
+                        p.IsDel = true;
+                        pmanage.Update(p);
+                    }
+
+                }
+                AjaxResultxx= deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
@@ -448,9 +519,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 var dept = deptmanage.GetEntity(id);
-                dept.IsDel = isdel;
-                deptmanage.Update(dept);
-                AjaxResultxx = deptmanage.Success();
+                if (isdel==true) {
+                    dept.IsDel = isdel;
+                    deptmanage.Update(dept);
+                    AjaxResultxx = deptmanage.Success();
+                }
+                else
+                {
+                    if (GetDept(id).IsDel == true)
+                    {
+                        AjaxResultxx = deptmanage.Success();
+                        AjaxResultxx.Msg = "不能启用";
+                    }
+                    else {
+                        dept.IsDel = isdel;
+                        deptmanage.Update(dept);
+                        AjaxResultxx = deptmanage.Success();
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -459,20 +545,163 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+        //岗位伪删除即 将岗位禁用
+        [HttpPost]
+        public ActionResult DelPositions(string list)
+        {
+            PositionManage deptmanage = new PositionManage();
+            var AjaxResultxx = new AjaxResult();
+            string[] str = list.Split(',');
+            try
+            {
+                for (int i = 0; i < str.Length; i++)
+                {
+                    var dept = deptmanage.GetEntity(str[i]);
+                    dept.IsDel = true;
+                    deptmanage.Update(dept);
 
-        //员工婚姻状态的修改 
-        public ActionResult EditEmphunyin(string id, bool ismarry) {
+                }
+                AjaxResultxx = deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
+        //员工婚姻状态和性别的修改 
+        public ActionResult EditEmphunyin(string id, string name, bool ismarry)
+        {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
-                var emp = empinfo.GetEntity(id);
-                if (ismarry == false)
+                switch (name)
                 {
-                    emp.MaritalStatus = true;
+                    case "IdCardIndate":
+                        var emp1 = empinfo.GetEntity(id);
+                        if (ismarry == false)
+                        {
+                            emp1.MaritalStatus = true;
+                        }
+                        else
+                        {
+                            emp1.MaritalStatus = false;
+                        }
+                        empinfo.Update(emp1);
+                        break;
+                    case "Sex":
+                        var emp2 = empinfo.GetEntity(id);
+                        if (ismarry == false)
+                        {
+                            emp2.Sex = "女";
+                        }
+                        else
+                        {
+                            emp2.Sex = "男";
+                        }
+                        empinfo.Update(emp2);
+                        break;
                 }
-                else {
-                    emp.MaritalStatus = false;
+                AjaxResultxx = empinfo.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = empinfo.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+        //员工信息列表单元格编辑（文本框形式）
+        public ActionResult EditTableCell(string id,string Attrbute,string endvalue) {
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                switch (Attrbute)
+                {
+                    case "EmpName":
+                        var emp1 = empinfo.GetEntity(id);
+                        emp1.EmpName = endvalue;
+                      empinfo.Update(emp1);
+                        break;
+                    case "Phone":
+                        var emp2 = empinfo.GetEntity(id);
+                        emp2.Phone = endvalue;
+                        empinfo.Update(emp2);
+                        break;
+                    case "Nation":
+                        var emp3 = empinfo.GetEntity(id);
+                        emp3.Nation = endvalue;
+                        empinfo.Update(emp3);
+                        break; 
+                   case "Birthday":
+                        var emp4= empinfo.GetEntity(id);
+                        emp4.Birthday = endvalue;
+                        empinfo.Update(emp4);
+                        break;
+                    case "UrgentPhone":
+                        var emp5 = empinfo.GetEntity(id);
+                        emp5.UrgentPhone = endvalue;
+                        empinfo.Update(emp5);
+                        break;
+                    case "DomicileAddress":
+                        var emp6 = empinfo.GetEntity(id);
+                        emp6.UrgentPhone = endvalue;
+                        empinfo.Update(emp6);
+                        break;
+                    case "Address":
+                        var emp7 = empinfo.GetEntity(id);
+                        emp7.UrgentPhone = endvalue;
+                        empinfo.Update(emp7);
+                        break;
+                    case "WorkExperience":
+                        var emp8 = empinfo.GetEntity(id);
+                        emp8.WorkExperience = endvalue;
+                        empinfo.Update(emp8);
+                        break;
+                    case "BCNum":
+                        var emp9 = empinfo.GetEntity(id);
+                        emp9.BCNum = endvalue;
+                        empinfo.Update(emp9);
+                        break;
+                    case "Material":
+                        var emp10 = empinfo.GetEntity(id);
+                        emp10.Material = endvalue;
+                        empinfo.Update(emp10);
+                        break;
+                    case "Remark":
+                        var emp11 = empinfo.GetEntity(id);
+                        emp11.Remark = endvalue;
+                        empinfo.Update(emp11);
+                        break;
+                }
+                AjaxResultxx = empinfo.Success();
+            }
+            catch (Exception ex)
+            {
+                empinfo.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+        //员工信息列表时间单元格编辑
+        public ActionResult EditDateCell(string id, string Attrbute, DateTime endvalue) {
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                switch (Attrbute)
+                {
+                    case "IdCardIndate":
+                        var emp1 = empinfo.GetEntity(id);
+                        emp1.IdCardIndate = endvalue;
+                        empinfo.Update(emp1);
+                        break;
+                    case "SSStartMonth":
+                        var emp2 = empinfo.GetEntity(id);
+                        emp2.SSStartMonth = endvalue;
+                        empinfo.Update(emp2);
+                        break;
                 }
                 AjaxResultxx = empinfo.Success();
             }

@@ -13,5 +13,22 @@ namespace SiliconValley.InformationSystem.Business.Employment
     /// </summary>
     public class CooperaEnterprisesBusiness: BaseBusiness<CooperaEnterprises>
     {
+        /// <summary>
+        /// 根据合作id返回合作对象
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public CooperaEnterprises GetCooByID(int ID) {
+            return this.GetIQueryable().Where(a => a.ID == ID && a.IsCooper == true).FirstOrDefault();
+        }
+        /// <summary>
+        /// 根据企业id返回合作对象
+        /// </summary>
+        /// <param name="EnterID"></param>
+        /// <returns></returns>
+        public CooperaEnterprises GetCooByEnterID(int? EnterID)
+        {
+            return this.GetIQueryable().Where(a => a.EnterID == EnterID && a.IsCooper == true).FirstOrDefault();
+        }
     }
 }

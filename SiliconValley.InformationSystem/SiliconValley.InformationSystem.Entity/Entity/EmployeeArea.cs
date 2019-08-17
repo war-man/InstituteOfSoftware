@@ -14,11 +14,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 渠道的区域
+    /// </summary>
     [Table(name: "EmployeeArea")]
     public partial class EmployeeArea
     {
         [Key]
-        public int ID { get; set; }
+        public int ID { get; set; } 
         public Nullable<int> RegionID { get; set; }
         public Nullable<int> RegionalDirectorID { get; set; }
         public Nullable<int> ChannelStaffID { get; set; }

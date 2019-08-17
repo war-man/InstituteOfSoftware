@@ -60,6 +60,7 @@
                                 @Html.HiddenFor(a => a.CooID)
                                 @Html.HiddenFor(a => a.EntScale)
                                 @Html.HiddenFor(a => a.EntNature)
+                                @Html.HiddenFor(a => a.OperNO)
 
                             </div>
                         </div>
@@ -149,7 +150,7 @@
                         </div>
                     </div>
                 </fieldset>
-                <label>填写合作联系人信息</label><input type="checkbox" lay-filter="iscoo" id="iscoo"  lay-skin="switch" lay-text="ON|OFF" >
+                <label>开启合作</label><input type="checkbox" lay-filter="iscoo" id="iscoo" lay-skin="switch" lay-text="ON|OFF">
                 <div id="coobobo">
 
                 </div>
@@ -208,8 +209,8 @@
     </script>
     @*合作企业信息加载模板*@
     <script id="coomuban">
-        <fieldset>
-              <legend>合作企业联系人信息</legend>
+        <fieldset >
+              <legend >合作企业联系人信息</legend>
                   <div class="layui-row layui-form-item">
                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                            <label class="layui-form-label">联系人姓名</label>
@@ -226,7 +227,7 @@
                             </div>
                         </div>
                    </div>
-        </fieldset>
+         </fieldset>
     </script>
     <script>
         var EntSpeeArry = new Array();
@@ -240,7 +241,7 @@
                 EntSpeeArry.push(EntSpee);
                 $.ajax({
                     type: "get",
-                    url: "/Employment/GetEntSpeeInfo",
+                    url: "/BusinessManagement/GetEntSpeeInfo",
                     data: { SpecID: specid, EntID: entid },
                     timeout: "10000",
                     async: false,
@@ -250,6 +251,7 @@
                             EntSpeeArry[i].Requirements = ViewData.Requirements;
                             EntSpeeArry[i].EntSalary = ViewData.EntSalary;
                             EntSpeeArry[i].JobResponsibilities = ViewData.JobResponsibilities;
+                            EntSpeeArry[i].SpeName = ViewData.SpecialtyName;
                             var compiled = _.template($("#muban").html());
                             var html = compiled({ content: ViewData.SpecialtyName, EntSalaryVal: ViewData.EntSalary, JobResponsibilitiesVal: ViewData.JobResponsibilities, RequirementsVal: ViewData.Requirements });
                             $("#list").append($(html));
@@ -263,24 +265,28 @@
             $(".raddiobibi").each(function (i) {
 
                 var MrDEntScale = $("#EntScale").val();
-                console.log(MrDEntScale);
+
                 if ($(this).val() == MrDEntScale) {
-                    console.log("lal");
+
                     $(this).attr("checked", "checked");
                 }
             })
             $(".radiolala").each(function (i) {
                 var MrDEntNature = $("#EntNature").val();
-                console.log(MrDEntNature);
+
                 if ($(this).val() == MrDEntNature) {
-                    console.log("biobi");
+
                     $(this).attr("checked", "checked");
                 }
             })
             var CooIDview = $("#CooID").val();
             if (CooIDview > 1) {
-                $("#iscoo").attr("checked","checked");
+                $("#iscoo").attr("checked", "checked");
+                var compiled = _.template($("#coomuban").html());
+                var html = compiled();
+                $("#coobobo").append($(html));
             }
+
         });
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
@@ -293,7 +299,6 @@
             form.on('checkbox(checks)', function (data) {
                 var name = data.elem.name;
                 if (data.elem.checked) {
-
                     var have = false;
                     $("#list legend").each(function () {
                         if ($(this).text() == name) {
@@ -302,15 +307,13 @@
                     });
                     if (!have) {
                         var compiled = _.template($("#muban").html());
-
                         var html = compiled({ content: name, EntSalaryVal: "", JobResponsibilitiesVal: "", RequirementsVal: "" });
-
                         $("#list").append($(html));
                         var EntSpee = new Object();
                         EntSpee.SpeID = data.elem.value;
                         EntSpee.SpeName = name;
                         EntSpeeArry.push(EntSpee);
-
+                        console.log(EntSpeeArry);
                     }
                 } else {
                     $("#list legend").each(function () {
@@ -321,6 +324,7 @@
                                     EntSpeeArry.splice(i, 1);
                                 }
                             }
+                            console.log(EntSpeeArry);
                         }
                     });
 
@@ -346,7 +350,7 @@
                     var entid = $("#EntID").val();
                     $.ajax({
                         type: "get",
-                        url: "/Employment/EntNameOnly",
+                        url: "/BusinessManagement/EntNameOnly",
                         async: false,
                         data: { EntName: value, EntID: entid },
                         success: function (data) {
@@ -371,7 +375,7 @@
                     var entid = $("#EntID").val();
                     $.ajax({
                         type: "get",
-                        url: "/Employment/EntPhoneOnly",
+                        url: "/BusinessManagement/EntPhoneOnly",
                         async: false,
                         data: { EntPhone: value, EntID: entid },
                         success: function (data) {
@@ -403,17 +407,16 @@
                 $(".EntSalary").each(function (i) {
                     EntSpeeArry[i].EntSalary = $(this).val();
                 });
-
+                console.log(EntSpeeArry);
                 //准备jquery的Ajax（$.Ajax({})）
                 $.ajax({
                     type: "POST",
-                    url: "/Employment/EditEnterprise",
+                    url: "/BusinessManagement/EditEnterprise",
                     data: { editEnterpriseView: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) },
-                    timeout: 5000,
+                   
                     success: function (data) {
                         console.log(data);
                         if (data.Success) {
-
                             layer.msg(data.Msg, { icon: 1 }, function () {
                                 //先得到当前iframe层的索引
                                 var index = parent.layer.getFrameIndex(window.name);
@@ -429,20 +432,29 @@
             });
             //填写合作联系人信息
             form.on('switch(iscoo)', function (data) {
-                console.log(data.elem); //得到checkbox原始DOM对象
-                console.log(data.elem.checked); //开关是否开启，true或者false
-                console.log(data.value); //开关value值，也可以通过data.elem.value得到
-                console.log(data.othis); //得到美化后的DOM对象
                 if (data.elem.checked) {
-                    var compiled = _.template($("#coomuban").html());
-                    $("#coobobo").append($(html));
+                    layer.msg('正在加载合作联系人信息', { time: 1000, icon: 16 }, function () {
+                        layer.msg('加载成功', { icon: 1 })
+                        $("#OperNO").val("1");
+                        var compiled = _.template($("#coomuban").html());
+                        var html = compiled();
+                        $("#coobobo").append($(html));
+
+                    });
+
                 } else {
-                    $("#coobobo").children().html("");
+
+                    layer.msg('正在删除', { time: 1000, icon: 16 }, function () {
+                        layer.msg('成功删除', { icon: 1 })
+                        $("#OperNO").val("0");
+                        $("#coobobo").html("");
+
+                    });
+
                 }
             });
         });
         $("#clode").click(function () {
-
             //先得到当前iframe层的索引
             var index = parent.layer.getFrameIndex(window.name);
             parent.MrDLayer.close(index); //再执行关闭
