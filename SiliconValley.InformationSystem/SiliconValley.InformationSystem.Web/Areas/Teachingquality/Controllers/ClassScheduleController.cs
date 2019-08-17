@@ -45,7 +45,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id)
         {
 
-          List<ClassSchedule> list = dbtext.GetList().Where(a=>a.ClassStatus==false).ToList();
+          List<ClassSchedule> list = dbtext.GetList().Where(a=>a.ClassStatus==false&&a.IsDelete==false).ToList();
             if (!string.IsNullOrEmpty(ClassNumber))
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
@@ -108,7 +108,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult AddClassSchedule(ClassSchedule classSchedule)
         {
           AjaxResult  retus = null;
-           var cou= dbtext.GetList().Where(a => a.ClassNumber == classSchedule.ClassNumber).Count();
+           var cou= dbtext.GetList().Where(a => a.ClassNumber == classSchedule.ClassNumber && a.IsDelete == false &&a.ClassStatus==false).Count();
             if (cou>0)
             {
                 retus = new ErrorResult();
@@ -122,6 +122,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 try
                 {
                     classSchedule.ClassStatus = false;
+                    classSchedule.IsDelete = false;
                     dbtext.Insert(classSchedule);
                     retus = new SuccessResult();
                     retus.Success = true;

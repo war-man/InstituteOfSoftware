@@ -126,7 +126,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //学员注册编辑
         public ActionResult Registeredtrainees()
         {
-            ViewBag.List = classschedu.GetList().Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
+            ViewBag.List = classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id)&&id!= "undefined")
             {
@@ -194,8 +194,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult DataKeys()
         {
             string Name = Request.QueryString["Name"];
-            StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
-         var x=   dbctext.GetList().Where(a => a.StuName == Name).ToList();
+            StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
+         var x=   dbctexta.GetList().Where(a => a.StuName == Name).ToList();
             var data = new
             {
                 code = "",
@@ -314,6 +314,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             string stuid = Request.QueryString["stuid"];
             var a = Finds(stuid);
+            var ClassID = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ClassID;
             var x = new
             {
                 StudentNumber = a.StudentNumber,//学号
@@ -333,9 +334,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Sex = a.Sex,//性别,
                 Guardian=a.Guardian,//亲属
                 AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().AddDate,//入班时间
-               classa = classschedu.GetEntity( Stuclass.GetList().Where(c=>c.StudentID==a.StudentNumber&&c.CurrentClass==true).First().ClassID).ClassNumber//班级号
+               classa = classschedu.GetList().Where(q=> q.IsDelete == false && q.ClassStatus == false&&q.ClassNumber== ClassID).FirstOrDefault().ClassNumber//班级号
+                                     //a => a.IsDelete == false && a.ClassStatus == false
             };
             
+                //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称
+                //a => a.IsDelete == false && a.ClassStatus == false
             return Json(x, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Viewdetails()
@@ -374,6 +378,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result.Msg = "服务器错误";
             }
           return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        //查询备案是否存在
+        public ActionResult Beian()
+        {
+            string Name = Request.QueryString["Name"];
+            StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
+            var x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+            return Json(x, JsonRequestBehavior.AllowGet);
         }
 
     }
