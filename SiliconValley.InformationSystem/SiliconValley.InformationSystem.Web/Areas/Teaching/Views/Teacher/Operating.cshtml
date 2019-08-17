@@ -127,6 +127,26 @@
             var form = layui.form;
             var layer = layui.layer;
 
+
+            var jointiem = $("#date").val();
+
+            var date = new Date(jointiem);
+
+            var year = date.getFullYear();
+
+            var mouth = date.getMonth() + 1;
+
+            var day = date.getDate();
+
+            $("#date").val(year + '年' + mouth + '月' + day + '日');
+
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+
+
+
+
             form.on('submit(editteacher)', function (data) {
 
 

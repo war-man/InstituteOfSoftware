@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using System.Linq.Dynamic;
     using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
 
-    public class TeacherBusiness:BaseBusiness<Teacher>
+    public class TeacherBusiness : BaseBusiness<Teacher>
     {
 
         //员工 业务上下文
@@ -39,9 +39,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         public bool EmpIsDel(Teacher teacher)
         {
-            return (bool)db_emp.GetList().Where(d=>d.EmployeeId==teacher.EmployeeId).FirstOrDefault().IsDel;
+            return (bool)db_emp.GetList().Where(d => d.EmployeeId == teacher.EmployeeId).FirstOrDefault().IsDel;
         }
-        
+
 
 
         /// <summary>
@@ -49,9 +49,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <param name="">教员ID</param>
         /// <returns>教员实体</returns>
-        public Teacher GetTeacherByID(int ? id)
+        public Teacher GetTeacherByID(int? id)
         {
-           Teacher teacher = this.GetList().Where(t => t.TeacherID == id).FirstOrDefault();
+            Teacher teacher = this.GetList().Where(t => t.TeacherID == id).FirstOrDefault();
 
 
             if (EmpIsDel(teacher))
@@ -72,7 +72,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             List<Teacher> resultlist = new List<Teacher>();
 
-          var temp =  this.GetList().Where(d => d.IsDel == false).ToList() ;
+            var temp = this.GetList().Where(d => d.IsDel == false).ToList();
 
             foreach (var item in temp)
             {
@@ -95,7 +95,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
 
 
-           return db_emp.GetList().Where(d => d.EmployeeId == EmpNo && d.IsDel==false).FirstOrDefault();     
+            return db_emp.GetList().Where(d => d.EmployeeId == EmpNo && d.IsDel == false).FirstOrDefault();
         }
 
 
@@ -109,11 +109,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<TecharOnstageBearing> business = new BaseBusiness<TecharOnstageBearing>();
 
-           var bus = business.GetList().Where(t => t.TeacherID == id).ToList();
+            var bus = business.GetList().Where(t => t.TeacherID == id).ToList();
 
             foreach (var item in bus)
             {
-                resultList.Add( db_grand.GetList().Where(t => t.Id == item.Stage && t.IsDelete==false).FirstOrDefault());
+                resultList.Add(db_grand.GetList().Where(t => t.Id == item.Stage && t.IsDelete == false).FirstOrDefault());
             }
 
             return resultList;
@@ -128,10 +128,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             List<Specialty> returnList = new List<Specialty>();
 
-           
+
             BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
 
-           var majors= baseBusiness.GetList().Where(t=>t.TeacherID==ID).ToList();
+            var majors = baseBusiness.GetList().Where(t => t.TeacherID == ID).ToList();
 
             foreach (var item in majors)
             {
@@ -143,25 +143,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 }
             }
             return returnList;
-
-        }
-
-        /// <summary>
-        /// 获取教员的转业 并且对应阶段
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Dictionary<Specialty,List<Grand>> GetMajorInGrandByTeacherID(int id)
-        {
-            BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
-            var test = baseBusiness.GetList().Where(d => d.TeacherID == id).ToList();
-
-            foreach (var item in test)
-            {
-                
-            }
-
-            return null;
 
         }
 
@@ -197,14 +178,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             EmployeesInfo emp = this.GetEmpByEmpNo(t.EmployeeId);
             teacherResult.emp = emp;
 
-           var post= curent_posi.GetList().Where(d=>d.Pid==emp.PositionId && d.IsDel==false).FirstOrDefault();
+            var post = curent_posi.GetList().Where(d => d.Pid == emp.PositionId && d.IsDel == false).FirstOrDefault();
 
 
             teacherResult.TeacherID = t.TeacherID;
 
             teacherResult.Position = post;
 
-           var dep= curent_Dep.GetList().Where(d=>d.DeptId==post.DeptId && d.IsDel==false).FirstOrDefault();
+            var dep = curent_Dep.GetList().Where(d => d.DeptId == post.DeptId && d.IsDel == false).FirstOrDefault();
 
 
             teacherResult.Department = dep;
@@ -234,7 +215,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <param name="teacherId"></param>
         /// <param name="marjorId"></param>
         /// <returns></returns>
-        public List<Grand> GetNoGrand(int teacherId,int majorId)
+        public List<Grand> GetNoGrand(int teacherId, int majorId)
         {
 
 
@@ -243,10 +224,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             Specialty Major = db_specialty.GetSpecialtyByID(majorId);
             BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
 
-            var haveGrands = baseBusiness.GetList().Where(t => t.TeacherID == teacherId && t.Major == majorId).ToList().OrderBy(t=>t.Stage).ToList();
+            var haveGrands = baseBusiness.GetList().Where(t => t.TeacherID == teacherId && t.Major == majorId).ToList().OrderBy(t => t.Stage).ToList();
 
             //获取全部阶段 
-           List<Grand> grands = db_grand.GetList().Where(d=>d.IsDelete==false).OrderBy(t=>t.Id).ToList();
+            List<Grand> grands = db_grand.GetList().Where(d => d.IsDelete == false).OrderBy(t => t.Id).ToList();
 
             foreach (var item in grands)//1 2 3
             {
@@ -264,20 +245,20 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         public bool contains(int id, List<TecharOnstageBearing> grands)
         {
-           return  grands.Where(e=>e.Stage==id).ToList().Count > 0 ;
+            return grands.Where(e => e.Stage == id).ToList().Count > 0;
 
         }
 
-        public List<Grand> GetHaveGrand(int teacherid,int majorid)
+        public List<Grand> GetHaveGrand(int teacherid, int majorid)
         {
 
             List<Grand> grands = new List<Grand>();
 
             BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
 
-            var lsit= baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Major == majorid).ToList();
+            var lsit = baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Major == majorid).ToList();
 
-            var grandlist = db_grand.GetList().Where(d=>d.IsDelete==false);
+            var grandlist = db_grand.GetList().Where(d => d.IsDelete == false);
 
             foreach (var item in grandlist)
             {
@@ -294,26 +275,26 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
-        
+
         public List<EmployeesInfo> employeesInfos()
         {
 
             BaseBusiness<Department> DepbaseBusiness = new BaseBusiness<Department>();
 
-            var deplist= DepbaseBusiness.GetList().Where(d=>d.IsDel==false).ToList();
+            var deplist = DepbaseBusiness.GetList().Where(d => d.IsDel == false).ToList();
 
-           var emps = db_emp.GetList().Where(d => d.IsDel == false).OrderBy(d=>d.PositionId).ToList();
+            var emps = db_emp.GetList().Where(d => d.IsDel == false).OrderBy(d => d.PositionId).ToList();
 
             BaseBusiness<Position> PobaseBusiness = new BaseBusiness<Position>();
 
-            var ind= PobaseBusiness.GetList().Where(d => d.IsDel == false).Where(d=>d.DeptId==2).ToList().OrderBy(d=>d.Pid).ToList();
+            var ind = PobaseBusiness.GetList().Where(d => d.IsDel == false).Where(d => d.DeptId == 2).ToList().OrderBy(d => d.Pid).ToList();
 
 
             List<EmployeesInfo> result = new List<EmployeesInfo>();
 
             foreach (var item in emps)
             {
-                foreach (var item1 in ind) 
+                foreach (var item1 in ind)
                 {
                     if (item.PositionId == item1.Pid)
                     {
@@ -323,11 +304,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
 
 
-            var list= new List<EmployeesInfo>();
+            var list = new List<EmployeesInfo>();
 
             foreach (var item in result)
             {
-               var ss =  this.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).ToList();
+                var ss = this.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).ToList();
 
                 if (ss.Count <= 0 || ss == null)
                 {
@@ -339,7 +320,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             return list;
 
-           
+
 
         }
 
@@ -356,7 +337,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return null;
         }
 
-       
+
 
         /// <summary>
         /// 根据岗位获取教员
@@ -369,7 +350,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             List<Teacher> resultlist = new List<Teacher>();
 
-           var emps = db_emp.GetList().Where(d=>d.PositionId==positionId && d.IsDel==false).ToList();
+            var emps = db_emp.GetList().Where(d => d.PositionId == positionId && d.IsDel == false).ToList();
 
             var teachers = this.GetTeachers();
 
@@ -434,7 +415,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
 
-             var ss= baseBusiness.GetList().Where(d=>d.Major==majorid ).ToList();
+            var ss = baseBusiness.GetList().Where(d => d.Major == majorid).ToList();
 
             List<TecharOnstageBearing> onstageBearings = new List<TecharOnstageBearing>();
 
@@ -451,7 +432,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in onstageBearings)
             {
-                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel==false).FirstOrDefault());
+                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel == false).FirstOrDefault());
             }
 
             return resultlist;
@@ -465,12 +446,12 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
 
-           var ss = baseBusiness.GetList().Where(d=>d.Major==majorid && grandid==d.Stage).ToList();
+            var ss = baseBusiness.GetList().Where(d => d.Major == majorid && grandid == d.Stage).ToList();
 
 
             foreach (var item in ss)
             {
-                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel==false).FirstOrDefault());
+                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel == false).FirstOrDefault());
             }
 
             return resultlist;
@@ -489,12 +470,12 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
             BaseBusiness<Curriculum> Curriculum_db = new BaseBusiness<Curriculum>();
-            var temp = goodskill_db.GetList().Where(d=>d.TearchID==teacherid).ToList();
+            var temp = goodskill_db.GetList().Where(d => d.TearchID == teacherid).ToList();
 
 
             foreach (var item in temp)
             {
-               var curr = Curriculum_db.GetList().Where(d=>d.IsDelete==false && d.CurriculumID==item.Curriculum).FirstOrDefault();
+                var curr = Curriculum_db.GetList().Where(d => d.IsDelete == false && d.CurriculumID == item.Curriculum).FirstOrDefault();
 
                 if (curr.MajorID == majorid)
                 {
@@ -519,11 +500,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             BaseBusiness<Curriculum> curr_db = new BaseBusiness<Curriculum>();
 
-            var temp1 = goodskill_db.GetList().Where(d => d.TearchID == teacherid).ToList().OrderBy(d=>d.Curriculum).ToList() ;
+            var temp1 = goodskill_db.GetList().Where(d => d.TearchID == teacherid).ToList().OrderBy(d => d.Curriculum).ToList();
 
             var temp2 = db_specialty.GetList().Where(d => d.IsDelete == false && d.Id == majorid).FirstOrDefault();
 
-            var temp3 = curr_db.GetList().Where(d=>d.IsDelete==false && d.MajorID == majorid).ToList();
+            var temp3 = curr_db.GetList().Where(d => d.IsDelete == false && d.MajorID == majorid).ToList();
 
 
             var all = new List<Curriculum>();
@@ -537,7 +518,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                     all.Add(cur);
 
-                }   
+                }
             }
             CurriculumBusiness curriculumBusiness = new CurriculumBusiness();
 
@@ -565,7 +546,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <param name="teacherid"></param>
         /// <param name="currid"></param>
-        public void SetNewSkillToTeacher(int teacherid, string [] currid)
+        public void SetNewSkillToTeacher(int teacherid, string[] currid)
         {
 
             BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
@@ -581,9 +562,197 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     goodSkill.TearchID = teacherid;
 
                     goodskill_db.Insert(goodSkill);
-                    
+
                 }
             }
+
+        }
+        /// <summary>
+        /// 给教员分配阶段
+        /// </summary>
+        /// <param name="ids">阶段</param>
+        /// <param name="majorid">专业id</param>
+        /// <param name="teacherid">教员id</param>
+        /// <returns></returns>
+        public void SetGrandToTeacherOnMajor(string[] grands, int majorid, int teacherid)
+        {
+            BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
+
+            if (this.GetTeacherByID(teacherid) != null)
+            {
+
+                foreach (var item in grands)
+                {
+
+                    var tempobj = baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Stage == int.Parse(item) && majorid == d.Major).FirstOrDefault();
+
+                    var tempobj1 = baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Stage == null && majorid == d.Major).FirstOrDefault();
+
+                    if (tempobj == null  && tempobj1==null)
+                    {
+
+                        TecharOnstageBearing techarOnstageBearing = new TecharOnstageBearing();
+
+                        techarOnstageBearing.TeacherID = teacherid;
+
+                        techarOnstageBearing.Stage = int.Parse(item);
+
+                        techarOnstageBearing.Major = majorid;
+
+
+                        baseBusiness.Insert(techarOnstageBearing);
+
+                    }
+
+                    if (tempobj1 != null)
+                    {
+
+                        tempobj1.Stage = int.Parse(item);
+                        baseBusiness.Update(tempobj1);
+                    }
+
+
+
+                }
+
+
+            }
+
+
+        }
+
+
+        /// <summary>
+        /// 获取教员没有的专业
+        /// </summary>
+        /// <param name="teacherid"></param>
+        /// <returns></returns>
+
+        public List<Specialty> GetNoHaveMajorOnTeacher(int teacherid)
+        {
+            List<Specialty> resultlist = new List<Specialty>();
+
+            if (this.GetTeacherByID(teacherid) == null)
+            {
+                return resultlist;
+            }
+
+
+            List<Specialty> havemajors = this.GetMajorByTeacherID(teacherid).OrderBy(d => d.Id).ToList();
+
+            List<Specialty> templist = db_specialty.GetList().OrderBy(d => d.Id).ToList();
+
+            foreach (var item in templist)
+            {
+                if (!Specialty.IsContain(havemajors, item))
+                {
+                    resultlist.Add(item);
+                }
+            }
+
+            return resultlist;
+        }
+
+
+        /// <summary>
+        /// 给教员添加专业
+        /// </summary>
+        public void SetMajorToTeacher(string[] ids, int teacherid)
+        {
+
+            BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
+
+            if (this.GetTeacherByID(teacherid) != null)
+            {
+
+                foreach (var item in ids)
+                {
+                    var tempobj1 = baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Major == int.Parse(item) && d.Stage == null).FirstOrDefault();
+
+                    if (tempobj1 == null)
+                    {
+
+                        //添加
+                        TecharOnstageBearing techarOnstageBearing = new TecharOnstageBearing();
+                        techarOnstageBearing.TeacherID = teacherid;
+                        techarOnstageBearing.Major = int.Parse(item);
+
+                        baseBusiness.Insert(techarOnstageBearing);
+
+                    }
+
+                }
+            }
+
+        }
+        /// <summary>
+        /// 移除教员在专业上对应的阶段
+        /// </summary>
+        /// <param name="grandid">阶段ID</param>
+        /// <param name="teacherid">教员ID</param>
+        /// <param name="majorid">专业ID</param>
+        /// <returns></returns>
+        public void RemoveGrandOnTeacherMajor(int grandid, int teacherid, int majorid)
+        {
+
+            if (this.GetTeacherByID(teacherid) == null)
+                return;
+
+
+            BaseBusiness<TecharOnstageBearing> baseBusiness = new BaseBusiness<TecharOnstageBearing>();
+
+            var temp = baseBusiness.GetList();
+            var temp2list = baseBusiness.GetList().Where(d => d.TeacherID == teacherid && d.Major == majorid).ToList();
+            foreach (var item in temp)
+            {
+
+                
+                    if (item.TeacherID == teacherid && item.Major == majorid && item.Stage == grandid)
+                    {
+                        if (temp2list.Count > 1)
+                        {
+
+                            baseBusiness.Delete(item);
+                             break;   
+                        }
+                        else
+                        {
+                            item.Stage = null;
+
+                            baseBusiness.Update(item);
+
+                            break;
+                        }
+
+                   
+                    }
+                
+
+
+               
+            }
+        }
+
+
+        /// <summary>
+        /// 移除教员擅长的课程
+        /// </summary>
+        /// <param name="teacherid">教员ID</param>
+        /// <param name="courseid">课程ID</param>
+        /// <returns></returns>
+        public void removeTeacherGoodSkill(int teacherid, int courseid)
+        {
+            BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
+
+            if (this.GetTeacherByID(teacherid) == null)
+                return;
+
+           var tempobj= goodskill_db.GetList().Where(d => d.TearchID == teacherid && d.Curriculum == courseid).FirstOrDefault();
+
+            if (tempobj == null)
+                return;
+
+            goodskill_db.Delete(tempobj);
 
         }
     }

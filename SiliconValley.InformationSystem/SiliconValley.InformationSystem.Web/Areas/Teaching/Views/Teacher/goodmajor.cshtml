@@ -13,7 +13,36 @@
 
     <style>
         .select {
-             background-color:aqua;
+             background-color:#ffd800;
+        }
+        .currbtn {
+            width:70px;
+            height:45px;
+        }
+
+        .myclose {
+            /* still bad on picking color */
+            background: orange;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            font-size: 18px;
+            padding: 1px;
+        }
+            /* use cross as close button */
+            .myclose::before {
+                content: "\2716";
+            }
+        /* place the button on top-right */
+        .myclose {
+            top: -10px;
+            right: -10px;
+            position: absolute;
         }
     </style>
 </head>
@@ -26,7 +55,7 @@
             {
                 <div class="layui-collapse" lay-filter="filter">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title"  majorid="@item.Id">@item.SpecialtyName  </h2>
+                        <h2 class="layui-colla-title"  majorid="@item.Id">@item.SpecialtyName 系列课程 </h2>
 
                         <div  id="opinionContent" class="layui-colla-content coll" style="position:relative;">
                             <div id="adddiv" style="display:inline-block;">
@@ -58,6 +87,22 @@
 
     <script>
 
+
+        //移除教员擅长的课程
+
+        function removeTeacherGoodSkill(teacherid,courseid,successcallback, errorcallback) {
+
+            //发送请求
+            Ajax("/Teaching/Teacher/removeTeacherGoodSkill", { teacherid: teacherid, courseid: courseid }, "post", function (data) {
+
+                successcallback(data);
+
+            }, function (error) {
+
+                errorcallback(error);
+                });
+
+        }
 
         layui.use(['element', 'layer'], function () {
 
@@ -92,14 +137,73 @@
 
                             }
 
-                            console.log(result);
 
                             for (var i = 0; i < result.Data.length; i++) {
 
-                                var btn = $('<button class="layui-btn layui-btn-primary"></button>');
+                                var btn = $('<a href="javascript:void(0);" style="position:relative;" class="layui-btn layui-btn-primary"></a>');
 
                                 btn.text(result.Data[i].CourseName);
-           
+                                btn.attr("CourseId", result.Data[i].CurriculumID);
+
+                                //创建删除按钮
+
+                                var closebtn = $('<span class=""></span>');
+
+                                //注册关闭按钮的点击事件
+
+                                closebtn.click(function () {
+
+                                    var closethis = $(this);
+                                    //课程ID
+                                    var couserid = $(this).parent().attr("CourseId");
+
+                                    layer.confirm("确定！", function (index) {
+
+                                        removeTeacherGoodSkill(teacherid, couserid, function (data) {
+
+                                            if (data.ErrorCode == 200) {
+
+                                                layer.msg("移除成功");
+                                                closethis.parent().remove();
+
+                                            }
+                                            else {
+                                                layer.msg("系统错误");
+                                            }
+
+
+                                        }, function (error) {
+
+                                            layer.msg("抱歉！ 您的是龟速网吗......");
+
+                                            });
+
+                                        layer.close(index);
+                                    });
+
+
+                                    
+
+                                });
+
+
+                                btn.append(closebtn);
+
+                                //显示删除按钮样式
+                                btn.mouseover(function () {
+
+                                    $($(this).children()[0]).addClass("myclose");
+
+                                });
+
+                                //隐藏删除按钮样式
+                                btn.mouseout(function () {
+
+                                    $($(this).children()[0]).removeClass("myclose");
+
+                                });
+
+
                                 $($(data.content).children()[1]).append(btn);
 
 
@@ -155,7 +259,7 @@
 
                         
 
-                        var btn = $('<button class="layui-btn layui-btn-primary currbtn"></button>');
+                        var btn = $('<button style="margin-top:20px;" class="layui-btn layui-btn-primary currbtn"></button>');
 
 
                         btn.text(result.Data[i].CourseName);
@@ -174,11 +278,8 @@
 
                     }
 
-                 
 
                     var html = $("#muban1").html();
-
-
 
                     //弹出层
 

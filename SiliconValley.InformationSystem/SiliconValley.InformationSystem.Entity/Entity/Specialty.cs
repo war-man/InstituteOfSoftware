@@ -52,7 +52,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
         }
 
-
-       
+        public static bool IsContain(List<Specialty> sources, Specialty specialty)
+        {
+            foreach (var item in sources)
+            {
+                if (item.Id == specialty.Id)
+                    return true;
+            }
+            return false;
+        }
     }
 }

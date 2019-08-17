@@ -317,6 +317,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
+
+        /// <summary>
+        /// 给教员分配阶段
+        /// </summary>
+        /// <param name="ids">阶段</param>
+        /// <param name="majorid">专业id</param>
+        /// <param name="teacherid">教员id</param>
+        /// <returns></returns>
+        public ActionResult SetGrandToTeacherOnMajor(string ids, int majorid, int teacherid)
+        {
+            var arry = ids.Split(',');
+
+            var arry1 = arry.ToList();
+            arry1.RemoveAt(arry.Length - 1);
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_teacher.SetGrandToTeacherOnMajor(arry1.ToArray(), majorid, teacherid);
+
+
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "失败";
+            }
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);  
+        }
+
         /// <summary>
         /// 判断key是否在另一个字典包含
         /// </summary>
@@ -716,5 +754,130 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
 
+        public ActionResult GetNoHaveMajorOnTeacher(int teacherid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            var list = new List<Specialty>();
+            try
+            {
+               list = db_teacher.GetNoHaveMajorOnTeacher(teacherid);
+
+                result.Data = list;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = list;
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+
+            }
+
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 给教员添加专业
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SetMajorToTeacher(string ids, int teacherid)
+        {
+
+            var arry = ids.Split(',');
+
+            var arry1 = arry.ToList();
+            arry1.RemoveAt(arry.Length - 1);
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_teacher.SetMajorToTeacher(arry1.ToArray(),teacherid);
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = ex.Message;
+            }
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 移除教员在专业上对应的阶段
+        /// </summary>
+        /// <param name="grandid">阶段ID</param>
+        /// <param name="teacherid">教员ID</param>
+        /// <param name="majorid">专业ID</param>
+        /// <returns></returns>
+        public ActionResult RemoveGrandOnTeacherMajor(int grandid, int teacherid, int majorid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_teacher.RemoveGrandOnTeacherMajor(grandid, teacherid, majorid);
+                result.Data = null;
+                result.ErrorCode = 200;
+                result.Msg= "成功";
+            }
+            catch (Exception ex) 
+            {
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = ex.Message;
+
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 移除教员擅长的课程
+        /// </summary>
+        /// <param name="teacherid">教员ID</param>
+        /// <param name="courseid">课程ID</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult removeTeacherGoodSkill(int teacherid, int courseid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_teacher.removeTeacherGoodSkill(teacherid, courseid);
+
+                result.Data = null;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = ex.Message;
+
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
     }
 }
