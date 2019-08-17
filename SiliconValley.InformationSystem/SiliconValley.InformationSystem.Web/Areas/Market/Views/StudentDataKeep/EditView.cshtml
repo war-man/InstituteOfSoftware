@@ -125,7 +125,7 @@
 
                         <label class="LableCss1">出生日期</label>
                         <div class="layui-input-block">
-                            <input name="StuBirthy" id="StuBirthy" placeholder="YY-MM-DD" lay-verify="StuBirthy" class="layui-input linu"/>
+                            <input name="StuBirthy" id="StuBirthy" placeholder="YY-MM-DD" lay-verify="StuBirthy|" class="layui-input linu"/>
                         </div>
 
                     </div>
@@ -201,7 +201,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">上门日期</label>
                         <div class="layui-input-block">
-                            <input name="StuVisit" id="StuVisit" lay-verify="StuDateTime|IsVisit" placeholder="YY-MM-DD" class="layui-input linu"/>
+                            <input name="StuVisit" id="StuVisit" lay-verify="StuDateTime|IsVisit|content" placeholder="YY-MM-DD" class="layui-input linu"/>
                         </div>
                     </div>
                 </div>
@@ -237,7 +237,7 @@
                     <button class="layui-btn butCss1" id="quxiao">取消</button>
                 </div>
             </div>
-
+            <input name="have" id="have" type="hidden" value="no"/>
         </form>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -265,7 +265,6 @@
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
-            var ityy;
             //刷新界面 所有元素
             form.render();
             //日期
@@ -286,10 +285,11 @@
             });
             //监听是否上门单选按钮事件
             form.on('radio(radio1)', function (data) {
-                ityy = data.value;
                 if (data.value == "true") {
+                    $("#have")[0].value = "yes";
                     $("#StuVisit")[0].removeAttribute("disabled");//可用
                 } else {
+                    $("#have")[0].value = "no";
                     $("#StuVisit")[0].setAttribute("disabled", "false");//禁用
                     $("#StuVisit")[0].value = null;
                 }
@@ -301,7 +301,8 @@
                 IsVisit: function (value) {
                     var reg = /^ *$/;  //这里^和*之间有一个空格
                     var Is = reg.test(value);
-                    if (ityy != "false") {
+                    var mm= $("#have")[0].value                    
+                    if (mm != "no") {
                         if (Is == true) {
                             return "上门日期不能为空";
                         }
@@ -312,13 +313,18 @@
                     , '电话号码只能是数字'
                 ]
                 , content: function (value) {
-                    layedit.sync(editIndex);
+                    var newsdate = new Date();
+                    var olddate = new Date(value);
+                    var s = newsdate - olddate;
+                    if (s < 0) {
+                        return "时间选择错误，请重新选择";
+                    }
                 }
             });
 
             //修改数据
             form.on('submit(xiugai)', function (data) {
-                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+               // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
                // let title = $('input[name="StuSex"]:checked ').val();
                 // data.field.StuSex = title;
                // console.log(title);
@@ -348,7 +354,14 @@
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
         });
-        $(function () {
+        function IsDisable(values) {
+            if (values == "false") {
+                $("#StuVisit")[0].disabled = "disabled";
+            } else {
+                $("#StuVisit").removeAttr("disabled");
+            }
+        }
+        $(function () {            
             $.ajax({
                 url: '/Market/StudentDataKeep/FindStudentInfomation/' + @ViewBag.id,
                 type: 'POST',
@@ -362,6 +375,7 @@
                             var form = layui.form;
                             form.val("myform1", successdata);
                         });
+                        IsDisable(successdata.StuIsGoto);
                     } else {
                         layui.use(['layer'], function () {
                             var layer = layui.layer;
@@ -382,7 +396,7 @@
                         });
                     });
                 }
-            });
+            });           
         });
     </script>
 </body>

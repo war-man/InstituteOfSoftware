@@ -268,6 +268,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\my1.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -336,6 +337,7 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -972,7 +974,7 @@
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
     <Folder Include="assets\img\" />
-    <Folder Include="uploadXLSXfile\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
