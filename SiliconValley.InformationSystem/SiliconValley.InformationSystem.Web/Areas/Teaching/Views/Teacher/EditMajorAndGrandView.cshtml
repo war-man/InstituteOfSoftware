@@ -16,74 +16,538 @@
     <style>
 
         .backcolor {
-        
-                background-color:#67d0aa !important; 
+            background-color: #67d0aa !important;
+        }
+
+      
+        .select {
+            background-color: #ffd800;
+        }
+        .CanSelectmajor, .grand {
+            width: 70px;
+            height: 45px;
+        }
+
+
+        .myclose {
+            /* still bad on picking color */
+            background: orange;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            font-size: 18px;
+            padding: 1px;
+        }
+            /* use cross as close button */
+        .myclose::before {
+            content: "\2716";
+        }
+        /* place the button on top-right */
+        .myclose {
+            top: -10px;
+            right: -10px;
+            position: absolute;
         }
 
     </style>
 </head>
 <body>
-    <div>
-
-
-        <h1 style="text-align:center">@ViewBag.TeacherView.Name </h1>
-
-        <input type="hidden"  id="teacherid" value="@ViewBag.TeacherView.TeacherID"/>
+    <div style=" position:relative; width:800px;margin: auto;" id="contein">
+        <input type="hidden" id="teacherid" value="@ViewBag.Teacher.TeacherID" />
         @{
-            foreach (var item in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>).Keys)
+
+            foreach (var item in ViewBag.majors)
             {
-
-                <div class="layui-collapse" style="margin-top:50px;">
+                <div class="layui-collapse" lay-filter="filter">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title">@item.SpecialtyName</h2>
-                        <div style="" class="layui-colla-content layui-show">
+                        <h2 class="layui-colla-title" majorid="@item.Id">@item.SpecialtyName 对应如下阶段 </h2>
 
-                            <div style="width:100%;text-align:center;">
-                                <button majorid="@item.Id" class="layui-btn layui-btn-warm" type="button">
-                                    @item.SpecialtyName
-                                </button>
+                        <div id="opinionContent" class="layui-colla-content coll" style="position:relative;">
+                            <div id="adddiv" style="display:inline-block;">
+                                <a majorid="@item.Id" class="layui-btn layui-btn-primary addgrandbtn" href="javascript:void(0);">  <i class="layui-icon">&#xe654;</i> 阶段</a>
                             </div>
 
-
-                            <div id="showGrand" style="height:80px;text-align:center;" >
-
+                            <div id="content" style="display:inline-block;  ">
 
                             </div>
-
-                            <div class="row" id="sethaveGrand" style="margin-top:10px;">
-
-                             
-
-                                    @{
-                                        foreach (var item1 in (ViewBag.MajorAndGrand_Dic as Dictionary<Specialty, List<Grand>>)[item])
-                                        {
-
-                                            <button class="layui-btn grand" grandid="@item1.Id" type="button" style="margin-top:50px;">
-                                                @item1.GrandName
-                                            </button>
-                                        }
-                                    }
-                               
-                                <button majorid="@item.Id" id="add1" select="false" class="layui-btn" type="button" style="margin-top:50px;">
-                                    + 添加阶段
-                                </button>
-
-                            </div>
-
-
                         </div>
+
+
                     </div>
-
                 </div>
-
             }
         }
+        <button style="margin-top:10px; width:100%;" id="addMajorBtn" class="layui-btn layui-btn-normal">  <i class="layui-icon">&#xe654;</i> 专业</button>
+
     </div>
+
+
+    <script type="text/template" id="muban1">
+    </script>
+    <script type="text/template" id="muban2">
+    </script>
+
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
-
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
 
     <script src="~/Areas/Teaching/Scripts/MajorAndGrand.js"></script>
 
+    <script>
+
+
+        function GetGrandByTeacheridAndMajorid(teacherid, majorid, successcallback, errorcallback) {
+
+
+            Ajax("/Teaching/Teacher/GetHaveGrandData", { teacherid: teacherid, majorid: majorid }, "post", function (data) {
+
+                successcallback(data);
+
+            }, function (error) {
+
+                errorcallback(error);
+            });
+
+
+        }
+
+
+        function GetnNoGrandByTeacheridAndMajorid(teacherid, majorid, successcallback, errorcallback) {
+
+
+
+            Ajax("/Teaching/Teacher/GetNoGrandOnMajor", { teacherId: teacherid, majorId: majorid }, "post", function (data) {
+
+                successcallback(data);
+
+            }, function (error) {
+
+                errorcallback(error);
+            });
+
+        }
+
+
+        function GetNoHaveMajor(teacherid, successcallback, errorcallback) {
+
+            Ajax("/Teaching/Teacher/GetNoHaveMajorOnTeacher", { teacherid: teacherid }, "post", function (data) { successcallback(data) }, function (error) { errorcallback(error); });
+        }
+
+
+        function RemoveGrandOnTeacherMajor(grandid,teacherid,majorid,successcallback,errorcallback) {
+
+            Ajax("/Teaching/Teacher/RemoveGrandOnTeacherMajor", { grandid: grandid, teacherid: teacherid, majorid: majorid }, "post", function (data) {
+
+                successcallback(data);
+
+
+            }, function (error) {
+
+                errorcallback(error);
+
+                });
+
+
+        }
+        layui.use(['layer', 'element'], function () {
+
+            var layer = layui.layer;
+            var element = layui.element;
+
+
+            //监听面板展开事件
+
+            element.on('collapse(filter)', function (data) {
+
+                //console.log(data.show); //得到当前面板的展开状态，true或者false
+                //console.log(data.title); //得到当前点击面板的标题区域DOM对象
+                //console.log(data.content); //得到当前点击面板的内容区域DOM对象
+
+
+                //如果被展开
+                if (data.show) {
+
+                    /*  获取这个教员的这个专业的阶段  */
+
+                    //获取teacherid
+                    var teacherid = $("#teacherid").val();
+
+                    //获取专业id
+                    var majorid = data.title[0].attributes["majorid"].nodeValue;
+
+                    GetGrandByTeacheridAndMajorid(teacherid, majorid, function (result) {
+
+                        $($(data.content).children()[1]).html("");
+
+                        if (result.ErrorCode == 200) {
+
+                            //获取数据
+
+                            //渲染
+                            for (var i = 0; i < result.Data.length; i++) {
+
+                                var btn = $('<a href="javascript:void(0);" style="position:relative;" class="layui-btn layui-btn-primary"></a>');
+
+                                btn.text(result.Data[i].GrandName);
+                                btn.attr("grandid", result.Data[i].Id);
+                                //创建删除按钮
+
+                                var closebtn = $('<span class=""></span>');
+
+
+                                //删除按钮事件
+                                closebtn.click(function () {
+
+                                    var closethis = $(this);
+
+                                    var gradid = $(this).parent().attr("grandid");
+
+                                    layer.confirm("确认！", function (index) {
+
+                                        //发送请求
+                                        RemoveGrandOnTeacherMajor(gradid, teacherid, majorid, function (data) {
+
+                                            if (data.ErrorCode == 200) {
+
+                                                //删除成功
+
+                                                closethis.parent().remove();
+
+                                                layer.msg("移除成功");
+
+
+                                            }
+                                            else {
+
+                                                layer.msg("系统繁忙.....");
+                                            }
+
+                                        }, function (error) {
+
+                                            layer.msg("抱歉 !网络异常......");
+
+                                            });
+
+                                        
+
+                                        layer.close(index);
+
+                                    });
+
+                                });
+
+                                btn.append(closebtn);
+
+                                  //显示删除按钮样式
+                                btn.mouseover(function () {
+
+                                    $($(this).children()[0]).addClass("myclose");
+                                   
+                                });
+
+                                 //隐藏删除按钮样式
+                                btn.mouseout(function () {
+
+                                    $($(this).children()[0]).removeClass("myclose");
+
+                                });
+
+
+                                $($(data.content).children()[1]).append(btn);
+
+
+                            }
+
+                        } else {
+                            layer.msg("抱歉！ 系统繁忙......");
+
+                        }
+
+                    }, function (error) {
+
+                        layer.msg("抱歉！ 网络出现了一点小问题......");
+
+                    });
+
+
+                }
+            });
+
+            //添加阶段的事件
+
+            $(".addgrandbtn").click(function () {
+
+                $("#muban1").html("");
+
+                //获取专业ID
+                var majorid = $(this).attr("majorid");
+
+                var teacherid = $("#teacherid").val();
+
+
+                GetnNoGrandByTeacheridAndMajorid(teacherid, majorid, function (result) {
+
+
+                    if (result.Data.length == 0) {
+                        layer.msg("没有更多了......");
+
+                        return;
+                    }
+
+                    if (result.ErrorCode == 200 && result.Data.length > 0) {
+
+                        for (var i = 0; i < result.Data.length; i++) {
+
+                            //创建按钮
+                            var btn = $('<a href="javascript:void(0);" style="margin-top:20px;" class="layui-btn layui-btn-primary grand"></a>');
+
+                            btn.text(result.Data[i].GrandName);
+
+                            btn.attr("grandid", result.Data[i].Id);
+
+                            //绑定事件
+                            $(document).off("click", ".grand").on('click', '.grand', function () {
+
+                                $(this).toggleClass("select");
+
+                            });
+
+
+                            $("#muban1").append(btn);
+
+                        }
+
+
+                        var html = $("#muban1").html();
+
+                        //弹出层
+
+                        layer.open({
+                            type: 1,
+                            title: "阶段",
+                            area: ['600px', '300px'],
+                            btn: ['确定', '关闭'],
+
+                            content: html
+                            , yes: function (index) {
+
+                                var ids = "";
+
+                                //获取选择的课程id
+
+                                $(".grand").each(function () {
+
+
+                                    if ($(this).hasClass("select") != false) {
+
+                                        ids += $(this).attr("grandid") + ",";
+                                    }
+
+                                });
+
+                                if (ids != "") {
+
+                                    layer.confirm('确定?', function (index) {
+                                        //发送请求
+
+                                        //获取教员id
+                                        var teacherid = $("#teacherid").val();
+
+
+                                        Ajax("/teaching/teacher/SetGrandToTeacherOnMajor", { ids: ids, majorid: majorid, teacherid: teacherid }, "post", function (result) {
+
+                                           
+                                            if (result.ErrorCode == 200) {
+
+                                                layer.msg("成功");
+
+                                            }
+
+
+                                        }, function (error) {
+
+                                            console.log(error);
+
+                                            layer.msg("抱歉！网络好像出现了一点小问题......");
+
+
+                                        });
+
+                                        layer.close(index);
+                                    });
+
+                                }
+
+
+                                layer.close(index);
+
+
+                                //收起折叠面板
+                                $(".coll").removeClass("layui-show");
+
+                            }
+                        });
+
+
+
+                    } else {
+
+                        layer.msg("系统正在喝茶！请稍后再试");
+
+                    }
+
+
+                }, function (error) {
+
+                    layer.msg("抱歉! 网络出现了点小问题......");
+
+
+                });
+
+            });
+
+
+            //添加专业事件
+
+            $("#addMajorBtn").click(function () {
+                $("#muban2").html("");
+
+                var teacherid = $("#teacherid").val();
+
+
+                //发送请求
+                GetNoHaveMajor(teacherid, function (data) {
+
+
+                    if (data.Data.length == 0) {
+
+
+                        layer.msg("没有更多的专业了......");
+                    }
+
+                    if (data.ErrorCode == 200) {
+
+
+                        for (var i = 0; i < data.Data.length; i++) {
+
+                            //创建按钮
+                            var btn = $('<button style="margin-top:20px;" class="layui-btn layui-btn-primary CanSelectmajor"></button>');
+
+                            btn.text(data.Data[i].SpecialtyName);
+
+                            btn.attr("majorid", data.Data[i].Id);
+
+                            //绑定事件
+                            $(document).off("click", ".CanSelectmajor").on('click', '.CanSelectmajor', function () {
+
+                                $(this).toggleClass("select");
+
+                            });
+
+
+                            $("#muban2").append(btn);
+
+                        }
+
+
+                        var html = $("#muban2").html();
+
+                        //弹出层
+
+                        layer.open({
+                            type: 1,
+                            title: "专业",
+                            area: ['600px', '300px'],
+                            btn: ['确定', '关闭'],
+
+                            content: html
+                            , yes: function (index) {
+
+                                var ids = "";
+
+
+                                $(".CanSelectmajor").each(function () {
+
+
+                                    if ($(this).hasClass("select") != false) {
+
+
+                                        ids += $(this).attr("majorid") + ",";
+                                    }
+
+                                });
+                               
+                                if (ids != "") {
+
+                                    layer.confirm('确定?', function (index) {
+                                        //发送请求
+
+                                        //获取教员id
+                                        var teacherid = $("#teacherid").val();
+
+                                        
+
+                                        Ajax("/teaching/teacher/SetMajorToTeacher", { ids: ids, teacherid: teacherid }, "post", function (result) {
+
+
+                                            if (result.Data.ErrorCode == 200) {
+
+                                                layer.msg("成功");
+
+                                            }
+
+
+                                        }, function (error) {
+
+                                            layer.msg("抱歉！网络好像出现了一点小问题......");
+
+
+                                        });
+
+                                        layer.close(index);
+                                    });
+
+                                }
+
+
+                                layer.close(index);
+
+
+                                //收起折叠面板
+                                $(".coll").removeClass("layui-show");
+
+                            }
+                        }); 
+
+
+
+                    } else {
+
+                        layer.msg("系统异常");
+
+                    }
+
+
+
+
+
+                }, function (error) {
+
+                    console.log(error);
+
+                    layer.msg("抱歉 ，网络异常！");
+
+                });
+
+            });
+
+        });
+    </script>
 </body>
 </html>

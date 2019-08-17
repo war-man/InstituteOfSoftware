@@ -392,6 +392,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
+        //部门伪删除即将部门禁用
+        [HttpPost]
+        public ActionResult DelDepts(string list) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var AjaxResultxx = new AjaxResult();
+            string [] str = list.Split(',');
+            try
+            {
+                for (int i = 0; i < str.Length; i++)
+                {
+                  var dept=  deptmanage.GetEntity(str[i]);
+                    dept.IsDel = true;
+                    deptmanage.Update(dept);
+
+                }
+                AjaxResultxx= deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
 
         //岗位表添加显示页
         public ActionResult AddPosition() {
@@ -482,5 +506,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
+
+        //岗位伪删除即 将岗位禁用
+        [HttpPost]
+        public ActionResult DelPositions(string list)
+        {
+            PositionManage deptmanage = new PositionManage();
+            var AjaxResultxx = new AjaxResult();
+            string[] str = list.Split(',');
+            try
+            {
+                for (int i = 0; i < str.Length; i++)
+                {
+                    var dept = deptmanage.GetEntity(str[i]);
+                    dept.IsDel = true;
+                    deptmanage.Update(dept);
+
+                }
+                AjaxResultxx = deptmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = deptmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

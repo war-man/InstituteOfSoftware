@@ -81,7 +81,12 @@
         color: #fff;
         border: none;
     }
- 
+    body .demo-class2 .layui-layer-title {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
 </style>
 <div>
     <form class="layui-form">
@@ -119,7 +124,7 @@
 
                         <label class="LableCss1">出生日期</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy|content" }, { "class", "layui-input linu" } })
                         </div>
 
                     </div>
@@ -135,12 +140,11 @@
                         <label class="layui-form-label">学历</label>
                         <div class="layui-input-block">
                             <select style="width:200px;" class="layui-select" id="StuEducational" name="StuEducational">
-                                <option value="初中">小学</option>
                                 <option value="初中">初中</option>
                                 <option value="高中">高中</option>
                                 <option value="大专">大专</option>
-                                <option value="二本">二本</option>
-                                <option value="一本">一本</option>
+                                <option value="本科">本科</option>
+                                <option value="中专">中专</option>
                             </select>
                         </div>
 
@@ -200,7 +204,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6"> 
                             <label class="LableCss1">上门日期</label>                         
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "StuDateTime|IsVisit" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "StuDateTime|IsVisit|content" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" } })
                             </div>                                                                       
                     </div>                  
                 </div>
@@ -293,7 +297,7 @@
         //姓名失去焦点事件
         $("#StuName").blur(function () {
             var name = $("#StuName").val();
-            console.log(name);
+           // console.log(name);
             $.ajax({
                 url: "/Market/StudentDataKeep/FindStudent/" + name,
                 success: function (successdata) {
@@ -301,18 +305,21 @@
                         //有相同的名称
                         layui.use('layer', function () {
                             var layer = layui.layer;
-                            layer.confirm('已有该学员名称', { icon: 3, title: '提示', btn: ['去看看', '关闭']}, function (index) {
+                            layer.confirm('已有该学员名称', { icon: 3, title: '提示', btn: ['去看看', '关闭'], skin: 'demo-class2'}, function (index) {
                                 //do something
                                 layer.close(index);
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭   
+                                window.parent.LoadTableSeache(name);  
                             }, function (index) {
                                 //将名字相同的数据加载给用户看
-                                layer.close(index);
+                                layer.close(index);                                 
                             });
                         })
                     }
                 }
             });
-        });
+        });         
     });
     layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form
@@ -368,16 +375,21 @@
                 , '电话号码只能是数字'
             ]
             , content: function (value) {
-                layedit.sync(editIndex);
+                var newsdate = new Date();
+                var olddate = new Date(value);
+                var s = newsdate - olddate;
+                if (s < 0) {
+                    return "时间选择错误，请重新选择";
+                }
             }
         });
 
         //提交数据
         form.on('submit(tijiao)', function (data) {
-            console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-            let title = $('input[name="StuSex"]:checked ').val();
+            //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+           // let title = $('input[name="StuSex"]:checked ').val();
            // data.field.StuSex = title;
-            console.log(title);
+           // console.log(title);
             $.ajax({
                 url: "/Market/StudentDataKeep/StudentDataKeepAdd",
                 data: data.field,
@@ -386,7 +398,7 @@
                     if (successdata == "ok") {
                         layer.msg("添加成功", {
                             icon: 1,
-                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭   
@@ -395,13 +407,13 @@
                     } else if (successdata == "error") {
                         layer.msg("已有该学员信息", {
                             icon: 1,
-                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         });
                     }
                     else {
                         layer.msg("添加失败，请重试!", {
                             icon: 2,
-                            time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
                         });
                     }
                      

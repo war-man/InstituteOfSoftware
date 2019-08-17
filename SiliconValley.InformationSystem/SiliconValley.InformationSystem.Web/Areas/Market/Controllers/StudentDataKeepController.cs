@@ -12,15 +12,22 @@ using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生�
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
 using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体
-using SiliconValley.InformationSystem.Entity.Entity;//获取树实体
+using SiliconValley.InformationSystem.Entity.MyEntity;//获取树实体
 using SiliconValley.InformationSystem.Business.PositionBusiness;//获取岗位实体
 using SiliconValley.InformationSystem.Entity.ViewEntity;//获取员工岗位部门实体
+using SiliconValley.InformationSystem.Entity.Entity;
+using System.Text;
+using System.IO;
+using System.Data;
+using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Entity.Base_SysManage;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/FindStudent
+        // GET: /Market/StudentDataKeep/Prompt
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -37,18 +44,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
+            //获取信息来源的所有数据
+            List<SelectListItem> se=  StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            SelectListItem e = new SelectListItem();
+            e.Selected = true;
+            e.Text = "请选择";
+            e.Value = "请选择";
+            se.Add(e);
+            ViewBag.infomation = se;
             return View();
         }
 
         //往数据库中获取数据备案的信息
         public ActionResult GetStudentPutOnRecordData(int limit,int page)
-        { 
-             
+        {
+            string findNamevalue = Request.QueryString["findNamevalue"];
+            string findPhonevalue = Request.QueryString["findPhonevalue"];
+            string findInformationvalue = Request.QueryString["findInformationvalue"];
+            IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s => s.Id);
+            if (!string.IsNullOrEmpty(findNamevalue))
+            {
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuName.Contains(findNamevalue));
+            }
+            if (!string.IsNullOrEmpty(findPhonevalue))
+            {
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuPhone.Contains(findPhonevalue));
+            }
+            if (!string.IsNullOrEmpty(findInformationvalue) && findInformationvalue!="请选择")
+            {
+                int type_id = Convert.ToInt32(findInformationvalue);
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuInfomationType_Id== type_id);
+            }
             try
             {
                 int SunLimit = s_Entity.GetList().Count;//总行数
                 int SunPage = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(SunLimit / limit)));//总页数
-                IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s=>s.Id);              
+              
                 List<StudentPutOnRecord> PageData= s_Entity.GetPagination<StudentPutOnRecord>(stu_IQueryable, page,limit,"Id","desc",ref SunLimit, ref SunPage); //分页
                 var Get_List_studentPutOnRecord = PageData.Select(s => new {
                     Id = s.Id,
@@ -111,12 +142,55 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             return "未填写";
         }
+        //这个方法是过滤的未在职员工的
         public string GetEmployeeValue(string id)
         {
-           return Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel==false).FirstOrDefault().EmpName;
+            EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel == false).FirstOrDefault();
+            if (finde!=null)
+            {
+                return finde.EmpName;
+            }
+            else
+            {
+                return "无";
+            }
+           
+        }
+        //这个方法是查询所有员工，无论在职或辞职都可以查询
+        public string GetEmployeeValueAll(string id)
+        {
+            EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id).FirstOrDefault();
+            if (finde != null)
+            {
+                return finde.EmpName;
+            }
+            else
+            {
+                return "无";
+            }
+        }
+        //这个方法是用于通过名字来查询信息来源Id的
+        public int GetNameSearchId(string name)
+        {
+              StuInfomationType liststuinfomation = StuInfomationType_Entity.GetList().Where(t=>t.Name==name).FirstOrDefault();
+            if (liststuinfomation !=null)
+            {
+                return liststuinfomation.Id;
+            }
+            else
+            {
+                return 1;
+            }
+
+        }
+        //这个方法是用于通过员工姓名来查询员工的员工编号
+        public string GetNameSreachEmploId(string name)
+        {
+            EmployeesInfo e = Enplo_Entity.GetList().Where(ee => ee.EmpName == name).FirstOrDefault();
+            return e.EmpName;
         }
         #endregion
-
+        #region
         //这是一个添加数据的页面
         public ActionResult AddorEdit(string id)
         {
@@ -293,9 +367,164 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         //创建一个编辑页面
-        public ActionResult EditView()
+        public ActionResult EditView(string id)
+        {
+            ViewBag.id = id;
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            //获取学生状态来源的所有数据
+            ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            return View();
+        }
+
+        //创建一个用于编辑的处理方法
+        public ActionResult EditFunction(StudentPutOnRecord olds)
+        {
+            //需要判断是咨询部人员修改还是网络部人员修改  SessionHelper.Session["UserId"]=""
+            try
+            {
+                StudentPutOnRecord fins = s_Entity.GetList().Where(s => s.Id == olds.Id).FirstOrDefault();//找到要修改的实体
+                fins.StuSex = olds.StuSex;
+                fins.StuBirthy = olds.StuBirthy;
+                fins.StuSchoolName = olds.StuSchoolName;
+                fins.StuEducational = olds.StuEducational;
+                fins.StuAddress = olds.StuAddress;
+                fins.StuWeiXin = olds.StuWeiXin;
+                fins.StuQQ = olds.StuQQ;
+                fins.StuIsGoto = olds.StuIsGoto;
+                fins.StuVisit = olds.StuVisit;
+                fins.StuInfomationType_Id = olds.StuInfomationType_Id;
+                fins.StuStatus_Id = olds.StuStatus_Id;
+                s_Entity.Update(fins);
+                return Json("ok", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中     
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+                return Json(Error("数据编辑有误"), JsonRequestBehavior.AllowGet);
+            }            
+        }
+        #endregion
+        //根据ID找到学生信息并赋值
+        public ActionResult FindStudentInfomation(string id)
+        {
+            if (!string.IsNullOrEmpty(id) && id!="undifind")
+            {
+               StudentPutOnRecord finds = s_Entity.GetList().Where(s=>s.Id==Convert.ToInt32(id)).FirstOrDefault();
+                var newdata = new {
+                    EmployeesInfo_Id = finds.EmployeesInfo_Id,
+                    Id = finds.Id,
+                    IsDelete = finds.IsDelete,
+                    Reak = finds.Reak,
+                    StuAddress = finds.StuAddress,
+                    StuBirthy = finds.StuBirthy,
+                    StuDateTime = finds.StuDateTime,
+                    StuEducational = finds.StuEducational,
+                    StuEntering = finds.StuEntering,
+                    StuInfomationType_Id = finds.StuInfomationType_Id,
+                    StuIsGoto = finds.StuIsGoto,
+                    StuName = finds.StuName,
+                    StuPhone = finds.StuPhone,
+                    StuQQ = finds.StuQQ,
+                    StuSchoolName = finds.StuSchoolName,
+                    StuSex = finds.StuSex,
+                    StuStatus_Id = finds.StuStatus_Id,
+                    StuVisit = finds.StuVisit,
+                    StuWeiXin = finds.StuWeiXin,
+                    e_Name = GetEmployeeValue(finds.EmployeesInfo_Id),
+                    StuEntering_1 = GetEmployeeValueAll(finds.StuEntering),
+                };
+                return Json(newdata, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json("学生ID未拿到", JsonRequestBehavior.AllowGet);
+            }
+            
+        }
+
+        //数据详情查看页面
+        public ActionResult LookDetailsView(string id)
+        {
+            ViewBag.id = id;
+            //获取信息来源的所有数据
+            ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
+
+            //获取学生状态来源的所有数据
+            ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            return View();
+        }
+
+        #region Excle文件导入
+        //文件上传页面
+        public ActionResult ExcleIntoView()
         {
             return View();
         }
+        
+        //获取上传的Excle文件的值
+        public ActionResult GetExcelValue()
+        {
+            string namef = SessionHelper.Session["filename"].ToString();
+            DataTable t = AsposeOfficeHelper.ReadExcel(namef, true);            
+            List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
+            for (int i = 0; i < (t.Rows.Count); i++)
+            {
+                StudentPutOnRecord create_s = new StudentPutOnRecord();
+                create_s.StuName = t.Rows[i][0].ToString();
+                create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
+                create_s.StuPhone = t.Rows[i][2].ToString();
+                create_s.StuQQ = t.Rows[i][3].ToString();
+                create_s.StuWeiXin = t.Rows[i][4].ToString();
+                create_s.StuSchoolName = t.Rows[i][5].ToString();
+                create_s.StuInfomationType_Id = GetNameSearchId(t.Rows[i][6].ToString());
+                create_s.StuEducational = t.Rows[i][7].ToString();
+                create_s.EmployeesInfo_Id = GetNameSreachEmploId(t.Rows[i][8].ToString());
+                create_s.StuIsGoto = false;
+                create_s.StuDateTime = DateTime.Now;
+                new_listStudent.Add(create_s);
+            }
+            var jsondata = new
+            {
+                code = 0, //解析接口状态,
+                msg = "", //解析提示文本,
+                count = new_listStudent.Count, //解析数据长度
+                data = new_listStudent //解析数据列表
+            };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        //处理文件上传的方法
+        public ActionResult IntoFunction()
+        {
+            StringBuilder ProName = new StringBuilder();
+            try
+            {
+                HttpPostedFileBase file = Request.Files["file"];
+                string fname = Request.Files["file"].FileName; //获取上传文件名称（包含扩展名）
+                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                string name = Path.GetExtension(fname);//获取扩展名
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/ConsultUploadfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
+                string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                file.SaveAs(ProName.ToString());//上传文件   
+                SessionHelper.Session["filename"] = ProName.ToString();
+            }
+            catch (Exception ee)
+            {
+                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
+            }
+            var jsondata = new
+            {
+                code = "",
+                msg = "成功",
+                data = "",
+            };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
     }
 }
