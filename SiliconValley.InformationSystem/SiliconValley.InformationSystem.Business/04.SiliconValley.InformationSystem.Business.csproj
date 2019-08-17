@@ -82,6 +82,7 @@
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CooperaEnterprisesBusiness.cs" />
+    <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />

@@ -273,6 +273,7 @@
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
     <Compile Include="ViewEntity\MrDDetailSpecView.cs" />
+    <Compile Include="ViewEntity\MrDEmployStaffView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
