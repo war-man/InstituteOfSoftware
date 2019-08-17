@@ -4,8 +4,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Index</h2>
+@*模糊查询*@
+<form class="layui-form">
+    <div class="layui-row layui-form-item">
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="layui-form-label">姓名：</label>
+            <div class="layui-input-inline">
+                <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="layui-form-label" style="width:100px;">所属部门</label>
+            <div class="layui-input-inline">
+                <select name="deptid" id="deptid" style="width:100px;" lay-filter="deptidfilter" lay-search="">
+                    <option value="">请选择所属部门</option>
+                </select>
 
+            </div>
+        </div>
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="layui-form-label" style="width:100px;">所属岗位</label>
+            <div class="layui-input-block">
+                <select name="PositionId" id="PositionId" lay-search="">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row layui-form-item">
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="layui-form-label" style="width:100px;">在职状态：</label>
+            <div class="layui-input-inline">
+                <select id="IsDel" name="IsDel" lay-search="">
+                    <option value="">--请选择--</option>
+                    <option value="False">在职</option>
+                    <option value="True">离职</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label" style="width:100px;">入职时间：</label>
+            <div class="layui-inline" style="margin-left:-50px;">
+                <label class="layui-form-label">从：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="start_time" name="start_time" lay-verify="start_time" placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline" style="margin-left:-50px;">
+                <label class="layui-form-label">至：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="end_time" name="start_time" lay-verify="end_time" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:40px;">查询</button>
+
+    </div>
+
+
+
+</form>
 
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
@@ -18,18 +78,39 @@
 <table id="emptab" lay-filter="emptest"></table>
 
 
-@*员工婚姻状态改变*@
+@*员工婚姻状态及性别改变*@
 <script type="text/html" id="switchTpl">
-    <input type="checkbox" name="MaritalStatus" value="{{d.EmployeeId}}" lay-skin="switch" lay-text="未婚|已婚" lay-filter="hunyinDemo" {{d.IsDel == false ? 'checked' : ''}}>
+    <input type="checkbox" name="MaritalStatus" value="{{d.EmployeeId}}" lay-skin="switch" lay-text="未婚|已婚" lay-filter="hunyinDemo" {{d.MaritalStatus == false ? 'checked' : ''}}>
+
+</script>
+<script type="text/html" id="switchTp2">
+    <input type="checkbox" name="Sex" value="{{d.EmployeeId}}" lay-skin="switch" lay-text="男|女" lay-filter="hunyinDemo" {{d.Sex == "男" ? 'checked' : ''}}>
+</script>
+@*工作状态*@
+<script type="text/html" id="myworkstate">
+    {{# if(d.IsDel==false){ }}
+    {{ d.IsDel="在职" }}
+    {{# }else{ }}
+    {{ d.IsDel="离职" }}
+    {{# } }}
 </script>
 
 @section script{
 
     <script>
-        layui.use(['table', 'layer', 'form'], function () {
+        layui.use(['table', 'layer', 'form', 'laydate'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#start_time',
+            });
+            laydate.render({
+                elem: '#end_time',
+            });
+
             table.render({
                 elem: '#emptab'
                 , url: '/Personnelmatters/EmployeesInfo/GetData'
@@ -40,36 +121,40 @@
                 , cols: [[
                     , { field: 'EmployeeId', title: '员工编号', width: 126 }
                     , { field: 'DDAppId', title: '钉钉工号', width: 108, sort: true }
-                    , { field: 'EmpName', title: '姓名', width: 110, sort: true }
+                    , { field: 'EmpName', title: '姓名', width: 110, sort: true, edit: 'text' }
                     , { field: 'Depart', title: '所属部门', width: 110, sort: true }
                     , { field: 'Position', title: '所属岗位', width: 110, sort: true }
-                    , { field: 'Phone', title: '电话号码', sort: true, width: 110 }
+                    , { field: 'Phone', title: '电话号码', sort: true, width: 110, edit: 'text' }
                     , { field: 'IsDel', title: '在职状态', width: 100, templet: '#myworkstate' }
-                    , { field: 'Sex', title: '性别', sort: true, width: 90, templet: '#mysex' }
+                    , { field: 'Sex', title: '性别', sort: true, width: 90, templet: '#switchTp2', unresize: true }
                     , { field: 'Age', title: '年龄', sort: true, width: 90 }
-                    , { field: 'Nation', title: '民族', sort: true, width: 100 }
+                    , { field: 'Nation', title: '民族', sort: true, width: 100, edit: 'text' }
                     , { field: 'IdCardNum', title: '身份证号码', sort: true, width: 120 }
                     , { field: 'EntryTime', title: '入职时间', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.EntryTime) } }
                     , { field: 'ContractStartTime', title: '合同起始时间', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.ContractStartTime) } }
                     , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.ContractEndTime) } }
                     , { field: 'Birthdate', title: '出生日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.Birthdate) } }
-                    , { field: 'Birthday', title: '生日', sort: true, width: 110 }
+                    , { field: 'Birthday', title: '生日', sort: true, width: 110, edit: 'text' }
                     , { field: 'PositiveDate', title: '转正日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.PositiveDate) } }
-                    , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 135 }
-                    , { field: 'DomicileAddress', title: '户籍地址', sort: true, width: 110 }
-                    , { field: 'Address', title: '现居地址', sort: true, width: 110 }
+                    , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 135, edit: 'text' }
+                    , { field: 'DomicileAddress', title: '户籍地址', sort: true, width: 110, edit: 'text' }
+                    , { field: 'Address', title: '现居地址', sort: true, width: 110, edit: 'text' }
                     , { field: 'Education', title: '学历', sort: true, width: 110 }
                     , { field: 'MaritalStatus', title: '婚姻状态', sort: true, width: 110, templet: '#switchTpl', unresize: true }
-                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.IdCardIndate) } }
+                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 135, event: 'date', data_field: "IdCardIndate", templet: function (d) { return changeDateTimeFormat(d.IdCardIndate) } }
                     , { field: 'PoliticsStatus', title: '政治面貌', sort: true, width: 110 }
-                    , { field: 'WorkExperience', title: '工作经验', sort: true, width: 110 }
+                    , { field: 'WorkExperience', title: '工作经验', sort: true, width: 110, edit: 'text' }
                     , { field: 'ProbationSalary', title: '试用期工资', sort: true, width: 120 }
-                    , { field: 'Salary', title: '转给工资', sort: true, width: 110 }
-                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 135 }
-                    , { field: 'BCNum', title: '银行卡号', sort: true, width: 110 }
-                    , { field: 'Material', title: '材料', sort: true, width: 110 }
-                    , { field: 'Remark', title: '备注', sort: true, width: 110 }
-                ]]
+                    , { field: 'Salary', title: '转正工资', sort: true, width: 110 }
+                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 135, event: 'date', data_field: "SSStartMonth" }
+                    , { field: 'BCNum', title: '银行卡号', sort: true, width: 110, edit: 'text' }
+                    , { field: 'Material', title: '材料', sort: true, width: 110, edit: 'text' }
+                    , { field: 'Remark', title: '备注', sort: true, width: 110, edit: 'text' }
+                ]],
+                data: [{
+                    IdCardIndate: '',
+                    SSStartMonth: ''
+                }]
                 , page: true
             });
 
@@ -86,31 +171,97 @@
                 };
             });
 
-            //监听行工具事件
-            table.on('tool(test)', function (obj) {
+            //监听单元格编辑
+            table.on('edit(emptest)', function (obj) {
+                var value = obj.value //得到修改后的值
+                    , data = obj.data //得到所在行所有键值
+                    , field = obj.field; //得到字段
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "/Personnelmatters/EmployeesInfo/EditTableCell",
+                    data: { id: data.EmployeeId, Attrbute: field, endvalue: value },
+                    success: function (data) {
+                        console.log("单元格结果：" + data);
+                        if (data.Success) {
+                            //  layer.msg('[ID: ' + data.EmployeeId + '] ' + field + ' 字段更改为：' + value);
+                        } else {
+                            layer.msg("修改失败!");
+                        }
+                    }
+                });
+
+            });
+
+            //监听单元格日期编辑事件
+            table.on('tool(emptest)', function (obj) {
                 var data = obj.data;
-                if (obj.event === 'edit') {
-                    UpdateEmp(data.id);
+                // var newdata = {};
+                if (obj.event === 'date') {
+                    var field = $(this).data('field');
+                    console.log(field);
+                    laydate.render({
+                        elem: this.firstChild,
+                        show: true //直接显示
+                        , closeStop: this
+                        , done: function (value, date) {
+                            $.ajax({
+                                type: "get",
+                                dataType: "json",
+                                url: "/Personnelmatters/EmployeesInfo/EditDateCell",
+                                data: { id: data.EmployeeId, Attrbute: field, endvalue: value },
+                                success: function (data) {
+                                    console.log("单元格结果：" + data);
+                                    if (data.Success) {
+                                        //   layer.msg('[ID: ' + data.EmployeeId + '] ' + field + ' 字段更改为：' + value);
+                                    } else {
+                                        layer.msg("修改失败!");
+                                    }
+                                }
+                            });
+                        }
+                    });
                 }
             });
 
             //监听婚姻状态操作
             form.on('switch(hunyinDemo)', function (obj) {
-               
+
                 var id = this.value; var name = this.name;
                 console.log(id); console.log(name); console.log(obj.elem.checked);
                 $.ajax({
                     type: "get",
                     dataType: "json",
                     url: "/Personnelmatters/EmployeesInfo/EditEmphunyin",
-                    data: { id: id, ismarry: obj.elem.checked },
+                    data: { id: id, name: name, ismarry: obj.elem.checked },
                     success: function (data) {
                         if (data.Success) {
                             layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
                         } else {
-                            layer.alert("修改失败!");
+                            layer.tips("修改失败!", obj.othis);
                         }
                     }
+                });
+            });
+
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var ename = $("#EmpName").val();//员工姓名
+                var deptname = $("#deptid").val();//员工所属部门
+                var pname = $("#PositionId").val();//员工所属岗位
+                var IsDel = $("#IsDel").val();//员工在职状态
+                var start_time = $("#start_time").val();//起始时间
+                var end_time = $("#end_time").val();//终止时间
+
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('myEmpInfo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: ename + "," + deptname + "," + pname + "," + IsDel + "," + start_time + "," + end_time
+                        }
+                    });
                 });
             });
         });
@@ -139,7 +290,7 @@
 
                 layer.open({
                     type: 2
-                    , area: ["1100px", "600px"]
+                    , area: ["1100px", "750px"]
                     , title: "部门及岗位管理"
                     , content: '/Personnelmatters/EmployeesInfo/DeptOperation'
                     , anim: 2
@@ -174,20 +325,63 @@
         }
     </script>
 
-    @*性别*@
-    <script type="text/html" id="mysex">
-        {{# if(d.Sex==0){ }}
-        {{ d.Sex="女" }}
-        {{# }else{ }}
-        {{ d.Sex="男" }}
-        {{# } }}
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#deptid").append(new Option("请选择项目", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $('#deptid')
+                                .append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PositionId").empty();
+                            console.log(resultData.data);
+                            $("#PositionId").append(new Option("请选择项目", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#PositionId')
+                                    .append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PositionId").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
     </script>
-    @*工作状态*@
-    <script type="text/html" id="myworkstate">
-        {{# if(d.IsDel==false){ }}
-        {{ d.IsDel="在职" }}
-        {{# }else{ }}
-        {{ d.IsDel="离职" }}
-        {{# } }}
-    </script>
+
+
 }
