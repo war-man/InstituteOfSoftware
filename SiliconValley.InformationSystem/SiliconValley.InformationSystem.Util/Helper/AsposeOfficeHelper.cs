@@ -63,7 +63,6 @@ namespace SiliconValley.InformationSystem.Util
             Workbook book = new Workbook(fileNmae);
             Worksheet sheet = book.Worksheets[0];
             Cells cells = sheet.Cells;
-
             return cells.ExportDataTableAsString(0, 0, cells.MaxDataRow + 1, cells.MaxDataColumn + 1, true);
         }
 

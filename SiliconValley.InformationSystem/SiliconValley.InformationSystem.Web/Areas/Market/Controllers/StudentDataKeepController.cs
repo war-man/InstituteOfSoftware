@@ -16,12 +16,18 @@ using SiliconValley.InformationSystem.Entity.MyEntity;//获取树实体
 using SiliconValley.InformationSystem.Business.PositionBusiness;//获取岗位实体
 using SiliconValley.InformationSystem.Entity.ViewEntity;//获取员工岗位部门实体
 using SiliconValley.InformationSystem.Entity.Entity;
+using System.Text;
+using System.IO;
+using System.Data;
+using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Entity.Base_SysManage;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/GetStudentPutOnRecordData
+        // GET: /Market/StudentDataKeep/Prompt
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -162,6 +168,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 return "无";
             }
+        }
+        //这个方法是用于通过名字来查询信息来源Id的
+        public int GetNameSearchId(string name)
+        {
+              StuInfomationType liststuinfomation = StuInfomationType_Entity.GetList().Where(t=>t.Name==name).FirstOrDefault();
+            if (liststuinfomation !=null)
+            {
+                return liststuinfomation.Id;
+            }
+            else
+            {
+                return 1;
+            }
+
+        }
+        //这个方法是用于通过员工姓名来查询员工的员工编号
+        public string GetNameSreachEmploId(string name)
+        {
+            EmployeesInfo e = Enplo_Entity.GetList().Where(ee => ee.EmpName == name).FirstOrDefault();
+            return e.EmpName;
         }
         #endregion
         #region
@@ -430,5 +456,75 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
             return View();
         }
+
+        #region Excle文件导入
+        //文件上传页面
+        public ActionResult ExcleIntoView()
+        {
+            return View();
+        }
+        
+        //获取上传的Excle文件的值
+        public ActionResult GetExcelValue()
+        {
+            string namef = SessionHelper.Session["filename"].ToString();
+            DataTable t = AsposeOfficeHelper.ReadExcel(namef, true);            
+            List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
+            for (int i = 0; i < (t.Rows.Count); i++)
+            {
+                StudentPutOnRecord create_s = new StudentPutOnRecord();
+                create_s.StuName = t.Rows[i][0].ToString();
+                create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
+                create_s.StuPhone = t.Rows[i][2].ToString();
+                create_s.StuQQ = t.Rows[i][3].ToString();
+                create_s.StuWeiXin = t.Rows[i][4].ToString();
+                create_s.StuSchoolName = t.Rows[i][5].ToString();
+                create_s.StuInfomationType_Id = GetNameSearchId(t.Rows[i][6].ToString());
+                create_s.StuEducational = t.Rows[i][7].ToString();
+                create_s.EmployeesInfo_Id = GetNameSreachEmploId(t.Rows[i][8].ToString());
+                create_s.StuIsGoto = false;
+                create_s.StuDateTime = DateTime.Now;
+                new_listStudent.Add(create_s);
+            }
+            var jsondata = new
+            {
+                code = 0, //解析接口状态,
+                msg = "", //解析提示文本,
+                count = new_listStudent.Count, //解析数据长度
+                data = new_listStudent //解析数据列表
+            };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        //处理文件上传的方法
+        public ActionResult IntoFunction()
+        {
+            StringBuilder ProName = new StringBuilder();
+            try
+            {
+                HttpPostedFileBase file = Request.Files["file"];
+                string fname = Request.Files["file"].FileName; //获取上传文件名称（包含扩展名）
+                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                string name = Path.GetExtension(fname);//获取扩展名
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/ConsultUploadfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
+                string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                file.SaveAs(ProName.ToString());//上传文件   
+                SessionHelper.Session["filename"] = ProName.ToString();
+            }
+            catch (Exception ee)
+            {
+                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
+            }
+            var jsondata = new
+            {
+                code = "",
+                msg = "成功",
+                data = "",
+            };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
     }
 }
