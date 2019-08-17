@@ -220,6 +220,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
+    <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
@@ -239,6 +240,11 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Teaching\Scripts\Ajax.js" />
+    <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
+    <Content Include="Areas\Teaching\Scripts\MajorOperation.js" />
+    <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
+    <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\custom-styles.css" />
@@ -338,6 +344,14 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\AddTeacher.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\EditMajorAndGrandView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\GetNewSkill.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\goodmajor.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\Operating.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\TeacherDetailView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
+    <Content Include="Areas\Teaching\Views\Major\MajorIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -669,6 +683,7 @@
     <Content Include="Scripts\layui\lay\modules\util.js" />
     <Content Include="Scripts\layui\prefixfree.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\util\easyui-extend.js" />
     <Content Include="Scripts\util\framework-util.js" />
     <Content Include="Scripts\util\upload-time.js" />
