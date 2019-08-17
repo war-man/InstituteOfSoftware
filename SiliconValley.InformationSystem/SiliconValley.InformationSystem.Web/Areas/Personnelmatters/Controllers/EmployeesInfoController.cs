@@ -27,9 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetData(int page,int limit,string AppCondition)
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
-            PositionManage pmanage = new PositionManage();
             var list = empinfo.GetList();
-            var plist = pmanage.GetList();
             if (!string.IsNullOrEmpty(AppCondition)) {
                 string[] str = AppCondition.Split(',');
                 string ename = str[0];
@@ -136,7 +134,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
 
-
         //添加员工时获取未禁用的部门信息
         public ActionResult BindDeptSelect() {
             DepartmentManage deptmanage = new DepartmentManage();
@@ -242,33 +239,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             // string count = Count().ToString();
            // string count = num.ToString();
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
-            string laststr = empinfo.GetList().LastOrDefault().EmployeeId;
-            string startfournum= laststr.Substring(0, 4);
-            string endfournum= laststr.Substring(laststr.Length - 4, 4);
-
-            if (laststr == null || int.Parse(n) > int.Parse(startfournum))
+            var lastobj = empinfo.GetList().LastOrDefault();
+            if (lastobj == null)
             {
                 mingci = "0001";
-
             }
             else {
-                string newstr = (int.Parse(endfournum) + 1).ToString();
-                if (newstr.Length < 10)
+                string laststr = lastobj.EmployeeId;
+                string startfournum = laststr.Substring(0, 4);
+                string endfournum = laststr.Substring(laststr.Length - 4, 4);
+                if (int.Parse(n) > int.Parse(startfournum))
                 {
-                    mingci = "000" + newstr;
+                    mingci = "0001";
                 }
-                else if (newstr.Length >= 10 && newstr.Length < 100)
+                else
                 {
-                    mingci = "00" + newstr;
-                }
-                else if (newstr.Length >= 100 && newstr.Length < 1000)
-                {
-                    mingci = "0" + newstr;
-                }
-                else {
-                    mingci= newstr;
+                    string newstr = (int.Parse(endfournum) + 1).ToString();
+                    if (newstr.Length < 10)
+                    {
+                        mingci = "000" + newstr;
+                    }
+                    else if (newstr.Length >= 10 && newstr.Length < 100)
+                    {
+                        mingci = "00" + newstr;
+                    }
+                    else if (newstr.Length >= 100 && newstr.Length < 1000)
+                    {
+                        mingci = "0" + newstr;
+                    }
+                    else
+                    {
+                        mingci = newstr;
+                    }
                 }
             }
+           
  
             string EmpidResult = n + y + d + mingci;
             return EmpidResult;

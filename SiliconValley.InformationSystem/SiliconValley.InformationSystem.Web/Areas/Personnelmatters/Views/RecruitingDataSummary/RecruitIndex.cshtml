@@ -12,8 +12,20 @@
         <li>人才需求计划</li>
 
     </ul>
-    <div class="layui-tab-content" style="height: 100px;">
-        <div class="layui-tab-item layui-show">默认宽度是相对于父元素100%适应的，你也可以固定宽度。</div>
+    <div class="layui-tab-content" >
+        <div class="layui-tab-item layui-show">
+            <div>
+                <table id="recruitTab" lay-filter="test1"></table>
+                @*头部工具栏*@
+                <script type="text/html" id="toolbarDemo1">
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="addDept">部门添加</button>
+                        <button class="layui-btn layui-btn-sm" lay-event="delDept">部门删除</button>
+                    </div>
+                </script>
+
+            </div>
+        </div>
         <div class="layui-tab-item">2</div>
         <div class="layui-tab-item">2</div>
 
@@ -29,7 +41,37 @@
             var laydate = layui.laydate;
             var element = layui.element;
 
-
+            table.render({
+                elem: '#recruitTab'
+                , url: '/Personnelmatters/RecruitingDataSummary/GetRecruitData'
+                , id: "myRecruitData"
+                , toolbar: '#toolbarDemo'
+                , limits: [1, 3, 6, 9, 12, 15, 18]
+                , limit: 6
+                , cols: [[
+                    , { field: 'Pid', title: '岗位', width: 126 }
+                    , { field: 'PlanRecruitNum', title: '计划招聘人数', width: 108, sort: true }
+                    , { field: 'ResumeSum', title: '简历总数', width: 110, sort: true, edit: 'text' }
+                    , { field: 'OutboundCallSum', title: '所属部门', width: 110, sort: true }
+                    , { field: 'InstantInviteSum', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'InstantToFacesSum', title: '电话号码', sort: true, width: 110, edit: 'text' }
+                    , { field: 'InstantRetestSum', title: '在职状态', width: 100, templet: '#myworkstate' }
+                    , { field: 'InstantRetestPassSum', title: '性别', sort: true, width: 90, templet: '#switchTp2', unresize: true }
+                    , { field: 'InstantEntryNum', title: '年龄', sort: true, width: 90 }
+                    , { field: 'InstantToFacesRate', title: '民族', sort: true, width: 100, edit: 'text' }
+                    , { field: 'InstantInviteRate', title: '身份证号码', sort: true, width: 120 }
+                    , { field: 'InstantRetestPassrate', title: '身份证号码', sort: true, width: 120 }
+                    , { field: 'EntryRate', title: '身份证号码', sort: true, width: 120 }
+                    , { field: 'RecruitPercentage', title: '身份证号码', sort: true, width: 120 }
+                    , { field: 'Remark', title: '身份证号码', sort: true, width: 120 }
+                    , { field: 'YearAndMonth', title: '身份证号码', sort: true, width: 120 }
+                ]],
+                data: [{
+                    IdCardIndate: '',
+                    SSStartMonth: ''
+                }]
+                , page: true
+            });
         });
     </script>
 
