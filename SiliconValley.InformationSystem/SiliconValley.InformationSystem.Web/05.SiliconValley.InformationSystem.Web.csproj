@@ -220,7 +220,6 @@
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
-    <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
@@ -240,10 +239,6 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Teaching\Scripts\Ajax.js" />
-    <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
-    <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
-    <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\custom-styles.css" />
@@ -273,6 +268,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\my1.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -341,15 +337,7 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\EditMajorAndGrandView.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\AddTeacher.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\GetNewSkill.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\goodmajor.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\Operating.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\TeacherDetailView.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
-    <Content Include="Areas\Teaching\Views\Major\MajorIndex.cshtml" />
-    <Content Include="Config\Major.json" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -986,7 +974,7 @@
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
     <Folder Include="assets\img\" />
-    <Folder Include="uploadXLSXfile\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
