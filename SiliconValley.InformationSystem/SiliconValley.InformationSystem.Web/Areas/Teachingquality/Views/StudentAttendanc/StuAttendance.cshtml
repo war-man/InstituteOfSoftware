@@ -1,0 +1,117 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StuAttendance</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+</head>
+<body>
+    <h2 style="text-align:center;color:dodgerblue;">@ViewBag.Classe 班</h2>
+    <div style="margin-left:30px;">
+        @{
+            int a = 0;
+            foreach (var item in Model as List<StudentInformation>)
+            {
+                a++;
+                if (a > 4)
+                {
+                    a = 0;
+                    <br />
+                }
+              
+                    <button type="button" style="width:135px;margin-top:10px;" class="layui-btn stu"  value="@item.StudentNumber"><i class="layui-icon">&#xe770;</i>@item.Name (@item.StudentNumber.Substring(12))</button>
+        
+              
+
+            }
+        }
+
+        <br>
+    </div>
+  
+        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;position:absolute;top:90%;">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal"  id="but1" type="button" >立即提交</button>
+             
+            </div>
+        </div>
+
+ 
+</body>
+</html>
+<script>
+    var arr = new Array();
+    var atrr = new Array();
+    $(".stu").click(function (e) {
+        var a = $(this).val();
+        var b = $(this).text().split('(');
+        if (!$(this).is(".layui-btn-danger")) {
+            $(this).addClass("layui-btn-danger");
+            arr.push(a);
+            atrr.push(b[0].substring(1));
+        } else {
+            $(this).removeClass("layui-btn-danger");
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] == a) {
+                   
+                    arr.splice(i, 1);
+                   
+                }
+
+            }
+            for (var i = 0; i < atrr.length; i++) {
+                if (atrr[i] == b[0].substring(1)) {
+                    atrr.splice(i,1);
+                }
+            }
+          
+        }
+     
+
+    });
+    layui.use(['layer'], function () {
+        var layer = layui.layer;
+        $("#but1").click(function () {
+            var x = "";
+            var c = "";
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i] != "") {
+                  
+
+                        x += arr[i] + ",";
+                   
+                }
+            }
+            for (var i = 0; i < atrr.length; i++) {
+                if (atrr[i] != "") {
+                
+                    if (i<arr.length-1) {
+                       
+                        c += atrr[i] + ",";
+                    } else {
+                        c += atrr[i];
+                    }
+                }
+
+            
+            }
+
+            layer.confirm('您真的要选择吗?', function (index) {
+                parent.GetPartsItmes(x,c);
+                parent.layer.close(parent.layer.index);
+            });
+
+        });
+    });
+  
+</script>

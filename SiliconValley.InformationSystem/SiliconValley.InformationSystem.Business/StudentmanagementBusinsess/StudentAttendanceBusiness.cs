@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
 {
-   public class StudentAttendanceBusiness:BaseBusiness<StudentAttendanc>
+   public class StudentAttendanceBusiness:BaseBusiness<StudentAttendance>
     {
 
 

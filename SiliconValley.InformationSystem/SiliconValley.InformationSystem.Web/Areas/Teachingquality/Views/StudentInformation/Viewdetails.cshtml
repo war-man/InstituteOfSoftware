@@ -200,6 +200,10 @@
         var layer = layui.layer;
        
         var id = $("#stuid").val();
+        //去掉所有的空格
+        function trim(str) {
+            return str.replace(/(^\s+)|(\s+$)/g, "");
+        }
      
         $.post("/Teachingquality/StudentInformation/Select?stuid=" + id, function (data) {
             $("#StudentNumber").val(data.StudentNumber);//学号
@@ -223,7 +227,7 @@
             $("#InsitDate").val(TimeChange(data.InsitDate))//入校日期
             //
             var GuaSex = data.Guardian.split(',')
-            $("#Sexs").text(GuaSex[1]+"姓名")//亲属关系
+            $("#Sexs").text(trim(GuaSex[1])+"姓名")//亲属关系
 
             $("#Guardian").val(GuaSex[0])//亲属姓名
             console.log(Age(TimeChange(data.BirthDate)));
