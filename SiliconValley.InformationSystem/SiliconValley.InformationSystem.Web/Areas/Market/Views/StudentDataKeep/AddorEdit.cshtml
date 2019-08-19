@@ -385,11 +385,7 @@
         });
 
         //提交数据
-        form.on('submit(tijiao)', function (data) {
-            //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-           // let title = $('input[name="StuSex"]:checked ').val();
-           // data.field.StuSex = title;
-           // console.log(title);
+        form.on('submit(tijiao)', function (data) {            
             $.ajax({
                 url: "/Market/StudentDataKeep/StudentDataKeepAdd",
                 data: data.field,
