@@ -42,27 +42,41 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">查看详情</a>
 </script>
 <form class="layui-form">
-    <div class="layui-row">
-        <div class="layui-col-sm3">
-            <label>姓名:</label>
-            <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
-        </div>
-        <div class="layui-col-sm3">
-            <label>联系电话:</label>
-            <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
-        </div>
-        <div class="layui-col-sm3">
-             <label>信息来源:</label> 
-             <div style="display: inline-block;width:150px;">
-                 @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>)
-             </div>
-             
-        </div>
+    <fieldset style="border: 1px solid #009688;">
+        <legend style="color:#009688;">简单查询</legend>
+        <div class="layui-row">
+            <div class="layui-col-sm3">
+                <label>姓名:</label>
+                <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
+            </div>
+            <div class="layui-col-sm3">
+                <label>联系电话:</label>
+                <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
+            </div>
+            <div class="layui-col-sm3">
+                <label>信息来源:</label>
+                <div style="display: inline-block;width:150px;">
+                    @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>)
+                </div>
 
-        <div class="layui-col-sm2">
-            <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
+            </div>
         </div>
-    </div>
+        <div class="layui-row" style="margin-top:10px">
+            <div class="layui-col-sm3">
+                <label>开始时间:</label>
+                <input name="findStartvalue" id="findStartvalue" class="inputCss1" placeholder="YY-MM-DD"/>
+            </div>
+            <div class="layui-col-sm3">
+                <label>结束时间:</label>
+                <div style="display: inline-block;width:150px;">
+                    <input name="findEndvalue" id="findEndvalue" class="inputCss1" placeholder="YY-MM-DD"/>
+                </div>
+            </div>
+            <div class="layui-col-sm5" style="text-align:right">
+                <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
+            </div>
+        </div>
+    </fieldset>
 </form>
 <table id="tabletest1" lay-filter="tabletest1"></table>
 @section script{
@@ -92,6 +106,16 @@
             });
 
         }
+        //提示
+        function TiShi(msg) {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                layer.msg(msg, {
+                    icon: 2,
+                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                });
+            });
+        }
         //这个方法是用于当有姓名相同的就会显示与姓名相同的数据
         function LoadTableSeache(name) {
             layui.use('table', function () {
@@ -99,16 +123,12 @@
                 table.reload('tabletest1', {
                     url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
                     , where: { 'findNamevalue': name} //设定异步数据接口的额外参数
-                    //,height: 300
                 });
             });
         }
         $(function () {
             //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
             $(document).keydown(function (event) {
-                //console.log(event.ctrlKey);//是否是Ctrl键
-                //console.log(event.keyCode);
-                //console.log(event);
                 if (event.keyCode === 90 && event.ctrlKey === true) {
                     layui.use('layer', function () {
                         var layer = layui.layer;
@@ -129,20 +149,42 @@
                 var findNamevalue = $("#findNamevalue").val();
                 var findPhonevalue = $("#findPhonevalue").val();
                 var findInformationvalue = $("#findInformationvalue").val();
-                var Jsondata = { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue };
-                console.log(Jsondata);
-                layui.use('table', function () {
-                    var table = layui.table;
-                    table.reload('tabletest1', {
-                        url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                        , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue } //设定异步数据接口的额外参数
-                        //,height: 300
+                var findStartvalue = $("#findStartvalue").val();//获取开始时间
+                var findEndvalue = $("#findEndvalue").val();//获取结束时间
+                var newsdate = new Date();//获取当前时间
+                var ss1 = new Date(findStartvalue);
+                var ss2 = new Date(findEndvalue);
+                if (newsdate - ss1 < 0 && findStartvalue != null) {
+                    TiShi('开始时间不能大于当前时间');
+                } else if (newsdate - ss2 < 0 && findEndvalue != null) {
+                    TiShi('结束时间不能大于当前时间');
+                } else if (ss2 - ss1 < 0 && findEndvalue != null && findStartvalue != null) {
+                    TiShi('开始时间不能大于结束时间');
+                } else {
+                    //var Jsondata = { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue };
+                   // console.log(Jsondata);
+                    layui.use('table', function () {
+                        var table = layui.table;
+                        table.reload('tabletest1', {
+                            url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
+                            , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue } //设定异步数据接口的额外参数
+                        });
                     });
-                });
+                }                 
+ 
             });
         });
-        layui.use('table', function () {
+        layui.use(['table','laydate','form'], function () {
             var table = layui.table;
+            var laydate = layui.laydate;
+            var form = layui.form;
+            //日期
+            laydate.render({
+                elem: '#findStartvalue'
+            });
+            laydate.render({
+                elem: '#findEndvalue'
+            });
             table.render({
                 elem: '#tabletest1'
                 , url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
@@ -178,7 +220,6 @@
                             return TimeChange(res.StuDateTime);
                         }
                     }
-                    , { field: 'Reak', title: '说明' }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 150 }
                 ]]
                 , page: true
@@ -238,8 +279,6 @@
                     });
                 }
             });
-
-
         });
     </script>
 

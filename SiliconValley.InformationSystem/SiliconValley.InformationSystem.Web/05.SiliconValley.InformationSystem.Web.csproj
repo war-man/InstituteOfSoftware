@@ -215,7 +215,6 @@
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
-    <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
@@ -384,13 +383,12 @@
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\Registerattendance.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\StuAttendance.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\RecruitIndex.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddTalantDemand.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddEmp.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddPosition.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptOperation.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptUpdate.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmp.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\AddorEdit.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowSeekNet.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -1029,7 +1027,7 @@
     <Folder Include="assets\img\" />
     <Folder Include="bin\roslyn\" />
     <Folder Include="bin\zh-Hans\" />
-    <Folder Include="uploadXLSXfile\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
