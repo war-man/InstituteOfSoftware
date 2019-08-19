@@ -14,6 +14,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.RecruitPhoneTraceBusiness;
 
     using SiliconValley.InformationSystem.Entity.MyEntity;
+    using SiliconValley.InformationSystem.Util;
+
     public class RecruitingDataSummaryController : Controller
     {
         // GET: Personnelmatters/RecruitingDataSummary
@@ -124,5 +126,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return emp;
         }
 
+
+        //添加人才需求计划
+        public ActionResult AddTalantDemand() {
+            return View();
+        }
+
+        //添加页绑定负责人属性下拉框
+        public ActionResult BindEmpSelect() {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var emp = empmanage.GetList();
+            var newobj = new{
+                code = 0,
+                msg = "",
+                count = emp.Count(),
+                data = emp
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult AddTalantDemand(TalentDemandPlan tdp) {
+            TalentDemandPlanManage tdpmanage = new TalentDemandPlanManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                tdp.IsDel = false;
+                tdpmanage.Insert(tdp);
+                AjaxResultxx = tdpmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = tdpmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
     }
 }
