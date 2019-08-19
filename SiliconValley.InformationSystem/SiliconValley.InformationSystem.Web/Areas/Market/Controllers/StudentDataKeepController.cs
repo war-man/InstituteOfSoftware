@@ -27,7 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/Prompt
+        // GET: /Market/StudentDataKeep/IntoServer
 
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -187,7 +187,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public string GetNameSreachEmploId(string name)
         {
             EmployeesInfo e = Enplo_Entity.GetList().Where(ee => ee.EmpName == name).FirstOrDefault();
-            return e.EmpName;
+            return e.EmployeeId;
         }
         #endregion
         #region
@@ -458,43 +458,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #region Excle文件导入
+
+        //获取Excle文件中的值
+        public List<StudentPutOnRecord> GetExcelFunction()
+        {
+            string namef = SessionHelper.Session["filename"].ToString();
+            DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);
+            List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
+            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "QQ" && t.Rows[0][4].ToString() == "微信" && t.Rows[0][5].ToString() == "学校" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
+            {
+                for (int i = 1; i < (t.Rows.Count); i++)
+                {
+                    StudentPutOnRecord create_s = new StudentPutOnRecord();
+                    create_s.StuName = t.Rows[i][0].ToString();
+                    create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
+                    create_s.StuPhone = t.Rows[i][2].ToString();
+                    create_s.StuQQ = t.Rows[i][3].ToString();
+                    create_s.StuWeiXin = t.Rows[i][4].ToString();
+                    create_s.StuSchoolName = t.Rows[i][5].ToString();
+                    create_s.StuInfomationType_Id = GetNameSearchId(t.Rows[i][6].ToString());
+                    create_s.StuEducational = t.Rows[i][7].ToString() == null ? "初中" : t.Rows[i][7].ToString();
+                    create_s.EmployeesInfo_Id = GetNameSreachEmploId(t.Rows[i][8].ToString());
+                    create_s.StuIsGoto = false;
+                    create_s.StuStatus_Id = 1;
+                    create_s.Reak = t.Rows[i][9].ToString();
+                    new_listStudent.Add(create_s);
+                }
+            }
+            else
+            {
+                return new_listStudent;
+            }
+            return new_listStudent;
+        }
+
         //文件上传页面
         public ActionResult ExcleIntoView()
         {
             return View();
         }
-        
-        //获取上传的Excle文件的值
-        public ActionResult GetExcelValue()
-        {
-            string namef = SessionHelper.Session["filename"].ToString();
-            DataTable t = AsposeOfficeHelper.ReadExcel(namef, true);            
-            List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
-            for (int i = 0; i < (t.Rows.Count); i++)
-            {
-                StudentPutOnRecord create_s = new StudentPutOnRecord();
-                create_s.StuName = t.Rows[i][0].ToString();
-                create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
-                create_s.StuPhone = t.Rows[i][2].ToString();
-                create_s.StuQQ = t.Rows[i][3].ToString();
-                create_s.StuWeiXin = t.Rows[i][4].ToString();
-                create_s.StuSchoolName = t.Rows[i][5].ToString();
-                create_s.StuInfomationType_Id = GetNameSearchId(t.Rows[i][6].ToString());
-                create_s.StuEducational = t.Rows[i][7].ToString();
-                create_s.EmployeesInfo_Id = GetNameSreachEmploId(t.Rows[i][8].ToString());
-                create_s.StuIsGoto = false;
-                create_s.StuDateTime = DateTime.Now;
-                new_listStudent.Add(create_s);
-            }
-            var jsondata = new
-            {
-                code = 0, //解析接口状态,
-                msg = "", //解析提示文本,
-                count = new_listStudent.Count, //解析数据长度
-                data = new_listStudent //解析数据列表
-            };
-            return Json(jsondata, JsonRequestBehavior.AllowGet);
-        }
+
 
         //处理文件上传的方法
         public ActionResult IntoFunction()
@@ -511,20 +514,105 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
                 file.SaveAs(ProName.ToString());//上传文件   
                 SessionHelper.Session["filename"] = ProName.ToString();
+                List<StudentPutOnRecord> studentlist = GetExcelFunction();
+                if (studentlist.Count>0)
+                {
+                    var jsondata = new
+                    {
+                        code = "",
+                        msg = "ok",
+                        data = studentlist,
+                    };
+                    return Json(jsondata, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var jsondata = new
+                    {
+                        code = "",
+                        msg = "文件格式错误",
+                        data = "",
+                    };
+                    return Json(jsondata, JsonRequestBehavior.AllowGet);
+                }
+                 
             }
             catch (Exception ee)
             {
                 BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
+                return Json("no", JsonRequestBehavior.AllowGet);
             }
-            var jsondata = new
-            {
-                code = "",
-                msg = "成功",
-                data = "",
-            };
-            return Json(jsondata, JsonRequestBehavior.AllowGet);
+
         }
 
+        //获取上传的Excle文件的值
+        public ActionResult GetExcelValue(int page,int limit)
+        {
+            List<StudentPutOnRecord> new_listStudents = GetExcelFunction();
+           
+                var mydata = new_listStudents.Select(s => new {
+                    Id = s.Id,
+                    StuName = s.StuName,
+                    StuSex = s.StuSex,
+                    StuBirthy = s.StuBirthy,
+                    StuPhone = s.StuPhone,
+                    StuSchoolName = s.StuSchoolName,
+                    StuEducational = s.StuEducational,
+                    StuAddress = s.StuAddress,
+                    StuWeiXin = s.StuWeiXin,
+                    StuQQ = s.StuQQ,
+                    StuInfomationType_Id = GetStuInfomationTypeValue(s.StuInfomationType_Id),
+                    StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
+                    StuIsGoto = s.StuIsGoto,
+                    StuVisit = s.StuVisit,
+                    EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
+                    StuDateTime = s.StuDateTime,
+                    StuEntering = s.StuEntering,
+                    Reak = s.Reak
+                });
+                var mydata1 = mydata.Skip((page - 1) * limit).Take(limit).ToList();
+                var jsondata = new
+                {
+                    code = 0, //解析接口状态,
+                    msg = "", //解析提示文本,
+                    count = new_listStudents.Count, //解析数据长度
+                    data = mydata1 //解析数据列表
+                };
+                return Json(jsondata, JsonRequestBehavior.AllowGet);             
+        }
+        
+
+        //Excle文件内容导入到数据中
+        public ActionResult IntoServer()
+        {
+            List<StudentPutOnRecord> listStudent = GetExcelFunction();
+            
+                List<StudentPutOnRecord> Addstudent = new List<StudentPutOnRecord>();//用于存放已有的重复数据;
+                try
+                {
+                    foreach (StudentPutOnRecord item in listStudent)
+                    {
+                        StudentPutOnRecord er = s_Entity.GetList().Where(s => s.StuName == item.StuName && s.StuPhone == item.StuPhone).FirstOrDefault();
+                        if (er == null)
+                        {
+                            item.StuDateTime = DateTime.Now;
+                            s_Entity.Insert(item);
+                        }
+                        else
+                        {
+                            Addstudent.Add(item);
+                        }
+                    }
+                    var datas = new { data = Addstudent, msg = "ok" };
+                    return Json(Addstudent, JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                    return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
+                }            
+        }
+         
         #endregion
     }
 }
