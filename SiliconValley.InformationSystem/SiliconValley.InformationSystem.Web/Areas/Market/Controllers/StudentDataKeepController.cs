@@ -61,6 +61,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string findNamevalue = Request.QueryString["findNamevalue"];
             string findPhonevalue = Request.QueryString["findPhonevalue"];
             string findInformationvalue = Request.QueryString["findInformationvalue"];
+            string findStartvalue = Request.QueryString["findStartvalue"];
+            string findEndvalue = Request.QueryString["findEndvalue"];
             IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s => s.Id);
             if (!string.IsNullOrEmpty(findNamevalue))
             {
@@ -75,9 +77,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 int type_id = Convert.ToInt32(findInformationvalue);
                 stu_IQueryable = stu_IQueryable.Where(s => s.StuInfomationType_Id== type_id);
             }
+            if (!string.IsNullOrEmpty(findStartvalue))
+            {
+                DateTime t1 = Convert.ToDateTime(findStartvalue);
+                
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuDateTime >=  t1);
+            }
+            if (!string.IsNullOrEmpty(findEndvalue))
+            {
+                DateTime t2 = Convert.ToDateTime(findEndvalue);
+                DateTime dd = new DateTime(t2.Year, t2.Month, t2.Day, 23, 59, 59);
+                stu_IQueryable = stu_IQueryable.Where(s => s.StuDateTime <= dd );
+            }
+          
             try
             {
-                int SunLimit = s_Entity.GetList().Count;//总行数
+                int SunLimit = stu_IQueryable.Count();//总行数
                 int SunPage = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(SunLimit / limit)));//总页数
               
                 List<StudentPutOnRecord> PageData= s_Entity.GetPagination<StudentPutOnRecord>(stu_IQueryable, page,limit,"Id","desc",ref SunLimit, ref SunPage); //分页
@@ -458,7 +473,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #region Excle文件导入
-
+        //一个删除文件的方法
+        public void DeleteFile()
+        {
+            var namef = SessionHelper.Session["filename"];
+            if (namef!=null)
+            {
+                FileInfo fi = new FileInfo(namef.ToString());
+                bool ishave = fi.Exists;
+                if (ishave)
+                {
+                    fi.Delete();
+                }
+            }
+            
+           
+        }
         //获取Excle文件中的值
         public List<StudentPutOnRecord> GetExcelFunction()
         {
@@ -515,17 +545,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 file.SaveAs(ProName.ToString());//上传文件   
                 SessionHelper.Session["filename"] = ProName.ToString();
                 List<StudentPutOnRecord> studentlist = GetExcelFunction();
-                if (studentlist.Count>0)
+                if (studentlist.Count>0)//如果拿到值说明文件格式是可以读取的
                 {
+                    var mydata = studentlist.Select(s => new
+                    {
+                        #region
+                        Id = s.Id,
+                        StuName = s.StuName,
+                        StuSex = s.StuSex,
+                        StuBirthy = s.StuBirthy,
+                        StuPhone = s.StuPhone,
+                        StuSchoolName = s.StuSchoolName,
+                        StuEducational = s.StuEducational,
+                        StuAddress = s.StuAddress,
+                        StuWeiXin = s.StuWeiXin,
+                        StuQQ = s.StuQQ,
+                        StuInfomationType_Id = GetStuInfomationTypeValue(s.StuInfomationType_Id),
+                        StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
+                        StuIsGoto = s.StuIsGoto,
+                        StuVisit = s.StuVisit,
+                        EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
+                        StuDateTime = s.StuDateTime,
+                        StuEntering = s.StuEntering,
+                        Reak = s.Reak
+                        #endregion
+                    });
                     var jsondata = new
                     {
                         code = "",
                         msg = "ok",
-                        data = studentlist,
+                        data = mydata,
                     };
                     return Json(jsondata, JsonRequestBehavior.AllowGet);
                 }
-                else
+                else //该文件格式不正确
                 {
                     var jsondata = new
                     {
@@ -533,6 +586,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         msg = "文件格式错误",
                         data = "",
                     };
+                    DeleteFile();//如果格式不符合规范则删除上传的文件
                     return Json(jsondata, JsonRequestBehavior.AllowGet);
                 }
                  
@@ -543,51 +597,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json("no", JsonRequestBehavior.AllowGet);
             }
 
-        }
-
-        //获取上传的Excle文件的值
-        public ActionResult GetExcelValue(int page,int limit)
-        {
-            List<StudentPutOnRecord> new_listStudents = GetExcelFunction();
-           
-                var mydata = new_listStudents.Select(s => new {
-                    Id = s.Id,
-                    StuName = s.StuName,
-                    StuSex = s.StuSex,
-                    StuBirthy = s.StuBirthy,
-                    StuPhone = s.StuPhone,
-                    StuSchoolName = s.StuSchoolName,
-                    StuEducational = s.StuEducational,
-                    StuAddress = s.StuAddress,
-                    StuWeiXin = s.StuWeiXin,
-                    StuQQ = s.StuQQ,
-                    StuInfomationType_Id = GetStuInfomationTypeValue(s.StuInfomationType_Id),
-                    StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
-                    StuIsGoto = s.StuIsGoto,
-                    StuVisit = s.StuVisit,
-                    EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
-                    StuDateTime = s.StuDateTime,
-                    StuEntering = s.StuEntering,
-                    Reak = s.Reak
-                });
-                var mydata1 = mydata.Skip((page - 1) * limit).Take(limit).ToList();
-                var jsondata = new
-                {
-                    code = 0, //解析接口状态,
-                    msg = "", //解析提示文本,
-                    count = new_listStudents.Count, //解析数据长度
-                    data = mydata1 //解析数据列表
-                };
-                return Json(jsondata, JsonRequestBehavior.AllowGet);             
-        }
-        
-
-        //Excle文件内容导入到数据中
+        }         
+        //将文件中的内容写入到数据库中
         public ActionResult IntoServer()
         {
             List<StudentPutOnRecord> listStudent = GetExcelFunction();
-            
-                List<StudentPutOnRecord> Addstudent = new List<StudentPutOnRecord>();//用于存放已有的重复数据;
+                int chishu = 0;
+                StringBuilder sb = new StringBuilder();
+                sb.Append("重复学员名称:");
                 try
                 {
                     foreach (StudentPutOnRecord item in listStudent)
@@ -596,23 +613,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         if (er == null)
                         {
                             item.StuDateTime = DateTime.Now;
+                            item.IsDelete = false;
                             s_Entity.Insert(item);
                         }
                         else
                         {
-                            Addstudent.Add(item);
+                            chishu++;
+                            sb.AppendLine(er.StuName + ",");
                         }
                     }
-                    var datas = new { data = Addstudent, msg = "ok" };
-                    return Json(Addstudent, JsonRequestBehavior.AllowGet);
+                    sb.AppendLine("重复数据:" + chishu + "条");
+                    return Json(sb.ToString(), JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
                     BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
                     return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
-                }            
+                }
+            
+             
         }
-         
         #endregion
     }
 }

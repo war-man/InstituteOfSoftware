@@ -383,6 +383,12 @@
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\Registerattendance.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\StuAttendance.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\AddorEdit.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowSeekNet.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -1021,7 +1027,7 @@
     <Folder Include="assets\img\" />
     <Folder Include="bin\roslyn\" />
     <Folder Include="bin\zh-Hans\" />
-    <Folder Include="uploadXLSXfile\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
