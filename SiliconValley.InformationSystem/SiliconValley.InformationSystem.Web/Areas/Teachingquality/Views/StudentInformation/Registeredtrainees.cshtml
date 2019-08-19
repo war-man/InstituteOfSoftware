@@ -16,7 +16,7 @@
     <style>
         #but1 {
             position: absolute;
-            top: 4%;
+            top: 3%;
             left:35%;
             width:36px;
             height:36px;
@@ -41,363 +41,378 @@
 </head>
 <body>
 
-    
-      
-        <h1 style="text-align:center;height:50px;">@ViewBag.Name</h1>
-    <input type="text" id="StudentID"  value="@ViewBag.StudentID" style="display:none;"/>
-        <div>
-            <form class="layui-form" action="" lay-filter="example">
-                <div class="layui-container">
-                    <fieldset>
-
-                        <legend>基础信息</legend>
 
 
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
-                                <label class="layui-form-label">学号</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" name="StudentNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+    <h1 style="text-align:center;height:50px;">@ViewBag.Name</h1>
+ 
+    <input type="text" id="StudentID" value="@ViewBag.StudentID" style="display:none;" />
+    <div>
+        <form class="layui-form" action="" lay-filter="example">
+            <div class="layui-container">
+                <fieldset>
+
+                    <legend>基础信息</legend>
 
 
-                                </div>
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">姓名</label>
-                                <div class="layui-input-inline">
-                                    @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
-                                </div>
-                            </div>
-                            <div id="but1">
-                                <i class="layui-icon" id="liden">&#xe615;</i>
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
+                            <label class="layui-form-label">学号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="StudentNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
 
-                                <label class="layui-form-label">性别</label>
-                                <div class="layui-input-block">
-                                    <input type="radio" name="Sex" value="false" title="女">
-                                    <input type="radio" name="Sex" value="true" title="男" checked="checked">
-                                </div>
 
-                            </div>
-
-                        </div>
-                        <div class="layui-row layui-form-item">
-
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                                <label class="layui-form-label">身份证号</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required|identity" }, { "placeholder", "请输入身份证" }, { "class", "layui-input linu" } })
-                                </div>
-
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">民族</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" } })
-                                </div>
                             </div>
                         </div>
-                        
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label" style="margin-top:18px;">亲属关系</label>
-                                <div class="layui-input-block">
-                                    <input type="radio" name="Sexs" value="父亲" title="父亲" checked="checked">
-                                    <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
-                                    <input type="radio" name="Sexs" value="爷爷" title="爷爷">
-                                    <input type="radio" name="Sexs" value="奶奶" title="奶奶">
-                                </div>
-
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6"  style="margin-top:18px;">
-                                <label class="layui-form-label">亲属姓名</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Guardian, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入亲属姓名" }, { "class", "layui-input linu" } })
-                                </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
                             </div>
                         </div>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">电话号</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
-                                </div>
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">家庭住址</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" } })
-                                </div>
-                            </div>
+                        <div id="but1">
+                            <i class="layui-icon" id="liden">&#xe615;</i>
                         </div>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">出生日期</label>
-                                <div class="layui-input-block">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
-                                    @Html.TextBoxFor(a => a.BirthDate, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
-                                </div>
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">学员学历</label>
-
-                                <div class="layui-input-block">
-                                    @Html.LabelFor(a => a.Education, "初中", new { @for = "n" })
-                                    @Html.RadioButtonFor(model => model.Education, "初中", new { id = "n", @checked = "cheked" })
-                                    @Html.LabelFor(a => a.Education, "高中", new { @for = "a" })
-                                    @Html.RadioButtonFor(model => model.Education, "高中", new { id = "a" })
-                                    @Html.LabelFor(a => a.Education, "大专", new { @for = "c" })
-                                    @Html.RadioButtonFor(model => model.Education, "大专", new { id = "c" })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-row layui-form-item" id="list">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths">
-                                <label class="layui-form-label">班级</label>
-                                <div class="layui-input-inline">
-
-
-                                    @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "list" } })
-
-                                </div>
-                            </div>
-
-                        </div>
-
-
-                    </fieldset>
-                    <fieldset>
-                        <input type="text" id="textid"  style="display:none;"/>
-                        <legend>详细信息</legend>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">微信</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.WeChat, new Dictionary<string, object>() { { "placeholder", "请输入微信号码" }, { "class", "layui-input linu" } })
-                                </div>
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">QQ</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.qq, new Dictionary<string, object>() { { "placeholder", "请输入qq号码" }, { "class", "layui-input linu" } })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">兴趣爱好</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Hobby, new Dictionary<string, object>() { { "placeholder", "请输入兴趣爱好" }, { "class", "layui-input linu" } })
-                                </div>
-                            </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">学员性格</label>
-                                <div class="layui-input-block">
-                                    @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                <label class="layui-form-label">备注</label>
-                                <div class="layui-input-block">
-
-                                    @Html.TextAreaFor(a => a.Reack, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
-                                </div>
-                            </div>
-
-                        </div>
-                    </fieldset>
-                    <div class="layui-row layui-form-item" style="margin-top:20px;">
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                            <label class="layui-form-label">性别</label>
                             <div class="layui-input-block">
-                                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
-                                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                                <input type="radio" name="Sex" value="false" title="女">
+                                <input type="radio" name="Sex" value="true" title="男" checked="checked">
+                            </div>
 
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                            <label class="layui-form-label">身份证号</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required|identity" }, { "placeholder", "请输入身份证" }, { "class", "layui-input linu" } })
+                            </div>
+
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">民族</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label" style="margin-top:18px;">亲属关系</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="Sexs" value="父亲" title="父亲" checked="checked">
+                                <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                            </div>
+
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" style="margin-top:18px;">
+                            <label class="layui-form-label">亲属姓名</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Guardian, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入亲属姓名" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">电话号</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">家庭住址</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">出生日期</label>
+                            <div class="layui-input-block">
+
+                                @Html.TextBoxFor(a => a.BirthDate, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">学员学历</label>
+
+                            <div class="layui-input-block">
+                                @Html.LabelFor(a => a.Education, "初中", new { @for = "n" })
+                                @Html.RadioButtonFor(model => model.Education, "初中", new { id = "n", @checked = "cheked" })
+                                @Html.LabelFor(a => a.Education, "高中", new { @for = "a" })
+                                @Html.RadioButtonFor(model => model.Education, "高中", new { id = "a" })
+                                @Html.LabelFor(a => a.Education, "中专", new { @for = "w" })
+
+                                @Html.RadioButtonFor(model => model.Education, "中科", new { id = "w" })
+                                <br />
+                                @Html.LabelFor(a => a.Education, "大专", new { @for = "c" })
+                                @Html.RadioButtonFor(model => model.Education, "大专", new { id = "c" })
+                                @Html.LabelFor(a => a.Education, "本科", new { @for = "wc" })
+                                @Html.RadioButtonFor(model => model.Education, "本科", new { id = "wc" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item" id="clssa" style="margin-top:-15px;display:none" >
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths">
+                            <label class="layui-form-label">班级</label>
+                            <div class="layui-input-inline">
+
+
+                                @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "list" } })
 
                             </div>
                         </div>
 
                     </div>
+
+
+                </fieldset>
+                <fieldset>
+                    <input type="text" id="textid" style="display:none;" />
+                    <legend>详细信息</legend>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">微信</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.WeChat, new Dictionary<string, object>() { { "placeholder", "请输入微信号码" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">QQ</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.qq, new Dictionary<string, object>() { { "placeholder", "请输入qq号码" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">兴趣爱好</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Hobby, new Dictionary<string, object>() { { "placeholder", "请输入兴趣爱好" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">学员性格</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+
+                                @Html.TextAreaFor(a => a.Reack, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                            </div>
+                        </div>
+
+                    </div>
+                </fieldset>
+                <div class="layui-row layui-form-item" style="margin-top:20px;">
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+
+
+
+                        </div>
+                    </div>
+
                 </div>
+            </div>
 
 
 
 
-               
-            </form>
-        </div>
 
-        <script>
-           
-            if ($("#StudentID").val() != false) {
-                $("#liden").css("display", "none");
-                $("#Name").attr("readonly", "readonly");
-                $("#list").remove();
-                layui.use(['form'], function () {
-                    var form = layui.form;
-                    $.post("/Teachingquality/StudentInformation/Select?stuid=" + $("#StudentID").val(), function (data) {
-                        $("input[name=Sex][value=false]").attr("checked", data.Sex == false ? true : false);
-                        $("input[name=Sex][value=true]").attr("checked", data.Sex == true ? true : false);
-              
-                        $("input[name=Education][value=初中]").attr("checked", data.Education == "初中" ? true : false);
-                        $("input[name=Education][value=高中]").attr("checked", data.Education == "高中" ? true : false);
-                        $("input[name=Education][value=大专]").attr("checked", data.Education == "大专" ? true : false);
-         
-                        //
-                        var GuaSex = data.Guardian.split(',')
-                        console.log($("input[name=Sexs][value=父亲]"));
-                        $("input[name=Sexs][value=父亲]").attr("checked", GuaSex[1] == "父亲" ? true : false);
-                        $("input[name=Sexs][value=母亲]").attr("checked", GuaSex[1] == "母亲" ? true : false);
-                        $("input[name=Sexs][value=爷爷]").attr("checked", GuaSex[1] == "爷爷" ? true : false);
-                        $("input[name=Sexs][value=奶奶]").attr("checked", GuaSex[1] == "奶奶" ? true : false);
-                        form.render();
-                        $("#Guardian").val(GuaSex[0])//亲属姓名
-                        $("#StudentNumber").val(data.StudentNumber);//学号
-                        $("#Name").val(data.Name);//姓名
-                        $("#Telephone").val(data.Telephone);//电话
-                        $("#Familyaddress").val(data.Familyaddress);//家庭住址
-                        $("#WeChat").val(data.WeChat);//微信
-                        $("#qq").val(data.qq);//qq
-                        $("#BirthDate").val(TimeChange(data.BirthDate));//出生日期
-                        $("#identitydocument").val(data.identitydocument);//身份证号码
-                        $("#Reack").val(data.Reack)//备注
-                        $("#Traine").val(data.Traine)//学员性格
-                        $("#Hobby").val(data.Hobby)//兴趣爱好
-                        $("#Nation").val(data.Nation)//民族
-                        //
-                     
-                    });
-                });
-            } else {
-                $("#nba").css("display", "none");
-                //
-                
+        </form>
+    </div>
+
+    <script>
+
+        if ($("#StudentID").val() != false) {
+            $("#liden").css("display", "none");
+            $("#Name").attr("readonly", "readonly");
+            $("#list").remove();
+            //去掉所有的空格
+            function trim(str) {
+                return str.replace(/(^\s+)|(\s+$)/g, "");
             }
-            layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
-             
-                var form = layui.form
-                    , layer = layui.layer
-                    , layedit = layui.layedit
-                    , laydate = layui.laydate;
-                laydate.render({
-                    elem: '#BirthDate'
+            layui.use(['form'], function () {
+                var form = layui.form;
+                $.post("/Teachingquality/StudentInformation/Select?stuid=" + $("#StudentID").val(), function (data) {
+                    var GuaSex = data.Guardian.split(',')
+
+                    var Guas = trim(GuaSex[1]);
+                    console.log(Guas.length);
+                    $("input[name=Sexs][value='父亲']").attr("checked", Guas == "父亲" ? true : false);
+                    $("input[name=Sexs][value='母亲']").attr("checked", Guas == "母亲" ? true : false);
+                    $("input[name=Sexs][value='爷爷']").attr("checked", Guas == "爷爷" ? true : false);
+                    $("input[name=Sexs][value='奶奶']").attr("checked", Guas == "奶奶" ? true : false);
+
+
+
+                    $("input[name=Sex][value=false]").attr("checked", data.Sex == false ? true : false);
+                    $("input[name=Sex][value=true]").attr("checked", data.Sex == true ? true : false);
+                    console.log(data.StuEducational);
+                    $("input[name=Education][value=初中]").attr("checked", data.Education == "初中" ? true : false);
+                    $("input[name=Education][value=高中]").attr("checked", data.Education == "高中" ? true : false);
+                    $("input[name=Education][value=大专]").attr("checked", data.Education == "大专" ? true : false);
+                    $("input[name=Education][value=初中]").attr("checked", data.Education == "中专" ? true : false);
+                    $("input[name=Education][value=本科]").attr("checked", data.Education == "本科" ? true : false);
+
+                    $("#Guardian").val(GuaSex[0])//亲属姓名
+                    $("#StudentNumber").val(data.StudentNumber);//学号
+                    $("#Name").val(data.Name);//姓名
+                    $("#Telephone").val(data.Telephone);//电话
+                    $("#Familyaddress").val(data.Familyaddress);//家庭住址
+                    $("#WeChat").val(data.WeChat);//微信
+                    $("#qq").val(data.qq);//qq
+                    $("#BirthDate").val(TimeChange(data.BirthDate));//出生日期
+                    $("#identitydocument").val(data.identitydocument);//身份证号码
+                    $("#Reack").val(data.Reack)//备注
+                    $("#Traine").val(data.Traine)//学员性格
+                    $("#Hobby").val(data.Hobby)//兴趣爱好
+                    $("#Nation").val(data.Nation)//民族
+                    //
+                    form.render();
                 });
-                //搜索名字
-                $("#liden").click(function () {
-                    var name = $("#Name").val();
-                    if (name == "") {
-                        layer.alert('姓名不能为空！！！');
+            });
+        } else {
+            $("#nba").css("display", "none");
+            $("#clssa").css("display", "block");
+            //clssa
 
-                    } else {
-                        layer.open({
-                            title: "备案学员",
-                            type: 2,
+        }
+        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
 
-                            btnAlign: 'c'
-                            , area: ['400px', '200px']
-                            , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
-                        });
-                    }
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            laydate.render({
+                elem: '#BirthDate'
+            });
+            //错误消息提示
+            function Errye(err) {
+                layer.msg(err, {
+                    time: 8000, //20s后自动关闭
 
+                    btn: ['确定']
                 });
+            }
+            //搜索名字
+            $("#liden").click(function () {
+                var name = $("#Name").val();
+                if (name == "") {
+                    layer.alert('姓名不能为空！！！');
 
-                //正则表达式
-                form.verify({
-                    Name: function (value, item) { //value：表单的值、item：表单的DOM对象
-                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-                            return '用户名不能有特殊字符';
+                } else {
+                    $.post("/Teachingquality/StudentInformation/Beian?Name=" + name, function (db) {
+
+                        if (db.length > 0) {
+                            layer.open({
+                                title: "备案学员",
+                                type: 2,
+
+                                btnAlign: 'c'
+                                , area: ['400px', '200px']
+                                , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
+                            });
+
+                        } else {
+
+                            Errye("此姓名未备案，请到质询部备案！")
                         }
+                    });
+                   
+                }
 
+            });
+
+            //正则表达式
+            form.verify({
+                Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '用户名不能有特殊字符';
                     }
+
+                }
+            });
+            //错误消息提示
+            function Errye(err) {
+                layer.msg(err, {
+                    time: 8000, //20s后自动关闭
+
+                    btn: ['确定']
                 });
+            }
+            //正在执行中
+            function showLoad() {
 
-                //正在执行中
-                function showLoad() {
+                return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
 
-                    return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+            }
+            //关闭执行中的窗体
+            function closeLoad(index) {
+                layer.close(index);
 
+            }
+            //年月日
+            function getNowFormatDate(date) {
+
+                var seperator1 = "-";
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
                 }
-                //关闭执行中的窗体
-                function closeLoad(index) {
-                    layer.close(index);
-
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
                 }
+                var currentdate = year + seperator1 + month + seperator1 + strDate;
+                return currentdate;
+            }
+            //判断身份证号是否跟生日对应
+            function Ages(sheng) {
+                //生日
+                var ss = sheng.substring(6, sheng.length - 4);
+               var n= ss.substring(0, ss.length - 4);
+               var y= ss.substring(4, ss.length - 2);
+                var r = ss.substring(6);
+                ss = n + "-" + y + "-" + r;
+                return ss;
               
-                  
-                //监听提交
-                form.on('submit(demo1)', function (data) {
-                    data.field.Guardian = data.field.Guardian + "," + data.field.Sexs;
-                    //layer.alert(JSON.stringify(data.field), {
-                    //    title: '最终的提交信息'
-                    //})
-                    //return false;
-                    var id = $("#textid").val();
-                    if ($("#StudentID").val() != false) {
-                     
-                        $.ajax({
-                            url: '/Teachingquality/StudentInformation/Enti',
-                            type: 'POST',
-                            async: true,
-                            cache: false,
-                            timeout: 2000,
-                            data: data.field,
-                            timeout: 1000,
-                            beforeSend: function () {//执行中
-                                i = showLoad();
-                            },
-                            success: function (data) {//执行成功
-                                closeLoad(i);
-                                if (data.Success == true) {
-                                    layer.open({
-                                        type: 1
-                                        , title: false //不显示标题栏
-                                        , closeBtn: false
-                                        , area: '300px;'
-                                        , shade: 0.8
-                                        , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                                        , btn: ['确认']
-                                        , btnAlign: 'c'
-                                        , moveType: 1 //拖拽模式，0或者1
-                                        , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改成功！！！</div>'
+            }
+       
+          
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                data.field.Guardian = data.field.Guardian + "," + data.field.Sexs;
+                //layer.alert(JSON.stringify(data.field), {
+                //    title: '最终的提交信息'
+                //})
+                //return false;
+                var mydate = new Date();
+                var id = $("#textid").val();
+                console.log("text");
+                if (getNowFormatDate(mydate) < Ages(data.field.identitydocument) || getNowFormatDate(new Date()) < data.field.BirthDate) {
+                    console.log("text1");
+                    Errye("身份证或生日错误!!!");
+                } else {
+                    function text() {
+                        if ($("#StudentID").val() != false) {
 
-                                        , success: function (layero) {
-
-                                            var btn = layero.find('.layui-layer-btn');
-
-                                            btn.find('.layui-layer-btn0').click(function () {
-                                                var index = parent.layer.getFrameIndex(window.name);
-                                                parent.layer.close(index);
-                                            });
-                                        }
-
-                                    });
-                                } else {
-                                    layer.msg(data.Msg, {
-                                        time: 5000, //20s后自动关闭
-
-                                        btn: ['确定']
-                                    });
-                                }
-                            }
-                            , error: function (xmlhttprequest, textstatus, message) {
-                                closeLoad(i);
-                                layer.msg("您的网络出现问题，请稍后再试！！！", {
-                                    time: 5000, //20s后自动关闭
-
-                                    btn: ['确定']
-                                });
-                            }
-                        });
-                     
-                    } else {
-                        if (id != "") {
-                            $("#Name").removeAttr("readonly");
-                           
-                         
-                            var i;
                             $.ajax({
                                 url: '/Teachingquality/StudentInformation/Enti',
                                 type: 'POST',
@@ -405,14 +420,75 @@
                                 cache: false,
                                 timeout: 2000,
                                 data: data.field,
-                                beforeSend: function () {
+                                timeout: 1000,
+                                beforeSend: function () {//执行中
                                     i = showLoad();
                                 },
-                                success: function (data) {
-                                  //  closeLoad(i);
-                                    //    closeLoad(i);
+                                success: function (data) {//执行成功
+                                    closeLoad(i);
                                     if (data.Success == true) {
-                                        closeLoad(i);
+                                        layer.open({
+                                            type: 1
+                                            , title: false //不显示标题栏
+                                            , closeBtn: false
+                                            , area: '300px;'
+                                            , shade: 0.8
+                                            , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                            , btn: ['确认']
+                                            , btnAlign: 'c'
+                                            , moveType: 1 //拖拽模式，0或者1
+                                            , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;修改成功！！！</div>'
+
+                                            , success: function (layero) {
+
+                                                var btn = layero.find('.layui-layer-btn');
+
+                                                btn.find('.layui-layer-btn0').click(function () {
+                                                    var index = parent.layer.getFrameIndex(window.name);
+                                                    parent.layer.close(index);
+                                                });
+                                            }
+
+                                        });
+                                    } else {
+                                        layer.msg(data.Msg, {
+                                            time: 5000, //20s后自动关闭
+
+                                            btn: ['确定']
+                                        });
+                                    }
+                                }
+                                , error: function (xmlhttprequest, textstatus, message) {
+                                    closeLoad(i);
+                                    layer.msg("您的网络出现问题，请稍后再试！！！", {
+                                        time: 5000, //20s后自动关闭
+
+                                        btn: ['确定']
+                                    });
+                                }
+                            });
+
+                        } else {
+                            if (id != "") {
+                                $("#Name").removeAttr("readonly");
+
+
+                                var i;
+                                $.ajax({
+                                    url: '/Teachingquality/StudentInformation/Enti',
+                                    type: 'POST',
+                                    async: true,
+                                    cache: false,
+                                    timeout: 2000,
+                                    data: data.field,
+                                    beforeSend: function () {
+                                        i = showLoad();
+                                    },
+                                    success: function (data) {
+                                        //  closeLoad(i);
+                                        //    closeLoad(i);
+                                        if (data.Success == true) {
+                                            closeLoad(i);
                                             layer.open({
                                                 type: 1
                                                 , title: false //不显示标题栏
@@ -449,98 +525,117 @@
                                                 }
 
                                             });
-                                    } else {
-                                        closeLoad(i);
+                                        } else {
+                                            closeLoad(i);
                                             layer.msg(data.Msg, {
                                                 time: 5000, //20s后自动关闭
 
                                                 btn: ['确定']
                                             });
                                         }
-                                   
-                                   
 
-                                }
-                                , error: function (xmlhttprequest, textstatus, message) {
-                                    closeLoad(i);
-                                    layer.msg("您的网络出现问题，请稍后再试！！！", {
-                                        time: 5000, //20s后自动关闭
 
-                                        btn: ['确定']
-                                    });
-                                }
-                            })
 
-                        } else {
-                           // layer.alert('请', { icon: 0 });
-                            layer.msg("请点击小图标进行注册！！！", {
-                                time: 5000, //20s后自动关闭
+                                    }
+                                    , error: function (xmlhttprequest, textstatus, message) {
+                                        closeLoad(i);
+                                        layer.msg("您的网络出现问题，请稍后再试！！！", {
+                                            time: 5000, //20s后自动关闭
 
-                                btn: ['确定']
-                            });
+                                            btn: ['确定']
+                                        });
+                                    }
+                                })
+
+                            } else {
+                                // layer.alert('请', { icon: 0 });
+                                layer.msg("请点击小图标进行注册！！！", {
+                                    time: 5000, //20s后自动关闭
+
+                                    btn: ['确定']
+                                });
+                            }
                         }
                     }
-                 
-                  
-                });
-            });
-           
-            //输入姓名查询备案数据赋值
-            function GetPartsItme(id) {
-                $("#textid").val(id);
-                $("#Name").attr("readonly", "readonly");
-                //readonly="readonly"
-                layui.use(['form'], function () {
-                    var form = layui.form;
-                    $.post("/Teachingquality/StudentInformation/NameKeys/" + id, function (data) {
+                    if (Ages(data.field.identitydocument) == data.field.BirthDate) {
+                        text();
+                    } else {
+                        layer.confirm('您的身份证与生日不符，真的要进行操作吗?', function (index) {
+
+                            text();
+                        });
+                    }
+                   
+                        //BirthDate
                      
-                        $("input[name=Sex][value=false]").attr("checked", data.StuSex == false ? true : false);
-                        $("input[name=Sex][value=true]").attr("checked", data.StuSex == true ? true : false);
-
-                        form.render();
-                        $("input[name=Education][value=初中]").attr("checked", data.StuEducational == "初中" ? true : false);
-                        $("input[name=Education][value=高中]").attr("checked", data.StuEducational == "高中" ? true : false);
-                        $("input[name=Education][value=大专]").attr("checked", data.StuEducational == "大专"? true : false);
-                        form.render();
-                        //$("Sex").val(data.StuSex);
-
-                        $("#Name").val(data.StuName);//姓名
-
-                        $("#Telephone").val(data.StuPhone);//电话
-              
-                        $("#Familyaddress").val(data.StuAddress);//家庭住址
-                        $("#WeChat").val(data.StuWeiXin);//微信
-                        $("#qq").val(data.StuQQ);//qq
-                        $("#BirthDate").val(TimeChange(data.StuBirthy));//出生日期
-
-
-
-                    })
-                });
-               
-            };
-
-
-            //时间转换方法
-            function TimeChange(newtime) {
-                if (newtime == null)
-                    return "";
-                var date = new Date(parseInt(newtime.slice(6)));
-                var year = date.getFullYear();
-                var month = date.getMonth();
-                if (month < 10) {
-                    month = "0" + (parseInt(month) + 1);
+                   
+             
                 }
-                var day = date.getDate();
-                if (day < 10) {
-                    day = "0" + day;
-                }
-                var result = year + '-' + month + '-' + day;
-                return result;
+        
+
+
+            });
+        });
+
+        //输入姓名查询备案数据赋值
+        function GetPartsItme(id) {
+            $("#textid").val(id);
+            $("#liden").css("display", "none");
+            $("#Name").attr("readonly", "readonly");
+            //readonly="readonly"
+            layui.use(['form'], function () {
+                var form = layui.form;
+                $.post("/Teachingquality/StudentInformation/NameKeys/" + id, function (data) {
+
+                    $("input[name=Sex][value=false]").attr("checked", data.StuSex == false ? true : false);
+                    $("input[name=Sex][value=true]").attr("checked", data.StuSex == true ? true : false);
+
+                    form.render();
+                    $("input[name=Education][value=初中]").attr("checked", data.StuEducational == "初中" ? true : false);
+                    $("input[name=Education][value=高中]").attr("checked", data.StuEducational == "高中" ? true : false);
+                    $("input[name=Education][value=大专]").attr("checked", data.StuEducational == "大专" ? true : false);
+                    $("input[name=Education][value=初中]").attr("checked", data.StuEducational == "中专" ? true : false);
+                    $("input[name=Education][value=本科]").attr("checked", data.StuEducational == "本科" ? true : false);
+                    form.render();
+                    //$("Sex").val(data.StuSex);
+
+                    $("#Name").val(data.StuName);//姓名
+
+                    $("#Telephone").val(data.StuPhone);//电话
+
+                    $("#Familyaddress").val(data.StuAddress);//家庭住址
+                    $("#WeChat").val(data.StuWeiXin);//微信
+                    $("#qq").val(data.StuQQ);//qq
+                    $("#BirthDate").val(TimeChange(data.StuBirthy));//出生日期
+
+
+
+                })
+            });
+
+        };
+
+
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + (parseInt(month) + 1);
             }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
 
-           
-        </script>
+
+    </script>
 
 
 </body>

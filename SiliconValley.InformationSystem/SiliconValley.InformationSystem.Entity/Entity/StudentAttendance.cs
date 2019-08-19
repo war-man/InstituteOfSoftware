@@ -14,14 +14,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    [Table(name: "StudentAttendanc")]
-    public partial class StudentAttendanc
+    [Table(name: "StudentAttendance")]
+    public partial class StudentAttendance
     {
         [Key]
         public int ID { get; set; }
         public Nullable<System.DateTime> InspectionDate { get; set; }
         public string Attendancestatus { get; set; }
-        public Nullable<int> Registrar { get; set; }
+        public string Registrar { get; set; }
         public string AttendanceTitle { get; set; }
         public string StudentID { get; set; }
         public string Remarks { get; set; }
