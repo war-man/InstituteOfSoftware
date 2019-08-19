@@ -209,6 +209,8 @@
     <Compile Include="Areas\Base_SysManage\Controllers\CityController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\CommonController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
+    <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
+    <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
@@ -240,11 +242,14 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
     <Content Include="Areas\Teaching\Scripts\MajorOperation.js" />
+    <Content Include="Areas\Teaching\Scripts\md5.js" />
     <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
     <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
+    <Content Include="Areas\Teaching\Scripts\util.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\custom-styles.css" />
@@ -352,6 +357,9 @@
     <Content Include="Areas\Teaching\Views\Teacher\TeacherDetailView.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
     <Content Include="Areas\Teaching\Views\Major\MajorIndex.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\web.config" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\CourseIndex.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\OperationView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -970,6 +978,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\CourseSyllabus\Models\" />
+    <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Finance\Controllers\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />

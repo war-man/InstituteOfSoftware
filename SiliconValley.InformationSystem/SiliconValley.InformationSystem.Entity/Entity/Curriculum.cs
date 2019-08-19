@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int CurriculumID { get; set; }
         public Nullable<int> Grand_Id { get; set; }
-        public Nullable<int> MajorID { get; set; }
+        public int MajorID { get; set; }
         public string CourseName { get; set; }
         public Nullable<int> CourseType_Id { get; set; }
         public Nullable<int> CourseCount { get; set; }

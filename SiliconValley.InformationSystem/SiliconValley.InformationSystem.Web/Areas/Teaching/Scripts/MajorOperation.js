@@ -188,20 +188,21 @@ layui.use(['layer'], function () {
 
     //查看专业下课程的按钮事件
 
-    $(".checkCurroseBtn1").click(function () {
-
-        layer.msg("敬请期待！");
-    });
-
     $(document).off("click", ".checkCurroseBtn1").on('click', '.checkCurroseBtn1', function () {
         layer.msg("敬请期待！");
     });
 
     //查看的按钮事件
-
-  
     $(document).off("click", ".checkTeacher1").on('click', '.checkTeacher1', function () {
-        layer.msg("敬请期待！");
+
+        //获取点击专业信息
+        var major = $(this).parent().attr("majorid");
+
+        var majorName = $(this).parent().text().trim();
+        //加密
+        var passwd = escape(major);
+
+        window.location.href = "/Teaching/Teacher/Teachersinfo?majorname=" + majorName + "&major=" + passwd;
     });
 
 

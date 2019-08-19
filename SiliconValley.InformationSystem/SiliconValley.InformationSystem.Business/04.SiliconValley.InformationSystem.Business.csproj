@@ -80,6 +80,8 @@
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
     <Compile Include="CourseSchedulingSysBusiness\CurriculumBusiness.cs" />
+    <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
+    <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CooperaEnterprisesBusiness.cs" />

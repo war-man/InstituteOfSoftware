@@ -106,8 +106,8 @@
 
     <script src="~/Areas/Teaching/Scripts/Teacheroptioner.js"></script>
     <script src="~/Scripts/vendor/bootstrap/bootstrap.min.js"></script>
-
-
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <script src="~/Areas/Teaching/Scripts/md5.js"></script>
     <script>
 
 
@@ -376,6 +376,43 @@
                 });
 
             });
+
+
+            //监听跳转查询事件
+            var queryMajor = getQueryVariable("major");
+
+            if (queryMajor == undefined || queryMajor == null) {
+
+                
+
+            } else {
+                var querymajor = unescape(queryMajor);
+
+                $("#majorlist li a").each(function () {
+
+                    var tempmajor1 = $(this).attr("majorid");
+
+                    if (tempmajor1 == querymajor) {
+
+                        $(this).click();
+
+                    }
+                });
+
+
+                //发送请求
+                table.reload('Teacherlist', {
+                    url: '/Teaching/Teacher/GetTeacherByMajorOrGrand'
+                    , where: {
+
+                        majorid: querymajor,
+                        grandid: 0,
+
+                    } //设定异步数据接口的额外参数
+                    //,height: 300
+                });
+
+            }
         });
     </script>
 

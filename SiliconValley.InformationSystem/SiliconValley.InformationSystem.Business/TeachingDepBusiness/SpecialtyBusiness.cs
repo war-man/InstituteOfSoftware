@@ -17,7 +17,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public Specialty GetSpecialtyByID(int SpecialtyId)
         {
 
-            return this.GetList().Where(t=>t.Id==SpecialtyId).FirstOrDefault();
+            return this.GetSpecialties().Where(t=>t.Id==SpecialtyId ).FirstOrDefault();
         }
 
         public bool IsInList(List<Specialty> souces, Specialty specialty)
