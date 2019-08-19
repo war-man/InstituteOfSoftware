@@ -107,8 +107,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //获取所属岗位对象
         public Position GetPosition(int pid) {
             PositionManage pmanage = new PositionManage();
-            var plist = pmanage.GetList();//获取公司所有岗位的数据集合
-            var str = plist.Where(p => p.Pid == pid).FirstOrDefault();
+            var str = pmanage.GetEntity(pid);
             return  str;
         }
         //获取所属岗位的所属部门对象

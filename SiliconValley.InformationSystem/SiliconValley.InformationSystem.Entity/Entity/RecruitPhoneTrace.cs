@@ -34,5 +34,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsEntry { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+        public Nullable<int> Pid { get; set; }
     }
 }
