@@ -386,6 +386,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\StuAttendance.cshtml" />
     <Content Include="Areas\Teachingquality\Views\InterviewStudents\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\InterviewStudents\StudIenterEntiy.cshtml" />
+    <Content Include="Config\Major.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

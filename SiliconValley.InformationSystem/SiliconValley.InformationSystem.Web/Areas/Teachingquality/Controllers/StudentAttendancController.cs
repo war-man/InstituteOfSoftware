@@ -69,11 +69,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 InspectionDate=a.InspectionDate,
                 Attendancestatus=a.Attendancestatus,
-                Registrar=infoBusiness.GetEntity(a.Registrar).EmployeeId,
+                Registrar=a.Registrar,
                 AttendanceTitle=a.AttendanceTitle,
                 StudentID=a.StudentID,
                 Remarks=a.Remarks,
-                Stuclass= Stuclass.GetList().Where(q=>q.StudentID==a.StudentID&&q.CurrentClass==true).First().ClassID,  //班级
+                Stuclass= Stuclass.GetList().Where(q=>q.StudentID==a.StudentID&&q.CurrentClass==true).FirstOrDefault().ClassID,  //班级
                 Name = student.GetEntity(a.StudentID).Name,   //姓名
                 RegistrarName= infoBusiness.GetEntity(a.Registrar).EmpName //登记人姓名
             }).ToList();

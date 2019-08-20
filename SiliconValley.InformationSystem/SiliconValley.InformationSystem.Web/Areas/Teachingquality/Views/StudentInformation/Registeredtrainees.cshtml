@@ -294,7 +294,7 @@
 
         }
         layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
-
+       
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
@@ -314,43 +314,49 @@
             function ErrenName() {
 
             }
+       
             //搜索名字
-            $("#liden").click(function () {
+            $("#but1").click(function () {
+               
                 var name = $("#Name").val();
-                if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
-                    return '内容只能由中文或字母组成';
-                } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
+             
+              //  if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
+              //      return '姓名只能由中文或字母组成';
+              //  } if (!/(^\_)|(\__)|(\_+$)/.test(name)) {
+              //      return '姓名首尾不能出现下划线\'_\'';
+              //  }
+              //  if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
+                 
+              //      return '姓名不能有特殊字符';
+              //  }
+              //if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
+              //      return '姓名只能由中文或字母组成';
+              //  }
+                if (name == "") {
+                    layer.alert('姓名不能为空！！！');
 
-                } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
+                } else {
+                    $.post("/Teachingquality/StudentInformation/Beian?Name=" + name, function (db) {
+
+                        if (db.length > 0) {
+                            layer.open({
+                                title: "备案学员",
+                                type: 2,
+
+                                btnAlign: 'c'
+                                , area: ['400px', '200px']
+                                , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
+                            });
+
+                        } else {
+
+                            Errye("此姓名未备案，请到质询部备案！")
+                        }
+                    });
 
                 }
-                else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
 
-                }
-
-                //if (name == "") {
-                //    layer.alert('姓名不能为空！！！');
-
-                //} else {
-                //    $.post("/Teachingquality/StudentInformation/Beian?Name=" + name, function (db) {
-
-                //        if (db.length > 0) {
-                //            layer.open({
-                //                title: "备案学员",
-                //                type: 2,
-
-                //                btnAlign: 'c'
-                //                , area: ['400px', '200px']
-                //                , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
-                //            });
-
-                //        } else {
-
-                //            Errye("此姓名未备案，请到质询部备案！")
-                //        }
-                //    });
-                   
-                //}
+             
 
             });
 
