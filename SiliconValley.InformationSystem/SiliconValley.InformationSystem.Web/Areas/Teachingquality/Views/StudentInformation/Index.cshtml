@@ -144,45 +144,52 @@
             //正则表达式
             form.verify({
                 Name: function (value, item) { //value：表单的值、item：表单的DOM对象
-                    if (value == '') {
-                        return '';
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
                     } else {
-                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-                            return '姓名不能有特殊字符';
-                        }
-                        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
-                            return '姓名首尾不能出现下划线\'_\'';
-                        }
-                        if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
-                            return '姓名只能由中文或字母注册';
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                                return '姓名不能有特殊字符';
+                            }
+                            if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                                return '姓名首尾不能出现下划线\'_\'';
+                            }
+                            if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                                return '姓名只能由中文或字母组成';
+                            }
                         }
                     }
+                   
                 },//(^$)|^\d{10}$/
                 identityi: function (value) {
-                    if (value == '') {
-                        return '';
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
                     } else {
-                        var identitydocument = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                        if (!identitydocument.test(value)) {
-                            return '请输入正确身份证号';
-                        }
-                    }
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                            if (!identitydocument.test(value)) {
+                                return '请输入正确身份证号';
+                            }
+                        }}
+                   
                 },
                 number: function (value) {
-                    if (value == '') {
-                        return '';
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
                     } else {
-                     
-                  
-                        //var identitydocument = /^\d{17}/;
-                        //if (!identitydocument.test(value)) {
-                        //    return '请输入十七位数学号';
-                        //}
-                        var identitydocument = /^\d/;
-                        if (!identitydocument.test(value)) {
-                            return '学号由数字组成';
-                        }
-                    }
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /^\d/;
+                            if (!identitydocument.test(value)) {
+                                return '学号由数字组成';
+                            }
+                        } }
+                 
                 }
             });
             //表格渲染

@@ -217,6 +217,7 @@
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
@@ -383,6 +384,8 @@
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\Registerattendance.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentAttendanc\StuAttendance.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\InterviewStudents\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\InterviewStudents\StudIenterEntiy.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

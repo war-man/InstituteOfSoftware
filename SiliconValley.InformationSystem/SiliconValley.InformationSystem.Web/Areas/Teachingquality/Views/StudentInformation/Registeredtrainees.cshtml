@@ -66,7 +66,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
+                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
                             </div>
                         </div>
                         <div id="but1">
@@ -115,7 +115,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" style="margin-top:18px;">
                             <label class="layui-form-label">亲属姓名</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Guardian, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入亲属姓名" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(a => a.Guardian, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入亲属姓名" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
                     </div>
@@ -182,13 +182,13 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">微信</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.WeChat, new Dictionary<string, object>() { { "placeholder", "请输入微信号码" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(a => a.WeChat, new Dictionary<string, object>() { { "lay-verify", "WeChat" }, { "placeholder", "请输入微信号码" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">QQ</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.qq, new Dictionary<string, object>() { { "placeholder", "请输入qq号码" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(a => a.qq, new Dictionary<string, object>() { { "lay-verify", "QQ" }, { "placeholder", "请输入qq号码" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
                     </div>
@@ -196,13 +196,13 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">兴趣爱好</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Hobby, new Dictionary<string, object>() { { "placeholder", "请输入兴趣爱好" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(a => a.Hobby, new Dictionary<string, object>() { { "lay-verify", "MyText" }, { "placeholder", "请输入兴趣爱好" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">学员性格</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "lay-verify", "MyText" }, { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(a => a.Reack, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                                @Html.TextAreaFor(a => a.Reack, new Dictionary<string, object>() {  { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
                             </div>
                         </div>
 
@@ -310,44 +310,112 @@
                     btn: ['确定']
                 });
             }
+            //验证输入框姓名
+            function ErrenName() {
+
+            }
             //搜索名字
             $("#liden").click(function () {
                 var name = $("#Name").val();
-                if (name == "") {
-                    layer.alert('姓名不能为空！！！');
+                if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
+                    return '内容只能由中文或字母组成';
+                } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
 
-                } else {
-                    $.post("/Teachingquality/StudentInformation/Beian?Name=" + name, function (db) {
+                } else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
 
-                        if (db.length > 0) {
-                            layer.open({
-                                title: "备案学员",
-                                type: 2,
-
-                                btnAlign: 'c'
-                                , area: ['400px', '200px']
-                                , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
-                            });
-
-                        } else {
-
-                            Errye("此姓名未备案，请到质询部备案！")
-                        }
-                    });
-                   
                 }
+                else if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
+
+                }
+
+                //if (name == "") {
+                //    layer.alert('姓名不能为空！！！');
+
+                //} else {
+                //    $.post("/Teachingquality/StudentInformation/Beian?Name=" + name, function (db) {
+
+                //        if (db.length > 0) {
+                //            layer.open({
+                //                title: "备案学员",
+                //                type: 2,
+
+                //                btnAlign: 'c'
+                //                , area: ['400px', '200px']
+                //                , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
+                //            });
+
+                //        } else {
+
+                //            Errye("此姓名未备案，请到质询部备案！")
+                //        }
+                //    });
+                   
+                //}
 
             });
 
             //正则表达式
             form.verify({
+                //微信正则 /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/
+                //qq正则  /^[1-9]\d{4,9}$/
+                //中文 [\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*
                 Name: function (value, item) { //value：表单的值、item：表单的DOM对象
-                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-                        return '用户名不能有特殊字符';
-                    }
-
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                            return '内容不能有特殊字符';
+                        }
+                        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                            return '内容首尾不能出现下划线\'_\'';
+                        }
+                        if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                            return '内容只能由中文或字母组成';
+                        }}
+                  
+                },
+                WeChat: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(value)) {
+                                return '请输入正确的微信号码';
+                            }
+                        }}
+                  
+                },
+                QQ: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!/^[1-9]\d{4,9}$/.test(value)) {
+                                return '请输入正确的QQ号码';
+                            }
+                        }}
+                    
+                },
+                MyText: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!/[\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*/.test(value)) {
+                                return '输入内容不规范';
+                            }
+                        }}
+                 
                 }
-            });
+
+             
+            });//Guardian
             //错误消息提示
             function Errye(err) {
                 layer.msg(err, {
@@ -394,8 +462,8 @@
                 return ss;
               
             }
-       
-          
+            //提示消息
+            var couer = 0;
             //监听提交
             form.on('submit(demo1)', function (data) {
                 data.field.Guardian = data.field.Guardian + "," + data.field.Sexs;
@@ -456,6 +524,7 @@
 
                                             btn: ['确定']
                                         });
+                                        couer++;
                                     }
                                 }
                                 , error: function (xmlhttprequest, textstatus, message) {
@@ -465,6 +534,7 @@
 
                                         btn: ['确定']
                                     });
+                                    couer++;
                                 }
                             });
 
@@ -560,10 +630,15 @@
                     if (Ages(data.field.identitydocument) == data.field.BirthDate) {
                         text();
                     } else {
-                        layer.confirm('您的身份证与生日不符，真的要进行操作吗?', function (index) {
+                        if (couer < 1) {
+                            layer.confirm('您的身份证与生日不符，真的要进行操作吗?', function (index) {
 
+                                text();
+                            });
+                        } else {
                             text();
-                        });
+                        }
+                       
                     }
                    
                         //BirthDate

@@ -34,10 +34,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
        }
         //获取数据
-        public ActionResult GetDate(int page, int limit)
+        public ActionResult GetDate(int page, int limit,string Name,string Attendancestatus,string qBeginTime,string identitydocument,string qEndTime)
         {
-            //
-            List<StudentAttendance> list =dbtext.GetList();
+
+           List<StudentAttendance> list = new List<StudentAttendance>();
+
+            if (!string.IsNullOrEmpty(Name))
+            {
+                var stu = student.GetList().Where(a => a.Name.Contains(Name)).ToList();
+                foreach (var item in stu)
+                {
+                    list.AddRange( dbtext.GetList().Where(a => a.StudentID == item.StudentNumber).ToList());
+                }
+            } else { list = dbtext.GetList(); }
+           
+            if (!string.IsNullOrEmpty(Attendancestatus))
+            {
+                list = list.Where(a => a.Attendancestatus==Attendancestatus).ToList();
+            }
+            if (!string.IsNullOrEmpty(qBeginTime))
+            {
+                list = list.Where(a => a.InspectionDate >= Convert.ToDateTime(qBeginTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(qEndTime))
+            {
+                list = list.Where(a => a.InspectionDate <= Convert.ToDateTime(qEndTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(identitydocument))
+            {
+                list = list.Where(a => a.StudentID== identitydocument).ToList();
+            }
 
             var listx = list.Select(a => new
             {
@@ -149,7 +175,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult StuAttendance()
         {
             string StudentID = Request.QueryString["StudentID"];
+            string InteStu = Request.QueryString["InteStu"];
+            if (!string.IsNullOrEmpty(InteStu))
+            {
+                ViewBag.InteStu = InteStu;
+            }
+            else
+            {
+                ViewBag.InteStu = "";
+            }
             ViewBag.Classe=StudentID;
+        //    ViewBag.InteStu = "";
             //1710NA
             var classStu = Stuclass.GetList().Where(a => a.CurrentClass == true && a.ClassID == StudentID).ToList();
 

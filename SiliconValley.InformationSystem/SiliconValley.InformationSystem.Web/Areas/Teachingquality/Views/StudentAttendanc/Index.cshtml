@@ -18,11 +18,11 @@
                             <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
+                    <div class="layui-col-xs4"  style="margin-left:-60px;">
                        
-                            <label class="layui-form-label" style="width:100px">出勤标题</label>
+                            <label class="layui-form-label" style="width:100px" >出勤标题</label>
                             <div class="layui-input-inline">
-                                <select name="Attendancestatus" lay-verify="required" lay-search="">
+                                <select name="Attendancestatus"  lay-search="">
                                     <option value="">请选择出勤状态</option>
                                     <option value="早操出勤">早操出勤</option>
                                     <option value="上课出勤">上课出勤</option>
@@ -33,10 +33,10 @@
 
                         </div>
                     </div>
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label" style="width:100px">出勤状态</label>
+                    <div class="layui-col-xs4" style="margin-left:-60px;">
+                        <label class="layui-form-label" style="width:100px;">出勤状态</label>
                         <div class="layui-input-inline">
-                            <select name="Attendancestatus" lay-verify="required" lay-search="">
+                            <select name="Attendancestatus"  lay-search="">
                                 <option value="">请选择出勤状态</option>
                                 <option value="迟到">迟到</option>
                                 <option value="早退">早退</option>
@@ -51,12 +51,12 @@
                         <div class="layui-inline">
                             <label for="" class="layui-form-label">时间段</label>
                             <div class="layui-input-inline startTime">
-                                <input type="text" name="tydate" id="tydate" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                <input type="text" name="qBeginTime" id="qBeginTime"  readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid">到</div>
                             <div class="layui-input-inline endTime">
                               
-                                <input type="text" name="mydate" id="mydate" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                <input type="text" name="qEndTime" id="qEndTime" readonly="readonly"  placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -120,62 +120,102 @@
             return result;
         }
 
-     
+        //月份小于10的前面加个0
+        function MoDay(a) {
+            if (a < 10) {
+                return "0" + a;
+            }
+            return a;
+        }
         layui.use(['table', 'layer','laydate', 'tree', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
             var laydate = layui.laydate;
+          
+           
+            ////系统时间
+            
+            var curDate = new Date();
+            var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+           
+             // 时间选择器初始化 开始时间
             laydate.render({
-                elem: '#mydate',
-              
-            });
-            laydate.render({
-                elem: '#tydate'
-            });
+                elem: '#qBeginTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                  
+                    var startDate = new Date(value).getTime();
+                    var endTime = new Date($('#qEndTime').val()).getTime();
+               
+                   // console.log(ri);
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qBeginTime').val($('#qEndTime').val());
+                    }
+                    if (startDate > curDate.getTime()) {
+                        layer.msg('开始时间不能大于当前时间');
+                        $('#qBeginTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+             // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#qEndTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date($('#qBeginTime').val()).getTime();
+                    var endTime = new Date(value).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qEndTime').val($('#qBeginTime').val());
+                    }
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#qEndTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+      
           
             //正则表达式
             form.verify({
                 Name: function (value, item) { //value：表单的值、item：表单的DOM对象
-                    if (value == '') {
-                        return '';
+                  
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
                     } else {
-                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
-                            return '姓名不能有特殊字符';
-                        }
-                        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
-                            return '姓名首尾不能出现下划线\'_\'';
-                        }
-                        if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
-                            return '姓名只能由中文或字母注册';
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                                return '姓名不能有特殊字符';
+                            }
+                            if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                                return '姓名首尾不能出现下划线\'_\'';
+                            }
+                            if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                                return '姓名只能由中文或字母注册';
+                            }
                         }
                     }
-                },//(^$)|^\d{10}$/
-                identityi: function (value) {
-                    if (value == '') {
-                        return '';
+                
+                }
+                , identityi: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
                     } else {
-                        var identitydocument = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                        if (!identitydocument.test(value)) {
-                            return '请输入正确身份证号';
-                        }
-                    }
-                },
-                number: function (value) {
-                    if (value == '') {
-                        return '';
-                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /^\d{17}/;
+                            if (!identitydocument.test(value)) {
+                                return '请输入十七位数学号';
+                            }
 
-
-                        //var identitydocument = /^\d{17}/;
-                        //if (!identitydocument.test(value)) {
-                        //    return '请输入十七位数学号';
-                        //}
-                        var identitydocument = /^\d/;
-                        if (!identitydocument.test(value)) {
-                            return '学号由数字组成';
                         }
                     }
+                    
                 }
             });
             //表格渲染
@@ -263,14 +303,15 @@
             form.on('submit(demo2)', function (data) {
 
                 var x = data.field;
-
-
+                console.log(x);
+             
                 table.reload('idTest', {
                     where: {
                         Name: x.Name,
-                        Sex: x.Sex,
-                        StudentNumber: x.StudentNumber,
-                        identitydocument: x.identitydocument
+                        Attendancestatus: x.Attendancestatus,
+                        qBeginTime: x.qBeginTime,
+                        identitydocument: x.identitydocument,
+                        qEndTime:x.qEndTime
                     }, page: {
                         curr: 1
                     }

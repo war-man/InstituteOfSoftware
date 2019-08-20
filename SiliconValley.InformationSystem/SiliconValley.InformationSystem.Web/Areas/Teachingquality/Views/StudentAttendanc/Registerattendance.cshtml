@@ -60,7 +60,7 @@
                             <label class="layui-form-label">班级名称</label>
                             <div class="layui-input-inline">
                                 @Html.HiddenFor(a => a.StudentID)
-                                <input type="text"  id="StuDenNull" lay-verify="required"  placeholder="请输入班级名称" class="layui-input">
+                                <input type="text"  id="StuDenNull" lay-verify="required|StuName"  placeholder="请输入班级名称" class="layui-input">
                              
                             </div>
                         </div>
@@ -135,7 +135,17 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
             laydate.render({
-                elem: '#InspectionDate'
+                elem: '#InspectionDate',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date(value).getTime();
+                    var mydate = new Date();
+                    if (startDate > mydate.getTime()) {
+                        layer.msg('不能超过当前日期');
+                        $('#InspectionDate').val(getNowFormatDate(mydate));
+                    }
+                    
+                }
             });
             var i;
             //正在执行中
@@ -211,6 +221,16 @@
                     btn: ['确定']
                 });
             }
+            
+            //^[\da-zA-z]{6,12}$
+            //正则表达式
+            form.verify({
+                StuName: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (/^[\da-zA-z]{6,10}$/.test(value)) {
+                        return '班级名称由字母或者数字组成,6-10位';
+                    }
+                }
+            });
             //ajax
             function ajaxpost(url, datae) {
 
@@ -293,7 +313,7 @@
 
                                 btnAlign: 'c'
                                 , area: ['650px', '600px']
-                                , content: "/Teachingquality/StudentAttendanc/StuAttendance/StuAttendance?StudentID=" + name
+                                , content: "/Teachingquality/StudentAttendanc/StuAttendance?StudentID=" + name
                             });
                         } else {
                             Errye("此班级未查到学员，请检查班级名称是否正确！")

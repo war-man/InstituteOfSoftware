@@ -16,6 +16,7 @@
 
 </head>
 <body>
+    <input type="text" style="display:none;" value="@ViewBag.InteStu" id="text1" />
     <h2 style="text-align:center;color:dodgerblue;">@ViewBag.Classe 班</h2>
     <div style="margin-left:30px;">
         @{
@@ -52,14 +53,32 @@
 <script>
     var arr = new Array();
     var atrr = new Array();
+    var name = "";
+    var stuid = "";
+    //text1
+    var text = $("#text1").val();
+    //图标变色
     $(".stu").click(function (e) {
         var a = $(this).val();
-        var b = $(this).text().split('(');
+        var b = $(this).text();
+       
         if (!$(this).is(".layui-btn-danger")) {
-            $(this).addClass("layui-btn-danger");
-            arr.push(a);
-            atrr.push(b[0].substring(1));
+            if (text == "2018") {
+                $(".stu").removeClass("layui-btn-danger");
+                $(this).addClass("layui-btn-danger");
+                name = b;
+                stuid = a;
+            } else {
+                $(this).addClass("layui-btn-danger");
+              
+               
+                arr.push(a);
+                atrr.push(b);
+            }
+            
+           
         } else {
+            stuid = "";
             $(this).removeClass("layui-btn-danger");
             for (var i = 0; i < arr.length; i++) {
                 if (arr[i] == a) {
@@ -70,7 +89,7 @@
 
             }
             for (var i = 0; i < atrr.length; i++) {
-                if (atrr[i] == b[0].substring(1)) {
+                if (atrr[i] == b) {
                     atrr.splice(i,1);
                 }
             }
@@ -79,37 +98,50 @@
      
 
     });
+    //提交数据
     layui.use(['layer'], function () {
         var layer = layui.layer;
         $("#but1").click(function () {
             var x = "";
             var c = "";
-            for (var i = 0; i < arr.length; i++) {
-                if (arr[i] != "") {
-                  
+            if (text == "2018") {
+                var na = name.split('(');
+                c = na[0].substring(1);
+                x = stuid;
+            } else {
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i] != "") {
+
 
                         x += arr[i] + ",";
-                   
-                }
-            }
-            for (var i = 0; i < atrr.length; i++) {
-                if (atrr[i] != "") {
-                
-                    if (i<arr.length-1) {
-                       
-                        c += atrr[i] + ",";
-                    } else {
-                        c += atrr[i];
+
                     }
                 }
+                for (var i = 0; i < atrr.length; i++) {
+                    if (atrr[i] != "") {
+                        var x = atrr[i].split('(')
+                        if (i < arr.length - 1) {
 
-            
+                            c += x[0].substring(1) + ",";
+                        } else {
+                            c += x[0].substring(1);
+                        }
+                    }
+
+
+                }
             }
-
-            layer.confirm('您真的要选择吗?', function (index) {
-                parent.GetPartsItmes(x,c);
-                parent.layer.close(parent.layer.index);
-            });
+            
+            if (x != "") {
+                layer.confirm('您真的要选择吗?', function (index) {
+                    parent.GetPartsItmes(x, c);
+                    parent.layer.close(parent.layer.index);
+                });
+            } else {
+                layer.msg('请选择学员');
+            }
+           
+           
 
         });
     });
