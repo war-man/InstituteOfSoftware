@@ -28,6 +28,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string PresentPosition { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
+        public Nullable<decimal> PreviousSalary { get; set; }
+        public Nullable<decimal> PresentSalary { get; set; }
     }
 }
