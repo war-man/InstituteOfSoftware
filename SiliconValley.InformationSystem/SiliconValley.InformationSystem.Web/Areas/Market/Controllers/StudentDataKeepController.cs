@@ -132,10 +132,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
                 return Json(Error("加载数据有误"),JsonRequestBehavior.AllowGet);
             }                            
-        }                                
-                                         
-        //获取外键的值                   
-        #region
+        }
+        
+        #region 获取各种外键的值
         public string GetStuStatuValue(int? id)
         {
             List<StuStatus> Get_List_stustate = Stustate_Entity.GetList().Where(sta=>sta.IsDelete==false).ToList();//获取上门学生状态所有数据
@@ -146,7 +145,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
  
             return "未填写";
         }
-
         public string GetStuInfomationTypeValue(int? id)
         {
             List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList().Where(info=>info.IsDelete==false).ToList();
@@ -459,7 +457,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             
         }
-
         //数据详情查看页面
         public ActionResult LookDetailsView(string id)
         {
@@ -521,14 +518,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             return new_listStudent;
         }
-
         //文件上传页面
         public ActionResult ExcleIntoView()
         {
             return View();
         }
-
-
         //处理文件上传的方法
         public ActionResult IntoFunction()
         {
@@ -614,6 +608,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         {
                             item.StuDateTime = DateTime.Now;
                             item.IsDelete = false;
+                        //从登陆那里获取当前的登录人员的员工编号
+                            item.StuEntering = "201908150001";
                             s_Entity.Insert(item);
                         }
                         else
@@ -622,8 +618,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             sb.AppendLine(er.StuName + ",");
                         }
                     }
+                if (chishu > 0)
+                {
                     sb.AppendLine("重复数据:" + chishu + "条");
                     return Json(sb.ToString(), JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -633,6 +637,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             
              
         }
+        #endregion
+
+        #region 基础数据的添加（信息类型、学生状态）
+        
         #endregion
     }
 }
