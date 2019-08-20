@@ -130,23 +130,23 @@
                     , { field: 'Age', title: '年龄', sort: true, width: 90 }
                     , { field: 'Nation', title: '民族', sort: true, width: 100, edit: 'text' }
                     , { field: 'IdCardNum', title: '身份证号码', sort: true, width: 120 }
-                    , { field: 'EntryTime', title: '入职时间', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.EntryTime) } }
-                    , { field: 'ContractStartTime', title: '合同起始时间', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.ContractStartTime) } }
-                    , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 135, templet: function (d) { return changeDateTimeFormat(d.ContractEndTime) } }
-                    , { field: 'Birthdate', title: '出生日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.Birthdate) } }
+                    , { field: 'EntryTime', title: '入职时间', sort: true, width: 110, templet: function (d) { return GetYMD(d.EntryTime) } }
+                    , { field: 'ContractStartTime', title: '合同起始时间', sort: true, width: 135, templet: function (d) { return GetYMD(d.ContractStartTime) } }
+                    , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 135, templet: function (d) { return GetYMD(d.ContractEndTime) } }
+                    , { field: 'Birthdate', title: '出生日期', sort: true, width: 110, templet: function (d) { return GetYMD(d.Birthdate) } }
                     , { field: 'Birthday', title: '生日', sort: true, width: 110, edit: 'text' }
-                    , { field: 'PositiveDate', title: '转正日期', sort: true, width: 110, templet: function (d) { return changeDateTimeFormat(d.PositiveDate) } }
+                    , { field: 'PositiveDate', title: '转正日期', sort: true, width: 110, templet: function (d) { return GetYMD(d.PositiveDate) } }
                     , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 135, edit: 'text' }
                     , { field: 'DomicileAddress', title: '户籍地址', sort: true, width: 110, edit: 'text' }
                     , { field: 'Address', title: '现居地址', sort: true, width: 110, edit: 'text' }
                     , { field: 'Education', title: '学历', sort: true, width: 110 }
                     , { field: 'MaritalStatus', title: '婚姻状态', sort: true, width: 110, templet: '#switchTpl', unresize: true }
-                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 135, event: 'date', data_field: "IdCardIndate", templet: function (d) { return changeDateTimeFormat(d.IdCardIndate) } }
+                    , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 135, event: 'date', data_field: "IdCardIndate", templet: function (d) { return GetYMD(d.IdCardIndate) } }
                     , { field: 'PoliticsStatus', title: '政治面貌', sort: true, width: 110 }
                     , { field: 'WorkExperience', title: '工作经验', sort: true, width: 110, edit: 'text' }
                     , { field: 'ProbationSalary', title: '试用期工资', sort: true, width: 120 }
                     , { field: 'Salary', title: '转正工资', sort: true, width: 110 }
-                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 135, event: 'date', data_field: "SSStartMonth" }
+                    , { field: 'SSStartMonth', title: '社保起始月份', sort: true, width: 135, event: 'date', data_field: "SSStartMonth", templet: function (d) { return GetYearAndMonth(d.SSStartMonth) } }
                     , { field: 'BCNum', title: '银行卡号', sort: true, width: 110, edit: 'text' }
                     , { field: 'Material', title: '材料', sort: true, width: 110, edit: 'text' }
                     , { field: 'Remark', title: '备注', sort: true, width: 110, edit: 'text' }
@@ -302,6 +302,49 @@
 
 
         //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
         function changeDateTimeFormat(cellval) {
             if (cellval != null) {
                 var date;
