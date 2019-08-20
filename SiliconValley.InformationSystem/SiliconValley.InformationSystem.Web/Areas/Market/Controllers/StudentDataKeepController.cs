@@ -640,7 +640,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         #endregion
 
         #region 基础数据的添加（信息类型、学生状态）
-        
+         //这是一个显示所有信息类型与学生状态的主页面
+         public ActionResult InfomationAndStatuView()
+        {
+            return View();
+        }
         #endregion
     }
 }
