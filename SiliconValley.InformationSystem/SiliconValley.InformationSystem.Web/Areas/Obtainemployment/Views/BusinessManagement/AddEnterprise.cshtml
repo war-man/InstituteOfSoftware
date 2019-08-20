@@ -55,7 +55,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司名</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { @*{ "lay-verify", "required|EntNameZz|EntNameOnly" },*@ { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
+                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "lay-verify", "required|EntNameZz|EntNameOnly" }, { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司地址</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() { { "class", "layui-input " }, @*{ "lay-verify", "required" },*@ { "placeholder", "请输入公司地址" }, { "lay-reqtext", "公司名称不可为空" } })
+                                @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "请输入公司地址" }, { "lay-reqtext", "公司名称不可为空" } })
                             </div>
                         </div>
 
@@ -103,7 +103,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司福利</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntWelfare, new Dictionary<string, object>() { @*{ "lay-verify", "required" },*@ { "placeholder", "请输入公司福利" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.EntWelfare, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入公司福利" }, { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>
@@ -139,7 +139,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">联系人姓名</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { @*{ "lay-verify", "required" },*@ { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">联系方式</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { @*{ "lay-verify", "required|phone|EntPhoneOnly" },*@ { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone|EntPhoneOnly" }, { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>

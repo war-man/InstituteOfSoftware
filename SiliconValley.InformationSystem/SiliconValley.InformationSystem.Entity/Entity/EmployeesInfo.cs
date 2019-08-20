@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string EmployeeId { get; set; }
         public Nullable<int> DDAppId { get; set; }
         public string EmpName { get; set; }
-        public Nullable<int> PositionId { get; set; }
+        public int PositionId { get; set; }
         public string Sex { get; set; }
         public Nullable<int> Age { get; set; }
         public string Nation { get; set; }

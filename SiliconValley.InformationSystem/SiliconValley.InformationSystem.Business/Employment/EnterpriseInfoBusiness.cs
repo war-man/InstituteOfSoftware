@@ -17,7 +17,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="EnterID"></param>
         /// <returns></returns>
-        public EnterpriseInfo GetEnterByID(int EnterID) {
+        public EnterpriseInfo GetEnterByID(int? EnterID) {
             return this.GetIQueryable().Where(a => a.ID == EnterID).FirstOrDefault();
         }
     }

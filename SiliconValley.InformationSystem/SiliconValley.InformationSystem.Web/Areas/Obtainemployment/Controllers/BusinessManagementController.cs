@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-   
+    using SiliconValley.InformationSystem.Business.Common;
     public class BusinessManagementController : Controller
     {
         /// <summary>
@@ -210,7 +210,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         }
         [HttpPost]
         /// <summary>
-        /// 根据id接触合作关系
+        /// 根据id解除合作关系
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -229,6 +229,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
             catch (Exception ex)
             {
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
                 ajaxResult.Success = false;
                 ajaxResult.Msg = ex.Message;
             }
@@ -603,8 +604,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             coo = new CooperaEnterprisesBusiness();
             Enter = new EnterpriseInfoBusiness();
             var AjaxResultss = new AjaxResult();
-            var Enterdata = Enter.GetIQueryable().Where(a => a.ID == EntID).FirstOrDefault();
-            if (Enterdata.EntName == EntName)
+
+            var MrDEnt = Enter.GetEnterByID(EntID);
+            if (MrDEnt != null && MrDEnt.EntName == EntName)
             {
                 AjaxResultss.Success = true;
                 AjaxResultss.ErrorCode = 1;
@@ -614,12 +616,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 try
                 {
-                    var enterobjj = Enter.GetIQueryable().Where(a => a.EntName == EntName).FirstOrDefault();
+                    var enterobjj = Enter.GetIQueryable().Where(a => a.EntName == EntName && a.IsDel == false).FirstOrDefault();
                     if (enterobjj != null)
                     {
                         AjaxResultss.Success = true;
                         AjaxResultss.ErrorCode = 0;
-                        AjaxResultss.Msg = "该公司信息已存在。";
+                        AjaxResultss.Msg = "存在重复的公司名称。";
                     }
                 }
                 catch (Exception ex)

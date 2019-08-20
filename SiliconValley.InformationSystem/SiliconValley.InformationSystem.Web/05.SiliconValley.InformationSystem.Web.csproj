@@ -222,6 +222,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
+    <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
     <Compile Include="Areas\Teaching\Controllers\StudentHomeWorkController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
@@ -354,6 +355,12 @@
     <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmploymentCommissionerIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmpStaffList.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\GetNewSkill.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\AddEmployStaff.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmployDetailView.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EditEmployStaff.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\ManageAreas.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\ManageClass.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
