@@ -13,7 +13,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 就业专员表
+    /// </summary>
     [Table(name: "EmploymentStaff")]
     public partial class EmploymentStaff
     {
@@ -23,6 +25,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> AreaID { get; set; }
         public string EmployeesInfo_Id { get; set; }
         public string Remark { get; set; }
+        /// <summary>
+        /// 带班经验
+        /// </summary>
+        public string AttendClassStyle { get; set; }
+        /// <summary>
+        /// 就业经验
+        /// </summary>
+        public string EmployExperience { get; set; }
+        /// <summary>
+        /// 工作经验
+        /// </summary>
+        public string WorkExperience { get; set; }
+
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     

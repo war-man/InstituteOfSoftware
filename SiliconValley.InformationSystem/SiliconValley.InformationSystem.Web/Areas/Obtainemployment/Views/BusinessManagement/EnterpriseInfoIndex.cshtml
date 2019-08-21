@@ -221,6 +221,8 @@
             WhyShow(a);
             if (a == "ShowNoCoop") {
                 $("#EntContacts").attr("disabled", "disabled");
+            } else {
+                $("#EntContacts").removeAttr("disabled");
             }
         });
         $("#AddCooper").click(function () {

@@ -13,13 +13,16 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 岗位表
+    /// </summary>
     [Table(name: "Position")]
     public partial class Position
     {
 
         [Key]
         public int Pid { get; set; }
-        public Nullable<int> DeptId { get; set; }
+        public int DeptId { get; set; }
         public string PositionName { get; set; }
         public Nullable<bool> IsDel { get; set; }
 

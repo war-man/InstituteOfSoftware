@@ -82,7 +82,7 @@
     <Compile Include="CourseSchedulingSysBusiness\CurriculumBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
-    <Compile Include="Employment\CooperaEnterprisesBusiness.cs" />
+    <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />

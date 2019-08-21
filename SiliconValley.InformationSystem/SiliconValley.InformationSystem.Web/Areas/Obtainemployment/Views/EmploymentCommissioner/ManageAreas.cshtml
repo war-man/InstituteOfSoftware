@@ -1,0 +1,161 @@
+﻿@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.EmploymentStaff
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+
+        #jiben input {
+            border: 0px solid #ffffff;
+        }
+    </style>
+
+</head>
+<body>
+    <div>
+
+        <h1 style="text-align:center;">为@{@ViewBag.empinfo.EmpName}分配区域</h1>
+        <hr />
+        <form class="layui-form">
+            <fieldset id="jiben">
+                <legend>基本信息</legend>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">员工编号</label>
+
+                        <div class="layui-input-inline">
+                            <input type="tel" value="@ViewBag.empinfo.EmployeeId" name="Number" readonly autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">员工姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" value="@ViewBag.empinfo.EmpName" readonly name="Name" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+
+                            <input type="radio" name="sex" value="@ViewBag.empinfo.Sex" checked title="@ViewBag.empinfo.Sex">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">入职时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="inputtime" value="@ViewBag.empinfo.EntryTime" readonly id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+        </form>
+
+        <fieldset>
+            <legend>分配区域</legend>
+            <form class="layui-form" lay-filter="editteacher">
+                @Html.HiddenFor(a => a.ID)
+
+            </form>
+
+        </fieldset>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script>
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            var jointiem = $("#date").val();
+
+            var date = new Date(jointiem);
+
+            var year = date.getFullYear();
+
+            var mouth = date.getMonth() + 1;
+
+            var day = date.getDate();
+
+            $("#date").val(year + '年' + mouth + '月' + day + '日');
+
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            form.on('submit(editEmploystaff)', function (data) {
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+
+                 var loadindex = layer.load(2); //又换了种风格，并且设定最长等待10秒
+
+                $.ajax({
+                    url: "/Obtainemployment/EmploymentCommissioner/EditEmployStaff",
+                    type: "POST",
+                    data: data.field,
+                    timeout: 5000,
+                    dataType: 'json',
+                    success: function (successResult) {
+                        console.log(successResult);
+                        layer.close(loadindex);
+                        layer.msg(
+                            successResult.Msg,
+                            { icon: 6,time: 1000},
+                            function () {
+
+                            //当你在iframe页面关闭自身时
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+
+                        });
+                    },
+                    error: function (errorResult) {
+                        console.log(errorResult);
+                        layer.close(loadindex);
+
+                        layer.msg("网络连接错误!");
+
+                    }
+                });
+
+                return false;
+            });
+
+
+            $(document).keydown(function (event) {
+
+                console.log(event.keyCode);
+
+                if (event.keyCode == 13) {
+
+                    $("#submit").click();
+
+                }
+
+            });
+
+        });
+
+
+    </script>
+
+</body>
+</html>
+
+
+
+

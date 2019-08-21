@@ -12,6 +12,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string EmpName { get; set; }
         public string EmployeeId { get; set; }
         public string Sex { get; set; }
+
+        public string Phone { get; set; }
         public string AreaName { get; set; }
         /// <summary>
         /// 带班
