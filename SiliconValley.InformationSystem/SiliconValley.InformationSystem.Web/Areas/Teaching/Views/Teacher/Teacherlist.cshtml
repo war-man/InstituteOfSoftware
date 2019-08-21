@@ -1,81 +1,71 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "Teacherlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Teacherlist</title>
+@section style{
+
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-</head>
-<body>
-    <div class="">
-        <div>
-            <table class="layui-hide" id="teacherlist" lay-filter="teacherlist_filter"></table>
+    <style>
+        body .demo-class .layui-layer-title {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+
+}
+    <div>
+        <div id="tablelist">
+            @{
+                foreach (var item in ViewBag.majors)
+                {
+            <div>
+                <h1 style="text-align:center; background-color:#23cc36 " >@item.SpecialtyName</h1>
+                @{
+
+                    foreach (var item1 in ViewBag.grands)
+                    {
+                <div style="margin-left:20px;">
+                    <h3 style="text-align:center; background-color:#70cc75;" >@item1.GrandName</h3>
+
+                    <table class=".table-hover tables">
+                        <thead>
+
+                        </thead>
+
+                        <tbody>
+
+                        </tbody>
+                    </table>
+
+                </div>
+                    }
+
+                }
+
+
+
+            </div>
+                }
+            }
+
         </div>
     </div>
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui/layui.all.js"></script>
 
-
+@section script{
+    
     <script>
 
 
-        function callbackdata() {
-            var checkStatus = layui.table.checkStatus('Teacherlist'); //idTest 即为基础参数 id 对应的值
-            return checkStatus;
-        }
-
-        layui.use(['table', 'layer'], function () {
-
-            var table = layui.table;
-            var layer = layui.layer;
-            var index = layer.load(0, { shade: false }); //0代表加载的风格，支持0-2
-            table.render({
-                elem: '#teacherlist'
-                , id: 'Teacherlist'
-                , shade: index  
-                , url: '/Teaching/Teacher/GetEmpData/'
-                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-                , cols: [[
-                        { type: 'radio' }
-                    , { field: 'EmpName',  title: '姓名' }
-                    , { field: 'Number', title: '员工编号' }
-                    , { field: 'Sex',  title: '性别' }
-                ]]
-                , page: true
-
-                , yes: function (index) {
-                  
-                }, done: function (res) {   //返回数据执行回调函数
-                    layer.close(index);    //返回数据关闭loading
-
-                }
-            });
+        
 
 
-            //$(document).keydown(function (event) {
 
-            //    console.log(event.keyCode);
-               
-            //    if (event.keyCode == 13) {
-                   
-            //        $($(".layui-layer-btn0")[0]).click();
-
-            //    }
-
-            //    if (event.keyCode == 27) {
-
-            //        $($(".layui-layer-btn1")[0]).click();
-
-            //    }
-
-            //});
-
-        });
     </script>
-</body>
-</html>
+    
+}
+

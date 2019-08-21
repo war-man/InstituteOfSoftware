@@ -154,11 +154,28 @@
 
                         </div>
 
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                <label class="layui-form-label">阶段:</label>
+                                <div class="layui-input-block">
+                                    @{ foreach (var item in Model.Grands)
+                                        {
+                                            <button type="button" class="layui-btn">@item.GrandName</button>
+                                        }
+                                    }
+                                </div>
+
+                            </div>
+
+                        </div>
+
                         <div class="layui-form-item layui-form-text">
                             <label class="layui-form-label">项目经验:</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(t => t.ProjectExperience, new { @class = "layui-textarea" ,@readonly = "d" })
+                                @Html.TextAreaFor(t => t.ProjectExperience, new { @class = "layui-textarea", @readonly = "d" })
 
                             </div>
                         </div>

@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System.Linq.Dynamic;
     using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
+    using SiliconValley.InformationSystem.Util;
 
     public class TeacherBusiness : BaseBusiness<Teacher>
     {
@@ -72,17 +73,32 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             List<Teacher> resultlist = new List<Teacher>();
 
-            var temp = this.GetList().Where(d => d.IsDel == false).ToList();
+            //从缓存中获取
+            RedisCache redisCache = new RedisCache();
 
-            foreach (var item in temp)
+            resultlist = redisCache.GetCache<List<Teacher>>("TeacherList");
+
+            if (resultlist == null || resultlist.Count == 0)
             {
-                if (!EmpIsDel(item))
+
+                resultlist = new List<Teacher>();
+
+
+                var temp = this.GetList().Where(d => d.IsDel == false).ToList();
+
+                foreach (var item in temp)
                 {
-                    resultlist.Add(item);
+                    if (!EmpIsDel(item))
+                    {
+                        resultlist.Add(item);
+                    }
                 }
+
+
+                redisCache.SetCache("TeacherList", resultlist);
             }
 
-            return resultlist;
+            return resultlist.OrderByDescending(d=>d.TeacherID) .ToList();
 
         }
 
@@ -113,7 +129,18 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in bus)
             {
-                resultList.Add(db_grand.GetList().Where(t => t.Id == item.Stage && t.IsDelete == false).FirstOrDefault());
+                var tempobj = db_grand.GetList().Where(t => t.Id == item.Stage && t.IsDelete == false).FirstOrDefault();
+
+                    if (tempobj != null)
+                    {
+                        if (!Grand.IsInList(resultList, tempobj))
+                        {
+                            resultList.Add(tempobj);
+                        }
+                        
+
+                       
+                    }
             }
 
             return resultList;
@@ -302,8 +329,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     }
                 }
             }
-
-
             var list = new List<EmployeesInfo>();
 
             foreach (var item in result)
@@ -315,13 +340,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     list.Add(item);
                 }
 
-
             }
 
             return list;
-
-
-
         }
 
 
@@ -513,7 +534,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             {
                 var cur = temp3.Where(d => d.CurriculumID == item.Curriculum).FirstOrDefault();
 
-                if (cur.MajorID == majorid)
+                if ( cur !=null && cur.MajorID == majorid)
                 {
 
                     all.Add(cur);

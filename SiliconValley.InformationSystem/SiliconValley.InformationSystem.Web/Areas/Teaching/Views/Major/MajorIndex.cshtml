@@ -4,21 +4,157 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+
 @section style
 {
 
+    <style>
+
+        #majorwarp {
+            
+            width:100%;
+
+            border:1px solid gray;
+        
+            margin-top:50px;
+
+        }
+
+        .major,#addMajorBtn {
+            position: relative;
+            width: 70%;
+            height: 200px;
+            display: inline-block;
+            line-height: 200px;
+            margin-top: 20px;
+            margin-left: 100px;
+            font-size: 25px;
+        }
+
+        .checkCurroseBtn {
+            /* still bad on picking color */
+            background: orange;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 50px;
+            width: 120px;
+            line-height: 50px;
+            font-size: 18px;
+            opacity: 0.5;
+            padding: 1px;
+            z-index: 2;
+        }
+            .checkCurroseBtn::before { content: "查看所有课程"; }
+        /* place the button on top-right */
+        .checkCurroseBtn {
+            top: 38%;
+            right: 70%;
+            position: absolute;
+        }
 
 
+        .checkTeacherBtn {
+            /* still bad on picking color */
+            background: orange;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 50px;
+            width: 120px;
+            line-height: 50px;
+            font-size: 18px;
+            padding: 1px;
+            opacity:0.5;
+            z-index:2;
+        }
+            .checkTeacherBtn::before { content: "查看所有老师"; }
+        /* place the button on top-right */
+        .checkTeacherBtn {
+            top: 38%;
+            right: 0%;
+            position: absolute;
+        }
+    </style>
 }
 
-<h2><i></i> 种专业</h2>
+<h2 style="text-align:center;"><i id="majorcount">@ViewBag.Majors.Count</i> 大专业</h2>
 
- 
+<div id="majorwarp">
+    <div id="majorlist" class="layui-row">
+
+        <div class="layui-col-sm4">
+            <button id="addMajorBtn" class="layui-btn layui-btn-primary">  <i class="layui-icon">&#xe654;</i>添加专业</button>
+        </div>
+
+        @{
+
+            foreach (var item in @ViewBag.Majors as List<Specialty>)
+            {
+                <div class="layui-col-sm4">
+                    <a href="javascript:void(0);" class="layui-btn major" majorid="@item.Id">
+
+                        <span class="checkCurroseBtn1" ></span>
+                        <span  class="checkTeacher1"></span>
+                        @item.SpecialtyName
+                    </a>
+                </div>
+            }
+        }
+    </div>
+   
+    @*<button class="layui-btn layui-btn-warm major">Java</button>
+
+    <button class="layui-btn layui-btn-primary major">Python</button>*@
+
+    <script id="addMajorTemp">
+
+     
+        
+        <div style="margin-top:20px;" class="layui-form-item">
+                <div class="layui-inline">
+                    <label style="width:100px;" class="layui-form-label">专业名称:</label>
+                    <div class="layui-input-block">
+                    <input style="width:150%;" id="addMajorNameInput" type="text" name="majorName"  class="layui-input" />
+                    </div>
+            </div>
+
+            </div>
+
+   
+    </script>
+
+    <script type="text/template" id="MajorTemp">
+
+         <div class="layui-col-sm4">
+                    <a href="javascript:void(0);" class="layui-btn major" majorid="{{=majorid}}" >
+
+                        <span class="checkCurroseBtn1" ></span>
+                        <span  class="checkTeacher1"></span>
+                        {{=majorName}}
+                    </a>
+                </div>
+
+
+    </script>
+
+</div>
+
 
 
 @section script
 {
-
+<script src="~/Scripts/underscore.js"></script>
+<script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+<script src="~/Areas/Teaching/Scripts/util.js"></script>
+<script src="~/Areas/Teaching/Scripts/MajorOperation.js"></script>
 
 
 }

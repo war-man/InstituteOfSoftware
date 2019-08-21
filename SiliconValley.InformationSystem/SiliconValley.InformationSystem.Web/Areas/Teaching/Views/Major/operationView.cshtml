@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>operationView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+</head>
+<body>
+    <div> 
+        <form class="layui-form" enctype="multipart/form-data">
+
+            <div style="margin-top:20px;" class="layui-form-item">
+                <div class="layui-inline">
+                    <label style="width:100px;" class="layui-form-label">专业名称:</label>
+                    <div class="layui-input-block">
+                        <input style="width:150%;" id="addMajorNameInput" type="text" name="majorName" class="layui-input" />
+                    </div>
+                </div>
+
+                <br />
+                <div class="layui-inline">
+                    <label style="width:100px;" class="layui-form-label">logo图片:</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn" id="test1">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button class="layui-btn" id="tijiao" lay-submit="" lay-filter="operation">确定</button>
+                <button class="layui-btn" style="text-align:center;">关闭</button>
+            </div>
+
+
+        </form>
+    </div>
+    <script src="~/Areas/Teaching/Scripts/MajorOperation.js"></script>
+
+</body>
+</html>

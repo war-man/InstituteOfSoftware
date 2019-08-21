@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
-    using SiliconValley.InformationSystem.Util;
+
 
 
     [CheckLogin]
@@ -61,7 +61,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         public ActionResult Teacherlist()
         {
 
+            var majorlist = db_specialty.GetList();
 
+            ViewBag.majors = majorlist;
+
+            var grandlist = db_grand.GetList();
+            ViewBag.grands = grandlist;
 
             return View();
 
@@ -70,10 +75,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         public ActionResult GetEmpData(int limit, int page)
         {
 
-
             var list = db_teacher.employeesInfos().Where(d=>d.IsDel==false).ToList();
-
-
 
             var returnlist = list.Skip((page - 1) * limit).Take(limit).ToList().Select(x => new { EmpName = x.EmpName, Number = x.EmployeeId, Sex = x.Sex });
 
@@ -88,10 +90,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return Json(objresult,JsonRequestBehavior.AllowGet);
         }
  
-        public ActionResult TeacherData(int limit,int page)
+        public ActionResult TeacherData(int limit,int page,int  major, int  grand)
        {
 
-            var list = db_teacher.GetTeachers().Where(d => d.IsDel == false).ToList().Skip((page -1) * limit).Take(limit);
+            var list = new List<Teacher>();
+
+            if (major == 0 && grand == 0)
+            {
+
+                list = db_teacher.GetTeachers().Where(d => d.IsDel == false).ToList().Skip((page - 1) * limit).Take(limit).ToList();
+            }
+            else
+            {
+                list = db_teacher.getTeacherByMajorAndGrand(major, grand).Skip((page - 1) * limit).Take(limit).ToList();
+            }
+
+          
+           
 
             var returnlist = new List<object>();
 
@@ -172,6 +187,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             try
             {
                 db_teacher.Insert(teacher);
+
+                //更新缓存
+                RedisCache redisCache = new RedisCache();
+                redisCache.RemoveCache("TeacherList");
+
+
                 result.ErrorCode = 200;
                 result.Msg = "成功";
                 result.Data = null;
@@ -258,10 +279,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             {
                 db_teacher.Update(t);
 
+                //更新缓存
+                RedisCache redisCache = new RedisCache();
+                redisCache.RemoveCache("TeacherList");
+
                 result = new SuccessResult();
                 result.Msg = "修改成功";
                 result.Success = true;
-
             }
             catch (Exception)
             {
