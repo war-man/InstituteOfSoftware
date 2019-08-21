@@ -54,10 +54,12 @@
                     <div class="layui-row layui-form-item" style="margin-left:130px;">
 
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                            <label class="layui-form-label">班级名称</label>
+                            <label class="layui-form-label" id="lab1">班级名称</label>
                             <div class="layui-input-inline">
+                              
                                 @Html.HiddenFor(a => a.StudentNumberID)
-                                <input type="text" id="StuDenNull" lay-verify="required|StuName" placeholder="请输入班级名称" class="layui-input">
+                                <input type="text" id="ID" name="ID" value="@ViewBag.id" style="display:none" />
+                                <input type="text" id="StuDenNull"  lay-verify="required" placeholder="请输入班级名称" class="layui-input">
 
                             </div>
                         </div>
@@ -68,7 +70,7 @@
 
                             <label class="layui-form-label">访谈标题</label>
                             <div class="layui-input-block">
-                                @Html.TextAreaFor(a => a.InterviewTopics, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "class", "llayui-textarea Nation" } })
+                                @Html.TextAreaFor(a => a.InterviewTopics, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入访谈标题" }, { "class", "llayui-textarea Nation" } })
                             </div>
 
                         </div>
@@ -76,13 +78,13 @@
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                             <label class="layui-form-label">访谈内容</label>
                             <div class="layui-input-block">
-                                @Html.TextAreaFor(a => a.InterviewTopics, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "class", "llayui-textarea Nation" } })
+                                @Html.TextAreaFor(a => a.Interviewcontent, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "lay-verify", "required" }, { "class", "llayui-textarea Nation" } })
                             </div>
                         </div>
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                             <label class="layui-form-label">日期</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Dateofinterview, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(a => a.Dateofinterview, new Dictionary<string, object>() { { "lay-verify", "date|required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql" id="yi" style="display:none;">
@@ -132,6 +134,42 @@
 
             }
         });
+        if ($("#ID").val() != "") {
+            $("#but1").remove();
+            console.log($("#StuDenNull"));
+            $("#StuDenNull").attr('disabled', 'disabled');
+            $("#lab1").text("姓名");
+            $.post("/Teachingquality/InterviewStudents/Select/" + $("#ID").val(), function (data) {
+                if (data != 0) {
+                    $("#InterviewTopics").val(data[0].InterviewTopics);
+                    $("#Interviewcontent").val(data[0].Interviewcontent);
+                    $("#Dateofinterview").val(TimeChange(data[0].Dateofinterview));
+                    $("#StuDenNull").val(data[0].StudentNumberID);
+                  
+                } else {
+                    Errye(data);
+                }
+             
+            })
+        }
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + (parseInt(month) + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+
         var i;
         //正在执行中
         function showLoad() {
@@ -144,7 +182,75 @@
             layer.close(index);
 
         }
+        
+        //监听提交
+        form.on('submit(demo1)', function (data) {
 
+            var date = new Date(data.field.Dateofinterview);
+
+            var dates = new Date();
+            //
+            var button = $('#xue').children().length;
+            var errten = "";
+
+            //提交数据
+            function Entiy() {
+
+                if (button > 0) {
+                    if (getNowFormatDate(dates) >= getNowFormatDate(date)) {
+                        console.log(data.field);
+
+                        ajaxpost("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field);
+                    } else {
+                        Errye("输入的日期不能超过大于当前日期")
+                    }
+                } else {
+                    Errye("请使用查询按钮根据班级选择学员")
+              
+                }
+            }
+            if ($("#ID").val() != "")
+                layer.confirm('<br/>您真的要选择吗?', function (index) {
+                    ajaxpost("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field);
+                }); else
+            if (data.field.StudentNumberID != "") {
+                //判断是否有重复学员
+                $.post("/Teachingquality/InterviewStudents/Errnt", data.field, function (datas) {
+                    
+                    if (datas.length > 0) {
+                        console.log(datas);
+                     
+                      
+                        for (var i = 0; i < datas.length; i++) {
+                            errten += "学号为:" + datas[i].StudentID + ",姓名为:" + datas[i].Name + ",日期为" + getNowFormatDate(datas[i].Dateofinterview) + "<br/>";
+
+                        }
+                        layer.confirm(errten + '<br/>您真的要选择吗?', function (index) {
+                            Entiy();
+                        });
+
+                        // document.getElementById("form").reset();
+                        // reset();
+                    } else {
+                        Entiy();
+                    }
+
+
+                });
+            } else {
+                Errye("请使用小图标搜索班级选择学员！")
+            }
+        });
+        //错误消息提示
+        function Errye(err) {
+            layer.msg(err, {
+                time: 8000, //20s后自动关闭
+
+                btn: ['确定']
+            });
+        }
+
+        //^[\da-zA-z]{6,12}$
         //年月日
         function getNowFormatDate(date) {
 
@@ -161,61 +267,7 @@
             var currentdate = year + seperator1 + month + seperator1 + strDate;
             return currentdate;
         }
-        //监听提交
-        form.on('submit(demo1)', function (data) {
-
-            var date = new Date(data.field.InspectionDate);
-
-            var dates = new Date();
-            //
-            var button = $('#xue').children().length;
-            var errten = "";
-            $.post("/Teachingquality/StudentAttendanc/Errnt", data.field, function (datas) {
-                if (datas.length > 0) {
-                    console.log(datas);
-                    for (var i = 0; i < datas.length; i++) {
-                        errten += "学号为:" + datas[i].StudentID + ",姓名为:" + datas[i].Name + "<br/>";
-
-                    }
-                    Errye(errten + "<br/>该数据已存在数据库,页面数据将为您清空，请勿在同一个日期添加相同数据");
-                    document.getElementById("form").reset();
-                    reset();
-                } else {
-                    //判断是否有查询学员
-                    if (button > 0) {
-                        if (getNowFormatDate(dates) >= getNowFormatDate(date)) {
-                            console.log(data.field);
-
-                            ajaxpost("/Teachingquality/StudentAttendanc/Registerattendance", data.field);
-                        } else {
-                            Errye("输入的日期不能超过大于当前日期")
-                        }
-                    } else {
-                        Errye("请使用查询按钮根据班级选择学员")
-                    }
-                }
-
-
-            });
-        });
-        //错误消息提示
-        function Errye(err) {
-            layer.msg(err, {
-                time: 8000, //20s后自动关闭
-
-                btn: ['确定']
-            });
-        }
-
-        //^[\da-zA-z]{6,12}$
-        //正则表达式
-        form.verify({
-            StuName: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (/^[\da-zA-z]{6,10}$/.test(value)) {
-                    return '班级名称由字母或者数字组成,6-10位';
-                }
-            }
-        });
+      
         //ajax
         function ajaxpost(url, datae) {
 
@@ -325,7 +377,7 @@
     });
     //输入班级查询学员数据赋值
     function GetPartsItmes(id, name) {
-        $("#StudentID").val(id);
+        $("#StudentNumberID").val(id);
         $("#but1").css("display", "none");
         $("#yi").css("display", "block");
         $("#StuDenNull").attr("readonly", "readonly");
@@ -343,6 +395,7 @@
 
             xue.append($("<button type='button' style='width:100px;margin-top:10px;' class='layui-btn'><i class='layui-icon'>&#xe770;</i>" + myname[i] + " </button>"));
         }
+        console.log(id);
        
 
 

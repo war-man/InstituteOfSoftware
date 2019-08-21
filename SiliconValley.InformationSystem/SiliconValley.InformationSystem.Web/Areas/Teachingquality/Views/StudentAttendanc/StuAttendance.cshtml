@@ -70,8 +70,7 @@
                 stuid = a;
             } else {
                 $(this).addClass("layui-btn-danger");
-              
-               
+
                 arr.push(a);
                 atrr.push(b);
             }
@@ -119,19 +118,19 @@
                 }
                 for (var i = 0; i < atrr.length; i++) {
                     if (atrr[i] != "") {
-                        var x = atrr[i].split('(')
+                        var Z = atrr[i].split('(')
                         if (i < arr.length - 1) {
 
-                            c += x[0].substring(1) + ",";
+                            c += Z[0].substring(1) + ",";
                         } else {
-                            c += x[0].substring(1);
+                            c += Z[0].substring(1);
                         }
                     }
 
 
                 }
             }
-            
+            console.log(x);
             if (x != "") {
                 layer.confirm('您真的要选择吗?', function (index) {
                     parent.GetPartsItmes(x, c);

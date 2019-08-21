@@ -16,7 +16,7 @@
     <style>
         #but1 {
             position: absolute;
-            top: 3%;
+            top: 8%;
             left:35%;
             width:36px;
             height:36px;
@@ -34,7 +34,11 @@
         }
         .textar{
             width:80%;
-            height:200px;
+            height:150px;
+        }
+        .demo1{
+            width:100px;
+            height:100px;
         }
     </style>
 
@@ -47,14 +51,26 @@
  
     <input type="text" id="StudentID" value="@ViewBag.StudentID" style="display:none;" />
     <div>
+
         <form class="layui-form" action="" lay-filter="example">
+
             <div class="layui-container">
                 <fieldset>
+
 
                     <legend>基础信息</legend>
 
 
                     <div class="layui-row layui-form-item">
+
+                        <div class="layui-upload" style="position:relative;left:40%; ">
+                            <button type="button" class="layui-btn" id="test1">上传图片</button>
+                            <div class="layui-upload-list" style="position:absolute;">
+                                <img class="layui-upload-img" id="demo1">
+                                <p id="demoText"></p>
+                            </div>
+                        </div>
+
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
                             <label class="layui-form-label">学号</label>
                             <div class="layui-input-inline">
@@ -83,6 +99,7 @@
                         </div>
 
                     </div>
+
                     <div class="layui-row layui-form-item">
 
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -160,7 +177,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-row layui-form-item" id="clssa" style="margin-top:-15px;display:none" >
+                    <div class="layui-row layui-form-item" id="clssa" style="margin-top:-15px;display:none">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths">
                             <label class="layui-form-label">班级</label>
                             <div class="layui-input-inline">
@@ -211,7 +228,7 @@
                             <label class="layui-form-label">备注</label>
                             <div class="layui-input-block">
 
-                                @Html.TextAreaFor(a => a.Reack, new Dictionary<string, object>() {  { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                                @Html.TextAreaFor(a => a.Reack, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
                             </div>
                         </div>
 
@@ -240,7 +257,7 @@
     <script>
 
         if ($("#StudentID").val() != false) {
-            $("#liden").css("display", "none");
+            $("#but1").remove();
             $("#Name").attr("readonly", "readonly");
             $("#list").remove();
             //去掉所有的空格
@@ -293,7 +310,7 @@
             //clssa
 
         }
-        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        layui.use(['form', 'layedit', 'laydate','upload', 'layer'], function () {
        
             var form = layui.form
                 , layer = layui.layer
@@ -310,10 +327,40 @@
                     btn: ['确定']
                 });
             }
-            //验证输入框姓名
-            function ErrenName() {
+            var $ = layui.jquery
+                , upload = layui.upload;
 
-            }
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                , url: '/Teachingquality/StudentInformation/img'
+                , before: function (obj) {
+                    $("#demo1").css("width", "100px");
+                    $("#demo1").css("height", "100px");
+
+                    //demo1 height
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                  
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                }
+                //, done: function (res) {
+                //    //如果上传失败
+                //    if (res.code > 0) {
+                //        return layer.msg('上传失败');
+                //    }
+                //    //上传成功
+                //}
+                //, error: function () {
+                //    //演示失败状态，并实现重传
+                //    var demoText = $('#demoText');
+                //    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                //    demoText.find('.demo-reload').on('click', function () {
+                //        uploadInst.upload();
+                //    });
+                //}
+            });
        
             //搜索名字
             $("#but1").click(function () {

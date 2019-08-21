@@ -10,6 +10,7 @@ using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.Common;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -45,7 +46,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id)
         {
 
-          List<ClassSchedule> list = dbtext.GetList().Where(a=>a.ClassStatus==false&&a.IsDelete==false).ToList();
+         
+           
+            try
+            {
+         List<ClassSchedule> list = dbtext.GetList().Where(a=>a.ClassStatus==false&&a.IsDelete==false).ToList();
             if (!string.IsNullOrEmpty(ClassNumber))
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
@@ -86,8 +91,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 msg = "",
                 count = dataList.Count,
                 data = dataList
-            };
-            return Json(data, JsonRequestBehavior.AllowGet);
+            }; return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+                return Json("数据有误", JsonRequestBehavior.AllowGet);
+            }
         }
 
          //开设班级页面
@@ -128,13 +139,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     retus.Success = true;
                     retus.Msg = "开设成功";
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     retus = new ErrorResult();
                     retus.Msg = "服务器错误";
 
                     retus.Success = false;
                     retus.ErrorCode = 500;
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+               
 
                 }
             }

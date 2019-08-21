@@ -11,6 +11,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
+using SiliconValley.InformationSystem.Business.Common;
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
     [CheckLogin]
@@ -78,7 +79,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string c = a.ToString();
             return c;
         }
-       
+      
+       //图片
+       public JsonResult img()
+        {
+            if (Request.Files.Count > 0)
+            {
+                HttpPostedFileBase f = Request.Files["file"];//最简单的获取方法
+                string name = "2017.jpg";
+  
+                f.SaveAs(AppDomain.CurrentDomain.BaseDirectory + "Areas/Teachingquality/StuImages/"+name);//保存图片
+
+                //这下面是返回json给前端 
+                var data1 = new
+                {
+                    src = AppDomain.CurrentDomain.BaseDirectory + "Areas/Teachingquality/StuImages/" + name ,//服务器储存路径
+                };
+                var Person = new
+                {
+                    code = 0,//0表示成功
+                    msg = "",//这个是失败返回的错误
+                    data = data1
+                };
+                return Json(Person);//格式化为json
+            }
+            else
+            {
+                return null;
+            }
+        }
         //生成学号
         public string StudentID(string IDnumber)
 
@@ -90,7 +119,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string n = date.Year.ToString().Substring(2);//获取年份
 
             //学员总数
-            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count()+1;
+            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n&& a.IsDelete != true).Count()+1;
             string sfz = IDnumber.Substring(6,8);
 
             string y = Month(Convert.ToInt32(date.Month)).ToString();
@@ -149,27 +178,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
             //    List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
-            List<StudentInformation> list = dbtext.GetList();
-            if (!string.IsNullOrEmpty(Name))
+            List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
+            try
             {
-                list = list.Where(a => a.Name.Contains(Name)).ToList();
-            }
-            if (!string.IsNullOrEmpty(Sex))
-            {
-                bool sex = Convert.ToBoolean(Sex);
-                list = list.Where(a => a.Sex== sex).ToList();
-            }
-            if (!string.IsNullOrEmpty(StudentNumber))
-            {
-                list = list.Where(a => a.StudentNumber.Contains(StudentNumber)).ToList();
-            }
-            if (!string.IsNullOrEmpty(identitydocument))
-            {
-                list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
-            }
+              
+                if (!string.IsNullOrEmpty(Name))
+                {
+                    list = list.Where(a => a.Name.Contains(Name)).ToList();
+                }
+                if (!string.IsNullOrEmpty(Sex))
+                {
+                    bool sex = Convert.ToBoolean(Sex);
+                    list = list.Where(a => a.Sex == sex).ToList();
+                }
+                if (!string.IsNullOrEmpty(StudentNumber))
+                {
+                    list = list.Where(a => a.StudentNumber.Contains(StudentNumber)).ToList();
+                }
+                if (!string.IsNullOrEmpty(identitydocument))
+                {
+                    list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
+                }
 
+              
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+
+                
+            }
             var dataList = list.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
-          //  var x = dbtext.GetList();
+            //  var x = dbtext.GetList();
             var data = new
             {
                 code = "",
@@ -194,8 +234,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult DataKeys()
         {
             string Name = Request.QueryString["Name"];
-            StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
-         var x=   dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+            List<StudentPutOnRecord> x = null;
+            try
+            {
+                StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
+                x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+            }
+            catch (Exception ex)
+            {
+
+            BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+            }
+         
             var data = new
             {
                 code = "",
@@ -211,13 +261,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             NameKeysid = id;
             StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
-          var x=  dbctext.GetList().Where(a => a.Id == id).FirstOrDefault();
-            return Json(x, JsonRequestBehavior.AllowGet);
+            try
+            {
+                var x = dbctext.GetList().Where(a => a.Id == id).FirstOrDefault();
+                return Json(x, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+                return Json("加载数据异常", JsonRequestBehavior.AllowGet);
+            }
+      
         }
         //以身份证查询是否有重复学员
         public bool Isidentitydocument(string identitydocument)
         {
-           var x= dbtext.GetList().Where(a => a.identitydocument == identitydocument).ToList();
+        
+           var x= dbtext.GetList().Where(a => a.identitydocument == identitydocument&& a.IsDelete != true).ToList();
             if (x.Count>0)
             {
                 return false;
@@ -258,13 +318,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         result.Success = true;
                         result.Data = studentInformation.StudentNumber;
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         result = new ErrorResult();
                         result.ErrorCode = 500;
                         result.Msg = "服务器错误1";
 
-
+                        BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                     
                     }
                 }
                 else
@@ -289,14 +350,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         result.Success = true;
                     
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         result = new ErrorResult();
                         result.ErrorCode = 500;
                         result.Msg = "服务器错误";
 
-
-                    }
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+                  
+                }
                 }
              
            
@@ -306,7 +368,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //按学号查询单个学员 find
         public StudentInformation Finds(string id)
         {
-            var x = dbtext.GetList().Where(a => a.StudentNumber == id).FirstOrDefault();
+            var x = dbtext.GetList().Where(a => a.StudentNumber == id&& a.IsDelete != true).FirstOrDefault();
             return x;
         }
         //按学号查询单个学员返回json格式
@@ -360,7 +422,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult Password(StudentInformation student)
         {
-          var x=  dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber).FirstOrDefault();
+          var x=  dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber&& a.IsDelete != true).FirstOrDefault();
             x.Password = student.Password;
             AjaxResult result = null;
             try
@@ -370,12 +432,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result.Success = true;
                 result.Msg = "修改成功";
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 result = new ErrorResult();
                 result.ErrorCode = 500;
                 result.Msg = "服务器错误";
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+              
             }
           return Json(result, JsonRequestBehavior.AllowGet);
         }

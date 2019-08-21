@@ -10,6 +10,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.Common;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -37,7 +38,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page, int limit,string Name,string Attendancestatus,string qBeginTime,string identitydocument,string qEndTime)
         {
 
-           List<StudentAttendance> list = new List<StudentAttendance>();
+         
+            try
+            {  List<StudentAttendance> list = new List<StudentAttendance>();
 
             if (!string.IsNullOrEmpty(Name))
             {
@@ -86,7 +89,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 count = dataList.Count,
                 data = dataList
             };
-            return Json(data, JsonRequestBehavior.AllowGet);
+          return Json(data, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+                return Json("数据异常", JsonRequestBehavior.AllowGet);
+                throw;
+            }
+            
         }
 
         //登记出勤
@@ -136,13 +147,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result.Msg = "记录成功";
                 result.Success = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 result = new ErrorResult();
                 result.ErrorCode = 500;
                 result.Success = false;
                 result.Msg = "服务器错误";
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+            
             }
            
             return Json(result,JsonRequestBehavior.AllowGet);
@@ -207,5 +220,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var classStu = Stuclass.GetList().Where(a => a.CurrentClass == true && a.ClassID == StudentID).ToList();
             return Json(classStu, JsonRequestBehavior.AllowGet);
         }
+
+       
     }
 }

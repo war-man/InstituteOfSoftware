@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string InterviewTopics { get; set; }
         public Nullable<System.DateTime> Dateofinterview { get; set; }
         public string Interviewcontent { get; set; }
-        public Nullable<int> InterviewRecorderID { get; set; }
+        public string InterviewRecorderID { get; set; }
         public string StudentNumberID { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
