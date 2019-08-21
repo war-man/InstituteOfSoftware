@@ -251,9 +251,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-        //预到招聘数据汇总添加
-        public ActionResult AddRecruitData() {
-            return View();
+        //月度招聘数据汇总添加
+        public AjaxResult AddRecruitData() {
+            var AjaxResultxx = new AjaxResult();
+
+            return AjaxResultxx;
         }
     }
 }
