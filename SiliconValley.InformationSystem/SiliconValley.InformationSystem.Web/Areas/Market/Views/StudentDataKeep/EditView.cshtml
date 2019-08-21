@@ -125,7 +125,7 @@
 
                         <label class="LableCss1">出生日期</label>
                         <div class="layui-input-block">
-                            <input name="StuBirthy" id="StuBirthy" placeholder="YY-MM-DD" lay-verify="StuBirthy|" class="layui-input linu"/>
+                            <input name="StuBirthy" id="StuBirthy" placeholder="YY-MM-DD" lay-verify="StuBirthy|content" class="layui-input linu"/>
                         </div>
 
                     </div>
@@ -187,6 +187,12 @@
                             <input type="hidden" id="StuEntering" name="StuEntering" />
                         </div>
                     </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">所在区域</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
+                        </div>
+                    </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -206,17 +212,16 @@
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="LableCss1">学生状态</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
                         <label class="layui-form-label">备案人</label>
                         <div class="layui-input-block">
                             <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />
-
                             <input name="e_Name" id="e_Name" lay-verify="required" class="layui-input linu" readonly="readonly" placeholder="备案人" />
                         </div>
                     </div>                    

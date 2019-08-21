@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string StuEntering { get; set; }
         public string Reak { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
-      
+        public Nullable<int> Region_id { get; set; }
+
     }
 }

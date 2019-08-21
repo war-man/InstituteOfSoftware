@@ -98,6 +98,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecruitingDataSummaryBusiness\RecruitingDataSummaryManage.cs" />
     <Compile Include="RecruitPhoneTraceBusiness\RecruitPhoneTraceManage.cs" />
+    <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />

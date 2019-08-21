@@ -6,22 +6,21 @@ using System.Web.Mvc;
 using SiliconValley.InformationSystem.Entity;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
-using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.MyEntity;//获取树实体
 using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;//获取学生状态实体
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;//获取学生信息来源实体
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工信息实体
-using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体
-using SiliconValley.InformationSystem.Entity.MyEntity;//获取树实体
+using SiliconValley.InformationSystem.Business.DepartmentBusiness; //获取岗位信息实体 
 using SiliconValley.InformationSystem.Business.PositionBusiness;//获取岗位实体
 using SiliconValley.InformationSystem.Entity.ViewEntity;//获取员工岗位部门实体
 using SiliconValley.InformationSystem.Entity.Entity;
 using System.Text;
 using System.IO;
 using System.Data;
-using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.RegionManage;//获取区域实体
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -41,6 +40,89 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         DepartmentManage Department_Entity = new DepartmentManage();
         //创建一个用于查询岗位信息实体
         PositionManage Position_Entity = new PositionManage();
+        //创建一个用于查询区域的实体
+        RegionManeges region_Entity = new RegionManeges();
+
+        #region 获取各种外键的值
+        //获取学生状态名称
+        public string GetStuStatuValue(int? id)
+        {
+            StuStatus Get_List_stustate = Stustate_Entity.GetEntity(id);//获取上门学生状态所有数据
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                return Get_List_stustate.StatusName;
+            }
+
+            return "未填写";
+        }
+        //获取信息来源名称
+        public string GetStuInfomationTypeValue(int? id)
+        {
+            StuInfomationType Get_List_stuInfomationtype = StuInfomationType_Entity.GetEntity(id);
+
+            if (!string.IsNullOrEmpty(id.ToString()))
+            {
+                return Get_List_stuInfomationtype.Name;
+            }
+            return "未填写";
+        }
+        //查询员工
+        public string GetEmployeeValue(string id,bool isglu)
+        {
+            if (isglu)
+            {
+                EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel == false).FirstOrDefault();
+                if (finde != null)
+                {
+                    return finde.EmpName;
+                }
+                else
+                {
+                    return "无";
+                }
+            }
+            else
+            {
+                EmployeesInfo finde = Enplo_Entity.GetEntity(id);
+                if (finde != null)
+                {
+                    return finde.EmpName;
+                }
+                else
+                {
+                    return "无";
+                }
+            }            
+        }       
+        //这个方法是用于通过名字来查询信息来源Id的
+        public int GetNameSearchId(string name)
+        {
+            StuInfomationType liststuinfomation = StuInfomationType_Entity.GetEntity(name);
+            if (liststuinfomation != null)
+            {
+                return liststuinfomation.Id;
+            }
+            else
+            {
+                return 1;
+            }
+
+        }
+        //这个方法是用于通过员工姓名来查询员工的员工编号
+        public string GetNameSreachEmploId(string name)
+        {
+            EmployeesInfo e = Enplo_Entity.GetEntity(name);
+            return e.EmployeeId;
+        }       
+
+        //缓存
+        public List<StudentPutOnRecord> GetList()
+        {
+            s_Entity.GetList();
+            RedisCache my_redis = new RedisCache();
+        }
+        #endregion
+
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
         {
@@ -52,18 +134,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             e.Value = "请选择";
             se.Add(e);
             ViewBag.infomation = se;
+            //获取区域所有信息
+            SelectListItem newselectitem = new SelectListItem() { Text="请选择",Value="请选择",Selected=true};
+            var r_list= region_Entity.GetList().Where(r => r.IsDel == false).Select(r => new SelectListItem { Text = r.RegionName, Value = r.ID.ToString() }).ToList();
+            r_list.Add(newselectitem);
+            ViewBag.are = r_list;
             return View();
         }
 
         //往数据库中获取数据备案的信息
         public ActionResult GetStudentPutOnRecordData(int limit,int page)
         {
+            #region 取值
             string findNamevalue = Request.QueryString["findNamevalue"];
             string findPhonevalue = Request.QueryString["findPhonevalue"];
             string findInformationvalue = Request.QueryString["findInformationvalue"];
             string findStartvalue = Request.QueryString["findStartvalue"];
             string findEndvalue = Request.QueryString["findEndvalue"];
+            string findBeanManvalue = Request.QueryString["findBeanManvalue"];
+            string findAreavalue = Request.QueryString["findAreavalue"];
+            #endregion
             IQueryable<StudentPutOnRecord> stu_IQueryable = s_Entity.GetIQueryable().OrderByDescending(s => s.Id);
+            #region 模糊查询
             if (!string.IsNullOrEmpty(findNamevalue))
             {
                 stu_IQueryable = stu_IQueryable.Where(s => s.StuName.Contains(findNamevalue));
@@ -89,9 +181,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 DateTime dd = new DateTime(t2.Year, t2.Month, t2.Day, 23, 59, 59);
                 stu_IQueryable = stu_IQueryable.Where(s => s.StuDateTime <= dd );
             }
-          
+            if (!string.IsNullOrEmpty(findBeanManvalue))
+            {
+                string Beanname = findBeanManvalue;
+                string empyeid = GetNameSreachEmploId(Beanname);
+                stu_IQueryable = stu_IQueryable.Where(s => s.EmployeesInfo_Id == empyeid);
+            }
+            if (!string.IsNullOrEmpty(findAreavalue)&& findAreavalue!= "请选择")
+            {
+                int Areeid =Convert.ToInt32( findAreavalue);                
+                stu_IQueryable = stu_IQueryable.Where(s => s.Region_id == Areeid);
+            }
+            #endregion            
             try
             {
+                #region 分页转前端数据格式类型
                 int SunLimit = stu_IQueryable.Count();//总行数
                 int SunPage = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(SunLimit / limit)));//总页数
               
@@ -109,21 +213,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuQQ = s.StuQQ,
                     StuInfomationType_Id = GetStuInfomationTypeValue(s.StuInfomationType_Id),
                     StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
-                    StuIsGoto =s.StuIsGoto,
-                    StuVisit =s.StuVisit,
-                    EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
-                    StuDateTime =s.StuDateTime,
-                    StuEntering =s.StuEntering,
-                    Reak =s.Reak
-
-                });//获取了数据库中所有数据备案信息;                                                                                          
-                
+                    StuIsGoto = s.StuIsGoto,
+                    StuVisit = s.StuVisit,
+                    EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id, false),
+                    StuDateTime = s.StuDateTime,
+                    StuEntering = s.StuEntering,
+                    Reak = s.Reak,
+                    Regin_id = s.Region_id,
+                    ReginName = region_Entity.GetEntity(s.Region_id).RegionName
+                });//获取了数据库中所有数据备案信息;                                                                                                         
                 var JsonData = new {     
                     code=0, //解析接口状态,
                     msg="", //解析提示文本,
                     count= SunLimit, //解析数据长度
                     data= Get_List_studentPutOnRecord //解析数据列表
-                };                       
+                };
+                #endregion
                 return Json(JsonData,JsonRequestBehavior.AllowGet);
             }                            
             catch (Exception ex)         
@@ -134,75 +239,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }                            
         }
         
-        #region 获取各种外键的值
-        public string GetStuStatuValue(int? id)
-        {
-            List<StuStatus> Get_List_stustate = Stustate_Entity.GetList().Where(sta=>sta.IsDelete==false).ToList();//获取上门学生状态所有数据
-            if (!string.IsNullOrEmpty(id.ToString()))
-            {
-                return Get_List_stustate.Where(s => s.Id == id).FirstOrDefault().StatusName;
-            }
- 
-            return "未填写";
-        }
-        public string GetStuInfomationTypeValue(int? id)
-        {
-            List<StuInfomationType> Get_List_stuInfomationtype = StuInfomationType_Entity.GetList().Where(info=>info.IsDelete==false).ToList();
-           
-            if (!string.IsNullOrEmpty(id.ToString()))
-            {
-                return Get_List_stuInfomationtype.Where(s => s.Id == id).FirstOrDefault().Name;
-            }
-            return "未填写";
-        }
-        //这个方法是过滤的未在职员工的
-        public string GetEmployeeValue(string id)
-        {
-            EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id && s.IsDel == false).FirstOrDefault();
-            if (finde!=null)
-            {
-                return finde.EmpName;
-            }
-            else
-            {
-                return "无";
-            }
-           
-        }
-        //这个方法是查询所有员工，无论在职或辞职都可以查询
-        public string GetEmployeeValueAll(string id)
-        {
-            EmployeesInfo finde = Enplo_Entity.GetList().Where(s => s.EmployeeId == id).FirstOrDefault();
-            if (finde != null)
-            {
-                return finde.EmpName;
-            }
-            else
-            {
-                return "无";
-            }
-        }
-        //这个方法是用于通过名字来查询信息来源Id的
-        public int GetNameSearchId(string name)
-        {
-              StuInfomationType liststuinfomation = StuInfomationType_Entity.GetList().Where(t=>t.Name==name).FirstOrDefault();
-            if (liststuinfomation !=null)
-            {
-                return liststuinfomation.Id;
-            }
-            else
-            {
-                return 1;
-            }
-
-        }
-        //这个方法是用于通过员工姓名来查询员工的员工编号
-        public string GetNameSreachEmploId(string name)
-        {
-            EmployeesInfo e = Enplo_Entity.GetList().Where(ee => ee.EmpName == name).FirstOrDefault();
-            return e.EmployeeId;
-        }
-        #endregion
         #region
         //这是一个添加数据的页面
         public ActionResult AddorEdit(string id)
@@ -211,7 +247,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s=>s.IsDelete==false).Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
 
             //获取学生状态来源的所有数据
-            ViewBag.state = Stustate_Entity.GetList().Where(s=>s.IsDelete==false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();             
+            ViewBag.state = Stustate_Entity.GetList().Where(s=>s.IsDelete==false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            //获取所有区域
+            SelectListItem s1 = new SelectListItem() { Text = "区域外", Value = "区域外" };
+             var r_list = region_Entity.GetList().Where(r=>r.IsDel==false).Select(r=>new SelectListItem { Text=r.RegionName,Value=r.ID.ToString()}).ToList();
+             r_list.Add(s1);
+            ViewBag.area = r_list;
+
+
             return View();
         }
 
@@ -266,79 +309,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
              
         }
 
-        //获取录入人员
-        public ActionResult FindInfoEmply()
-        {
-           List<Department> list_e1= Department_Entity.GetList().Where(d=>(d.DeptName=="咨询部" || d.DeptName=="网络部")&& d.IsDel==false).ToList();
-           
-            return View();
-        }
-
-        //加载网络部跟咨询部员工供用户选择
-        public List<EmployeesInfo> loadNetSeekData1()
-        {
-            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "咨询部" && d.IsDel==false).ToList();//获取可用的所有部门信息
-            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有在职员工信息
-            List<Position> list_Position = Position_Entity.GetList().Where(p=>p.IsDel==false).ToList();//获取可用的岗位信息
-            List<EmployeesInfo> ee = new List<EmployeesInfo>();
-            foreach (Department item1 in d_list)
-            {
-                List<TreeClass> bigTree = new List<TreeClass>();
-                foreach (Position item2 in list_Position)
-                {
-                    if (item1.DeptId == item2.DeptId)
-                    {
-                        foreach (EmployeesInfo item3 in list_Enploy)
-                        {
-                            if (item3.PositionId == item2.Pid)
-                            {
-                                ee.Add(item3);
-                            }
-                        }                        
-                    }
-                }
-            }
-            return ee;
-        }
-        public List<EmployeesInfo> loadNetSeekData2()
-        {
-            List<Department> d_list = Department_Entity.GetList().Where(d => d.DeptName == "网络部" && d.IsDel==false).ToList();//获取可用部门信息
-            List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(e=>e.IsDel==false).ToList();//获取在职员工信息
-            List<Position> list_Position = Position_Entity.GetList().Where(p=>p.IsDel==false).ToList();//获取可用岗位信息
-            List<EmployeesInfo> ee = new List<EmployeesInfo>();
-            foreach (Department item1 in d_list)
-            {
-                List<TreeClass> bigTree = new List<TreeClass>();
-                foreach (Position item2 in list_Position)
-                {
-                    if (item1.DeptId == item2.DeptId)
-                    {
-                        foreach (EmployeesInfo item3 in list_Enploy)
-                        {
-                            if (item3.PositionId == item2.Pid)
-                            {
-                                ee.Add(item3);
-                            }
-                        }
-                    }
-                }
-            }
-            return ee;
-        }
-        //将网络部的员工与咨询部的员工加载出来
-        public ActionResult ShowSeekNet()
-        {
-            List<EmployeesInfo> ee1 = loadNetSeekData1();
-            List<EmployeesInfo> ee2 = loadNetSeekData2();
-            ViewBag.ee1 = ee1;
-            ViewBag.ee2 = ee2;
-            return View(ee1);
-        }
-
         //添加备案数据
         public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
-        {
-             
+        {            
             try
             {
                StudentPutOnRecord er= s_Entity.GetList().Where(s => s.StuName == news.StuName && s.StuPhone == news.StuPhone).FirstOrDefault();
@@ -346,6 +319,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     news.StuDateTime = DateTime.Now;
                     news.IsDelete = false;
+                    news.StuEntering = "201908150001";
                     s_Entity.Insert(news);
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
@@ -388,6 +362,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             //获取学生状态来源的所有数据
             ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+            //获取所有区域
+            SelectListItem s1 = new SelectListItem() { Text = "区域外", Value = "区域外" };
+            var r_list = region_Entity.GetList().Where(r => r.IsDel == false).Select(r => new SelectListItem { Text = r.RegionName, Value = r.ID.ToString() }).ToList();
+            r_list.Add(s1);
+            ViewBag.area = r_list;
             return View();
         }
 
@@ -409,6 +388,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 fins.StuVisit = olds.StuVisit;
                 fins.StuInfomationType_Id = olds.StuInfomationType_Id;
                 fins.StuStatus_Id = olds.StuStatus_Id;
+                fins.Region_id = olds.Region_id;
                 s_Entity.Update(fins);
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
@@ -446,8 +426,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuStatus_Id = finds.StuStatus_Id,
                     StuVisit = finds.StuVisit,
                     StuWeiXin = finds.StuWeiXin,
-                    e_Name = GetEmployeeValue(finds.EmployeesInfo_Id),
-                    StuEntering_1 = GetEmployeeValueAll(finds.StuEntering),
+                    e_Name = GetEmployeeValue(finds.EmployeesInfo_Id,false),
+                    StuEntering_1 = GetEmployeeValue(finds.StuEntering,false),
                 };
                 return Json(newdata, JsonRequestBehavior.AllowGet);
             }
@@ -558,7 +538,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
                         StuIsGoto = s.StuIsGoto,
                         StuVisit = s.StuVisit,
-                        EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id),
+                        EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id,false),
                         StuDateTime = s.StuDateTime,
                         StuEntering = s.StuEntering,
                         Reak = s.Reak
