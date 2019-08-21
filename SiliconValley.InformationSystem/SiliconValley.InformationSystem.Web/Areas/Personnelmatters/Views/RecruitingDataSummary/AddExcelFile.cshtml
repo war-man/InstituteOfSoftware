@@ -1,0 +1,119 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>AddExcelFile</title>
+        <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+        <script src="~/Scripts/layui/layui.js"></script>
+        <style>
+            #but1 {
+                position: absolute;
+                top: 13%;
+                left: 35%;
+                width: 36px;
+                height: 36px;
+                text-align: center;
+                line-height: 36px;
+            }
+
+                #but1:hover {
+                    background-color: aqua;
+                }
+
+            #Nation {
+                width: 100px;
+            }
+
+            .linu {
+                width: 200px;
+            }
+        </style>
+
+    </head>
+    <body>
+
+        <h1 style="text-align:center;height:50px;">导入excel文件格式的人才计划需求</h1>
+        <div>
+            <form class="layui-form" action="">
+                <div class="layui-container">
+                    <fieldset>
+                        <button type="button" class="layui-btn" id="btn1"><i class="layui-icon"></i>选择Excel文件</button>
+                    </fieldset>
+                    <fieldset>
+                        <legend>数据列表</legend>
+                        <table id="excelTab" lay-filter="excelTab"></table>
+                    </fieldset>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入">
+                        <button class="layui-btn" id="No" name="No">取消</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            layui.use(['form','table','upload', 'layer', 'laydate'], function () {
+                var form = layui.form
+                    , layer = layui.layer
+                    , layedit = layui.layedit
+                    , laydate = layui.laydate
+                    ,   $ = layui.jquery
+                    , upload = layui.upload
+                    , table = layui.table;
+                   
+                    //指定允许上传的文件类型
+                    upload.render({
+                        elem: '#btn1'
+                        , url: '/Personnelmatters/RecruitingDataSummary/ShowUploadFile'
+                        , accept: 'file' //普通文件
+                        , exts: 'xls|xlsx'//只允许上传Excle文件
+                        , done: function (res) {
+                            if (res.msg == "ok") {
+                                table.render({
+                                    elem: '#excelTab'
+                                    , data: res.data
+                                    , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                                    , cols: [[
+                                        , { field: 'dname', title: '部门', width: 73 }
+                                        , { field: 'pname', title: '岗位名称', width: 126, sort: true }
+                                        , { field: 'DemandPersonNum', title: '需求人数', width: 105, sort: true }
+                                        , { field: 'empname', title: '负责人', width: 95, sort: true }
+                                        , { field: 'ApplyTime', title: '需求申请时间', width: 135, sort: true, templet: function (d) { return GetYMD(d.ApplyTime); } }
+                                        , { field: 'PlanEntryTime', title: '预入职时间', width: 130, sort: true, templet: function (d) { return GetYMD(d.PlanEntryTime); } }
+                                        , { field: 'PositionStatement', title: '岗位职责', width: 140, sort: true }
+                                        , { field: 'PositionRequest', title: '岗位要求', width: 140, sort: true }
+                                        , { field: 'RecruitReason', title: '招聘原因', sort: true, width: 140 }
+                                        , { field: 'Remark', title: '备注' }
+
+                                    ]]
+                                    , page: true
+                                    , limits: [5, 8]
+                                    , limit: 5
+                                });
+                                $("#Yes")[0].removeAttribute("disabled");
+                            } else if (res.msg == "文件格式错误") {
+                                TiShi(res.msg);
+                            } else if (res.msg == "no") {
+                                TiShi('操作错误');
+                            }
+                        }
+                    });
+              
+            });
+        </script>
+
+
+    </body>
+</html>
+
