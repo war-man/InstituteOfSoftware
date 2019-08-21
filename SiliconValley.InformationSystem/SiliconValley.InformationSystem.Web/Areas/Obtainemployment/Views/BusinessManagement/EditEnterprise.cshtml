@@ -57,7 +57,6 @@
                             <div class="layui-input-inline">
                                 @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { @*{ "lay-verify", "required|EntNameZz|EntNameOnly" },*@ { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
                                 @Html.HiddenFor(a => a.EntID)
-                                @Html.HiddenFor(a => a.CooID)
                                 @Html.HiddenFor(a => a.EntScale)
                                 @Html.HiddenFor(a => a.EntNature)
                                 @Html.HiddenFor(a => a.OperNO)
@@ -279,8 +278,8 @@
                     $(this).attr("checked", "checked");
                 }
             })
-            var CooIDview = $("#CooID").val();
-            if (CooIDview > 1) {
+            var OperNO = $("#OperNO").val();
+            if (OperNO > 1) {
                 $("#iscoo").attr("checked", "checked");
                 var compiled = _.template($("#coomuban").html());
                 var html = compiled();

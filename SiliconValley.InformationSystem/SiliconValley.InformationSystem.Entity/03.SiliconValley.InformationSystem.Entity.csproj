@@ -110,7 +110,6 @@
     <Compile Include="Entity\ConsultTeacher.cs" />
     <Compile Include="Entity\ConversationRecord.cs" />
     <Compile Include="Entity\ConvertCourse.cs" />
-    <Compile Include="Entity\CooperaEnterprises.cs" />
     <Compile Include="Entity\Costlist.cs" />
     <Compile Include="Entity\CourseTime.cs" />
     <Compile Include="Entity\CourseType.cs" />

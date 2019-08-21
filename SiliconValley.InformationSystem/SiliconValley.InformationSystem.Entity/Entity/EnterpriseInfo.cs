@@ -14,20 +14,58 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 企业信息i
+    /// </summary>
     [Table(name: "EnterpriseInfo")]
     public partial class EnterpriseInfo
     {
-     
+
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 公司名称
+        /// </summary>
         public string EntName { get; set; }
+        /// <summary>
+        /// 公司地址
+        /// </summary>
         public string EntAddress { get; set; }
+        /// <summary>
+        /// 规模
+        /// </summary>
         public string EntScale { get; set; }
+        /// <summary>
+        /// 性质
+        /// </summary>
         public string EntNature { get; set; }
+        /// <summary>
+        /// 待遇
+        /// </summary>
         public string EntWelfare { get; set; }
         public Nullable<System.DateTime> EntDate { get; set; }
+        /// <summary>
+        /// 录入人
+        /// </summary>
         public int EmpStaffID { get; set; }
         public string Remark { get; set; }
-        public Nullable<bool> IsDel { get; set; }
+        public bool IsDel { get; set; }
+
+        /// <summary>
+        /// 联系人
+        /// </summary>
+        public string EntContacts { get; set; }
+        /// <summary>
+        /// 电话
+        /// </summary>
+        public string EntPhone { get; set; }
+        /// <summary>
+        /// 是否合作
+        /// </summary>
+        public bool IsCooper { get; set; }
+        /// <summary>
+        /// 合作时间
+        /// </summary>
+        public Nullable<System.DateTime> CooData { get; set; }
     }
 }

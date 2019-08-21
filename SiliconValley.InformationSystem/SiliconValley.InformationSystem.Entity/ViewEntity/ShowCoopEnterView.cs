@@ -22,8 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string EmploymentStaffName { get; set; }
         //企业备注
         public string Remark { get; set; }
-        //合作企业ID
-        public Nullable<int> CooperaEnterprisesID { get; set; }
+   
         //联系人
         public string EntContacts { get; set; }
         //联系方式
