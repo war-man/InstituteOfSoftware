@@ -12,7 +12,6 @@
             color: #fff;
             border: none;
         }
-
         .inputCss1 {
             height: 38px;
             line-height: 1.3;
@@ -25,6 +24,14 @@
         .spanCssThree1 {
             color: red
         }
+        .spanCss2 {
+            font-size: 15px;
+            font-weight: normal;
+        }
+       .inputCss2{
+            border-radius:5px;
+            height:30px;
+        }
     </style>
 }
 <script type="text/html" id="toolbarDemo1">
@@ -34,6 +41,9 @@
         </button>
         <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
             <i class="layui-icon">&#xe60a;</i> Excel文件导入
+        </button>
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="getSerchType">
+            <i class="layui-icon">&#xe615;</i> 查看信息来源与学生状态
         </button>
     </div>
 </script>
@@ -46,33 +56,43 @@
         <legend style="color:#009688;">简单查询</legend>
         <div class="layui-row">
             <div class="layui-col-sm3">
-                <label>姓名:</label>
-                <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
+                <label class="spanCss2">姓名:</label>
+                <input name="findNamevalue" id="findNamevalue" class="inputCss1 inputCss2" />
             </div>
             <div class="layui-col-sm3">
-                <label>联系电话:</label>
-                <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
+                <label class="spanCss2">联系电话:</label>
+                <input name="findPhonevalue" id="findPhonevalue" class="inputCss1 inputCss2" />
             </div>
             <div class="layui-col-sm3">
-                <label>信息来源:</label>
+                <label class="spanCss2">信息来源:</label>
                 <div style="display: inline-block;width:150px;">
-                    @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>)
+                    @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>,new Dictionary<string,object>(){ { "class","inputCss2"} })
                 </div>
 
             </div>
-        </div>
-        <div class="layui-row" style="margin-top:10px">
             <div class="layui-col-sm3">
-                <label>开始时间:</label>
-                <input name="findStartvalue" id="findStartvalue" class="inputCss1" placeholder="YY-MM-DD"/>
-            </div>
-            <div class="layui-col-sm3">
-                <label>结束时间:</label>
+                <label class="spanCss2">所在区域:</label>
                 <div style="display: inline-block;width:150px;">
-                    <input name="findEndvalue" id="findEndvalue" class="inputCss1" placeholder="YY-MM-DD"/>
+                    @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>)
+                </div>
                 </div>
             </div>
-            <div class="layui-col-sm5" style="text-align:right">
+        <div class="layui-row" style="margin-top:10px;margin-bottom:10px">
+            <div class="layui-col-sm3">
+                <label class="spanCss2">备案人:</label>
+                <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1 inputCss2" />
+            </div>
+            <div class="layui-col-sm3">
+                <label class="spanCss2">开始时间:</label>
+                <input name="findStartvalue" id="findStartvalue" class="inputCss1 inputCss2" placeholder="YY-MM-DD" />
+            </div>
+            <div class="layui-col-sm3">
+                <label class="spanCss2">结束时间:</label>
+                <div style="display: inline-block;width:150px;">
+                    <input name="findEndvalue" id="findEndvalue" class="inputCss1 inputCss2" placeholder="YY-MM-DD" />
+                </div>
+            </div>
+            <div class="layui-col-sm3" style="text-align:right">
                 <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
             </div>
         </div>
@@ -151,27 +171,15 @@
                 var findInformationvalue = $("#findInformationvalue").val();
                 var findStartvalue = $("#findStartvalue").val();//获取开始时间
                 var findEndvalue = $("#findEndvalue").val();//获取结束时间
-                var newsdate = new Date();//获取当前时间
-                var ss1 = new Date(findStartvalue);
-                var ss2 = new Date(findEndvalue);
-                if (newsdate - ss1 < 0 && findStartvalue != null) {
-                    TiShi('开始时间不能大于当前时间');
-                } else if (newsdate - ss2 < 0 && findEndvalue != null) {
-                    TiShi('结束时间不能大于当前时间');
-                } else if (ss2 - ss1 < 0 && findEndvalue != null && findStartvalue != null) {
-                    TiShi('开始时间不能大于结束时间');
-                } else {
-                    //var Jsondata = { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue };
-                   // console.log(Jsondata);
+                var findAreavalue = $("#findAreavalue").val();//获取区域
+                var findBeanManvalue = $("#findBeanManvalue").val();//获取备案人               
                     layui.use('table', function () {
                         var table = layui.table;
                         table.reload('tabletest1', {
                             url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                            , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue } //设定异步数据接口的额外参数
+                            , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue} //设定异步数据接口的额外参数
                         });
-                    });
-                }                 
- 
+                    });                                                 
             });
         });
         layui.use(['table','laydate','form'], function () {
@@ -179,12 +187,53 @@
             var laydate = layui.laydate;
             var form = layui.form;
             //日期
+           
+            //月份小于10的前面加个0
+            function MoDay(a) {
+                if (a < 10) {
+                    return "0" + a;
+                }
+                return a;
+            }
+            ////系统时间
+
+            var curDate = new Date();
+            var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+
+            // 时间选择器初始化 开始时间
             laydate.render({
-                elem: '#findStartvalue'
-            });
-            laydate.render({
-                elem: '#findEndvalue'
-            });
+                elem: '#findStartvalue',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date(value).getTime();
+                    var endTime = new Date($('#findEndvalue').val()).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#findStartvalue').val($('#findEndvalue').val());
+                    }
+                    if (startDate > curDate.getTime()) {
+                        layer.msg('开始时间不能大于当前时间');
+                        $('#findStartvalue').val(curYearMonthrDay);
+                    }
+                }
+            })
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#findEndvalue',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date($('#findStartvalue').val()).getTime();
+                    var endTime = new Date(value).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#findEndvalue').val($('#findStartvalue').val());
+                    }
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#findEndvalue').val(curYearMonthrDay);
+                    }
+                }
+            })
             table.render({
                 elem: '#tabletest1'
                 , url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
@@ -215,6 +264,7 @@
                         }
                     }
                     , { field: 'EmployeesInfo_Id', title: '备案人' }
+                    , { field:'ReginName',title:'区域'}
                     , {
                         field: 'StuDateTime', title: '备案日期', templet: function (res) {
                             return TimeChange(res.StuDateTime);
@@ -243,13 +293,24 @@
                     case 'getFileInto':                         
                           layer.open({
                                 type: 2,
-                                content: '/Market/StudentDataKeep/ExcleIntoView' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                                content: '/Market/StudentDataKeep/ExcleIntoView'  
                                 , area: ['1000px', '650px'],
                                 title: '导入Excle文件'
                                 , shade: 0.8
                                 , anim: 4
                                 , skin: 'demo-class'
                         });                      
+                        break;
+                    case 'getSerchType':
+                        layer.open({
+                            type: 2,
+                            content: '/Market/StudentDataKeep/InfomationAndStatuView' 
+                            , area: ['1000px', '650px'],
+                            title: '查看信息来源与学生状态'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });       
                         break;
                 };
             });
