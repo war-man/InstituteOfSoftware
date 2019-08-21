@@ -39,6 +39,7 @@ layui.use(['table', 'layer','form'], function () {
             , { field: 'SpecialtyName', title: '专业', templet: '<div>{{d.Major.SpecialtyName}}</div>' }   
             , { field: 'TypeName', title: '课程类型', templet: '<div>{{d.CourseType.TypeName}}</div>' }   
             , { field: 'CourseCount', title: '课时', sort: true }
+            , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }
            
         ]]
         , page: true
@@ -83,10 +84,12 @@ layui.use(['table', 'layer','form'], function () {
 
             if (data.ErrorCode == 200) {
 
-                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                parent.layer.close(index); //再执行关闭   
+                layer.msg("操作成功", { time: 1000 }, function () {
 
-                layer.msg("操作成功!");
+                    //当你在iframe页面关闭自身时
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                });
 
                 table.reload('Courselist', {
 
@@ -105,11 +108,57 @@ layui.use(['table', 'layer','form'], function () {
     });
 
 
- 
-
-
-
-
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<新增课程区域<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>监听行工具区域>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+    //监听行工具事件
+    table.on('tool(courselist_filter)', function (obj) {
+        var data = obj.data;
+        var id = obj.data.CurriculumID;
+        var CourseName = obj.data.CourseName;
+        //console.log(obj)
+        if (obj.event === 'edit') {
+            layer.open({
+                title: "编辑课程 (" + CourseName + ")",
+                skin: "demo-class",
+                type: 2,
+                area: ["900px", "420px"],
+                content: '/CourseSyllabus/Course/OperationView/' + id,
+                end: function () {
+                    table.reload('Courselist', {
+
+                    });
+
+
+                }
+
+            });
+        } else if (obj.event === 'detail') {
+
+            layer.open({
+                title: "详细课程 (" + CourseName + ")",
+                skin: "demo-class",
+                type: 2,
+                area: ["900px", "420px"],
+                content: '/CourseSyllabus/Course/DetailView/' + id,
+
+            });
+
+
+        }
+
+    });
+
+
+//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<监听行工具区域<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+    $(".detailclose").click(function () {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭   
+    });
 
 });

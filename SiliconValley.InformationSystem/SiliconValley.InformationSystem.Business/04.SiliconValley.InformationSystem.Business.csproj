@@ -106,6 +106,7 @@
     <Compile Include="TeachingDepBusiness\GrandBusiness.cs" />
     <Compile Include="TeachingDepBusiness\SpecialtyBusiness.cs" />
     <Compile Include="TeachingDepBusiness\TeacherBusiness.cs" />
+    <Compile Include="TeachingDepBusiness\TeacherClassBusiness.cs" />
     <Compile Include="TeachingDepBusiness\TecharOnstageBearingBusiness.cs" />
     <Compile Include="UserManeger\UsersInfoManeger.cs" />
   </ItemGroup>

@@ -36,9 +36,21 @@ function ContainsMajorName(majorName, successcallback, errorcallback) {
 //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<所有函数操作<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<//
 
 
-layui.use(['layer'], function () {
+layui.use(['layer','upload'], function () {
 
-    var layer = layui.layer;
+    var upload = layui.upload;
+
+    //执行实例
+    var uploadInst = upload.render({
+        elem: '#test1' //绑定元素
+        , url: '/upload/' //上传接口
+        , done: function (res) {
+            //上传完毕回调
+        }
+        , error: function () {
+            //请求异常回调
+        }
+    });
 
 
     //************************************》》》》》》》》》》》》》》》》》》》》》》》按钮的隐藏和显示
@@ -73,10 +85,13 @@ layui.use(['layer'], function () {
         layer.open({
             type: 1,
             title:"新增专业",
-            area:["450px","180px"],
+            area:["450px","380px"],
             btn: ['确定', '关闭'],
             content: addMajorTemp,
             yes: function (index) {
+
+
+                var majorName = $("#addMajorNameInput").val();
 
                 layer.msg("请稍等......");
 
@@ -89,6 +104,7 @@ layui.use(['layer'], function () {
 
                     return;
                 }
+
 
                 ContainsMajorName(majorName, function (data) {
 
@@ -126,7 +142,6 @@ layui.use(['layer'], function () {
 
                                     layer.msg("系统忙");
                                 }
-
                                 layer.close(index);
 
                             }, function (error) {

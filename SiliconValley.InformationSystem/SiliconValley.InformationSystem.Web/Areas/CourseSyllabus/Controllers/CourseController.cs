@@ -76,13 +76,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <returns></returns>
         /// 
         [HttpGet]
-        public ActionResult OperationView(int? courseID)
+        public ActionResult OperationView(int? id)
         {
             CourseView curriculum = new CourseView();
 
-            if (courseID != null)
+            if (id != null)
             {
-                curriculum = db_course.ToCourseView(db_course.GetCurriculas().Where(d => d.CurriculumID == courseID).FirstOrDefault());
+                curriculum = db_course.ToCourseView(db_course.GetCurriculas().Where(d => d.CurriculumID == id).FirstOrDefault());
             }
 
             //获取专业集合
@@ -97,20 +97,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             return View(curriculum);
 
         }
+
+
+        /// <summary>
+        /// 课程的操作（添加 修改）
+        /// </summary>
+        /// <param name="courseView"></param>
+        /// <param name="Grand"></param>
+        /// <param name="Major"></param>
+        /// <param name="CourseType"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult DoOperation(CourseView courseView, int Grand, int Major, int CourseType)
         {
 
             AjaxResult result = new AjaxResult();
 
+            courseView.Major = db_major.GetSpecialtyByID(Major);
+            courseView.Grand = db_grand.GetList().Where(d => d.Id == Grand && d.IsDelete == false).FirstOrDefault();
+            courseView.CourseType = db_coursetype.GetList().Where(d => d.IsDelete == false && d.Id == CourseType).FirstOrDefault();
+
+            var course = db_course.ToCurriculum(courseView);
             if (courseView.CurriculumID == 0)
             {
-                courseView.Major = db_major.GetSpecialtyByID(Major);
-                courseView.Grand = db_grand.GetList().Where(d=>d.Id==Grand && d.IsDelete==false).FirstOrDefault();
-                courseView.CourseType = db_coursetype.GetList().Where(d=>d.IsDelete==false && d.Id== CourseType).FirstOrDefault();
-                var course = db_course.ToCurriculum(courseView);
-
-
+               
                 try
                 {
                     this.DoAdd(course);
@@ -134,15 +144,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             {
                 try
                 {
-                   
+                    this.DoEdit(course);
                     result.ErrorCode = 200;
                     result.Msg = "成功";
+                    BusHelper.WriteSysLog("修改课程", Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
                 }
                 catch (Exception ex)
                 {
                     result.Data = null;
                     result.ErrorCode = 500;
                     result.Msg = "失败";
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
                 }
             }
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -154,6 +166,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
         }
 
+
+        public void DoEdit(Curriculum curriculum)
+        {
+            db_course.DoEdit(curriculum);
+
+        }
+
+
+        /// <summary>
+        /// 课程详细页面 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult DetailView(int id)
+        {
+
+            //获取专业集合
+            ViewBag.majors = db_major.GetSpecialties().Select(d => new SelectListItem() { Text = d.SpecialtyName, Value = d.Id.ToString() });
+
+            //获取阶段集合
+            ViewBag.grands = db_grand.GetList().Where(d => d.IsDelete == false).ToList().Select(d => new SelectListItem() { Text = d.GrandName, Value = d.Id.ToString() });
+
+            //获取课程类型集合
+            ViewBag.courseTypes = db_coursetype.GetCourseTypes().Select(d => new SelectListItem() { Text = d.TypeName, Value = d.Id.ToString() });
+
+
+            var course =  db_course.GetCurriculas().Where(d=>d.CurriculumID==id).FirstOrDefault();
+
+            var courseView = db_course.ToCourseView(course);
+
+          return View(courseView);
+        }
 
 
     }

@@ -8,8 +8,8 @@
 
 <script type="text/html" id="topBar">
     <div class="layui-btn-container">
-      
-        <button type="button" class="layui-btn layui-btn-sm"  lay-event="Add">
+
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="Add">
             <i class="layui-icon">&#xe654;</i>
             课程
         </button>
@@ -19,6 +19,11 @@
 <div>
     <table class="layui-hide" id="courselist" lay-filter="courselist_filter"></table>
 </div>
+
+<script type="text/html" id="editBar">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
+</script>
 
 @section script{
 

@@ -25,5 +25,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> AddDate { get; set; }
 
 
+        public static bool IsInList(List<Grand> sources, Grand grand)
+        {
+            foreach (var item in sources)
+            {
+                if (item.Id == grand.Id)
+                    return true;
+            }
+            return false;
+        }
+
     }
 }

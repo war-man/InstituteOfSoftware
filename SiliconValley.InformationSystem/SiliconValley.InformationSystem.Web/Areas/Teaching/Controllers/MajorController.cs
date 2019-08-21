@@ -9,6 +9,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Entity.MyEntity;
+    using System.IO;
     public class MajorController : Controller
     {
 
@@ -90,6 +91,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+        /// <summary>
+        /// 图片上传
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult upload(HttpPostedFileBase postedFileBase,string name)
+        {
+
+            string fielpath = postedFileBase.FileName;
+
+            //获取文件扩展名称
+
+            FileInfo fileInfo = new FileInfo(fielpath);
+            string fileExtension = fileInfo.Extension;
+
+            string filename = name + fileExtension;
+
+            postedFileBase.SaveAs(Server.MapPath("/Teaching/Images/MajorLogoImages/" + filename));
+
+            return null;
+        }
+
+        [HttpGet]
+        public ActionResult operationView(int ? id)
+        {
+            if (id == null)
+            {
+                return View();
+
+            }
+            else
+            {
+                var major = db_major.GetSpecialties().Where(d => d.Id == id).FirstOrDefault();
+                return View(major);
+            }
 
         }
     }

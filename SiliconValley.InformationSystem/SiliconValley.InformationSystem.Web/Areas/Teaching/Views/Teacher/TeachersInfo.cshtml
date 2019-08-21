@@ -21,85 +21,111 @@
 
 
 
-<div>
-
-
-    <div style=" width:500px; display:inline-block;">
-
-        <!-- Single button -->
-        <label>专业：</label>
-        <div class="btn-group layui-container" style="width:120px;">
-
-            <button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectMajor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                选择专业 <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="majorlist">
-                <li><a href="#" majorid="0">不限</a></li>
-                @{
-                    foreach (var item in ViewBag.majors)
-                    {
-                        <li><a href="javascript:void(0);" majorid="@item.Id">@item.SpecialtyName</a></li>
-                    }
-                }
-
-            </ul>
-        </div>
-
-
-        <label>阶段：</label>
-        <div class="btn-group layui-container" style="width:120px;">
-
-            <button type="button" class="btn btn-default dropdown-toggle" id="selectGrand" grandid="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                选择阶段 <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="grandlist">
-                <li><a href="#" grandid="0">不限</a></li>
-                @{
-                    foreach (var item in ViewBag.grands)
-                    {
-                        <li><a href="javascript:void(0);" grandid="@item.Id">@item.GrandName</a></li>
-                    }
-                }
-
-            </ul>
-        </div>
-
-        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-    </div>
-
-    <div style="display:inline-block;width:500px;" class="form-inline">
-
-        <div class="form-group">
-            <input type="text" class="form-control" id="name" placeholder="输入姓名">
-        </div>
-
-        <div class="form-group">
-            <input type="tel" class="form-control" id="phone" lay-verify="phone" placeholder="电话">
-        </div>
-
-        <button id="serchBtn2" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-
-    </div>
-
     <div>
-        <table class="layui-hide" id="teacherlist" lay-filter="teacherlist_filter"></table>
-    </div>
 
-    <script type="text/html" id="topBar">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="EditMajorAdnGrand">专业 / 阶段</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Add">+新成员</button>
+
+        <div style=" width:500px; display:inline-block;">
+
+            <!-- Single button -->
+            <label>专业：</label>
+            <div class="btn-group layui-container" style="width:120px;">
+
+                <button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectMajor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    选择专业 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="majorlist">
+                    <li><a href="#" majorid="0">不限</a></li>
+                    @{
+                        foreach (var item in ViewBag.majors)
+                        {
+                            <li><a href="javascript:void(0);" majorid="@item.Id">@item.SpecialtyName</a></li>
+                        }
+                    }
+
+                </ul>
+            </div>
+
+
+            <label>阶段：</label>
+            <div class="btn-group layui-container" style="width:120px;">
+
+                <button type="button" class="btn btn-default dropdown-toggle" id="selectGrand" grandid="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    选择阶段 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="grandlist">
+                    <li><a href="#" grandid="0">不限</a></li>
+                    @{
+                        foreach (var item in ViewBag.grands)
+                        {
+                            <li><a href="javascript:void(0);" grandid="@item.Id">@item.GrandName</a></li>
+                        }
+                    }
+
+                </ul>
+            </div>
+
+            <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
         </div>
-    </script>
 
-    <script type="text/html" id="editBar">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editgoodmajor">擅长的课程</a>
-    </script>
+        <div style="display:inline-block;width:500px;" class="form-inline">
+
+            <div class="form-group">
+                <input type="text" class="form-control" id="name" placeholder="输入姓名">
+            </div>
+
+            <div class="form-group">
+                <input type="tel" class="form-control" id="phone" lay-verify="phone" placeholder="电话">
+            </div>
+
+            <button id="serchBtn2" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+
+        </div>
+
+        @*<div id="tablelist">
+            @{
+                foreach (var item in ViewBag.majors)
+                {
+            <div>
+                <h1 style="text-align:center; background-color:#23cc36 " >@item.SpecialtyName</h1>
+                @{
+
+                    foreach (var item1 in ViewBag.grands)
+                    {
+                <div style="margin-left:20px;">
+                    <h3 style="text-align:center; background-color:#70cc75;" >@item1.GrandName</h3>
 
 
-</div>
+
+                </div>
+                    }
+
+                }
+
+
+
+            </div>
+                }
+            }
+
+        </div>*@
+
+        <table class="layui-hide tablelist" id="teacherlist" lay-filter="teacherlist_filter"></table>
+
+        <script type="text/html" id="topBar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="EditMajorAdnGrand">专业 / 阶段</button>
+              
+            </div>
+        </script>
+
+        <script type="text/html" id="editBar">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editgoodmajor">擅长的课程</a>
+        </script>
+
+
+    </div>
 
 @section script{
     <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
@@ -119,38 +145,58 @@
 
             //var index = layer.load(0, { shade: false }); //0代表加载的风格，支持0-2
 
-            table.render({
-                elem: '#teacherlist'
-                , id: 'Teacherlist'
-                , toolbar: '#topBar'
-                , shade: 3
-                , url: '/Teaching/Teacher/TeacherData/'
-                , cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-                , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'TeacherID', title: 'ID', sort: true }
-                    , { field: 'TeacherName', title: '姓名' }
-                    , { field: 'EmployeeId', title: '员工编号' }
-                    , {
-                        field: 'Sex', title: '性别', templet: function (data) {
 
-                            if (data.toString() == 0) {
-                                return '女';
+
+            function render(elem, topBar , major, grand) {
+                table.render({
+                    elem: elem
+                    , id: 'Teacherlist'
+                    , toolbar: topBar
+                    , shade: 3
+                    , url: '/Teaching/Teacher/TeacherData?major=' + major + "&grand=" + grand
+                    , cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                    , cols: [[
+                        { type: 'checkbox', fixed: 'left' }
+                        , { field: 'TeacherID', title: 'ID', sort: true, hide: true }
+                        , { field: 'TeacherName', title: '姓名' }
+                        , { field: 'EmployeeId', title: '员工编号' }
+                        , {
+                            field: 'Sex', title: '性别', templet: function (data) {
+
+                                if (data.toString() == 0) {
+                                    return '女';
+                                }
+
+                                return '男';
+
                             }
-
-                            return '男';
-
                         }
-                    }
-                    , { field: 'WorkExperience', title: '工作经验', sort: true }
-                    , { field: 'ProjectExperience', title: '项目经验', sort: true }
-                    , { field: 'TeachingExperience', title: '教学经验', sort: true }
-                    , { field: 'AttendClassStyle', title: '上课风格', sort: true }
-                    , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }
-                ]]
-                , page: true
-            });
+                        , { field: 'WorkExperience', title: '工作经验', sort: true }
+                        , { field: 'ProjectExperience', title: '项目经验', sort: true }
+                        , { field: 'TeachingExperience', title: '教学经验', sort: true }
+                        , { field: 'AttendClassStyle', title: '上课风格', sort: true }
+                        , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }
+                    ]]
+                    , page: true
+                });
+            }
 
+
+            render("#teacherlist" , "#topBar",0,0);
+
+            //$(".tablelist").each(function (index, elem) {
+
+            //   var tableid = $(this).attr("id");
+
+
+            //    console.log(index+"...................");
+
+            //    var major = $(this).attr("majorid");
+            //    var grand = $(this).attr("grandid");
+                
+            //    render("#" + tableid, "#topBar",major, grand);
+
+            //});
 
 
             function openTeacherMajorAndGrand(teacherid,title) {
@@ -171,8 +217,6 @@
 
                 });
             }
-
-
             //头工具栏事件
             table.on('toolbar(teacherlist_filter)', function (obj) {
 
@@ -257,6 +301,9 @@
                 var data = obj.data;
                 var id = obj.data.TeacherID;
                 var name = obj.data.TeacherName;
+
+                console.log(id);
+
                 //console.log(obj)
                 if (obj.event === 'detail') {
                     layer.open({
@@ -381,7 +428,9 @@
             //监听跳转查询事件
             var queryMajor = getQueryVariable("major");
 
-            if (queryMajor == undefined || queryMajor == null) {
+            console.log(queryMajor +'.....................');
+
+            if (queryMajor == undefined || queryMajor == null || queryMajor == false) {
 
                 
 

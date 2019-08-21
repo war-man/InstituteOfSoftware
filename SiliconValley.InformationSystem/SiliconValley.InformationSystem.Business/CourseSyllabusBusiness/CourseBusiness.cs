@@ -25,7 +25,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         public List<Curriculum> GetCurriculas()
         {
 
-            return this.GetList().Where(d => d.IsDelete == false).ToList();
+            return this.GetList().Where(d => d.IsDelete == false).ToList().OrderByDescending(d=>d.CurriculumID).ToList();
 
         }
 
@@ -97,6 +97,13 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         public void DoAdd(Curriculum curriculum)
         {
             this.Insert(curriculum);
+
+        }
+
+
+        public void DoEdit(Curriculum curriculum)
+        {
+            this.Update(curriculum);
 
         }
     }
