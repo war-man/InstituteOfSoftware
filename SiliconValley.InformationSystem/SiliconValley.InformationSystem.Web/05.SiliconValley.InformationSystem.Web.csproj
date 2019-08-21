@@ -387,6 +387,7 @@
     <Content Include="Areas\Teachingquality\Views\InterviewStudents\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\InterviewStudents\StudIenterEntiy.cshtml" />
     <Content Include="Config\Major.json" />
+    <Content Include="Areas\Teaching\Views\Major\MajorIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -1018,9 +1019,11 @@
     <Folder Include="Areas\Personnelmatters\Models\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
+    <Folder Include="Areas\Teachingquality\StuImages\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
+    <Folder Include="Areas\Teaching\Views\StudentDataKeep\" />
     <Folder Include="Areas\Teaching\Views\StudentHomeWork\" />
     <Folder Include="assets\img\" />
     <Folder Include="bin\roslyn\" />

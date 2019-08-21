@@ -186,6 +186,7 @@
 
                 var dates = new Date();
                 //
+                console.log(data.field)
                 var button = $('#xue').children().length;
                 var errten = "";
                 $.post("/Teachingquality/StudentAttendanc/Errnt", data.field, function (datas) {
@@ -345,6 +346,7 @@
         //输入班级查询学员数据赋值
         function GetPartsItmes(id, name) {
             $("#StudentID").val(id);
+            console.log(id);
             $("#but1").css("display", "none");
             $("#yi").css("display", "block");
             $("#StuDenNull").attr("readonly", "readonly");
