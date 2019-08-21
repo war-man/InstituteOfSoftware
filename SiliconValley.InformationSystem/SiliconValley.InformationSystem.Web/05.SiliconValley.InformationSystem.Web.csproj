@@ -218,6 +218,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
@@ -276,6 +277,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\my1.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -361,6 +363,18 @@
     <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EditEmployStaff.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\ManageAreas.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\ManageClass.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddEmp.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddPosition.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptOperation.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptUpdate.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmp.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Addrpt.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddTalantDemand.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\RecruitIndex.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddExcelFile.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -990,7 +1004,6 @@
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
-    <Folder Include="Areas\Personnelmatters\Views\EmployeesInfo\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />

@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using System.Net;
     using SiliconValley.InformationSystem.Util;
     using System.ComponentModel.DataAnnotations;
-
+    using SiliconValley.InformationSystem.Business.Employment;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -165,6 +165,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult AddEmpInfo(EmployeesInfo emp) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
+            EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -173,7 +174,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 emp.IsDel = false;
                 empinfo.Insert(emp);
-                AjaxResultxx= empinfo.Success();
+                if (GetPosition(emp.PositionId).PositionName=="就业专员") {
+                    var s = esmanage.AddEmploystaff(emp.EmployeeId);
+                        empinfo.Success().Success = s;
+                    AjaxResultxx = empinfo.Success();
+                }
+                AjaxResultxx = empinfo.Success();
             }
             catch (Exception ex)
             {

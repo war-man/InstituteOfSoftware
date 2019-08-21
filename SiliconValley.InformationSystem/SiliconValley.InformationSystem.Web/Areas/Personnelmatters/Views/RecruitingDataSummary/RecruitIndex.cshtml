@@ -87,8 +87,9 @@
                     , { field: 'PositionStatement', title: '岗位职责', width: 140, sort: true }
                     , { field: 'PositionRequest', title: '岗位要求', width: 140, sort: true }
                     , { field: 'RecruitReason', title: '招聘原因', sort: true, width: 140 }
+                    , { field: 'IsDel', title: '是否完成招聘', sort: true, width: 135, templet: '#switchTpl', unresize: true }
                     , { field: 'Remark', title: '备注' }
-                    , { field: 'IsDel', title: '是否完成招聘', sort: true, templet: '#switchTpl', unresize: true }
+                  
                 ]]
                 , page: true
             });
@@ -256,7 +257,17 @@
 
         //将人才需求从excel中倒过来
         function GetFromExcel() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["1000px", "600px"]
+                    , title: "导入Excel文件中的人才需求计划"
+                    , content: '/Personnelmatters/RecruitingDataSummary/AddExcelFile'
+                    , anim: 2
+                });
 
+            })
         }
 
         //添加招聘电话追踪记录

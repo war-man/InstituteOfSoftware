@@ -15,6 +15,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Util;
+    using System.Text;
+    using System.IO;
+    using SiliconValley.InformationSystem.Business.Common;
+    using SiliconValley.InformationSystem.Entity.Base_SysManage;
 
     public class RecruitingDataSummaryController : Controller
     {
@@ -107,24 +111,69 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
 
 
-        //获取部门对象
+        /// <summary>
+        /// 获取部门对象
+        /// </summary>
+        /// <param name="deptid"></param>
+        /// <returns></returns>
         public Department GetDept(int deptid) {
             DepartmentManage dmanage = new DepartmentManage();
             var deptobj = dmanage.GetEntity(deptid);
             return deptobj;
         }
-        //获取所属岗位对象
+
+        /// <summary>
+        ///获取所属岗位对象
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public Position GetPosition(int pid)
         {
             PositionManage pmanage = new PositionManage();
             var str = pmanage.GetEntity(pid);
             return str;
         }
-        //获取员工（人才需求计划表-负责人）
+
+        /// <summary>
+        /// 获取员工（人才需求计划表-负责人）
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
         public EmployeesInfo GetEmp(string empid) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var emp = empmanage.GetEntity(empid);
             return emp;
+        }
+
+        /// <summary>
+        /// 根据部门名称获取部门编号
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public int GetDeptidByName(string name) {
+            DepartmentManage dmanage = new DepartmentManage();
+            var dept = dmanage.GetList().Where(s => s.DeptName == name).FirstOrDefault();
+            return dept.DeptId;
+        }
+        /// <summary>
+        /// 根据岗位名称获取岗位编号
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public int GetPidByName(string name) {
+            PositionManage pmanage = new PositionManage();
+            var pid = pmanage.GetList().Where(p => p.PositionName == name).FirstOrDefault().Pid;
+            return pid;
+        }
+        /// <summary>
+        /// 根据员名称获取员工编号
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public string GetEmpidByName(string name) {
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var empid = emanage.GetList().Where(e => e.EmpName == name).FirstOrDefault().EmployeeId;
+            return empid;
         }
 
 
@@ -177,6 +226,116 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 AjaxResultxx = tdpmanage.Error(ex.Message);
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+        //导入excel文件显示页面
+        public ActionResult AddExcelFile() {
+            return View();
+        }
+        //获取excel里的文件
+        public List<TalentDemandPlan> GetExcelFile() {
+            List<TalentDemandPlan> tdplist = new List<TalentDemandPlan>();
+            string namef = SessionHelper.Session["filename"].ToString();
+               var t = AsposeOfficeHelper.ReadExcel(namef, false);
+            if (t.Rows[0][0].ToString() == "部门" && t.Rows[0][1].ToString() == "岗位名称" && t.Rows[0][2].ToString() == "需求人数" && t.Rows[0][3].ToString() == "负责人" && t.Rows[0][4].ToString() == "需求申请时间" && t.Rows[0][5].ToString() == "预入职时间" && t.Rows[0][6].ToString() == "岗位职责" && t.Rows[0][7].ToString() == "岗位要求" && t.Rows[0][8].ToString() == "招聘原因" && t.Rows[0][9].ToString() == "是否完成招聘" && t.Rows[0][10].ToString() == "备注")
+            {
+                for (int i = 1; i < (t.Rows.Count); i++)
+                {
+                    TalentDemandPlan tdp = new TalentDemandPlan();
+                    tdp.DeptId = GetDeptidByName(t.Rows[0].ToString());
+                    tdp.Pid = GetPidByName(t.Rows[i][1].ToString());
+                    tdp.DemandPersonNum = Convert.ToInt32(t.Rows[i][2]);
+                    tdp.EmployeeId = GetEmpidByName(t.Rows[i][3].ToString());
+                    tdp.ApplyTime =Convert.ToDateTime( t.Rows[i][4]);
+                    tdp.PlanEntryTime = Convert.ToDateTime(t.Rows[i][5]);
+                    tdp.PositionStatement =t.Rows[i][6].ToString();
+                    tdp.PositionRequest =t.Rows[i][7].ToString();
+                    tdp.RecruitReason = t.Rows[i][8].ToString();
+                    tdp.IsDel = Convert.ToBoolean(t.Rows[i][9]);
+                    tdp.Remark = t.Rows[i][10].ToString();
+                    tdplist.Add(tdp);
+                }
+            }
+            else
+            {
+                return tdplist;
+            }
+            return tdplist;
+        }
+        //一个删除文件的方法
+        public void DeleteFile()
+        {
+            var namef = SessionHelper.Session["filename"];
+            if (namef != null)
+            {
+                FileInfo fi = new FileInfo(namef.ToString());
+                bool ishave = fi.Exists;
+                if (ishave)
+                {
+                    fi.Delete();
+                }
+            }
+        }
+        //显示出上传过来的excel文件
+        public ActionResult ShowUploadFile() {
+            StringBuilder ProName = new StringBuilder();
+            try
+            {
+                HttpPostedFileBase file = Request.Files["file"];
+                string fname = Request.Files["file"].FileName; //获取上传文件名称（包含扩展名）
+                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                string name = Path.GetExtension(fname);//获取扩展名
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/ConsultUploadfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
+                string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                file.SaveAs(ProName.ToString());//上传文件   
+                SessionHelper.Session["filename"] = ProName.ToString();
+                List<TalentDemandPlan> tdplist = GetExcelFile();
+                if (tdplist.Count > 0)//如果拿到值说明文件格式是可以读取的
+                {
+                    var mydata = tdplist.Select(s => new
+                    {
+                        #region
+                        s.Id,
+                        dname = GetDept((int)s.DeptId).DeptName,
+                        pname = GetPosition((int)s.Pid).PositionName,
+                        s.DemandPersonNum,
+                        s.PlanEntryTime,
+                        s.PositionStatement,
+                        s.PositionRequest,
+                        s.RecruitReason,
+                        empname = GetEmp(s.EmployeeId).EmpName,
+                        s.ApplyTime,
+                        s.Remark,
+                        s.IsDel
+                        #endregion
+                    });
+                    var jsondata = new
+                    {
+                        code = "",
+                        msg = "ok",
+                        data = mydata,
+                    };
+                    return Json(jsondata, JsonRequestBehavior.AllowGet);
+                }
+                else //该文件格式不正确
+                {
+                    var jsondata = new
+                    {
+                        code = "",
+                        msg = "文件格式错误",
+                        data = "",
+                    };
+                    DeleteFile();//如果格式不符合规范则删除上传的文件
+                    return Json(jsondata, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ee)
+            {
+                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
+                return Json("no", JsonRequestBehavior.AllowGet);
+            }
+
         }
 
 
@@ -257,5 +416,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return AjaxResultxx;
         }
+
+       
     }
 }
