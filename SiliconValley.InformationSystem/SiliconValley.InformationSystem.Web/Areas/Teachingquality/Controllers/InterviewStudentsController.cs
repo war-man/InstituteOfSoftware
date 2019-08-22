@@ -34,12 +34,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //主页面
         public ActionResult Index()
         {
+            ViewBag.List = classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
+
             return View();
         }
         //主页面获取表格数据
         public ActionResult GetDate(int page, int limit)
         {
-            var list = dbtext.GetList();
+            var list = dbtext.Mylist("name");
             var mylist = list.Select(a => new
             {
                 ID=a.ID,
@@ -89,7 +91,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string tu = interviewStudents.StudentNumberID.Substring(0, interviewStudents.StudentNumberID.Length);
             //转成数组
             string[] stu = tu.Split(',');
-            var list = dbtext.GetList();
+            var list = dbtext.Mylist("name");
             List<InterviewStudents> mylist = new List<InterviewStudents>();
             for (int i = 0; i < stu.Length; i++)
             {
@@ -117,6 +119,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 try
                 {
+                   
                     var x = dbtext.GetEntity(interviewStudents.ID);
                     interviewStudents.InterviewRecorderID = x.InterviewRecorderID;
                     interviewStudents.Dateofinterview = x.Dateofinterview;
@@ -126,6 +129,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result = new SuccessResult();
                     result.Msg = "修改谈话记录成功";
                     result.Success = true;
+                    dbtext.Remove("name");
                 }
                 catch (Exception ex)
                 {
@@ -177,7 +181,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result.Success = false;
                     result.Msg = "服务器错误";
                     BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
-
+                    dbtext.Remove("name");
                 }
 
                 return Json(result, JsonRequestBehavior.AllowGet);

@@ -29,7 +29,7 @@
 
         .Nation {
             width: 240px;
-            height:100px;
+            height: 100px;
         }
 
         .linu {
@@ -56,10 +56,10 @@
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                             <label class="layui-form-label" id="lab1">班级名称</label>
                             <div class="layui-input-inline">
-                              
+
                                 @Html.HiddenFor(a => a.StudentNumberID)
                                 <input type="text" id="ID" name="ID" value="@ViewBag.id" style="display:none" />
-                                <input type="text" id="StuDenNull"  lay-verify="required" placeholder="请输入班级名称" class="layui-input">
+                                <input type="text" id="StuDenNull" lay-verify="required" placeholder="请输入班级名称" class="layui-input">
 
                             </div>
                         </div>
@@ -115,12 +115,14 @@
     </div>
 </body>
 </html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
     layui.use(['form', 'layedit', 'layer', 'laydate'], function () {
         var form = layui.form
             , layer = layui.layer
             , layedit = layui.layedit
             , laydate = layui.laydate;
+       
         laydate.render({
             elem: '#Dateofinterview',
             format: 'yyyy-MM-dd',
@@ -145,11 +147,11 @@
                     $("#Interviewcontent").val(data[0].Interviewcontent);
                     $("#Dateofinterview").val(TimeChange(data[0].Dateofinterview));
                     $("#StuDenNull").val(data[0].StudentNumberID);
-                  
+
                 } else {
                     Errye(data);
                 }
-             
+
             })
         }
         //时间转换方法
@@ -170,19 +172,8 @@
             return result;
         }
 
-        var i;
-        //正在执行中
-        function showLoad() {
+    
 
-            return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
-
-        }
-        //关闭执行中的窗体
-        function closeLoad(index) {
-            layer.close(index);
-
-        }
-        
         //监听提交
         form.on('submit(demo1)', function (data) {
 
@@ -200,76 +191,52 @@
                     if (getNowFormatDate(dates) >= getNowFormatDate(date)) {
                         console.log(data.field);
 
-                        ajaxpost("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field);
+                        ajaxpost("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field,"继续登记");
                     } else {
                         Errye("输入的日期不能超过大于当前日期")
                     }
                 } else {
                     Errye("请使用查询按钮根据班级选择学员")
-              
+
                 }
             }
             if ($("#ID").val() != "")
                 layer.confirm('<br/>您真的要选择吗?', function (index) {
-                    ajaxpost("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field);
+                    ajaxpostUpdata("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field);
                 }); else
-            if (data.field.StudentNumberID != "") {
-                //判断是否有重复学员
-                $.post("/Teachingquality/InterviewStudents/Errnt", data.field, function (datas) {
-                    
-                    if (datas.length > 0) {
-                        console.log(datas);
-                     
-                      
-                        for (var i = 0; i < datas.length; i++) {
-                            errten += "学号为:" + datas[i].StudentID + ",姓名为:" + datas[i].Name + ",日期为" + getNowFormatDate(datas[i].Dateofinterview) + "<br/>";
+                if (data.field.StudentNumberID != "") {
+                    //判断是否有重复学员
+                    $.post("/Teachingquality/InterviewStudents/Errnt", data.field, function (datas) {
 
-                        }
-                        layer.confirm(errten + '<br/>您真的要选择吗?', function (index) {
+                        if (datas.length > 0) {
+                            console.log(datas);
+
+
+                            for (var i = 0; i < datas.length; i++) {
+                                errten += "学号为:" + datas[i].StudentID + ",姓名为:" + datas[i].Name + ",日期为" + getNowFormatDate(datas[i].Dateofinterview) + "<br/>";
+
+                            }
+                            layer.confirm(errten + '<br/>您真的要选择吗?', function (index) {
+                                Entiy();
+                            });
+
+                            // document.getElementById("form").reset();
+                            // reset();
+                        } else {
                             Entiy();
-                        });
-
-                        // document.getElementById("form").reset();
-                        // reset();
-                    } else {
-                        Entiy();
-                    }
+                        }
 
 
-                });
-            } else {
-                Errye("请使用小图标搜索班级选择学员！")
-            }
+                    });
+                } else {
+                    Errye("请使用小图标搜索班级选择学员！")
+                }
         });
-        //错误消息提示
-        function Errye(err) {
-            layer.msg(err, {
-                time: 8000, //20s后自动关闭
-
-                btn: ['确定']
-            });
-        }
-
-        //^[\da-zA-z]{6,12}$
-        //年月日
-        function getNowFormatDate(date) {
-
-            var seperator1 = "-";
-            var year = date.getFullYear();
-            var month = date.getMonth() + 1;
-            var strDate = date.getDate();
-            if (month >= 1 && month <= 9) {
-                month = "0" + month;
-            }
-            if (strDate >= 0 && strDate <= 9) {
-                strDate = "0" + strDate;
-            }
-            var currentdate = year + seperator1 + month + seperator1 + strDate;
-            return currentdate;
-        }
-      
-        //ajax
-        function ajaxpost(url, datae) {
+     
+        
+        
+        //修改数据
+        function ajaxpostUpdata(url, datae) {
 
             console.log("aaa11");
             $.ajax({
@@ -293,19 +260,16 @@
                             , area: '300px;'
                             , shade: 0.8
                             , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                            , btn: ['继续登记', '确认']
+                            , btn: ['确认']
                             , btnAlign: 'c'
                             , moveType: 1 //拖拽模式，0或者1
-                            , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + data.Msg + '！！！</div>'
+                            , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;' + data.Msg + '！！！</div>'
 
                             , success: function (layero) {
 
                                 var btn = layero.find('.layui-layer-btn');
+
                                 btn.find('.layui-layer-btn0').click(function () {
-                                    document.getElementById("form").reset();
-                                    reset();
-                                });
-                                btn.find('.layui-layer-btn1').click(function () {
                                     var index = parent.layer.getFrameIndex(window.name);
                                     parent.layer.close(index);
                                 });
@@ -350,7 +314,7 @@
 
                             btnAlign: 'c'
                             , area: ['650px', '600px']
-                            , content: "/Teachingquality/StudentAttendanc/StuAttendance?StudentID=" + name +"&InteStu=2018"
+                            , content: "/Teachingquality/StudentAttendanc/StuAttendance?StudentID=" + name + "&InteStu=2018"
                         });
                     } else {
                         Errye("此班级未查到学员，请检查班级名称是否正确！")
@@ -396,7 +360,7 @@
             xue.append($("<button type='button' style='width:100px;margin-top:10px;' class='layui-btn'><i class='layui-icon'>&#xe770;</i>" + myname[i] + " </button>"));
         }
         console.log(id);
-       
+
 
 
 
