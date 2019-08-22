@@ -154,5 +154,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
             return Json(retus, JsonRequestBehavior.AllowGet);
         }
+        
+        public ActionResult ClassStudent()
+        {
+            return View();
+        }
+       
     }
 }

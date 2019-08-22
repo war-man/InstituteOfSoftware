@@ -245,6 +245,7 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
     <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
@@ -388,6 +389,7 @@
     <Content Include="Areas\Teachingquality\Views\InterviewStudents\StudIenterEntiy.cshtml" />
     <Content Include="Config\Major.json" />
     <Content Include="Areas\Teaching\Views\Major\MajorIndex.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\ClassStudent.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
