@@ -248,6 +248,7 @@
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
     <Content Include="Areas\Teaching\Scripts\MajorOperation.js" />
     <Content Include="Areas\Teaching\Scripts\md5.js" />
+    <Content Include="Areas\Teaching\Scripts\TeacherClass.js" />
     <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
     <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
     <Content Include="Areas\Teaching\Scripts\util.js" />
@@ -364,6 +365,7 @@
     <Content Include="Areas\CourseSyllabus\Views\Course\DetailView.cshtml" />
     <Content Include="Areas\Teaching\Views\Major\operationView.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\Index.cshtml" />
+    <Content Include="Areas\Teaching\Views\Class\StudentDetailInfo.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -696,6 +698,7 @@
     <Content Include="Scripts\layui\prefixfree.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\Util.js" />
     <Content Include="Scripts\util\easyui-extend.js" />
     <Content Include="Scripts\util\framework-util.js" />
     <Content Include="Scripts\util\upload-time.js" />
