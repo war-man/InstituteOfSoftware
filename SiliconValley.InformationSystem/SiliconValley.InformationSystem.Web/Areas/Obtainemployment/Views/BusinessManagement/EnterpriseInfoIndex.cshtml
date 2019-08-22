@@ -49,6 +49,10 @@
 
         var MrDtableIns;
         var MrDLayer;
+        var MrDWhyShow;
+        jQuery(function () {
+            MrDWhyShow = "all";
+        });
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -158,17 +162,19 @@
 
                 }
                 else if (obj.event === 'del') {
-                    var CooID = data.CooperaEnterprisesID;
-                    if (CooID > 0) {
+                    var EntContacts = data.EntContacts;
+                    console.log( data.EnterpriseInfoID);
+                    console.log( data);
+                    if (EntContacts != "") {
+                        
                         layer.confirm('真的解除合作关系么', function (index) {
-
                             $.ajax({
                                 type: "POST",
                                 url: "/BusinessManagement/DelEnterpriseInfo/",
                                 async: false,
-                                data: { CooID: data.CooperaEnterprisesID },
+                                data: { EntID: data.EnterpriseInfoID },
                                 success: function (data) {
-
+                                    layer.msg('解除合作企业成功。', { icon: 6 });
                                     table.reload('Enterprise', {
                                         page: {
                                             curr: 1 //重新从第 1 页开始
@@ -178,7 +184,7 @@
                                 error: function () {
                                 }
                             });
-                            layer.msg('解除合作企业成功。', { icon: 6 });
+                            
                         });
                     } else {
                         layer.msg('并不是合作企业。', { icon: 5 });
@@ -217,7 +223,7 @@
             var grandid = $(this).attr("grandid");
             $("#selectGrand").attr("grandid", grandid);
             var a = $(this).attr("whyshow");
-
+            MrDWhyShow = a;
             WhyShow(a);
             if (a == "ShowNoCoop") {
                 $("#EntContacts").attr("disabled", "disabled");
@@ -234,7 +240,8 @@
             MrDtableIns.reload({
                 where: {
                     EntName: EntName,
-                    EntContacts:EntContacts
+                    EntContacts: EntContacts,
+                    whyshow:MrDWhyShow
                     }
                 , page: {
                     curr: 1

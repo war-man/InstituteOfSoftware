@@ -178,6 +178,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             var OldEnter = Enter.GetEnterByID(EntID);
             OldEnter.IsCooper = false;
+            OldEnter.EntContacts = string.Empty;
+            OldEnter.EntPhone = string.Empty;
             try
             {
                 Enter.Update(OldEnter);
@@ -415,7 +417,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <returns></returns>
         private bool Operation(int entid, string EntSpeeList)
         {
-
+            EntSpeeBus = new EntSpeeBusiness();
             bool result = false;
             JArray jArray = JArray.Parse(EntSpeeList);
 
@@ -423,6 +425,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             try
             {
                 EntSpeeBus.Delete(entspeeList);
+
                 List<EntSpee> entSpees = new List<EntSpee>();
                 foreach (var item in jArray)
                 {

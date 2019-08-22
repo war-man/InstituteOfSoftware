@@ -19,7 +19,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
     /// </summary>
     public class EmploymentCommissionerController : Controller
     {
-
         /// <summary>
         /// 就业专员业务类
         /// </summary>
@@ -29,27 +28,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         private EmploymentAreasBusiness MrDEmployAreBus;
         /// <summary>
-        /// 基表员工业务类
-        /// </summary>
-        private EmployeesInfoManage NoMrDEmployManBus;
-        /// <summary>
         /// 管理就业专员首页
         /// </summary>
         /// <returns></returns>
         public ActionResult EmploymentCommissionerIndex()
         {
+            MrDEmployAreBus = new EmploymentAreasBusiness();
+            ViewBag.arealist= MrDEmployAreBus.GetAll();
             return View();
         }
         /// <summary>
         /// 显示就业专员的数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult SearchData(int page, int limit, string whyshow, string EntName, string EntContacts)
+        public ActionResult SearchData(int page, int limit, int? areaid, string name, string phone)
         {
             MrDEmployStaffBus = new EmploymentStaffBusiness();
             MrDEmployAreBus = new EmploymentAreasBusiness();
-            var MrDEmpInfoData = MrDEmployStaffBus.GetALl();
+            var MrDEmpInfoData = MrDEmployStaffBus.GetALl().OrderByDescending(a => a.ID).ToList();
+            if (areaid>0)
+            {
+                MrDEmpInfoData= MrDEmpInfoData.Where(a => a.AreaID == areaid).ToList();
+
+            }
             var returnlist = new List<MrDEmployStaffView>();
+
             foreach (var item in MrDEmpInfoData)
             {
                 EmployeesInfo info = MrDEmployStaffBus.GetEmployeesInfoByID(item.EmployeesInfo_Id);
@@ -62,6 +65,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 obj.AreaName =MrDEmployAreBus.GetObjByID(item.AreaID).AreaName;
                 returnlist.Add(obj);
             }
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                returnlist = returnlist.Where(a => a.EmpName.Contains(name)).ToList();
+            }
+            if (!string.IsNullOrEmpty(phone))
+            {
+                returnlist = returnlist.Where(a => a.Phone.Contains(phone)).ToList();
+            }
             var bnewdata = returnlist.Skip((page - 1) * limit).Take(limit).ToList();
             var returnObj = new
             {
@@ -73,99 +85,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             return Json(returnObj, JsonRequestBehavior.AllowGet);
 
-        }
-
-        /// <summary>
-        /// 就业专员列表
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult EmpStaffList()
-        {
-            return View();
-        }
-
-        /// <summary>
-        /// 获取可以没有在就业专员表中的而且是在就业部中的员工数据
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult GetEmpStaffData(int page, int limit)
-        {
-
-            MrDEmployStaffBus = new EmploymentStaffBusiness();
-            var returnlist = MrDEmployStaffBus.EmployeesInfos();
-            var bnewdata = returnlist.Skip((page - 1) * limit).Take(limit).ToList();
-            var returnObj = new
-            {
-                code = 0,
-                msg = "",
-                count = returnlist.Count(),
-                data = bnewdata
-            };
-            return Json(returnObj, JsonRequestBehavior.AllowGet);
-
-        }
-
-        /// <summary>
-        /// 显示页面的添加员工
-        /// </summary>
-        /// <param name="empid"></param>
-        /// <returns></returns>
-        [HttpGet]
-        public ActionResult AddEmployStaff(string empid)
-        {
-           
-            NoMrDEmployManBus = new EmployeesInfoManage();
-            MrDEmployAreBus = new EmploymentAreasBusiness();
-            var AreaData = MrDEmployAreBus.GetAll().Select(s1=>new SelectListItem() { Text=s1.AreaName,Value=s1.ID.ToString()}).ToList();
-            SelectListItem s = new SelectListItem() { Text= "---待定---", Value = "-1",Selected=true};
-            AreaData.Add(s);
-            ViewBag.Area = AreaData;
-            var emp = NoMrDEmployManBus.GetList().Where(d => d.IsDel == false && d.EmployeeId == empid).ToList().FirstOrDefault();
-
-            ViewBag.Emp = emp;
-
-            return View();
-        }
-
-        /// <summary>
-        /// post请求的action
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult AddEmployStaff(EmploymentStaff employmentStaff)
-        {
-            MrDEmployStaffBus = new EmploymentStaffBusiness();
-
-
-            employmentStaff.IsDel = false;
-            employmentStaff.Date = DateTime.Now;
-            if (employmentStaff.AreaID > 0)
-            {
-                employmentStaff.AreaID = employmentStaff.AreaID;
-            }
-            else
-            {
-                employmentStaff.AreaID = null;
-            }
-           
-            AjaxResult result = new AjaxResult();
-
-            try
-            {
-                MrDEmployStaffBus.Insert(employmentStaff);
-                result.ErrorCode = 200;
-                result.Msg = "成功";
-                result.Data = null;
-            }
-            catch (Exception)
-            {
-
-                result.ErrorCode = 500;
-                result.Msg = "错误";
-                result.Data = null;
-            }
-
-            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -202,7 +121,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         }
 
         /// <summary>
-        /// get 请求修改数据
+        /// post 请求修改数据
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -244,13 +163,5 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ManageClass(/*string ids*/) {
-
-            //var temparryid = ids.Split(',');
-            //var list = temparryid.ToList();
-            //list.RemoveAt(temparryid.Length-1);
-
-            return View();
-        }
     }
 }

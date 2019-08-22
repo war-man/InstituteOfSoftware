@@ -21,41 +21,20 @@
         <label>区域：</label>
         <div class="btn-group layui-container" style="width:120px;">
 
-            <button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectMajor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectArea" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 选择区域 <span class="caret"></span>
             </button>
-            <ul class="dropdown-menu" id="majorlist">
-                <li><a href="#" majorid="0">不限</a></li>
-                @*@{
-                        foreach (var item in ViewBag.majors)
-                        {
-                            <li><a href="javascript:void(0);" majorid="@item.Id">@item.SpecialtyName</a></li>
-                        }
-                    }*@
+            <ul class="dropdown-menu" id="arealist">
+                <li><a href="javascript:void(0);" areaid="0">不限</a></li>
+                @{
+                    foreach (var item in ViewBag.arealist)
+                    {
+                        <li><a href="javascript:void(0);" areaid="@item.ID">@item.AreaName</a></li>
+                    }
+                }
 
             </ul>
         </div>
-
-
-        @*<label>阶段：</label>
-        <div class="btn-group layui-container" style="width:120px;">
-
-            <button type="button" class="btn btn-default dropdown-toggle" id="selectGrand" grandid="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                选择阶段 <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="grandlist">
-                <li><a href="#" grandid="0">不限</a></li>
-                @{
-                        foreach (var item in ViewBag.grands)
-                        {
-                            <li><a href="javascript:void(0);" grandid="@item.Id">@item.GrandName</a></li>
-                        }
-                    }
-
-            </ul>
-        </div>*@
-
-        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
     </div>
 
     <div style="display:inline-block;width:500px;" class="form-inline">
@@ -76,18 +55,10 @@
         <table class="layui-hide" id="EmpStaffTab" lay-filter="EmpStaffTab_filter"></table>
     </div>
 
-    <script type="text/html" id="topBar">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="manageclass">带班管理</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Add">+新成员</button>
-        </div>
-    </script>
 
     <script type="text/html" id="editBar">
         <a class="layui-btn layui-btn-xs layui-btn-danger" lay-event="edit">编辑</a>
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情</a>
-        @*<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="manageclass">带班管理</a>*@
-        @*<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="manageareas">分配就业区域</a>*@
     </script>
 
 
@@ -96,6 +67,7 @@
     <script>
 
         var MrDtableIns;
+        var areaid;
         layui.use(['table', 'layer', 'form', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -106,7 +78,6 @@
 
             var tableIns = table.render({
                 elem: '#EmpStaffTab'
-                , toolbar: '#topBar'
                 , shade: 3
                 , url: '/Obtainemployment/EmploymentCommissioner/SearchData/'
                 , cols: [[
@@ -123,93 +94,6 @@
                 , page: true
             });
             MrDtableIns = tableIns;
-
-
-            ///头工具栏事件
-            table.on('toolbar(EmpStaffTab_filter)', function (obj) {
-
-                var checkStatus = table.checkStatus(obj.config.id);
-                console.log(checkStatus);
-                switch (obj.event) {
-
-                    case 'manageclass':
-
-                        var ids = "";
-
-                        for (var i = 0; i < checkStatus.data.length; i++) {
-                           
-                            ids += checkStatus.data[i].EmploymentStaffID + ",";
-                        }
-
-                        
-
-                            layer.open({
-                                title: "带班管理",
-                                type: 2,
-                                area: ["1300px", "850px"],
-                                content: "/Obtainemployment/EmploymentCommissioner/ManageClass?ids="+ids
-                            });
-                        
-                        
-                        break;
-
-                    case 'Add':
-
-                        layer.open({
-                            type: 2
-                            , area: ["600px", "300px"],
-                            shade: [0],
-                            title: "选择员工",
-                            btn: ['确定', '关闭'],
-                            content: '/Obtainemployment/EmploymentCommissioner/EmpStaffList'
-                            //, end: function () { table.reload('idTest', {}); }
-                            , yes: function (index) {
-                                //当点击‘确定’按钮的时候，获取弹出层返回的值
-                                var res = window["layui-layer-iframe" + index].callbackdata();
-
-                                //打印返回的值，看是否有我们想返回的值。
-                                if (res.data.length > 0) {
-                                    // 获取员工ID
-                                    var empid = res.data[0].EmployeeId;
-                                    layer.close(index);
-                                    layer.open({
-                                        type: 2,
-                                        area: ["900px", "800px"],
-                                        shade: [0],
-                                        title: "添加就业专员",
-                                        content: '/Obtainemployment/EmploymentCommissioner/AddEmployStaff?empid=' + empid,
-                                        end: function () {
-                                            MrDtableIns.reload({
-                                                page: {
-                                                    curr: 1
-                                                }
-                                            });
-                                        }
-                                    });
-
-                                    //layer.open({
-                                    //    content: 'test'
-                                    //});
-
-
-                                }
-                                else {
-                                    layer.msg('请选择员工', { icon: 0 });
-                                }
-
-                                layer.close(index);
-                            }
-
-                        });
-
-                        break;
-                };
-
-
-
-            });
-
-
             ////监听行工具事件
             table.on('tool(EmpStaffTab_filter)', function (obj) {
                 var data = obj.data;
@@ -227,7 +111,8 @@
                         }
 
                     });
-                } else if (obj.event === 'edit') {
+                }
+                else if (obj.event === 'edit') {
                     //编辑
                     layer.open({
                         type: 2,
@@ -247,88 +132,43 @@
 
                     });
                 }
-                //else if (obj.event === 'manageareas') {
-                //    //设定区域
-                //    layer.open({
-                //        type: 2,
-                //        area: ["800px", "600px"],
-                //        content: "/Obtainemployment/EmploymentCommissioner/ManageAreas/" + id,
-                //        end: function () {
-
-                //            MrDtableIns.reload({
-                //                page: {
-                //                    curr: 1
-                //                }
-                //            });
-                //        }
-
-                //    });
-                //}
 
             });
+        });
 
+        $("#arealist li a").click(function () {
 
-            //$("#majorlist li a").click(function () {
+            var area = $(this).text();
+            $("#selectArea")[0].innerHTML = area + " <span class='caret'></span>";
+            areaid = $(this).attr("areaid");
 
-            //    var major = $(this).text();
+            //发送请求
+            MrDtableIns.reload({
+                where: {
+                    areaid: areaid
+                }
+                , page: {
+                    curr: 1
+                }
+            });
+        });
 
-            //    $("#selectMajor")[0].innerHTML = major + " <span class='caret'></span>";
+       
 
-            //    var majorid = $(this).attr("majorid");
-            //    $("#selectMajor").attr("majorid", majorid);
+        $("#serchBtn2").click(function () {
 
-            //});
+            //获取姓名 和 电话
+            var name = $("#name").val();
+            var phone = $("#phone").val();
 
-            //$("#grandlist li a").click(function () {
+            MrDtableIns.reload('EmpStaffTab', {
+                where: {
+                    areaid: areaid,
+                    name: name,
+                    phone: phone
+                }
+            });
 
-            //    var grand = $(this).text();
-
-            //    $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-
-            //    var grandid = $(this).attr("grandid");
-            //    $("#selectGrand").attr("grandid", grandid);
-            //});
-
-            //$("#serchBtn1").click(function () {
-
-            //    //获取 专业ID
-            //    var majorid = $("#selectMajor").attr("majorid");
-
-            //    //获取阶段ID
-            //    var grandid = $("#selectGrand").attr("grandid");
-
-            //    //发送请求
-            //    table.reload('Teacherlist', {
-            //        url: '/Teaching/Teacher/GetTeacherByMajorOrGrand'
-            //        , where: {
-
-            //            majorid: majorid,
-            //            grandid: grandid,
-
-            //        } //设定异步数据接口的额外参数
-            //        //,height: 300
-            //    });
-
-            //});
-
-            //$("#serchBtn2").click(function () {
-
-            //    //获取姓名 和 电话
-            //    var name = $("#name").val();
-            //    var phone = $("#phone").val();
-
-            //    table.reload('Teacherlist', {
-            //        url: '/Teaching/Teacher/BrushSelectionTeacher'
-            //        , where: {
-
-            //            name: name,
-            //            phone: phone,
-
-            //        } //设定异步数据接口的额外参数
-            //        //,height: 300
-            //    });
-
-            //});
         });
     </script>
 }
