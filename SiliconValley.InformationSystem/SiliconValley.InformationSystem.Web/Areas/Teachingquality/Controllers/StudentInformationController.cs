@@ -22,6 +22,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //学员班级表
         ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
         //备案id
+       
         private static int NameKeysid = 0;
         public class Student { }
 
@@ -119,7 +120,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string n = date.Year.ToString().Substring(2);//获取年份
 
             //学员总数
-            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n&& a.IsDelete != true).Count()+1;
+            var laststr = dbtext.Mylist("StudentInformation").Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n&& a.IsDelete != true).Count()+1;
             string sfz = IDnumber.Substring(6,8);
 
             string y = Month(Convert.ToInt32(date.Month)).ToString();
@@ -178,7 +179,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
             //    List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
-            List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
+            List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true).ToList();
             try
             {
               
@@ -277,7 +278,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public bool Isidentitydocument(string identitydocument)
         {
         
-           var x= dbtext.GetList().Where(a => a.identitydocument == identitydocument&& a.IsDelete != true).ToList();
+           var x= dbtext.Mylist("StudentInformation").Where(a => a.identitydocument == identitydocument&& a.IsDelete != true).ToList();
             if (x.Count>0)
             {
                 return false;
@@ -306,6 +307,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         studentInformation.InsitDate = DateTime.Now; ;
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
+                        studentInformation.IsDelete = false;
                         dbtext.Insert(studentInformation);
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
                         scheduleForTrainees.ClassID = List;//班级名称
@@ -313,10 +315,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         scheduleForTrainees.StudentID = studentInformation.StudentNumber;
                         scheduleForTrainees.AddDate = DateTime.Now;
                         Stuclass.Insert(scheduleForTrainees);
+                        Stuclass.Remove("ScheduleForTrainees");
                         result = new SuccessResult();
                         result.Msg = "注册成功";
                         result.Success = true;
                         result.Data = studentInformation.StudentNumber;
+                        dbtext.Remove("StudentInformation");
+                     
                     }
                     catch (Exception ex)
                     {
@@ -348,8 +353,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result = new SuccessResult();
                         result.Msg = "修改成功";
                         result.Success = true;
-                    
-                    }
+                    dbtext.Remove("StudentInformation");
+                }
                     catch (Exception ex)
                     {
                         result = new ErrorResult();
@@ -368,7 +373,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //按学号查询单个学员 find
         public StudentInformation Finds(string id)
         {
-            var x = dbtext.GetList().Where(a => a.StudentNumber == id&& a.IsDelete != true).FirstOrDefault();
+            var x = dbtext.Mylist("StudentInformation").Where(a => a.StudentNumber == id&& a.IsDelete != true).FirstOrDefault();
             return x;
         }
         //按学号查询单个学员返回json格式
@@ -376,7 +381,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             string stuid = Request.QueryString["stuid"];
             var a = Finds(stuid);
-            var ClassID = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ClassID;
+            var ClassID = Stuclass.Mylist("ScheduleForTrainees").Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ClassID;
             var x = new
             {
                 StudentNumber = a.StudentNumber,//学号
@@ -395,7 +400,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Nation = a.Nation,//民族
                 Sex = a.Sex,//性别,
                 Guardian=a.Guardian,//亲属
-                AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().AddDate,//入班时间
+                AddDate = Stuclass.Mylist("ScheduleForTrainees").Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().AddDate,//入班时间
                classa = classschedu.GetList().Where(q=> q.IsDelete == false && q.ClassStatus == false&&q.ClassNumber== ClassID).FirstOrDefault().ClassNumber//班级号
                                      //a => a.IsDelete == false && a.ClassStatus == false
             };
@@ -422,7 +427,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult Password(StudentInformation student)
         {
-          var x=  dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber&& a.IsDelete != true).FirstOrDefault();
+          var x=  dbtext.Mylist("StudentInformation").Where(a => a.StudentNumber == student.StudentNumber&& a.IsDelete != true).FirstOrDefault();
             x.Password = student.Password;
             AjaxResult result = null;
             try
@@ -431,6 +436,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result = new SuccessResult();
                 result.Success = true;
                 result.Msg = "修改成功";
+                dbtext.Remove("StudentInformation");
             }
             catch (Exception ex)
             {

@@ -133,7 +133,40 @@ namespace SiliconValley.InformationSystem.Business
         {
             Service.Insert<T>(entity);
         }
+        /// <summary>
+        /// Name缓存的名称 查询所有缓存数据
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public List<T> Mylist(string Name)
+        {
+            List<T> list = new List<T>();
+            var x = this.GetList();
+            RedisCache redis = new RedisCache();
+            list = redis.GetCache<List<T>>(Name);
+            if (list != null)
+            {
+                return list;
+            }
+            else
+            {
+                redis.SetCache(Name, x);
+                list = redis.GetCache<List<T>>(Name);
 
+                return list;
+
+            }
+        }
+        /// <summary>
+        /// 更新缓存数据
+        /// </summary>
+        /// <param name="Name"></param>
+        public void Remove(string Name)
+        {
+            RedisCache redis = new RedisCache();
+            redis.RemoveCache(Name);
+        }
+     
         /// <summary>
         /// 插入数据列表
         /// 注：若数据量较大，请使用BulkInsert
