@@ -776,5 +776,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             goodskill_db.Delete(tempobj);
 
         }
+
+      
     }
 }

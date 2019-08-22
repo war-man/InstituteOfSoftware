@@ -1,0 +1,143 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.ViewEntity.StudentDetailView
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StudentDetailInfo</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #warp {
+                
+            
+        }
+
+        form label {
+            font-size:20px;
+            color:#f16a0b;
+        }
+
+        .layui-input {
+            font-size: 18px;
+            border: 0px solid #ffffff;
+            color: #808080;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="warp">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="name" value="@Model.Name" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="sex" value="@Model.Sex" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">生日:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="birthday" value="@Model.BirthDate" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">学历:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="education" value="@Model.Education" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">住址:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="address" value="@Model.Familyaddress" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">qq号:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="qq" value="@Model.qq" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">微信:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="wechat" value="@Model.WeChat" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">电话:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="phone" value="@Model.Telephone" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">班级:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" id="class" value="@Model.ClassName" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">阶段:</label>
+                <div class="layui-input-block">
+                    <button id="currentgrand" type="button" class="layui-btn layui-btn-primary">@Model.GrandName</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">专业:</label>
+                <div class="layui-input-block">
+
+                    <button id="currentmajor" type="button" class="layui-btn layui-btn-primary">@Model.MajorName</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">状态:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="" value="@Model.State" readonly autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <script>
+        layui.use(['form'], function () {
+
+            var form = layui.form;
+
+            var birthday = $("#birthday").val();
+
+            //birthday = dateConvert(birthday);
+            var date = new Date(birthday);
+
+            var year = date.getFullYear();
+
+            var mouth = date.getMonth() + 1;
+
+            var day = date.getDate();
+
+            
+
+
+            $("#birthday").val(year + "年" + mouth + "月" + day+"日");
+
+
+        });
+    </script>
+</body>
+
+
+</html>
