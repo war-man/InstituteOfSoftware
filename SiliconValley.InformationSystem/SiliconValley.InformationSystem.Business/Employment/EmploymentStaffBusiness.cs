@@ -183,6 +183,27 @@ namespace SiliconValley.InformationSystem.Business.Employment
             var empdata= this.GetEmploymentByID(EmpID);
             return this.GetEmployeesInfoByID(empdata.EmployeesInfo_Id);
         }
+        /// <summary>
+        /// 添加就业专员
+        /// </summary>
+        /// <param name="EmployNO"></param>
+        /// <returns></returns>
+        public bool AddEmploystaff(string EmployNO)
+        {
+            EmploymentStaff staff = new EmploymentStaff();
+            staff.EmployeesInfo_Id = EmployNO;
+            staff.Date = DateTime.Now;
+            staff.IsDel = false;
+            try
+            {
+                this.Insert(staff);
+                return true;
+            }
+            catch (Exception ex)
+            {
 
+                return false;
+            }
+        }
     }
 }
