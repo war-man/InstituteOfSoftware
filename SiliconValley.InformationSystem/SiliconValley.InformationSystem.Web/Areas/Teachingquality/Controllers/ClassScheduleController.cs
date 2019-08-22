@@ -154,9 +154,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
             return Json(retus, JsonRequestBehavior.AllowGet);
         }
-        
+        //查看班级的学员
         public ActionResult ClassStudent()
         {
+            string ClassNumber = Request.QueryString["ClassNumber"];
             return View();
         }
        
