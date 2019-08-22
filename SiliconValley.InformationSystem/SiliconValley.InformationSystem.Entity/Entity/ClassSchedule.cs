@@ -20,13 +20,34 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     public partial class ClassSchedule
     {
         
+        /// <summary>
+        /// 班级编号
+        /// </summary>
       [Key]
         public string ClassNumber { get; set; }
+        /// <summary>
+        /// 班级状态 false为未毕业班 true为毕业班
+        /// </summary>
         public Nullable<bool> ClassStatus { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string ClassRemarks { get; set; }
+        /// <summary>
+        /// 是否删除 false 存在 true 停用
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 专业id
+        /// </summary>
         public Nullable<int> Major_Id { get; set; }
-        public Nullable<int> grade_Id { get; set; }
+        /// <summary>
+        /// 阶段id
+        /// </summary>
+        public int grade_Id { get; set; }
+        /// <summary>
+        /// 枚举 1是上午
+        /// </summary>
         public Nullable<int> BaseDataEnum_Id { get; set; }
     }
 }

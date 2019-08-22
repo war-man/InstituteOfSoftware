@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 员工表
+    /// </summary>
     [Table(name: "EmployeesInfo")]
     public partial class EmployeesInfo
     {

@@ -73,46 +73,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
             var cc = NomyEmp.GetIQueryable().Where(a => a.EmployeeId == EmployeeId && a.IsDel == false).FirstOrDefault();
             return cc;
         }
-        /// <summary>
-        /// 返回属于就业岗位的员工
-        /// </summary>
-        public List<EmployeesInfo> EmployeesInfos()
-        {
-            BaseBusiness<Department> DepbaseBusiness = new BaseBusiness<Department>();
-            BaseBusiness<Position> PositionBusiness = new BaseBusiness<Position>();
-            BaseBusiness<EmployeesInfo> EmployeesInfoBusiness = new BaseBusiness<EmployeesInfo>();
-            var DepList = DepbaseBusiness.GetIQueryable().Where(a => a.IsDel == false).ToList();
-            var PositionList = PositionBusiness.GetIQueryable().Where(a => a.IsDel == false).ToList();
-            var EmployStaffList = this.GetIQueryable().Where(a => a.IsDel == false).ToList();
-            var EmployInfoList = EmployeesInfoBusiness.GetIQueryable().Where(a => a.IsDel == false).ToList();
-
-            //得到就业岗位的员工
-            var ResultList = new List<EmployeesInfo>();
-            var NewResultList = new List<EmployeesInfo>();
-
-
-            foreach (var item in EmployInfoList)
-            {
-                var PositionObj = PositionList.Where(a => a.Pid == item.PositionId).First();
-                if (PositionObj.DeptId == 4)
-                {
-                    ResultList.Add(item);
-                    NewResultList.Add(item);
-                }
-            }
-
-            foreach (var item in EmployStaffList)
-            {
-                foreach (var result in ResultList)
-                {
-                    if (item.EmployeesInfo_Id == result.EmployeeId)
-                    {
-                        NewResultList.Remove(result);
-                    }
-                }
-            }
-            return NewResultList;
-        }
 
         /// <summary>
         /// 用于详细页面
@@ -214,15 +174,26 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
             return this.GetALl().Where(a => a.AreaID == AreasID).FirstOrDefault();
         }
-
+        /// <summary>
+        /// 根据就业专员id返回员工对象
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public EmployeesInfo GetEmpInfoByEmpID(int EmpID) {
+            var empdata= this.GetEmploymentByID(EmpID);
+            return this.GetEmployeesInfoByID(empdata.EmployeesInfo_Id);
+        }
         /// <summary>
         /// 添加就业专员
         /// </summary>
-        /// <param name="EmployNO">员工编号</param>
+        /// <param name="EmployNO"></param>
         /// <returns></returns>
-        public bool AddEmploystaff(string EmployNO) {
+        public bool AddEmploystaff(string EmployNO)
+        {
             EmploymentStaff staff = new EmploymentStaff();
             staff.EmployeesInfo_Id = EmployNO;
+            staff.Date = DateTime.Now;
+            staff.IsDel = false;
             try
             {
                 this.Insert(staff);

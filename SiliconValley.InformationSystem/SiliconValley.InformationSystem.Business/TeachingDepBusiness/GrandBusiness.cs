@@ -13,5 +13,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
    public class GrandBusiness:BaseBusiness<Grand>
     {
 
+        public Grand GetGrandByID(int GrandID)
+        {
+           return this.GetList().Where(d=>d.IsDelete==false && d.Id==GrandID).FirstOrDefault();
+        }
+
     }
 }

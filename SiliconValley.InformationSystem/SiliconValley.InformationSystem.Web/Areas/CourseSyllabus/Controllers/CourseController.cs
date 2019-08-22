@@ -11,6 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Util;
+
     using SiliconValley.InformationSystem.Business.Common;
 
     [CheckLogin]

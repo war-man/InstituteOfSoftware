@@ -4,91 +4,112 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.ViewEntity
 @section style{
-    
-        <style>
-            #classstudent {
-              
-                height: 200px;
-                border: 1px solid red;
-            }
 
-            #classlist {
-                width: 20%;
-                height: 500px;
-                border: 1px solid red;
-                float:left
-                
-            }
+    <style>
+        #classstudent {
+            height: 200px;
+            border: 1px solid red;
+        }
 
-            #studenttable {
-              
-                width: 79%;
-                height: 500px;
-                border: 1px solid red;
-                float:right;
-            }
+        #classlist {
+            width: 20%;
+            height: 500px;
+            border: 1px solid red;
+            float: left
+        }
 
-            .classbtn {
-                display:block;
-                width:100%;
-                height:50px;
-                border:1px solid red;
-                margin-top:10px;
+        #studenttable {
+            width: 79%;
+            height: 500px;
+            border: 1px solid red;
+            float: right;
+        }
+
+        .classbtn {
+            display: block;
+            width: 100%;
+            height: 50px;
+            border: 1px solid red;
+            margin-top: 10px;
+            font-size:20px;
+        }
+
+        .studentbtn {
+            display: inline-block;
+            margin-left: 10px;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
+
+            .studentbtn button {
+                width: 100px;
+                height: 60px;
             }
-        </style>
+    </style>
 }
-   
-    
 
-
-
-
-
-
-
-<div >
+<div>
 
     <div id="classstudent">
-
+        <button class="layui-btn">
+            我的按钮
+        </button>
     </div>
     <div id="classlist">
         <!--我的班级编号列表-->
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
-        <div>
-            <button class="layui-btn classbtn">1710NA</button>
-        </div>
+        <h2 style="text-align:center;">我的班级列表</h2>
+        @{
 
-
-
+            foreach (var item in ViewBag.classlist as List<ClassTableView>)
+            {
+                <div>
+                    <button classnumber="@item.ClassNumber" class="layui-btn classbtn">@item.ClassNumber <span style="margin-left:5px; font-size:18px;">@item.GradeName 阶段</span></button>
+                </div>
+            }
+        }
 
     </div>
 
     <div id="studenttable">
 
+
+
     </div>
+
+    <script type="text/template" id="studenthtml">
+
+        <div class="studentbtn">
+            <button studentnumber="{{=studentnumber}}" class="layui-btn"> <i class="layui-icon">&#xe66f;</i>    {{=studentname}}</button>
+        </div>
+
+    </script>
+
+
+    <!--弹窗模板-->
+    <script type="text/template" id="layerthtml">
+
+        <div>
+            <div>
+                <button studentnumber="{{=studentnumber}}" id="detailinfo" class="layui-btn layui-btn-warm classbtn"><i class="layui-icon">&#xe615;</i>查看学生详细信息<br/>
+                        {{=posi}}
+                </button>
+            </div>
+        </div>
+
+    </script>
 
 
 </div>
+
+@section script{
+
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
+    <script src="~/Areas/Teaching/Scripts/TeacherClass.js"></script>
+
+}
 
