@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Business.Common;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
+    //出勤
     public class StudentAttendancController : Controller
     {
         private readonly StudentAttendanceBusiness dbtext;
@@ -47,9 +48,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 var stu = student.GetList().Where(a => a.Name.Contains(Name)).ToList();
                 foreach (var item in stu)
                 {
-                    list.AddRange( dbtext.GetList().Where(a => a.StudentID == item.StudentNumber).ToList());
+                    list.AddRange( dbtext.Mylist("StudentAttendance").Where(a => a.StudentID == item.StudentNumber).ToList());
                 }
-            } else { list = dbtext.GetList(); }
+            } else { list = dbtext.Mylist("StudentAttendance"); }
            
             if (!string.IsNullOrEmpty(Attendancestatus))
             {
@@ -146,6 +147,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result = new SuccessResult();
                 result.Msg = "记录成功";
                 result.Success = true;
+                dbtext.Remove("StudentAttendance");
             }
             catch (Exception ex)
             {
@@ -168,7 +170,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string tu = studentAttendanc.StudentID.Substring(0, studentAttendanc.StudentID.Length - 1);
             //转成数组
             string[] stu = tu.Split(',');
-            var list = dbtext.GetList();
+            var list = dbtext.Mylist("StudentAttendance");
             List<StudentAttendance> mylist = new List<StudentAttendance>();
             for (int i = 0; i < stu.Length; i++)
             {

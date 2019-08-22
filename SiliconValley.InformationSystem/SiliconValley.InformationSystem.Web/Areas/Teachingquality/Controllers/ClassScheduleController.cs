@@ -11,7 +11,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.Common;
-
+//班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
     public class ClassScheduleController : Controller
