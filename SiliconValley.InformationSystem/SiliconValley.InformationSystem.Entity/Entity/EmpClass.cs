@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> EmpStaffID { get; set; }
+        public int EmpStaffID { get; set; }
         public string ClassNO { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }

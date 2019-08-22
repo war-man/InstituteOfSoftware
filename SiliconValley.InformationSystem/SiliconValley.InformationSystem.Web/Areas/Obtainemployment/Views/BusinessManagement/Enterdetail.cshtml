@@ -42,7 +42,8 @@
         <fieldset class="fieldset">
             <legend class="major">{{=content}}</legend>
             <div class="layui-row layui-form-item">
-                <div class="layui-inline">
+                <div class="layui-block">
+
                     <fieldset>
                         <legend class="title">薪资</legend>
                         <div class="layui-row layui-form-item">
@@ -52,7 +53,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="layui-inline">
+                <div class="layui-block">
                     <fieldset>
                         <legend class="title">岗位职责</legend>
                         <div class="layui-row layui-form-item">
@@ -63,7 +64,7 @@
                         </div>
                     </fieldset>
                 </div>
-                <div class="layui-inline">
+                <div class="layui-block">
                     <fieldset>
                         <legend class="title">任职要求</legend>
                         <div class="layui-row layui-form-item">
@@ -84,20 +85,19 @@
     <h1 style="text-align:center;height:50px;">查看企业信息</h1>
     <div>
         <form class="layui-form" action="">
-            <div class="layui-container">
-                <fieldset>
-                    <legend>基础数据</legend>
-                    <div class="layui-row layui-form-item">
+            <fieldset>
+                <legend>基础数据</legend>
+                <div class="layui-row">
+
+                    <div class="layui-col-md6">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司名</label>
                             <div class="layui-input-inline">
                                 @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "readonly", "readonly" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
-
-
                             </div>
                         </div>
                     </div>
-                    <div class="layui-row layui-form-item">
+                    <div class="layui-col-md6 ">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司地址</label>
                             <div class="layui-input-inline">
@@ -106,7 +106,7 @@
                         </div>
 
                     </div>
-                    <div class="layui-row layui-form-item">
+                    <div class="layui-col-md6 ">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司规模</label>
                             <div class="layui-input-block">
@@ -116,7 +116,7 @@
                         </div>
 
                     </div>
-                    <div class="layui-row layui-form-item">
+                    <div class="layui-col-md6 ">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司性质</label>
                             <div class="layui-input-block">
@@ -126,7 +126,7 @@
                         </div>
                     </div>
 
-                    <div class="layui-row layui-form-item">
+                    <div class="layui-col-md6 ">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司福利</label>
                             <div class="layui-input-block">
@@ -138,46 +138,47 @@
 
 
 
-
-
-                    <div id="list" class="layui-row layui-form-item">
-
-
-                    </div>
-
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">备注</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">联系人姓名</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "readonly", "readonly" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">联系方式</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "readonly", "readonly" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
-                            </div>
-                        </div>
-                    </div>
-                </fieldset>
-            </div>
-            <div class="layui-form-item">
-
-                <div class="layui-input-inline">
-                    <button class="layui-btn" id="clode">返回</button>
                 </div>
-            </div>
-        </form>
+
+            </fieldset>
+                <div id="list" class="layui-row layui-form-item">
+
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">联系人姓名</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "readonly", "readonly" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">联系方式</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "readonly", "readonly" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-form-item">
+
+                    <div class="layui-input-inline">
+                        <button class="layui-btn" id="clode">返回</button>
+                    </div>
+                </div>
+</form>
     </div>
 
 

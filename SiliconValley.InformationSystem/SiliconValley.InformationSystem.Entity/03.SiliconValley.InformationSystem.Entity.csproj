@@ -133,6 +133,7 @@
     <Compile Include="Entity\DormitoryMaintenance.cs" />
     <Compile Include="Entity\Electricitytarifftype.cs" />
     <Compile Include="Entity\EmpClass.cs" />
+    <Compile Include="Entity\EmpClassTransaction.cs" />
     <Compile Include="Entity\EmployedStudent.cs" />
     <Compile Include="Entity\EmployeeArea.cs" />
     <Compile Include="Entity\EmployeesInfo.cs" />
@@ -268,7 +269,9 @@
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
+    <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
+    <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
