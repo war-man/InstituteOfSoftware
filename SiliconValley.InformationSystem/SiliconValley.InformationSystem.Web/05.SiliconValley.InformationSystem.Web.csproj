@@ -990,6 +990,17 @@
     <Content Include="Scripts\layui\font\iconfont.eot" />
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20190820091208" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20190821025124" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20190821113059" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\人才需求计划表.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\人才需求计划表20190822085131.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\人才需求计划表20190822091029.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\人才需求计划表20190822095505.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\人才需求计划表20190822100512.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\测试220190820091529.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\测试220190820092210.xlsx" />
+    <Content Include="uploadXLSXfile\Sheet1.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1010,7 +1021,6 @@
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
     <Folder Include="assets\img\" />
-    <Folder Include="uploadXLSXfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

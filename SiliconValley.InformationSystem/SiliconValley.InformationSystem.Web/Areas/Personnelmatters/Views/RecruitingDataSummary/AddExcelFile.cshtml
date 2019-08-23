@@ -43,7 +43,7 @@
 
         <h1 style="text-align:center;height:50px;">导入excel文件格式的人才计划需求</h1>
         <div>
-            <form class="layui-form" action="">
+            <form class="layui-form" method="post" action="" enctype="multipart/form-data">
                 <div class="layui-container">
                     <fieldset>
                         <button type="button" class="layui-btn" id="btn1"><i class="layui-icon"></i>选择Excel文件</button>
@@ -110,7 +110,20 @@
                         }
                     });
               
+
+                //提示
+                function TiShi(msg) {
+                    layui.use(['layer'], function () {
+                        var layer = layui.layer;
+                        layer.msg(msg, {
+                            icon: 2,
+                            time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                        });
+                    });
+                }
             });
+
+            
         </script>
 
 
