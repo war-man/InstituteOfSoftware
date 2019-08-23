@@ -13,18 +13,39 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 课程表
+    /// </summary>
     [Table("Curriculum")]
     public partial class Curriculum
     {
         
         [Key]
         public int CurriculumID { get; set; }
+        /// <summary>
+        /// 阶段id
+        /// </summary>
         public Nullable<int> Grand_Id { get; set; }
+        /// <summary>
+        /// 专业
+        /// </summary>
         public int MajorID { get; set; }
+        /// <summary>
+        /// 课程名称
+        /// </summary>
         public string CourseName { get; set; }
+        /// <summary>
+        /// 课程类型 专业课 军事课 直素课 义务教育课
+        /// </summary>
         public Nullable<int> CourseType_Id { get; set; }
+        /// <summary>
+        /// 课时
+        /// </summary>
         public Nullable<int> CourseCount { get; set; }
         public Nullable<int> Sort { get; set; }
+        /// <summary>
+        /// 课时费
+        /// </summary>
         public Nullable<decimal> PeriodMoney { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
