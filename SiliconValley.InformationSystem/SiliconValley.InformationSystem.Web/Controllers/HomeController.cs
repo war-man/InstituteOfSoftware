@@ -14,11 +14,20 @@ using Newtonsoft.Json.Linq;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
-   
-    [CheckLogin]
+    public class users
+    {
+        public int ID { get; set; }
+
+        public string name { get; set; }
+
+        public int age  { get; set; }
+
+        public DateTime birthday { get; set; }
+    }
+    //[CheckLogin]
     public class HomeController : Controller
     {
-       
+      // /Home/DataSetToExcel
         public ActionResult Index()
         {
             // Business.Base_SysManage.Base_UserBusiness buser = new Business.Base_SysManage.Base_UserBusiness();
@@ -59,21 +68,26 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         {
           // string ss= ConfigHelper.GetConnectionString("BaseDb");
 
-            SqlConnection con = new SqlConnection("server=.;database=exsil;uid=sa;pwd=123;");
-            string sql = "select * from users";
-            con.Open();
-            SqlDataAdapter adapter = new SqlDataAdapter(sql, con);
-            DataSet ds = new DataSet();
-            adapter.Fill(ds);
+            //SqlConnection con = new SqlConnection("server=.;database=exsil;uid=sa;pwd=123;");
+            //string sql = "select * from users";
+            //con.Open();
+            //SqlDataAdapter adapter = new SqlDataAdapter(sql, con);
+            //DataSet ds = new DataSet();
+            //adapter.Fill(ds);
 
-            DataTable user = ds.Tables[0];
+           // DataTable user = ds.Tables[0];
 
-
+            List<users> users = new List<users>();
+            users.Add(new users() { ID = 1, name = "唐敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+            users.Add(new users() { ID = 1, name = "唐da敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+            users.Add(new users() { ID = 1, name = "唐xiao敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+            users.Add(new users() { ID = 1, name = "唐mm敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+            DataTable user = users.ToDataTable<users>();
             var userbaty = AsposeOfficeHelper.DataTableToExcelBytes(user);
 
-            DataTable dataTable = ds.Tables[0];
-            int rowNumber = dataTable.Rows.Count;
-            int columnNumber = dataTable.Columns.Count;
+           
+            int rowNumber = user.Rows.Count;
+            int columnNumber = user.Columns.Count;
             int colIndex = 0;
             if (rowNumber == 0)
             {
@@ -103,7 +117,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
             JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
             //生成字段名称 
-            foreach (DataColumn col in dataTable.Columns)
+            foreach (DataColumn col in user.Columns)
             {
                 colIndex++;
                 excel.Cells[1, colIndex] = jo[col.ColumnName] ;
@@ -115,7 +129,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
                 for (int j = 0; j < columnNumber; j++)
                 {
-                    excel.Cells[c + 1, j + 1] = dataTable.Rows[c-1].ItemArray[j];
+                    excel.Cells[c + 1, j + 1] = user.Rows[c-1].ItemArray[j];
                 }
             }
 

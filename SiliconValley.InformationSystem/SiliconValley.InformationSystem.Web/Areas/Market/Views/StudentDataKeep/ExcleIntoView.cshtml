@@ -33,6 +33,7 @@
             <fieldset class="fieldsetCssTwo1">
                 <legend class="legendCssTwo1">文件选择区</legend>
                 <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>选择Excel文件</button>
+                <a href="/Market/StudentDataKeep/DownFile" class="layui-btn"><i class="layui-icon">&#xe601;</i>文件下载</a>
             </fieldset>
             <fieldset class="fieldsetCssTwo1" style="height:420px;">
                 <legend class="legendCssTwo1">文件内容显示区</legend>
@@ -64,7 +65,6 @@
             var result = year + '-' + month + '-' + day;
             return result;
         }
-
         //提示
         function TiShi(msg) {
             layui.use(['layer'], function () {
@@ -131,7 +131,7 @@
             $.ajax({
                 url: '/Market/StudentDataKeep/DeleteFile'
             });
-        });
+        });         
         layui.use(['upload','table'], function () {
             var $ = layui.jquery
                 , upload = layui.upload;
