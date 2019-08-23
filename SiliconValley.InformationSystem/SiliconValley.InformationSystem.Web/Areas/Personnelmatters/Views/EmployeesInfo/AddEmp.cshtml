@@ -1,9 +1,9 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
 @model SiliconValley.InformationSystem.Entity.MyEntity.EmployeesInfo
 @using SiliconValley.InformationSystem.Entity.MyEntity;
+
 <!DOCTYPE html>
 
 <html>
@@ -126,25 +126,24 @@
 
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4" >
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">合同起始时间</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "lay-verify", "ContractStartTime" }, { "id", "ContractStartTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">合同终止时间</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ContractEndTime, new Dictionary<string, object>() { { "lay-verify", "ContractEndTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.ContractEndTime, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">出生日期</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "lay-verify", "Birthdate" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
-                        </div>
+                            @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd(员工至少十六岁)" }, { "class", "layui-input" } })</div>
                     </div>
                 </div>
 
@@ -200,14 +199,14 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">婚姻状态</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="MaritalStatus" value="False" title="未婚" checked >
+                            <input type="radio" name="MaritalStatus" value="False" title="未婚" checked>
                             <input type="radio" name="MaritalStatus" value="True" title="已婚">
                         </div>
                     </div>
                 </div>
 
                 <div class="layui-row layui-form-item">
-       
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">身份证有效期</label>
                         <div class="layui-input-block">
@@ -223,7 +222,7 @@
                                 <option value="团员">团员</option>
                                 <option value="群众">群众</option>
                             </select>
-                         
+
                         </div>
                     </div>
                 </div>
@@ -233,7 +232,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入试用期工资" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入试用期工资" }, { "class", "layui-input " } })
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -355,18 +354,85 @@
                 , laydate = layui.laydate;
 
             //日期验证
-            laydate.render({
+            var curDate = new Date();
+            var curYearMonthrDay = curDate.getFullYear() - 16 + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));//员工至少是16岁以上，所以出生日期只能选择距今16年前的日期
+            //月份小于10的前面加个0
+            function MoDay(a) {
+                if (a < 10) {
+                    return "0" + a;
+                }
+                return a;
+            }
+
+            var entryTime = laydate.render({
                 elem: '#EntryTime',
-            });//入职时间
-            laydate.render({
+                done: function (value, date) {
+                    startTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    },
+                        endTime.config.min = {
+                            year: date.year,
+                            month: date.month - 1,//关键
+                            date: date.date,
+                            hours: date.hours,
+                            minutes: date.minutes,
+                            seconds: date.seconds}
+                }
+            }); //入职时间
+            var startTime = laydate.render({
                 elem: '#ContractStartTime',
+                done: function (value, date) {
+                    console.log("开始时间：" + $("#ContractStartTime").val());
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    },
+                    entryTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
             });//合同起始时间
-            laydate.render({
+            var endTime = laydate.render({
                 elem: '#ContractEndTime',
-            }); //合同终止时间
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    },
+                    entryTime.config.max = {
+                            year: date.year,
+                            month: date.month - 1,//关键
+                            date: date.date,
+                            hours: date.hours,
+                            minutes: date.minutes,
+                            seconds: date.seconds
+                        }
+                }
+            });//合同终止时间
             laydate.render({
                 elem: '#Birthdate',
-            }); //出生日期
+                value: curYearMonthrDay,
+                isInitValue: false,
+                max: curYearMonthrDay
+            });//出生日期
             laydate.render({
                 elem: '#IdCardIndate',
             });//身份证有效期
@@ -382,8 +448,8 @@
                             return '身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X';
                         }
                     }
-                },//身份证号 
-                myUrgentPhone: function (value,item) {
+                },//身份证号
+                myUrgentPhone: function (value, item) {
                     if (value == '') {
                         return '';
                     } else {
@@ -394,48 +460,6 @@
                     }
                 }//紧急联系电话
             });
-            
-            //日期   
-            var curDate = new Date();
-            var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
-            var startTime = laydate.render({
-                elem: '#ContractStartTime',
-                btns: ['clear', 'now', 'confirm'],
-                //format: 'yyyy-MM-dd',
-                done: function (value, date) {
-                    console.log("开始时间：" + $("#ContractStartTime").val());
-                    endTime.config.min = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
-                    }
-                }
-            })
-            var endTime = laydate.render({
-                elem: '#ContractEndTime',
-                btns: ['clear', 'now', 'confirm'],
-                format: 'yyyy-MM-dd',
-                done: function (value, date) {
-                    startTime.config.max = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
-                    }
-                }
-            })
-            //月份小于10的前面加个0
-            function MoDay(a) {
-                if (a < 10) {
-                    return "0" + a;
-                }
-                return a;
-            }
 
 
             //添加提交
@@ -464,7 +488,7 @@
 
 
 
-    
+
     </script>
 
 
