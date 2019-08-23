@@ -19,6 +19,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using System.IO;
     using SiliconValley.InformationSystem.Business.Common;
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
+    using System.Data;
 
     public class RecruitingDataSummaryController : Controller
     {
@@ -236,29 +237,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             List<TalentDemandPlan> tdplist = new List<TalentDemandPlan>();
             string namef = SessionHelper.Session["filename"].ToString();
                var t = AsposeOfficeHelper.ReadExcel(namef, false);
-            if (t.Rows[0][0].ToString() == "部门" && t.Rows[0][1].ToString() == "岗位名称" && t.Rows[0][2].ToString() == "需求人数" && t.Rows[0][3].ToString() == "负责人" && t.Rows[0][4].ToString() == "需求申请时间" && t.Rows[0][5].ToString() == "预入职时间" && t.Rows[0][6].ToString() == "岗位职责" && t.Rows[0][7].ToString() == "岗位要求" && t.Rows[0][8].ToString() == "招聘原因" && t.Rows[0][9].ToString() == "是否完成招聘" && t.Rows[0][10].ToString() == "备注")
+            foreach (DataRow item in t.Rows)
             {
-                for (int i = 1; i < (t.Rows.Count); i++)
-                {
-                    TalentDemandPlan tdp = new TalentDemandPlan();
-                    tdp.DeptId = GetDeptidByName(t.Rows[0].ToString());
-                    tdp.Pid = GetPidByName(t.Rows[i][1].ToString());
-                    tdp.DemandPersonNum = Convert.ToInt32(t.Rows[i][2]);
-                    tdp.EmployeeId = GetEmpidByName(t.Rows[i][3].ToString());
-                    tdp.ApplyTime =Convert.ToDateTime( t.Rows[i][4]);
-                    tdp.PlanEntryTime = Convert.ToDateTime(t.Rows[i][5]);
-                    tdp.PositionStatement =t.Rows[i][6].ToString();
-                    tdp.PositionRequest =t.Rows[i][7].ToString();
-                    tdp.RecruitReason = t.Rows[i][8].ToString();
-                    tdp.IsDel = Convert.ToBoolean(t.Rows[i][9]);
-                    tdp.Remark = t.Rows[i][10].ToString();
-                    tdplist.Add(tdp);
-                }
+                TalentDemandPlan tdp = new TalentDemandPlan();
+                tdp.DeptId = GetDeptidByName(item["部门"].ToString());
+                tdp.Pid = GetPidByName(item["岗位名称"].ToString());
+                tdp.DemandPersonNum = Convert.ToInt32(item["需求人数"]);
+                tdp.EmployeeId = GetEmpidByName(item["负责人"].ToString());
+                tdp.ApplyTime = Convert.ToDateTime(item["需求申请时间"]);
+                tdp.PlanEntryTime = Convert.ToDateTime(item["预计入职时间"]);
+                tdp.PositionStatement = item["岗位职责"].ToString();
+                tdp.PositionRequest = item["岗位要求"].ToString();
+                tdp.RecruitReason =item["招聘原因"].ToString();
+                tdp.IsDel = Convert.ToBoolean(item["是否完成招聘"]);
+                tdp.Remark = item["备注"].ToString();
+                tdplist.Add(tdp);
+
             }
-            else
-            {
-                return tdplist;
-            }
+            //if (t.Rows[0][0].ToString() == "部门" && t.Rows[0][1].ToString() == "岗位名称" && t.Rows[0][2].ToString() == "需求人数" && t.Rows[0][3].ToString() == "负责人" && t.Rows[0][4].ToString() == "需求申请时间" && t.Rows[0][5].ToString() == "预入职时间" && t.Rows[0][6].ToString() == "岗位职责" && t.Rows[0][7].ToString() == "岗位要求" && t.Rows[0][8].ToString() == "招聘原因" && t.Rows[0][9].ToString() == "是否完成招聘" && t.Rows[0][10].ToString() == "备注")
+            //{
+            //    for (int i = 1; i < (t.Rows.Count); i++)
+            //    {
+            //        TalentDemandPlan tdp = new TalentDemandPlan();
+            //        tdp.DeptId = GetDeptidByName(t.Rows[0].ToString());
+            //        tdp.Pid = GetPidByName(t.Rows[i][1].ToString());
+            //        tdp.DemandPersonNum = Convert.ToInt32(t.Rows[i][2]);
+            //        tdp.EmployeeId = GetEmpidByName(t.Rows[i][3].ToString());
+            //        tdp.ApplyTime =Convert.ToDateTime( t.Rows[i][4]);
+            //        tdp.PlanEntryTime = Convert.ToDateTime(t.Rows[i][5]);
+            //        tdp.PositionStatement =t.Rows[i][6].ToString();
+            //        tdp.PositionRequest =t.Rows[i][7].ToString();
+            //        tdp.RecruitReason = t.Rows[i][8].ToString();
+            //        tdp.IsDel = Convert.ToBoolean(t.Rows[i][9]);
+            //        tdp.Remark = t.Rows[i][10].ToString();
+            //        tdplist.Add(tdp);
+            //    }
+            //}
+            //else
+            //{
+            //    return tdplist;
+            //}
             return tdplist;
         }
         //一个删除文件的方法
@@ -285,7 +303,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
                 string name = Path.GetExtension(fname);//获取扩展名
                 string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/ConsultUploadfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
-                string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称 
                 ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
                 file.SaveAs(ProName.ToString());//上传文件   
                 SessionHelper.Session["filename"] = ProName.ToString();
@@ -333,7 +351,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             catch (Exception ee)
             {
                 BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
-                return Json("no", JsonRequestBehavior.AllowGet);
+                var jsondata = new
+                {
+                    code = "",
+                    msg = ee.Message,
+                    data = "",
+                };
+                return Json(jsondata, JsonRequestBehavior.AllowGet);
             }
 
         }

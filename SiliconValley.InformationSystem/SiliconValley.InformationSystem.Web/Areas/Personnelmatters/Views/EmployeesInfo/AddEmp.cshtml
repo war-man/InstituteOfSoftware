@@ -119,31 +119,31 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">入职时间</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.EntryTime, new Dictionary<string, object>() { { "lay-verify", "required|EntryTime" }, { "placeholder", "请选择日期" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.EntryTime, new Dictionary<string, object>() { { "lay-verify", "required|EntryTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
                 </div>
 
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4" ">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4" >
                         <label class="layui-form-label">合同起始时间</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "lay-verify", "ContractStartTime" }, { "placeholder", "请选择日期" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "lay-verify", "ContractStartTime" }, { "id", "ContractStartTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">合同终止时间</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ContractEndTime, new Dictionary<string, object>() { { "lay-verify", "ContractEndTime" }, { "placeholder", "请选择日期" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.ContractEndTime, new Dictionary<string, object>() { { "lay-verify", "ContractEndTime" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">出生日期</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "lay-verify", "Birthdate" }, { "placeholder", "请选择日期" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "lay-verify", "Birthdate" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
                 </div>
@@ -211,7 +211,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">身份证有效期</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.IdCardIndate, new Dictionary<string, object>() { { "lay-verify", "IdCardIndate" }, { "placeholder", "请选择日期" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.IdCardIndate, new Dictionary<string, object>() { { "lay-verify", "IdCardIndate" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
@@ -394,6 +394,48 @@
                     }
                 }//紧急联系电话
             });
+            
+            //日期   
+            var curDate = new Date();
+            var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+            var startTime = laydate.render({
+                elem: '#ContractStartTime',
+                btns: ['clear', 'now', 'confirm'],
+                //format: 'yyyy-MM-dd',
+                done: function (value, date) {
+                    console.log("开始时间：" + $("#ContractStartTime").val());
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            })
+            var endTime = laydate.render({
+                elem: '#ContractEndTime',
+                btns: ['clear', 'now', 'confirm'],
+                format: 'yyyy-MM-dd',
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            })
+            //月份小于10的前面加个0
+            function MoDay(a) {
+                if (a < 10) {
+                    return "0" + a;
+                }
+                return a;
+            }
 
 
             //添加提交
@@ -420,6 +462,9 @@
             });
         });
 
+
+
+    
     </script>
 
 
