@@ -166,6 +166,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+          
             try
             {
                 emp.EmployeeId = EmpId();
