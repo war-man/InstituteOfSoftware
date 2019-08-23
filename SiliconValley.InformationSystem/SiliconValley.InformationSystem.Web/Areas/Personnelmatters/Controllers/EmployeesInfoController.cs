@@ -10,6 +10,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.PositionBusiness;
     using SiliconValley.InformationSystem.Business.DepartmentBusiness;
+    using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using System.Net;
     using SiliconValley.InformationSystem.Util;
@@ -166,7 +167,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
-          
+            HeadmasterBusiness hm = new HeadmasterBusiness(); 
             try
             {
                 emp.EmployeeId = EmpId();
@@ -178,6 +179,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (GetDept(emp.PositionId).DeptName == "就业部")
                 {
                     bool s = esmanage.AddEmploystaff(emp.EmployeeId);
+                    empinfo.Success().Success = s;
+                    AjaxResultxx = empinfo.Success();
+                }
+                if (GetDept(emp.PositionId).DeptName == "教质部") {
+                    bool s = hm.AddHeadmaster(emp.EmployeeId);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
@@ -714,6 +720,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         emp2.SSStartMonth = endvalue;
                         empinfo.Update(emp2);
                         break;
+                    case "ContractStartTime":
+                        var emp3 = empinfo.GetEntity(id);
+                        if (endvalue < emp3.EntryTime)
+                        {
+                            empinfo.Success().Msg = "合同起始时间不能小于入职时间";
+
+                        }
+                        else if (endvalue > emp3.ContractEndTime)
+                        {
+                            empinfo.Success().Msg = "合同起始时间不能大于合同终止时间";
+                        }
+                        else {
+                            emp3.ContractStartTime = endvalue;
+                            empinfo.Update(emp3);
+                        }
+                        break;
+                    case "ContractEndTime":
+                        var emp4 = empinfo.GetEntity(id);
+                        if (endvalue <= emp4.ContractStartTime)
+                        {
+                            empinfo.Success().Msg = "合同终止时间必须大于合同起始时间";
+                        }
+                        else if (endvalue <= emp4.EntryTime)
+                        {
+                            empinfo.Success().Msg = "合同终止时间必须大于入职时间";
+                        }
+                        else {
+                            emp4.ContractEndTime = endvalue;
+                            empinfo.Update(emp4);
+                        }
+                        break;
                 }
                 AjaxResultxx = empinfo.Success();
             }
@@ -723,5 +760,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
+
     }
 }

@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         //添加班主任
         public bool AddHeadmaster(string informatiees_Id)
         {
-            bool str = false;
+            bool str = true;
           
             try
             {
