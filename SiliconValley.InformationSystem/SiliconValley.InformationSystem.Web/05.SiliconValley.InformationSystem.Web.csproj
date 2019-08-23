@@ -244,6 +244,7 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
     <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />

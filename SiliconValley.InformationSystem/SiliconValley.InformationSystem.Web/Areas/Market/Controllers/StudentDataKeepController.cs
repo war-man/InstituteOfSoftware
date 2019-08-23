@@ -116,11 +116,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }       
 
         //缓存
-        public List<StudentPutOnRecord> GetList()
-        {
-            s_Entity.GetList();
-            RedisCache my_redis = new RedisCache();
-        }
+        //public List<StudentPutOnRecord> GetList()
+        //{
+        //    s_Entity.GetList();
+        //    RedisCache my_redis = new RedisCache();
+        //}
         #endregion
 
         //这是一个数据备案的主页面

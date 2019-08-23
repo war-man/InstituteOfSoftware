@@ -107,6 +107,7 @@
                     , { field: 'EmpName', title: '员工姓名', width: 145 }
                     , { field: 'Phone', title: '联系方式', width: 165 }
                     , { field: 'GrandName', title: '班级阶段', width: 89 }
+                    , { field: 'SpecialtyName', title: '专业方向', width: 89 }
                     , {
                         field: 'empclassDate', title: '接班时间', width: 165, templet: function (v) {
                             return TimeChange(v.empclassDate);
@@ -132,7 +133,7 @@
                     } else {
                         layer.open({
                             type: 2
-                            , area: ["800px", "620px"]
+                            , area: ["1000px", "620px"]
                             , title: "分配班级"
                             , content: '/Obtainemployment/EmpClass/Distribution/' + data.ClassNumber
                             , anim: "2" /* 改变弹出层弹出方式*/

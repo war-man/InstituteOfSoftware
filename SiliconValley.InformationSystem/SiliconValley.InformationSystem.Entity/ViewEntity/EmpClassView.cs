@@ -36,5 +36,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 备注
         /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 专业方向名称
+        /// </summary>
+        public string SpecialtyName { get; set; }
     }
 }

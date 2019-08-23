@@ -19,6 +19,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public Nullable<int> TeacherID { get; set; }
+        /// <summary>
+        /// 课程id
+        /// </summary>
         public Nullable<int> Skill { get; set; }
         public string ClassNumber { get; set; }
         public Nullable<bool> IsDel { get; set; }
