@@ -24,5 +24,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Result { get; set; }
         public Nullable<System.DateTime> Time { get; set; }
         public Nullable<bool> IsDel { get; set; }
+        public string StudenNumber { get; set; }
     }
 }

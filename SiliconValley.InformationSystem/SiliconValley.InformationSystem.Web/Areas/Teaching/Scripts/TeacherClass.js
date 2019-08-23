@@ -55,7 +55,7 @@ layui.use(["table", "layer"], function () {
             for (var i = 0; i < data.length; i++) {
                 var studenthtml = _.template($("#studenthtml").html());
 
-                var studentdata = studenthtml({ studentnumber: data[i].StudentNumber, studentname: data[i].Name });
+                var studentdata = studenthtml({ studentnumber: data[i].StudentNumber, studentname: data[i].Name, posi: data[i].PositionName });
 
                 $("#studenttable").append($(studentdata));
             }
@@ -99,6 +99,8 @@ layui.use(["table", "layer"], function () {
 
         GetStudentByClass(classnumber, function (data) {
 
+            console.log(data);
+
       
             if (data.length > 0) {
              
@@ -130,13 +132,13 @@ layui.use(["table", "layer"], function () {
 
     $(document).off("mouseover", ".studentbtn button").on('mouseover', '.studentbtn button', function () {
   
-        $(this).addClass("layui-btn layui-btn-warm");
+        $(this).addClass("layui-btn-warm");
     });
 
 
     $(document).off("mouseout", ".studentbtn button").on('mouseout', '.studentbtn button', function () {
 
-        $(this).removeClass("layui-btn layui-btn-warm");
+        $(this).removeClass("layui-btn-warm");
     });
 
 

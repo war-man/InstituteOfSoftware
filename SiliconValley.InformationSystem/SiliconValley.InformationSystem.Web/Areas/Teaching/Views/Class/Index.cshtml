@@ -11,20 +11,20 @@
     <style>
         #classstudent {
             height: 200px;
-            border: 1px solid red;
+            border: 1px solid white;
         }
 
         #classlist {
             width: 20%;
             height: 500px;
-            border: 1px solid red;
+            border: 1px solid white;
             float: left
         }
 
         #studenttable {
             width: 79%;
             height: 500px;
-            border: 1px solid red;
+            border: 1px solid white;
             float: right;
         }
 
@@ -32,7 +32,7 @@
             display: block;
             width: 100%;
             height: 50px;
-            border: 1px solid red;
+            border: 1px solid white;
             margin-top: 10px;
             font-size:20px;
         }
@@ -82,7 +82,13 @@
     <script type="text/template" id="studenthtml">
 
         <div class="studentbtn">
-            <button studentnumber="{{=studentnumber}}" class="layui-btn"> <i class="layui-icon">&#xe66f;</i>    {{=studentname}}</button>
+            <button studentnumber="{{=studentnumber}}" class="layui-btn">
+                <i class="layui-icon">&#xe66f;</i>    {{=studentname}}
+                <div style="margin-top:-8px;color:red;">
+                    {{=posi}}
+                </div>
+ 
+            </button>
         </div>
 
     </script>
@@ -93,8 +99,8 @@
 
         <div>
             <div>
-                <button studentnumber="{{=studentnumber}}" id="detailinfo" class="layui-btn layui-btn-warm classbtn"><i class="layui-icon">&#xe615;</i>查看学生详细信息<br/>
-                        {{=posi}}
+                <button studentnumber="{{=studentnumber}}" id="detailinfo" class="layui-btn layui-btn-warm classbtn"><i class="layui-icon">&#xe615;</i>查看学生详细信息
+                       
                 </button>
             </div>
         </div>
