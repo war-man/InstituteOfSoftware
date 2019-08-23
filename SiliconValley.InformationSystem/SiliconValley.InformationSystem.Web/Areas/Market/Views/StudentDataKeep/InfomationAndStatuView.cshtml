@@ -10,11 +10,45 @@
     <meta name="viewport" content="width=device-width" />
     <title>InfomationAndStatuView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+         .LiselectionCssOne1 {
+            background-color: #009688;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
-    <div>
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">学生来源信息</li>
+            <li>学生状态信息</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">内容1</div>
+            <div class="layui-tab-item">内容2</div>
+            <div class="layui-tab-item">内容3</div>
+            <div class="layui-tab-item">内容4</div>
+            <div class="layui-tab-item">内容5</div>
+        </div>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use('element', function () {
+            var element = layui.element;
+        });
+        //这是一个改变颜色的方法
+        function changeColor() {
+            $("li").removeClass("LiselectionCssOne1");
+            $(t).addClass("LiselectionCssOne1");
+ 
+        }
+        $(function () {
+            $("li").click(function (this) {
+                changeColor(this);
+            });
+           
+        });
+    </script>
 </body>
 </html>

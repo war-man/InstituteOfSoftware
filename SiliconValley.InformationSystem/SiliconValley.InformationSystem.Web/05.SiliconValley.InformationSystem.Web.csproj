@@ -209,6 +209,8 @@
     <Compile Include="Areas\Base_SysManage\Controllers\CityController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\CommonController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
+    <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
+    <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
@@ -227,7 +229,6 @@
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
-    <Compile Include="Controllers\DataKeepOnRecordController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -246,6 +247,7 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
     <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
@@ -396,6 +398,11 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\ShowSeekNet.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\CourseIndex.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\DetailView.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\OperationView.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\web.config" />
+    <Content Include="Config\Major.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -1010,11 +1017,12 @@
     <Content Include="Scripts\layui\font\iconfont.eot" />
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
-    <Content Include="uploadXLSXfile\ConsultUploadfile\测试220190820091529.xlsx" />
-    <Content Include="uploadXLSXfile\ConsultUploadfile\测试220190820092210.xlsx" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\CourseSyllabus\Models\" />
+    <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Finance\Controllers\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
@@ -1036,6 +1044,8 @@
     <Folder Include="assets\img\" />
     <Folder Include="bin\roslyn\" />
     <Folder Include="bin\zh-Hans\" />
+    <Folder Include="uploadXLSXfile\ConflictExcel\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

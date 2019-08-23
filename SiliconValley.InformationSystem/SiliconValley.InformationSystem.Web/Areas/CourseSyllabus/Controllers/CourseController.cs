@@ -128,7 +128,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
                     result.Msg = "成功";
 
 
-                    BusHelper.WriteSysLog("新增课程", Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                    BusHelper.WriteSysLog("新增课程", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
                 }
                 catch (Exception ex)
@@ -137,7 +137,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
                     result.ErrorCode = 500;
                     result.Msg = "失败";
 
-                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                 }
             }
             else
@@ -147,14 +147,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
                     this.DoEdit(course);
                     result.ErrorCode = 200;
                     result.Msg = "成功";
-                    BusHelper.WriteSysLog("修改课程", Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+                    BusHelper.WriteSysLog("修改课程", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
                 catch (Exception ex)
                 {
                     result.Data = null;
                     result.ErrorCode = 500;
                     result.Msg = "失败";
-                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
             }
             return Json(result, JsonRequestBehavior.AllowGet);

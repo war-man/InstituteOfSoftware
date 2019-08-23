@@ -135,7 +135,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result.ErrorCode = 500;
                     result.Success = false;
                     result.Msg = "服务器错误";
-                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据异常);
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
                 return Json(result, JsonRequestBehavior.AllowGet);
 
@@ -176,7 +176,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result.ErrorCode = 500;
                     result.Success = false;
                     result.Msg = "服务器错误";
-                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
 
                 }
 
@@ -205,7 +205,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                 return Json("数据异常", JsonRequestBehavior.AllowGet);
             }
         
