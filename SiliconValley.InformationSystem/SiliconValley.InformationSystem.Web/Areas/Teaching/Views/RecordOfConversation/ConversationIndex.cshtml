@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "ConversationIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section style{
+
+    <style>
+
+        #torbar {
+            height: 300px;
+            border: 1px solid red;
+        }
+
+        #list {
+            height: 700px;
+            border: 1px solid #00ffff;
+        }
+    </style>
+
+}
+
+
+
+    <div id="warp">
+
+        <h1>我的谈话记录</h1>
+      
+        <div id="torbar">
+            <button class="layui-btn" id="addrecord"><i class="layui-icon">&#xe608;</i>新建谈话记录</button>
+        </div>
+
+        <div id="list">
+        </div>
+
+    </div>
+
+<script type="text/template" id="recordmuban">
+
+    <div class="media" style="margin-top:20px;margin-left:20px;float:left; width:400px;">
+        <div class="media-left">
+            <button class="layui-btn" style="width:150px;height:150px;">{{=studentname}}</button>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading"><strong style="font-size:18px;">主题</strong>:{{=title}}</h4>
+            <span><strong style="font-size:18px;">时间</strong>：{{=date}}</span>
+            <div>
+                <strong style="font-size:18px;">内容</strong>:{{=content}}...
+            </div>
+            </div>
+    </div>
+
+
+</script>
+
+
+@section script{
+<script src="~/Scripts/layui/layui.js"></script>
+<script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+<script src="~/Scripts/underscore.js"></script>
+<script src="~/Areas/Teaching/Scripts/util.js"></script>
+
+    <script>
+
+        ///////////////////////////谈话记录业务////////////////////////////////////
+
+
+        function GetConversationRecord(begindate, enddate, studentname, successcallback, errorcallback) {
+
+            Ajax('/Teaching/RecordOfConversation/GetConversationRecord', { begindate: begindate, enddate: enddate, studentname: studentname }, "post", function (data) {
+
+                successcallback(data);
+
+            }, function (error) {
+
+                errorcallback(error);
+
+            });
+
+        }
+
+        function GetConversationRecords(successcallback, errorcallback) {
+
+            Ajax('/Teaching/RecordOfConversation/GetConversationrecords', {}, "post", function (data) {
+
+                successcallback(data);
+
+            }, function (error) {
+
+                errorcallback(error);
+
+            });
+
+        }
+       
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+            GetConversationRecords(function (data) {
+
+                console.log(data);
+
+                //渲染数据
+                if (data.ErrorCode == 200) {
+
+                    for (var i = 0; i < data.Data.length; i++) {
+
+                        var recordmoban = _.template($("#recordmuban").html());
+
+                        /Date(1564761600000)/
+
+                        var time = data.Data[i].Time;
+                        var temp = time.substring(time.indexOf('(')+1, time.indexOf(')'));
+
+                        var d = new Date(parseInt(temp));
+
+                        var dd = formatDate(d);
+
+                      
+                        var record = recordmoban({ studentname: data.Data[i].StudentName, title: data.Data[i].Theme, content: data.Data[i].Content, date: dd });
+
+                        $("#list").append($(record));
+
+                    }
+
+                }
+
+
+              
+
+            }, function (error) {
+                layer.msg("抱歉网络出现了问题");
+                console.log(error);
+
+                });
+
+
+            ////////新建访谈记录
+            $("#addrecord").click(function () {
+
+                layer.open({
+
+                    type: 2,
+                    area: ['800px', '600px'],
+                    title: "添加学生谈话记录",
+                    content:'/Teaching/RecordOfConversation/Operations'
+                
+
+                });
+            });
+
+        });
+    </script>
+
+}
+

@@ -209,22 +209,22 @@
     <Compile Include="Areas\Base_SysManage\Controllers\CityController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\CommonController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
+    <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
+    <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\BusinessManagementController.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
+    <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
-    <Compile Include="Areas\Teaching\Controllers\StudentHomeWorkController.cs" />
+    <Compile Include="Areas\Teaching\Controllers\RecordOfConversationController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
@@ -244,11 +244,16 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
+    <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
+    <Content Include="Areas\Teaching\Scripts\ConversationRecord.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
+    <Content Include="Areas\Teaching\Scripts\MajorOperation.js" />
+    <Content Include="Areas\Teaching\Scripts\md5.js" />
+    <Content Include="Areas\Teaching\Scripts\TeacherClass.js" />
     <Content Include="Areas\Teaching\Scripts\TeacherEdit.js" />
     <Content Include="Areas\Teaching\Scripts\Teacheroptioner.js" />
+    <Content Include="Areas\Teaching\Scripts\util.js" />
     <Content Include="assets\css\bootstrap-theme.min.css" />
     <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\custom-styles.css" />
@@ -278,6 +283,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\my1.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -345,23 +351,27 @@
     <Content Include="Areas\Market\Views\StudentDataKeep\ShowTree.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\EditView.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\AddEnterprise.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\EditEnterprise.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\EnterpriseInfoIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\Enterdetail.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\LookDetailsView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExcleIntoView.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\AddTeacher.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\EditMajorAndGrandView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\GetNewSkill.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\goodmajor.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\Operating.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeacherDetailView.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\Teacherlist.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmploymentCommissionerIndex.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\GetNewSkill.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmployDetailView.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EditEmployStaff.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmpClass\EmpClassIndex.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmpClass\Distribution.cshtml" />
+    <Content Include="Areas\Teaching\Views\Major\MajorIndex.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\web.config" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\CourseIndex.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\OperationView.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\DetailView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Major\operationView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Class\Index.cshtml" />
+    <Content Include="Areas\Teaching\Views\Class\StudentDetailInfo.cshtml" />
+    <Content Include="Areas\Teaching\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Teaching\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\Teaching\Views\RecordOfConversation\ConversationIndex.cshtml" />
+    <Content Include="Areas\Teaching\Views\RecordOfConversation\Operations.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -694,6 +704,7 @@
     <Content Include="Scripts\layui\prefixfree.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\underscore.js" />
+    <Content Include="Scripts\Util.js" />
     <Content Include="Scripts\util\easyui-extend.js" />
     <Content Include="Scripts\util\framework-util.js" />
     <Content Include="Scripts\util\upload-time.js" />
@@ -980,6 +991,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\CourseSyllabus\Models\" />
+    <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Finance\Controllers\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
@@ -988,16 +1001,18 @@
     <Folder Include="Areas\Logistics\Views\Shared\" />
     <Folder Include="Areas\Market\Models\" />
     <Folder Include="Areas\Market\Views\Shared\" />
+    <Folder Include="Areas\Obtainemployment\Controllers\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
+    <Folder Include="Areas\Personnelmatters\Views\EmployeesInfo\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
+    <Folder Include="Areas\Teaching\Images\MajorLogoImages\" />
     <Folder Include="Areas\Teaching\Models\" />
-    <Folder Include="Areas\Teaching\Views\Shared\" />
     <Folder Include="assets\img\" />
-    <Folder Include="uploadXLSXfile\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
