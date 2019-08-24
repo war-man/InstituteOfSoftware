@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int EmpStaffID { get; set; }
         public string ClassNO { get; set; }
         public bool IsDel { get; set; }
-        public System.DateTime Date { get; set; }
+        public System.DateTime dirDate { get; set; }
         public string Remark { get; set; }
         public System.DateTime StartTime { get; set; }
         public Nullable<System.DateTime> EndingTime { get; set; }

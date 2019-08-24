@@ -13,23 +13,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// 获取所有的专员带班记录
         /// </summary>
         /// <returns>专员带班集合</returns>
-        public List<EmpClass> GetEmpClassFormRedisOrServer()
+        public List<EmpClass> GetEmpClassFormServer()
         {
-            RedisCache myredis = new RedisCache();
-            var resultlist = new List<EmpClass>();
-            resultlist = myredis.GetCache<List<EmpClass>>("redistoempclass");
-            if (resultlist.Count != 0)
-            {
-                return resultlist;
-            }
-            else
-            {
-                var empclassdata = this.GetIQueryable().Where(a => a.IsDel == false).ToList();
 
-                //放入缓存中
-                myredis.SetCache("redistoempclass", empclassdata);
-                return empclassdata;
-            }
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
         // <summary>
@@ -39,33 +26,23 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<EmpClass> GetEmpsByEmpID(int EmplotStaffID)
         {
-            return this.GetEmpClassFormRedisOrServer().Where(a => a.EmpStaffID == EmplotStaffID).ToList();
+            return this.GetEmpClassFormServer().Where(a => a.EmpStaffID == EmplotStaffID).ToList();
         }
 
         /// <summary>
         /// 获取所有的班级对象
         /// </summary>
         /// <returns></returns>
-        public List<ClassSchedule> GetClassFormRedisOrServer()
+        public List<ClassSchedule> GetClassFormServer()
         {
-            RedisCache myredis = new RedisCache();
-            var resultlist = new List<ClassSchedule>();
-            resultlist = myredis.GetCache<List<ClassSchedule>>("redistoClassSchedule");
-            if (resultlist.Count != 0)
-            {
-                return resultlist;
-            }
-            else
-            {
-                ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
-                var classdata= dbclass.GetIQueryable().Where(a => a.IsDelete == false).ToList();
 
-                //放入缓存中
-                myredis.SetCache("redistoempclass", classdata);
-                return classdata;
-            }
+            ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
+            var classdata = dbclass.GetIQueryable().Where(a => a.IsDelete == false).ToList();
 
-           
+
+            return classdata;
+
+
         }
 
         /// <summary>
@@ -75,7 +52,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public ClassSchedule GetClassedByID(string classiD)
         {
-            return this.GetClassFormRedisOrServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级id获取正在学习的班级
@@ -84,7 +61,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public ClassSchedule GetClassingByID(string classiD)
         {
-            return this.GetClassFormRedisOrServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
         }
         /// <summary>
         /// 获取带班已毕业的
@@ -124,7 +101,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<ClassSchedule> GetS3Class()
         {
-            var resultdata = this.GetClassFormRedisOrServer().Where(a => a.grade_Id == 3 || a.grade_Id == 4).ToList();
+            var resultdata = this.GetClassFormServer().Where(a => a.grade_Id == 3 || a.grade_Id == 4).ToList();
             return resultdata.Where(a => a.ClassStatus == false & a.IsDelete == false).ToList();
         }
         /// <summary>
@@ -133,7 +110,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<ClassSchedule> GetGraduations()
         {
-            var resultdata = this.GetClassFormRedisOrServer().Where(a => a.grade_Id == 4).ToList();
+            var resultdata = this.GetClassFormServer().Where(a => a.grade_Id == 4).ToList();
             return resultdata.Where(a => a.ClassStatus == true & a.IsDelete == false).ToList();
         }
 
@@ -161,19 +138,20 @@ namespace SiliconValley.InformationSystem.Business.Employment
             var alldata = this.GetS3Class();
             var resultdata = this.GetS3Class();
             //带班记录
-            var empclasslist = this.GetEmpClassFormRedisOrServer();
+            var empclasslist = this.GetEmpClassFormServer();
             //分配的班级它的班级编号就会出现在这个带班记录中
-            foreach (var item in alldata)
+
+            for (int i = alldata.Count - 1; i >= 0; i--)
             {
                 foreach (var empclass in empclasslist)
                 {
-                    if (item.ClassNumber == empclass.ClassNO)
+                    if (alldata[i].ClassNumber == empclass.ClassNO)
                     {
-                        resultdata.Remove(item);
+                        alldata.Remove(alldata[i]);
                     }
                 }
             }
-            return resultdata;
+            return alldata;
         }
 
         /// <summary>
@@ -202,7 +180,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public Grand GetGrandByClassNo(string ClassNo)
         {
-            var classdata = this.GetClassFormRedisOrServer().Where(a => a.ClassNumber == ClassNo).FirstOrDefault();
+            var classdata = this.GetClassFormServer().Where(a => a.ClassNumber == ClassNo).FirstOrDefault();
             return this.GetGrandByID(classdata.grade_Id);
         }
         /// <summary>
@@ -211,19 +189,20 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="empClass"></param>
         /// <returns></returns>
 
-        public bool AddEmpClass(EmpClass empClass) {
-            RedisCache myredis = new RedisCache();
+        public bool AddEmpClass(EmpClass empClass)
+        {
+
             bool result = false;
             try
             {
                 this.Insert(empClass);
                 result = true;
-                myredis.RemoveCache("redistoempclass");
+
                 //BusHelper.WriteSysLog("Obtainemployment区域EmpClass控制器ClassToEmpstaff方法成功", EnumType.LogType.上传文件异常);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                result= false;
+                result = false;
                 //BusHelper.WriteSysLog("Obtainemployment区域EmpClass控制器ClassToEmpstaff方法", EnumType.LogType.上传文件异常);
             }
             return result;
