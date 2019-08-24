@@ -5,14 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+
 namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 {
 
   public  class ScheduleForTraineesBusiness:BaseBusiness<ScheduleForTrainees>
     {
-       
 
-        //通过班级名称获取学员
+        /// <summary>
+        /// 通过班级名称获取学员
+        /// </summary>
+        /// <param name="ClassID"></param>
+        /// <returns></returns>
         public List<StudentInformation> ClassStudent(string ClassID)
         {
             //CurrentClass是否为正常状态 查询使用以参数为班级的学员学号
@@ -35,5 +40,6 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 
             return resullist;
         }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
     }
 }
