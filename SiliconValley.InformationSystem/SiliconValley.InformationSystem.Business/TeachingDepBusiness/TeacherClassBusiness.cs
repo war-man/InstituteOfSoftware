@@ -105,7 +105,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
            var temp = db_studentclass.GetList().Where(d => d.CurrentClass == true && d.StudentID == student.StudentNumber).FirstOrDefault();
             ClassSchedule myclass = db_class.GetList().Where(d=>d.IsDelete==false && d.ClassNumber==temp.ClassID).FirstOrDefault();
-            var classmenber = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == myclass.ClassNumber && d.Student_number == student.StudentNumber).FirstOrDefault();
+            var classmenber = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == myclass.ClassNumber && d.Studentnumber == student.StudentNumber).FirstOrDefault();
 
 
             if (classmenber != null)

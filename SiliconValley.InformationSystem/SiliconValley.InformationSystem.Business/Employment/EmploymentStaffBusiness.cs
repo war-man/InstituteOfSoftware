@@ -1,4 +1,6 @@
-﻿using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+﻿using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
@@ -22,16 +24,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<EmploymentStaff> GetALl()
         {
-            var data = this.GetIQueryable().ToList();
-            var newdata = new List<EmploymentStaff>();
-            foreach (var item in data)
-            {
-                if (!IsDel(item.EmployeesInfo_Id))
-                {
-                    newdata.Add(item);
-                }
-            }
-            return newdata;
+           return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
         /// <summary>
@@ -43,25 +36,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
             return this.GetALl().Where(a => a.ID == id).FirstOrDefault();
         }
-        /// <summary>
-        /// 判断是否员工是否离职
-        /// </summary>
-        /// <param name="EmployeeId"></param>
-        /// <returns></returns>
-        public bool IsDel(string EmployeeId)
-        {
 
-            var EmpInfo = GetEmployeesInfoByID(EmployeeId);
-            if (EmpInfo.IsDel == false)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-
-        }
         /// <summary>
         /// 根据员工编号查找i员工对象
         /// </summary>
@@ -194,16 +169,51 @@ namespace SiliconValley.InformationSystem.Business.Employment
             staff.EmployeesInfo_Id = EmployNO;
             staff.Date = DateTime.Now;
             staff.IsDel = false;
+            bool result = false;
             try
             {
                 this.Insert(staff);
-                return true;
+                result = true;
+                BusHelper.WriteSysLog("当添加就业员工的时候，位于Employment文件夹中EmploymentStaffBusiness业务类中AddEmploystaff方法，添加成功。", EnumType.LogType.添加数据);
             }
             catch (Exception ex)
             {
 
-                return false;
+                result = false;
+                BusHelper.WriteSysLog("当添加就业员工的时候，位于Employment文件夹中EmploymentStaffBusiness业务类中AddEmploystaff方法，添加成功。", EnumType.LogType.添加数据);
             }
+            return result;
+        }
+        /// <summary>
+        /// 根据员工id获取就业专员对象
+        /// </summary>
+        /// <param name="EmpInfoID"></param>
+        /// <returns></returns>
+        public EmploymentStaff GetEmploymentByEmpInfoID(string EmpInfoID) {
+          return  this.GetALl().Where(a => a.EmployeesInfo_Id == EmpInfoID).FirstOrDefault();
+        }
+        /// <summary>
+        /// 删除就业专员
+        /// </summary>
+        /// <param name="EmpInfoID"></param>
+        /// <returns></returns>
+        public bool DelEmploystaff(string EmpInfoID) {
+            EmploymentStaff data = this.GetEmploymentByEmpInfoID(EmpInfoID);
+            data.IsDel = true;
+            bool result = false;
+            try
+            {
+                this.Update(data);
+                result = true;
+                BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑成功。", EnumType.LogType.编辑数据);
+            }
+            catch (Exception ex)
+            {
+
+                result = false;
+                BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑失败。", EnumType.LogType.编辑数据);
+            }
+            return result;
         }
     }
 }

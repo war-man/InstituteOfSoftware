@@ -50,7 +50,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             //获取了s3以s4未毕业的班级而且没分配的班级
             var NoGraduation = dbempclass.NoDistribution();
             //获取了专员带班记录表
-            var empclasslist = dbempclass.GetEmpClassFormRedisOrServer().OrderByDescending(a => a.EmpStaffID).ToList();
+            var empclasslist = dbempclass.GetEmpClassFormServer().OrderByDescending(a => a.EmpStaffID).ToList();
             var emplist = empclasslist.Select(a => new EmpClassView
             {
                 ClassNumber = a.ClassNO,
@@ -58,7 +58,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 Phone = dbempstaff.GetEmpInfoByEmpID(a.EmpStaffID).Phone,
                 EntID = a.EmpStaffID,
                 GrandName = dbempclass.GetGrandByClassNo(a.ClassNO).GrandName,
-                empclassDate = a.Date,
+                empclassDate = a.dirDate,
                 Remark = a.Remark,
                 SpecialtyName = dbspee.GetSpecialtyByID(dbempclass.GetClassingByID(a.ClassNO).Major_Id).SpecialtyName
             }).ToList();
@@ -108,11 +108,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         }
 
 
-        public ActionResult Distribution(string ClassNumber)
+        public ActionResult Distribution(string id)
         {
             dbempclass = new EmpClassBusiness();
             dbempstaff = new EmploymentStaffBusiness();
-            var resultclass = dbempclass.GetClassingByID(ClassNumber);
+            var resultclass = dbempclass.GetClassingByID(id);
             var empstaffdata = dbempstaff.GetALl();
             var resultdata = empstaffdata.Select(a => new SelectListItem
             {
@@ -142,7 +142,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             mypie.Add(pie2);
             mypie.Add(pie3);
             ViewBag.pielist = Newtonsoft.Json.JsonConvert.SerializeObject(mypie);
-            return View();
+            return View(resultclass);
         }
 
         public ActionResult GetClassList(int empstaffid)
@@ -157,16 +157,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbempclass = new EmpClassBusiness();
             EmpClass empClass = new EmpClass();
             empClass.ClassNO = ClassNO;
-            empClass.Date = DateTime.Now;
+            empClass.dirDate = DateTime.Now;
             empClass.EmpStaffID = empstaffid;
-            empClass.EndingTime = null;
             empClass.IsDel = false;
             empClass.Remark = "带班";
             empClass.StartTime = DateTime.Now;
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
-                dbempclass.AddEmpClass(empClass);
+                dbempclass.Insert(empClass);
                 ajaxResult.Data = "";
                 ajaxResult.ErrorCode = 200;
                 ajaxResult.Msg = "分配成功";
