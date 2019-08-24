@@ -97,6 +97,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //获取月度招聘数据汇总
         public ActionResult GetRecruitData(int page, int limit) {
+            AddRecruitData();
             RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
             var rdslist = rdsmanage.GetList();
             var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
@@ -254,29 +255,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 tdplist.Add(tdp);
 
             }
-            //if (t.Rows[0][0].ToString() == "部门" && t.Rows[0][1].ToString() == "岗位名称" && t.Rows[0][2].ToString() == "需求人数" && t.Rows[0][3].ToString() == "负责人" && t.Rows[0][4].ToString() == "需求申请时间" && t.Rows[0][5].ToString() == "预入职时间" && t.Rows[0][6].ToString() == "岗位职责" && t.Rows[0][7].ToString() == "岗位要求" && t.Rows[0][8].ToString() == "招聘原因" && t.Rows[0][9].ToString() == "是否完成招聘" && t.Rows[0][10].ToString() == "备注")
-            //{
-            //    for (int i = 1; i < (t.Rows.Count); i++)
-            //    {
-            //        TalentDemandPlan tdp = new TalentDemandPlan();
-            //        tdp.DeptId = GetDeptidByName(t.Rows[0].ToString());
-            //        tdp.Pid = GetPidByName(t.Rows[i][1].ToString());
-            //        tdp.DemandPersonNum = Convert.ToInt32(t.Rows[i][2]);
-            //        tdp.EmployeeId = GetEmpidByName(t.Rows[i][3].ToString());
-            //        tdp.ApplyTime =Convert.ToDateTime( t.Rows[i][4]);
-            //        tdp.PlanEntryTime = Convert.ToDateTime(t.Rows[i][5]);
-            //        tdp.PositionStatement =t.Rows[i][6].ToString();
-            //        tdp.PositionRequest =t.Rows[i][7].ToString();
-            //        tdp.RecruitReason = t.Rows[i][8].ToString();
-            //        tdp.IsDel = Convert.ToBoolean(t.Rows[i][9]);
-            //        tdp.Remark = t.Rows[i][10].ToString();
-            //        tdplist.Add(tdp);
-            //    }
-            //}
-            //else
-            //{
-            //    return tdplist;
-            //}
             return tdplist;
         }
         //一个删除文件的方法
@@ -302,7 +280,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 string fname = Request.Files["file"].FileName; //获取上传文件名称（包含扩展名）
                 string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
                 string name = Path.GetExtension(fname);//获取扩展名
-                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/ConsultUploadfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/TalantDemandPlanfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
                 string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称 
                 ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
                 file.SaveAs(ProName.ToString());//上传文件   
@@ -350,7 +328,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             catch (Exception ee)
             {
-                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
+                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件);
                 var jsondata = new
                 {
                     code = "",
@@ -437,7 +415,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //月度招聘数据汇总添加
         public AjaxResult AddRecruitData() {
             var AjaxResultxx = new AjaxResult();
+            TalentDemandPlanManage tdp = new TalentDemandPlanManage();
+            RecruitPhoneTraceManage rpt = new RecruitPhoneTraceManage();
+            try
+            {
+               
+            }
+            catch (Exception)
+            {
 
+                throw;
+            }
             return AjaxResultxx;
         }
 
