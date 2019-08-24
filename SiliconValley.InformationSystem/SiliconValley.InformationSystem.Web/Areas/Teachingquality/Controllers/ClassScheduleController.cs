@@ -157,8 +157,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //查看班级的学员
         public ActionResult ClassStudent()
         {
+           
             string ClassNumber = Request.QueryString["ClassNumber"];
-            return View();
+            var x = dbtext.ClassStudentneList(ClassNumber);
+            ViewBag.ClassName = ClassNumber;
+            ViewBag.ClassdetailsView = dbtext.Listdatails(ClassNumber);
+            return View(x);
         }
        
     }
