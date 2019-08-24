@@ -218,6 +218,7 @@
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
@@ -228,7 +229,6 @@
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
-    <Compile Include="Controllers\DataKeepOnRecordController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Global.asax.cs">
@@ -372,6 +372,17 @@
     <Content Include="Areas\Teaching\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Teaching\Views\RecordOfConversation\ConversationIndex.cshtml" />
     <Content Include="Areas\Teaching\Views\RecordOfConversation\Operations.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddExcelFile.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Addrpt.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\AddTalantDemand.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\RecruitIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddEmp.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\AddPosition.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptOperation.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptUpdate.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmp.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\InfomationAndStatuView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -984,7 +995,6 @@
     <Content Include="Views\Login\LoginIndex.cshtml" />
     <Content Include="Views\Home\test.cshtml" />
     <Content Include="Views\Home\show.cshtml" />
-    <Content Include="Views\DataKeepOnRecord\DataKeepOnRecordIndex.cshtml" />
     <Content Include="Scripts\layui\font\iconfont.eot" />
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
@@ -1005,7 +1015,6 @@
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
-    <Folder Include="Areas\Personnelmatters\Views\EmployeesInfo\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Teachingquality\Models\" />
     <Folder Include="Areas\Teachingquality\Views\Shared\" />
