@@ -22,6 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string RegionName { get; set; }
         public Nullable<bool> IsDel { get; set; }
 
+        public System.DateTime RegionDate { get; set; }
 
     }
 }

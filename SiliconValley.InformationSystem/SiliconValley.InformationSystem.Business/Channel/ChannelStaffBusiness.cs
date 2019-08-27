@@ -1,7 +1,9 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,23 @@ namespace SiliconValley.InformationSystem.Business.Channel
         public List<ChannelStaff> GetChannelStaffs()
         {
             return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+        }
+        /// <summary>
+        /// 根据年份来查找员工
+        /// </summary>
+        /// <param name="YearName"></param>
+        /// <returns></returns>
+        public List<ChannelStaff> GetChannelsByYear(string YearName) {
+            var alldata = this.GetIQueryable().ToList();
+
+            for (int i = alldata.Count - 1; i >= 0; i--)
+            {
+                if (alldata[i].ChannelDate.Year.ToString()!=YearName)
+                {
+                    alldata.Remove(alldata[i]);
+                }
+            }
+            return alldata;
         }
         /// <summary>
         /// 根据这个渠道专员id获取渠道专员对象
@@ -74,6 +93,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
             ChannelStaff channelStaff = new ChannelStaff();
             channelStaff.IsDel = false;
             channelStaff.EmployeesInfomation_Id = empid;
+            channelStaff.ChannelDate = DateTime.Now;
             bool result = false;
             try
             {
@@ -88,6 +108,17 @@ namespace SiliconValley.InformationSystem.Business.Channel
                 BusHelper.WriteSysLog("当添加渠道员工的时候，位于Channel文件夹中ClassesBusiness业务类中AddChannelStaff方法，添加失败。", EnumType.LogType.添加数据);
             }
             return result;
+
         }
+
+        /// <summary>
+        /// 获取所有的备案数据
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetbeianAll() {
+            StudentDataKeepAndRecordBusiness dbbeian = new StudentDataKeepAndRecordBusiness();
+           return dbbeian.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+        }
+      
     }
 }

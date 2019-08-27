@@ -21,7 +21,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> SchoolYearPlanID { get; set; }
         public Nullable<int> ChannelStaffID { get; set; }
         public Nullable<int> PlanNumber { get; set; }
-        public Nullable<int> SignUpNumber { get; set; }
         public Nullable<bool> IsDel { get; set; }
     }
 }
