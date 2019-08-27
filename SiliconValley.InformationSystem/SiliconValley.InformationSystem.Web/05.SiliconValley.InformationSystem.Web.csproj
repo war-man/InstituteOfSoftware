@@ -1006,6 +1006,8 @@
     <Content Include="Scripts\layui\font\iconfont.eot" />
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls" />
+    <Content Include="uploadXLSXfile\ConflictExcel\测试.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
