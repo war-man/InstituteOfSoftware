@@ -31,7 +31,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/DownFile
+        // GET: /Market/StudentDataKeep/DelteInfomationType
         #region 创建实体
         //创建一个用于操作数据的备案实体
         StudentDataKeepAndRecordBusiness s_Entity = new StudentDataKeepAndRecordBusiness();
@@ -133,6 +133,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     my_redis.SetCache("ListStudentPutOnRecord", resutllist);
                 }
             return resutllist;
+        }
+
+        //通过ID或名称拿值
+        public string GetAreValue(string Id,bool IsKey)
+        {
+            if (IsKey)
+            {
+               return region_Entity.GetEntity(Convert.ToInt32(Id)).RegionName;
+            }
+            else
+            {
+              Region regin=  region_Entity.GetList().Where(r => r.RegionName == Id).FirstOrDefault();
+                if (regin!=null)
+                {
+                    return regin.ID.ToString();
+                }
+                else
+                {
+                    return null;
+                }
+            }
         }
         #endregion
 
@@ -465,7 +486,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #region Excle文件导入
-        //一个删除文件的方法
+        ///一个删除文件的方法
         public void DeleteFile()
         {
             var namef = SessionHelper.Session["filename"];
@@ -484,38 +505,66 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取Excle文件中的值
         public List<StudentPutOnRecord> GetExcelFunction()
         {
-            string namef = SessionHelper.Session["filename"].ToString();
-            DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);
+            string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
+            DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
             List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
-            //foreach (DataRow item in t.Rows)
-            //{
-            //    var tm= item;
-            //}
-                if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "QQ" && t.Rows[0][4].ToString() == "微信" && t.Rows[0][5].ToString() == "学校" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
-            {
-                for (int i = 1; i < (t.Rows.Count); i++)
-                {
-                    StudentPutOnRecord create_s = new StudentPutOnRecord();
-                    create_s.StuName = t.Rows[i][0].ToString();
-                    create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
-                    create_s.StuPhone = t.Rows[i][2].ToString();
-                    create_s.StuQQ = t.Rows[i][3].ToString();
-                    create_s.StuWeiXin = t.Rows[i][4].ToString();
-                    create_s.StuSchoolName = t.Rows[i][5].ToString();
-                    create_s.StuInfomationType_Id = GetNameSearchId(t.Rows[i][6].ToString());
-                    create_s.StuEducational = t.Rows[i][7].ToString() == null ? "初中" : t.Rows[i][7].ToString();
-                    create_s.EmployeesInfo_Id = GetNameSreachEmploId(t.Rows[i][8].ToString());
-                    create_s.StuIsGoto = false;
-                    create_s.StuStatus_Id = 1;
-                    create_s.Reak = t.Rows[i][9].ToString();
-                    new_listStudent.Add(create_s);
-                }
+                if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
+            {                
+                    //需要转型
+                    for (int i = 1; i < (t.Rows.Count); i++)
+                    {
+                        StudentPutOnRecord create_s = new StudentPutOnRecord();
+                        create_s.StuName = t.Rows[i][0].ToString();
+                        create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
+                        create_s.StuPhone = t.Rows[i][2].ToString();
+                        create_s.StuSchoolName = t.Rows[i][3].ToString();//学校
+                        create_s.StuAddress = t.Rows[i][4].ToString();//家庭住址
+                        create_s.Region_id = GetAreValue(t.Rows[i][5].ToString(), false) == null ? 0 : Convert.ToInt32(GetAreValue(t.Rows[i][5].ToString(), false));//区域
+                        create_s.StuInfomationType_Id = GetNameSearchId(t.Rows[i][6].ToString());//信息来源
+                        create_s.StuEducational = t.Rows[i][7].ToString() == null ? "初中" : t.Rows[i][7].ToString();
+                        create_s.EmployeesInfo_Id = GetNameSreachEmploId(t.Rows[i][8].ToString());//备案人
+                        create_s.Reak = t.Rows[i][9].ToString();//备注
+                        create_s.StuIsGoto = false;
+                        create_s.StuStatus_Id = 1;
+                        new_listStudent.Add(create_s);
+                    }
+                return new_listStudent;
             }
             else
             {
                 return new_listStudent;
             }
-            return new_listStudent;
+        }
+        //转型为Excle集合(目的:有些是区域外的，会被处理)
+        public List<MyExcelClass> GetExcel()
+        {
+            string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
+            DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
+            List<MyExcelClass> new_listStudent = new List<MyExcelClass>();
+            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
+            {
+                //直接设为Excel实体
+                for (int i = 1; i < (t.Rows.Count); i++)
+                {
+                    MyExcelClass create_s = new MyExcelClass();
+                    create_s.StuName = t.Rows[i][0].ToString();
+                    create_s.StuSex = t.Rows[i][1].ToString();
+                    create_s.StuPhone = t.Rows[i][2].ToString();
+                    create_s.StuSchoolName = t.Rows[i][3].ToString();//学校
+                    create_s.StuAddress = t.Rows[i][4].ToString();//家庭住址
+                    create_s.Region_id = t.Rows[i][5].ToString();//区域
+                    create_s.StuInfomationType_Id = t.Rows[i][6].ToString();//信息来源
+                    create_s.StuEducational = t.Rows[i][7].ToString();
+                    create_s.EmployeesInfo_Id = t.Rows[i][8].ToString();//备案人
+                    create_s.Reak = t.Rows[i][9].ToString();//备注
+                    new_listStudent.Add(create_s);
+                }
+                return new_listStudent;
+            }
+            else
+            {
+                return new_listStudent;
+            }
         }
         //文件上传页面
         public ActionResult ExcleIntoView()
@@ -617,7 +666,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     }
  
                     BusHelper.WriteSysLog(UserName+"成功导入了Excl文件，但是有数据冲突", Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
-                                                                                                                            //将有冲突的数据写入Excle文件中
+                    //将有冲突的数据写入Excle文件中
                     CreateExcleFile(equally_list, UserName);
                 }
                 catch (Exception ex)
@@ -656,65 +705,83 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// </summary>
         public void CreateExcleFile(List<StudentPutOnRecord> equally_list,string UserName)
         {
-            try
+            List<MyExcelClass> exlist1 = GetExcel();
+            List<MyExcelClass> exlist2 = new List<MyExcelClass>();
+            if (exlist1.Count > 0)
             {
-                DataTable dt = equally_list.ToDataTable<StudentPutOnRecord>();
-                int rowNumber = dt.Rows.Count;
-                int columnNumber = dt.Columns.Count;
-                int colIndex = 0;
-                if (rowNumber == 0)
+                try
                 {
-
-                    // return Content("d"); ;
-                }
-                //获取当前年月日
-                string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + UserName + "ErrorExcel.xls";
-                string path = "~/uploadXLSXfile/ConflictExcel/" + filename;
-                //FileInfo files = new FileInfo(Server.MapPath(path));
-                //files.Create();
-               
-                //建立Excel对象 
-                Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
-
-                excel.Application.Workbooks.Add(true);
-                excel.Visible = true;//是否打开该Excel文件 
-
-                //读取用户字段
-                string jsonfile = Server.MapPath(path);
-
-                System.IO.StreamReader file = System.IO.File.OpenText(jsonfile);
-                //加载问卷
-                JsonTextReader reader = new JsonTextReader(file);
-
-                //转化为JObject
-                JObject ojb = (JObject)JToken.ReadFrom(reader);
-
-                var jj = ojb["user"].ToString();
-
-                JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
-                //生成字段名称 
-                foreach (DataColumn col in dt.Columns)
-                {
-                    colIndex++;
-                    excel.Cells[1, colIndex] = jo[col.ColumnName];
-                }
-
-                //填充数据 
-                for (int c = 1; c <= rowNumber; c++)
-                {
-
-                    for (int j = 0; j < columnNumber; j++)
+                    foreach (StudentPutOnRecord item1 in equally_list)
                     {
-                        excel.Cells[c + 1, j + 1] = dt.Rows[c - 1].ItemArray[j];
+                        foreach (MyExcelClass item2 in exlist1)
+                        {
+                            if(item2.StuName==item2.StuName && item2.StuPhone == item1.StuPhone)
+                            {
+                                exlist2.Add(item2);
+                            }
+                        }
                     }
-                }
-                
-            }
-            catch (Exception ex)
-            {
 
-                DeleteFile();
+                    DataTable dt = exlist2.ToDataTable<MyExcelClass>();
+                    int rowNumber = dt.Rows.Count;
+                    int columnNumber = dt.Columns.Count;
+                    int colIndex = 0;
+                    if (rowNumber == 0)
+                    {
+
+                        
+                    }
+                    //获取当前年月日
+                    //string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + UserName + "ErrorExcel.xls";
+                    //string path = "~/uploadXLSXfile/ConflictExcel/" + filename;
+                    //FileStream stream = new FileStream(Server.MapPath(path), FileMode.Append);
+                    //建立Excel对象 
+                    Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();                   
+                   // excel.Application.Workbooks.Add(true);
+                   excel.Application.Workbooks.Open(Server.MapPath("~/uploadXLSXfile/ConflictExcel/测试.xls"));
+                   excel.Visible = true;//是否打开该Excel文件 
+                    var jj = CreateJsonFile();
+
+                    JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
+                    //生成字段名称 
+                    foreach (DataColumn col in dt.Columns)
+                    {
+                        colIndex++;
+                        excel.Cells[1, colIndex] = jo[col.ColumnName];
+                    }
+
+                    //填充数据 
+                    for (int c = 1; c <= rowNumber; c++)
+                    {
+
+                        for (int j = 0; j < columnNumber; j++)
+                        {
+                            excel.Cells[c + 1, j + 1] = dt.Rows[c - 1].ItemArray[j];
+                        }
+                    }
+                    
+                    //设置禁止弹出保存和覆盖的询问提示框   
+                    excel.DisplayAlerts = false;
+                    excel.AlertBeforeOverwriting = false;
+
+                    //保存工作簿   
+                    excel.Application.Workbooks.Add(true).Save();
+                    excel.Application.Workbooks.Close();
+
+                    //保存excel文件   
+                    excel.Save(Server.MapPath("~/uploadXLSXfile/ConflictExcel/测试.xls"));
+                   
+                    //确保Excel进程关闭   
+                    excel.Quit();
+                    excel = null;
+                }
+                catch (Exception ex)
+                {
+                    string errmsg = ex.Message;
+                    DeleteFile();
+                }
             }
+            
              
         }
         /// <summary>
@@ -727,7 +794,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             FileStream stream = new FileStream(rr, FileMode.Open);
              return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
-
+        /// <summary>
+        /// 创建一个json数据
+        /// </summary>
+        public string  CreateJsonFile()
+        {
+            MyExcelClass myentity = new MyExcelClass();
+            myentity.StuName = "姓名";
+            myentity.StuPhone = "电话";
+            myentity.StuSex = "性别";
+            myentity.StuSchoolName = "学校名称";
+            myentity.StuAddress = "家庭住址";
+            myentity.Region_id = "区域";
+            myentity.StuInfomationType_Id = "信息来源";
+            myentity.StuEducational = "学历";
+            myentity.EmployeesInfo_Id = "备案人";
+            myentity.Reak = "说明";
+           string myvalue= JsonConvert.SerializeObject(myentity);
+            return myvalue;
+        }
         #endregion
 
         #region 基础数据的添加（信息类型、学生状态）
@@ -736,6 +821,116 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             return View();
         }
+        //获取信息类型所有的数据
+        public ActionResult GetInfomationData(int page,int limit)
+        {
+            List<StuInfomationType> infomation_List = StuInfomationType_Entity.GetList().OrderByDescending(i=>i.Id).ToList();
+            List<StuInfomationType> infomation_List2 = infomation_List.Skip((page - 1) * limit).Take(limit).ToList();
+            var Jsondata = new {
+                code = 0, //解析接口状态,
+                msg = "", //解析提示文本,
+                count = infomation_List.Count, //解析数据长度
+                data = infomation_List2 //解析数据列表
+            };
+            return Json(Jsondata,JsonRequestBehavior.AllowGet);
+        }
+        //修改信息类型
+        public ActionResult EditInfomationType(string id,string name,string state)
+        {
+            //获取当前上传的操作人
+            string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+            int Id = Convert.ToInt32(id);
+            
+            if (!string.IsNullOrEmpty(name))
+            {
+                try
+                {
+                    StuInfomationType findinfomation = StuInfomationType_Entity.GetList().Where(i => i.Id == Id).FirstOrDefault();
+                    StuInfomationType Isrepeat = StuInfomationType_Entity.GetList().Where(i => i.Name==name).FirstOrDefault();
+                    if (findinfomation != null && Isrepeat==null)
+                    {
+                        findinfomation.Name = name;
+                        StuInfomationType_Entity.Update(findinfomation);
+                        return Json("ok",JsonRequestBehavior.AllowGet);
+                    }else if (findinfomation==null)
+                    {
+                        BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:数据未能查找到该值", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                        return Json("数据有误，请重试!", JsonRequestBehavior.AllowGet);
+                    }else if (Isrepeat != null)
+                    {
+                        return Json("数据重复", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                catch (Exception ex)
+                {  
+                    //将错误填写到日志中     
+                    BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                    return Json("no", JsonRequestBehavior.AllowGet);
+                }
+                
+            }
+            if (!string.IsNullOrEmpty(state))
+            {
+                StuInfomationType findinfomation = StuInfomationType_Entity.GetList().Where(i => i.Id == Id).FirstOrDefault();
+                if (findinfomation != null)
+                {
+                    try
+                    {
+                        bool Isdel = Convert.ToBoolean(state)==true?false:true;
+                        findinfomation.IsDelete = Isdel; 
+                        StuInfomationType_Entity.Update(findinfomation);
+                        return Json("ok", JsonRequestBehavior.AllowGet);
+                    }
+                    catch (Exception ex)
+                    {
+                        //将错误填写到日志中     
+                        BusHelper.WriteSysLog("操作人:"+UserName+"操作时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                        return Json("修改错误，请重试", JsonRequestBehavior.AllowGet);
+                    }
+                }
+            }
+            return Json("请求错误，请重试!",JsonRequestBehavior.AllowGet);
+        }
+        //添加信息类型
+        public ActionResult AddInfomationType()
+        {
+            //获取当前上传的操作人
+            string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+            StuInfomationType findIsNull = StuInfomationType_Entity.GetList().Where(i => i.Name == null).FirstOrDefault();
+            try
+            {
+                if (findIsNull==null)
+                {
+                    StuInfomationType_Entity.Insert(new StuInfomationType() { IsDelete = false });
+                    BusHelper.WriteSysLog("操作人:" + UserName + "触发了添加学生信息类型来源的按钮", Entity.Base_SysManage.EnumType.LogType.加载数据);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("有信息未填写，请填写之后在添加", JsonRequestBehavior.AllowGet);
+                }                 
+            }
+            catch (Exception ex)
+            {
+                //将错误填写到日志中     
+                BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
+                return Json("修改错误，请重试", JsonRequestBehavior.AllowGet);
+            }             
+        }
+        //删除没有名称的数据
+        public void DelteInfomationType()
+        {
+            List<StuInfomationType> findIsNull = StuInfomationType_Entity.GetList().Where(i => i.Name == null).ToList();
+            if (findIsNull.Count>0)
+            {
+                foreach (StuInfomationType item in findIsNull)
+                {
+                    StuInfomationType_Entity.Delete(item);
+                }
+            }
+        }
+
+
         #endregion
     }
 }
