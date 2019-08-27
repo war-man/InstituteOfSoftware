@@ -1,0 +1,219 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model SchoolYearPlan
+<!DOCTYPE html>
+
+<html>
+<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/layui/layui.js"></script>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>添加年度计划</title>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            width: 200px;
+        }
+    </style>
+    <script src="~/Scripts/underscore.js"></script>
+</head>
+<body>
+
+    <h1 style="text-align:center;height:50px;">添加年度计划</h1>
+    <div>
+        <form class="layui-form" action="">
+            <div class="layui-container">
+                <fieldset>
+                    <legend>计划详情</legend>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">计划标题</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required|title" }, { "placeholder", "请输入计划标题" }, { "class", "layui-input " }, { "lay-reqtext", "计划标题不可为空" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">渠道预计人数</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.MarketForecast, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "渠道预计人数" }, { "lay-reqtext", "渠道预计人数不可为空" } })
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">代理预计人数</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Estimatednumberofagents, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "代理预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "代理预计人数不可为空" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">口碑预计人数</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Estimatednumberofwordofmouth, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "口碑预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "口碑预计人数不可为空" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">网络预计人数</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.PredictedNetworkNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "网络预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "网络预计人数不可为空" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Remak, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                </div>
+                <div class="layui-input-inline">
+                    <button class="layui-btn" id="clode">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <script type="text/template" id="muban">
+        <fieldset class="fieldset">
+            <legend class="major">{{=content}}</legend>
+            <div class="layui-row layui-form-item">
+                <div class="layui-block">
+                    <fieldset>
+                        <legend class="title">薪资</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="text" placeholder="请输入薪资" class="layui-input EntSalary" name="EntSalary{{=content}}">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="layui-block">
+                    <fieldset>
+                        <legend class="title">岗位职责</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <textarea placeholder="请输入内容" class="layui-textarea JobResponsibilities " name="JobResponsibilities{{=content}}"></textarea>
+                            </div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="layui-block">
+                    <fieldset>
+                        <legend class="title">任职要求</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-input-block">
+                                <textarea placeholder="请输入内容" class="layui-textarea Requirements" name="Requirements{{=content}}"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+
+            </div>
+        </fieldset>
+    </script>
+
+    <script>
+
+
+
+
+        var MrDLayer;
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            MrDLayer = layer;
+
+
+            //自定义验证规则
+            form.verify({
+                title: function (value) {
+                    if (value.length < 5) {
+                        return '标题至少得5个字符啊';
+                    }
+                }
+            });
+
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field;
+
+                $.post({
+                    url: "/Market/SchoolYearPlan/AddSchoolYearPlan",
+                    data: { formdata: jsonStr },
+                    type: "POST",
+                    async: true,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            layer.msg(data.Msg, { icon: 1 }, function () {
+                                //先得到当前iframe层的索引
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index); //再执行关闭
+                            })
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+                return false;
+            });
+        });
+
+        $("#clode").click(function () {
+            //先得到当前iframe层的索引
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.MrDLayer.close(index); //再执行关闭
+        });
+
+    </script>
+
+
+</body>
+</html>

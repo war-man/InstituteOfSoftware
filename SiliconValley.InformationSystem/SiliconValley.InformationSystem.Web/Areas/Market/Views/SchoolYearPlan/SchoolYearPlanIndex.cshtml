@@ -1,0 +1,216 @@
+﻿
+@{
+    ViewBag.Title = "ChannelStaffIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+}
+
+
+
+<!-- Single button -->
+@*<div class="btn-group">
+        <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            搜索条件
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" id="grandlist">
+            <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
+            <li><a whyshow="distribution" href="javascript:void(0);">已分配班级</a></li>
+            <li><a whyshow="nodistribution" href="javascript:void(0);">未分配班级</a></li>
+        </ul>
+    </div>
+
+    <div style="display:inline-block;width:600px;" class="form-inline">
+
+        <div class="form-group">
+            <input type="text" class="form-control" id="classnumber" placeholder="专员的名字。">
+        </div>
+
+        <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
+    </div>*@
+
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addSchoolYearPlan">添加</button>
+    </div>
+</script>
+<table class="layui-hide" id="SchoolYearPlan" lay-filter="SchoolYearPlanfilter"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="EidtSchoolYearPlan">修改</a>
+</script>
+
+
+
+@section script{
+    <script>
+
+        var MrDtableIns;
+        var MrDLayer;
+        var MrDWhyShow;
+        jQuery(function () {
+            0
+            MrDWhyShow = "all";
+        });
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+
+
+        //显示条件查询
+        function WhyShow(value) {
+            MrDtableIns.reload({
+                where: {
+                    whyshow: value
+                }
+                , page: {
+                    curr: 1
+                }
+            });
+        }
+
+        //添加合作企业
+        function AddSchoolYearPlan() {
+            MrDLayer.open({
+                type: 2
+                , area: ["800px", "620px"]
+                , title: "添加合作企业信息"
+                , content: '/Market/SchoolYearPlan/AddSchoolYearPlan'
+                , anim: "2" /* 改变弹出层弹出方式*/
+                , end: function () {
+                    MrDtableIns.reload('Enterprise', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                    });
+                }
+            });
+        }
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer; //layui对象
+            MrDLayer = layer;
+
+            //展示已知数据
+            var tableIns = table.render({
+                elem: '#SchoolYearPlan'
+                , url: '/Market/SchoolYearPlan/SearchSchoolYearPlan' //数据接口
+                , page: true //开启分页
+                , even: true //开启隔行背景
+                , limit: 15
+                , limits: [15, 30, 45, 60, 75]
+                , toolbar: '#toolbarDemo'
+                , cols: [[ //标题栏
+                    , { type: 'checkbox' }
+                    , { field: 'ID', title: '计划id', width: 165, hide: true }
+                    , { field: 'Title', title: '标题', width: 165 }
+                    , { field: 'MarketForecast', title: '市场预计人数', width: 130 }
+                    , { field: 'Estimatednumberofwordofmouth', title: '口碑预计人数', width: 130 }
+                    , { field: 'Estimatednumberofagents', title: '代理预计人数', width: 130 }
+                    , { field: 'PredictedNetworkNumber', title: '网络预计人数', width: 130 }
+                    , { field: 'Remak', title: '备注', width: 180 }
+                    , {
+                        field: 'PlanDate', title: '计划定制时间', width: 120, templet: function (v) {
+                            return TimeChange(v.PlanDate);
+                        }
+                    }
+                    , { fixed: 'right', title: '操作', width: 198, align: 'center', toolbar: '#barDemo' }
+                ]]
+
+            });
+            MrDtableIns = tableIns;
+            //监听行事件
+            table.on('tool(SchoolYearPlanfilter)', function (obj) {
+                var data = obj.data;
+                console.log(data);
+                if (obj.event === 'distribution') {
+                    if (data.EntID) {
+                        layer.msg('该班级已经分配专员了。', {
+                            time: 1000, //20s后自动关闭
+                            btn: ['关闭']
+                        });
+
+                    } else {
+                        layer.open({
+                            type: 2
+                            , area: ["1000px", "620px"]
+                            , title: "分配班级"
+                            , content: '/Obtainemployment/EmpClass/Distribution/' + data.ClassNumber
+                            , anim: "2" /* 改变弹出层弹出方式*/
+                            , end: function () {
+                                table.reload('empclass', {
+                                    page: {
+                                        curr: 1
+                                    }
+                                });
+
+                            }
+                        });
+                    }
+
+                }
+            });
+
+            //监听表达按钮事件
+            table.on('toolbar(SchoolYearPlanfilter)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addSchoolYearPlan':
+                        AddSchoolYearPlan();
+                        break;
+                };
+            });
+        });
+
+        //$("#grandlist li a").click(function () {
+        //    var grand = $(this).text();
+        //    $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
+        //    var grandid = $(this).attr("grandid");
+        //    $("#selectGrand").attr("grandid", grandid);
+        //    var a = $(this).attr("whyshow");
+        //    MrDWhyShow = a;
+        //    WhyShow(a);
+        //    if (a == "nodistribution") {
+        //        $("#empname").attr("disabled", "disabled");
+        //    } else {
+        //        $("#empname").removeAttr("disabled");
+        //    }
+        //});
+
+        //$("#SearchEnter").click(function () {
+        //    var empname = $("#empname").val();
+        //    var classnumber = $("#classnumber").val();
+        //    MrDtableIns.reload({
+        //        where: {
+        //            empname: empname,
+        //            classnumber: classnumber,
+        //            whyshow: MrDWhyShow
+        //        }
+        //        , page: {
+        //            curr: 1
+        //        }
+        //    });
+        //});
+    </script>
+}
+
+
