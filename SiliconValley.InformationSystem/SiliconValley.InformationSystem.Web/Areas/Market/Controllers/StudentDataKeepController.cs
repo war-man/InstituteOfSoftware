@@ -486,7 +486,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         #region Excle文件导入
-        //一个删除文件的方法
+        ///一个删除文件的方法
         public void DeleteFile()
         {
             var namef = SessionHelper.Session["filename"];
@@ -929,6 +929,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
             }
         }
+
+
         #endregion
     }
 }
