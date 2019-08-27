@@ -403,6 +403,7 @@
     <Content Include="Areas\CourseSyllabus\Views\Course\OperationView.cshtml" />
     <Content Include="Areas\CourseSyllabus\Views\web.config" />
     <Content Include="Config\Major.json" />
+    <Content Include="Config\StudentPutOnRecord.json" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

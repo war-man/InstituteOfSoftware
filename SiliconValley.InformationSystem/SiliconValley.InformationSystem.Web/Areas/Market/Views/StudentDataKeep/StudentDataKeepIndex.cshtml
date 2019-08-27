@@ -305,11 +305,16 @@
                         layer.open({
                             type: 2,
                             content: '/Market/StudentDataKeep/InfomationAndStatuView' 
-                            , area: ['1000px', '650px'],
+                            , area: ['800px', '450px'],
                             title: '查看信息来源与学生状态'
                             , shade: 0.8
                             , anim: 4
                             , skin: 'demo-class'
+                            , end: function () {
+                                $.ajax({
+                                    url:'/Market/StudentDataKeep/DelteInfomationType'
+                                });
+                            }
                         });       
                         break;
                 };

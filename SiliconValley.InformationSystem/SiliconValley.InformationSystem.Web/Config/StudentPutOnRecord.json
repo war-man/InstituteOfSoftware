@@ -1,0 +1,15 @@
+﻿{
+  "StudentPutOnRecord": {
+    "StuName": "姓名",
+    "StuSex": "性别",
+    "StuPhone": "电话",
+    "StuSchoolName": "学校名称",
+    "StuAddress": "家庭住址",
+    "Region_id": "区域",
+    "StuInfomationType_Id": "信息来源",
+    "StuEducational": "学历",
+    "EmployeesInfo_Id": "备案人",
+    "Reak": "备注"
+  }
+
+}

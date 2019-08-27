@@ -350,7 +350,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             catch (Exception ee)
             {
-                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件异常);
+                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件);
                 var jsondata = new
                 {
                     code = "",
