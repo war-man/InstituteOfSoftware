@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>穿梭框组件</title>
+
+
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div id="test1"></div>
+
+    <script>
+        layui.use('transfer', function () {
+            var transfer = layui.transfer;
+
+            //渲染
+            transfer.render({
+                elem: '#test1'  //绑定元素
+                , data: [
+                    { "value": "1", "title": "李白", "disabled": "", "checked": "" }
+                    , { "value": "2", "title": "杜甫", "disabled": "", "checked": "" }
+                    , { "value": "3", "title": "贤心", "disabled": "", "checked": "" }
+                ]
+                , id: 'demo1' //定义索引
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,19 +1,42 @@
 ﻿
 @{
-    ViewBag.Title = "ChannelStaffIndex";
+    ViewBag.Title = "ChannelYearPlanIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section style{
 
-    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+
+<link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
 
 }
 
 
 
+<!-- Single button -->
+<div class="btn-group">
+    <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        @ViewBag.NowYearName
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" id="grandlist">
+        @{
+            foreach (var item in ViewBag.YearName)
+            {
+                <li><a href="javascript:void(0);" planid="@item.SchoolPlanID">@item.YearName</a></li>
+            }
+        }
+    </ul>
+</div>
 
+<div style="display:inline-block;width:600px;" class="form-inline">
 
+    <div class="form-group">
+        <input type="text" class="form-control" id="classnumber" placeholder="专员的名字。">
+    </div>
+
+    <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
+</div>
 <table class="layui-hide" id="channelstaff" lay-filter="channelstafffilter"></table>
 
 <script type="text/html" id="barDemo">
@@ -69,7 +92,7 @@
 
             //展示已知数据
             var tableIns = table.render({
-                elem: '#channelstaff'
+                elem: '#empclass'
                 , url: '/Market/ChannelStaff/GetChannelStaffData' //数据接口
                 , page: true //开启分页
                 , even: true //开启隔行背景
@@ -77,23 +100,18 @@
                 , limits: [15, 30, 45, 60, 75]
                 , cols: [[ //标题栏
                     , { type: 'checkbox' }
-                    , { field: 'ChannelStaffID', title: '渠道员工id', width: 165, hide: true }
-                    , { field: 'EmployeeId', title: '员工编号', width: 165}
+                    , { field: '', title: '员工编号', width: 165, sort: true }
+                    , { field: 'EntID', title: '员工id', width: 165, hide: true }
                     , { field: 'EmpName', title: '员工姓名', width: 145 }
                     , { field: 'Phone', title: '联系方式', width: 165 }
-                    , { field: 'RegionName', title: '带领区域', width: 100 }
-                    , { field: 'RegionID', title: '区域id', width: 89, hide: true }
-                    , { field: 'RegionalDirectorEmpName', title: '区域主管', width: 100 }
-                    , { field: 'RegionalDirectorID', title: '主管员工编号', width: 89 , hide: true}
-                    
+                    , { field: 'GrandName', title: '带领区域', width: 89 }
+                    , { field: 'SpecialtyName', title: '备案数量', width: 89 }
+                    , { field: 'SpecialtyName', title: '上门数量', width: 89 }
+                    , { field: 'SpecialtyName', title: '报名数量', width: 89 }
+                    , { field: 'SpecialtyName', title: '借资次数', width: 89 }
                     , {
-                        field: 'EntryTime', title: '入职时间', width: 165, templet: function (v) {
-                            return TimeChange(v.EntryTime);
-                        }
-                    }
-                    , {
-                        field: 'PositiveDate', title: '转正时间', width: 165, templet: function (v) {
-                            return TimeChange(v.PositiveDate);
+                        field: 'empclassDate', title: '入职时间', width: 165, templet: function (v) {
+                            return TimeChange(v.empclassDate);
                         }
                     }
                     , { field: 'Remark', title: '备注', width: 165 }
@@ -103,19 +121,25 @@
             });
             MrDtableIns = tableIns;
             //监听工具条
-            table.on('tool(channelstafffilter)', function (obj) {
+            table.on('tool(empclassInfo)', function (obj) {
                 var data = obj.data;
                 console.log(data);
                 if (obj.event === 'distribution') {
-                  
+                    if (data.EntID) {
+                        layer.msg('该班级已经分配专员了。', {
+                            time: 1000, //20s后自动关闭
+                            btn: ['关闭']
+                        });
+
+                    } else {
                         layer.open({
                             type: 2
                             , area: ["1000px", "620px"]
-                            , title: "分配区域、主管"
-                            , content: '/Market/ChannelStaff/DistributionArea/' + data.ChannelStaffID
+                            , title: "分配班级"
+                            , content: '/Obtainemployment/EmpClass/Distribution/' + data.ClassNumber
                             , anim: "2" /* 改变弹出层弹出方式*/
                             , end: function () {
-                                table.reload('channelstaff', {
+                                table.reload('empclass', {
                                     page: {
                                         curr: 1
                                     }
@@ -123,7 +147,7 @@
 
                             }
                         });
-                    
+                    }
 
                 }
             });
@@ -162,5 +186,3 @@
         });
     </script>
 }
-
-

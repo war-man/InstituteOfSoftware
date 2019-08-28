@@ -17,8 +17,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     /// <summary>
     /// 渠道的区域
     /// </summary>
-    [Table(name: "EmployeeArea")]
-    public partial class EmployeeArea
+    [Table(name: "ChannelArea")]
+    public partial class ChannelArea
     {
         [Key]
         public int ID { get; set; } 

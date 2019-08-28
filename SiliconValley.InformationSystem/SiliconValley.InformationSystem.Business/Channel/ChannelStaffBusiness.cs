@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
     public class ChannelStaffBusiness : BaseBusiness<ChannelStaff>
     {
         EmploymentStaffBusiness dbempstaff = new EmploymentStaffBusiness();
+
         /// <summary>
         /// 得到没有离职的渠道专员
         /// </summary>
@@ -26,23 +27,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
         {
             return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
-        /// <summary>
-        /// 根据年份来查找员工
-        /// </summary>
-        /// <param name="YearName"></param>
-        /// <returns></returns>
-        public List<ChannelStaff> GetChannelsByYear(string YearName) {
-            var alldata = this.GetIQueryable().ToList();
-
-            for (int i = alldata.Count - 1; i >= 0; i--)
-            {
-                if (alldata[i].ChannelDate.Year.ToString()!=YearName)
-                {
-                    alldata.Remove(alldata[i]);
-                }
-            }
-            return alldata;
-        }
+        
         /// <summary>
         /// 根据这个渠道专员id获取渠道专员对象
         /// </summary>

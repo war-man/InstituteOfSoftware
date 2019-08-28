@@ -28,9 +28,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<int> Estimatednumberofwordofmouth { get; set; }
         /// <summary>
-        /// 代理预计人数
+        /// 区域量
         /// </summary>
-        public Nullable<int> Estimatednumberofagents { get; set; }
+        public Nullable<int> AreaNumber { get; set; }
         /// <summary>
         /// 网络预计人数
         /// </summary>

@@ -91,7 +91,6 @@
     <Compile Include="Entity\CardRegistration.cs" />
     <Compile Include="Entity\CDInterview.cs" />
     <Compile Include="Entity\ChannelStaff.cs" />
-    <Compile Include="Entity\ChannelYearPlan.cs" />
     <Compile Include="Entity\Check.cs" />
     <Compile Include="Entity\CheckGoods.cs" />
     <Compile Include="Entity\ChoiceQuestionPaper.cs" />
@@ -135,7 +134,7 @@
     <Compile Include="Entity\EmpClass.cs" />
     <Compile Include="Entity\EmpClassTransaction.cs" />
     <Compile Include="Entity\EmployedStudent.cs" />
-    <Compile Include="Entity\EmployeeArea.cs" />
+    <Compile Include="Entity\ChannelArea.cs" />
     <Compile Include="Entity\EmployeesInfo.cs" />
     <Compile Include="Entity\EmploymentAreas.cs" />
     <Compile Include="Entity\EmploymentStaff.cs" />
@@ -271,6 +270,8 @@
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
+    <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
+    <Compile Include="ViewEntity\ChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />
@@ -287,6 +288,7 @@
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
+    <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />

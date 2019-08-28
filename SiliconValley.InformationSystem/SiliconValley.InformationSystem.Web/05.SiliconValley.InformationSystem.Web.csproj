@@ -214,6 +214,7 @@
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
+    <Compile Include="Areas\Market\Controllers\ChannelYearPlanController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
@@ -390,6 +391,8 @@
     <Content Include="Areas\Obtainemployment\Views\EmpClass\EmpClassIndex.cshtml" />
     <Content Include="Areas\Market\Views\SchoolYearPlan\SchoolYearPlanIndex.cshtml" />
     <Content Include="Areas\Market\Views\SchoolYearPlan\AddSchoolYearPlan.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\ChannelYearPlanIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -716,6 +719,7 @@
     <Content Include="Scripts\layui\lay\modules\rate.js" />
     <Content Include="Scripts\layui\lay\modules\slider.js" />
     <Content Include="Scripts\layui\lay\modules\table.js" />
+    <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\layui\lay\modules\tree.js" />
     <Content Include="Scripts\layui\lay\modules\upload.js" />
     <Content Include="Scripts\layui\lay\modules\util.js" />

@@ -5,6 +5,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Psychro;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <summary>
         /// 渠道专员区域分布
         /// </summary>
-        private EmployeeAreaBusiness dbemparea;
-
-
+        private ChannelAreaBusiness dbemparea;
+        /// <summary>
+        /// 区域业务类
+        /// </summary>
+        private RegionBusiness dbregion;
         /// <summary>
         /// 进入市场渠道页面
         /// </summary>
@@ -51,45 +54,82 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult ChannelStaffIndex()
         {
-            dbschoolpaln = new SchoolYearPlanBusiness();
-            ViewBag.YearName = dbschoolpaln.GetAll().Select(a => new 
-            {
-                ID = a.ID,
-                YearName = a.PlanDate.Year.ToString() + "年"
-            }) ;
-            ViewBag.NowYearName = DateTime.Now.Year.ToString() + "年";
             return View();
         }
-
 
         /// <summary>
         /// 加载渠道员工数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult GetChannelStaffData(int page, int limit,string YearName)
+        public ActionResult GetChannelStaffData(int page, int limit)
         {
             dbchastaff = new ChannelStaffBusiness();
             dbempinfo = new EmployeesInfoManage();
-            var data= dbchastaff.GetChannelsByYear(YearName);
-
-            var newdata = data.Select(a => new 
+            dbemparea = new ChannelAreaBusiness();
+            var data= dbchastaff.GetChannelStaffs();
+            List<ChannelStaffIndexView> resultlist = new List<ChannelStaffIndexView>();
+            foreach (var item in data)
             {
-                ChannelStaffID = a.ID,
-                EmpinfoID = a.EmployeesInfomation_Id,
-                ChannelDate = a.ChannelDate,
-                EmpName = dbempinfo.GetInfoByEmpID(a.EmployeesInfomation_Id).EmpName,
-                Phone = dbempinfo.GetInfoByEmpID(a.EmployeesInfomation_Id).Phone,
-              
+                var empinfo = dbempinfo.GetInfoByEmpID(item.EmployeesInfomation_Id);
+                ChannelStaffIndexView indexView = new ChannelStaffIndexView();
+                indexView.ChannelStaffID = item.ID;
+                indexView.EmployeeId = item.EmployeesInfomation_Id;
+                indexView.EmpName = empinfo.EmpName;
+                indexView.EntryTime = empinfo.EntryTime;
+                indexView.Phone = empinfo.Phone;
+                indexView.PositiveDate = empinfo.PositiveDate;
+                indexView.Remark = empinfo.Remark;
+                var channelarea = dbemparea.GetAreaByChannelID(item.ID);
+                if (channelarea!=null)
+                {
+                    var mrdRegionName = "";
+                    var mrRegionID = "";
+                    var mrRegionalDirectorEmpName = "";
+                    var mrRegionalDirectorID = "";
+                    foreach (var mrdarea in channelarea)
+                    {
+                        var region = dbregion.GetRegionByID(mrdarea.RegionID);
+                        var zhugaun = dbchastaff.GetChannelByID(mrdarea.RegionalDirectorID);
+                        var zhugauninfo = dbempinfo.GetInfoByEmpID(zhugaun.EmployeesInfomation_Id);
+                        mrdRegionName =mrdRegionName+"、"+ region.RegionName;
+                        mrRegionID = mrRegionID + "、" + region.ID.ToString();
+                        mrRegionalDirectorEmpName = zhugauninfo.EmpName;
+                        mrRegionalDirectorID = zhugauninfo.EmployeeId;
+                    }
+                }
+                else
+                {
+                    indexView.RegionalDirectorEmpName = "";
+                    indexView.RegionName ="";
+                    indexView.RegionalDirectorID =null;
+                    indexView.RegionID ="";
 
-            });
+                }
+                resultlist.Add(indexView);
+
+            }
+            var bnewdata = resultlist.Skip((page - 1) * limit).Take(limit).ToList();
             var returnObj = new
             {
                 code = 0,
                 msg = "",
-                count = newdata.Count(),
-                data = newdata
+                count = resultlist.Count(),
+                data = bnewdata
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        /// <summary>
+        /// get 请求分配区域
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DistributionArea(int id) {
+            ViewBag.ChannelStaffID = id;
+            //拿没有分配的区域
+           
+            //拿主任列表
+            return View();
         }
         /// <summary>
         /// 借资/预资页面
