@@ -851,7 +851,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     {
                         findinfomation.Name = name;
                         StuInfomationType_Entity.Update(findinfomation);
-                        return Json("ok",JsonRequestBehavior.AllowGet);
                     }else if (findinfomation==null)
                     {
                         BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:数据未能查找到该值", Entity.Base_SysManage.EnumType.LogType.编辑数据);
@@ -879,7 +878,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         bool Isdel = Convert.ToBoolean(state)==true?false:true;
                         findinfomation.IsDelete = Isdel; 
                         StuInfomationType_Entity.Update(findinfomation);
-                        return Json("ok", JsonRequestBehavior.AllowGet);
                     }
                     catch (Exception ex)
                     {
@@ -889,7 +887,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     }
                 }
             }
-            return Json("请求错误，请重试!",JsonRequestBehavior.AllowGet);
+            BusHelper.WriteSysLog("操作人:" + UserName + "编辑成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            return Json("ok", JsonRequestBehavior.AllowGet);
         }
         //添加信息类型
         public ActionResult AddInfomationType()
@@ -920,6 +919,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //删除没有名称的数据
         public void DelteInfomationType()
         {
+            //删除信息来源
             List<StuInfomationType> findIsNull = StuInfomationType_Entity.GetList().Where(i => i.Name == null).ToList();
             if (findIsNull.Count>0)
             {
@@ -928,9 +928,93 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuInfomationType_Entity.Delete(item);
                 }
             }
+            //删除学生状态
+            List<StuStatus> findStateNull = Stustate_Entity.GetList().Where(i=>i.StatusName==null).ToList();
+            if (findStateNull.Count > 0)
+            {
+                foreach (StuStatus item2 in findStateNull)
+                {
+                    Stustate_Entity.Delete(item2);
+                }
+            }
         }
-
-
+        //获取学生状态的所有数据
+        public ActionResult GetStatusData(int page,int limit)
+        {
+            List<StuStatus> state_list = Stustate_Entity.GetList();
+            List<StuStatus> newstate = state_list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var Jsondata = new
+            {
+                code = 0, //解析接口状态,
+                msg = "", //解析提示文本,
+                count = state_list.Count, //解析数据长度
+                data = newstate //解析数据列表
+            };
+            return Json(Jsondata, JsonRequestBehavior.AllowGet);
+        }
+        //修改状态
+        public ActionResult EditStates(string id,string name,string state)
+        {
+            //获取当前上传的操作人
+            string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+            try
+            {
+                int Id = Convert.ToInt32(id);
+                StuStatus findstate= Stustate_Entity.GetEntity(Id);
+                StuStatus IsRepart = Stustate_Entity.GetList().Where(s => s.StatusName == name).FirstOrDefault();
+                if (!string.IsNullOrEmpty(name) && findstate!=null && IsRepart==null)
+                {
+                    findstate.StatusName = name;
+                    Stustate_Entity.Update(findstate);                     
+                }
+                else if(IsRepart != null)
+                {
+                    return Json("数据重复!!!", JsonRequestBehavior.AllowGet);
+                }
+                else if (findstate==null)
+                {
+                    return Json("数据错误，请重试!", JsonRequestBehavior.AllowGet);
+                }
+                if (!string.IsNullOrEmpty(state))
+                {
+                    bool states = Convert.ToBoolean(state);
+                    findstate.IsDelete = states==true?false:true;
+                    Stustate_Entity.Update(findstate);
+                }
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog("操作人:" + UserName + "出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                return Json("系统异常，请联系管理员", JsonRequestBehavior.AllowGet);
+            }
+            BusHelper.WriteSysLog("操作人:" + UserName + "编辑成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            return Json("ok", JsonRequestBehavior.AllowGet);
+        }
+        //添加
+        public ActionResult AddStates()
+        {
+            //获取当前上传的操作人
+            string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+            List<StuStatus> Isrepert = Stustate_Entity.GetList().Where(s=>s.StatusName==null).ToList();
+            try
+            {
+                if (Isrepert.Count>0)
+                {
+                    return Json("有信息未填写，请填写之后在添加", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    Stustate_Entity.Insert(new StuStatus() { IsDelete = false });
+                }             
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog("操作人:" + UserName + "出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                return Json("系统异常，请联系管理员", JsonRequestBehavior.AllowGet);
+            }
+            BusHelper.WriteSysLog("操作人:" + UserName + "触发了添加按钮", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            return Json("ok", JsonRequestBehavior.AllowGet);
+        }
         #endregion
     }
 }

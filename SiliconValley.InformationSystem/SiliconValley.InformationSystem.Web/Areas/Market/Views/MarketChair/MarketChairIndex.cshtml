@@ -1,0 +1,73 @@
+﻿
+@{
+    ViewBag.Title = "MarketChairIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style type="text/css">
+    </style>
+}
+@*头*@
+<script type="text/html" id="MytoolbarDemoSex-1">
+    <button type="button" class="layui-btn layui-btn-sm" lay-event="MygetCheckDataSex-1">
+        <i class="layui-icon">&#xe608;</i> 添加
+    </button>
+</script>
+@*行*@
+<script type="text/html" id="MybarDemoSex-1">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+<table id="MyTableSix-1" lay-filter="MyTableSix-1" name="MyTableSix-1"></table>
+@section script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            table.render({
+                elem: '#MyTableSix-1'
+                , url: '/Market/MarketChair/GetListMarketDataFunction'
+                , toolbar: '#MytoolbarDemoSex-1'
+                , title: '用户数据表'
+                , totalRow: true
+                , cols: [[
+                    { type: 'radio' }
+                    //{ type: 'checkbox', fixed: 'left' }
+                    , { field: 'ChairName', title: '讲座人', width: 80, fixed: 'left', unresize: true, sort: true, totalRowText: '合计' }
+                    , { field: 'TerCharName', title: '参与人', width: 120, edit: 'text' }
+                    , {
+                        field: 'ChairAddress', title: '讲座地点', width: 150, edit: 'text', templet: function (res) {
+                            return '<em>' + res.ChairAddress + '</em>'
+                        }
+                    }
+                    , { field: 'ChairTime', title: '讲座日期', width: 80, sort: true, totalRow: true }
+                    , { field: 'EmpName', title: '登记人', width: 80, edit: 'text', sort: true }
+                    , { field: 'Rmark', title: '备注', width: 100, sort: true, totalRow: true }
+                    , { fixed: 'right', title: '操作', toolbar: '#MybarDemoSex-1', width: 150 }
+                ]]
+                , page: true
+            });
+
+            //工具栏事件
+            table.on('toolbar(MyTableSix-1)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':
+                        var data = checkStatus.data;
+                        layer.alert(JSON.stringify(data));
+                        break;
+                    case 'getCheckLength':
+                        var data = checkStatus.data;
+                        layer.msg('选中了：' + data.length + ' 个');
+                        break;
+                    case 'isAll':
+                        layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                        break;
+                };
+            });
+        });
+    </script>
+}
+
