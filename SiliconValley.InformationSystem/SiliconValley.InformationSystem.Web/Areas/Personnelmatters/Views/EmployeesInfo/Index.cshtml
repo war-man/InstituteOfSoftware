@@ -177,12 +177,16 @@
             var data = obj.data;
             if (obj.event === 'date') {
                 var field = $(this).data('field');
+                console.log("入职时间：" + GetYMD(data.EntryTime));
                 laydate.render({
                     elem: this.firstChild,
                     show: true //直接显示
                     //, closeStop: this
                     , btns: ['now', 'confirm']
-                    , done: function (value, date, endDate) {
+                    , format:'yyyy-MM-dd'
+                    , min: CheckDatamin(data, field)
+                    , max: CheckDatamax(data, field)
+                    , done: function (value, date) {
                         $.ajax({
                             type: "get",
                             dataType: "json",
@@ -192,14 +196,6 @@
                                 console.log(data.Msg );
                                 if (data.Success) {
                                     layer.msg('编辑成功');
-                                } else if (data.Msg =="合同起始时间不能小于入职时间") {
-                                    layer.msg("编辑失败，" + data.Msg);
-                                } else if (data.Msg =="合同起始时间不能大于合同终止时间") {
-                                    layer.msg("编辑失败，" + data.Msg);
-                                } else if (data.Msg =="合同终止时间必须大于合同起始时间") {
-                                    layer.msg("编辑失败，" + data.Msg);
-                                } else if (data.Msg == "合同终止时间必须大于入职时间") {
-                                    layer.msg("编辑失败，" + data.Msg);
                                 }
                                 else {
                                     layer.msg("修改失败!");
@@ -211,6 +207,35 @@
              
             }
         });
+        //单元格合同起止时间编辑的最大值最小值确认
+        function CheckDatamin(first, second) {
+            if (second == "ContractStartTime") {
+                return GetYMD(first.EntryTime);
+            } else if (second == "ContractEndTime") {
+                console.log(GetYMD(first.ContractStartTime));
+                if (GetYMD(first.ContractStartTime) == "") {
+                    return GetYMD(first.EntryTime);
+                } else {
+                    return GetYMD(first.ContractStartTime);
+                }
+               
+
+            } else {
+                return '1900-1-1';
+            }
+        }
+        function CheckDatamax(first, second) {
+            if (second == "ContractStartTime") {
+                if (GetYMD(first.ContractEndTime) == "") {
+                    return '2099-12-31';
+                } else {
+                    return GetYMD(first.ContractEndTime);
+                }
+            } else {
+                return '2099-12-31';
+            }
+        }
+     
 
         //监听婚姻状态操作
         form.on('switch(hunyinDemo)', function (obj) {
@@ -289,6 +314,7 @@
 
     });
 
+   
 
     //添加员工的方法
     function AddEmployee() {

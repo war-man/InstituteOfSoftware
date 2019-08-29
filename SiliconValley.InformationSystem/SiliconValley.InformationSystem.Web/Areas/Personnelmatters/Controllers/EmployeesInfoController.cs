@@ -714,45 +714,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         var emp1 = empinfo.GetEntity(id);
                         emp1.IdCardIndate = endvalue;
                         empinfo.Update(emp1);
+                        AjaxResultxx = empinfo.Success();
                         break;
                     case "SSStartMonth":
                         var emp2 = empinfo.GetEntity(id);
                         emp2.SSStartMonth = endvalue;
                         empinfo.Update(emp2);
+                        AjaxResultxx = empinfo.Success();
                         break;
                     case "ContractStartTime":
                         var emp3 = empinfo.GetEntity(id);
-                        if (endvalue < emp3.EntryTime)
-                        {
-                            empinfo.Success().Msg = "合同起始时间不能小于入职时间";
-
-                        }
-                        else if (endvalue > emp3.ContractEndTime)
-                        {
-                            empinfo.Success().Msg = "合同起始时间不能大于合同终止时间";
-                        }
-                        else {
                             emp3.ContractStartTime = endvalue;
                             empinfo.Update(emp3);
-                        }
+                        AjaxResultxx = empinfo.Success();
                         break;
                     case "ContractEndTime":
                         var emp4 = empinfo.GetEntity(id);
-                        if (endvalue <= emp4.ContractStartTime)
-                        {
-                            empinfo.Success().Msg = "合同终止时间必须大于合同起始时间";
-                        }
-                        else if (endvalue <= emp4.EntryTime)
-                        {
-                            empinfo.Success().Msg = "合同终止时间必须大于入职时间";
-                        }
-                        else {
                             emp4.ContractEndTime = endvalue;
                             empinfo.Update(emp4);
-                        }
+                        AjaxResultxx = empinfo.Success();
                         break;
                 }
-                AjaxResultxx = empinfo.Success();
+               
             }
             catch (Exception ex)
             {

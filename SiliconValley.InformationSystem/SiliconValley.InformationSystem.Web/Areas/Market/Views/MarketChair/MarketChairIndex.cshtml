@@ -1,0 +1,129 @@
+﻿
+@{
+    ViewBag.Title = "MarketChairIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style type="text/css">
+    </style>
+}
+@*头*@
+<script type="text/html" id="MytoolbarDemoSex-1">
+    <button type="button" class="layui-btn layui-btn-sm" lay-event="MygetCheckDataSex-1">
+        <i class="layui-icon">&#xe608;</i> 添加
+    </button>
+</script>
+
+<script type="text/html" id="switchTpl">
+    
+</script>
+
+
+<table id="MyTableSix-1" lay-filter="MyTableSix-1" name="MyTableSix-1"></table>
+@section script{
+    <script>
+        //转换时间的方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+        //刷新数据
+        function FlushTableSix1(){
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('MyTableSix-1');
+            });
+        }
+        //错误提示
+        function TiHelper(Msg) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.msg(Msg, {icon: 2,time: 2000});
+            });
+        }
+        layui.use('table', function () {
+            var table = layui.table;
+
+            table.render({
+                elem: '#MyTableSix-1'
+                , url: '/Market/MarketChair/GetListMarketDataFunction'
+                , toolbar: '#MytoolbarDemoSex-1'
+                , title: '用户数据表'
+                , totalRow: true
+                , cols: [[
+                    { type: 'radio', fixed: 'left'}
+                    //{ type: 'checkbox', fixed: 'left' }
+                    , { field: 'ChairName', title: '讲座人', fixed: 'left', edit: 'text'}
+                    , { field: 'TerCharName', title: '参与人', edit: 'text'}
+                    , { field: 'ChairAddress', title: '讲座地点', edit: 'text'}
+                    , {
+                        field: 'ChairTime', title: '讲座日期', edit: 'text',templet: function (res) {
+                            return TimeChange(res.ChairTime);
+                        }
+                    }
+                    , { field: 'EmpName', title: '登记人' }
+                    , { field: 'Rmark', title: '说明', edit: 'text' }
+                    , {
+                        field: 'IsDelete', title: '状态', templet: function (res) {
+                            if (res.IsDelets == true) {
+                                //return ' <input type="checkbox" name="States" value=' + res.IsDelets + ' lay-skin="switch" lay-text="正常|异常" lay-filter="StateDemo" {{ d.id == 10003 ? 'checked' : '' }}>'
+                            }
+                        }
+                    }
+                ]]
+                , page: true
+            });
+
+            //工具栏事件
+            table.on('toolbar(MyTableSix-1)', function (obj) {
+                switch (obj.event) {
+                    case 'MygetCheckDataSex-1':
+                        $.ajax({
+                            url: "/Market/MarketChair/AddMarketDataFunction",
+                            success: function (SucData) {
+                                if (SucData != "ok") {
+                                    TiHelper(SucData);
+                                } else {
+                                    FlushTableSix1();
+                                }
+                            }
+                        });
+                        break;
+                };
+            });
+            //监听单元格编辑
+            table.on('edit(MyTableSix-1)', function (obj) {
+                var value = obj.value //得到修改后的值
+                    , data = obj.data //得到所在行所有键值
+                    , field = obj.field; //得到字段
+                var MyDatas = { "Id": data.Id, "Values": value, "KeyName": field};
+                $.ajax({
+                    url: "/Market/MarketChair/EditMarketDataFunction",
+                    dataType: 'json',
+                    type: 'POST',
+                    data: MyDatas,
+                    success: function (SucData) {
+                        if (SucData != "ok") {
+                            TiHelper(SucData);
+                        } else {
+                            FlushTableSix1();
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+
