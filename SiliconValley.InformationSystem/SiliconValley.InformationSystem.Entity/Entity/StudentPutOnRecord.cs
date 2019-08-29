@@ -34,7 +34,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> StuIsGoto { get; set; }
         public Nullable<System.DateTime> StuVisit { get; set; }
         public string EmployeesInfo_Id { get; set; }
-        public Nullable<System.DateTime> StuDateTime { get; set; }
+        public System.DateTime StuDateTime { get; set; }
         public string StuEntering { get; set; }
         public string Reak { get; set; }
         public Nullable<bool> IsDelete { get; set; }

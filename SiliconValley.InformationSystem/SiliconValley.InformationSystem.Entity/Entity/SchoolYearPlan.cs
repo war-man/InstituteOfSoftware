@@ -19,7 +19,35 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> EstimateNumber { get; set; }
+        /// <summary>
+        /// 渠道预计人数
+        /// </summary>
+        public Nullable<int> MarketForecast { get; set; }
+        /// <summary>
+        /// 口碑预计人数
+        /// </summary>
+        public Nullable<int> Estimatednumberofwordofmouth { get; set; }
+        /// <summary>
+        /// 区域量
+        /// </summary>
+        public Nullable<int> AreaNumber { get; set; }
+        /// <summary>
+        /// 网络预计人数
+        /// </summary>
+        public Nullable<int> PredictedNetworkNumber { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
+        public string Remak { get; set; }
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get; set; }
+        /// <summary>
+        /// 计划定制时间
+        /// </summary>
+        public System.DateTime PlanDate { get; set; }
+
         public Nullable<bool> IsDel { get; set; }
     
         

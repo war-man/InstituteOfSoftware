@@ -3,7 +3,7 @@
     Layout = null;
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity
-@model EmpClass
+@model ClassSchedule
 <!DOCTYPE html>
 
 <html>
@@ -72,7 +72,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">班级编号:</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(t => t.ClassNO, new { @class = "layui-input", @readonly = "d" })
+                                @Html.TextBoxFor(a=>a.ClassNumber,new { @class = "layui-input", @readonly = "d" })
                             </div>
                         </div>
 
@@ -242,7 +242,8 @@
                         if (data.length>0) {
                             for (var i = 0; i < data.length; i++) {
                             var compiled = _.template($("#muban").html());
-                            var jsclassnumber=  data.ClassNO;
+                                var jsclassnumber = data[i].ClassNumber;
+                                console.log(jsclassnumber   );
                             var html = compiled({ content: jsclassnumber });
                             $("#classlist").append($(html));
                              }
@@ -255,16 +256,26 @@
                 });
         }
         function distributionbtn() {
+           
             var staffid = $("#mystafflist").val();
-            var jsclassno = $("#ClassNO").val();
+            var jsclassno = $("#ClassNumber").val();
             $.ajax({
                 type: "POST",
                 url: "/Obtainemployment/EmpClass/ClassToEmpstaff/",
                 async: true,
                 data: { ClassNO:jsclassno,empstaffid:staffid },
-                timeout: 5000,
                 success: function (data) {
-
+                   
+                    if (data.Success) {
+                      
+                        layer.msg(data.Msg, { icon: 1 }, function () {
+                            //先得到当前iframe层的索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index); //再执行关闭
+                        })
+                    } else {
+                        layer.msg("分配失败，请重新刷新页面！");  
+                    }
                 },
                 error: function (data) {
 

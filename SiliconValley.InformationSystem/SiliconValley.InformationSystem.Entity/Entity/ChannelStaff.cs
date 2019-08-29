@@ -13,12 +13,22 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 渠道员工表
+    /// </summary>
     [Table("ChannelStaff")]
     public partial class ChannelStaff
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 员工id
+        /// </summary>
         public string EmployeesInfomation_Id { get; set; }
+        /// <summary>
+        /// 注册时间
+        /// </summary>
+        public System.DateTime ChannelDate { get; set; }
         public Nullable<bool> IsDel { get; set; }
     
     }

@@ -1,0 +1,165 @@
+﻿
+@{
+    ViewBag.Title = "ChannelStaffIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+}
+
+
+
+<h1>给新人分配区域的页面，主任级别上级是杨校，而专员级别上级就是各个主任，区域分配一人允许多个，分配的时候只显示没有分配的区域。</h1>
+
+<table class="layui-hide" id="channelstaff" lay-filter="channelstafffilter"></table>
+
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="distribution">分配区域</a>
+</script>
+
+
+
+@section script{
+    <script>
+
+        var MrDtableIns;
+        var MrDLayer;
+        var MrDWhyShow;
+        jQuery(function () {
+            0
+            MrDWhyShow = "all";
+        });
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+
+
+        //显示条件查询
+        function WhyShow(value) {
+            MrDtableIns.reload({
+                where: {
+                    whyshow: value
+                }
+                , page: {
+                    curr: 1
+                }
+            });
+        }
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer; //layui对象
+            MrDLayer = layer;
+
+            //展示已知数据
+            var tableIns = table.render({
+                elem: '#channelstaff'
+                , url: '/Market/ChannelStaff/GetChannelStaffData' //数据接口
+                , page: true //开启分页
+                , even: true //开启隔行背景
+                , limit: 15
+                , limits: [15, 30, 45, 60, 75]
+                , cols: [[ //标题栏
+                    , { type: 'checkbox' }
+                    , { field: 'ChannelStaffID', title: '渠道员工id', width: 165, hide: true }
+                    , { field: 'EmployeeId', title: '员工编号', width: 165}
+                    , { field: 'EmpName', title: '员工姓名', width: 145 }
+                    , { field: 'Phone', title: '联系方式', width: 165 }
+                    , { field: 'RegionName', title: '带领区域', width: 165 }
+                    , { field: 'RegionID', title: '区域id', width: 89, hide: true }
+                    , { field: 'RegionalDirectorEmpName', title: '区域主管', width: 100 }
+                    , { field: 'RegionalDirectorID', title: '主管员工编号', width: 89 , hide: true}
+                    
+                    , {
+                        field: 'EntryTime', title: '入职时间', width: 165, templet: function (v) {
+                            return TimeChange(v.EntryTime);
+                        }
+                    }
+                    , {
+                        field: 'PositiveDate', title: '转正时间', width: 165, templet: function (v) {
+                            return TimeChange(v.PositiveDate);
+                        }
+                    }
+                    , { field: 'Remark', title: '备注', width: 165 }
+                    , { fixed: 'right', title: '操作', width: 198, align: 'center', toolbar: '#barDemo' }
+                ]]
+
+            });
+            MrDtableIns = tableIns;
+            //监听工具条
+            table.on('tool(channelstafffilter)', function (obj) {
+                var data = obj.data;
+                console.log(data);
+                if (obj.event === 'distribution') {
+                        layer.open({
+                            type: 2
+                            , area: ["1000px", "620px"]
+                            , title: "分配区域、主管"
+                            , content: '/Market/ChannelStaff/DistributionArea/' + data.ChannelStaffID
+                            , anim: "2" /* 改变弹出层弹出方式*/
+                            , end: function () {
+                                table.reload('channelstaff', {
+                                    page: {
+                                        curr: 1
+                                    }
+                                });
+
+                            }
+                        });
+                    
+
+                }
+            });
+
+
+        });
+
+        $("#grandlist li a").click(function () {
+            var grand = $(this).text();
+            $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
+            var grandid = $(this).attr("grandid");
+            $("#selectGrand").attr("grandid", grandid);
+            var a = $(this).attr("whyshow");
+            MrDWhyShow = a;
+            WhyShow(a);
+            if (a == "nodistribution") {
+                $("#empname").attr("disabled", "disabled");
+            } else {
+                $("#empname").removeAttr("disabled");
+            }
+        });
+
+        $("#SearchEnter").click(function () {
+            var empname = $("#empname").val();
+            var classnumber = $("#classnumber").val();
+            MrDtableIns.reload({
+                where: {
+                    empname: empname,
+                    classnumber: classnumber,
+                    whyshow: MrDWhyShow
+                }
+                , page: {
+                    curr: 1
+                }
+            });
+        });
+    </script>
+}
+
+
