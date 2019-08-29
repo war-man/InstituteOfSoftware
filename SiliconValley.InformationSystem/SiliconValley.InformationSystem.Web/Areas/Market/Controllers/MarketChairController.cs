@@ -7,12 +7,15 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.MarketChair_Business;//获取市场讲座实体
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工实体
 using SiliconValley.InformationSystem.Business.Common;//获取日志实体
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class MarketChairController : Controller
     {
         #region 创建业务实体
+        //获取当前上传的操作人
+        string UserName = Base_UserBusiness.GetCurrentUser().UserName;
         MarketChairManeger MarketChair_Entity = new MarketChairManeger();
         EmployeesInfoManage Employes_Entity = new EmployeesInfoManage();
         #endregion
@@ -35,7 +38,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
         }
         #endregion
-        // GET: /Market/MarketChair/GetListMarketDataFunction
+        // GET: /Market/MarketChair/EditMarketDataFunction
         public ActionResult MarketChairIndex()
         {
             return View();
@@ -79,6 +82,70 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json("加载数据有误", JsonRequestBehavior.AllowGet);
             }
            
+        }
+        /// <summary>
+        /// 添加一行文本框让用户填写数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddMarketDataFunction()
+        {
+            MarketChair findm = MarketChair_Entity.GetList().Where(m => m.ChairName == null).FirstOrDefault();
+            if (findm==null)
+            {
+                try
+                {
+                    DateTime d1 = DateTime.Now;
+                    MarketChair_Entity.Insert(new MarketChair() { ChairTime = d1, Employees_Id = "201908150001" });
+                    BusHelper.WriteSysLog("操作人:" + UserName + "触发了添加按钮" , Entity.Base_SysManage.EnumType.LogType.添加数据);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                    return Json("数据有误，请重试!", JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                return Json("有信息未补充完，请先填写！！！", JsonRequestBehavior.AllowGet);
+            }                        
+        }
+        [HttpPost]
+        public ActionResult EditMarketDataFunction()
+        {
+            try
+            {
+                int Id = Convert.ToInt32(Request.Form["Id"]);
+                string Value = Request.Form["Values"];
+                string KeyName = Request.Form["KeyName"];
+                MarketChair FINDMC = MarketChair_Entity.GetEntity(Id);
+                switch (KeyName)
+                {
+                    case "ChairName":
+                        FINDMC.ChairName = Value;
+                        break;
+                    case "TerCharName":
+                        FINDMC.TerCharName = Value;
+                        break;
+                    case "ChairAddress":
+                        FINDMC.ChairAddress = Value;
+                        break;
+                    case "ChairTime":
+                        FINDMC.ChairTime = Convert.ToDateTime(Value);
+                        break;
+                    case "Rmark":
+                        FINDMC.Rmark = Value;
+                        break;
+                }
+                MarketChair_Entity.Update(FINDMC);
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                return Json("数据有误，请重试!", JsonRequestBehavior.AllowGet);
+            }
+
+            return Json("ok", JsonRequestBehavior.AllowGet);
         }
     }
 }
