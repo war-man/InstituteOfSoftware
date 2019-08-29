@@ -1,0 +1,166 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Assmeetings
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AssmeetingsEntity</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .Nation {
+            width: 100%;
+            height: 120px;
+        }
+
+        .mysql {
+            margin-top: 10px;
+        }
+
+        .bordel {
+            border: 0px;
+        }
+
+        .width {
+            width: 400px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h3 style="text-align:center;margin-top:30px;">@ViewBag.Name</h3>
+        <div>
+            <form class="layui-form" action="" id="form">
+                <div class="layui-container">
+                    <fieldset>
+
+                        <legend>基础数据</legend>
+
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label" id="lab1">班级名称</label>
+                                <div class="layui-input-inline">
+
+                                    @Html.HiddenFor(a => a.ID)
+
+                                    @Html.TextBoxFor(a => a.ClassNumber, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "disabled", "disabled" }, { "class", "layui-input bordel" } })
+
+                                </div>
+                            </div>
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label">班会标题</label>
+                                <div class="layui-input-inline">
+                                    @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入班级标题" }, { "class", "layui-input width" } })
+
+                                </div>
+                            </div>
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+
+                                <label class="layui-form-label">班会日期</label>
+
+                                <div class="layui-input-block">
+                                    @Html.TextBoxFor(a => a.Classmeetingdate, new Dictionary<string, object>() { { "lay-verify", "date|required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                                </div>
+
+                            </div>
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label">班会内容</label>
+                                <div class="layui-input-block">
+                                    @Html.TextAreaFor(a => a.Content, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "lay-verify", "required" }, { "class", "llayui-textarea Nation" } })
+                                </div>
+                            </div>
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "lay-verify", "required" }, { "class", "llayui-textarea Nation" } })
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </fieldset>
+                </div>
+                <div class="layui-row layui-form-item" style="margin-top:20px;">
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                            <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['table', 'layer', 'laydate', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        ////系统时间
+        //月份小于10的前面加个0
+        function MoDay(a) {
+            if (a < 10) {
+                return "0" + a;
+            }
+            return a;
+        }
+        var curDate = new Date();
+        var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+
+        // 时间选择器初始化 结束时间
+        laydate.render({ //结束时间
+            elem: '#Classmeetingdate',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var endTime = new Date(value).getTime();
+                if (endTime > curDate.getTime()) {
+                    layer.msg('结束时间不能大于当前时间');
+                    $('#Classmeetingdate').val(curYearMonthrDay);
+                }
+            }
+        })
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+
+           
+            Entiy(data.field);
+       
+            //提交数据
+            function Entiy(da) {
+
+                if (da.ID < 1) {
+                    ajaxpost("/Teachingquality/ClassSchedule/AssmeetingsEntity", da, "继续录入");
+                } else {
+                    ajaxpostUpdata("/Teachingquality/ClassSchedule/AssmeetingsEntity", da);
+                }
+                        
+                  
+              
+                  
+
+                
+            }
+           
+        });
+
+    });
+
+</script>

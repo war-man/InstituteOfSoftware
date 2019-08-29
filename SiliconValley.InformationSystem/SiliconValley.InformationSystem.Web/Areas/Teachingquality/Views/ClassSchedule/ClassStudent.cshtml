@@ -5,9 +5,11 @@
 }
 
 @using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
 @section style{
+    <link href="~/Areas/Teachingquality/Styles/MenuBar.css" rel="stylesheet" />
     <style>
-       
+
 
         .fload {
             float: left;
@@ -17,51 +19,103 @@
             width: 120px;
             height: 120px;
             border: 1px solid red;
-            padding:10px;margin-left:80px;
-            margin-top:20px;
-        }
-        .Mydiv:host{
-            background-color:aqua;
-        }
-        table {
-            margin-left: 20px;
-        }
-        table th{ 
-         padding:20px;
-         color:orangered;
-            /*font-size:20pt;
-            padding:10px;*/
-        }
-        .mybut{
-            margin-top:10px;
-        padding:0px;
-            border:1px solid red;
-        }
-        table td{
-            
-            height:40px;
-         
-        }
-        table{
-            margin-top:20px;
-        }
-       
-        .layui-colla-title {
+            padding: 10px;
+            margin-left: 80px;
+            margin-top: 20px;
             background-color: #1cc09f;
             color: #fff;
         }
+
+            .Mydiv:host {
+                background-color: aqua;
+            }
+
+        table {
+            margin-left: 10px;
+        }
+
+        .teshu th {
+            padding: 10px;
+            color: orangered;
+            /*font-size:20pt;
+            padding:10px;*/
+        }
+
+        .mybut {
+            margin-top: 10px;
+            padding: 0px;
+            border: 1px solid red;
+        }
+
+        table td {
+            height: 40px;
+        }
+
+        table {
+            margin-top: 20px;
+        }
+
+        .layui-colla-title {
+            background-color: #1cc09f;
+            color: #fff;
+           
+        }
+
         .mycolor {
             background-color: burlywood;
+        }
+
+        .backRed {
+            background-color: red;
+        }
+
+        .Lcc {
+            background-color: #1cc09f;
         }
     </style>
 
 }
+@*//菜单栏*@
+<div>
+    <menu class="menu">
+
+        <li class="menu-item submenu">
+            <button type="button" class="menu-btn">
+                <i class="fa fa-users"></i>
+                <span class="menu-text">添加班委</span>
+            </button>
+            <!--二级菜单-->
+            <menu class="menu">
+                @{ foreach (var item in ViewBag.Members as List<Members>)
+                    {
+                        <li class="menu-item">
+                            <button type="button" class="menu-btn">
+                                <i class="fa fa-comment"></i>
+                                <span class="menu-text"  value="@item.ID">@item.Nameofmembers</span>
+                            </button>
+                        </li>
+                    }
+                }
+
+             
+
+            </menu>
+        </li>
+        <li class="menu-item">
+            <button type="button" class="menu-btn">
+                <i class="fa fa-folder-open" value="撤销"></i>
+                <span class="menu-text">撤销班委</span>
+            </button>
+        </li>
+
+    </menu>
+</div>
 <div style="width:100%;height:150px;border:1px solid #1cc09f;">
     <div>
         <div>
-           
-         
-            <table>
+
+
+            <table class="teshu">
                 <tr>
                     @{
                         foreach (var item in ViewBag.ClassdetailsView as List<ClassdetailsView>)
@@ -71,13 +125,23 @@
                             if (item.QQ != null)
                             {
                                 <td>QQ群</td>
-                                <th>@item.QQ</th>
+                                <th><div id="qq">@item.QQ</div></th>
 
                             }
-                            if (item.WeChat!=null)
+                            else
+                            {
+                                <td>QQ群</td>
+                                <th><div id="qq">未记录</div></th>
+                            }
+                            if (item.WeChat != null)
                             {
                                 <td>微信群</td>
-                                <th>@item.WeChat</th>
+                                <th><div id="wechat">@item.WeChat</div></th>
+                            }
+                            else
+                            {
+                                <td>微信群</td>
+                                <th><div id="wechat">未记录</div></th>
                             }
                         }
                     }
@@ -85,63 +149,62 @@
 
 
                 </tr>
-            
+
                 <tr>
-                    @foreach (var item in Model as List<ClassStudentView>)
 
-                    {
+                    @{
+                            int a = 0;
+                            foreach (var item in ViewBag.Members as List<Members>)
+                            {
+                            a++;
+                            if (a>4)
+                            {
+                                a = 0;
+                              <br/>
+                            }
+                            <td class="Nameofmembers">@item.Nameofmembers</td>
 
-                        if (item.Nameofmembers != null)
-                        {
+                            <th class="Names">未设置</th>
 
-                            <td>@item.Nameofmembers:</td>
-                            <th><div>@item.Name</div></th>
-                        }
                     }
-                
+
+                    }
+
                 </tr>
 
-            </table>
+              
+
+
+
+                </table>
         </div>
         <div style="position:absolute;left:50%;top:7%;">
-            <h1>@ViewBag.ClassName</h1>
+            <h1 id="ClassName">@ViewBag.ClassName</h1>
         </div>
 
     </div>
-   
+
 </div>
 <div class="layui-collapse fload" lay-accordion="" style="width:25%; border:1px solid #1cc09f;height:600px;text-align:center; margin-top:20px;">
     <div class="layui-colla-item">
         <h2 class="layui-colla-title"> 班级群号管理</h2>
         <div class="layui-colla-content layui-anim">
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">添加群号</button>
+                <button type="button" id="but1" class="layui-btn layui-btn-fluid mybut">群号设置</button>
             </div>
-            <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">编辑群号</button>
-            </div>
-            
+
+
         </div>
     </div>
-    <div class="layui-colla-item">
-        <h2 class="layui-colla-title"> 班级委员管理</h2>
-        <div class="layui-colla-content layui-anim">
-            <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">设置班委</button>
-            </div>
-            <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">修改班委</button>
-            </div>
-        </div>
-    </div>
+  
     <div class="layui-colla-item">
         <h2 class="layui-colla-title"> 班会记录</h2>
         <div class="layui-colla-content layui-anim">
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">查看记录</button>
+                <button type="button" id="banhui1" class="layui-btn layui-btn-fluid mybut">查看记录</button>
             </div>
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">新增记录</button>
+                <button type="button" id="banhui2" class="layui-btn layui-btn-fluid mybut">新增记录</button>
             </div>
         </div>
     </div>
@@ -161,83 +224,317 @@
 
 <div class="layui-container fload" style="width:73%;margin-right:-20px; margin-top:20px;margin-left:20px">
 
-
+    <div id="table" style="display:none;">
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+    </div>
     @{
-        int aa = 0;
-        <div class="layui-row">
+
+        <div class="layui-row" id="MyShutdown">
             @foreach (var item in Model as List<ClassStudentView>)
 
             {
 
 
-                <div class="Mydiv layui-col-xs4 " style="background-color:#1cc09f;color:#fff;">
+                <div class="Mydiv layui-col-xs4">
                     <div style="display:none;">@item.StuNameID</div>
                     <div style="text-align:center;margin-top:20px;line-height:23px;">
-                        
-                       <text>@item.Name</text>
-                        <br />
-                       <text>@item.Nameofmembers</text>
+
+                        <div class="Name">@item.Name</div>
+                      
+                     
                     </div>
 
 
                 </div>
-           
 
-                }
+
+            }
         </div>
     }
 
 
 </div>
 <script>
-    layui.use(['element', 'layer'], function(){
-  var element = layui.element;
-  var layer = layui.layer;
-  
-        var Stuid = "";
+    console.log($(".Name").next(".Nameofmembers"));
+   
+    //给头部的班委赋值
+    $.post("/Teachingquality/ClassSchedule/DateMembers", function (dat) {
+        console.log(dat)
+        if (dat.length>0) {
+            for (var i = 0; i < dat.length; i++) {
+                if (dat[i].Nameofmembers != null) {
+                    
+                    for (var l = 0; l < dat[i].Nameofmembers.length; l++) {
 
+                        var myxx = $(".Nameofmembers");
+                        for (var z = 0; z < myxx.length; z++) {
+
+                            if (dat[i].Nameofmembers[l].Nameofmembers == $(myxx[z]).text()) {
+
+                                $(myxx[z]).next().text(dat[i].Name);
+                            }
+                        }
+                    }
+                  
+                   
+                }
+            }
+        }
+     
+   
+    });
+    $(document).ready(function () {
+        window.oncontextmenu = function () { return false; }
+        //加上这个代码即可
+    });
+    layui.use(['element','table', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var table = layui.table;
+        var Stuid = "";
+        //表格渲染
+        table.render({
+            elem: '#test'
+            , url: '/Teachingquality/ClassSchedule/GetDate'
+            , toolbar: '#toolbarDemo'
+            , id: 'idTest'
+            , page: true
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , cols: [[
+                { type: 'radio' }
+                , { field: 'Title', title: '班会标题' }
+                , { field: 'Content', title: '班会内容' }
+                , { field: 'Classmeetingdate', title: '班会日期 ' }
+                , { field: 'Remarks', title: '备注 ' }
+            ]]
+            , page: true
+            , limit: 8
+            , limits: [8, 10, 15]
+        });
         //移入
         $(".Mydiv").mouseover(function () {
             $(".Mydiv").removeClass("mycolor");
-            $(this).attr("class", "mycolor");
-            
-           
-         
+            $(this).addClass("mycolor");
+
+
+
         });
         //移出
         $(".Mydiv").mouseleave(function () {
             $(this).removeClass("mycolor");
         });
-        //点击
-        $(".Mydiv").click(function () {
-            $(".Mydiv").css("backgroundColor", "#1cc09f");
-            $(this).css("backgroundColor", "red");
-            console.log($($(this).children()[0]).text());
+        ////添加班会记录
+        $("#banhui2").click(function () {
+            var stuid = $("#ClassName").text();
+            AssmestingEntity(stuid);
         });
-        //.layui-colla-title
-        //移入
-        //$(".layui-colla-title").mouseover(function () {
-
-
-
-        //    $(this).addClass("layui-btn-warm");
-
-        //});
-        ////移出
-        //$(".layui-colla-title").mouseleave(function () {
-        //    $(".Mydiv").removeClass("layui-btn-warm");
-        //});
-        $(".Mydiv").dblclick(function () {
-            var stuid = $($(this).children()[0]).text();
+        //班会数据操作页面层
+        function AssmestingEntity(stuid,id) {
             layer.open({
                 title: name,
                 type: 2,
-                area: ['500px', '830px']
-                , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + stuid
-
+                area: ['600px', '600px']
+                , content: "/Teachingquality/ClassSchedule/AssmeetingsEntity?ClassName=" + stuid + "&id=" + id
+                //, end: function () { table.reload('idTest'); select(); }
+                , anim: 1,
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
-        });
+        }
 
-});
+
+                //双击详细
+       $(".Mydiv").dblclick(function () {
+                    var stuid = $($(this).children()[0]).text();
+                    layer.open({
+                        title: name,
+                        type: 2,
+                        area: ['500px', '830px']
+                        , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + stuid
+
+                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    });
+                });
+                //群号设置
+       $("#but1").click(function () {
+
+                    console.log($("#ClassName").text());
+         layer.open({
+                        title: name,
+                        type: 2,
+                        area: ['400px', '300px']
+                        , content: "/Teachingquality/ClassSchedule/Groupnumber?ClassNumber=" + $("#ClassName").text()
+                        //, end: function () { table.reload('idTest'); select(); }
+                        , anim: 1,
+                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    });
+        });
+        var banhui1 = 0;
+        //查看班会记录
+        $("#banhui1").click(function () {
+            banhui1++;
+            if (banhui1>1) {
+                banhui1 = 0;
+                $("#banhui1").text("查看记录");
+                $("#MyShutdown").css("display", "block");
+                $("#table").css("display", "none");
+                //table
+                
+            } else {
+                $("#banhui1").text("返回查看学员");
+                $("#MyShutdown").css("display", "none");
+                $("#table").css("display", "block");
+            }
+          
+        });
+      
+    });
+
+    //设置班委
+    var Success = "";
+    function postjson(stuid, MenName, Entity) {
+     
+        $.post("/Teachingquality/ClassSchedule/AddMembers?Stuid=" + stuid + "&MenName=" + MenName + "&Entity=" + Entity, function (db) {
+            layer.msg(db.Msg);
+            
+            Success = db.Success;
+        
+           
+        });
+       
+    }
+    //群管理操作返回数据
+    function GetPartsItme(qq, wechat) {
+
+        if (qq != "") {
+            $("#qq").text(qq);
+        } else {
+            $("#qq").text("未记录");
+        }
+        if (wechat != "") {
+            $("#wechat").text(wechat);
+        } else {
+            $("#wechat").text("未记录");
+        }
+
+    }
+
+    var menu = document.querySelector('.menu');
+    function showMenu(x, y) {
+        console.log(x);
+        console.log(y);
+        if (x > 1600) {
+            x = x - 300;
+        }
+        menu.style.left = parseInt(x - 220) + 'px';
+        menu.style.top = parseInt(y - 80) + 'px';
+        menu.classList.add('show-menu');
+    }
+    function hideMenu() {
+
+        menu.classList.remove('show-menu');
+    }
+    var stuid = "";
+    var Name = "";
+    var mycars = new Array();
+    function onContextMenu(e) {
+
+        e.preventDefault();
+        showMenu(e.pageX, e.pageY);
+        document.addEventListener('mousedown', onMouseDown, false);
+    }
+    function onMouseDown(e) {
+        hideMenu();
+        document.removeEventListener('mousedown', onMouseDown);
+
+        var myx = $(e)[0].target.innerText;
+        var zz = 0;
+             var myxx = $(".Nameofmembers");
+        for (var i = 0; i < myxx.length; i++) {
+         
+              switch (myx) {
+                  case $(myxx[i]).text():
+                      var lo = i;
+                      layui.use(['layer'], function () {
+                          var layer = layui.layer;
+
+                      $.post("/Teachingquality/ClassSchedule/AssmeetingsBool?Stuid=" + stuid + "&MenName=" + $(myxx[i]).text(), function (db) {
+                       
+                          if (db.Msg != null) {
+                              if (db.Data != null) {
+                                  layer.confirm(db.Msg, function (index) {
+                                      console.log($(myxx[lo]).text() + "-----名称");
+                                      console.log($(myxx[i]).text() + "-----名称")
+                                      postjson(stuid, $(myxx[lo]).text());
+                                      My_Inter();
+                                  });
+                              } else {
+                                  layer.msg(db.Msg);
+                              }
+                          } else {
+
+                              postjson(stuid, $(myxx[lo]).text());
+                              My_Inter();
+                          }
+
+                      });
+
+                      })
+                      function My_Inter() {
+                          var interval2 = window.setInterval(function () {
+
+                              if (Success == true) {
+
+                                  $(myxx[lo]).next().text(Name)// $(myxx[i]).next().text("aaaa");
+                              }
+                          }, 100);
+
+                          setTimeout(function () { window.clearInterval(interval2); }, 200);
+
+                      }
+                  
+                  
+                    
+                  
+                      break;
+                  case "撤销班委":
+                      
+                      
+                      if ($(myxx[i]).next().text() == Name) {
+                          
+                          zz++;
+                          mycars[zz] = i;
+                         // mycars
+
+                          postjson(stuid,"1","1");
+                         
+
+                          var interval2 = window.setInterval(function () {
+
+                              if (Success == true) {
+
+                                  for (var w = 1; w < mycars.length; w++) {
+                                      $(myxx[mycars[w]]).next().text("未设置");
+                                  }
+                                 
+                              }
+                            
+                          }, 100);
+
+                          setTimeout(function () { window.clearInterval(interval2); }, 200);
+                      }
+                      break;
+              }
+        
+        }
+    }//attr("value") originalTarget
+    //右击取消选中
+    $(".Mydiv").bind("contextmenu", function (e) {
+        //$(this).removeClass("backRed");
+        onContextMenu(e);
+        stuid = $($(this).children()[0]).text();
+        Name = $($($(this).children()[1]).children()[0]).text();
+        return false;
+        document.addEventListener('contextmenu', onContextMenu, false);
+    });
+
 </script>

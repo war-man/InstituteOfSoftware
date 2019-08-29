@@ -24,14 +24,14 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             informatiees.informatiees_Id = informatiees_Id;
                 
                 this.Insert(informatiees);
-                
-              
+                BusHelper.WriteSysLog("添加班主任成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+
             }
             catch (Exception ex)
             {
 
                 str = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             return str;
 

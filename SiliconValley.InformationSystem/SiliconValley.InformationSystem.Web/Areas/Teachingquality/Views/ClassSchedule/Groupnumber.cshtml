@@ -1,0 +1,128 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.GroupManagement
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Groupnumber</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <form class="layui-form" action="" lay-filter="example">
+        <div class="layui-container" style="margin:50px auto;">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:60px;">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-inline">
+                    @Html.HiddenFor(a => a.ID)
+                    班级名称 <input type="text" value="@ViewBag.ClassNumber" name="ClassNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+
+
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                <label class="layui-form-label">QQ群号</label>
+                <div class="layui-input-inline">
+                   
+                    @Html.TextBoxFor(a => a.QQGroupnumber, new Dictionary<string, object>() { { "placeholder", "请输入QQ群号" }, { "class", "layui-input " } })
+
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:40px;">
+                <label class="layui-form-label">微信群号</label>
+                <div class="layui-input-inline">
+
+                    @Html.TextBoxFor(a => a.WechatGroupNumber, new Dictionary<string, object>() { { "placeholder", "请输入微信群号/名称" }, { "class", "layui-input " } })
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-input-block" style="margin-left:114px;margin-top:20px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">确认</button>
+                    <button type="reset" id="but1" class="layui-btn layui-btn-primary">取消</button>
+
+
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+
+        var form = layui.form;
+        var layer = layui.layer;
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var db = data.field;
+            console.log(db);
+            console.log(db.QQGroupnumber);
+            if (db.QQGroupnumber != ""||db.WechatGroupNumber != "") {
+                $.ajax({
+                    url: '/Teachingquality/ClassSchedule/GroupEntity',
+                    type: 'POST',
+                    async: true,
+                    cache: false,
+                    timeout: 2000,
+                    data: db,
+                    beforeSend: function () {
+                        i = showLoad();
+                    },
+                    success: function (data) {
+                        
+                        if (data.Success == true) {
+                            closeLoad(i);
+                            layer.open({
+                                type: 1
+                                , title: false //不显示标题栏
+                                , closeBtn: false
+                                , area: '300px;'
+                                , shade: 0.8
+                                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                , btn: ['确认']
+                                , btnAlign: 'c'
+                                , moveType: 1 //拖拽模式，0或者1
+                                , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + data.Msg + '</div>'
+                                , success: function (layero) {
+                                    var btn = layero.find('.layui-layer-btn');
+                                    btn.find('.layui-layer-btn0').click(function () {
+                                        parent.GetPartsItme(db.QQGroupnumber, db.WechatGroupNumber);
+                                        parent.layer.close(parent.layer.index);
+                                    });
+                                }
+                            });
+                        } else {
+                            closeLoad(i);
+                            layer.msg(data.Msg, {
+                                time: 5000, //20s后自动关闭
+
+                                btn: ['确定']
+                            });
+                        }
+                    }
+                    , error: function (xmlhttprequest, textstatus, message) {
+                        closeLoad(i);
+                        layer.msg("您的网络出现问题，请稍后再试！！！", {
+                            time: 5000, //20s后自动关闭
+                            btn: ['确定']
+                        });
+                    }
+                })
+            } else {
+                Errye("QQ群号或者微信群号至少要选择一个")
+            }
+          
+        });
+        $("#but1").click(function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+        });
+    });
+</script>

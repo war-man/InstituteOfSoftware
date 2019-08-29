@@ -11,6 +11,8 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -29,28 +31,50 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         EmployeesInfoManage infoBusiness = new EmployeesInfoManage();
         //学员班级表
         ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
+
+        //班级表
+        ClassScheduleBusiness classSchedule = new ClassScheduleBusiness();
         // GET: Teachingquality/StudentAttendanc
         public ActionResult Index()
         {
+        
+            ViewBag.ClassName = classSchedule.GetList().Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber }).ToList();
             return View();
 
        }
         //获取数据
-        public ActionResult GetDate(int page, int limit,string Name,string Attendancestatus,string qBeginTime,string identitydocument,string qEndTime)
+      
+        public ActionResult GetDate(int page, int limit,string Name,string Attendancestatus,string qBeginTime,string identitydocument,string qEndTime,string ClassName)
         {
 
          
             try
             {  List<StudentAttendance> list = new List<StudentAttendance>();
-
+                List<StudentAttendance> lists = new List<StudentAttendance>();
+                if (!string.IsNullOrEmpty(ClassName))
+                {
+                    var it = classSchedule.ClassStudentneList(ClassName);
+                    foreach (var item in it)
+                    {
+                        list.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StuNameID).ToList());
+                    }
+                }
             if (!string.IsNullOrEmpty(Name))
             {
                 var stu = student.GetList().Where(a => a.Name.Contains(Name)).ToList();
-                foreach (var item in stu)
-                {
-                    list.AddRange( dbtext.Mylist("StudentAttendance").Where(a => a.StudentID == item.StudentNumber).ToList());
-                }
-            } else { list = dbtext.Mylist("StudentAttendance"); }
+                  
+                           foreach (var item in stu)
+                            {    
+                            // list = list.Distinct().ToList();
+                            if (!string.IsNullOrEmpty(ClassName))
+                           { lists.AddRange(list.Where(a => a.StudentID == item.StudentNumber)); }
+                            else { lists.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StudentNumber)); }
+                            }
+                        list = lists;
+                   
+                  
+                    
+            } else if(string.IsNullOrEmpty(Name)&&string.IsNullOrEmpty(ClassName)) { list = dbtext.Mylist("StudentAttendance"); }
            
             if (!string.IsNullOrEmpty(Attendancestatus))
             {
@@ -101,6 +125,78 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
         }
 
+
+
+        //饼状图
+        public ActionResult MyDate(string Name,  string qBeginTime, string identitydocument, string qEndTime, string ClassName)
+        {
+            List<StudentAttendance> list = new List<StudentAttendance>();
+            List<StudentAttendance> lists = new List<StudentAttendance>();
+            List<PiechartView> stulist = new List<PiechartView>();
+            if (!string.IsNullOrEmpty(ClassName))
+            {
+                var it = classSchedule.ClassStudentneList(ClassName);
+                foreach (var item in it)
+                {
+                    list.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StuNameID).ToList());
+                }
+            }
+            if (!string.IsNullOrEmpty(Name))
+            {
+                var stu = student.GetList().Where(a => a.Name.Contains(Name)).ToList();
+
+                foreach (var item in stu)
+                {
+                    // list = list.Distinct().ToList();
+                    if (!string.IsNullOrEmpty(ClassName))
+                    { lists.AddRange(list.Where(a => a.StudentID == item.StudentNumber)); }
+                    else { lists.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StudentNumber)); }
+                }
+                list = lists;
+
+
+
+            }
+            else if (string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(ClassName)) { list = dbtext.Mylist("StudentAttendance"); }
+          
+            if (!string.IsNullOrEmpty(qBeginTime))
+            {
+                list = list.Where(a => a.InspectionDate >= Convert.ToDateTime(qBeginTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(qEndTime))
+            {
+                list = list.Where(a => a.InspectionDate <= Convert.ToDateTime(qEndTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(identitydocument))
+            {
+                list = list.Where(a => a.StudentID == identitydocument).ToList();
+            }
+
+            PiechartView piechartViews = new PiechartView();
+            piechartViews.count = list.Where(a => a.Attendancestatus == "早退").Count();
+            piechartViews.showname = "早退";
+            piechartViews.Corlor = "#CC00CC";
+            stulist.Add(piechartViews);
+          
+            PiechartView piechartView = new PiechartView();
+            piechartView.count = list.Where(a => a.Attendancestatus == "迟到").Count();
+             piechartView.showname = "迟到";
+             piechartView.Corlor = "#AAAAAA";
+            stulist.Add(piechartView);
+            PiechartView piechartViews1 = new PiechartView();
+            piechartViews1.count = list.Where(a => a.Attendancestatus == "缺勤").Count();
+            piechartViews1.showname = "缺勤";
+            piechartViews1.Corlor = "#FF0000";
+            stulist.Add(piechartViews1);
+            PiechartView piechartViews2 = new PiechartView();
+            piechartViews2.count = list.Where(a => a.Attendancestatus == "请假").Count();
+            piechartViews2.showname = "请假";
+            piechartViews2.Corlor = "#00FF00 ";
+            stulist.Add(piechartViews2);
+            return Json(stulist, JsonRequestBehavior.AllowGet);
+
+
+        }
         //登记出勤
         [HttpGet]
         public ActionResult Registerattendance()
@@ -148,6 +244,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result.Msg = "记录成功";
                 result.Success = true;
                 dbtext.Remove("StudentAttendance");
+                BusHelper.WriteSysLog("出勤记录成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             catch (Exception ex)
             {

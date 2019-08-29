@@ -3,40 +3,61 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+<div >
+    <button type="button" id="butbiao" class="layui-btn">表格展示</button>
+    <button type="button" id="butbing"  class="layui-btn">图像展示</button>
+</div>
 <form class="layui-form" action="">
     <div class="layui-container">
-        <div class="layui-row " >
+        <div class="layui-row ">
 
             <div class="layui-col-xs12">
                 <div class="layui-row layui-form-item">
 
+                    <div class="layui-col-xs4" style="margin-left:-60px;">
 
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label">姓名</label>
+                        <label class="layui-form-label" style="width:100px">班级名称</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("ClassName", ViewBag.ClassName as SelectList, "请选择", new Dictionary<string, object>() { { "name", "ClassName" } })
+
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label" style="margin-left:-40px;">姓名</label>
                         <div class="layui-input-inline">
                             <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4"  style="margin-left:-60px;">
-                       
-                            <label class="layui-form-label" style="width:100px" >出勤标题</label>
-                            <div class="layui-input-inline">
-                                <select name="Attendancestatus"  lay-search="">
-                                    <option value="">请选择出勤状态</option>
-                                    <option value="早操出勤">早操出勤</option>
-                                    <option value="上课出勤">上课出勤</option>
-                                    <option value="晚自习出勤">晚自习出勤</option>
+                    <div class="layui-col-xs4" style="margin-left:-60px;">
 
-                                </select>
-                         
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-block">
+                            <input type="text" lay-verify="identityi"  style="width:200px;" name="identitydocument" class="layui-input" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs4" style="margin-left:-60px;">
+
+                        <label class="layui-form-label" style="width:100px">出勤标题</label>
+                        <div class="layui-input-inline">
+                            <select name="AttendanceTitle" id="AttendanceTitle" lay-search="">
+                                <option value="">请选择出勤状态</option>
+                                <option value="早操出勤">早操出勤</option>
+                                <option value="上课出勤">上课出勤</option>
+                                <option value="晚自习出勤">晚自习出勤</option>
+
+                            </select>
+
 
                         </div>
                     </div>
-                    <div class="layui-col-xs4" style="margin-left:-60px;">
+                    <div class="layui-col-xs6" style="margin-left:-60px;">
                         <label class="layui-form-label" style="width:100px;">出勤状态</label>
                         <div class="layui-input-inline">
-                            <select name="Attendancestatus"  lay-search="">
+                            <select name="Attendancestatus" id="Attendancestatus" lay-search="">
                                 <option value="">请选择出勤状态</option>
                                 <option value="迟到">迟到</option>
                                 <option value="早退">早退</option>
@@ -47,33 +68,24 @@
                     </div>
                     <div class="layui-col-xs6">
 
-                     
-                        <div class="layui-inline">
+
+                        <div class="layui-inline" style="margin-left:-240px;">
                             <label for="" class="layui-form-label">时间段</label>
                             <div class="layui-input-inline startTime">
-                                <input type="text" name="qBeginTime" id="qBeginTime"  readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid">到</div>
                             <div class="layui-input-inline endTime">
-                              
-                                <input type="text" name="qEndTime" id="qEndTime" readonly="readonly"  placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+
+                                <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
                     </div>
-               
-                 
 
-                    <div class="layui-col-xs4">
 
-                        <label class="layui-form-label">学号</label>
-                        <div class="layui-input-block">
-                            <input type="text" lay-verify="identityi" name="identitydocument" class="layui-input linu" />
 
-                        </div>
-
-                    </div>
-                    <div style="position:absolute;left:90%;top:20px;">
+                    <div style="position:absolute;left:55%;top:20px;">
                         <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
                     </div>
 
@@ -85,15 +97,21 @@
         </div>
     </div>
 </form>
+<div id="nutext">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
 
-<table class="layui-hide" id="test" lay-filter="test"></table>
+<div height="400" width="600" style="margin:50px">
+    <canvas id="chart" style="display:none"> 你的浏览器不支持HTML5 canvas </canvas>
+</div>
+<script src="~/Areas/Obtainemployment/Scripts/Drawing.js"></script>
 @section script{
     @*头部工具栏*@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>登记出勤</button>
-           
-  
+
+
 
         </div>
     </script>
@@ -102,6 +120,36 @@
 
     </script>
     <script>
+        Bing("");
+        function Bing(datas) {
+           
+            $.post("/Teachingquality/StudentAttendanc/MyDate", datas, function (data) {
+                var x = jsontoarr(data);
+                goChart(x);
+            })
+        }
+        function GetPartsItmes() {
+            
+            var Name = $("#Name").val();
+            var AttendanceTitle = $("#AttendanceTitle").val();
+            var ClassName = $("#ClassName").val();
+            var identitydocument = $("#identitydocument").val();
+           
+            var qBeginTime = $("#qBeginTime").val();
+            var qEndTime = $("#qEndTime").val();
+            var data =  {
+                Name: Name,
+                AttendanceTitle: AttendanceTitle,
+                ClassName: ClassName,
+                identitydocument: identitydocument,
+           
+                qBeginTime: qBeginTime,
+                qEndTime: qEndTime
+            };
+            console.log(data);
+            Bing(data)
+          
+        }
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -127,28 +175,28 @@
             }
             return a;
         }
-        layui.use(['table', 'layer','laydate', 'tree', 'form'], function () {
+        layui.use(['table', 'layer', 'laydate', 'tree', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
             var laydate = layui.laydate;
-          
-           
+
+
             ////系统时间
-            
+
             var curDate = new Date();
             var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
-           
-             // 时间选择器初始化 开始时间
+
+            // 时间选择器初始化 开始时间
             laydate.render({
                 elem: '#qBeginTime',
                 format: 'yyyy-MM-dd',
                 done: function (value, date, endDate) {
-                  
+
                     var startDate = new Date(value).getTime();
                     var endTime = new Date($('#qEndTime').val()).getTime();
-               
-                   // console.log(ri);
+
+                    // console.log(ri);
                     if (endTime < startDate) {
                         layer.msg('结束时间不能小于开始时间');
                         $('#qBeginTime').val($('#qEndTime').val());
@@ -159,7 +207,7 @@
                     }
                 }
             })
-             // 时间选择器初始化 结束时间
+            // 时间选择器初始化 结束时间
             laydate.render({ //结束时间
                 elem: '#qEndTime',
                 format: 'yyyy-MM-dd',
@@ -176,12 +224,12 @@
                     }
                 }
             })
-      
-          
+
+
             //正则表达式
             form.verify({
                 Name: function (value, item) { //value：表单的值、item：表单的DOM对象
-                  
+
                     if (!/^[^\s]*$/.test(value)) {
                         return '内容不能输入空格';
                     } else {
@@ -199,7 +247,7 @@
                             }
                         }
                     }
-                
+
                 }
                 , identityi: function (value) {
                     if (!/^[^\s]*$/.test(value)) {
@@ -215,7 +263,7 @@
 
                         }
                     }
-                    
+
                 }
             });
             //表格渲染
@@ -229,16 +277,16 @@
                 , cols: [[
                     { type: 'radio' }
                     , { field: 'Stuclass', title: '班级 ' }
-                    , { field: 'Attendancestatus',  title: '出勤状态', sort: true }
-                    , { field: 'AttendanceTitle',  title: '出勤类型' }
+                    , { field: 'Attendancestatus', title: '出勤状态', sort: true }
+                    , { field: 'AttendanceTitle', title: '出勤类型' }
                     , { field: 'Name', title: '学员姓名 ' }
                     , {
-                        field: 'InspectionDate',  title: '检查日期', templet: function (c) {
+                        field: 'InspectionDate', title: '检查日期', templet: function (c) {
                             return TimeChange(c.InspectionDate);
                         }
                     }
                     , { field: 'StudentID', title: '学员学号' }
-                    , { field: 'Registrar',  title: '登记人工号' }
+                    , { field: 'Registrar', title: '登记人工号' }
                     , { field: 'RegistrarName', title: '登记人姓名' }
                 ]]
                 , page: true
@@ -303,15 +351,16 @@
             form.on('submit(demo2)', function (data) {
 
                 var x = data.field;
-                console.log(x);
-             
+                console.log(x.ClassName);
+                Bing(x)
                 table.reload('idTest', {
                     where: {
                         Name: x.Name,
                         Attendancestatus: x.Attendancestatus,
                         qBeginTime: x.qBeginTime,
                         identitydocument: x.identitydocument,
-                        qEndTime:x.qEndTime
+                        qEndTime: x.qEndTime,
+                        ClassName:x.ClassName,
                     }, page: {
                         curr: 1
                     }
@@ -319,6 +368,18 @@
                 return false;
             });
         });
+        $("#butbiao").click(function () {
+         
+            $("#nutext").css("display", "block");
+            $("#chart").css("display", "none");
+        });
+        $("#butbing").click(function () {
+            $("#nutext").css("display", "none");
+            $("#chart").css("display", "block");
+            
+        });
     </script>
+
+  
 
 }

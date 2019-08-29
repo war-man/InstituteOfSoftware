@@ -321,7 +321,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         result.Success = true;
                         result.Data = studentInformation.StudentNumber;
                         dbtext.Remove("StudentInformation");
-                     
+                        BusHelper.WriteSysLog("注册学员成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+
                     }
                     catch (Exception ex)
                     {
@@ -354,6 +355,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         result.Msg = "修改成功";
                         result.Success = true;
                     dbtext.Remove("StudentInformation");
+                    BusHelper.WriteSysLog("修改学员信息成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
                     catch (Exception ex)
                     {
@@ -437,6 +439,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result.Success = true;
                 result.Msg = "修改成功";
                 dbtext.Remove("StudentInformation");
+                BusHelper.WriteSysLog("修改学员密码成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
             {

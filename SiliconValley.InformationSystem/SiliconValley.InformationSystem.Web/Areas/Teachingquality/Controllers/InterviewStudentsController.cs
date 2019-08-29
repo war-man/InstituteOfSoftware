@@ -126,6 +126,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result = new SuccessResult();
                     result.Msg = "修改谈话记录成功";
                     result.Success = true;
+                    BusHelper.WriteSysLog("修改谈话记录成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
                 catch (Exception ex)
                 {
@@ -168,6 +169,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result = new SuccessResult();
                     result.Msg = "记录成功";
                     result.Success = true;
+                    BusHelper.WriteSysLog("谈话记录成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 }
                 catch (Exception ex)
                 {

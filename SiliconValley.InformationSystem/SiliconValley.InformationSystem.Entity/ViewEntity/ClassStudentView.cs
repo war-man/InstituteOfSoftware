@@ -19,6 +19,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 班委名称
         /// </summary>
-        public string Nameofmembers { get; set; }//
+        public object Nameofmembers { get; set; }//
     }
 }

@@ -271,6 +271,7 @@
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />
+    <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
@@ -279,6 +280,7 @@
     <Compile Include="ViewEntity\MrDDetailSpecView.cs" />
     <Compile Include="ViewEntity\MrDEmployStaffView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
+    <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />

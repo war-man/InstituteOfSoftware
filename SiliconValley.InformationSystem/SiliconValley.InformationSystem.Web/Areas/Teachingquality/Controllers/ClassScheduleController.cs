@@ -14,8 +14,10 @@ using SiliconValley.InformationSystem.Business.Common;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
+    
     public class ClassScheduleController : Controller
     {
+        private static string classNumberss = "";
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
         {
@@ -138,6 +140,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     retus = new SuccessResult();
                     retus.Success = true;
                     retus.Msg = "开设成功";
+                    BusHelper.WriteSysLog("班级开设成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 }
                 catch (Exception ex)
                 {
@@ -157,13 +160,91 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //查看班级的学员
         public ActionResult ClassStudent()
         {
-           
-            string ClassNumber = Request.QueryString["ClassNumber"];
-            var x = dbtext.ClassStudentneList(ClassNumber);
-            ViewBag.ClassName = ClassNumber;
-            ViewBag.ClassdetailsView = dbtext.Listdatails(ClassNumber);
+
+            classNumberss = Request.QueryString["ClassNumber"];
+            var x = dbtext.ClassStudentneList(classNumberss);
+            ViewBag.ClassName = classNumberss;
+            ViewBag.ClassdetailsView = dbtext.Listdatails(classNumberss);
+            ViewBag.Members = dbtext.MembersList();
             return View(x);
         }
-       
+
+        //群号操作页面
+        public ActionResult Groupnumber()
+        {
+            string ClassNumber = Request.QueryString["ClassNumber"];
+            ViewBag.ClassNumber = ClassNumber;
+            return View(dbtext.Grouselect(ClassNumber));
+        }
+        //群号数据操作
+        public ActionResult GroupEntity(GroupManagement groupManagement)
+        {
+            return Json(dbtext.GroupAdd(groupManagement), JsonRequestBehavior.AllowGet);
+        }
+        public ActionResult text()
+        {
+            return View();
+        }
+        //获取班委
+        public ActionResult DateMembers()
+        {
+            return Json(dbtext.ClassStudentneList(classNumberss), JsonRequestBehavior.AllowGet);
+        }
+        //班委数据操作
+        public ActionResult AddMembers()
+        {
+            //学员学号
+            string Stuid = Request.QueryString["Stuid"];
+            //班委名称
+            string MenName = Request.QueryString["MenName"];
+            //数据操作
+            string Entity = Request.QueryString["Entity"];
+
+
+         return Json(dbtext.Entityembers(Stuid, MenName, classNumberss, Entity),JsonRequestBehavior.AllowGet);
+
+
+
+        }
+        //班会表单页面
+        [HttpGet]
+        public ActionResult AssmeetingsEntity()
+        {
+            //undefined
+            string ClassName = Request.QueryString["ClassName"];
+
+            string uid = Request.QueryString["id"];
+            Assmeetings assmeetings = new Assmeetings();
+            if (uid!= "undefined")
+            {
+                ViewBag.Name = "添加班会记录";
+                assmeetings =  dbtext.AssmeetingsSelect(int.Parse(uid));
+                return View(assmeetings);
+            }
+            else
+            {
+                ViewBag.Name = "编辑班会记录";
+                assmeetings.ClassNumber = ClassName;
+                return View(assmeetings);
+            }
+         
+        }
+        //班会数据操作方法
+        [HttpPost]
+        public ActionResult AssmeetingsEntity(Assmeetings assmeetings)
+        {
+            return Json(dbtext.EntityAssmeetings(assmeetings), JsonRequestBehavior.AllowGet);
+        }
+
+        //查看是否有相同的班委
+        public ActionResult AssmeetingsBool()
+        {
+            //班委名称
+            string MenName = Request.QueryString["MenName"];
+            //学号
+            string Stuid = Request.QueryString["Stuid"];
+            return Json(dbtext.AssmeetingsBool(MenName, classNumberss, Stuid), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }
