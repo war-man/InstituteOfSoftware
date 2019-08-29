@@ -4,29 +4,107 @@
     <meta charset="utf-8">
     <title>穿梭框组件</title>
 
-
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+    <style>
+        .fiCss1 {
+            float: left;
+        }
+    </style>
 </head>
 <body>
-    <div id="test1"></div>
+    <div>
+        <form class="layui-form" action="">
+            <div class="layui-container">
+                <div class="layui-col-xs9 layui-col-sm9 layui-col-md9">
+                    <fieldset class="fiCss1">
+                        <legend>分配区域</legend>
+                        <div class="layui-row layui-form-item">
+
+                            <div id="test4" class="demo-transfer"></div>
+
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                    <fieldsetn class="fiCss1">
+                        <legend>选择上级</legend>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <div class="layui-input-inline">
+                                    <input type="text" name="channelstaffid" id="channelstaffid" value="@ViewBag.ChannelStaffID" hidden="hidden" />
+                                    @Html.DropDownList("dudu", ViewBag.shangji as List<SelectListItem>)
+                                </div>
+                                <div class="layui-input-inline">
+                                    <button type="button" onclick="DistributionArea()">安排</button>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldsetn>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+
 
     <script>
-        layui.use('transfer', function () {
-            var transfer = layui.transfer;
+        var mytransfer;
+        var getData;
+        layui.use(['transfer', 'layer', 'util'], function () {
+            var $ = layui.$
+                , transfer = layui.transfer
+                , layer = layui.layer
+                , util = layui.util;
 
-            //渲染
+            var data = JSON.parse('@Html.Raw(ViewBag.regions)');
+
+
+
+            //显示搜索框
             transfer.render({
-                elem: '#test1'  //绑定元素
-                , data: [
-                    { "value": "1", "title": "李白", "disabled": "", "checked": "" }
-                    , { "value": "2", "title": "杜甫", "disabled": "", "checked": "" }
-                    , { "value": "3", "title": "贤心", "disabled": "", "checked": "" }
-                ]
-                , id: 'demo1' //定义索引
-            });
+                elem: '#test4'
+                , data: data
+                , title: ['可分配区域', '已分配区域']
+                , showSearch: true
+                ,id: 'mykey' //定义索引
+                ,parseData: function(res){
+                    return {
+                      "value": res.ID //数据值
+                      ,"title": res.RegionName //数据标题
+                      ,"disabled": res.disabled  //是否禁用
+                      ,"checked": res.checked //是否选中
+                    }
+                  }
+            })
+            mytransfer = transfer;
         });
+
+        function DistributionArea() {
+            var empinfoid= $("#dudu").val();
+            var channelstaffid = $("#channelstaffid").val();
+            var data = mytransfer.getData('mykey');
+            $.ajax({
+                url: "/Market/ChannelStaff/DoDistribution",
+                type: "POST",
+                data: {empinfoid:empinfoid,channelstaffid:channelstaffid,jsonarr:JSON.stringify(data)},
+                async: true,
+                success: function (data) {
+                    if (data.Success) {
+                        layer.msg(data.Msg, { icon: 1 }, function () {
+                            //先得到当前iframe层的索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index); //再执行关闭
+                        });
+                    }
+                },
+                error: function(data){
+
+                }
+            });
+        }
     </script>
 </body>
 </html>

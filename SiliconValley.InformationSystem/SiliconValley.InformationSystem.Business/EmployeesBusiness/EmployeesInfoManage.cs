@@ -48,5 +48,38 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             }
             return result;
         }
+
+
+        /// <summary>
+        /// 查询是市场主任员工集合
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetChannelStaffZhuren() {
+           return this.GetAll().Where(a => a.PositionId == 1006).ToList();
+        }
+        /// <summary>
+        /// 杨校
+        /// </summary>
+        /// <returns></returns>
+        public EmployeesInfo GetYangxiao() {
+            return this.GetAll().Where(a => a.EmployeeId == "201908290017").FirstOrDefault();
+        }
+        /// <summary>
+        /// 判断是否是渠道主任
+        /// </summary>
+        /// <param name="empinfoid">员工编号</param>
+        /// <returns></returns>
+        public bool IsChannelZhuren(string empinfoid) {
+            bool iszhuren = false;
+            var data = this.GetChannelStaffZhuren();
+            foreach (var item in data)
+            {
+                if (item.EmployeeId==empinfoid)
+                {
+                    iszhuren = true;
+                }
+            }
+            return iszhuren;
+        }
     }
 }

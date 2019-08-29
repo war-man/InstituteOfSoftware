@@ -12,7 +12,7 @@
 
 
 
-
+<h1>给新人分配区域的页面，主任级别上级是杨校，而专员级别上级就是各个主任，区域分配一人允许多个，分配的时候只显示没有分配的区域。</h1>
 
 <table class="layui-hide" id="channelstaff" lay-filter="channelstafffilter"></table>
 
@@ -81,7 +81,7 @@
                     , { field: 'EmployeeId', title: '员工编号', width: 165}
                     , { field: 'EmpName', title: '员工姓名', width: 145 }
                     , { field: 'Phone', title: '联系方式', width: 165 }
-                    , { field: 'RegionName', title: '带领区域', width: 100 }
+                    , { field: 'RegionName', title: '带领区域', width: 165 }
                     , { field: 'RegionID', title: '区域id', width: 89, hide: true }
                     , { field: 'RegionalDirectorEmpName', title: '区域主管', width: 100 }
                     , { field: 'RegionalDirectorID', title: '主管员工编号', width: 89 , hide: true}
@@ -107,7 +107,6 @@
                 var data = obj.data;
                 console.log(data);
                 if (obj.event === 'distribution') {
-                  
                         layer.open({
                             type: 2
                             , area: ["1000px", "620px"]

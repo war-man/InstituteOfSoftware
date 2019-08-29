@@ -16,7 +16,8 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// 获取全部区域
         /// </summary>
         /// <returns></returns>
-        public List<Region> GetRegions() {
+        public List<Region> GetRegions()
+        {
             return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
         /// <summary>
@@ -24,8 +25,30 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// </summary>
         /// <param name="Regionid"></param>
         /// <returns></returns>
-        public Region GetRegionByID(int Regionid) {
+        public Region GetRegionByID(int Regionid)
+        {
             return this.GetRegions().Where(a => a.ID == Regionid).FirstOrDefault();
+        }
+        /// <summary>
+        /// 获取没有分配的区域
+        /// </summary>
+        /// <param name="dbchannelarea"></param>
+        /// <returns></returns>
+        public List<Region> GetNoDistribution(ChannelAreaBusiness dbchannelarea)
+        {
+            var regionlist = this.GetRegions();
+            var channelarealist = dbchannelarea.GetChannelAreas();
+            for (int i = regionlist.Count - 1; i >= 0; i--)
+            {
+                foreach (var item in channelarealist)
+                {
+                    if (regionlist[i].ID==item.RegionID)
+                    {
+                        regionlist.Remove(regionlist[i]);
+                    }
+                }
+            }
+            return regionlist;
         }
     }
 }

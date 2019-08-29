@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; } 
         public int RegionID { get; set; }
-        public int RegionalDirectorID { get; set; }
+        public Nullable<int> RegionalDirectorID { get; set; }
         public int ChannelStaffID { get; set; }
         public bool IsDel { get; set; }
         public System.DateTime StaffAreaDate { get; set; }

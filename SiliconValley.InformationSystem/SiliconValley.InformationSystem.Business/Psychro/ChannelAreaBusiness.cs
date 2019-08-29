@@ -30,6 +30,12 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         public List<ChannelArea> GetAreaByChannelID(int ChannelStaffID) {
             return this.GetIQueryable().Where(a => a.ChannelStaffID == ChannelStaffID && a.IsDel == false).ToList();
         }
-        
+        /// <summary>
+        /// 获取全部的没有伪删除的数据
+        /// </summary>
+        /// <returns></returns>
+        public List<ChannelArea> GetChannelAreas() {
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+        }
     }
 }

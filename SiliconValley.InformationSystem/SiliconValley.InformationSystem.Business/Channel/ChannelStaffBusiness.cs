@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
         /// </summary>
         /// <param name="ChanneID"></param>
         /// <returns>ChannelStaff</returns>
-        public ChannelStaff GetChannelByID(int ChanneID) {
+        public ChannelStaff GetChannelByID(int? ChanneID) {
           return  this.GetChannelStaffs().Where(a => a.ID == ChanneID).FirstOrDefault();
         }
         /// <summary>
