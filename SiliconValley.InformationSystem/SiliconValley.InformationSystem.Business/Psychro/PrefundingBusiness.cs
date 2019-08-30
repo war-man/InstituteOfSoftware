@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// </summary>
         /// <returns></returns>
         public List<Prefunding> GetAll() {
-          return  this.GetIQueryable().Where(a=>a.IsDel==false).ToList();
+            return this.GetIQueryable().Where(a=>a.IsDel==false).ToList();
         }
         /// <summary>
         /// 根据预资id返回预资单对象
@@ -25,12 +25,12 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             return this.GetAll().Where(a => a.ID == PerfundingID).FirstOrDefault();
         }
         /// <summary>
-        /// 根据渠道员工id返回他的所有借资单集合
+        /// 根据员工编号返回他的所有借资单集合
         /// </summary>
         /// <param name="ChannelStaffID"></param>
         /// <returns></returns>
-        public List<Prefunding> GetPrefundingByChannelStaffID(int ChannelStaffID) {
-            return this.GetAll().Where(a => a.ChannelStaffID == ChannelStaffID).ToList();
+        public List<Prefunding> GetPrefundingByChannelStaffID(string EmpNumber) {
+            return this.GetAll().Where(a => a.EmpNumber == EmpNumber).ToList();
         }
 
         /// <summary>

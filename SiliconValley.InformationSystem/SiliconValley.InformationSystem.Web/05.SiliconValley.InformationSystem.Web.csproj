@@ -393,6 +393,7 @@
     <Content Include="Areas\Market\Views\SchoolYearPlan\AddSchoolYearPlan.cshtml" />
     <Content Include="Areas\Market\Views\ChannelYearPlan\ChannelYearPlanIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\AssessmentChannelStaffIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

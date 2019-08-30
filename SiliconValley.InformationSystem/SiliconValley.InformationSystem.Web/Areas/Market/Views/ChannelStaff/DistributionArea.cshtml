@@ -52,7 +52,7 @@
 
     <script>
         var mytransfer;
-        var getData;
+       
         layui.use(['transfer', 'layer', 'util'], function () {
             var $ = layui.$
                 , transfer = layui.transfer
@@ -60,9 +60,6 @@
                 , util = layui.util;
 
             var data = JSON.parse('@Html.Raw(ViewBag.regions)');
-
-
-
             //显示搜索框
             transfer.render({
                 elem: '#test4'

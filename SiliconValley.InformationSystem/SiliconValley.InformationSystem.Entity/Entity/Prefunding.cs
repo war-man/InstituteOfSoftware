@@ -20,9 +20,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
         public int ID { get; set; }
         /// <summary>
-        /// 渠道员工编号
+        /// 员工编号
         /// </summary>
-        public int ChannelStaffID { get; set; }
+        public string EmpNumber { get; set; }
 
         /// <summary>
         /// 预资时间
@@ -39,6 +39,6 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// <summary>
         /// 预资金额
         /// </summary>
-        public float PerMoney { get; set; }
+        public double PerMoney { get; set; }
     }
 }
