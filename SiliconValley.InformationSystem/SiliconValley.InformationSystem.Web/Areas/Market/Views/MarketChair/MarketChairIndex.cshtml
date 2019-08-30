@@ -5,6 +5,13 @@
 }
 @section style{
     <style type="text/css">
+        .TimeCss1 {
+            border: 0px solid double
+        }
+        .InputCssSex1{
+            width:106px;
+            margin-left:-10px;
+        }
     </style>
 }
 @*头*@
@@ -13,13 +20,37 @@
         <i class="layui-icon">&#xe608;</i> 添加
     </button>
 </script>
-
-<script type="text/html" id="switchTpl">
-    
-</script>
-
-
+<div>
+    <hr />
+    <label>讲座人：</label>
+    <div class="btn-group layui-container" style="width:120px;">
+        <div style="display:inline-block">
+            <input type="text" class="form-control" id="JangzMan" name="JangzMan" placeholder="讲座人">
+        </div>
+    </div>
+    <label>人数：</label>
+    <div class="btn-group layui-container" style="width:120px;">
+        <div style="display:inline-block">
+            <input type="text" class="form-control" id="MCount" name="MCount" placeholder="人数">
+        </div>
+    </div>
+    <label>开始时间：</label>
+    <div class="btn-group layui-container" style="width:120px;">
+        <div style="display:inline-block">
+            <input type="text" class="form-control InputCssSex1" id="StarTime" name="StarTime" lay-verify="StarTime" placeholder="YY-MM-DD">
+        </div>
+    </div>
+    <label>结束时间：</label>
+    <div class="btn-group layui-container" style="width:120px;">
+        <div style="display:inline-block">
+            <input type="text" class="form-control InputCssSex1" id="EndTime" name="EndTime" lay-verify="EndTime" placeholder="YY-MM-DD">
+        </div>
+    </div>
+    <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+    <hr />
+</div>
 <table id="MyTableSix-1" lay-filter="MyTableSix-1" name="MyTableSix-1"></table>
+
 @section script{
     <script>
         //转换时间的方法
@@ -40,20 +71,71 @@
             return result;
         }
         //刷新数据
-        function FlushTableSix1(){
+        function FlushTableSix1() {
             layui.use('table', function () {
                 var table = layui.table;
-                table.reload('MyTableSix-1');
+                table.reload('MyTableSix-1', { where: { 'JangzMan': null, 'StarTime': null, 'EndTime': null, 'MCount': null }, url:'/Market/MarketChair/GetListMarketDataFunction' });
             });
         }
         //错误提示
         function TiHelper(Msg) {
             layui.use('layer', function () {
                 var layer = layui.layer;
-                layer.msg(Msg, {icon: 2,time: 2000});
+                layer.msg(Msg, { icon: 2, time: 2000 });
             });
         }
-        layui.use('table', function () {
+        layui.use(['table', 'laydate', 'form', 'layer'], function () {
+            var layer = layui.layer;
+            var form = layui.form;
+            var Date_My = null;
+            var Date_Me = null;
+            //获取当前年月日
+            var Newdate = new Date().toLocaleDateString();
+            var laydate = layui.laydate;
+            //日期
+            laydate.render({
+                elem: '#Time',
+                max: Newdate,
+                format: "yyyy-MM-dd",
+                calendar: true,
+                btns: ['now', 'confirm']                 
+            });
+            laydate.render({
+                elem: '#StarTime',
+                max: Newdate,
+                format: "yyyy-MM-dd",
+                calendar: true,
+                done: function (value, date, endDate) {
+                    Date_My = value;
+                    if (Date_Me != null) {
+                        var s1 = new Date(Date_Me);
+                        var s2 = new Date(value);
+                        if (s1 - s2 < 0) {
+                            $("#StarTime").val(s1.toLocaleDateString());
+                            TiHelper("开始时间不能大于结束时间！！！");
+                        }
+                    }
+                }
+            });
+            laydate.render({
+                elem: '#EndTime',
+                max: Newdate,
+                format: "yyyy-MM-dd",
+                calendar: true,
+                done: function (value, date, endDate) {
+                    Date_Me = value;
+                    //console.log(value); //得到日期生成的值，如：2017-08-18             
+                    if (Date_My != null) {
+                        var s1 = new Date(Date_My);
+                        var s2 = new Date(value);
+                        if (s2 - s1 < 0) {
+                            var newdate = new Date().toLocaleDateString();
+                            $("#EndTime").val(newdate);
+                            TiHelper("开始时间不能大于结束时间！！！");
+                        }
+                    }
+                }
+            });
             var table = layui.table;
 
             table.render({
@@ -63,22 +145,24 @@
                 , title: '用户数据表'
                 , totalRow: true
                 , cols: [[
-                    { type: 'radio', fixed: 'left'}
-                    //{ type: 'checkbox', fixed: 'left' }
-                    , { field: 'ChairName', title: '讲座人', fixed: 'left', edit: 'text'}
-                    , { field: 'TerCharName', title: '参与人', edit: 'text'}
-                    , { field: 'ChairAddress', title: '讲座地点', edit: 'text'}
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'ChairName', title: '讲座人', fixed: 'left', edit: 'text' }
+                    , { field: 'ManCount', title: '人数', edit: 'text' }
+                    , { field: 'TerCharName', title: '参与人', edit: 'text' }
+                    , { field: 'ChairAddress', title: '讲座地点', edit: 'text' }
                     , {
-                        field: 'ChairTime', title: '讲座日期', edit: 'text',templet: function (res) {
+                        field: 'ChairTime', title: '讲座日期', event: 'ChairTime' ,templet: function (res) {
                             return TimeChange(res.ChairTime);
                         }
                     }
                     , { field: 'EmpName', title: '登记人' }
                     , { field: 'Rmark', title: '说明', edit: 'text' }
                     , {
-                        field: 'IsDelete', title: '状态', templet: function (res) {
-                            if (res.IsDelets == true) {
-                                //return ' <input type="checkbox" name="States" value=' + res.IsDelets + ' lay-skin="switch" lay-text="正常|异常" lay-filter="StateDemo" {{ d.id == 10003 ? 'checked' : '' }}>'
+                        field: 'IsDelete', title: '状态',templet: function (res) {
+                            if (res.IsDelete == false) {
+                                return ' <input myid='+res.Id+' type="checkbox" name="States" id="States" value=' + res.IsDelete + ' lay-skin="switch" lay-text="正常|异常" lay-filter="StateDemo" checked >'
+                            } else {
+                                return ' <input myid=' + res.Id + ' type="checkbox" name="States" id="States" value=' + res.IsDelete + ' lay-skin="switch" lay-text="正常|异常" lay-filter="StateDemo">'
                             }
                         }
                     }
@@ -95,9 +179,8 @@
                             success: function (SucData) {
                                 if (SucData != "ok") {
                                     TiHelper(SucData);
-                                } else {
+                                } 
                                     FlushTableSix1();
-                                }
                             }
                         });
                         break;
@@ -108,22 +191,101 @@
                 var value = obj.value //得到修改后的值
                     , data = obj.data //得到所在行所有键值
                     , field = obj.field; //得到字段
-                var MyDatas = { "Id": data.Id, "Values": value, "KeyName": field};
-                $.ajax({
-                    url: "/Market/MarketChair/EditMarketDataFunction",
-                    dataType: 'json',
-                    type: 'POST',
-                    data: MyDatas,
-                    success: function (SucData) {
-                        if (SucData != "ok") {
-                            TiHelper(SucData);
-                        } else {
+                if (data.IsDelete == false) {
+                    var MyDatas = { "Id": data.Id, "Values": value, "KeyName": field };
+                    $.ajax({
+                        url: "/Market/MarketChair/EditMarketDataFunction",
+                        dataType: 'json',
+                        type: 'POST',
+                        data: MyDatas,
+                        success: function (SucData) {
+                            if (SucData != "ok") {
+                                TiHelper(SucData);
+                            }
                             FlushTableSix1();
                         }
-                    }
-                });
+                    });
+                } else {
+                    FlushTableSix1();
+                    TiHelper("异常数据不能更改！！！");
+                }
+ 
             });
+
+            table.on('tool(MyTableSix-1)', function (obj) {
+                var data = obj.data;
+                var Mydate = new Date().toLocaleString();
+               // console.log(data);
+                if (obj.event === 'ChairTime') {
+                    laydate.render({
+                        elem: this.firstChild,
+                        show: true //直接显示
+                        , btns: ['now', 'confirm']
+                        , format: 'yyyy-MM-dd'
+                        , max: Mydate
+                        , done: function (value, date) {
+                            var MyDatas = { "Id": data.Id, "Values": value, "KeyName": "ChairTime" };
+                            $.ajax({
+                                url: "/Market/MarketChair/EditMarketDataFunction",
+                                dataType: 'json',
+                                type: 'POST',
+                                data: MyDatas,
+                                success: function (SucData) {
+                                    if (SucData != "ok") {
+                                        TiHelper(SucData);
+                                    } else {
+                                        FlushTableSix1();
+                                    }
+                                }
+                            });
+                        }
+                    })
+                }
+            });
+
+            //监听异常数据操作
+            form.on('switch(StateDemo)', function (obj) {
+                var data = obj.elem;//获取这个元素
+                var myid = $(data).attr("myid");
+                var myvalue = this.value;
+                if (myvalue != "true") {
+                    //温馨提示
+                    layer.confirm('< h2 style = "color:red" > 一旦改变，无法修改请三思！！！</h2 >', { icon: 3, title: '系统温馨提示' }, function (index) {
+                        var MyDatas = { "Id": myid, "Values": myvalue, "KeyName": "IsDelete" };
+                        $.ajax({
+                            url: "/Market/MarketChair/EditMarketDataFunction",
+                            dataType: 'json',
+                            type: 'POST',
+                            data: MyDatas,
+                            success: function (SucData) {
+                                if (SucData != "ok") {
+                                    TiHelper(SucData);
+                                }
+                                FlushTableSix1();
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    
+                } else {
+                    FlushTableSix1();
+                    TiHelper("异常数据不能更改！！！");
+                }
+            });
+        });
+        //模糊查询数据
+        $("#serchBtn1").click(function () {
+                var JangzMan = $("#JangzMan").val();
+                var StarTime = $("#StarTime").val();
+                var EndTime = $("#EndTime").val();
+                var MCount = $("#MCount").val();
+                layui.use(['table', 'laydate'], function () {
+                    var table = layui.table;
+                    table.reload('MyTableSix-1', {
+                        url: '/Market/MarketChair/GetListMarketDataFunction',
+                        where: { 'JangzMan': JangzMan, 'StarTime': StarTime, 'EndTime': EndTime, 'MCount': MCount }
+                    });
+                });        
         });
     </script>
 }
-
