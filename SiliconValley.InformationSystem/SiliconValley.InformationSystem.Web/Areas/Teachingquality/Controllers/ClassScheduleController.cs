@@ -211,7 +211,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult AssmeetingsEntity()
         {
             //undefined
-            string ClassName = Request.QueryString["ClassName"];
+            //string ClassName = Request.QueryString["ClassName"];
 
             string uid = Request.QueryString["id"];
             Assmeetings assmeetings = new Assmeetings();
@@ -224,7 +224,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             else
             {
                 ViewBag.Name = "编辑班会记录";
-                assmeetings.ClassNumber = ClassName;
+                assmeetings.ClassNumber = classNumberss;
                 return View(assmeetings);
             }
          
@@ -245,6 +245,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string Stuid = Request.QueryString["Stuid"];
             return Json(dbtext.AssmeetingsBool(MenName, classNumberss, Stuid), JsonRequestBehavior.AllowGet);
         }
-
+        //班级班会数据
+        public ActionResult AssmeetingsGetDate(int page, int limit,string Title,string qBeginTime,string qEndTime)
+        {
+            var dataList = dbtext.AssmeetingsList(classNumberss) ;
+            if (!string.IsNullOrEmpty(Title))
+            {
+                dataList = dataList.Where(a => a.Title.Contains(Title)).ToList();
+            }
+       
+            if (!string.IsNullOrEmpty(qBeginTime))
+            {
+                dataList = dataList.Where(a => a.Classmeetingdate >= Convert.ToDateTime(qBeginTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(qEndTime))
+            {
+                dataList = dataList.Where(a => a.Classmeetingdate <= Convert.ToDateTime(qEndTime)).ToList();
+            }
+            dataList= dataList.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = dataList.Count,
+                data = dataList
+            }; return Json(data, JsonRequestBehavior.AllowGet);
+        
+          
+       
+        }
     }
 }

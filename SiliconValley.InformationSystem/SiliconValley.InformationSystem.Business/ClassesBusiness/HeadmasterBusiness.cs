@@ -29,12 +29,33 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             }
             catch (Exception ex)
             {
-
+                
                 str = false;
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             return str;
 
+        }
+
+
+        //班主任离职时间
+        public bool QuitEntity(string informatiees_Id)
+        {
+            bool str = true;
+            try
+            {
+                var x = this.GetEntity(informatiees_Id);
+                x.IsDelete = true;
+                this.Update(x);
+            }
+            catch (Exception ex)
+            {
+
+                str = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            
+            }
+            return str;
         }
     }
 }

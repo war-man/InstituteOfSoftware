@@ -220,6 +220,7 @@
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\HeadteacherController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
@@ -248,6 +249,7 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />
     <Content Include="Areas\Teachingquality\js\bing.js" />
+    <Content Include="Areas\Teachingquality\js\Datetime.js" />
     <Content Include="Areas\Teachingquality\js\MMembersAddjson.js" />
     <Content Include="Areas\Teachingquality\Styles\MenuBar.css" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
@@ -381,6 +383,7 @@
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Groupnumber.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\text.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\AssmeetingsEntity.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\Index.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

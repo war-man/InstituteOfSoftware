@@ -111,7 +111,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 code = "",
                 msg = "",
-                count = dataList.Count,
+                count = listx.Count,
                 data = dataList
             };
           return Json(data, JsonRequestBehavior.AllowGet);

@@ -58,7 +58,6 @@
         .layui-colla-title {
             background-color: #1cc09f;
             color: #fff;
-           
         }
 
         .mycolor {
@@ -91,13 +90,13 @@
                         <li class="menu-item">
                             <button type="button" class="menu-btn">
                                 <i class="fa fa-comment"></i>
-                                <span class="menu-text"  value="@item.ID">@item.Nameofmembers</span>
+                                <span class="menu-text" value="@item.ID">@item.Nameofmembers</span>
                             </button>
                         </li>
                     }
                 }
 
-             
+
 
             </menu>
         </li>
@@ -113,8 +112,6 @@
 <div style="width:100%;height:150px;border:1px solid #1cc09f;">
     <div>
         <div>
-
-
             <table class="teshu">
                 <tr>
                     @{
@@ -153,30 +150,30 @@
                 <tr>
 
                     @{
-                            int a = 0;
-                            foreach (var item in ViewBag.Members as List<Members>)
-                            {
+                        int a = 0;
+                        foreach (var item in ViewBag.Members as List<Members>)
+                        {
                             a++;
-                            if (a>4)
+                            if (a > 4)
                             {
                                 a = 0;
-                              <br/>
+                                <br />
                             }
                             <td class="Nameofmembers">@item.Nameofmembers</td>
 
                             <th class="Names">未设置</th>
 
-                    }
+                        }
 
                     }
 
                 </tr>
 
-              
 
 
 
-                </table>
+
+            </table>
         </div>
         <div style="position:absolute;left:50%;top:7%;">
             <h1 id="ClassName">@ViewBag.ClassName</h1>
@@ -196,7 +193,7 @@
 
         </div>
     </div>
-  
+
     <div class="layui-colla-item">
         <h2 class="layui-colla-title"> 班会记录</h2>
         <div class="layui-colla-content layui-anim">
@@ -225,23 +222,69 @@
 <div class="layui-container fload" style="width:73%;margin-right:-20px; margin-top:20px;margin-left:20px">
 
     <div id="table" style="display:none;">
+        <form class="layui-form" action="">
+            <div class="layui-container">
+                <div class="layui-row ">
+
+                    <div class="layui-col-xs12">
+                        <div class="layui-row layui-form-item">
+
+
+                            <div class="layui-col-xs6">
+                                <label class="layui-form-label" style="margin-left:0px;width:100px;">班会标题</label>
+                                <div class="layui-input-inline">
+                                    <input type="tel" name="Title"  id="Title" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="layui-col-xs6">
+
+
+                                <div class="layui-inline" style="margin-left:-260px;">
+                                    <label for="" class="layui-form-label">时间段</label>
+                                    <div class="layui-input-inline startTime">
+                                        <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-mid">到</div>
+                                    <div class="layui-input-inline endTime">
+
+                                        <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <div style="position:absolute;left:76%;top:0px;">
+                                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </form>
         <table class="layui-hide" id="test" lay-filter="test"></table>
     </div>
     @{
 
         <div class="layui-row" id="MyShutdown">
             @foreach (var item in Model as List<ClassStudentView>)
-
             {
-
-
                 <div class="Mydiv layui-col-xs4">
                     <div style="display:none;">@item.StuNameID</div>
                     <div style="text-align:center;margin-top:20px;line-height:23px;">
 
                         <div class="Name">@item.Name</div>
-                      
-                     
+
+
                     </div>
 
 
@@ -254,16 +297,20 @@
 
 
 </div>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="Entity">编辑</a>
+
+</script>
+<script src="~/Areas/Teachingquality/js/Datetime.js"></script>
 <script>
-    console.log($(".Name").next(".Nameofmembers"));
-   
+
     //给头部的班委赋值
     $.post("/Teachingquality/ClassSchedule/DateMembers", function (dat) {
         console.log(dat)
-        if (dat.length>0) {
+        if (dat.length > 0) {
             for (var i = 0; i < dat.length; i++) {
                 if (dat[i].Nameofmembers != null) {
-                    
+
                     for (var l = 0; l < dat[i].Nameofmembers.length; l++) {
 
                         var myxx = $(".Nameofmembers");
@@ -275,41 +322,136 @@
                             }
                         }
                     }
-                  
-                   
+
+
                 }
             }
         }
-     
-   
+
+
     });
     $(document).ready(function () {
         window.oncontextmenu = function () { return false; }
         //加上这个代码即可
     });
-    layui.use(['element','table', 'layer'], function () {
+    //时间转换方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if (month < 10) {
+            month = "0" + (parseInt(month) + 1);
+        }
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+    layui.use(['element','form', 'table', 'laydate', 'layer'], function () {
         var element = layui.element;
         var layer = layui.layer;
         var table = layui.table;
+        var laydate = layui.laydate;
+        var form = layui.form;
         var Stuid = "";
+      
+       
+            // 时间选择器初始化 开始时间
+            laydate.render({
+                elem: '#qBeginTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+
+                    var startDate = new Date(value).getTime();
+                    var endTime = new Date($('#qEndTime').val()).getTime();
+
+                    // console.log(ri);
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qBeginTime').val($('#qEndTime').val());
+                    }
+                    if (startDate > curDate.getTime()) {
+                        layer.msg('开始时间不能大于当前时间');
+                        $('#qBeginTime').val(curYearMonthrDay);
+                    }
+                }
+            });
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#qEndTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date($('#qBeginTime').val()).getTime();
+                    var endTime = new Date(value).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qEndTime').val($('#qBeginTime').val());
+                    }
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#qEndTime').val(curYearMonthrDay);
+                    }
+                }
+            });
+
+        
         //表格渲染
         table.render({
             elem: '#test'
-            , url: '/Teachingquality/ClassSchedule/GetDate'
-            , toolbar: '#toolbarDemo'
+            , url: '/Teachingquality/ClassSchedule/AssmeetingsGetDate'
+
             , id: 'idTest'
             , page: true
             , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
             , cols: [[
                 { type: 'radio' }
+                , { field: 'ID', title: '编号' }
                 , { field: 'Title', title: '班会标题' }
                 , { field: 'Content', title: '班会内容' }
-                , { field: 'Classmeetingdate', title: '班会日期 ' }
+
+                , {
+                    field: 'Classmeetingdate', title: '班会日期', templet: function (c) {
+                        return TimeChange(c.Classmeetingdate);
+                    }
+                }
                 , { field: 'Remarks', title: '备注 ' }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
             ]]
+
             , page: true
             , limit: 8
             , limits: [8, 10, 15]
+        });
+
+        //查询功能
+        form.on('submit(demo2)', function (data) {
+
+            var x = data.field;
+            table.reload('idTest', {
+                where: {
+                    Title: x.Title,
+                    qBeginTime: x.qBeginTime,
+                    qEndTime: x.qEndTime,
+                }, page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+        //监听工作条
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+
+            if (layEvent === 'Entity') { //编辑
+                console.log(data.ID);
+                AssmestingEntity(data.ID);
+            }
+
         });
         //移入
         $(".Mydiv").mouseover(function () {
@@ -325,82 +467,82 @@
         });
         ////添加班会记录
         $("#banhui2").click(function () {
-            var stuid = $("#ClassName").text();
-            AssmestingEntity(stuid);
+            // var stuid = $("#ClassName").text();
+            AssmestingEntity();
         });
         //班会数据操作页面层
-        function AssmestingEntity(stuid,id) {
+        function AssmestingEntity(id) {
             layer.open({
                 title: name,
                 type: 2,
                 area: ['600px', '600px']
-                , content: "/Teachingquality/ClassSchedule/AssmeetingsEntity?ClassName=" + stuid + "&id=" + id
-                //, end: function () { table.reload('idTest'); select(); }
+                , content: "/Teachingquality/ClassSchedule/AssmeetingsEntity?id=" + id
+                , end: function () { table.reload('idTest'); }
                 , anim: 1,
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
 
 
-                //双击详细
-       $(".Mydiv").dblclick(function () {
-                    var stuid = $($(this).children()[0]).text();
-                    layer.open({
-                        title: name,
-                        type: 2,
-                        area: ['500px', '830px']
-                        , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + stuid
+        //双击详细
+        $(".Mydiv").dblclick(function () {
+            var stuid = $($(this).children()[0]).text();
+            layer.open({
+                title: name,
+                type: 2,
+                area: ['500px', '830px']
+                , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + stuid
 
-                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                    });
-                });
-                //群号设置
-       $("#but1").click(function () {
+                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        });
+        //群号设置
+        $("#but1").click(function () {
 
-                    console.log($("#ClassName").text());
-         layer.open({
-                        title: name,
-                        type: 2,
-                        area: ['400px', '300px']
-                        , content: "/Teachingquality/ClassSchedule/Groupnumber?ClassNumber=" + $("#ClassName").text()
-                        //, end: function () { table.reload('idTest'); select(); }
-                        , anim: 1,
-                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                    });
+            console.log($("#ClassName").text());
+            layer.open({
+                title: name,
+                type: 2,
+                area: ['400px', '300px']
+                , content: "/Teachingquality/ClassSchedule/Groupnumber?ClassNumber=" + $("#ClassName").text()
+                //, end: function () { table.reload('idTest'); select(); }
+                , anim: 1,
+                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
         });
         var banhui1 = 0;
         //查看班会记录
         $("#banhui1").click(function () {
             banhui1++;
-            if (banhui1>1) {
+            if (banhui1 > 1) {
                 banhui1 = 0;
                 $("#banhui1").text("查看记录");
                 $("#MyShutdown").css("display", "block");
                 $("#table").css("display", "none");
                 //table
-                
+
             } else {
                 $("#banhui1").text("返回查看学员");
                 $("#MyShutdown").css("display", "none");
                 $("#table").css("display", "block");
             }
-          
+
         });
-      
+
     });
 
     //设置班委
     var Success = "";
     function postjson(stuid, MenName, Entity) {
-     
+
         $.post("/Teachingquality/ClassSchedule/AddMembers?Stuid=" + stuid + "&MenName=" + MenName + "&Entity=" + Entity, function (db) {
             layer.msg(db.Msg);
-            
+
             Success = db.Success;
-        
-           
+
+
         });
-       
+
     }
     //群管理操作返回数据
     function GetPartsItme(qq, wechat) {
@@ -448,83 +590,82 @@
 
         var myx = $(e)[0].target.innerText;
         var zz = 0;
-             var myxx = $(".Nameofmembers");
+        var myxx = $(".Nameofmembers");
         for (var i = 0; i < myxx.length; i++) {
-         
-              switch (myx) {
-                  case $(myxx[i]).text():
-                      var lo = i;
-                      layui.use(['layer'], function () {
-                          var layer = layui.layer;
 
-                      $.post("/Teachingquality/ClassSchedule/AssmeetingsBool?Stuid=" + stuid + "&MenName=" + $(myxx[i]).text(), function (db) {
-                       
-                          if (db.Msg != null) {
-                              if (db.Data != null) {
-                                  layer.confirm(db.Msg, function (index) {
-                                      console.log($(myxx[lo]).text() + "-----名称");
-                                      console.log($(myxx[i]).text() + "-----名称")
-                                      postjson(stuid, $(myxx[lo]).text());
-                                      My_Inter();
-                                  });
-                              } else {
-                                  layer.msg(db.Msg);
-                              }
-                          } else {
+            switch (myx) {
+                case $(myxx[i]).text():
+                    var lo = i;
+                    layui.use(['layer'], function () {
+                        var layer = layui.layer;
 
-                              postjson(stuid, $(myxx[lo]).text());
-                              My_Inter();
-                          }
+                        $.post("/Teachingquality/ClassSchedule/AssmeetingsBool?Stuid=" + stuid + "&MenName=" + $(myxx[i]).text(), function (db) {
 
-                      });
+                            if (db.Msg != null) {
+                                if (db.Data != null) {
+                                    layer.confirm(db.Msg, function (index) {
 
-                      })
-                      function My_Inter() {
-                          var interval2 = window.setInterval(function () {
+                                        postjson(stuid, $(myxx[lo]).text());
+                                        My_Inter(lo);
+                                    });
+                                } else {
+                                    layer.msg(db.Msg);
+                                }
+                            } else {
+                                console.log("否则");
+                                postjson(stuid, $(myxx[lo]).text());
+                                My_Inter(lo);
+                            }
 
-                              if (Success == true) {
+                        });
 
-                                  $(myxx[lo]).next().text(Name)// $(myxx[i]).next().text("aaaa");
-                              }
-                          }, 100);
+                    })
+                    function My_Inter(lo) {
+                        var interval2 = window.setInterval(function () {
 
-                          setTimeout(function () { window.clearInterval(interval2); }, 200);
+                            if (Success == true) {
 
-                      }
-                  
-                  
-                    
-                  
-                      break;
-                  case "撤销班委":
-                      
-                      
-                      if ($(myxx[i]).next().text() == Name) {
-                          
-                          zz++;
-                          mycars[zz] = i;
-                         // mycars
+                                $(myxx[lo]).next().text(Name)// $(myxx[i]).next().text("aaaa");
+                            }
+                        }, 100);
 
-                          postjson(stuid,"1","1");
-                         
+                        setTimeout(function () { window.clearInterval(interval2); }, 200);
 
-                          var interval2 = window.setInterval(function () {
+                    }
 
-                              if (Success == true) {
 
-                                  for (var w = 1; w < mycars.length; w++) {
-                                      $(myxx[mycars[w]]).next().text("未设置");
-                                  }
-                                 
-                              }
-                            
-                          }, 100);
 
-                          setTimeout(function () { window.clearInterval(interval2); }, 200);
-                      }
-                      break;
-              }
-        
+
+                    break;
+                case "撤销班委":
+
+
+                    if ($(myxx[i]).next().text() == Name) {
+
+                        zz++;
+                        mycars[zz] = i;
+                        // mycars
+
+                        postjson(stuid, "1", "1");
+
+
+                        var interval2 = window.setInterval(function () {
+
+                            if (Success == true) {
+
+                                for (var w = 1; w < mycars.length; w++) {
+                                    $(myxx[mycars[w]]).next().text("未设置");
+                                }
+
+                            }
+
+                        }, 100);
+
+                        setTimeout(function () { window.clearInterval(interval2); }, 200);
+                    }
+                    break;
+            }
+
         }
     }//attr("value") originalTarget
     //右击取消选中
