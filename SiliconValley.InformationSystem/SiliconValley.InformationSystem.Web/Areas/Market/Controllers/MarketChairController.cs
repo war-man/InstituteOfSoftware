@@ -186,7 +186,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json("ok", JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// 这是一个柱状图
+        /// 这是一个线性图
         /// </summary>
         /// <returns></returns>
         public ActionResult ThisIsImageDataView()
@@ -202,5 +202,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var ss = Year_list;
             return null;
         }
+        /// <summary>
+        /// 这是一个柱状图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ThisIsZhuZhuangImageView()
+        {
+            return View();
+        }
+
    }
 }

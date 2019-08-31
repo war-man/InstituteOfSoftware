@@ -10,6 +10,15 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
 {
    public class StuStateManeger:BaseBusiness<StuStatus>
     {
-
+        /// <summary>
+        /// 这是根据名称找状态
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public StuStatus GetStu(string name)
+        {
+           StuStatus find_s= this.GetList().Where(s => s.StatusName == name).FirstOrDefault();
+            return find_s;
+        }
     }
 }

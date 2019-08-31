@@ -444,9 +444,11 @@
     <Content Include="bin\assets\fonts\glyphicons-halflings-regulard41d.eot" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
+    <Content Include="Areas\Market\Views\MarketChair\ThisIsZhuZhuangImageView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
+    <Content Include="Scripts\css\index.css" />
     <Content Include="Scripts\css\main.css" />
     <Content Include="Scripts\easyui\datagrid-cellediting.js" />
     <Content Include="Scripts\easyui\easyloader.js" />
@@ -663,7 +665,11 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\jsrender.min.js" />
     <Content Include="Scripts\js\DD_belatedPNG.js" />
+    <Content Include="Scripts\js\echarts.min.js" />
     <Content Include="Scripts\js\fun.base.js" />
+    <Content Include="Scripts\js\index.js" />
+    <Content Include="Scripts\js\Index2.js" />
+    <Content Include="Scripts\js\jquery-1.7.2-min.js" />
     <Content Include="Scripts\js\jQuery.js" />
     <Content Include="Scripts\js\script.js" />
     <Content Include="Scripts\layui\css\default.css" />
