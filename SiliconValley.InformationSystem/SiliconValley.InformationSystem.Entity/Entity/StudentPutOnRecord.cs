@@ -39,6 +39,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Reak { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<int> Region_id { get; set; }
+        public Nullable<System.DateTime> StatusTime { get; set; }
 
         public bool Equals(StudentPutOnRecord x, StudentPutOnRecord y)
         {
