@@ -30,10 +30,14 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public int[] GetYearGotoCount(DateTime YeanName)
         {
            List<StudentPutOnRecord> student_data= this.GetList().Where(s => s.StuIsGoto == true && s.StuVisit <= YeanName).ToList();//获取匹配的数据
-           //拿到一月到12的人数
-
-
-            return new int[12];
+            int j = 1;                                                                                                               //拿到一月到12的人数            
+            int[] ary = new int[12];
+            for (int i = 0; i < 12; i++)
+            {
+                ary[i] = GetMonthCount(student_data, j);
+                j++;
+            }
+            return ary;
         }
         /// <summary>
         /// 这个方法是在学生报名之后就修改学生状态的方法
@@ -66,8 +70,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
         public int GetMonthCount(List<StudentPutOnRecord> student_list,int monthName)
         {
-            //var count = student_list.Where(s=>s)
-            return 0;
+            var count = student_list.Select(s => Convert.ToDateTime(s.StuVisit).Month).Where(s => s == monthName).ToList().Count;
+            return count;
         }
     }
 }
