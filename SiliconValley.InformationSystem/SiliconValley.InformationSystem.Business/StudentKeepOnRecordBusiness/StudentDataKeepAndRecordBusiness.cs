@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
+using SiliconValley.InformationSystem.Business.Psychro;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
    public class StudentDataKeepAndRecordBusiness: BaseBusiness<StudentPutOnRecord>
     {
         StuStateManeger Statu_Entity = new StuStateManeger();
-
+        SchoolYearPlanBusiness Syb_Entity = new SchoolYearPlanBusiness();
         /// <summary>
         /// 这是一个获取报名学生的方法
         /// </summary>
@@ -72,6 +73,40 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             var count = student_list.Select(s => Convert.ToDateTime(s.StuVisit).Month).Where(s => s == monthName).ToList().Count;
             return count;
+        }
+        /// <summary>
+        /// 获取上门量
+        /// </summary>
+        /// <param name="PlanId"></param>
+        /// <param name="EmpId"></param>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetGoSchoolByPlan(int PlanId ,string EmpId)
+        {
+            //Syb_Entity.GetAll().Where(s => s.ID == PlanId).FirstOrDefault();
+            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuIsGoto==true).ToList();
+            return list_s;
+        }
+        /// <summary>
+        /// 获取备案量
+        /// </summary>
+        /// <param name="EmpId"></param>
+        /// <param name="PlanId"></param>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetBeanCount(string EmpId,int PlanId)
+        {
+            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId).ToList();
+            return list_s;
+        }
+        /// <summary>
+        /// 获取报名量
+        /// </summary>
+        /// <param name="EmpId"></param>
+        /// <param name="PlanId"></param>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetBaoMingCount(string EmpId, int PlanId)
+        {
+            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuStatus_Id==2).ToList();
+            return list_s;
         }
     }
 }

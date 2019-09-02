@@ -80,6 +80,8 @@
     <Compile Include="ClassSchedule_Business\ClassScheduleBusiness.cs" />
     <Compile Include="Common\BusHelper.cs" />
     <Compile Include="Common\Operator.cs" />
+    <Compile Include="Consult_Business\ConsultManeger.cs" />
+    <Compile Include="Consult_Business\ConsultTeacherManeger.cs" />
     <Compile Include="CourseSchedulingSysBusiness\CurriculumBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />

@@ -24,5 +24,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> ConsultType { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
+        public string BrainImage { get; set; }
     }
 }
