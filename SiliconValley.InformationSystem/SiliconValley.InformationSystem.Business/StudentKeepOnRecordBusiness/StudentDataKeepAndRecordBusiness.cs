@@ -82,9 +82,31 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public List<StudentPutOnRecord> GetGoSchoolByPlan(int PlanId ,string EmpId)
         {
-            //Syb_Entity.GetAll().Where(s => s.ID == PlanId).FirstOrDefault();
+            //当前查询的计划
+            var nowplan= Syb_Entity.GetPlanByID(PlanId);
+            //拿到下一个计划
+            var nextplan= Syb_Entity.GetNextPlan(nowplan);
+
             List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuIsGoto==true).ToList();
-            return list_s;
+            List<StudentPutOnRecord> resultlist = new List<StudentPutOnRecord>();
+            foreach (var item in list_s)
+            {
+                if (item.StuVisit>=nowplan.PlanDate)
+                {
+                    if (nextplan!=null)
+                    {
+                        if (item.StuVisit<=nextplan.PlanDate)
+                        {
+                            resultlist.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        resultlist.Add(item);
+                    }
+                }
+            }
+            return resultlist;
         }
         /// <summary>
         /// 获取备案量
@@ -94,8 +116,30 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public List<StudentPutOnRecord> GetBeanCount(string EmpId,int PlanId)
         {
+            //当前查询的计划
+            var nowplan = Syb_Entity.GetPlanByID(PlanId);
+            //拿到下一个计划
+            var nextplan = Syb_Entity.GetNextPlan(nowplan);
             List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId).ToList();
-            return list_s;
+            List<StudentPutOnRecord> resultlist = new List<StudentPutOnRecord>();
+            foreach (var item in list_s)
+            {
+                if (item.StuDateTime >= nowplan.PlanDate)
+                {
+                    if (nextplan != null)
+                    {
+                        if (item.StuVisit <= nextplan.PlanDate)
+                        {
+                            resultlist.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        resultlist.Add(item);
+                    }
+                }
+            }
+            return resultlist;
         }
         /// <summary>
         /// 获取报名量
@@ -105,8 +149,30 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public List<StudentPutOnRecord> GetBaoMingCount(string EmpId, int PlanId)
         {
+            //当前查询的计划
+            var nowplan = Syb_Entity.GetPlanByID(PlanId);
+            //拿到下一个计划
+            var nextplan = Syb_Entity.GetNextPlan(nowplan);
             List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuStatus_Id==2).ToList();
-            return list_s;
+            List<StudentPutOnRecord> resultlist = new List<StudentPutOnRecord>();
+            foreach (var item in list_s)
+            {
+                if (item.StatusTime >= nowplan.PlanDate)
+                {
+                    if (nextplan != null)
+                    {
+                        if (item.StuVisit <= nextplan.PlanDate)
+                        {
+                            resultlist.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        resultlist.Add(item);
+                    }
+                }
+            }
+            return resultlist;
         }
     }
 }
