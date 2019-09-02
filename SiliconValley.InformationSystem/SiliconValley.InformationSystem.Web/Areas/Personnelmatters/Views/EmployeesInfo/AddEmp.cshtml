@@ -175,6 +175,7 @@
                                 <option value="中专">中专</option>
                                 <option value="初中">初中</option>
                                 <option value="小学">小学</option>
+                                <option value="群众">群众</option>
                             </select>
                         </div>
                     </div>
@@ -232,13 +233,13 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入试用期工资" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入试用期工资" }, { "class", "layui-input salary" } })
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">转正后工资</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入转正工资" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入转正工资" }, { "class", "layui-input salary" } })
                         </div>
                     </div>
 
@@ -459,6 +460,21 @@
                         }
                     }
                 }//紧急联系电话
+            });
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
             });
 
 

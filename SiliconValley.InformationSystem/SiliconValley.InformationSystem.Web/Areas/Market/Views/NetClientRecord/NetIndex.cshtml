@@ -1,0 +1,358 @@
+﻿
+@{
+    ViewBag.Title = "NetIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.NetClientRecord
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<h2>网咨学生登记表</h2>
+
+<fieldset style="margin-top:50px;">
+    @*模糊查询*@
+    <form class="layui-form" action="" lay-filter="formtest">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">学生姓名：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="StuName" name="StuName" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">信息来源：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="InformationSource" name="InformationSource" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">登记人</label>
+                <div class="layui-input-inline">
+                    @Html.DropDownListFor(a => a.EmployeeId, ViewBag.nettea as SelectList, "--请选择--", new Dictionary<string, object>() { { "class", "layui-input " } })
+
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">是否面咨</label>
+                <div class="layui-input-block">
+                    <select name="IsFaceConsult" id="IsFaceConsult" lay-search="">
+                        <option value="">--请选择--</option>
+                        <option value="True">是</option>
+                        <option value="False">否</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">是否入学：</label>
+                <div class="layui-input-inline">
+                    <select id="IsDel" name="IsDel" lay-search="">
+                        <option value="">--请选择--</option>
+                        <option value="False">未入学</option>
+                        <option value="True">已入学</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">地区：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Region" name="Region" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:100px;">登记时间：</label>
+                <div class="layui-inline" style="margin-left:-50px;">
+                    <label class="layui-form-label">从：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="margin-left:-50px;">
+                    <label class="layui-form-label">至：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="end_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:40px;">查询</button>
+
+        </div>
+
+
+
+    </form>
+
+</fieldset>
+
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addNetStu">添加网咨学生信息</button>
+        @*<button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>*@
+    </div>
+</script>
+
+<table id="network" lay-filter="netConsult"></table>
+@*行工具操作*@
+<script type="text/html" id="barDemo1">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">详情查看</a>
+</script>
+
+@section script{
+
+    <script>
+        layui.use(['table', 'layer', 'form', 'laydate'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            table.render({
+                elem: '#network'
+                , url: '/Market/NetClientRecord/GetData'
+                , id: "mynetinfo"
+                , toolbar: '#toolbarDemo'
+                , limits: [1, 3, 6, 9, 12, 15, 18]
+                , limit: 6
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'StuName', title: '咨询学生姓名', width: 135, sort: true }
+                    , { field: 'StuSex', title: '性别', width: 90, sort: true, templet: '#mysex' }
+                    , { field: 'StuAge', title: '年龄', sort: true, width: 90 }
+                    , { field: 'netemp', title: '登记人', sort: true, width: 125 }
+                    , { field: 'NetClientDate', title: '登记日期', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.NetClientDate); } }
+                    , { field: 'channeltea', title: '市场对接老师', width: 130 }
+                    , { field: 'InformationSource', title: '信息来源', width: 100 }
+                    , { field: 'ContactInformation', title: '联系方式/电话/宅电', width: 150 }
+                    , { field: 'Region', title: '地区', width: 120 }
+                    , { field: 'IsFaceConsult', title: '是否面咨', width: 100, templet: '#switchTp1', unresize: true }
+                    , { field: 'IsDel', title: '是否入学', width: 110, templet: '#switchTp2', unresize: true }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1' }
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(netConsult)', function (obj) {
+                //var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addNetStu':
+                        AddNetStu();
+                        break;
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(netConsult)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/NetClientRecord/EditView/?Id=' + data.Id
+                        , area: ['1000px', '700px'],
+                        title: '编辑备案信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else if (obj.event === 'detail') {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/NetClientRecord/DetailInfo/?Id=' + data.Id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        , area: ['1000px', '700px'],
+                        title: '网咨学员详细信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var name = $("#StuName").val();//网咨学生姓名
+                var InformationSource = $("#InformationSource").val();//信息来源
+                var registrant = $("#EmployeeId").val();//登记人
+                var IsFaceConsult = $("#IsFaceConsult").val();//是否面咨
+                var IsDel = $("#IsDel").val();//是否入学
+                var start_time = $("#start_time").val();//起始时间
+                var end_time = $("#end_time").val();//终止时间
+
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('mynetinfo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: name + "," + InformationSource + "," + registrant + "," + IsFaceConsult + ","+ IsDel + "," + start_time + "," + end_time
+                        }
+                    });
+                });
+
+
+
+            });
+
+            //日期
+            var startTime = laydate.render({
+                elem: '#start_time',
+                done: function (value, date) {
+                    console.log(value);
+                    console.log(date);
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });
+            var endTime = laydate.render({
+                elem: '#end_time',
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });
+
+
+            //监听是否面咨和是否入学操作
+            form.on('switch(isfaceDemo)', function (obj) {
+
+                var id = this.value; var name = this.name;
+                console.log(id); console.log(name); console.log(obj.elem.checked);
+                $.ajax({
+                    type: "get",
+                    dataType: "json",
+                    url: "/Market/NetClientRecord/EditNetStu",
+                    data: { id: id, name: name, ismarry: obj.elem.checked },
+                    success: function (data) {
+                        if (data.Success) {
+                            //layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+                            layui.table.reload('mynetinfo');
+                        } else {
+                            layer.tips("修改失败!", obj.othis);
+                        }
+                    }
+                });
+            });
+
+        });
+
+        //添加网咨学生信息的方法
+        function AddNetStu() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["1000px", "700px"]
+                    , title: "网咨学员信息记录"
+                    , content: '/Market/NetClientRecord/AddNetConsultStuinfo'
+                    , anim: 2
+                });
+
+            })
+
+        }
+
+
+        //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+
+
+
+    @*性别属性*@
+    <script type="text/html" id="mysex">
+        {{# if(d.StuSex==false){ }}
+        {{ d.StuSex="男" }}
+        {{# }else{ }}
+        {{ d.StuSex="女" }}
+        {{# } }}
+    </script>
+    @*是否面咨属性*@
+    <script type="text/html" id="switchTp1">
+        <input type="checkbox" name="IsFaceConsult" value="{{d.Id}}" lay-skin="switch" lay-text="是|否" lay-filter="isfaceDemo" {{ d.IsFaceConsult == true ? 'checked' : '' }}>
+    </script>
+    @*是否入学属性*@
+    <script type="text/html" id="switchTp2">
+        <input type="checkbox" name="IsDel" value="{{d.Id}}" lay-skin="switch" lay-text="已入学|未入学" lay-filter="isfaceDemo" {{ d.IsDel == true ? 'checked' : '' }}>
+    </script>
+
+}
+
+

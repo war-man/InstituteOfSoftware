@@ -28,45 +28,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
-        //获取人才需求计划
-        public ActionResult GetTalantDemandData(int page, int limit) {
-            TalentDemandPlanManage tdpmanage = new TalentDemandPlanManage();
-            var list = tdpmanage.GetList();
-            var mytdplist = list.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            var newlist = from tdp in mytdplist
-                          select new {
-                              tdp.Id,
-                              dname = GetDept((int)tdp.DeptId).DeptName,
-                              pname = GetPosition((int)tdp.Pid).PositionName,
-                              tdp.DemandPersonNum,
-                              tdp.PlanEntryTime,
-                              tdp.PositionStatement,
-                              tdp.PositionRequest,
-                              tdp.RecruitReason,
-                              empname = GetEmp(tdp.EmployeeId).EmpName,
-                              tdp.ApplyTime,
-                              tdp.Remark,
-                              tdp.IsDel
-                          };
-            var newobj = new
-            {
-                code = 0,
-                msg = "",
-                count = list.Count(),
-                data = newlist
-            };
-            return Json(newobj, JsonRequestBehavior.AllowGet);
-        }
-
+       
         //获取招聘电话追踪数据
         public ActionResult GetTraceData(int page, int limit)
-        {
+        {  
             RecruitPhoneTraceManage rptmanage = new RecruitPhoneTraceManage();
             var rdslist = rptmanage.GetList();
             var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var newlist = from rds in myrdslist
                           select new
                           {
+                              #region 赋值
                               rds.Id,
                               rds.Name,
                               pname = GetPosition((int)rds.Pid).PositionName,
@@ -84,6 +56,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                               rds.PlanEntryTime,
                               rds.IsEntry,
                               rds.Remark
+                              #endregion
                           };
             var newobj = new
             {
@@ -96,22 +69,64 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         //获取月度招聘数据汇总
-        public ActionResult GetRecruitData(int page, int limit) {
-            AddRecruitData();
+        public ActionResult GetRecruitData(int page, int limit,string AppCondition) {
+             AddRecruitData();
             RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
             var rdslist = rdsmanage.GetList();
             var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string pname = str[0];
+                string start_time = str[1];
+                string end_time = str[2];
+                if (!string.IsNullOrEmpty(pname) )
+                {
+                    myrdslist = myrdslist.Where(e => e.Pid == int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(start_time))
+                {
+                    DateTime stime = Convert.ToDateTime(start_time);
+                    myrdslist = myrdslist.Where(a => a.YearAndMonth >= stime).ToList();
+                }
+                if (!string.IsNullOrEmpty(end_time))
+                {
+                    DateTime etime = Convert.ToDateTime(end_time );
+                    myrdslist = myrdslist.Where(a => a.YearAndMonth <= etime).ToList();
+                }
+            }
+            var newlist = from rds in myrdslist
+                          select new
+                          {
+                              #region 赋值
+                              rds.Id,
+                              rds.YearAndMonth,
+                              pname = GetPosition((int)rds.Pid).PositionName,
+                              rds.PlanRecruitNum,
+                              rds.ResumeSum,
+                              rds.OutboundCallSum,
+                              rds.InstantInviteSum,
+                              rds.InstantToFacesSum,
+                              rds.InstantRetestSum,
+                              rds.InstantRetestPassSum,
+                              rds.InstantEntryNum,
+                              rds.InstantToFacesRate,
+                              rds.InstantInviteRate,
+                              rds.InstantRetestPassrate,
+                              rds.EntryRate,
+                              rds.RecruitPercentage,
+                              rds.Remark
+                              #endregion
+                          };
             var newobj = new
             {
                 code = 0,
                 msg = "",
                 count = rdslist.Count(),
-                data = rdslist
+                data = newlist
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
-
-
 
         /// <summary>
         /// 获取部门对象
@@ -134,17 +149,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             PositionManage pmanage = new PositionManage();
             var str = pmanage.GetEntity(pid);
             return str;
-        }
-
-        /// <summary>
-        /// 获取员工（人才需求计划表-负责人）
-        /// </summary>
-        /// <param name="empid"></param>
-        /// <returns></returns>
-        public EmployeesInfo GetEmp(string empid) {
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp = empmanage.GetEntity(empid);
-            return emp;
         }
 
         /// <summary>
@@ -179,168 +183,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-        //添加人才需求计划
-        public ActionResult AddTalantDemand() {
-            return View();
-        }
-        //人才需求添加页绑定负责人属性下拉框
-        public ActionResult BindEmpSelect() {
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp = empmanage.GetList();
-            var newobj = new {
-                code = 0,
-                msg = "",
-                count = emp.Count(),
-                data = emp
-            };
-            return Json(newobj, JsonRequestBehavior.AllowGet);
-        }
-        [HttpPost]
-        public ActionResult AddTalantDemand(TalentDemandPlan tdp) {
-            TalentDemandPlanManage tdpmanage = new TalentDemandPlanManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                tdp.IsDel = false;
-                tdpmanage.Insert(tdp);
-                AjaxResultxx = tdpmanage.Success();
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = tdpmanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
-        //人才需求计划的是否完成招聘属性修改
-        public ActionResult EditTdpIsdel(int id, bool isdel)
-        {
-            TalentDemandPlanManage tdpmanage = new TalentDemandPlanManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                var tdp = tdpmanage.GetEntity(id);
-                tdp.IsDel = isdel;
-                tdpmanage.Update(tdp);
-                AjaxResultxx = tdpmanage.Success();
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = tdpmanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
-        //导入excel文件显示页面
-        public ActionResult AddExcelFile() {
-            return View();
-        }
-        //获取excel里的文件
-        public List<TalentDemandPlan> GetExcelFile() {
-            List<TalentDemandPlan> tdplist = new List<TalentDemandPlan>();
-            string namef = SessionHelper.Session["filename"].ToString();
-               var t = AsposeOfficeHelper.ReadExcel(namef, false);
-            foreach (DataRow item in t.Rows)
-            {
-                TalentDemandPlan tdp = new TalentDemandPlan();
-                tdp.DeptId = GetDeptidByName(item["部门"].ToString());
-                tdp.Pid = GetPidByName(item["岗位名称"].ToString());
-                tdp.DemandPersonNum = Convert.ToInt32(item["需求人数"]);
-                tdp.EmployeeId = GetEmpidByName(item["负责人"].ToString());
-                tdp.ApplyTime = Convert.ToDateTime(item["需求申请时间"]);
-                tdp.PlanEntryTime = Convert.ToDateTime(item["预计入职时间"]);
-                tdp.PositionStatement = item["岗位职责"].ToString();
-                tdp.PositionRequest = item["岗位要求"].ToString();
-                tdp.RecruitReason =item["招聘原因"].ToString();
-                tdp.IsDel = Convert.ToBoolean(item["是否完成招聘"]);
-                tdp.Remark = item["备注"].ToString();
-                tdplist.Add(tdp);
-
-            }
-            return tdplist;
-        }
-        //一个删除文件的方法
-        public void DeleteFile()
-        {
-            var namef = SessionHelper.Session["filename"];
-            if (namef != null)
-            {
-                FileInfo fi = new FileInfo(namef.ToString());
-                bool ishave = fi.Exists;
-                if (ishave)
-                {
-                    fi.Delete();
-                }
-            }
-        }
-        //显示出上传过来的excel文件
-        public ActionResult ShowUploadFile() {
-            StringBuilder ProName = new StringBuilder();
-            try
-            {
-                HttpPostedFileBase file = Request.Files["file"];
-                string fname = Request.Files["file"].FileName; //获取上传文件名称（包含扩展名）
-                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
-                string name = Path.GetExtension(fname);//获取扩展名
-                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/TalantDemandPlanfile/";//获取当前程序集下面的uploads文件夹中的excel文件夹目录
-                string completefilePath = f + DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称 
-                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
-                file.SaveAs(ProName.ToString());//上传文件   
-                SessionHelper.Session["filename"] = ProName.ToString();
-                List<TalentDemandPlan> tdplist = GetExcelFile();
-                if (tdplist.Count > 0)//如果拿到值说明文件格式是可以读取的
-                {
-                    var mydata = tdplist.Select(s => new
-                    {
-                        #region
-                        s.Id,
-                        dname = GetDept((int)s.DeptId).DeptName,
-                        pname = GetPosition((int)s.Pid).PositionName,
-                        s.DemandPersonNum,
-                        s.PlanEntryTime,
-                        s.PositionStatement,
-                        s.PositionRequest,
-                        s.RecruitReason,
-                        empname = GetEmp(s.EmployeeId).EmpName,
-                        s.ApplyTime,
-                        s.Remark,
-                        s.IsDel
-                        #endregion
-                    });
-                    var jsondata = new
-                    {
-                        code = "",
-                        msg = "ok",
-                        data = mydata,
-                    };
-                    return Json(jsondata, JsonRequestBehavior.AllowGet);
-                }
-                else //该文件格式不正确
-                {
-                    var jsondata = new
-                    {
-                        code = "",
-                        msg = "文件格式错误",
-                        data = "",
-                    };
-                    DeleteFile();//如果格式不符合规范则删除上传的文件
-                    return Json(jsondata, JsonRequestBehavior.AllowGet);
-                }
-
-            }
-            catch (Exception ee)
-            {
-                BusHelper.WriteSysLog(ee.Message, EnumType.LogType.上传文件);
-                var jsondata = new
-                {
-                    code = "",
-                    msg = ee.Message,
-                    data = "",
-                };
-                return Json(jsondata, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
-
         //添加招聘电话追踪信息
         public ActionResult Addrpt() {
             return View();
@@ -365,8 +207,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                
+                rpt.IsDel = false;
                 rmanage.Insert(rpt);
                 AjaxResultxx = rmanage.Success();
+
             }
             catch (Exception ex)
             {
@@ -411,24 +256,176 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        public  string Condition(DateTime date, string type)
+        {
+            if (type == "day")
+            {
+                return date.ToString("yyyy-M-d");
+            }
+            else if (type == "month")
+            {
+                return date.ToString("yyyy-M");
+            }
+            return date.Year.ToString();
+        }
 
-        //月度招聘数据汇总添加
-        public AjaxResult AddRecruitData() {
-            var AjaxResultxx = new AjaxResult();
-            TalentDemandPlanManage tdp = new TalentDemandPlanManage();
+        /// <summary>
+        /// 招聘电话追踪编辑
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Editrpt(int id) {
             RecruitPhoneTraceManage rpt = new RecruitPhoneTraceManage();
+             var r= rpt.GetEntity(id);
+            PositionManage pmanage = new PositionManage();
+            ViewBag.pname = new SelectList(pmanage.GetList(),"Pid","PositionName");
+            ViewBag.id = id;
+            return View(r);
+        }
+        public ActionResult GetrptById(int Id) {
+            RecruitPhoneTraceManage rpt = new RecruitPhoneTraceManage();
+            var r = rpt.GetEntity(Id);
+            return Json(r,JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult Editrpt(RecruitPhoneTrace rpt) {
+            RecruitPhoneTraceManage rmanage = new RecruitPhoneTraceManage();
+            var AjaxResultxx = new AjaxResult();
             try
             {
-               
+                rmanage.Update(rpt);
+                AjaxResultxx= rmanage.Success();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                AjaxResultxx = rmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
 
-                throw;
+        //月度招聘数据汇总添加
+        public AjaxResult AddRecruitData()   {
+            var AjaxResultxx = new AjaxResult();
+            RecruitPhoneTraceManage rpt = new RecruitPhoneTraceManage();
+            RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
+            try
+            {
+                var list = from r in rpt.GetList()
+                           group r by new
+                           { r.Pid, month = Condition((DateTime)r.TraceTime, "month") } into g
+                           select new
+                           {
+                               month = g.Key.month,//月份
+                               position = g.Key.Pid,//岗位
+                               resumenum = g.Count(),//简历总数
+                               PhoneCommunicatenum= g.Count(t=>t.PhoneCommunicateResult != null),//电话呼出总数
+                               invitednum=g.Count(t=>t.FirstInterviewDate!=null),//邀约总数
+                               Facednum=g.Count(t=>t.IsInterview==true),//当月到面总数
+                               Refacednum=g.Count(t=>t.RetestResult!="-1"),//当月复试总数
+                               Refacepassednum=g.Count(t=>t.RetestResult=="通过"),//当月复试通过总数
+                               Entrynum=g.Count(t=>t.IsEntry==true)//当月入职人数
+                           };
+                List<RecruitingDataSummary> rlist = new List<RecruitingDataSummary>();
+                foreach (var s in list)
+                {
+                    #region 给对象赋值
+                    RecruitingDataSummary item = new RecruitingDataSummary();
+                    item.YearAndMonth = DateTime.Parse(s.month);
+                    item.Pid = s.position;
+                    item.ResumeSum = s.resumenum;
+                    item.OutboundCallSum = s.PhoneCommunicatenum;
+                    item.InstantInviteSum = s.invitednum;
+                    item.InstantToFacesSum = s.Facednum;
+                    item.InstantRetestSum = s.Refacednum;
+                    item.InstantRetestPassSum = s.Refacepassednum;
+                    item.InstantEntryNum = s.Entrynum;
+                    if (s.invitednum != 0)
+                    {
+                        item.InstantToFacesRate = (decimal)s.Facednum / (decimal)s.invitednum;
+                    }
+                    if (s.PhoneCommunicatenum != 0)
+                    {
+                        item.InstantInviteRate = (decimal)s.invitednum / (decimal)s.PhoneCommunicatenum;
+                    }
+                    if (s.Refacednum != 0)
+                    {
+                        item.InstantRetestPassrate = (decimal)s.Refacepassednum / (decimal)s.Refacednum;
+                    }
+                    if (s.Refacepassednum != 0)
+                    {
+                        item.EntryRate = (decimal)s.Entrynum / (decimal)s.Refacepassednum;
+                    }
+                    var rds = rdsmanage.GetList().Where(a => a.Pid == item.Pid && Condition((DateTime)a.YearAndMonth, "month") == Condition((DateTime)item.YearAndMonth, "month")).FirstOrDefault();
+                    if (rds != null)
+                    {
+                        rds.YearAndMonth = item.YearAndMonth;
+                        rds.Pid = item.Pid;
+                        rds.ResumeSum = item.ResumeSum;
+                        rds.OutboundCallSum = item.OutboundCallSum;
+                        rds.InstantInviteSum = item.InstantInviteSum;
+                        rds.InstantToFacesSum = item.InstantToFacesSum;
+                        rds.InstantRetestSum = item.InstantRetestSum;
+                        rds.InstantRetestPassSum = item.InstantRetestPassSum;
+                        rds.InstantEntryNum = item.InstantEntryNum;
+                        rds.InstantToFacesRate = item.InstantToFacesRate;
+                        rds.InstantInviteRate = item.InstantInviteRate;
+                        rds.InstantRetestPassrate = item.InstantRetestPassrate;
+                        rds.EntryRate = item.EntryRate;
+                        rds.RecruitPercentage = (decimal)rds.InstantEntryNum / (decimal)rds.PlanRecruitNum;
+                        rdsmanage.Update(rds);
+                    }
+                    else if (rdsmanage.GetList().Count() == 0)
+                    {
+                        rdsmanage.Insert(item);
+                    }
+                    else
+                    {
+                        rdsmanage.Insert(item);
+                    }
+                    #endregion
+                }
+                AjaxResultxx = rdsmanage.Success();
+                        
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = rdsmanage.Error(ex.Message);
             }
             return AjaxResultxx;
         }
+        /// <summary>
+        /// 招聘数据汇总[计划招聘人数]字段的单元格编辑方法
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="endvalue"></param>
+        /// <returns></returns>
+        public ActionResult EditTableCell(int id,string attribute, string endvalue) {
+           RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var rds= rdsmanage.GetEntity(id);
+                switch (attribute)
+                {
+                    case "PlanRecruitNum":
+                        rds.PlanRecruitNum = int.Parse(endvalue);
+                        rds.RecruitPercentage = (decimal)rds.InstantEntryNum / (decimal)rds.PlanRecruitNum;
+                        rdsmanage.Update(rds);
+                        break;
+                    case "Remark":
+                        rds.Remark = endvalue;
+                        rdsmanage.Update(rds);
+                        break;
+                }                          
+                AjaxResultxx= rdsmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = rdsmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
 
-       
+
     }
 }
