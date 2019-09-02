@@ -269,7 +269,10 @@
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
+    <Compile Include="ViewEntity\ClassdetailsView.cs" />
+    <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />
+    <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
