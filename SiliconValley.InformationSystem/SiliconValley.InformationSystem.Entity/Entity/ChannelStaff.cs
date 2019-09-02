@@ -29,7 +29,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 注册时间
         /// </summary>
         public System.DateTime ChannelDate { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDel { get; set; }
-    
+        /// <summary>
+        /// 离职时间
+        /// </summary>
+        public Nullable<System.DateTime> QuitDate { get; set; }
+
+
     }
 }

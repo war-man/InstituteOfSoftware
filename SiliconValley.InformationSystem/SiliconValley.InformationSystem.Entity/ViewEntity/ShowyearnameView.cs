@@ -18,6 +18,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 年份名称
         /// </summary>
-        public string YearName { get; set; }
+        public string ShowTitle { get; set; }
     }
 }

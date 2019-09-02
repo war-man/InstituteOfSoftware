@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 区域量
         /// </summary>
-        public Nullable<int> AreaNumber { get; set; }
+        public int AreaNumber { get; set; }
         /// <summary>
         /// 网络预计人数
         /// </summary>

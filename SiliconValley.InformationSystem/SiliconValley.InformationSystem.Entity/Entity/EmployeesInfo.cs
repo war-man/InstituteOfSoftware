@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string IdCardNum { get; set; }
         public Nullable<System.DateTime> ContractStartTime { get; set; }
         public Nullable<System.DateTime> ContractEndTime { get; set; }
-        public Nullable<System.DateTime> EntryTime { get; set; }
+        public System.DateTime EntryTime { get; set; }
         public Nullable<System.DateTime> Birthdate { get; set; }
         public string Birthday { get; set; }
         public Nullable<System.DateTime> PositiveDate { get; set; }

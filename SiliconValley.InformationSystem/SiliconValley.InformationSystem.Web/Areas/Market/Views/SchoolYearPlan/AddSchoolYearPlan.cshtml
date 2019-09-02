@@ -65,16 +65,6 @@
 
                     </div>
 
-
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">代理预计人数</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Estimatednumberofagents, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "代理预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "代理预计人数不可为空" } })
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">口碑预计人数</label>
@@ -83,11 +73,21 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">网络预计人数</label>
                             <div class="layui-input-block">
                                 @Html.TextBoxFor(a => a.PredictedNetworkNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "网络预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "网络预计人数不可为空" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">区域预计人数</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.AreaNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "区域预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "区域预计人数不可为空" } })
                             </div>
                         </div>
                     </div>
@@ -196,6 +196,12 @@
                                 var index = parent.layer.getFrameIndex(window.name);
                                 parent.layer.close(index); //再执行关闭
                             })
+                        } else {
+                            layer.msg(data.Msg, { icon: 1 }, function () {
+                                //先得到当前iframe层的索引
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index); //再执行关闭
+                            });
                         }
                     },
                     error: function () {

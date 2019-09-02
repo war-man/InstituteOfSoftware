@@ -13,13 +13,16 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 借资表
+    /// </summary>
     [Table("Debit")]
     public partial class Debit
     {
         [Key]
         public int ID { get; set; }
-        public string ChaStaffNO { get; set; }
-        public Nullable<double> DebitMoney { get; set; }
+        public string EmpNumber { get; set; }
+        public double DebitMoney { get; set; }
         public string Debitwhy { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }

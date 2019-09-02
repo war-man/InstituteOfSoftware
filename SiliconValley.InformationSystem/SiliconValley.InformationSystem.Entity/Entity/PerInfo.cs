@@ -24,9 +24,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public int PreID { get; set; }
         /// <summary>
-        /// 学生编号
+        /// 备案id
         /// </summary>
-        public string StudentNumber { get; set; }
+        public int BeianID { get; set; }
         /// <summary>
         /// 是否删除
         /// </summary>
