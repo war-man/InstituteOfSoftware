@@ -19,5 +19,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             //根据员工获取报名的数据
           return  this.GetList().Where(s => s.StuStatus_Id == 2 && s.EmployeesInfo_Id == EmpyId).ToList();
         }
+
+
+
     }
 }

@@ -403,14 +403,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(ajaxResult,JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 考核页面
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AssessmentChannelStaffIndex() {
-
-            return View();
-        }
+       
 
     }
 }

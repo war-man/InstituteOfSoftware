@@ -9,12 +9,16 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// <summary>
     /// 用于显示渠道专员年度计划数据
     /// </summary>
-    public class ChannelYearPlanIndexView
+    public class MrdChannelYearPlanIndexView
     {
+        /// <summary>
+        /// 员工编号
+        /// </summary>
+        public string EmpStaffID { get; set; }
         /// <summary>
         /// 年度渠道专员计划id
         /// </summary>
-        public int ChannelYearPlanID { get; set; }
+        public Nullable<int> ChannelYearPlanID { get; set; }
         /// <summary>
         /// 渠道专员id
         /// </summary>
@@ -23,11 +27,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 专员名字
         /// </summary>
-        public int EmpName { get; set; }
+        public string EmpName { get; set; }
         /// <summary>
         /// 专员电话
         /// </summary>
-        public int Phone { get; set; }
+        public string Phone { get; set; }
         /// <summary>
         /// 专员计划量
         /// </summary>
@@ -56,5 +60,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 入职时间
         /// </summary>
         public System.DateTime ChannelDate { get; set; }
+        /// <summary>
+        /// 离职时间
+        /// </summary>
+        public Nullable<System.DateTime> QuitDate { get; set; }
+        /// <summary>
+        /// 借资次数
+        /// </summary>
+        public Nullable<int> DebitNumber { get; set; }
     }
 }

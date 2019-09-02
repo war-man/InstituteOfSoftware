@@ -1,5 +1,6 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Business.Psychro;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -18,7 +19,10 @@ namespace SiliconValley.InformationSystem.Business.Channel
     public class ChannelStaffBusiness : BaseBusiness<ChannelStaff>
     {
         EmploymentStaffBusiness dbempstaff = new EmploymentStaffBusiness();
-
+        /// <summary>
+        /// 学校年度计划的业务类
+        /// </summary>
+        private SchoolYearPlanBusiness dbschoolpaln;
         /// <summary>
         /// 得到没有离职的渠道专员
         /// </summary>
@@ -27,7 +31,14 @@ namespace SiliconValley.InformationSystem.Business.Channel
         {
             return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
-        
+
+        /// <summary>
+        /// 获取所有的渠道员工
+        /// </summary>
+        /// <returns></returns>
+        public List<ChannelStaff> GetAll() {
+            return this.GetIQueryable().ToList();
+        }
         /// <summary>
         /// 根据这个渠道专员id获取渠道专员对象
         /// </summary>
@@ -53,6 +64,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
         public bool DelChannelStaff(string empid) {
             ChannelStaff channelStaff=  this.GetChannelByEmpID(empid);
             channelStaff.IsDel = true;
+            channelStaff.QuitDate = DateTime.Now;
             bool result = false;
             try
             {
@@ -103,6 +115,36 @@ namespace SiliconValley.InformationSystem.Business.Channel
         public List<StudentPutOnRecord> GetbeianAll() {
             StudentDataKeepAndRecordBusiness dbbeian = new StudentDataKeepAndRecordBusiness();
            return dbbeian.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+        }
+        /// <summary>
+        /// 根据年度计划的id获取该年度的人员情况
+        /// </summary>
+        /// <param name="PlanID"></param>
+        /// <returns></returns>
+        public List<ChannelStaff> GetChannelByYear(int? PlanID, SchoolYearPlanBusiness dbschoolpaln) {
+         
+            var nowschoolplan = dbschoolpaln.GetPlanByID(PlanID);
+            var nextdata = dbschoolpaln.GetNextPlan(nowschoolplan);
+            List<ChannelStaff> resultlist = new List<ChannelStaff>();
+            var channelstafflist = this.GetAll();
+            for (int i = channelstafflist.Count-1; i >=0; i--)
+            {
+                if (channelstafflist[i].ChannelDate>= nowschoolplan.PlanDate)
+                {
+                    if (nextdata != null)
+                    {
+                        if (channelstafflist[i].ChannelDate <= nextdata.PlanDate)
+                        {
+                            resultlist.Add(channelstafflist[i]);
+                        }
+                    }
+                    else
+                    {
+                        resultlist.Add(channelstafflist[i]);
+                    }
+                }
+            }
+            return resultlist;
         }
       
     }
