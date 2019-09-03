@@ -449,6 +449,7 @@
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsZhuZhuangImageView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

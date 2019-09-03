@@ -3,71 +3,177 @@
     ViewBag.Title = "ConsultTeacherIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@using SiliconValley.InformationSystem.Entity.ViewEntity
 
 @section style{
-<link href="~/Scripts/Tangmin_CssAndJs/ConsultTeacher_Css/YlSidler.css" rel="stylesheet" />
+    <style type="text/css">
+        #show
+        {
+            position: relative;
+            margin-top: 20px auto;
+            width: 800px;
+        }
+
+        .item
+        {
+            position: absolute;
+            height: 80px;
+            width: 120px;
+            border: 1px solid #eeeeee;
+            cursor: pointer;
+            text-align:center
+        }
+        .divMyCss
+        {
+            width: 1000px;
+            margin:100px auto;
+
+        }
+        body .demo-class .layui-layer-title
+        {
+            background: #ffd800;
+            color: #fff;
+            border:none;
+        }
+        .spanCssone{
+        font-size:25px;
+        font-family:STSong
+        }
+        .demo-class .layui-layer-btn a
+        {
+            background: #ffd800;
+            color: #fff;
+            border: none;
+        }
+        body .demo-class2 .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
 }
+@*<input id="l" type="button" value="left" class="layui-btn">
+<input id="r" type="button" value="right" class="layui-btn">*@
 
-<div class="sun_banner">
-    <div class="Yl-container"></div>
-</div>
-
-
-@section script{
-<script src="~/Scripts/Tangmin_CssAndJs/ConsultTeacher_Js/jquery.min.js"></script>
-<script src="~/Scripts/Tangmin_CssAndJs/ConsultTeacher_Js/jquery.Yl.Slide.min.js"></script>
-<script>    
-    @*function  GetData() {
-        @{ 
-            for (int i = 0; i < ViewBag.data.count; i++)
+<div class="divMyCss">
+    <div id="show">
+        @{
+            foreach (T_ConsultTeacherData item in ViewBag.data as List<T_ConsultTeacherData>)
             {
-                return " 0: ['<div class="Yl - font0">一人之下</div>', '<div class="Yl - font1">术之尽头，炁体源流</div>', '<div class="Yl - font2">国漫崛起</div>'],";
+                <div class="item" myid="@item.Id">
+                    <img src="~/Images/onepgscr-5.jpg" style="height:80%;width:100%" />
+                    <span> @item.EmpName</span>
+                </div>        
             }
         }
-    }*@
-    $(function () {
-        $('.Yl-container').YlSlide({
-            wrapper: '.Yl-wrapper',
-            slideClass: '.Yl-slide',
-            stylePrefix: '.Yl-',
-            slideLength: 3,
-            pages: true,
-            pagination: '.Yl-pagination',
-            pagingSelect: '.Yl-pagination-bullet-active',
-            autoplay: 25000,
-            imgTemplate: {
-                0: ['<div class="Yl-img0"></div>'],
-                1: ['<div class="Yl-img1"></div>'],
-                2: ['<div class="Yl-img2"></div>']
-            },
-            fontTemplate: {                 
-                0: ['<div class="Yl-font0">一人之下</div>', '<div class="Yl-font1">术之尽头，炁体源流</div>', '<div class="Yl-font2">国漫崛起</div>'],
-                1: ['<div class="Yl-font0">画江湖</div>', '<div class="Yl-font1">不良人、侠岚、换世门生、灵主</div>', '<div class="Yl-font2">国漫崛起</div>'],
-                2: ['<div class="Yl-font0">镇魂街</div>', '<div class="Yl-font1">末将于禁 愿为曹家世代赴汤蹈火</div>', '<div class="Yl-font2">国漫崛起</div>']
-            },
-            fontAnimationMode: {
-                0: ['fadeInUp', 'fadeInUp', 'slideInLeft'],
-                1: ['fadeInUp', 'fadeInUp', 'slideInLeft'],
-                2: ['fadeInUp', 'fadeInUp', 'slideInLeft']
-            },
-            customTemplate: {
-                0: ['<div class="Yl-Button"><a href="javascript:void(0);">查看详情</a></div>'],
-                1: ['<div class="Yl-Button"><a href="javascript:void(0);">查看详情</a></div>'],
-                2: ['<div class="Yl-Button"><a href="javascript:void(0);">查看详情</a></div>']
-            },
-            callback: function (e) {
-                //整个dom加载完成后的回调函数、切换动画前的回调
-            },
-            before: function (e) {
-                //页面切换前的回调函数
-            },
-            after: function (e) {
-                //页面切换完成后的回调函数
+    </div>
+</div>
+ 
+@section script{
+    <script type="text/javascript">
+        function ComHelper(msg) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.confirm('<span class=spanCssone>'+msg+'</span>',
+                    { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8},
+                    function (index) {
+                     
+                    layer.close(index);//关闭弹出层
+                });
+            });            
+        }
+        var len;
+        var showerObj;
+        var listObj;
+        var showerWidth = 800;//设置最外面框的宽度
+        var showerHeight = 400;//设置最外面框的高度
+        var r;
+        var cR = 0;
+        var ccR = 0;
+        var timer = 0;
+        window.onload = function () {
+            showerObj = document.getElementById("show");//获取最外面的Div
+            listObj = showerObj.getElementsByTagName("div");//拿到所有的要旋转的Div
+            len = listObj.length;//获取要旋转的Div个数
+            r = Math.PI / 180 * 360 / len;//Math.PI=3.14---这里应该是拿到圆的半经
+            for (var i = 0; i < len; i++) {
+                var item = listObj[i];//循环拿旋转的Div
+                item.style.top = showerHeight / 2 + Math.sin(r * i) * showerWidth / 2 - 20 + "px";//设置样式
+                item.style.left = showerWidth / 2 + Math.cos(r * i) * showerWidth / 2 - 30 + "px";
+                item.rotate = (r * i + 2 * Math.PI) % (2 * Math.PI);//旋转方式
+
+                item.onclick = function () {
+                    cR = Math.PI / 2 - this.rotate;//居中
+                    timer || (timer = setInterval(rotate, 20));
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.confirm('<span class=spanCssone>是否查看详情？</span>',
+                            { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8 },
+                            function (index) {
+                                var id = item.getAttribute("myid");//获取咨询师Id
+                                //打开详情页面
+                                layer.close(index);//关闭弹出层
+                                layer.open({
+                                    type: 2,
+                                    content: '/Market/ConsultTeacher/ConsultTeacherDefalut/'+id  
+                                    , area: ['1000px', '650px'],
+                                    title: '咨询师详情信息'
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class2'
+                                });
+                            });
+                    });            
+                }//当Div被点击时居中
 
             }
-        });
-    });
-</script>
-}
+            var rX = showerObj.offsetLeft + showerWidth / 2;
+            var ry = showerObj.offsetTop + showerHeight / 2;
 
+            var rotate = function () {
+                ccR = (ccR + 2 * Math.PI) % (2 * Math.PI);
+                if (cR - ccR < 0) cR = cR + 2 * Math.PI;
+                if (cR - ccR < Math.PI) {
+                    ccR = ccR + (cR - ccR) / 19;
+                } else {
+                    ccR = ccR - (2 * Math.PI + ccR - cR) / 19;
+
+                }
+
+                if (Math.abs((cR + 2 * Math.PI) % (2 * Math.PI) - (ccR + 2 * Math.PI) % (2 * Math.PI)) < Math.PI / 720) {
+                    ccR = cR;
+                    clearInterval(timer);
+                    timer = 0;
+                }
+
+                for (var i = 0; i < len; i++) {
+                    var item = listObj[i];
+                    var w, h;
+                    var sinR = Math.sin(r * i + ccR);
+                    var cosR = Math.cos(r * i + ccR);
+                    w = 120 + 0.6 * 60 * sinR;
+                    h = (80 + 0.6 * 40 * sinR);//大小设置
+                    item.style.cssText += ";width:" + w + "px;height:" + h + "px;top:" + parseInt(showerHeight / 2 + sinR * showerWidth / 2 / 3 - w / 2) + "px;left:" + parseInt(showerWidth / 2 + cosR * showerWidth / 2 - h / 2) + "px;z-index:" + parseInt(showerHeight / 2 + sinR * showerWidth / 2 / 3 - w / 2) + ";";
+
+                }
+            }
+
+            //document.getElementById("l").onclick = function () {
+            //    cR = (cR + r + 2 * Math.PI) % (2 * Math.PI);
+            //    timer || (timer = setInterval(rotate, 10));//往左旋转
+            //}
+            //document.getElementById("r").onclick = function () {
+            //    cR = (cR - r + 2 * Math.PI) % (2 * Math.PI);
+            //    timer || (timer = setInterval(rotate, 10));//往右旋转
+            //}
+
+            rotate();
+
+            window.setInterval(function () {
+                cR = (cR + r + 2 * Math.PI) % (2 * Math.PI);
+                timer || (timer = setInterval(rotate, 10));
+            }, 2000);
+        }
+    </script>
+}

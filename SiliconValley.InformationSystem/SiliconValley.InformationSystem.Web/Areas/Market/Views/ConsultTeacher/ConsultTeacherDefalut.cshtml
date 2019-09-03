@@ -1,0 +1,128 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ConsultTeacherDefalut</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .TeaxAresCssServer1{
+           width:150px;
+           height:40px;
+        }
+        .myformCssServer1{
+          margin-top:20px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form myformCssServer1">
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">姓名:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input name="" id="" class="layui-input" />
+            </div>
+
+            <div class="layui-col-sm6" style="text-align:center">
+                <img src="~/Images/onepgscr-7.jpg" style="width:200px;height:180px;position:absolute"/>
+            </div>
+        </div>
+        <br />
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">联系电话:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input name="" id="" class="layui-input" />
+            </div>
+        </div>
+        <br />
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">学历:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input name="" id="" class="layui-input" />
+            </div>            
+        </div>
+        <br />
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">咨询等级:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input name="" id="" class="layui-input" />
+            </div>
+        </div>
+        <br />
+
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">政治面貌:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input name="" id="" class="layui-input" />
+            </div>            
+        </div>
+        <br />
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">咨询类型:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input type="radio" name="zai" id="" class="layui-input" title="高中" />
+                <input type="radio" name="zai" id="" class="layui-input" title="初中" />
+            </div>
+
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">是否在职:</label>
+            </div>
+            <div class="layui-col-sm3">
+                <input type="radio" name="zai" id="" class="layui-input" title="在职" />
+                <input type="radio" name="zai" id="" class="layui-input" title="离职" />
+            </div>
+        </div>
+        <br />
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">工作经验:</label>
+            </div>
+            <div class="layui-col-sm6">
+                <textarea style="width: 685px; height: 80px;">
+
+               </textarea>
+            </div>
+        </div>
+        <br />
+        <div class="layui-row">
+            <div class="layui-col-sm2">
+                <label class="layui-form-label">说明:</label>
+            </div>
+            <div class="layui-col-sm6">
+                <textarea style="width: 685px; height: 80px;">
+
+              </textarea>
+            </div>
+        </div>
+        <br />
+        <div class="layui-row">
+            <button class="layui-btn" lay-submit="" lay-filter="demo1">修改</button>
+            <button type="button" class="layui-btn">取消</button>
+        </div>
+    </form>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+        });
+    </script>
+</body>
+</html>
