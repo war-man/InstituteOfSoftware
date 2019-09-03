@@ -890,9 +890,6 @@
     <Content Include="Scripts\layui\lay\modules\util.js" />
     <Content Include="Scripts\layui\prefixfree.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\YlSidler.css" />
-    <Content Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\jquery.min.js" />
-    <Content Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\jquery.Yl.Slide.min.js" />
     <Content Include="Scripts\util\easyui-extend.js" />
     <Content Include="Scripts\util\framework-util.js" />
     <Content Include="Scripts\util\upload-time.js" />
@@ -1214,6 +1211,7 @@
     <Folder Include="bin\assets\img\" />
     <Folder Include="bin\roslyn\" />
     <Folder Include="bin\zh-Hans\" />
+    <Folder Include="Scripts\Tangmin_CssAndJs\" />
     <Folder Include="uploadXLSXfile\ConflictExcel\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
