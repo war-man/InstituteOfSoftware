@@ -114,15 +114,15 @@
                 , url: '/Market/NetClientRecord/GetData'
                 , id: "mynetinfo"
                 , toolbar: '#toolbarDemo'
-                , limits: [1, 3, 6, 9, 12, 15, 18]
-                , limit: 6
+                , limits: [5,10, 15, 20,25]
+                , limit: 10
                 , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'Id', title: '编号', width: 45, sort: true }
                     , { field: 'StuName', title: '咨询学生姓名', width: 135, sort: true }
                     , { field: 'StuSex', title: '性别', width: 90, sort: true, templet: '#mysex' }
                     , { field: 'StuAge', title: '年龄', sort: true, width: 90 }
                     , { field: 'netemp', title: '登记人', sort: true, width: 125 }
-                    , { field: 'NetClientDate', title: '登记日期', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.NetClientDate); } }
+                    , { field: 'NetClientDate', title: '登记日期', width: 170, sort: true, templet: function (d) { return changeDateTimeFormat(d.NetClientDate); } }
                     , { field: 'channeltea', title: '市场对接老师', width: 130 }
                     , { field: 'InformationSource', title: '信息来源', width: 100 }
                     , { field: 'ContactInformation', title: '联系方式/电话/宅电', width: 150 }
