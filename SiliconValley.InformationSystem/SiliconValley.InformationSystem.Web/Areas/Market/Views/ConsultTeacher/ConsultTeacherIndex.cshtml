@@ -10,8 +10,8 @@
         #show
         {
             position: relative;
-            margin: 20px auto;
-            width: 800px;  
+            margin-top: 20px auto;
+            width: 800px;
         }
 
         .item
@@ -19,29 +19,70 @@
             position: absolute;
             height: 80px;
             width: 120px;
-            background: #999999;
             border: 1px solid #eeeeee;
             cursor: pointer;
+            text-align:center
+        }
+        .divMyCss
+        {
+            width: 1000px;
+            margin:100px auto;
+
+        }
+        body .demo-class .layui-layer-title
+        {
+            background: #ffd800;
+            color: #fff;
+            border:none;
+        }
+        .spanCssone{
+        font-size:25px;
+        font-family:STSong
+        }
+        .demo-class .layui-layer-btn a
+        {
+            background: #ffd800;
+            color: #fff;
+            border: none;
+        }
+        body .demo-class2 .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
         }
     </style>
 }
-<input id="l" type="button" value="left" class="layui-btn">
-<input id="r" type="button" value="right" class="layui-btn">
+@*<input id="l" type="button" value="left" class="layui-btn">
+<input id="r" type="button" value="right" class="layui-btn">*@
 
-<div id="show">
-    @{
-        foreach (T_ConsultTeacherData item in ViewBag.data as List<T_ConsultTeacherData>)
-        {
-            <div class="item">
-
-             @item.EmpName
-            </div>            
+<div class="divMyCss">
+    <div id="show">
+        @{
+            foreach (T_ConsultTeacherData item in ViewBag.data as List<T_ConsultTeacherData>)
+            {
+                <div class="item" myid="@item.Id">
+                    <img src="~/Images/onepgscr-5.jpg" style="height:80%;width:100%" />
+                    <span> @item.EmpName</span>
+                </div>        
+            }
         }
-    }
-
+    </div>
 </div>
+ 
 @section script{
     <script type="text/javascript">
+        function ComHelper(msg) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.confirm('<span class=spanCssone>'+msg+'</span>',
+                    { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8},
+                    function (index) {
+                     
+                    layer.close(index);//关闭弹出层
+                });
+            });            
+        }
         var len;
         var showerObj;
         var listObj;
@@ -65,6 +106,25 @@
                 item.onclick = function () {
                     cR = Math.PI / 2 - this.rotate;//居中
                     timer || (timer = setInterval(rotate, 20));
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.confirm('<span class=spanCssone>是否查看详情？</span>',
+                            { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8 },
+                            function (index) {
+                                var id = item.getAttribute("myid");//获取咨询师Id
+                                //打开详情页面
+                                layer.close(index);//关闭弹出层
+                                layer.open({
+                                    type: 2,
+                                    content: '/Market/ConsultTeacher/ConsultTeacherDefalut/'+id  
+                                    , area: ['1000px', '650px'],
+                                    title: '咨询师详情信息'
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class2'
+                                });
+                            });
+                    });            
                 }//当Div被点击时居中
 
             }
@@ -93,22 +153,27 @@
                     var sinR = Math.sin(r * i + ccR);
                     var cosR = Math.cos(r * i + ccR);
                     w = 120 + 0.6 * 60 * sinR;
-                    h = (80 + 0.6 * 40 * sinR);
+                    h = (80 + 0.6 * 40 * sinR);//大小设置
                     item.style.cssText += ";width:" + w + "px;height:" + h + "px;top:" + parseInt(showerHeight / 2 + sinR * showerWidth / 2 / 3 - w / 2) + "px;left:" + parseInt(showerWidth / 2 + cosR * showerWidth / 2 - h / 2) + "px;z-index:" + parseInt(showerHeight / 2 + sinR * showerWidth / 2 / 3 - w / 2) + ";";
 
                 }
             }
 
-            document.getElementById("l").onclick = function () {
+            //document.getElementById("l").onclick = function () {
+            //    cR = (cR + r + 2 * Math.PI) % (2 * Math.PI);
+            //    timer || (timer = setInterval(rotate, 10));//往左旋转
+            //}
+            //document.getElementById("r").onclick = function () {
+            //    cR = (cR - r + 2 * Math.PI) % (2 * Math.PI);
+            //    timer || (timer = setInterval(rotate, 10));//往右旋转
+            //}
+
+            rotate();
+
+            window.setInterval(function () {
                 cR = (cR + r + 2 * Math.PI) % (2 * Math.PI);
                 timer || (timer = setInterval(rotate, 10));
-            }
-            document.getElementById("r").onclick = function () {
-                cR = (cR - r + 2 * Math.PI) % (2 * Math.PI);
-                timer || (timer = setInterval(rotate, 10));
-            }
-            rotate();
+            }, 2000);
         }
     </script>
 }
-
