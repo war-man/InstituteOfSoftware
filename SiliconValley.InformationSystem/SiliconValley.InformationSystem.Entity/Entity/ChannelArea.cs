@@ -26,6 +26,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> RegionalDirectorID { get; set; }
         public int ChannelStaffID { get; set; }
         public bool IsDel { get; set; }
+        /// <summary>
+        /// 负责区域时间
+        /// </summary>
         public System.DateTime StaffAreaDate { get; set; }
     }
 }

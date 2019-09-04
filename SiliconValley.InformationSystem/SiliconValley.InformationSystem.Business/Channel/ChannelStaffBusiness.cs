@@ -56,6 +56,8 @@ namespace SiliconValley.InformationSystem.Business.Channel
            return this.GetChannelStaffs().Where(a => a.EmployeesInfomation_Id == empid).FirstOrDefault();
         }
         
+
+
         /// <summary>
         /// 删除渠道员工
         /// </summary>
@@ -129,9 +131,10 @@ namespace SiliconValley.InformationSystem.Business.Channel
             var channelstafflist = this.GetAll();
             for (int i = channelstafflist.Count-1; i >=0; i--)
             {
+                //现在员工
                 if (channelstafflist[i].ChannelDate>= nowschoolplan.PlanDate)
                 {
-                    if (nextdata != null)
+                    if (nextdata.ID!=0)
                     {
                         if (channelstafflist[i].ChannelDate <= nextdata.PlanDate)
                         {
@@ -141,6 +144,28 @@ namespace SiliconValley.InformationSystem.Business.Channel
                     else
                     {
                         resultlist.Add(channelstafflist[i]);
+                    }
+                }
+                //老员工
+                else
+                {
+                    if (channelstafflist[i].IsDel==false)
+                    {
+                        resultlist.Add(channelstafflist[i]);
+                    }
+                    else
+                    {
+                        if (nextdata.ID!=0)
+                        {
+                            if (channelstafflist[i].QuitDate<=nextdata.PlanDate)
+                            {
+                                resultlist.Add(channelstafflist[i]);
+                            }
+                        }
+                        else
+                        {
+                            resultlist.Add(channelstafflist[i]);
+                        }
                     }
                 }
             }
