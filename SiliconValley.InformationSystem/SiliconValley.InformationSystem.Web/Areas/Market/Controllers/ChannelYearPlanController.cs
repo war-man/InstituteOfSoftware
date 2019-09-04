@@ -39,6 +39,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// 备案业务类
         /// </summary>
         private StudentDataKeepAndRecordBusiness dbbeian;
+
+        /// <summary>
+        /// 渠道负责区域业务类
+        /// </summary>
+        private ChannelAreaBusiness dbarea;
+        /// <summary>
+        /// 区域业务类
+        /// </summary>
+        private RegionBusiness dbregion;
         // GET: Market/ChannelYearPlan
         public ActionResult ChannelYearPlanIndex()
         {
@@ -65,6 +74,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbbeian = new StudentDataKeepAndRecordBusiness();
             dbdebit = new DebitBusiness();
             dbfunding = new PrefundingBusiness();
+            dbarea = new ChannelAreaBusiness();
+            dbregion = new RegionBusiness();
             int? selectplan = 0;
             if (PlanID != null)
             {
@@ -88,8 +99,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 //获取这个渠道员工这一年的学员报名量
                 var baomingcount = dbbeian.GetBaoMingCount(item.EmployeesInfomation_Id, selectplan);
                 //获取借资量与预资量
-                var debitcount = dbdebit.GetDebitsByEmpID(item.EmployeesInfomation_Id);
-                var fundingcoung = dbfunding.GetPrefundingByEmpNumber(item.EmployeesInfomation_Id);
+                var debitcount = dbdebit.GetDebitsByYear(item.EmployeesInfomation_Id, planinfo);
+                var fundingcoung = dbfunding.GetPrefundingsByYear(item.EmployeesInfomation_Id,planinfo);
+
+                //获取员工该年度计划负责区域
+                var channelarea= dbarea.GetAreaByPaln(item.ID, planinfo);
+
+                Region resultregion = new Region();
+                if (channelarea== null)
+                {
+                    resultregion.ID = 0;
+                    resultregion.RegionName = "";
+                }
+                else
+                {
+                    //获取区域对象
+                   resultregion = dbregion.GetRegionByID(channelarea.RegionID);
+                }
 
                 MrdChannelYearPlanIndexView mrdChannel = new MrdChannelYearPlanIndexView();
                 var empinfo = dbempstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
@@ -101,8 +127,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 mrdChannel.EmpName = empinfo.EmpName;
                 mrdChannel.Phone = empinfo.Phone;
                 mrdChannel.PlanNumber = planinfo.AreaNumber;
-                mrdChannel.Region = "";
-                mrdChannel.RegionID = 0;
+                mrdChannel.Region = resultregion.RegionName;
+                mrdChannel.RegionID = resultregion.ID;
                 mrdChannel.SignUpNumber = baomingcount.Count;
                 mrdChannel.QuitDate = item.QuitDate;
                 mrdChannel.EmpStaffID = item.EmployeesInfomation_Id;

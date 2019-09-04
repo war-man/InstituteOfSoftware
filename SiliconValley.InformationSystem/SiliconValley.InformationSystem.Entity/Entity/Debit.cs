@@ -25,8 +25,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public double DebitMoney { get; set; }
         public string Debitwhy { get; set; }
         public string Remark { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> date { get; set; }
+        public bool IsDel { get; set; }
+        /// <summary>
+        /// 借款时间
+        /// </summary>
+        public System.DateTime date { get; set; }
     
     }
 }

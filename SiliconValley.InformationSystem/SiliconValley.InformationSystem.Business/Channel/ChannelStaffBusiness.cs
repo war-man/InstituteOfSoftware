@@ -56,6 +56,8 @@ namespace SiliconValley.InformationSystem.Business.Channel
            return this.GetChannelStaffs().Where(a => a.EmployeesInfomation_Id == empid).FirstOrDefault();
         }
         
+
+
         /// <summary>
         /// 删除渠道员工
         /// </summary>

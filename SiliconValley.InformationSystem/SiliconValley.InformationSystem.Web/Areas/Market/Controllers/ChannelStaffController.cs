@@ -165,48 +165,59 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult DistributionArea(int id)
         {
-
             ViewBag.ChannelStaffID = id;
             dbregion = new RegionBusiness();
             dbemparea = new ChannelAreaBusiness();
             dbempinfo = new EmployeesInfoManage();
             dbchastaff = new ChannelStaffBusiness();
+
             //拿没有分配的区域
             var data = dbregion.GetNoDistribution(dbemparea);
+
+            int zhiwei = 0;
+            var empinfo = dbempinfo.GetInfoByChannelID(id);
             //拿主任列表
             var zhuren = dbempinfo.GetChannelStaffZhuren();
-            var channelstaff = dbchastaff.GetChannelByID(id);
-            bool iszhuren = false;
-            foreach (var item in zhuren)
+            //拿副主任列表
+            var fuzhuren = dbempinfo.GetChannelStaffFuzhuren();
+            if (dbempinfo.IsFuzhiren(empinfo))
             {
-                if (item.EmployeeId == channelstaff.EmployeesInfomation_Id)
-                {
-                    iszhuren = true;
-                }
+                zhiwei = 1;
+
             }
-            if (iszhuren)
+            else if (dbempinfo.IsChannelZhuren(empinfo))
             {
-                List<EmployeesInfo> myempinfolist = new List<EmployeesInfo>();
-                var yangxiao = dbempinfo.GetYangxiao();
-                myempinfolist.Add(yangxiao);
-                ViewBag.shangji = myempinfolist.Select(a => new SelectListItem
-                {
-                    Text = a.EmpName,
-                    Value = a.EmployeeId.ToString()
-                }).ToList();
+                zhiwei = 2;
             }
-            else
+            switch (zhiwei)
             {
-                ViewBag.shangji = zhuren.Select(a => new SelectListItem
-                {
-                    Text = a.EmpName,
-                    Value = a.EmployeeId.ToString()
-                }).ToList();
+                case 1:
+                    ViewBag.shangji = zhuren.Select(a => new SelectListItem
+                    {
+                        Text = a.EmpName,
+                        Value = a.EmployeeId.ToString()
+                    }).ToList();
+                    break;
+                case 2:
+                    List<EmployeesInfo> myempinfolist = new List<EmployeesInfo>();
+                    var yangxiao = dbempinfo.GetYangxiao();
+                    myempinfolist.Add(yangxiao);
+                    ViewBag.shangji = myempinfolist.Select(a => new SelectListItem
+                    {
+                        Text = a.EmpName,
+                        Value = a.EmployeeId.ToString()
+                    }).ToList();
+                    break;
+                default:
+                    ViewBag.shangji = fuzhuren.Select(a => new SelectListItem
+                    {
+                        Text = a.EmpName,
+                        Value = a.EmployeeId.ToString()
+                    }).ToList();
+                    break;
             }
+            
             ViewBag.regions = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-
-
-
             return View();
         }
         [HttpPost]
@@ -293,15 +304,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //根据这个员工的预资单获取他用过的备案编号
             foreach (var item in mydata)
             {
-                List<PerInfo> resultdata= dbperinfo.GetPrefundingByID(item.ID);
+                List<PerInfo> resultdata = dbperinfo.GetPrefundingByID(item.ID);
                 mrdperInfos.AddRange(resultdata);
             }
             //排除用过的备案编号
-            for (int i = mystudentlist.Count-1; i >=0; i--)
+            for (int i = mystudentlist.Count - 1; i >= 0; i--)
             {
                 foreach (var item in mrdperInfos)
                 {
-                    if (mystudentlist[i].Id==item.BeianID)
+                    if (mystudentlist[i].Id == item.BeianID)
                     {
                         mystudentlist.Remove(mystudentlist[i]);
                     }
@@ -351,7 +362,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult DoPrefunding(string EmployeeId, float DebitMoney, string transferdata)
         {
             dbprefunding = new PrefundingBusiness();
-            
+
             dbperinfo = new PerInfoBusiness();
             AjaxResult ajaxResult = new AjaxResult();
             JArray jArray = JArray.Parse(transferdata);
@@ -371,7 +382,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ajaxResult = dbprefunding.Success("添加成功");
                 dbprefunding = new PrefundingBusiness();
                 var mydata = dbprefunding.GetAll();
-                var dudu= mydata.Where(a => a.Remark == baiozhi).FirstOrDefault();
+                var dudu = mydata.Where(a => a.Remark == baiozhi).FirstOrDefault();
                 foreach (var item in jArray)
                 {
                     JObject jdata = (JObject)item;
@@ -400,10 +411,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ajaxResult = dbprefunding.Error("添加失败");
             }
 
-            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 
-       
+
 
     }
 }

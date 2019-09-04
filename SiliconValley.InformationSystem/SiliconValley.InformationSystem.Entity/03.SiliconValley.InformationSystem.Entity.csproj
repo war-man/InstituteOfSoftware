@@ -185,6 +185,7 @@
     <Compile Include="Entity\MeritsCheck.cs" />
     <Compile Include="Entity\MonthlySalaryRecord.cs" />
     <Compile Include="Entity\Montpowermission.cs" />
+    <Compile Include="Entity\MoveType.cs" />
     <Compile Include="Entity\MultipleChoiceQuestion.cs" />
     <Compile Include="Entity\MyExcelClass.cs" />
     <Compile Include="Entity\NetClientRecord.cs" />

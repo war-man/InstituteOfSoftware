@@ -14,21 +14,60 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    ///员工异动表
+    /// </summary>
     [Table(name: "EmpTransaction")]
     public partial class EmpTransaction
     {
+        /// <summary>
+        /// 异动id
+        /// </summary>
         [Key]
         public int TransactionId { get; set; }
+        /// <summary>
+        /// 员工编号
+        /// </summary>
         public string EmployeeId { get; set; }
-        public string TransactionType { get; set; }
+        /// <summary>
+        /// 异动类型 链接MoveType 表的ID
+        /// </summary>
+        public int TransactionType { get; set; }
+        /// <summary>
+        /// 异动产生时间
+        /// </summary>
         public Nullable<System.DateTime> TransactionTime { get; set; }
+        /// <summary>
+        /// 原部门
+        /// </summary>
         public string PreviousDept { get; set; }
+        /// <summary>
+        /// 原岗位
+        /// </summary>
         public string PreviousPosition { get; set; }
+        /// <summary>
+        /// 现部门
+        /// </summary>
         public string PresentDept { get; set; }
+        /// <summary>
+        /// 现岗位
+        /// </summary>
         public string PresentPosition { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remark { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDel { get; set; }
+        /// <summary>
+        /// 原来工资
+        /// </summary>
         public Nullable<decimal> PreviousSalary { get; set; }
+        /// <summary>
+        /// 现在工资
+        /// </summary>
         public Nullable<decimal> PresentSalary { get; set; }
     }
 }
