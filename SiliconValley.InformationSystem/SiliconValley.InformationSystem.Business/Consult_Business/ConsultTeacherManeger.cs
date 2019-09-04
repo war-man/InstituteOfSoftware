@@ -22,17 +22,21 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         {
             //获取当前上传的操作人
             string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+            bool result = true;
             try
             {
-                ConsultTeacher new_c = new ConsultTeacher() { Employees_Id = EmplyeId };
+                ConsultTeacher new_c = new ConsultTeacher();
+                new_c.Employees_Id = EmplyeId;
+                //new_c.ConGrade = 5;
                 this.Insert(new_c);
-                return true;
+                result = true;
             }
             catch (Exception ex)
             {
                 BusHelper.WriteSysLog("操作人:" + UserName + "出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-                return false;
+                result= false;
             }
+            return result;
             
         }
         /// <summary>

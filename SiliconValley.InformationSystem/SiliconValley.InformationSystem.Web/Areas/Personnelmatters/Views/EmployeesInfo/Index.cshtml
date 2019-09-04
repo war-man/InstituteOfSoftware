@@ -91,8 +91,8 @@
             , url: '/Personnelmatters/EmployeesInfo/GetData'
             , id: "myEmpInfo"
             , toolbar: '#toolbarDemo'
-            , limits: [1, 3, 6, 9, 12, 15, 18]
-            , limit: 6
+            , limits: [5,10,15,20,25,30]
+            , limit: 10
             , cols: [[
                 , { field: 'EmployeeId', title: '员工编号', width: 126 }
                 , { field: 'DDAppId', title: '钉钉工号', width: 108, sort: true }
@@ -104,7 +104,7 @@
                 , { field: 'Sex', title: '性别', sort: true, width: 90, templet: '#switchTp2', unresize: true }
                 , { field: 'Age', title: '年龄', sort: true, width: 90 }
                 , { field: 'Nation', title: '民族', sort: true, width: 100, edit: 'text' }
-                , { field: 'IdCardNum', title: '身份证号码', sort: true, width: 120 }
+                , { field: 'IdCardNum', title: '身份证号码', sort: true, width: 120, edit: 'text' }
                 , { field: 'EntryTime', title: '入职时间', sort: true, width: 110, templet: function (d) { return GetYMD(d.EntryTime) } }
                 , { field: 'ContractStartTime', title: '合同起始时间', sort: true, width: 135, event: 'date', data_field: "ContractStartTime", templet: function (d) { return GetYMD(d.ContractStartTime) } }
                 , { field: 'ContractEndTime', title: '合同终止时间', sort: true, width: 135, event: 'date', data_field: "ContractEndTime", templet: function (d) { return GetYMD(d.ContractEndTime) } }
@@ -114,10 +114,10 @@
                 , { field: 'UrgentPhone', title: '紧急联系电话', sort: true, width: 135, edit: 'text' }
                 , { field: 'DomicileAddress', title: '户籍地址', sort: true, width: 110, edit: 'text' }
                 , { field: 'Address', title: '现居地址', sort: true, width: 110, edit: 'text' }
-                , { field: 'Education', title: '学历', sort: true, width: 110 }
+                , { field: 'Education', title: '学历', sort: true, width: 110, edit: 'text'}
                 , { field: 'MaritalStatus', title: '婚姻状态', sort: true, width: 110, templet: '#switchTpl', unresize: true }
                 , { field: 'IdCardIndate', title: '身份证有效期', sort: true, width: 135, event: 'date', data_field: "IdCardIndate", templet: function (d) { return GetYMD(d.IdCardIndate) } }
-                , { field: 'PoliticsStatus', title: '政治面貌', sort: true, width: 110 }
+                , { field: 'PoliticsStatus', title: '政治面貌', sort: true, width: 110, edit: 'text' }
                 , { field: 'WorkExperience', title: '工作经验', sort: true, width: 110, edit: 'text' }
                 , { field: 'ProbationSalary', title: '试用期工资', sort: true, width: 120 }
                 , { field: 'Salary', title: '转正工资', sort: true, width: 110 }
@@ -430,7 +430,7 @@
                 $("#deptid").empty();
                 if (resultData.code == 0) {
 
-                    $("#deptid").append(new Option("请选择项目", ""));
+                    $("#deptid").append(new Option("请选择部门", ""));
                     $.each(resultData.data, function (index, item) {
                         $('#deptid')
                             .append(new Option(item.DeptName, item.DeptId));
@@ -457,7 +457,7 @@
                         //清空赋值
                         $("#PositionId").empty();
                         console.log(resultData.data);
-                        $("#PositionId").append(new Option("请选择项目", ""));
+                        $("#PositionId").append(new Option("请选择岗位", ""));
                         $.each(resultData.data, function (index, item) {
                             //赋值
                             $('#PositionId')

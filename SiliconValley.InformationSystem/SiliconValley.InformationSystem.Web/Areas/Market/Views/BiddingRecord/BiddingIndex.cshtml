@@ -5,10 +5,9 @@
 }
 @model SiliconValley.InformationSystem.Entity.MyEntity.BiddingRecord
 @using SiliconValley.InformationSystem.Entity.MyEntity;
-<h2>竞价记录</h2>
 
 
-<fieldset style="margin-top:30px;">
+<fieldset >
     <legend>条件查询</legend>
     @*模糊查询*@
     <form class="layui-form" action="" lay-filter="formtest">
@@ -99,7 +98,7 @@
                     , { field: 'TheFirstBid', title: '首位出价', width: 105 }
                     , { field: 'ShowTime', title: '展现时间', width: 160, templet: function (d) { return GetYMD(d.ShowTime);} }
                     , { field: 'AverageClickPrice', title: '平均点击价格', width: 120 }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1',width:110}
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1',width:90}
                 ]]
                 , page: true
             });
@@ -149,6 +148,7 @@
             //模糊查询点击事件
             $("#Conditionselect").click(function () {
                 var recorder = $("#Recorder").val();//竞价登记者
+                console.log(recorder);
                 var BiddingOpponent = $("#BiddingOpponent").val();//竞争对手
                 var Keyword = $("#Keyword").val();//关键词
                 var start_time = $("#start_time").val();//起始时间
@@ -156,7 +156,7 @@
 
                 layui.use(['table'], function () {
                     var table = layui.table;
-                    table.reload('mynetinfo', {
+                    table.reload('mybrinfo', {
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }, where: {

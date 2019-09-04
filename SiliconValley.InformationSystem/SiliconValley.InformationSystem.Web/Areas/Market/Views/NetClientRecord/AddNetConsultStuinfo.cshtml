@@ -63,7 +63,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">年龄</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.StuAge, new Dictionary<string, object>() { { "lay-verify", "number" },  { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.StuAge, new Dictionary<string, object>() { { "lay-verify", "myAge" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
@@ -74,7 +74,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">登记者</label>
                         <div class="layui-input-inline">
-                            @Html.DropDownListFor(a => a.EmployeeId, ViewBag.nettea as SelectList, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            @Html.DropDownListFor(a => a.EmployeeId, ViewBag.nettea as SelectList, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -86,7 +86,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">信息来源</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.InformationSource, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.InformationSource, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
@@ -200,6 +200,18 @@
             //日期验证
             laydate.render({
                 elem: '#NetClientDate',
+            });
+            form.verify({
+                myAge: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^(?:[1-9][0-9]?|1[01][0-9]|120)$/;
+                        if (!v.test(value)) {
+                            return '年龄必须是1-120的数字';
+                        }
+                    }
+                }//联系电话
             });
 
             //动态绑定岗位属性的下拉框的值

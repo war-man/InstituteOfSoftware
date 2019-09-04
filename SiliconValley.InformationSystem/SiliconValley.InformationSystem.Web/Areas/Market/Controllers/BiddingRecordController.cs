@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: Market/BiddingRecord/GetBRData
         public ActionResult BiddingIndex()
         {
+           
             return View();
         }
         public ActionResult GetBRData(int page, int limit,string AppCondition) {
@@ -26,14 +27,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 string[] str = AppCondition.Split(',');
                 string recorder = str[0];
-                string Keyword = str[1];
-                string start_time = str[2];
-                string end_time = str[3];
+                string BiddingOpponent = str[1];
+                string Keyword = str[2];
+                string start_time = str[3];
+                string end_time = str[4];
                
                 if (!string.IsNullOrEmpty(recorder))
                 {
                     brlist = brlist.Where(a => a.Recorder==recorder).ToList();
                 }
+                brlist = brlist.Where(a=>a.BiddingOpponent.Contains(BiddingOpponent)).ToList();
                 brlist = brlist.Where(e => e.Keyword.Contains(Keyword)).ToList();
                 if (!string.IsNullOrEmpty(start_time))
                 {

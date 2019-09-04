@@ -21,6 +21,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: Market/NetClientRecord
         public ActionResult NetIndex()
         {
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var elist = emanage.GetList();
+            ViewBag.recorder = new SelectList(elist, "EmployeeId", "EmpName");
             BindSelect();
             return View();
         }
