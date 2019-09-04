@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Employment;
     using SiliconValley.InformationSystem.Business.Consult_Business;
     using SiliconValley.InformationSystem.Business.Channel;
+    using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -26,7 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
         /// <summary>
-        ///获取员工信息数据
+        ///获取在职员工员工信息数据
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
@@ -35,7 +36,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetData(int page,int limit,string AppCondition)
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
-            var list = empinfo.GetList();
+            var list = empinfo.GetList().Where(e=>e.IsDel==false).ToList();
             if (!string.IsNullOrEmpty(AppCondition)) {
                 string[] str = AppCondition.Split(',');
                 string ename = str[0];
@@ -115,6 +116,101 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 };
             return Json(newobj,JsonRequestBehavior.AllowGet);
        }
+        /// <summary>
+        /// 获取离职员工信息
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDelEmpData(int page,int limit) {
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            EmpTransactionManage etm = new EmpTransactionManage();
+            var slist = empinfo.GetList().Where(e => e.IsDel == true).ToList();
+            var list = slist.Select(e1 => new
+            {
+                #region 两表查询的数据
+                e1.EmployeeId,
+                e1.DDAppId,
+                e1.EmpName,
+                e1.PositionId,
+                e1.Sex,
+                e1.Age,
+                e1.Nation,
+                e1.Phone,
+                e1.IdCardNum,
+                e1.EntryTime,
+                e1.ContractStartTime,
+                e1.ContractEndTime,
+                e1.Birthdate,
+                e1.Birthday,
+                e1.PositiveDate,
+                e1.UrgentPhone,
+                e1.DomicileAddress,
+                e1.Address,
+                e1.Education,
+                e1.MaritalStatus,
+                e1.IdCardIndate,
+                e1.PoliticsStatus,
+                e1.WorkExperience,
+                e1.ProbationSalary,
+                e1.Salary,
+                e1.SSStartMonth,
+                e1.BCNum,
+                e1.Material,
+                e1.Remark,
+                deltime = etm.GetDelEmp(e1.EmployeeId).TransactionTime//离职时间
+                #endregion
+
+            });
+            var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = from e in mylist
+                          select new
+                          {
+                              #region 获取属性值 
+                              e.EmployeeId,
+                              e.DDAppId,
+                              e.EmpName,
+                              Position = GetPosition((int)e.PositionId).PositionName,
+                              Depart = GetDept((int)e.PositionId).DeptName,
+                              e.Sex,
+                              e.Age,
+                              e.Nation,
+                              e.Phone,
+                              e.IdCardNum,
+                              e.ContractStartTime,
+                              e.ContractEndTime,
+                              e.EntryTime,
+                              e.Birthdate,
+                              e.Birthday,
+                              e.PositiveDate,
+                              e.UrgentPhone,
+                              e.DomicileAddress,
+                              e.Address,
+                              e.Education,
+                              e.MaritalStatus,
+                              e.IdCardIndate,
+                              e.PoliticsStatus,
+                              e.WorkExperience,
+                              e.ProbationSalary,
+                              e.Salary,
+                              e.SSStartMonth,
+                              e.BCNum,
+                              e.Material,
+                              e.Remark,
+                              e.IsDel
+                              #endregion
+
+                          };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = newlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
         //获取所属岗位对象
         public Position GetPosition(int pid) {
             PositionManage pmanage = new PositionManage();
