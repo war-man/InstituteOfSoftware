@@ -140,21 +140,21 @@
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">出生日期</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd(员工至少十六岁)" }, { "class", "layui-input" } })</div>
-                    </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
-
+                    @*<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-block">
+                @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd(员工至少十六岁)" }, { "class", "layui-input" } })</div>
+        </div>*@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">生日</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.Birthday, new Dictionary<string, object>() { { "placeholder", "请输入生日年月份及阴阳历" }, { "class", "layui-input" } })
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">紧急联系电话</label>
@@ -179,6 +179,15 @@
                             </select>
                         </div>
                     </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">婚姻状态</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="MaritalStatus" value="False" title="未婚" checked>
+                            <input type="radio" name="MaritalStatus" value="True" title="已婚">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="layui-row layui-form-item">
@@ -198,22 +207,15 @@
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">婚姻状态</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="MaritalStatus" value="False" title="未婚" checked>
-                            <input type="radio" name="MaritalStatus" value="True" title="已婚">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">身份证有效期</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.IdCardIndate, new Dictionary<string, object>() { { "lay-verify", "IdCardIndate" }, { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">政治面貌</label>
@@ -226,10 +228,6 @@
 
                         </div>
                     </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资</label>
                         <div class="layui-input-block">
@@ -242,17 +240,17 @@
                             @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入转正工资" }, { "class", "layui-input salary" } })
                         </div>
                     </div>
+                </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">银行卡号</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.BCNum, new Dictionary<string, object>() { { "placeholder", "请输入银行卡号" }, { "class", "layui-input" } })
                         </div>
                     </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">材料</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "class", "layui-input" } })
@@ -301,7 +299,7 @@
                     $("#deptid").empty();
                     if (resultData.code == 0) {
 
-                        $("#deptid").append(new Option("请选择项目", ""));
+                        $("#deptid").append(new Option("请选择部门", ""));
                         $.each(resultData.data, function (index, item) {
                             $('#deptid')
                                 .append(new Option(item.DeptName, item.DeptId));
@@ -328,7 +326,7 @@
                             //清空赋值
                             $("#PositionId").empty();
                             console.log(resultData.data);
-                            $("#PositionId").append(new Option("请选择项目", ""));
+                            $("#PositionId").append(new Option("请选择岗位", ""));
                             $.each(resultData.data, function (index, item) {
                                 //赋值
                                 $('#PositionId')
@@ -356,8 +354,7 @@
 
             //日期验证
             var curDate = new Date();
-            var curYearMonthrDay = curDate.getFullYear() - 16 + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));//员工至少是16岁以上，所以出生日期只能选择距今16年前的日期
-            //月份小于10的前面加个0
+          
             function MoDay(a) {
                 if (a < 10) {
                     return "0" + a;
@@ -428,12 +425,7 @@
                         }
                 }
             });//合同终止时间
-            laydate.render({
-                elem: '#Birthdate',
-                value: curYearMonthrDay,
-                isInitValue: false,
-                max: curYearMonthrDay
-            });//出生日期
+           
             laydate.render({
                 elem: '#IdCardIndate',
             });//身份证有效期

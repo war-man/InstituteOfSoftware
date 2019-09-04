@@ -21,7 +21,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int Id { get; set; }
         public string Employees_Id { get; set; }
         public Nullable<int> ConGrade { get; set; }
-        public Nullable<bool> ConsultType { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public string BrainImage { get; set; }
