@@ -17,6 +17,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     [CheckLogin]
     public class StudentInformationController : Controller
     {
+        //备案提供方法
+        StudentDataKeepAndRecordBusiness dataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
         //班级表
         ClassScheduleBusiness classschedu = new ClassScheduleBusiness();
         //学员班级表
@@ -308,6 +310,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         studentInformation.IsDelete = false;
+                        dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
                         scheduleForTrainees.ClassID = List;//班级名称

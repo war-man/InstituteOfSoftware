@@ -11,6 +11,8 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -26,6 +28,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
         //学员班级表
         ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
+        //班主任带班
+        BaseBusiness<HeadClass> HeadClassEnti = new BaseBusiness<HeadClass>();
+        //班主任
+        HeadmasterBusiness Hadmst = new HeadmasterBusiness();
         // GET: Teachingquality/ClassSchedule
         //主页面
         public ActionResult Index()
@@ -40,6 +46,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
         //基础数据枚举数据
         BaseDataEnumBusiness BanseDatea = new BaseDataEnumBusiness();
+        //当前登陆人
+        Base_UserModel user = Base_UserBusiness.GetCurrentUser();
         //专业
         SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
         //阶段
@@ -47,12 +55,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //获取数据
         public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id)
         {
-
-         
-           
             try
             {
-         List<ClassSchedule> list = dbtext.GetList().Where(a=>a.ClassStatus==false&&a.IsDelete==false).ToList();
+                List<ClassSchedule> list = new List<ClassSchedule>();
+                var HadnID = Hadmst.GetList().Where(c => c.informatiees_Id == user.EmpNumber && c.IsDelete == false).FirstOrDefault();
+                if (HadnID!=null)
+                {
+                    var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
+                    foreach (var item in x)
+                    {
+                       
+                   list.Add( dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber == item.ClassID).FirstOrDefault());
+                    }
+                }
+                else
+                {
+                    list = dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
+                }
+          
+               
+             
             if (!string.IsNullOrEmpty(ClassNumber))
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
@@ -273,6 +295,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         
           
        
+        }
+
+        //转班业务
+        public ActionResult Transferoftraunees()
+        {
+            return View();
         }
     }
 }

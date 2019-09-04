@@ -26,10 +26,12 @@
             color: #fff;
         }
 
-            .Mydiv:host {
-                background-color: aqua;
+            .Mydiv:hover {
+                background-color: burlywood;
             }
-
+           .color{
+               background-color:red;
+           }
         table {
             margin-left: 10px;
         }
@@ -60,9 +62,7 @@
             color: #fff;
         }
 
-        .mycolor {
-            background-color: burlywood;
-        }
+    
 
         .backRed {
             background-color: red;
@@ -213,6 +213,26 @@
             </div>
             <div>
                 <button type="button" class="layui-btn layui-btn-fluid mybut">查看本班活动</button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title"> 班级异动</h2>
+        <div class="layui-colla-content layui-anim">
+            <div>
+                <button type="button" id="DropoutofSchool" class="layui-btn layui-btn-fluid mybut">学员退学</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">学员重修</button>
+            </div>
+            <div>
+                <button type="button" id="Transferoftraunees" class="layui-btn layui-btn-fluid mybut">学员转班</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">学员复学</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">学员修学</button>
             </div>
         </div>
     </div>
@@ -453,18 +473,7 @@
             }
 
         });
-        //移入
-        $(".Mydiv").mouseover(function () {
-            $(".Mydiv").removeClass("mycolor");
-            $(this).addClass("mycolor");
-
-
-
-        });
-        //移出
-        $(".Mydiv").mouseleave(function () {
-            $(this).removeClass("mycolor");
-        });
+      
         ////添加班会记录
         $("#banhui2").click(function () {
             // var stuid = $("#ClassName").text();
@@ -482,8 +491,18 @@
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
-
-
+      
+        //点击事件
+        
+        $(".Mydiv").click(function () {
+            if (!$(this).is(".color")) {
+                $(this).addClass("color");
+            }
+            else {
+                $(this).removeClass("color");
+            }
+        });
+   
         //双击详细
         $(".Mydiv").dblclick(function () {
             var stuid = $($(this).children()[0]).text();
@@ -528,7 +547,26 @@
             }
 
         });
+        //退学业务
+        $("#DropoutofSchool").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                console.log(x);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+           
+        });
+        //业务 Transferoftraunees
+        $("#Transferoftraunees").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                console.log(x);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
 
+        });
     });
 
     //设置班委

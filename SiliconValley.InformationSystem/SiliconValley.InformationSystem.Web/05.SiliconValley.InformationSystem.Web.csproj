@@ -384,6 +384,8 @@
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\text.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\AssmeetingsEntity.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Headteacher\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\HeadmasterEntity.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Transferoftraunees.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
