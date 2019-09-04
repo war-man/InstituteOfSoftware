@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// </summary>
         /// <param name="ChannelStaffID"></param>
         /// <returns></returns>
-        public List<Prefunding> GetPrefundingByChannelStaffID(string EmpNumber) {
+        public List<Prefunding> GetPrefundingByEmpNumber(string EmpNumber) {
             return this.GetAll().Where(a => a.EmpNumber == EmpNumber).ToList();
         }
 

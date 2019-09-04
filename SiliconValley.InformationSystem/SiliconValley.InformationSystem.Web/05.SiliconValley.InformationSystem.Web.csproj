@@ -449,6 +449,12 @@
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsZhuZhuangImageView.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\ChannelYearPlanIndex.cshtml" />
+    <Content Include="Areas\Market\Views\SchoolYearPlan\AddSchoolYearPlan.cshtml" />
+    <Content Include="Areas\Market\Views\SchoolYearPlan\SchoolYearPlanIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\BorrowMoney.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

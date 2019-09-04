@@ -80,7 +80,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="PlanId"></param>
         /// <param name="EmpId"></param>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetGoSchoolByPlan(int PlanId ,string EmpId)
+        public List<StudentPutOnRecord> GetGoSchoolByPlan(int? PlanId ,string EmpId)
         {
             //当前查询的计划
             var nowplan= Syb_Entity.GetPlanByID(PlanId);
@@ -93,7 +93,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             {
                 if (item.StuVisit>=nowplan.PlanDate)
                 {
-                    if (nextplan!=null)
+                    if (nextplan.ID!=0)
                     {
                         if (item.StuVisit<=nextplan.PlanDate)
                         {
@@ -114,7 +114,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="EmpId"></param>
         /// <param name="PlanId"></param>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetBeanCount(string EmpId,int PlanId)
+        public List<StudentPutOnRecord> GetBeanCount(string EmpId,int? PlanId)
         {
             //当前查询的计划
             var nowplan = Syb_Entity.GetPlanByID(PlanId);
@@ -126,7 +126,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             {
                 if (item.StuDateTime >= nowplan.PlanDate)
                 {
-                    if (nextplan != null)
+                    if (nextplan.ID != 0)
                     {
                         if (item.StuVisit <= nextplan.PlanDate)
                         {
@@ -147,7 +147,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="EmpId"></param>
         /// <param name="PlanId"></param>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetBaoMingCount(string EmpId, int PlanId)
+        public List<StudentPutOnRecord> GetBaoMingCount(string EmpId, int? PlanId)
         {
             //当前查询的计划
             var nowplan = Syb_Entity.GetPlanByID(PlanId);
@@ -159,7 +159,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             {
                 if (item.StatusTime >= nowplan.PlanDate)
                 {
-                    if (nextplan != null)
+                    if (nextplan.ID != 0)
                     {
                         if (item.StuVisit <= nextplan.PlanDate)
                         {
