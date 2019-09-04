@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
 
         public bool UnionMembersEntity(StudentUnionMembers studentUnionMembers)
         {
-
+            return false;
         }
     }
 }
