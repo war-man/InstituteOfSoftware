@@ -1,0 +1,280 @@
+﻿
+@{
+    ViewBag.Title = "BiddingIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.BiddingRecord
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+
+
+<fieldset >
+    <legend>条件查询</legend>
+    @*模糊查询*@
+    <form class="layui-form" action="" lay-filter="formtest">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:100px;">记录者：</label>
+                <div class="layui-input-inline">
+                    @Html.DropDownListFor(a => a.Recorder, ViewBag.recorder as SelectList, "--请选择--", new Dictionary<string, object>() { { "class", "layui-input" } })
+                </div>
+            </div>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:100px;">竞争对手：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="BiddingOpponent" name="BiddingOpponent" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:100px;">关键词</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Keyword" name="Keyword" autocomplete="off" class="layui-input">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width:100px;">展现时间：</label>
+                <div class="layui-inline" style="margin-left:-50px;">
+                    <label class="layui-form-label">从：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="margin-left:-50px;">
+                    <label class="layui-form-label">至：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="end_time" name="start_time" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:300px;">查询</button>
+        </div>
+    </form>
+
+</fieldset>
+
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加竞价记录</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+    </div>
+</script>
+
+<table id="brwork" lay-filter="biddingRecord"></table>
+@*行工具操作*@
+<script type="text/html" id="barDemo1">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
+
+@section script{
+
+    <script>
+        layui.use(['table', 'layer', 'form', 'laydate'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            table.render({
+                elem: '#brwork'
+                , url: '/Market/BiddingRecord/GetBRData'
+                , id: "mybrinfo"
+                , toolbar: '#toolbarDemo'
+                , limits: [5, 10, 15, 20, 25]
+                , limit: 10
+                , cols: [[
+                    , {type:'checkbox', width: 18}
+                    , { field: 'recorder', title: '记录者', width: 100, sort: true }
+                    , { field: 'BiddingOpponent', title: '竞价对手', width: 120, sort: true }
+                    , { field: 'Url', title: '网址', sort: true, width: 110 }
+                    , { field: 'Unit', title: '单元', sort: true, width: 90 }
+                    , { field: 'Keyword', title: '关键词', width: 90 }
+                    , { field: 'CopywritingOriginality', title: '文案创意', width: 150 }
+                    , { field: 'TheFirstBid', title: '首位出价', width: 105 }
+                    , { field: 'ShowTime', title: '展现时间', width: 160, templet: function (d) { return GetYMD(d.ShowTime);} }
+                    , { field: 'AverageClickPrice', title: '平均点击价格', width: 120 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1',width:90}
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(biddingRecord)', function (obj) {
+                var checkStatus = table.checkStatus('mybrinfo');
+                switch (obj.event) {
+                    case 'add':
+                        AddBR();
+                        break;
+                    case 'delete':
+                        var data = checkStatus.data;
+                        if (data == 0) {
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.alert('请选中一条记录', { title: '提示信息',icon: 0  }, function (index) {
+                                    layer.close(index);
+                                });
+                            });
+                        } else {
+                            layer.confirm('确定删除选中记录?', function (index) {
+                                delapps(data);
+
+                            });
+                        }
+                        break;
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(biddingRecord)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/BiddingRecord/EditBR?Id=' + data.Id
+                        , area: ['800px', '500px'],
+                        title: '编辑竞价信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var recorder = $("#Recorder").val();//竞价登记者
+                console.log(recorder);
+                var BiddingOpponent = $("#BiddingOpponent").val();//竞争对手
+                var Keyword = $("#Keyword").val();//关键词
+                var start_time = $("#start_time").val();//起始时间
+                var end_time = $("#end_time").val();//终止时间
+
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('mybrinfo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: recorder + "," + BiddingOpponent + "," + Keyword + ","+ start_time + "," + end_time
+                        }
+                    });
+                });
+
+
+
+            });
+            //日期
+            var startTime = laydate.render({
+                elem: '#start_time',
+                done: function (value, date) {
+                    console.log(value);
+                    console.log(date);
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });
+            var endTime = laydate.render({
+                elem: '#end_time',
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });
+
+
+
+        });
+
+        //添加竞价记录的方法
+        function AddBR() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["800px", "500px"]
+                    , title: "竞价记录"
+                    , content: '/Market/BiddingRecord/AddBiddingRecord'
+                    , anim: 2
+                });
+
+            })
+
+        }
+
+        //删除竞价记录方法
+        function delapps(data) {
+            var list = "";
+            for (var i = 0; i < data.length; i++) {
+
+                list += data[i].Id + ",";
+            }
+
+            $.post("/Market/BiddingRecord/BRremove", { 'list': list }, function (da) {
+                console.log(da);
+                if (da.Success) {
+                    layer.alert("删除成功!", { icon: 1 }, function (index) {
+                        layui.use(['table'], function () {
+
+                            var table = layui.table;
+                            table.reload('mybrinfo');
+                        });
+                        layer.close(index);
+                    });
+                }
+                else {
+                    layer.alert("删除失败!");
+                }
+            })
+
+
+        }
+
+        //格式化时间
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+
+
+
+}
+
+
+
+

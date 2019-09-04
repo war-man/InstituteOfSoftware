@@ -16,6 +16,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Util;
     using System.ComponentModel.DataAnnotations;
     using SiliconValley.InformationSystem.Business.Employment;
+    using SiliconValley.InformationSystem.Business.Consult_Business;
+    using SiliconValley.InformationSystem.Business.Channel;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -23,8 +25,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
-
-        //获取员工信息数据
+        /// <summary>
+        ///获取员工信息数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="AppCondition"></param>
+        /// <returns></returns>
         public ActionResult GetData(int page,int limit,string AppCondition)
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
@@ -64,38 +71,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var newlist = from e in mylist
                           select new
                           {
+                              #region 获取属性值 
                               e.EmployeeId,
                               e.DDAppId,
                               e.EmpName,
                               Position = GetPosition((int)e.PositionId).PositionName,
                               Depart = GetDept((int)e.PositionId).DeptName,
-                                  e.Sex,
-                                  e.Age,
-                                  e.Nation,
-                                  e.Phone,
-                                  e.IdCardNum,
-                                  e.ContractStartTime,
-                                  e.ContractEndTime,
-                                  e.EntryTime,
-                                  e.Birthdate,
-                                  e.Birthday,
-                                  e.PositiveDate,
-                                  e.UrgentPhone,
-                                  e.DomicileAddress,
-                                  e.Address,
-                                  e.Education,
-                                  e.MaritalStatus,
-                                  e.IdCardIndate,
-                                  e.PoliticsStatus,
-                                  e.WorkExperience,
-                                  e.ProbationSalary,
-                                  e.Salary,
-                                  e.SSStartMonth,
-                                  e.BCNum,
-                                  e.Material,
-                                  e.Remark,
-                                  e.IsDel
-                              };
+                              e.Sex,
+                              e.Age,
+                              e.Nation,
+                              e.Phone,
+                              e.IdCardNum,
+                              e.ContractStartTime,
+                              e.ContractEndTime,
+                              e.EntryTime,
+                              e.Birthdate,
+                              e.Birthday,
+                              e.PositiveDate,
+                              e.UrgentPhone,
+                              e.DomicileAddress,
+                              e.Address,
+                              e.Education,
+                              e.MaritalStatus,
+                              e.IdCardIndate,
+                              e.PoliticsStatus,
+                              e.WorkExperience,
+                              e.ProbationSalary,
+                              e.Salary,
+                              e.SSStartMonth,
+                              e.BCNum,
+                              e.Material,
+                              e.Remark,
+                              e.IsDel
+                              #endregion
+
+                          };
                 var newobj = new
                 {
                     code = 0,
@@ -123,7 +133,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //添加员工页面显示
        [HttpGet]
         public ActionResult AddEmp() {
-           
             return View();
         }
 
@@ -134,7 +143,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
 
-        //添加员工时获取未禁用的部门信息
+        /// <summary>
+        ///添加员工时获取未禁用的部门信息 
+        /// </summary>
+        /// <returns></returns>
         public ActionResult BindDeptSelect() {
             DepartmentManage deptmanage = new DepartmentManage();
             var deptlist = deptmanage.GetList().Where(d=>d.IsDel==false);//获取公司部门数据集
@@ -147,7 +159,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newstr, JsonRequestBehavior.AllowGet);
         }
-        //员工添加的所属岗位下拉框绑定且是未禁用的
+        
+        /// <summary>
+        /// 员工添加的所属岗位下拉框绑定且是未禁用的
+        /// </summary>
+        /// <param name="deptid"></param>
+        /// <returns></returns>
         //[HttpPost]
         public ActionResult BindPositionSelect(int deptid) {
             PositionManage pmanage = new PositionManage();
@@ -161,17 +178,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newstr,JsonRequestBehavior.AllowGet);
         }
-        //添加员工
+        /// <summary>
+        /// 添加员工
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult AddEmpInfo(EmployeesInfo emp) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
-            HeadmasterBusiness hm = new HeadmasterBusiness(); 
+            HeadmasterBusiness hm = new HeadmasterBusiness();
+            ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
+            ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
             try
             {
                 emp.EmployeeId = EmpId();
-                if (emp.Birthdate!=null) {
+                if (emp.IdCardNum!=null) {
+                    emp.Birthdate =DateTime.Parse(GetBirth(emp.IdCardNum));
                 emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate,DateTime.Now));
                 }
                 emp.IsDel = false;
@@ -182,8 +206,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
+                if (GetDept(emp.PositionId).DeptName == "市场部")
+                {
+                    bool s = csmanage.AddChannelStaff(emp.EmployeeId);
+                    empinfo.Success().Success = s;
+                    AjaxResultxx = empinfo.Success();
+                }
                 if (GetDept(emp.PositionId).DeptName == "教质部") {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
+                    empinfo.Success().Success = s;
+                    AjaxResultxx = empinfo.Success();
+                }
+                if (GetPosition(emp.PositionId).PositionName=="咨询师" || GetPosition(emp.PositionId).PositionName=="咨询主任") {
+                    bool s= cmanage.AddConsultTeacherData(emp.EmployeeId);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
@@ -230,7 +265,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //月份及日期前面加个零
         public string MonthAndDay(int a)
         {
-
             if (a < 10)
             {
                 return "0" + a;
@@ -238,19 +272,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string c = a.ToString();
             return c;
         }
-        //生成员工编号
+
+        /// <summary>
+        ///生成员工编号
+        /// </summary>
+        /// <returns></returns>
         public string EmpId()
         {
             string mingci = string.Empty;
-            //DateTime date = Convert.ToDateTime(Date());
-            //string sfz = IDnumber.Substring(6, 8);
+           // DateTime date = Convert.ToDateTime(Date());
             DateTime date = DateTime.Now;
             string n = date.Year.ToString();//获取年份
             string y = MonthAndDay(Convert.ToInt32(date.Month)).ToString();//获取月份
             string d = MonthAndDay(Convert.ToInt32(date.Day)).ToString();//获取日期
 
-            // string count = Count().ToString();
-           // string count = num.ToString();
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var lastobj = empinfo.GetList().LastOrDefault();
             if (lastobj == null)
@@ -286,12 +321,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     }
                 }
             }
-           
- 
             string EmpidResult = n + y + d + mingci;
             return EmpidResult;
         }
-        //计算员工年龄
+
+        /// <summary>
+        ///计算员工年龄
+        /// </summary>
+        /// <param name="dtBirthday"></param>
+        /// <param name="dtNow"></param>
+        /// <returns></returns>
         public static string GetAge(DateTime dtBirthday, DateTime dtNow)
         {
             string strAge = string.Empty; // 年龄的字符串表示
@@ -344,6 +383,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             //}
 
             return strAge;
+        }
+        /// <summary>
+        /// 根据身份证号码获取出生日期
+        /// </summary>
+        /// <param name="idnum"></param>
+        /// <returns></returns>
+        public static string GetBirth(string idnum) {
+            string year = idnum.Substring(6, 4);
+            string month = idnum.Substring(10, 2);
+            string date = idnum.Substring(12, 2);
+            string result = year + "-" + month + "-" + date;
+            return result;
         }
 
         //部门信息获取
@@ -511,6 +562,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+       //岗位添加
         [HttpPost]
         public ActionResult AddPosition(Position p) {
 
@@ -652,8 +704,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         var emp3 = empinfo.GetEntity(id);
                         emp3.Nation = endvalue;
                         empinfo.Update(emp3);
-                        break; 
-                   case "Birthday":
+                        break;
+                    case "IdCardNum":
+                        var emp12 = empinfo.GetEntity(id);
+                        emp12.IdCardNum = endvalue;
+                        if (emp12.IdCardNum != null)
+                        {
+                            emp12.Birthdate = DateTime.Parse(GetBirth(emp12.IdCardNum));
+                            emp12.Age = Convert.ToInt32(GetAge((DateTime)emp12.Birthdate, DateTime.Now));
+                        }
+                        empinfo.Update(emp12);
+                        break;
+                    case "Birthday":
                         var emp4= empinfo.GetEntity(id);
                         emp4.Birthday = endvalue;
                         empinfo.Update(emp4);
@@ -692,6 +754,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         var emp11 = empinfo.GetEntity(id);
                         emp11.Remark = endvalue;
                         empinfo.Update(emp11);
+                        break;
+                    case "Education":
+                        var emp13 = empinfo.GetEntity(id);
+                        emp13.Education = endvalue;
+                        empinfo.Update(emp13);
+                        break;
+                    case "PoliticsStatus":
+                        var emp14 = empinfo.GetEntity(id);
+                        emp14.PoliticsStatus = endvalue;
+                        empinfo.Update(emp14);
                         break;
                 }
                 AjaxResultxx = empinfo.Success();

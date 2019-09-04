@@ -90,6 +90,7 @@
     <Compile Include="Entity\CandidateInfo.cs" />
     <Compile Include="Entity\CardRegistration.cs" />
     <Compile Include="Entity\CDInterview.cs" />
+    <Compile Include="Entity\ChannelArea.cs" />
     <Compile Include="Entity\ChannelStaff.cs" />
     <Compile Include="Entity\Check.cs" />
     <Compile Include="Entity\CheckGoods.cs" />
@@ -134,7 +135,6 @@
     <Compile Include="Entity\EmpClass.cs" />
     <Compile Include="Entity\EmpClassTransaction.cs" />
     <Compile Include="Entity\EmployedStudent.cs" />
-    <Compile Include="Entity\ChannelArea.cs" />
     <Compile Include="Entity\EmployeesInfo.cs" />
     <Compile Include="Entity\EmploymentAreas.cs" />
     <Compile Include="Entity\EmploymentStaff.cs" />
@@ -185,6 +185,7 @@
     <Compile Include="Entity\MeritsCheck.cs" />
     <Compile Include="Entity\MonthlySalaryRecord.cs" />
     <Compile Include="Entity\Montpowermission.cs" />
+    <Compile Include="Entity\MoveType.cs" />
     <Compile Include="Entity\MultipleChoiceQuestion.cs" />
     <Compile Include="Entity\MyExcelClass.cs" />
     <Compile Include="Entity\NetClientRecord.cs" />
@@ -272,7 +273,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
-    <Compile Include="ViewEntity\ChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />
@@ -284,6 +284,7 @@
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrDDetailSpecView.cs" />
     <Compile Include="ViewEntity\MrDEmployStaffView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
@@ -295,6 +296,7 @@
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
+    <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

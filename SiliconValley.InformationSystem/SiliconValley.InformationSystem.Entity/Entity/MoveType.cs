@@ -8,32 +8,24 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.Entity
 {
-    /// <summary>
-    /// 预资详细表
-    /// </summary>
-    [Table("PerInfo")]
-    public  class PerInfo
+    [Table("MoveType")]
+    public class MoveType
     {
-        /// <summary>
-        /// 详细id
-        /// </summary>
         [Key]
         public int ID { get; set; }
+
         /// <summary>
-        /// 预资单ID
+        /// 移动类型名称
         /// </summary>
-        public int PreID { get; set; }
-        /// <summary>
-        /// 备案id
-        /// </summary>
-        public int BeianID { get; set; }
+        public string MoveTypeName { get; set; }
+
         /// <summary>
         /// 是否删除
         /// </summary>
         public bool IsDel { get; set; }
-        /// <summary>
-        /// 备注
-        /// </summary>
+
         public string Remark { get; set; }
+
+        public string MoveTypeData { get; set; }
     }
 }

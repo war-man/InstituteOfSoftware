@@ -1,18 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
 {
-    using Base_SysManage;
+    using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     /// <summary>
     /// 员工业务类
     /// </summary>
     public class EmployeesInfoManage:BaseBusiness<EmployeesInfo>
     {
+
+        /// <summary>
+        /// 渠道
+        /// </summary>
+        private ChannelStaffBusiness dbchannel;
         /// <summary>
         /// 获取所有没有离职的员工
         /// </summary>
@@ -57,6 +60,25 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         public List<EmployeesInfo> GetChannelStaffZhuren() {
            return this.GetAll().Where(a => a.PositionId == 1006).ToList();
         }
+
+        /// <summary>
+        /// 获取副主任
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetChannelStaffFuzhuren() {
+            return this.GetAll().Where(a => a.PositionId == 2010).ToList();
+        }
+
+        /// <summary>
+        /// 根据渠道员工id获取员工对象
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public EmployeesInfo GetInfoByChannelID(int ChannelID) {
+            dbchannel = new ChannelStaffBusiness();
+            var channel= dbchannel.GetChannelByID(ChannelID);
+            return this.GetInfoByEmpID(channel.EmployeesInfomation_Id);
+        }
         /// <summary>
         /// 杨校
         /// </summary>
@@ -80,6 +102,34 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                 }
             }
             return iszhuren;
+        }
+        /// <summary>
+        /// 判断是不是主任
+        /// </summary>
+        /// <param name="empinfo"></param>
+        /// <returns></returns>
+        public bool IsChannelZhuren(EmployeesInfo empinfo) {
+            bool iszhuren = false;
+            if (empinfo.PositionId== 1006)
+            {
+                iszhuren = true;
+            }
+            return iszhuren;
+        }
+
+        /// <summary>
+        /// 判断是不是副主任
+        /// </summary>
+        /// <param name="empinfo"></param>
+        /// <returns></returns>
+        public bool IsFuzhiren(EmployeesInfo empinfo)
+        {
+            bool isfuzhuren = false;
+            if (empinfo.PositionId == 2010)
+            {
+                isfuzhuren = true;
+            }
+            return isfuzhuren;
         }
     }
 }
