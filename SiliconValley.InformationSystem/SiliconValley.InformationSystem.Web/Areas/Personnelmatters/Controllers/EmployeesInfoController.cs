@@ -158,55 +158,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e1.BCNum,
                 e1.Material,
                 e1.Remark,
-                deltime = etm.GetDelEmp(e1.EmployeeId).TransactionTime//离职时间
+                e1.IsDel,
+                deltime = etm.GetDelEmp(e1.EmployeeId).TransactionTime,//离职时间
+                delreason=etm.GetDelEmp(e1.EmployeeId).Reason//离职原因
                 #endregion
 
-            });
-            var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
-            var newlist = from e in mylist
-                          select new
-                          {
-                              #region 获取属性值 
-                              e.EmployeeId,
-                              e.DDAppId,
-                              e.EmpName,
-                              Position = GetPosition((int)e.PositionId).PositionName,
-                              Depart = GetDept((int)e.PositionId).DeptName,
-                              e.Sex,
-                              e.Age,
-                              e.Nation,
-                              e.Phone,
-                              e.IdCardNum,
-                              e.ContractStartTime,
-                              e.ContractEndTime,
-                              e.EntryTime,
-                              e.Birthdate,
-                              e.Birthday,
-                              e.PositiveDate,
-                              e.UrgentPhone,
-                              e.DomicileAddress,
-                              e.Address,
-                              e.Education,
-                              e.MaritalStatus,
-                              e.IdCardIndate,
-                              e.PoliticsStatus,
-                              e.WorkExperience,
-                              e.ProbationSalary,
-                              e.Salary,
-                              e.SSStartMonth,
-                              e.BCNum,
-                              e.Material,
-                              e.Remark,
-                              e.IsDel
-                              #endregion
-
-                          };
+                });
+                var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
             var newobj = new
             {
                 code = 0,
                 msg = "",
-                count = list.Count(),
-                data = newlist
+                count = slist.Count(),
+                data = mylist
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
