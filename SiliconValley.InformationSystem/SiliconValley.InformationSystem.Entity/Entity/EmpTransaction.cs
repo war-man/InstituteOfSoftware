@@ -69,5 +69,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 现在工资
         /// </summary>
         public Nullable<decimal> PresentSalary { get; set; }
+        /// <summary>
+        /// 异动原因
+        /// </summary>
+        public string Reason { get; set; }
     }
 }
