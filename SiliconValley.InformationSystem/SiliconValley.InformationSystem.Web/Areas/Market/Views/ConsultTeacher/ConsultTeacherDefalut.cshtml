@@ -21,17 +21,17 @@
     </style>
 </head>
 <body>
-    <form class="layui-form myformCssServer1">
+    <form class="layui-form myformCssServer1" lay-filter="MyFormServer1">
         <div class="layui-row">
             <div class="layui-col-sm2">
                 <label class="layui-form-label">姓名:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="" id="" class="layui-input" />
+                <input name="EmpName" id="EmpName" class="layui-input" readonly="readonly" lay-filter="filter"/>
             </div>
 
-            <div class="layui-col-sm6" style="text-align:center">
-                <img src="~/Images/onepgscr-7.jpg" style="width:200px;height:180px;position:absolute"/>
+            <div class="layui-col-sm6" style="text-align:center;width:200px;">
+                <img id="Myimg" name="Myimg" style="width:200px;height:180px;position:absolute" class="layui-upload-img"/>
             </div>
         </div>
         <br />
@@ -40,7 +40,7 @@
                 <label class="layui-form-label">联系电话:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="" id="" class="layui-input" />
+                <input name="Phone" id="Phone" class="layui-input" readonly="readonly" lay-filter="filter"/>
             </div>
         </div>
         <br />
@@ -49,16 +49,16 @@
                 <label class="layui-form-label">学历:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="" id="" class="layui-input" />
-            </div>            
+                <input name="Education" id="Education" class="layui-input" readonly="readonly" lay-filter="filter"/>
+            </div>
         </div>
         <br />
         <div class="layui-row">
             <div class="layui-col-sm2">
-                <label class="layui-form-label">咨询等级:</label>
+                <label class="layui-form-label">咨询等级:</label> 
             </div>
             <div class="layui-col-sm3">
-                <input name="" id="" class="layui-input" />
+                <div id="ConGrade" name="ConGrade"></div>               
             </div>
         </div>
         <br />
@@ -68,25 +68,34 @@
                 <label class="layui-form-label">政治面貌:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="" id="" class="layui-input" />
-            </div>            
+                <input name="Politicsstatus" id="Politicsstatus" class="layui-input" readonly="readonly" lay-filter="filter"/>
+            </div>
+
+            <div class="layui-col-sm5" style="text-align:center">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <div class="layui-upload-list">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
         </div>
         <br />
         <div class="layui-row">
             <div class="layui-col-sm2">
-                <label class="layui-form-label">咨询类型:</label>
+                <label class="layui-form-label">工作状态:</label>
             </div>
             <div class="layui-col-sm3">
-                <input type="radio" name="zai" id="" class="layui-input" title="高中" />
-                <input type="radio" name="zai" id="" class="layui-input" title="初中" />
+                <input type="radio" name="IsZhizhi" id="IsZhizhi" class="layui-input" title="在职" value="false" lay-filter="filter"/>
+                <input type="radio" name="IsZhizhi" id="IsZhizhi" class="layui-input" title="离职" value="true" lay-filter="filter" />
             </div>
-
+           
             <div class="layui-col-sm2">
-                <label class="layui-form-label">是否在职:</label>
+                <label class="layui-form-label">是否转正:</label>
             </div>
             <div class="layui-col-sm3">
-                <input type="radio" name="zai" id="" class="layui-input" title="在职" />
-                <input type="radio" name="zai" id="" class="layui-input" title="离职" />
+                <input type="radio" name="IsZhangzhe" id="IsZhangzhe" class="layui-input" title="是" value="true"  lay-filter="filter"/>
+                <input type="radio" name="IsZhangzhe" id="IsZhangzhe" class="layui-input" title="否" value="false" lay-filter="filter"/>
             </div>
         </div>
         <br />
@@ -95,7 +104,7 @@
                 <label class="layui-form-label">工作经验:</label>
             </div>
             <div class="layui-col-sm6">
-                <textarea style="width: 685px; height: 80px;">
+                <textarea style="width: 685px; height: 80px;" id="workExperence" name="workExperence" readonly="readonly" lay-filter="filter">
 
                </textarea>
             </div>
@@ -103,25 +112,153 @@
         <br />
         <div class="layui-row">
             <div class="layui-col-sm2">
-                <label class="layui-form-label">说明:</label>
+                <label class="layui-form-label">评价:</label>
             </div>
             <div class="layui-col-sm6">
-                <textarea style="width: 685px; height: 80px;">
+                <textarea style="width: 685px; height: 80px;" id="Rmark" name="Rmark">
 
               </textarea>
             </div>
         </div>
         <br />
-        <div class="layui-row">
-            <button class="layui-btn" lay-submit="" lay-filter="demo1">修改</button>
-            <button type="button" class="layui-btn">取消</button>
+        <br />
+        <div class="layui-row" style="float:right;">
+            <button class="layui-btn" lay-submit="" lay-filter="IsOk">修改</button>
+            <button type="button" id="No" class="layui-btn">取消</button>
+            <input type="hidden"id="Id" name="Id"/>
         </div>
     </form>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form'], function () {
+        var getGrand;
+        var chang1;
+        var chang2;
+        layui.use(['form', 'upload'], function () {             
             var form = layui.form;
+             var upload = layui.upload;
+
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                , url: '/Market/ConsultTeacher/UploadImage/'
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#Myimg').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    //如果上传失败
+                    if (res.msg != "ok") {
+                        return layer.msg('上传失败');
+                    } else {
+                        return layer.msg('成功');
+                    }
+                    //上传成功
+                }
+                , error: function () {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function () {
+                        uploadInst.upload();
+                    });
+                }
+            });
+            //修改
+            form.on('submit(IsOk)', function (data) {
+                //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                //console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                var formdara = data.field; //当前容器的全部表单字段，名值对形式：{name: value}
+                var datas = {
+                    "Rmark": formdara.Rmark,
+                    "ConGrade": getGrand,
+                    "Id": formdara.Id
+                };
+                
+                $.ajax({
+                    url: "/Market/ConsultTeacher/EdiConsultTeacherFunction"
+                    , type: "POST"
+                    , data: datas
+                    ,success: function (SucData) {
+                        if (SucData != "ok") {
+                            layer.msg(SucData, {icon:2})
+                        } else {
+                            layer.msg("修改成功！！", { icon: 1 }, function () {
+                                //调用父页面刷新数据
+                                window.parent.Flush();
+                                //关闭弹出层
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+                            });
+                             
+                        }
+                       }    
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+            //警告用户该值不能修改
+            form.on('radio(filter)', function (data) {                
+                layer.msg('该值不能修改!!!', { icon: 2 });  
+                form.val("MyFormServer1",
+                    {
+                        "IsZhizhi": chang1,
+                        "IsZhangzhe": chang2
+                    }
+                );
+            });  
+        });
+        $(function () {
+            $.ajax({
+                url: "/Market/ConsultTeacher/GetFormData/" +@ViewBag.id,
+                success: function (SucData) {
+                    if (typeof (SucData) == 'String') {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg(SucData);
+                        });
+                    } else {
+                        layui.use(['form','layer','rate'], function () {
+                            var form = layui.form;
+                            var layer = layui.layer;
+                            var rate = layui.rate;
+                            SucData.IsZhizhi = SucData.IsZhizhi.toString();
+                            chang1 = SucData.IsZhizhi.toString();
+                            SucData.IsZhangzhe = SucData.IsZhangzhe.toString();
+                            chang2 = SucData.IsZhangzhe.toString();
+                            if (SucData.BrainImage != null) {
+                                $("#Myimg")[0].src = "/uploadXLSXfile/ConsultTeacherImage/" + SucData.BrainImage;
+                            }
+                           
+                            rate.render({
+                                elem: '#ConGrade'
+                                , value: SucData.ConGrade
+                                , text: true
+                                , setText: function (value) { //自定义文本的回调
+                                    var arrs = {
+                                        '1': '能力差'
+                                        , '2': '能力一般'
+                                        , '3': '能力中等'
+                                        , '4': '优秀'
+                                        , '5': '极度优秀'
+                                    };
+                                    getGrand = value;
+                                    this.span.text(arrs[value] || (value + "星"));
+
+                                }
+                            });
+                            form.val("MyFormServer1", SucData);
+                        });
+                    }
+                  }
+            });
+
+            $("#No").click(function () {
+                //关闭弹出层
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            });
         });
     </script>
 </body>

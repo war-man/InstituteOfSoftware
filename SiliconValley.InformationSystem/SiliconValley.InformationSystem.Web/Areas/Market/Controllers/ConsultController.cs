@@ -6,12 +6,18 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
-    public class ConsultController : Controller
+    public class ConsultController : BaseMvcController
     {
-        // GET: Market/Consult
+        // GET: Market/Consult/
         public ActionResult ConsultIndex()
         {
             return View();
+        }
+
+        //获取分量数据
+        public ActionResult GetConsultData()
+        {
+            return null;
         }
     }
 }
