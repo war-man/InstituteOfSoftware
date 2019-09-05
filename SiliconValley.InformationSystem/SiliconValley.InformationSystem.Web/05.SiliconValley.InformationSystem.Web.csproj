@@ -218,6 +218,7 @@
     <Compile Include="Areas\Market\Controllers\ConsultController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultTeacherController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
+    <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
@@ -1187,6 +1188,7 @@
     <Content Include="Scripts\layui-v2.5.4\文档与示例\在线示例.url" />
     <Content Include="Scripts\layui-v2.5.4\文档与示例\快速上手.url" />
     <Content Include="Scripts\layui-v2.5.4\更新日志.url" />
+    <Content Include="uploadXLSXfile\Sheet1.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1216,6 +1218,7 @@
     <Folder Include="bin\roslyn\" />
     <Folder Include="bin\zh-Hans\" />
     <Folder Include="uploadXLSXfile\ConflictExcel\" />
+    <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>

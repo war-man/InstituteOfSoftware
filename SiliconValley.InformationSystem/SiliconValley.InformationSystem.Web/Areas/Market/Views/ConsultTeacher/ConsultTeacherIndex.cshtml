@@ -51,20 +51,60 @@
             color: #fff;
             border: none;
         }
+        li
+        {
+            text-align: center;
+            border-bottom: 1px solid #009688
+        }
+        li:hover{
+        cursor:pointer;
+        }
     </style>
 }
 @*<input id="l" type="button" value="left" class="layui-btn">
 <input id="r" type="button" value="right" class="layui-btn">*@
-
+ 
+    <div style=" width:500px; display:inline-block;">
+        <!-- Single button -->
+        <label>咨询师：</label>
+        <div class="btn-group layui-container layui-form" style="width:120px;">
+            <div class="dropdown">
+                <button  class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                     --请选择-- 
+                    <span class="caret"></span>
+                </button>
+                <ul id="Myul" class="dropdown-menu" aria-labelledby="dropdownMenu1" value="6">
+                    @{
+                        foreach (T_ConsultTeacherData item2 in ViewBag.data as List<T_ConsultTeacherData>)
+                        {
+                            <li myid="@item2.Id">@item2.EmpName</li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+        <input type="hidden" name="Myinput" id="Myinput"/>
+        <hr />
+    </div>
+ 
 <div class="divMyCss">
     <div id="show">
         @{
             foreach (T_ConsultTeacherData item in ViewBag.data as List<T_ConsultTeacherData>)
             {
-                <div class="item" myid="@item.Id">
-                    <img src="~/Images/onepgscr-5.jpg" style="height:80%;width:100%" />
-                    <span> @item.EmpName</span>
-                </div>        
+        <div class="item" myid="@item.Id">
+            @{
+                string imge = item.BrainImage;
+                if (string.IsNullOrEmpty(imge))
+                {
+                    imge = "1.jpg";
+                }
+                <img src="~/uploadXLSXfile/ConsultTeacherImage/@imge"  style="height:80%;width:100%" />
+            }
+
+            <span> @item.EmpName</span>
+        </div>        
             }
         }
     </div>
@@ -105,26 +145,7 @@
 
                 item.onclick = function () {
                     cR = Math.PI / 2 - this.rotate;//居中
-                    timer || (timer = setInterval(rotate, 20));
-                    layui.use('layer', function () {
-                        var layer = layui.layer;
-                        layer.confirm('<span class=spanCssone>是否查看详情？</span>',
-                            { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8 },
-                            function (index) {
-                                var id = item.getAttribute("myid");//获取咨询师Id
-                                //打开详情页面
-                                layer.close(index);//关闭弹出层
-                                layer.open({
-                                    type: 2,
-                                    content: '/Market/ConsultTeacher/ConsultTeacherDefalut/'+id  
-                                    , area: ['1000px', '650px'],
-                                    title: '咨询师详情信息'
-                                    , shade: 0.8
-                                    , anim: 4
-                                    , skin: 'demo-class2'
-                                });
-                            });
-                    });            
+                    timer || (timer = setInterval(rotate, 20));                             
                 }//当Div被点击时居中
 
             }
@@ -174,6 +195,68 @@
                 cR = (cR + r + 2 * Math.PI) % (2 * Math.PI);
                 timer || (timer = setInterval(rotate, 10));
             }, 2000);
+        }
+    </script>
+    <script>
+        $(function () {
+            $("#serchBtn1").click(function () {
+                //获取Id
+                var id = $("#Myinput").val();
+                if (id == null || id.length==0) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg("请选择咨询师!!!", { icon:2 })
+                    });  
+                } else {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.open({
+                            type: 2,
+                            content: '/Market/ConsultTeacher/ConsultTeacherDefalut/' + id
+                            , area: ['1000px', '700px'],
+                            title: '咨询师详情信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class2'
+                        });
+                    });  
+                }
+                           
+            });
+
+            //给下拉框注册点击事件
+            $("li").click(function () {
+                $("#dropdownMenu1")[0].innerText = this.innerText;     
+                var id = this.getAttribute("myid");
+                $("#Myinput").val(id);
+            });
+
+            //给imag注册点击事件
+            $(".item").click(function (event) {
+               var id=event.currentTarget.getAttribute("myid");
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.confirm('<span class=spanCssone>是否查看详情？</span>',
+                        { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8 },
+                        function (index) {
+                            //打开详情页面
+                            layer.close(index);//关闭弹出层
+                            layer.open({
+                                type: 2,
+                                content: '/Market/ConsultTeacher/ConsultTeacherDefalut/'+id  
+                                , area: ['1000px', '700px'],
+                                title: '咨询师详情信息'
+                                , shade: 0.8
+                                , anim: 4
+                                , skin: 'demo-class2'
+                            });
+                        });
+                });   
+            });
+        });
+        //刷新页面
+        function Flush() {
+            location.reload([true]);  
         }
     </script>
 }
