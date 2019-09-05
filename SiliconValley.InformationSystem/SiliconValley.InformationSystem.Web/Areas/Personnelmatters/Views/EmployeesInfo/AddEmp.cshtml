@@ -140,11 +140,6 @@
                         </div>
                     </div>
 
-                    @*<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-            <label class="layui-form-label">出生日期</label>
-            <div class="layui-input-block">
-                @Html.TextBoxFor(a => a.Birthdate, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd(员工至少十六岁)" }, { "class", "layui-input" } })</div>
-        </div>*@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">生日</label>
                         <div class="layui-input-block">
@@ -353,15 +348,6 @@
                 , laydate = layui.laydate;
 
             //日期验证
-            var curDate = new Date();
-          
-            function MoDay(a) {
-                if (a < 10) {
-                    return "0" + a;
-                }
-                return a;
-            }
-
             var entryTime = laydate.render({
                 elem: '#EntryTime',
                 done: function (value, date) {
@@ -425,7 +411,6 @@
                         }
                 }
             });//合同终止时间
-           
             laydate.render({
                 elem: '#IdCardIndate',
             });//身份证有效期
