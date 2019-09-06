@@ -197,7 +197,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                               e.BCNum,
                               e.Material,
                               e.Remark,
-                              e.IsDel
                               #endregion
 
                           };
