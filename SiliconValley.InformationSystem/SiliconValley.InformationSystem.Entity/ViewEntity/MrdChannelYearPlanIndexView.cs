@@ -51,7 +51,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 区域id
         /// </summary>
-        public int RegionID { get; set; }
+        public string RegionID { get; set; }
         /// <summary>
         /// 区域名称
         /// </summary>

@@ -40,19 +40,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 原部门
         /// </summary>
-        public string PreviousDept { get; set; }
+        public int PreviousDept { get; set; }
         /// <summary>
         /// 原岗位
         /// </summary>
-        public string PreviousPosition { get; set; }
+        public int PreviousPosition { get; set; }
         /// <summary>
         /// 现部门
         /// </summary>
-        public string PresentDept { get; set; }
+        public int PresentDept { get; set; }
         /// <summary>
         /// 现岗位
         /// </summary>
-        public string PresentPosition { get; set; }
+        public int PresentPosition { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
@@ -69,5 +69,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 现在工资
         /// </summary>
         public Nullable<decimal> PresentSalary { get; set; }
+        /// <summary>
+        /// 原因
+        /// </summary>
+        public string Reason { get; set; }
     }
 }
