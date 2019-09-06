@@ -1,0 +1,130 @@
+﻿
+@{
+    ViewBag.Title = "ConsultIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+
+@section style{
+    <style>
+        .container, .front, .back
+        {
+            width: 80px;
+            height: 30px;
+        }
+
+        .flip
+        {
+            position: relative;
+            transition: 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .front, .back
+        {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            backface-visibility: hidden;
+        }
+
+        .front
+        {
+            background-color: #009688;
+            z-index: 2;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        .back
+        {
+            transform: rotateY(-90deg);
+        }
+
+        .container:hover .flip
+        {
+            transform: rotateY(90deg);
+        }
+
+        .SpanCssenght1
+        {
+            font-family: STSong;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 800;
+        }
+
+        .ImageCssEight1
+        {
+            width: 40px;
+            height: 30px;
+        }
+        #divleft{
+        float:left;
+        width:10%;
+        }
+        #divright
+        {
+        margin-left:30px;
+            float: left;
+            width: 85%;
+            border: 1px solid black;
+        }
+    </style>
+}
+<div>
+    <hr />
+    <label>学生姓名：</label>
+    <div class="btn-group layui-container" style="width:120px;">
+        <div style="display:inline-block">
+            <input type="text" class="form-control" id="JangzMan" name="JangzMan" placeholder="学生姓名">
+        </div>
+    </div>
+    <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+    <hr />
+</div>
+<div id="divleft">
+    @{
+
+        foreach (ConsultShowData item in ViewBag.data as List<ConsultShowData>)
+        {
+                  <div class="layui-row">
+                      <div class="layui-col-sm3" style="text-align:center;margin-top:30px;">
+                          <div class="container" style="display:inline-block">
+                              <div class="flip">
+                                  <div class="front">
+                                      <span class="SpanCssenght1" id=" @item.empId" myid="@item.Id ">@item.empName</span>
+                                  </div>
+                                  <div class="back">
+                                      <img src="~/Images/redLove.jpg.gif" class="ImageCssEight1" />
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+          }
+      }
+
+            </div>
+<div id="divright">
+
+</div>
+
+
+@section script{
+    <script>
+        $(function () {
+            //注册鼠标点击事件
+            $(".container").click(function (event) {
+                var spanelem = event.currentTarget.firstElementChild.firstElementChild.firstElementChild;//获取span标签
+                var id=spanelem.getAttribute("id");
+                var myid=spanelem.getAttribute("myid");
+                var empName = spanelem.innerText;                
+            });
+        });
+    </script>
+}
+     
+
+
