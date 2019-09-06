@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.ClassesBusiness;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
@@ -110,7 +111,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult StudIenterEntiy(InterviewStudents interviewStudents)
         {
-            string EmpNumber = "201908150001";
+            Base_UserModel user = new Base_UserModel();
+            string EmpNumber = user.EmpNumber;
             AjaxResult result = null;
             //多个学号组成后面截取逗号
             if (interviewStudents.ID>0)

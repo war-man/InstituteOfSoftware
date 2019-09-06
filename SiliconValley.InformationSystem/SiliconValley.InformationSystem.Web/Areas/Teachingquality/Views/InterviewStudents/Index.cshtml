@@ -17,14 +17,7 @@
                             <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs4" style="margin-left:-60px;">
-                      
-                        <label class="layui-form-label">学员姓名</label>
-                        <div class="layui-input-inline">
-                            @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "MyClass" } })
-                        </div>
-
-                    </div>
+                   
                 </div>
                 
                 <div class="layui-col-xs4">

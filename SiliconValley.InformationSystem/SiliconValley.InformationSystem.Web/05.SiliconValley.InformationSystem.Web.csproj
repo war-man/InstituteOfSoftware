@@ -224,6 +224,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
@@ -252,6 +253,7 @@
     <Content Include="Areas\Teachingquality\js\Datetime.js" />
     <Content Include="Areas\Teachingquality\js\MMembersAddjson.js" />
     <Content Include="Areas\Teachingquality\Styles\MenuBar.css" />
+    <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
     <Content Include="Areas\Teaching\Scripts\MajorOperation.js" />
@@ -386,6 +388,10 @@
     <Content Include="Areas\Teachingquality\Views\Headteacher\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Headteacher\HeadmasterEntity.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Transferoftraunees.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentUnion\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentUnion\Department.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentUnion\StudentUnionMemberss.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentUnion\UnionMemberAdd.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

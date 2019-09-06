@@ -292,6 +292,7 @@
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
+    <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />

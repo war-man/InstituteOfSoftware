@@ -13,6 +13,7 @@ using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -58,24 +59,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             try
             {
                 List<ClassSchedule> list = new List<ClassSchedule>();
-                var HadnID = Hadmst.GetList().Where(c => c.informatiees_Id == user.EmpNumber && c.IsDelete == false).FirstOrDefault();
-                if (HadnID!=null)
-                {
-                    var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
-                    foreach (var item in x)
-                    {
-                       
-                   list.Add( dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber == item.ClassID).FirstOrDefault());
-                    }
-                }
-                else
+                if (user.UserId=="Admin")
                 {
                     list = dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
                 }
-          
-               
-             
-            if (!string.IsNullOrEmpty(ClassNumber))
+                else
+                {
+                    var HadnID = Hadmst.GetList().Where(c => c.informatiees_Id == user.EmpNumber && c.IsDelete == false).FirstOrDefault();
+                    if (HadnID != null)
+                    {
+                        var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
+                        foreach (var item in x)
+                        {
+                            list.Add(dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false && a.ClassNumber == item.ClassID).FirstOrDefault());
+                        }
+                    }
+                }
+
+
+
+
+                if (!string.IsNullOrEmpty(ClassNumber))
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
             }
@@ -300,6 +304,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //转班业务
         public ActionResult Transferoftraunees()
         {
+            StudentUnionBusiness SS = new StudentUnionBusiness();
+            var x= SS.StudentList("aa");
             return View();
         }
     }
