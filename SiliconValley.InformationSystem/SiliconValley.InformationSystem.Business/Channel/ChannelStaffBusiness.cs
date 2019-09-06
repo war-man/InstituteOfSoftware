@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.Psychro;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
@@ -19,6 +20,8 @@ namespace SiliconValley.InformationSystem.Business.Channel
     public class ChannelStaffBusiness : BaseBusiness<ChannelStaff>
     {
         EmploymentStaffBusiness dbempstaff = new EmploymentStaffBusiness();
+        private EmployeesInfoManage dbstaff;
+        private MrdEmpTransactionBusiness dbyidong;
         /// <summary>
         /// 学校年度计划的业务类
         /// </summary>
@@ -33,10 +36,11 @@ namespace SiliconValley.InformationSystem.Business.Channel
         }
 
         /// <summary>
-        /// 获取所有的渠道员工
+        /// 获取所有的渠道员工包括离职的
         /// </summary>
         /// <returns></returns>
-        public List<ChannelStaff> GetAll() {
+        public List<ChannelStaff> GetAll()
+        {
             return this.GetIQueryable().ToList();
         }
         /// <summary>
@@ -44,18 +48,20 @@ namespace SiliconValley.InformationSystem.Business.Channel
         /// </summary>
         /// <param name="ChanneID"></param>
         /// <returns>ChannelStaff</returns>
-        public ChannelStaff GetChannelByID(int? ChanneID) {
-          return  this.GetChannelStaffs().Where(a => a.ID == ChanneID).FirstOrDefault();
+        public ChannelStaff GetChannelByID(int? ChanneID)
+        {
+            return this.GetChannelStaffs().Where(a => a.ID == ChanneID).FirstOrDefault();
         }
         /// <summary>
         /// 根据员工id获取渠道专员对象
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public ChannelStaff GetChannelByEmpID(string empid) {
-           return this.GetChannelStaffs().Where(a => a.EmployeesInfomation_Id == empid).FirstOrDefault();
+        public ChannelStaff GetChannelByEmpID(string empid)
+        {
+            return this.GetChannelStaffs().Where(a => a.EmployeesInfomation_Id == empid).FirstOrDefault();
         }
-        
+
 
 
         /// <summary>
@@ -63,8 +69,9 @@ namespace SiliconValley.InformationSystem.Business.Channel
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool DelChannelStaff(string empid) {
-            ChannelStaff channelStaff=  this.GetChannelByEmpID(empid);
+        public bool DelChannelStaff(string empid)
+        {
+            ChannelStaff channelStaff = this.GetChannelByEmpID(empid);
             channelStaff.IsDel = true;
             channelStaff.QuitDate = DateTime.Now;
             bool result = false;
@@ -114,29 +121,29 @@ namespace SiliconValley.InformationSystem.Business.Channel
         /// 获取所有的备案数据
         /// </summary>
         /// <returns></returns>
-        public List<StudentPutOnRecord> GetbeianAll() {
+        public List<StudentPutOnRecord> GetbeianAll()
+        {
             StudentDataKeepAndRecordBusiness dbbeian = new StudentDataKeepAndRecordBusiness();
-           return dbbeian.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+            return dbbeian.GetIQueryable().Where(a => a.IsDelete == false).ToList();
         }
         /// <summary>
         /// 根据年度计划的id获取该年度的人员情况
         /// </summary>
         /// <param name="PlanID"></param>
         /// <returns></returns>
-        public List<ChannelStaff> GetChannelByYear(int? PlanID, SchoolYearPlanBusiness dbschoolpaln) {
-         
-            var nowschoolplan = dbschoolpaln.GetPlanByID(PlanID);
+        public List<ChannelStaff> GetChannelByYear(SchoolYearPlan nowschoolplan, SchoolYearPlanBusiness dbschoolpaln)
+        {
             var nextdata = dbschoolpaln.GetNextPlan(nowschoolplan);
             List<ChannelStaff> resultlist = new List<ChannelStaff>();
             var channelstafflist = this.GetAll();
-            for (int i = channelstafflist.Count-1; i >=0; i--)
+            for (int i = channelstafflist.Count - 1; i >= 0; i--)
             {
                 //现在员工
-                if (channelstafflist[i].ChannelDate>= nowschoolplan.PlanDate)
+                if (channelstafflist[i].ChannelDate >= nowschoolplan.PlanDate)
                 {
-                    if (nextdata.ID!=0)
+                    if (nextdata.ID != 0)
                     {
-                        if (channelstafflist[i].ChannelDate <= nextdata.PlanDate)
+                        if (channelstafflist[i].ChannelDate < nextdata.PlanDate)
                         {
                             resultlist.Add(channelstafflist[i]);
                         }
@@ -149,15 +156,15 @@ namespace SiliconValley.InformationSystem.Business.Channel
                 //老员工
                 else
                 {
-                    if (channelstafflist[i].IsDel==false)
+                    if (channelstafflist[i].IsDel == false)
                     {
                         resultlist.Add(channelstafflist[i]);
                     }
                     else
                     {
-                        if (nextdata.ID!=0)
+                        if (nextdata.ID != 0)
                         {
-                            if (channelstafflist[i].QuitDate<=nextdata.PlanDate)
+                            if (channelstafflist[i].QuitDate <= nextdata.PlanDate)
                             {
                                 resultlist.Add(channelstafflist[i]);
                             }
@@ -171,6 +178,40 @@ namespace SiliconValley.InformationSystem.Business.Channel
             }
             return resultlist;
         }
-      
+        /// <summary>
+        /// 根据年度计划，获取这个年度的主任 如果这个人离职了，但是离职时间是当前这个年度，丢弃不加载。 这个人这个季度是主任，下个季度降职，加载，如果这个人这个季度不是i主任，下个季度升职的不加载。
+        /// </summary>
+        /// <param name="nowschoolplan"></param>
+        /// <param name="dbschoolpaln"></param>
+        /// <returns></returns>
+        public List<ChannelStaff> GetChannelZhurenByPlan(SchoolYearPlan nowschoolplan, SchoolYearPlanBusiness dbschoolpaln)
+        {
+            dbyidong = new MrdEmpTransactionBusiness();
+            dbstaff = new EmployeesInfoManage();
+            var data = this.GetChannelByYear(nowschoolplan, dbschoolpaln);
+            List<ChannelStaff> zhurenlist = new List<ChannelStaff>();
+            foreach (var item in data)
+            {
+                var yidong = dbyidong.GetTransactionByPlan_EmpID(item.EmployeesInfomation_Id, nowschoolplan);
+                if (yidong != null)
+                {
+                    //主任
+                    if (yidong.PresentPosition == 1006)
+                    {
+                        zhurenlist.Add(item);
+                    }
+                }
+                else
+                {
+                    var empinfo = dbstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
+                    if (empinfo.PositionId == 1006)
+                    {
+                        zhurenlist.Add(item);
+                    }
+                }
+            }
+            return zhurenlist;
+        }
+
     }
 }

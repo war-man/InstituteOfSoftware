@@ -48,24 +48,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// 区域业务类
         /// </summary>
         private RegionBusiness dbregion;
+        /// <summary>
+        /// 异动业务类
+        /// </summary>
+        private MrdEmpTransactionBusiness dbyidong;
         // GET: Market/ChannelYearPlan
         public ActionResult ChannelYearPlanIndex()
         {
             dbschoolpaln = new SchoolYearPlanBusiness();
+            dbchannelstaff = new ChannelStaffBusiness();
+            dbempstaff = new EmployeesInfoManage();
+            
             var data = dbschoolpaln.GetAll().OrderByDescending(a => a.ID).Select(a => new ShowyearnameView
             {
                 SchoolPlanID = a.ID,
                 ShowTitle = a.Title
             }).ToList();
+
             ViewBag.YearName = data;
-            ViewBag.NowYearName = data.FirstOrDefault();
+            var nowyear=  data.FirstOrDefault();
+            ViewBag.NowYearName = nowyear;
+            var nowpaln= dbschoolpaln.GetPlanByID(nowyear.SchoolPlanID);
+            //加载该年的主任
+            var zhurenlist = dbchannelstaff.GetChannelZhurenByPlan(nowpaln, dbschoolpaln);
+            var empzhuren = new List<EmployeesInfo>();
+            foreach (var item in zhurenlist)
+            {
+                var bubu = dbempstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
+                empzhuren.Add(bubu);
+            }
+            ViewBag.empzhuren = empzhuren;
             return View();
         }
         /// <summary>
         /// 表格数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult ChannelYearPlanData(int page, int limit, int? PlanID, string EmpName)
+        public ActionResult ChannelYearPlanData(int page, int limit, int? PlanID, string EmpID)
         {
 
             dbchannelstaff = new ChannelStaffBusiness();
@@ -86,9 +105,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 var plan = dbschoolpaln.GetAll().LastOrDefault();
                 selectplan = plan.ID;
             }
+            //该年
             var planinfo = dbschoolpaln.GetPlanByID(selectplan);
+            
             //获取该年有的人
-            var data = dbchannelstaff.GetChannelByYear(selectplan, dbschoolpaln);
+            var data = dbchannelstaff.GetChannelByYear(planinfo, dbschoolpaln);
+            if (!string.IsNullOrEmpty(EmpID))
+            {
+                data= dbarea.GetTeamByEmpID(EmpID, planinfo,data);
+
+            }
             List<MrdChannelYearPlanIndexView> mrdplan = new List<MrdChannelYearPlanIndexView>();
             foreach (var item in data)
             {
@@ -105,16 +131,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 //获取员工该年度计划负责区域
                 var channelarea= dbarea.GetAreaByPaln(item.ID, planinfo);
 
-                Region resultregion = new Region();
-                if (channelarea== null)
+                var mrdRegionName = "";
+                var mrRegionID = "";
+                if (channelarea.Count!=0)
                 {
-                    resultregion.ID = 0;
-                    resultregion.RegionName = "";
-                }
-                else
-                {
-                    //获取区域对象
-                   resultregion = dbregion.GetRegionByID(channelarea.RegionID);
+                    foreach (var mrdarea in channelarea)
+                    {
+                        var region = dbregion.GetRegionByID(mrdarea.RegionID);
+                        mrdRegionName = mrdRegionName == "" ? region.RegionName : mrdRegionName + "、" + region.RegionName;
+                        mrRegionID = mrRegionID == "" ? region.ID.ToString() : mrRegionID + "、" + region.ID.ToString();
+                    }
                 }
 
                 MrdChannelYearPlanIndexView mrdChannel = new MrdChannelYearPlanIndexView();
@@ -127,14 +153,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 mrdChannel.EmpName = empinfo.EmpName;
                 mrdChannel.Phone = empinfo.Phone;
                 mrdChannel.PlanNumber = planinfo.AreaNumber;
-                mrdChannel.Region = resultregion.RegionName;
-                mrdChannel.RegionID = resultregion.ID;
+                mrdChannel.Region = mrdRegionName;
+                mrdChannel.RegionID = mrRegionID;
                 mrdChannel.SignUpNumber = baomingcount.Count;
                 mrdChannel.QuitDate = item.QuitDate;
                 mrdChannel.EmpStaffID = item.EmployeesInfomation_Id;
                 mrdChannel.DebitNumber = debitcount.Count+ fundingcoung.Count;
                 mrdplan.Add(mrdChannel);
             }
+
+            
             var bnewdata = mrdplan.Skip((page - 1) * limit).Take(limit).ToList();
             var returnObj = new
             {
@@ -143,7 +171,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 count = mrdplan.Count(),
                 data = bnewdata
             };
+
+            
+
             return Json(returnObj, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 加载主任下拉框
+        /// </summary>
+        /// <param name="Plan"></param>
+        /// <returns></returns>
+        public ActionResult LoadZhuren(int Plan) {
+            dbschoolpaln = new SchoolYearPlanBusiness();
+            dbchannelstaff = new ChannelStaffBusiness();
+            dbempstaff = new EmployeesInfoManage();
+            var planinfo=  dbschoolpaln.GetPlanByID(Plan);
+            //加载该年的主任
+            var zhurenlist = dbchannelstaff.GetChannelZhurenByPlan(planinfo, dbschoolpaln);
+            var empzhuren = new List<EmployeesInfo>();
+            foreach (var item in zhurenlist)
+            {
+                var bubu = dbempstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
+                empzhuren.Add(bubu);
+            }
+            return Json(empzhuren,JsonRequestBehavior.AllowGet);
         }
     }
 }

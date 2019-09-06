@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace SiliconValley.InformationSystem.Entity.MyEntity
+namespace SiliconValley.InformationSystem.Entity.Entity
 {
     [Table("MoveType")]
-    public partial class MoveType
+    public class MoveType
     {
         [Key]
         public int ID { get; set; }
@@ -23,6 +26,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
         public string Remark { get; set; }
 
-        public Nullable<System.DateTime> MoveTypeDate { get; set; }
+        public System.DateTime MoveTypeDate { get; set; }
     }
 }

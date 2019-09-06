@@ -30,5 +30,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 负责区域时间
         /// </summary>
         public System.DateTime StaffAreaDate { get; set; }
+        /// <summary>
+        /// 负责区域时间
+        /// </summary>
+        public Nullable<System.DateTime> StopDate { get; set; }
     }
 }

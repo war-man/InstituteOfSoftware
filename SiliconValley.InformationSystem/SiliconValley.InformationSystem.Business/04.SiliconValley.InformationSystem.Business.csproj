@@ -108,6 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Psychro\ChannelAreaBusiness.cs" />
     <Compile Include="Psychro\DebitBusiness.cs" />
+    <Compile Include="Psychro\MrdEmpTransactionBusiness.cs" />
     <Compile Include="Psychro\PerInfoBusiness.cs" />
     <Compile Include="Psychro\PrefundingBusiness.cs" />
     <Compile Include="Psychro\RegionBusiness.cs" />

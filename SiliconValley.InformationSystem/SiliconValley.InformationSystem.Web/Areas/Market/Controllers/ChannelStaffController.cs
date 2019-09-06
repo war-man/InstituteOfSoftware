@@ -107,8 +107,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     if (foritem.EmployeeId == item.EmployeesInfomation_Id)
                         iszhuren = true;
                 }
-
-                var channelarea = dbemparea.GetAreaByChannelID(item.ID);
+                //现在
+                var channelarea = dbemparea.GetAreasingByChannelID(item.ID);
                 if (channelarea.Count != 0)
                 {
                     var mrdRegionName = "";

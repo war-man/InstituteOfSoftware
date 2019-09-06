@@ -1,4 +1,6 @@
-﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+﻿using SiliconValley.InformationSystem.Business.Channel;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,29 +14,23 @@ namespace SiliconValley.InformationSystem.Business.Psychro
     /// </summary>
     public class ChannelAreaBusiness : BaseBusiness<ChannelArea>
     {
+        /// <summary>
+        /// 员工
+        /// </summary>
+        private EmployeesInfoManage dbemp;
+
+        /// <summary>
+        /// 渠道员工
+        /// </summary>
+        private ChannelStaffBusiness dbchannel;
 
         /// <summary>
         ///年度学校计划
         /// </summary>
         private SchoolYearPlanBusiness dbpaln;
-        /// <summary>
-        /// 根据区域id获取对象
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ChannelArea GetAreaByID(int id)
-        {
-            return this.GetIQueryable().Where(a => a.ID == id && a.IsDel == false).FirstOrDefault();
-        }
-        /// <summary>
-        /// 根据渠道员工id获取员工区域
-        /// </summary>
-        /// <param name="ChannelStaffID"></param>
-        /// <returns></returns>
-        public List<ChannelArea> GetAreaByChannelID(int ChannelStaffID)
-        {
-            return this.GetIQueryable().Where(a => a.ChannelStaffID == ChannelStaffID && a.IsDel == false).ToList();
-        }
+
+        private SchoolYearPlanBusiness dbplan;
+
         /// <summary>
         /// 获取全部的没有伪删除的数据
         /// </summary>
@@ -45,48 +41,158 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         }
 
         /// <summary>
-        /// 根据渠道员工id跟要查询的年度计划，获取该员工最后负责的区域
+        /// 根据区域id获取对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ChannelArea GetAreaByID(int id)
+        {
+            return this.GetChannelAreas().Where(a => a.ID == id).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据渠道员工id获取员工现在负责区域
+        /// </summary>
+        /// <param name="ChannelStaffID"></param>
+        /// <returns></returns>
+        public List<ChannelArea> GetAreasingByChannelID(int ChannelStaffID)
+        {
+            return this.GetChannelAreas().Where(a => a.ChannelStaffID == ChannelStaffID).ToList();
+        }
+
+        /// <summary>
+        /// 根据渠道员工id获取员工负责区域的全部
+        /// </summary>
+        /// <param name="ChannelStaffID"></param>
+        /// <returns></returns>
+        public List<ChannelArea> GetAreasedByChannelID(int ChannelStaffID)
+        {
+            return this.GetIQueryable().Where(a => a.ChannelStaffID == ChannelStaffID).ToList();
+        }
+        /// <summary>
+        /// 根据一个员工id返回当前所在的区域
+        /// </summary>
+        /// <param name="channelStaffID"></param>
+        /// <returns></returns>
+        public ChannelArea GetAreaByChannelID(int channelStaffID)
+        {
+            return this.GetChannelAreas().Where(a => a.ChannelStaffID == channelStaffID).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据渠道员工id跟要查询的年度计划，如果这个员工区域已经没在负责了，就判断他的停止时间是什么时候，如果是下个计划的开始时间停用的就添加到现在的这个年度中
         /// </summary>
         /// <param name="ChannelID"></param>
         /// <param name="nowplan"></param>
         /// <returns></returns>
-        public ChannelArea GetAreaByPaln(int ChannelID, SchoolYearPlan nowplan)
+        public List<ChannelArea> GetAreaByPaln(int ChannelID, SchoolYearPlan nowschoolplan)
         {
-            var channelarealist = this.GetAreaByChannelID(ChannelID);
+            //以前跟现在的记录
+            var channelarealist = this.GetAreasedByChannelID(ChannelID);
             dbpaln = new SchoolYearPlanBusiness();
-            var nextplan = dbpaln.GetNextPlan(nowplan);
-            List<ChannelArea> fuzeArea = new List<ChannelArea>();
-            dbpaln.GetNextPlan(nowplan);
+            var nextdata = dbpaln.GetNextPlan(nowschoolplan);
+            List<ChannelArea> resultlist = new List<ChannelArea>();
             foreach (var item in channelarealist)
             {
-                //老员工从以前就一直负责下来的。
-                if (item.StaffAreaDate <= nowplan.PlanDate)
+                //还在持续用
+                if (!item.IsDel)
                 {
-                    fuzeArea.Add(item);
-                }
-                //老员工换区域了或者是新员工刚刚分配
-                else
-                {
-                    //没有下一个i计划，这就是正在时
-                    if (nextplan.ID == 0)
+                    //区域分配时间在制定计划之后
+                    if (nowschoolplan.PlanDate < item.StaffAreaDate)
                     {
-                        fuzeArea.Add(item);
+                        //有下一个计划
+                        if (nextdata.ID != 0)
+                        {
+                            if (item.StaffAreaDate < nextdata.PlanDate)
+                            {
+                                resultlist.Add(item);
+                            }
+                        }
+                        //没有计划
+                        else
+                        {
+                            resultlist.Add(item);
+                        }
                     }
+                    //区域分配时间在制定计划之前
                     else
                     {
-                        if (item.StaffAreaDate <= nextplan.PlanDate)
+                        resultlist.Add(item);
+                    }
+                }
+                //停用
+                else
+                {
+                    if (nextdata.ID != 0)
+                    {
+                        if (item.StopDate > nextdata.PlanDate)
                         {
-                            fuzeArea.Add(item);
+                            resultlist.Add(item);
                         }
                     }
                 }
             }
-
-            //上面的循环找到了这个员工在一计划年内的区域异动列表
-
-            //现在我们找最接近下一个计划的最近的一次记录
-            var areaing = fuzeArea.OrderByDescending(a => a.StaffAreaDate).FirstOrDefault();
-            return areaing;
+            return resultlist;
         }
+
+        /// <summary>
+        /// 根据主任的员工编号获取他当年带的团队
+        /// </summary>
+        /// <returns></returns>
+        public List<ChannelStaff> GetTeamByEmpID(string EmpID, SchoolYearPlan nowschoolplan, List<ChannelStaff> data)
+        {
+            dbchannel = new ChannelStaffBusiness();
+            var channel = dbchannel.GetChannelByEmpID(EmpID);
+            var listarea = new List<ChannelArea>();
+            var resultlist = new List<ChannelStaff>();
+
+            var fuzhuren = new List<ChannelArea>();
+            var channelarealist = new List<ChannelArea>();
+            resultlist.Add(channel);
+
+            foreach (var item in data)
+            {
+                var mydata = this.GetAreaByPaln(item.ID, nowschoolplan);
+                listarea.AddRange(mydata);
+            }
+            //副主任
+            for (int i = 0; i < listarea.Count; i++)
+            {
+                if (listarea[i].RegionalDirectorID == channel.ID)
+                {
+                    var forfuzhuren = dbchannel.GetChannelByID(listarea[i].ChannelStaffID);
+                    fuzhuren.Add(listarea[i]);
+                    resultlist.Add(forfuzhuren);
+                }
+            }
+            //员工
+            for (int i = 0; i < listarea.Count; i++)
+            {
+                for (int k = 1; k < fuzhuren.Count; k++)
+                {
+                    if (listarea[i].RegionalDirectorID == fuzhuren[k].ID)
+                    {
+                        channelarealist.Add(listarea[i]);
+                    }
+                }
+            }
+
+            for (int i = 0; i < fuzhuren.Count; i++)
+            {
+                for (int k = 0; k < channelarealist.Count; k++)
+                {
+                    if (fuzhuren[i].ID == channelarealist[k].RegionalDirectorID)
+                    {
+                        var forchannelstaff = dbchannel.GetChannelByID(channelarealist[k].ChannelStaffID);
+                        resultlist.Insert(i, forchannelstaff);
+                    }
+                }
+            }
+
+            return resultlist;
+
+
+        }
+
     }
 }

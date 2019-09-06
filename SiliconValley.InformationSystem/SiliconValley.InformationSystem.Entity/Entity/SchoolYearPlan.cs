@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 学校年度计划
+    /// </summary>
     [Table(name: "SchoolYearPlan")]
     public partial class SchoolYearPlan
     {

@@ -9,7 +9,7 @@
 
 <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
 
-
+<script src="~/Scripts/underscore.js"></script>
 <!-- Single button -->
 <div class="btn-group">
     <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -27,7 +27,21 @@
 
 </div>
 
-主任下拉框
+<div class="btn-group">
+    <button type="button" id="selectZhuren" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        主任团队
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" id="Zhurenlist">
+        @{
+            foreach (var item in ViewBag.empzhuren)
+            {
+                <li><a href="javascript:void(0);" ZhurenID="@item.EmployeeId">@item.EmpName</a></li>
+            }
+        }
+    </ul>
+</div>
+
 <div style="display:inline-block;width:600px;" class="form-inline">
 
     <div class="form-group">
@@ -42,18 +56,15 @@
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="distribution">分配区域</a>
 </script>
 
-
+<script type="text/template" id="muban">
+    <li><a href="javascript:void(0);" ZhurenID={{=EmployeeId}}>{{=EmpName}}</a></li>
+</script>
 
 @section script{
     <script>
 
         var MrDtableIns;
         var MrDLayer;
-        //var MrDWhyShow;
-        jQuery(function () {
-
-            //MrDWhyShow = "all";
-        });
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -72,19 +83,40 @@
             return result;
         }
 
-
         //显示条件查询
-        function WhyShow(value) {
-            console.log(value);
+        function WhyShow(planid, empid) {
+
             MrDtableIns.reload({
                 where: {
-                    PlanID: value
+                    PlanID: planid,
+                    EmpID: empid
                 }
                 , page: {
                     curr: 1
                 }
             });
-        }
+            loadselect(planid);
+        };
+        function loadselect(planid) {
+            $.ajax({
+                url: '/Market/ChannelYearPlan/LoadZhuren',
+                data: { Plan: planid },
+                async: true,
+                success: function (data) {
+                    $("#Zhurenlist").children().remove();
+                    for (var i = 0; i < data.length; i++) {
+                        var compiled = _.template($("#muban").html());
+                        var EmpName = data[i].EmpName;
+                        var EmployeeId = data[i].EmployeeId;
+                        var html = compiled({ EmpName: EmpName, EmployeeId: EmployeeId });
+                        $("#Zhurenlist").append($(html));
+                    }
+                },
+                error: function (data) {
+
+                }
+            });
+        };
         layui.use(['table', 'layer'], function () {
             var table = layui.table;
             var layer = layui.layer; //layui对象
@@ -157,7 +189,7 @@
             //            });
             //        }
 
-            //    } 
+            //    }
 
             //});
 
@@ -167,10 +199,24 @@
         $("#grandlist li a").click(function () {
             var grand = $(this).text();
             $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-            var grandid = $(this).attr("grandid");
-            $("#selectGrand").attr("grandid", grandid);
             var a = $(this).attr("planid");
-            WhyShow(a);
+            var b = $("#Zhurenlist").val();
+            console.log($("#Zhurenlist"));
+            console.log(b);
+            WhyShow(a, b);
+        });
+
+        //$("#Zhurenlist li a").click(function () {
+        //    console.log("1");
+        //    var zhuren = $(this).text();
+        //    $("#selectZhuren")[0].innerHTML = zhuren + " <span class='caret'></span>";
+        //    var a = $("#grandlist").val();
+        //    var b = $(this).attr("ZhurenID");
+        //    WhyShow(a, b);
+        //});
+
+        $(document).off("click", "#Zhurenlist li").on('click', '#Zhurenlist li', function () {
+            console.log("11");
         });
 
         $("#SearchEnter").click(function () {
