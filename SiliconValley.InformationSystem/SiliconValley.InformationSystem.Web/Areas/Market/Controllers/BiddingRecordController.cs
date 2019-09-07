@@ -16,7 +16,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: Market/BiddingRecord/GetBRData
         public ActionResult BiddingIndex()
         {
-           
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var elist = emanage.GetList();
+            ViewBag.recorder = new SelectList(elist, "EmployeeId", "EmpName");
             return View();
         }
         public ActionResult GetBRData(int page, int limit,string AppCondition) {
@@ -28,15 +30,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 string[] str = AppCondition.Split(',');
                 string recorder = str[0];
                 string BiddingOpponent = str[1];
-                string Keyword = str[2];
-                string start_time = str[3];
-                string end_time = str[4];
+                string Unit = str[2];
+                string Keyword = str[3];
+                string start_time = str[4];
+                string end_time = str[5];
                
                 if (!string.IsNullOrEmpty(recorder))
                 {
                     brlist = brlist.Where(a => a.Recorder==recorder).ToList();
                 }
                 brlist = brlist.Where(a=>a.BiddingOpponent.Contains(BiddingOpponent)).ToList();
+                brlist = brlist.Where(a => a.Unit.Contains(Unit)).ToList();
                 brlist = brlist.Where(e => e.Keyword.Contains(Keyword)).ToList();
                 if (!string.IsNullOrEmpty(start_time))
                 {
@@ -88,6 +92,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             try
             {
                 //br.Recorder=登录的人就是记录的人
+                br.Recorder = "201908150004";//到时候再设置为登陆的用户
                 br.IsDel = false;
                 brmanage.Insert(br);
                 AjaxResultxx = brmanage.Success();
@@ -150,6 +155,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                var b = brmanage.GetEntity(br.Id);
+                br.Recorder = b.Recorder;
+                br.IsDel = b.IsDel;
                 brmanage.Update(br);
                 AjaxResultxx = brmanage.Success();
             }

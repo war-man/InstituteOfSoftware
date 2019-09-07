@@ -79,7 +79,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">首位出价</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.TheFirstBid, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.TheFirstBid, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -96,7 +96,7 @@
                     <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
                         <label class="layui-form-label" style="width:130px;margin-left:-55px;">平均点击价格</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.AverageClickPrice, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            @Html.TextAreaFor(a => a.AverageClickPrice, new Dictionary<string, object>() { { "class", "layui-input  salary" } })
                         </div>
                     </div>
                     <div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
@@ -130,6 +130,22 @@
                 elem: '#ShowTime',
                 format:'yyyy-MM-dd'
             });
+            //价格输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
            
             //添加提交
             form.on('submit(demo1)', function (data) {

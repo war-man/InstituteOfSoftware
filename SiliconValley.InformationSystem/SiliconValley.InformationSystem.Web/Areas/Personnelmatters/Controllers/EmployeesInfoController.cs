@@ -56,15 +56,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     list = list.Where(e => e.PositionId == int.Parse(pname)).ToList();
                 }
                 if (!string.IsNullOrEmpty(Education)) {
-                    list = list.Where(e => e.Education.Equals(bool.Parse(Education))).ToList();
+                    list = list.Where(e => e.Education==Education).ToList();
                 }
                 if (!string.IsNullOrEmpty(sex))
                 {
-                    list = list.Where(e => e.Sex.Equals(bool.Parse(sex))).ToList();
+                    list = list.Where(e => e.Sex==sex).ToList();
                 }
                 if (!string.IsNullOrEmpty(PoliticsStatus))
                 {
-                    list = list.Where(e => e.PoliticsStatus.Equals(bool.Parse(PoliticsStatus))).ToList();
+                    list = list.Where(e => e.PoliticsStatus==PoliticsStatus).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(start_time))
@@ -268,6 +268,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.EmployeeId = EmpId();
                 if (emp.IdCardNum != null) {
                     emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
+                   
+                }
+                if (emp.Birthdate!=null) {
                     emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 }
                 emp.IsDel = false;
@@ -762,22 +765,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 switch (Attrbute)
                 {
-                    case "EmpName":
+                    case "EmpName"://员工姓名
                         var emp1 = empinfo.GetEntity(id);
                         emp1.EmpName = endvalue;
                         empinfo.Update(emp1);
                         break;
-                    case "Phone":
+                    case "Phone"://员工电话号码
                         var emp2 = empinfo.GetEntity(id);
                         emp2.Phone = endvalue;
                         empinfo.Update(emp2);
                         break;
-                    case "Nation":
-                        var emp3 = empinfo.GetEntity(id);
-                        emp3.Nation = endvalue;
-                        empinfo.Update(emp3);
-                        break;
-                    case "IdCardNum":
+                    case "IdCardNum"://员工身份证号码
                         var emp12 = empinfo.GetEntity(id);
                         emp12.IdCardNum = endvalue;
                         if (emp12.IdCardNum != null)
@@ -787,55 +785,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         }
                         empinfo.Update(emp12);
                         break;
-                    case "Birthday":
-                        var emp4 = empinfo.GetEntity(id);
-                        emp4.Birthday = endvalue;
-                        empinfo.Update(emp4);
-                        break;
-                    case "UrgentPhone":
-                        var emp5 = empinfo.GetEntity(id);
-                        emp5.UrgentPhone = endvalue;
-                        empinfo.Update(emp5);
-                        break;
-                    case "DomicileAddress":
-                        var emp6 = empinfo.GetEntity(id);
-                        emp6.UrgentPhone = endvalue;
-                        empinfo.Update(emp6);
-                        break;
-                    case "Address":
-                        var emp7 = empinfo.GetEntity(id);
-                        emp7.UrgentPhone = endvalue;
-                        empinfo.Update(emp7);
-                        break;
-                    case "WorkExperience":
-                        var emp8 = empinfo.GetEntity(id);
-                        emp8.WorkExperience = endvalue;
-                        empinfo.Update(emp8);
-                        break;
-                    case "BCNum":
-                        var emp9 = empinfo.GetEntity(id);
-                        emp9.BCNum = endvalue;
-                        empinfo.Update(emp9);
-                        break;
-                    case "Material":
-                        var emp10 = empinfo.GetEntity(id);
-                        emp10.Material = endvalue;
-                        empinfo.Update(emp10);
-                        break;
-                    case "Remark":
+                    case "Remark"://备注
                         var emp11 = empinfo.GetEntity(id);
                         emp11.Remark = endvalue;
                         empinfo.Update(emp11);
-                        break;
-                    case "Education":
-                        var emp13 = empinfo.GetEntity(id);
-                        emp13.Education = endvalue;
-                        empinfo.Update(emp13);
-                        break;
-                    case "PoliticsStatus":
-                        var emp14 = empinfo.GetEntity(id);
-                        emp14.PoliticsStatus = endvalue;
-                        empinfo.Update(emp14);
                         break;
                 }
                 AjaxResultxx = empinfo.Success();
@@ -847,39 +800,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
         //员工信息列表时间单元格编辑
-        public ActionResult EditDateCell(string id, string Attrbute, DateTime endvalue) {
+        public ActionResult EditDateCell(string id, DateTime endvalue) {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
-                switch (Attrbute)
-                {
-                    case "IdCardIndate":
-                        var emp1 = empinfo.GetEntity(id);
-                        emp1.IdCardIndate = endvalue;
-                        empinfo.Update(emp1);
-                        AjaxResultxx = empinfo.Success();
-                        break;
-                    case "SSStartMonth":
+
                         var emp2 = empinfo.GetEntity(id);
                         emp2.SSStartMonth = endvalue;
                         empinfo.Update(emp2);
                         AjaxResultxx = empinfo.Success();
-                        break;
-                    case "ContractStartTime":
-                        var emp3 = empinfo.GetEntity(id);
-                        emp3.ContractStartTime = endvalue;
-                        empinfo.Update(emp3);
-                        AjaxResultxx = empinfo.Success();
-                        break;
-                    case "ContractEndTime":
-                        var emp4 = empinfo.GetEntity(id);
-                        emp4.ContractEndTime = endvalue;
-                        empinfo.Update(emp4);
-                        AjaxResultxx = empinfo.Success();
-                        break;
-                }
-
             }
             catch (Exception ex)
             {
@@ -921,7 +851,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditEmp(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
              var emp= empmanage.GetEntity(id);
+            ViewBag.dname = GetDept((int)emp.PositionId).DeptName;
+            ViewBag.pname = GetPosition((int)emp.PositionId).PositionName;
             return View(emp);
+        }
+        [HttpPost]
+        public ActionResult EditEmp(EmployeesInfo emp) {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var ajaxresult= new AjaxResult();
+            try
+            {
+                var emp2 = empmanage.GetEntity(emp.EmployeeId);
+                emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
+                emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
+                emp.IsDel = emp2.IsDel;
+                empmanage.Update(emp);
+                ajaxresult = empmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = empmanage.Error(ex.Message);
+            }
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
         }
 
     }

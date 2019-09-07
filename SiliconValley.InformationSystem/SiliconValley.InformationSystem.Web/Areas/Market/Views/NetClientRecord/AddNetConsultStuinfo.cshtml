@@ -71,12 +71,12 @@
 
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">登记者</label>
-                        <div class="layui-input-inline">
-                            @Html.DropDownListFor(a => a.EmployeeId, ViewBag.nettea as SelectList, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
-                        </div>
-                    </div>
+                    @*<div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="layui-form-label">登记者</label>
+            <div class="layui-input-inline">
+                @Html.DropDownListFor(a => a.EmployeeId, ViewBag.nettea as SelectList, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
+            </div>
+        </div>*@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">联系方式</label>
                         <div class="layui-input-block">
@@ -90,16 +90,17 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">市场对接老师</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(a => a.MarketTeaId, ViewBag.markettea as SelectList, "--请选择--", new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">学历</label>
                         <div class="layui-input-block">
@@ -113,15 +114,13 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">QQ号</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.QQNum, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">微信号</label>
@@ -129,6 +128,11 @@
                             @Html.TextBoxFor(a => a.WeChatNum, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">地区</label>
                         <div class="layui-input-block">
@@ -143,21 +147,22 @@
                         </div>
                     </div>
 
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">入学状态</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="IsDel" value="False" title="未入学" checked="">
+                            <input type="radio" name="IsDel" value="True" title="已入学">
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">入学状态</label>
-                             <div class="layui-input-block">
-                                <input type="radio" name="IsDel" value="False" title="未入学" checked="">
-                                <input type="radio" name="IsDel" value="True" title="已入学">
-                            </div>
-                    </div>
-                    <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">回访情况</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.CallBackCase, new Dictionary<string, object>() {  { "class", "layui-input linu" } })
+                            @Html.TextAreaFor(a => a.CallBackCase, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
