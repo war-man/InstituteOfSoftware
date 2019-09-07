@@ -26,6 +26,6 @@ namespace SiliconValley.InformationSystem.Entity.Entity
 
         public string Remark { get; set; }
 
-        public System.DateTime MoveTypeDate { get; set; }
+        public Nullable<System.DateTime>  MoveTypeDate { get; set; }
     }
 }

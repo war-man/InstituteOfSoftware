@@ -40,19 +40,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 原部门
         /// </summary>
-        public int PreviousDept { get; set; }
+        public Nullable<int> PreviousDept { get; set; }
         /// <summary>
         /// 原岗位
         /// </summary>
-        public int PreviousPosition { get; set; }
+        public Nullable<int> PreviousPosition { get; set; }
         /// <summary>
         /// 现部门
         /// </summary>
-        public int PresentDept { get; set; }
+        public Nullable<int> PresentDept { get; set; }
         /// <summary>
         /// 现岗位
         /// </summary>
-        public int PresentPosition { get; set; }
+        public Nullable<int> PresentPosition { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
