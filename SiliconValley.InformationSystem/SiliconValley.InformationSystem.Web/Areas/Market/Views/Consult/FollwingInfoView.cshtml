@@ -1,0 +1,120 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FollwingInfoView</title>
+    <style>
+        *
+        {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        body
+        {
+            background: #ccc;
+        }
+        /* accordion */
+        .accordion
+        {
+            width: 900px;
+            height: 370px;
+            overflow: hidden;
+            margin-top: 80px;
+            margin-left:auto;
+            margin-right:auto;
+            box-shadow: 0 0 10px 2px rgba(0,0,0,0.4);
+        }
+
+            .accordion ul
+            {
+                width: 3000px;
+            }
+
+            .accordion li
+            {
+                display: block;
+                height: 370px;
+                overflow: hidden;
+                position: relative;
+                float: left;
+                border-left: 1px solid #aaa;
+                box-shadow: 0 0 25px 10px rgba(0,0,0,0.4);
+                -webkit-transition: all .5s;
+                -moz-transition: all .5s;
+                -ms-transition: all .5s;
+                -o-transition: all .5s;
+                transition: all .5s;
+            }
+
+                .accordion li img
+                {
+                    display: block;
+                }
+
+            .accordion ul:hover li
+            {
+                width: 40px;
+            }
+
+            .accordion ul li:hover
+            {
+                width: 80%;
+            }
+
+            .accordion .title
+            {
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 640px;
+                background: rgba(0,0,0,0.5);
+            }
+
+                .accordion .title a
+                {
+                    display: block;
+                    color: #fff;
+                    font-size: 16px;
+                    padding: 20px;
+                }
+
+        .divCssEnght2
+        {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div id="div_right_middle_bttom">
+            <div class='accordion'>
+                <ul>
+                    @{
+                            List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
+                            int wid = 900 / f_list.Count;
+                            foreach (var item in f_list)
+                            {
+                            <li style="width:@wid">
+                                <div class='title'>@item.FollwingDate</div>
+                                <div class="divCssEnght2">
+                                    <span>等级:</span><span>@item.Rank</span>
+                                    <h3>
+                                       @item.TailAfterSituation
+                                    </h3>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+</body>
+</html>

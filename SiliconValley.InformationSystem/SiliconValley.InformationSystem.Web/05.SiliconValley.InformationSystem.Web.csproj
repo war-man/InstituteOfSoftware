@@ -294,7 +294,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="Images\my1.png" />
+    <Content Include="Images\onepgscr-3.jpg" />
+    <Content Include="Images\onepgscr-4.jpg" />
+    <Content Include="Images\onepgscr-5.jpg" />
+    <Content Include="Images\onepgscr-6.jpg" />
+    <Content Include="Images\onepgscr-7.jpg" />
+    <Content Include="Images\redLove.jpg.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -521,6 +526,9 @@
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\test\ut\.jshintrc" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\test\ut\configure" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\test\ut\MIT.LICENSE" />
+    <Content Include="Areas\Market\Views\Consult\ConsultIndex.cshtml" />
+    <Content Include="Areas\Market\Views\Consult\SingleDataView.cshtml" />
+    <Content Include="Areas\Market\Views\Consult\FollwingInfoView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2107,7 +2115,6 @@
     <Folder Include="Areas\Logistics\Models\" />
     <Folder Include="Areas\Logistics\Views\Shared\" />
     <Folder Include="Areas\Market\Models\" />
-    <Folder Include="Areas\Market\Views\Consult\" />
     <Folder Include="Areas\Market\Views\Shared\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />

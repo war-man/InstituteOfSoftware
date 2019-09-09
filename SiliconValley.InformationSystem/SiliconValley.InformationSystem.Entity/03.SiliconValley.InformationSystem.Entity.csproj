@@ -278,9 +278,11 @@
     <Compile Include="ViewEntity\ClassTableView.cs" />
     <Compile Include="ViewEntity\ConsultAndStedent.cs" />
     <Compile Include="ViewEntity\ConsultShowData.cs" />
+    <Compile Include="ViewEntity\ConsultZhuzImageData.cs" />
     <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\DistributionView.cs" />
+    <Compile Include="ViewEntity\DivTwoData.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
