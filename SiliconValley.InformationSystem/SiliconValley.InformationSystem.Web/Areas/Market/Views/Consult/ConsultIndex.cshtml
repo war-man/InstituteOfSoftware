@@ -11,7 +11,7 @@
         .container, .front, .back
         {
             width: 80px;
-            height: 30px;
+            height: 40px;
         }
 
         .flip
@@ -31,15 +31,16 @@
 
         .front
         {
-            background-color: #009688;
             z-index: 2;
-            line-height: 30px;
+            line-height: 40px;
             cursor: pointer;
         }
 
         .back
         {
             transform: rotateY(-90deg);
+            text-align: center;
+            cursor: pointer;
         }
 
         .container:hover .flip
@@ -57,19 +58,63 @@
 
         .ImageCssEight1
         {
-            width: 40px;
-            height: 30px;
+            width: 80px;
+            height: 40px;
         }
-        #divleft{
-        float:left;
-        width:10%;
+
+        #divleft
+        {
+            float: left;
+            width: 10%;
         }
+
         #divright
         {
-        margin-left:30px;
+            margin-left: 30px;
             float: left;
             width: 85%;
             border: 1px solid black;
+        }
+        .RedCss{
+        background-color:red;
+        }
+        .GreenCss
+        {
+            background-color: #009688;
+        }
+        .btnCenDivCss{
+         text-align:center;
+         margin-top:10px;
+        }
+        .btnCssEnght1{
+        width:70px;
+        height:35px;
+        text-align:center;
+        line-height:35px;
+        }
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class2 .layui-layer-title
+        {
+            background: #ffd800;
+            color: #fff;
+            border: none;
+        }
+        .spanCssone
+        {
+            font-size: 25px;
+            font-family: STSong
+        }
+        .demo-class2 .layui-layer-btn a
+        {
+            background: #ffd800;
+            color: #fff;
+            border: none;
         }
     </style>
 }
@@ -84,47 +129,296 @@
     <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
     <hr />
 </div>
+<script src="~/Scripts/ECharts4.2.1/incubator-echarts-master/dist/echarts.js"></script>
 <div id="divleft">
+    <div class="layui-row">
+        <div class="layui-col-sm3" style="text-align:center;margin-top:30px;">
+            <div class="container" style="display:inline-block">
+                <div class="flip">
+                    <div class="front RedCss">
+                        <span class="SpanCssenght1" id="Tang" myid="-1">整体</span>
+                    </div>
+                    <div class="back">
+                        <img src="~/Images/redLove.jpg.gif" class="ImageCssEight1" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     @{
 
         foreach (ConsultShowData item in ViewBag.data as List<ConsultShowData>)
         {
-                  <div class="layui-row">
-                      <div class="layui-col-sm3" style="text-align:center;margin-top:30px;">
-                          <div class="container" style="display:inline-block">
-                              <div class="flip">
-                                  <div class="front">
-                                      <span class="SpanCssenght1" id=" @item.empId" myid="@item.Id ">@item.empName</span>
-                                  </div>
-                                  <div class="back">
-                                      <img src="~/Images/redLove.jpg.gif" class="ImageCssEight1" />
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-          }
-      }
-
+            <div class="layui-row">
+                <div class="layui-col-sm3" style="text-align:center;margin-top:10px;">
+                    <div class="container" style="display:inline-block">
+                        <div class="flip">
+                            <div class="front GreenCss">
+                                <span class="SpanCssenght1" id=" @item.empId" myid="@item.Id ">@item.empName</span>
+                            </div>
+                            <div class="back">
+                                <img src="~/Images/redLove.jpg.gif" class="ImageCssEight1" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-<div id="divright">
+        }
+    }
 
 </div>
+<div id="divright">
+    <div id="div_right_top" style="height:500px">
+        <div id="dada" style="width:100%;height:100%"></div>
+    </div>
+    <input type="hidden" id="TeacherStuation" name="TeacherStuation" value="tangminGood"/>
+    <div id="div_right_middle" style="margin-top:50px;">
+        <h3>咨询师工作完成详情</h3>
+        <div id="div_right_middle_left" style="margin-top:30px;">
+            <form>
+                <fieldset>
+                    <legend id="spanText"></legend>
+                    <div id="wangchen" class="layui-row">
+
+                    </div>
+                </fieldset>
+            </form>
+        </div>    
+        
+    </div>
+</div>
+
 
 
 @section script{
     <script>
+        var Is;
         $(function () {
-            //注册鼠标点击事件
+            HiddenMiddle();
+            //注册鼠标点击事件(查询)
             $(".container").click(function (event) {
+                HiddenMiddle();
                 var spanelem = event.currentTarget.firstElementChild.firstElementChild.firstElementChild;//获取span标签
-                var id=spanelem.getAttribute("id");
-                var myid=spanelem.getAttribute("myid");
-                var empName = spanelem.innerText;                
+                var id = spanelem.getAttribute("id");
+                var myid = spanelem.getAttribute("myid");
+                var empName = spanelem.innerText;
+                if (empName != "整体") {                   
+                    $("#TeacherStuation").val(myid);
+                    $(".front").each(function (index, elem) {
+                        $(elem).removeClass("RedCss");
+                        $(elem).addClass("GreenCss");
+                    });
+                    var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
+                    $(Myspanelem).addClass("RedCss");
+                    $(Myspanelem).removeClass("GreenCss");
+                    $.ajax({
+                        type: "GET",
+                        url: '/Market/Consult/GetImageData/' + myid,
+                        success: function (data) {
+                            // 使用刚指定的配置项和数据显示图表。
+                            myChart.setOption(myoption(data));
+                        }
+                    });
+                    $("#TeacherStuation").val(myid);
+                } else {
+                    $(".front").each(function (index, elem) {
+                        $(elem).removeClass("RedCss");
+                        $(elem).addClass("GreenCss");
+                    });
+                    var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
+                    $(Myspanelem).removeClass("GreenCss");
+                    console.log(Myspanelem);
+                    $(Myspanelem).addClass("RedCss");
+                    $("#TeacherStuation").val("tangminGood");
+                    $.ajax({
+                        type: "GET",
+                        url: '/Market/Consult/GetImageData/',
+                        success: function (data) {
+                            // 使用刚指定的配置项和数据显示图表。
+                            myChart.setOption(myoption(data));
+                        }
+                    });                    
+                }
+                 
             });
         });
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('dada'));
+        myChart.title = '折柱混合';
+        //当鼠标移动到某个月份，显示未完成数据和完成数据
+        myChart.on('click', function (params) {
+            var mystatus= params.seriesName;
+            var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为完成量和完成量
+            Is = mystatus;
+            if (values != "tangminGood") {
+                switch (params.name) {
+                    case "一月":
+                        GetTwoDivData(values, "1", mystatus);
+                        break;
+                    case "二月":
+                        GetTwoDivData(values, "2", mystatus);
+                        break;
+                    case "三月":
+                        GetTwoDivData(values, "3", mystatus);
+                        break;
+                    case "四月":
+                        GetTwoDivData(values, "4", mystatus);
+                        break;
+                    case "五月":
+                        GetTwoDivData(values, "5", mystatus);
+                        break;
+                    case "六月":
+                        GetTwoDivData(values, "6", mystatus);
+                        break;
+                    case "七月":
+                        GetTwoDivData(values, "7", mystatus);
+                        break;
+                    case "八月":
+                        GetTwoDivData(values, "8", mystatus);
+                        break;
+                    case "九月":
+                        GetTwoDivData(values, "9", mystatus);
+                        break;
+                    case "十月":
+                        GetTwoDivData(values, "10", mystatus);
+                        break;
+                    case "十一月":
+                        GetTwoDivData(values, "11", mystatus);
+                        break;
+                    case "十二月":
+                        GetTwoDivData(values, "12", mystatus);
+                        break;
+                }
+            }  
+        });
+        function myoption(res) {
+            var wangchengarry = new Array();
+            var nowanchengarry = new Array();
+            for (var i = 0; i < res.length; i++) {
+                wangchengarry.push(res[i].wanchengcount);
+            }
+            for (var i = 0; i < res.length; i++) {
+                nowanchengarry.push(res[i].nowanchengcount);
+            }
+             
+          var  option = {
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        crossStyle: {
+                            color: '#999'
+                        }
+                    }
+                },
+                toolbox: {
+                    feature: {
+                        dataView: { show: true, readOnly: false },
+                        magicType: { show: true, type: ['line', 'bar'] },
+                        restore: { show: true },
+                        saveAsImage: { show: true }
+                    }
+                },
+                legend: {
+                    data: ['完成量', '未完成量']
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                        axisPointer: {
+                            type: 'shadow'
+                        }
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value',
+                        name: '数量',
+                        min: 0,
+                        interval: 50,
+                        axisLabel: {
+                            formatter: '{value} 人'
+                        }
+                    }
+                ],
+                series: [
+                    {
+                        name: '完成量',
+                        type: 'bar',
+                        data: wangchengarry
+                    },
+                    {
+                        name: '未完成量',
+                        type: 'bar',
+                        data: nowanchengarry
+                    }
+                ]
+          };
+            return option;
+        }
+        $.ajax({
+            type: "GET",
+            url: '/Market/Consult/GetImageData',
+            success: function (data) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(myoption(data));
+            }
+        });
+        function GetTwoDivData(values, name,status) {
+            ShowMiddle();
+            if (Is == "完成量") {
+                $("#spanText")[0].innerText = "已报名学生";
+            } else {
+                $("#spanText")[0].innerText = "未报名学生";
+            }
+            
+            $.ajax({
+                type: "GET",
+                url: '/Market/Consult/GetTwoDivData',
+                data: { "Myid": values, "MonthName": name, "Staue": status},
+                success: function (data) {
+                    // 使用刚指定的配置项和数据显示图表。
+                    //myChart.setOption(myoption(data));
+                    //完成的
+                    var Sucwc = $("#wangchen");
+                    $("#wangchen")[0].innerHTML = "";
+                    for (var i = 0; i < data[0].list.length; i++) {
+                        $('<div class="layui-col-sm1 btnCenDivCss"><input onclick=InputClick(' + data[0].list[i].StudentId+') type="button" class="layui-btn btnCssEnght1"  StudentId=' + data[0].list[i].StudentId + ' value=' + data[0].list[i].StudentName + '></div>').appendTo(Sucwc);
+                    }                    
+                }
+            });       
+        }
+        function HiddenMiddle() {
+            $("#div_right_middle").hide();
+            $("#wangchen")[0].innerHTML = "";
+        }
+        function ShowMiddle() {
+            $("#div_right_middle").show();   
+            $("#wangchen")[0].innerHTML = "";
+        }
+        function InputClick(studentid) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.confirm('<span>是否查看跟踪信息？</span>',
+                { icon: 3, title: '系统温馨提示', skin: 'demo-class2', shade: 0.8 },
+                function (index) {
+                    //打开详情页面
+                    layer.close(index);//关闭弹出层
+                    layer.open({
+                        type: 2,
+                        content: '/Market/Consult/FollwingInfoView/' + studentid
+                        , area: ['1000px', '650px'],
+                        title: '添加备案信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                });
+        });
+        }
     </script>
 }
-     
+
 
 
