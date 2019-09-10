@@ -306,7 +306,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-        //获取网络时间
+        //获取时间（网络时间/当前计算机时间）
         public string Date()
         {
             WebRequest request = null;
@@ -640,7 +640,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //岗位添加
         [HttpPost]
         public ActionResult AddPosition(Position p) {
-
             PositionManage deptmanage = new PositionManage();
             var AjaxResultxx = new AjaxResult();
             try
@@ -817,6 +816,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+
+
 
         /// <summary>
         /// 员工信息详情页面
