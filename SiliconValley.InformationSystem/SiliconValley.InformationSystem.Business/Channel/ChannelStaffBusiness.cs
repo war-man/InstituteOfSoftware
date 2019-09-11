@@ -19,13 +19,15 @@ namespace SiliconValley.InformationSystem.Business.Channel
     /// </summary>
     public class ChannelStaffBusiness : BaseBusiness<ChannelStaff>
     {
-        EmploymentStaffBusiness dbempstaff = new EmploymentStaffBusiness();
+        private EmployeesInfoManage dbempinfo;
         private EmployeesInfoManage dbstaff;
         private MrdEmpTransactionBusiness dbyidong;
         /// <summary>
         /// 学校年度计划的业务类
         /// </summary>
         private SchoolYearPlanBusiness dbschoolpaln;
+        private ChannelAreaBusiness dbchannelarea;
+
         /// <summary>
         /// 得到没有离职的渠道专员
         /// </summary>
@@ -213,5 +215,116 @@ namespace SiliconValley.InformationSystem.Business.Channel
             return zhurenlist;
         }
 
+        /// <summary>
+        /// 根据主任的渠道id获取底下副主任员工
+        /// </summary>
+        /// <param name="ZhurenChannelID"></param>
+        /// <param name="nowschoolplan"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetFUzhurenByPlan(string ZhurenEmpID, SchoolYearPlan nowschoolplan, List<ChannelStaff> data) {
+            dbchannelarea = new ChannelAreaBusiness();
+            dbempinfo = new EmployeesInfoManage();
+            var zhuren= this.GetChannelByEmpID(ZhurenEmpID);
+            List<ChannelArea> listarea = new List<ChannelArea>();
+            List<EmployeesInfo> result = new List<EmployeesInfo>();
+            foreach (var item in data)
+            {
+                var mydata = dbchannelarea.GetAreaByPaln(item.ID, nowschoolplan);
+                listarea.AddRange(mydata);
+            }
+
+            //副主任
+            foreach (var item in listarea)
+            {
+                if (item.RegionalDirectorID == zhuren.ID)
+                {
+                    var dudu= dbempinfo.GetInfoByChannelID(item.ChannelStaffID);
+                    result.Add(dudu);
+                }
+            }
+            //去除重复的渠道员工
+            for (int i = 0; i < result.Count; i++)
+            {
+                for (int j = result.Count - 1; j > i; j--)
+                {
+
+                    if (result[i].EmployeeId == result[j].EmployeeId)
+                    {
+                        result.RemoveAt(j);
+                    }
+
+                }
+            }
+            return result;
+
+        }
+
+        /// <summary>
+        /// 获取这个员工在该季度根据月份进行的查询备案数据
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetChannelMonthKeepOnRecord(int month,List<StudentPutOnRecord> data)
+        {
+            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            foreach (var item in data)
+            {
+                if (item.StuDateTime!=null)
+                {
+                    if (item.StuDateTime.Month == month)
+                    {
+                        result.Add(item);
+                    }
+                }
+                
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取这个员工在该季度根据月份进行的查询上门
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetChannelGoSchoolCount(int month, List<StudentPutOnRecord> data)
+        {
+            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            foreach (var item in data)
+            {
+                if (item.StuVisit!=null)
+                {
+                    if (Convert.ToDateTime(item.StuVisit).Month == month)
+                    {
+                        result.Add(item);
+                    }
+                }
+                
+            }
+
+            return result;
+        }
+        /// <summary>
+        /// 获取这个员工在该季度根据月份进行的查询报名
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> GetChannelSignUpCount(int month, List<StudentPutOnRecord> data)
+        {
+            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            foreach (var item in data)
+            {
+                if (item.StatusTime!=null)
+                {
+                    if (Convert.ToDateTime(item.StatusTime).Month == month)
+                    {
+                        result.Add(item);
+                    }
+                }
+                
+            }
+
+            return result;
+        }
+
+        
     }
 }

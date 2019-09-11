@@ -160,35 +160,49 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             {
                 if (listarea[i].RegionalDirectorID == channel.ID)
                 {
-                    var forfuzhuren = dbchannel.GetChannelByID(listarea[i].ChannelStaffID);
                     fuzhuren.Add(listarea[i]);
-                    resultlist.Add(forfuzhuren);
                 }
             }
             //员工
             for (int i = 0; i < listarea.Count; i++)
             {
-                for (int k = 1; k < fuzhuren.Count; k++)
+                for (int k = 0; k < fuzhuren.Count; k++)
                 {
-                    if (listarea[i].RegionalDirectorID == fuzhuren[k].ID)
+                    if (listarea[i].RegionalDirectorID == fuzhuren[k].ChannelStaffID)
                     {
                         channelarealist.Add(listarea[i]);
                     }
                 }
             }
 
+            //添加到集合中
             for (int i = 0; i < fuzhuren.Count; i++)
             {
+                var setfuzhuren = dbchannel.GetChannelByID(fuzhuren[i].ChannelStaffID);
+                resultlist.Add(setfuzhuren);
                 for (int k = 0; k < channelarealist.Count; k++)
                 {
-                    if (fuzhuren[i].ID == channelarealist[k].RegionalDirectorID)
+                    if (fuzhuren[i].ChannelStaffID == channelarealist[k].RegionalDirectorID)
                     {
                         var forchannelstaff = dbchannel.GetChannelByID(channelarealist[k].ChannelStaffID);
-                        resultlist.Insert(i, forchannelstaff);
+                        resultlist.Add(forchannelstaff);
                     }
                 }
             }
 
+            //去除重复的渠道员工
+            for (int i = 0; i < resultlist.Count; i++) 
+            {
+                for (int j = resultlist.Count - 1; j > i; j--)
+                {
+
+                    if (resultlist[i].EmployeesInfomation_Id == resultlist[j].EmployeesInfomation_Id)
+                    {
+                        resultlist.RemoveAt(j);
+                    }
+
+                }
+            }
             return resultlist;
 
 

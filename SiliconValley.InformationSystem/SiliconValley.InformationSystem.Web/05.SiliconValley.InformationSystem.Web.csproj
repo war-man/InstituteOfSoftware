@@ -521,6 +521,7 @@
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\test\ut\.jshintrc" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\test\ut\configure" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\test\ut\MIT.LICENSE" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\NewChannelYearPlanIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

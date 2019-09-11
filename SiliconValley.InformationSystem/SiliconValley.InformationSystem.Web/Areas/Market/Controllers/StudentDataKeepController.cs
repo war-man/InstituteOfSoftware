@@ -295,7 +295,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult ShowEmployeInfomation()
         {
             List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有在职员工
-            List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),name=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
+            List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),title=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
             List<Position> list_Position = Position_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有岗位有用的数据
             foreach (TreeClass item1 in list_Tree)
             {
@@ -310,7 +310,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             {
                                 TreeClass tcc2 = new TreeClass();
                                 tcc2.id = item3.EmployeeId;
-                                tcc2.name = item3.EmpName;
+                                tcc2.title = item3.EmpName;
                                 bigTree.Add(tcc2);
                             }
                         }
