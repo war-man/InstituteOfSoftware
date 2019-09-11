@@ -1,0 +1,145 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ConfigSetting</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+
+        html {
+            background-color:#3c3838;
+        }
+
+        #warp {
+            width: 100%;
+
+            color:white;
+         
+            
+        }
+        #menus {
+            float: left;
+            width: 15%;
+           border-left:1px solid gray;
+           border-right:1px solid gray;
+            height: 500px;
+            text-align:center;
+           
+        }
+        #configArea {
+            float: left;
+            width: 80%;
+            border-left: 1px solid gray;
+            border-right: 1px solid gray;
+        }
+
+        #titleDiv {
+            width:84%;
+            margin:0 auto;
+            height:150px;
+            
+        }
+
+        #menus div {
+        
+            margin-top:80px;
+        }
+
+            #menus div button {
+                margin-top: 80px;
+                width:180px !important;
+            }
+
+    </style>
+</head>
+<body>
+    <div id="warp">
+
+
+        <div id="titleDiv">
+
+        </div>
+
+        <hr style="background-color:gray;" />
+
+        <div id="menus">
+
+
+            <div> <button id="itemsetting" class="layui-btn layui-btn-radius layui-btn-primary">满意度调查内容设置</button></div>
+
+
+            <div> <button id="itemcontentsetting" class="layui-btn layui-btn-radius layui-btn-primary">满意度调查项设置</button></div>
+
+
+        </div>
+
+        <div id="configArea">
+
+
+            <iframe id="myiframe" style="width:100%; border:0px solid gray; height:600px; " src="/Teaching/SatisfactionSurvey/satisfactionItemSettingView">
+
+
+
+
+            </iframe>
+
+            @*<div id="itemsettingview">
+                @{
+
+                    Html.RenderPartial("satisfactionItemSettingView");
+                }
+            </div>
+
+            <div id="itemcontentsettingview">
+                @{
+
+                    Html.RenderPartial("satisfactionItemContentSettingView");
+                }
+            </div>*@
+
+
+
+        </div>
+
+    </div>
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
+    <script>
+
+
+        $("#itemsetting").click(function () {
+
+            $("#myiframe").attr("src", "/Teaching/SatisfactionSurvey/satisfactionItemSettingView");
+
+        });
+
+
+        $("#itemcontentsetting").click(function () {
+
+            $("#myiframe").attr("src", "/Teaching/SatisfactionSurvey/satisfactionItemTypeSettingView");
+
+        });
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+           
+
+        });
+
+      
+
+    </script>
+</body>
+</html>

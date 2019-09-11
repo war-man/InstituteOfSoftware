@@ -21,7 +21,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> ProjectID { get; set; }
         public string StudentID { get; set; }
         public string Task { get; set; }
-    
-        
+        public bool IsAccomplish { get; set; }
+
+       
+
     }
 }

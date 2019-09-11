@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewBag.Title = "SatisfactionIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+
+    <style>
+
+        #SatisfactionWarp {
+            width:80%;
+
+            margin:0 auto;
+
+            height:600px;
+
+            background-color:#ffffff;
+        }
+
+        .SatisfactionItems {
+            display:inline-block;
+            width:200px;
+            height:80px;
+            /*border:1px solid red;*/
+            text-align:center;
+            font-size:15px;
+            color:gray;
+            margin-left:50px;
+            margin-top:100px;
+        }
+
+            .SatisfactionItems span {
+                cursor:pointer;
+            }
+
+    </style>    
+    
+}
+
+
+    <div id="SatisfactionWarp">
+        <h2 style="text-align:center;">欢迎来到满意度调查</h2>
+
+        <div class="SatisfactionItems" id="SatisfactionConfig">
+            <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>满意度调查项配置</span>
+        </div>
+
+        <div class="SatisfactionItems">
+            <i class="layui-icon layui-icon-log" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>
+                满意度历史记录
+            </span>
+        </div>
+
+        <div class="SatisfactionItems">
+            <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>满意度调查项配置</span> 
+        </div>
+
+        <div class="SatisfactionItems">
+            <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>满意度调查项配置</span>
+        </div>
+
+    </div>
+
+@section script{
+    
+    <script>
+
+
+        $(".SatisfactionItems").mouseover(function () {
+
+            $(this).attr("style","color:red;");
+
+        });
+
+        $(".SatisfactionItems").mouseout(function () {
+
+            $(this).attr("style", "color:gray;");
+
+        });
+
+
+        layui.use(['layer', 'element'], function () {
+
+            var layer = layui.layer;
+
+            var element = layui.element;
+
+            $("#SatisfactionConfig").click(function () {
+
+                layer.open({
+
+                    type: 2,
+                    title: "满意度调查---配置",
+                    area: ["1600px", "1000px"],
+                    content:"/Teaching/SatisfactionSurvey/ConfigSetting"
+
+
+                });
+
+            });
+
+
+
+        });
+
+      
+
+
+    </script>
+ }
+
+
+

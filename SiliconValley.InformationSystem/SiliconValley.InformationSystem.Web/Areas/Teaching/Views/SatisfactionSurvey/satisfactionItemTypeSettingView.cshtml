@@ -1,0 +1,304 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>satisfactionItemTypeSettingView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+
+        #warp {
+            width: 100%;
+        }
+
+        .toordiv {
+            margin-left: 30px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+        #list ul li {
+            float: left;
+            margin-left: 90px;
+            margin-top: 80px;
+        }
+
+        #list ul li button {
+            width:200px !important;
+            height:60px !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="warp">
+
+        <div class="toordiv">
+
+            <div style="display:inline-block; margin-left:50px;"id="depselectdiv" class="dropdown">
+                <button DepID="2" style="width:150px !important;" class="btn btn-default dropdown-toggle" type="button" id="Dep" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="text">教学部</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="Dep">
+
+
+                    @{
+                        foreach (var item in ViewBag.Department as List<Department>)
+                        {
+
+                            <li><a depid="@item.DeptId" class="dep_a" href="javascript:void(0);">@item.DeptName</a></li>
+
+                        }
+                    }
+
+                </ul>
+            </div>
+
+
+
+            <div style="display:inline-block; margin-left:50px;" class="">
+
+                <button id="Add" class="layui-btn layui-btn-primary">
+                    新
+
+                    <i class="layui-icon layui-icon-release"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+        <hr />
+
+        <div id="list">
+
+
+            <ul>
+
+            </ul>
+
+        </div>
+
+
+    </div>
+
+    <script type="text/template" id="mobanyi">
+
+        <br />
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">项名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="typename_input" name="typename" lay-verify="required" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <label class="layui-form-label">部门</label>
+
+            <select id="depselect" style="width:180px; text-align:center; height:38px;font-size:20px;">
+
+                @{
+                    foreach (var item in ViewBag.Department as List<Department>)
+                    {
+
+                        <option value="@item.DeptId" style="font-size:20px;">@item.DeptName</option>
+
+
+                    }
+                }
+            </select>
+        </div>
+
+
+
+
+    </script>
+
+    <script type="text/template" id="moban2">
+        <li><button typeid="{{=typeid}}" class="layui-btn layui-btn-primary"><i style="font-size:30px;" class="layui-icon layui-icon-templeate-1"></i>{{=name}}</button></li>
+    </script>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+    <script>
+
+        layui.use(['layer', 'form'], function () {
+
+            var layer = layui.layer;
+            var form = layui.form;
+
+
+
+
+            //加载数据
+
+            function load(depid) {
+
+
+                Ajax('/Teaching/SatisfactionSurvey/GetGetSurveyItemTypeDataByDepid', { depid: depid }, 'post', function (data) {
+
+
+                    if (data.ErrorCode == 200) {
+
+                       
+
+                        for (var i = 0; i < data.Data.length; i++) {
+
+                            var html1 = _.template($("#moban2").html());
+
+                            var data1 = html1({ typeid: data.Data[i].ID, name: data.Data[i].TypeName});
+
+                            $("#list ul").append($(data1));
+                        }
+
+                       
+
+
+
+                    }
+
+
+                }, function (error) {
+
+
+                    layer.msg("数据加载异常");
+
+
+                });
+
+            }
+
+
+            //下拉框
+            $("#depselectdiv .dropdown-menu .dep_a").click(function () {
+
+                $(this).parent().parent().parent().find("#Dep").find(".text").text($(this).text());
+
+                $(this).parent().parent().parent().find("#Dep").attr("DepID", $(this).attr("depid"));
+
+
+                //切换数据
+
+                $("#list ul").html("");
+
+                load($(this).attr("depid"));
+
+            });
+
+            var depid = $("#Dep").attr("DepID");
+
+            //数据初始化
+            load(depid);
+
+            //添加
+            $("#Add").click(function () {
+
+                var heml = $("#mobanyi").html();
+
+                layer.open({
+                    type: 1,
+                    area: ['300px', '250px'],
+                    title: '+调查项',
+                    btn: ['确定'],
+                    content: heml,
+                    yes: function (index) {
+                        form.render();
+                        var typename = $("#typename_input").val();
+
+                        //获取部门
+                        var depid = $("#depselect").val();
+                        if (typename == undefined || typename == "") {
+
+                            layer.msg("请输入名称");
+
+                        }
+                        else {
+
+                            //首先查看是否有相同的名称
+
+                            //GetSurveyItemTypeData
+
+                            Ajax('/Teaching/SatisfactionSurvey/GetSurveyItemTypeData', { typename: typename, depid: depid }, 'post', function (data) {
+
+
+                                if (data.ErrorCode == 200) {
+
+                                    if (data.Data.length > 0) {
+
+                                        layer.msg("该名称已经存在");
+                                    }
+                                    else {
+
+                                        //做添加操作
+                                        Ajax('/Teaching/SatisfactionSurvey/AddSurveyItemType', { typename: typename, depid: depid }, 'post', function (data) {
+
+
+                                            if (data.ErrorCode == 200) {
+
+                                                layer.msg("成功！");
+
+                                                layer.close(index);
+                                            }
+                                            else {
+                                                layer.msg("异常！");
+                                            }
+
+
+                                        }, function (error) {
+                                            layer.msg("网络异常！");
+
+                                        });
+
+
+
+
+
+                                    }
+
+
+                                }
+                                else {
+                                    layer.msg("异常");
+                                }
+
+                            }, function (error) {
+
+                                layer.msg("网络异常");
+
+
+                            });
+
+
+
+
+
+                        }
+
+
+
+                    }
+
+                });
+
+
+            });
+
+
+
+        });
+
+    </script>
+</body>
+</html>

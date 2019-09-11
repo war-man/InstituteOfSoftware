@@ -1,0 +1,550 @@
+﻿
+@{
+    ViewBag.Title = "ProjectIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+
+        #projectWarp {
+            height: 200px;
+            margin-top: 0px;
+            background-color: #1F2531;
+        }
+
+        #titleImage {
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            border-radius: 50%;
+            /*background-image:url(/Areas/Teaching/Images/12.png);*/
+            margin-left: 40%;
+            margin-top: 25px;
+        }
+
+        #warptitle {
+            width: 150px;
+            height: 150px;
+            display: inline-block;
+            color: white;
+            font-size: 30px;
+        }
+
+        #projectdiv {
+            width: 100%;
+            background-color: white;
+            /*border:1px solid red;*/
+        }
+
+        #projectlist {
+            width: 60%;
+            /*border:1px solid red;*/
+            margin: 0 auto;
+        }
+
+        p {
+            margin-top: 20px;
+        }
+
+        .projectbtn {
+            margin-top: 10px;
+        }
+
+        #operations {
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        #searchdiv {
+            width: 60%;
+            margin: 20px auto;
+        }
+
+        .projecttitleselect {
+            color: #376dee;
+        }
+
+        .projecttitle {
+            cursor: pointer;
+        }
+
+        .myactive {
+            display: block !important;
+        }
+        .lunbotudiv div img {
+        
+              display:none;
+        }
+
+
+
+    </style>
+
+}
+
+<div id="projectWarp">
+
+    <div id="titleImage">
+        <img src="~/Areas/Teaching/Images/12.png" width="150" height="150" />
+    </div>
+
+    <div id="warptitle">
+        项目聚集地
+    </div>
+
+    <div id="operations">
+
+        <button class="layui-btn layui-btn-primary" id="AddProjectBtn" type="button">添加项目</button>
+
+    </div>
+    <hr />
+    <div id="projectdiv">
+        <hr />
+        <div id="searchdiv">
+            <input value="" style="width:300px; display:inline-block;" id="projectnameinput" class="layui-input form-control" />
+            <button class="layui-btn layui-btn-primary layui-btn-radius" id="seacherbtn1" type="button">搜索</button>
+
+            <div class="dropdown" style="display:inline-block; margin-left:20px;">
+                <button projecttype="0" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="selecttext">项目类型</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+
+                    <li><a typeid="0" class="typea" href="javascript:void(0);">全部</a></li>
+
+                    @{
+                        foreach (var item in ViewBag.ProjectTypes as List<ProjectType>)
+                        {
+                            <li><a class="typea" typeid="@item.Id" href="javascript:void(0);">@item.TypeName</a></li>
+                        }
+                    }
+
+                </ul>
+            </div>
+
+            <div style="display:inline-block;" class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">日期</label>
+
+
+                    <div class="layui-input-inline">
+                        <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <hr />
+        <div id="projectlist">
+
+
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<script id="moban" type="text/template">
+
+
+
+
+    <div class="projectItem" style="margin-top:50px;" projectid="{{=projectid}}">
+
+        <h3 class="projecttitle">
+            {{=projectname}}
+        </h3>
+        <br />
+        <div style="float:left;width:70%;">
+            <span>组长：</span>{{=groupLeader}}
+
+            <br />
+            <br />
+            <span>组员:</span>
+
+            <div style="display:inline-block;">
+
+                {{=TeamItem}}
+            </div>
+            <br />
+            <br />
+            <span>指导老师:</span>
+
+            <div style="display:inline-block;">
+
+                {{=Teacher}}
+            </div>
+
+            <br />
+            <br />
+            <span>状态:</span>
+
+            <div style="display:inline-block;">
+
+                {{=status}}
+            </div>
+
+
+
+            <p style="color:gray;">
+                <span style="color:black;">项目介绍：</span>
+
+                {{=ProjectIntroduce}}
+            </p>
+
+
+            <div class="projectbtn">
+                <button class="layui-btn layui-btn-primary editgroup" type="button">开发团队</button> <button class="layui-btn layui-btn-primary schedule" type="button">项目完成进度</button> <button class="layui-btn layui-btn-primary showImageManage" type="button">项目图片展示管理</button>
+            </div>
+
+        </div>
+
+        <div class="lunbotudiv" style="float:left;width:29%; height:200px;margin-top:20px;">
+
+            
+
+           
+        </div>
+        <br />
+        <br />
+        <hr />
+    </div>
+    <hr />
+
+
+
+</script>
+@section script{
+
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+   
+    <script>
+
+
+        //轮播图
+        //最后用js控制
+        function test(parentNode, currentNode, classname) {
+
+           
+
+            $(currentNode).siblings().removeClass(classname);
+
+            $(currentNode).addClass(classname);
+
+            currentNode = $(currentNode).next();
+
+
+            if (currentNode.length == 0) {
+
+                currentNode = $(parentNode).children()[0];
+
+            }
+            // 停顿2s
+            setTimeout(function () {
+
+                test(parentNode, currentNode, classname);
+
+            }, 2000);
+
+
+        }
+
+
+        layui.use(['flow', 'layer', 'carousel', 'laydate'], function () {
+
+            var laydate = layui.laydate;
+
+            //日期
+            laydate.render({
+                elem: '#date'
+            });
+
+            //当网络连通的情况触发该事件
+            window.addEventListener("online", function (e) {
+
+                layer.msg("网络链接成功");
+
+            });
+            //当网络断开的情况触发该事件
+            window.addEventListener("offline", function (e) {
+                layer.msg("抱歉 当前网络已断开......");
+            })
+
+            var flow = layui.flow;
+            //信息流
+            function load(dataurl, data) {
+
+                flow.load({
+                    elem: '#projectlist' //指定列表容器
+                    , isAuto: true
+                    , done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+
+                        //发送请求
+                        Ajax(dataurl + "?page=" + page, data, 'post', function (data) {
+
+
+                           
+
+                            for (var i = 0; i < data.data.length; i++) {
+
+                                var lis = [];
+
+                               
+
+                                var moban1 = _.template($("#moban").html());
+                                var teamitem = "";
+
+
+                                var status = data.data[i].IsStop == true ? "已结束" : "未完成";
+
+                                for (var j = 0; j < data.data[i].TeamImte.length; j++) {
+
+                                    teamitem += data.data[i].TeamImte[j].Name + ',';
+                                }
+
+
+                                var moban1data = moban1({ status: status, Teacher: data.data[i].TutorEmp.EmpName, TeamItem: teamitem, groupLeader: data.data[i].GroupLeader == null ? "" : data.data[i].GroupLeader.Name, projectname: data.data[i].ProjectName, ProjectIntroduce: data.data[i].ProjectIntroduce, projectid: data.data[i].ProjectID });
+
+                                lis.push($(moban1data)[0].outerHTML);
+
+                                //将图片分割出来
+                                var aryimgs = "";
+                                if (data.data[i].ShowImages != null) {
+
+                                    aryimgs = data.data[i].ShowImages.split(',');
+                                }
+
+                                next(lis.join(''), page < data.total);
+
+
+
+
+                                //轮播图片
+                                var img1; //存储轮播的第一张图片
+
+                                //创建图片的父元素
+                                var imgparent = $("<div></div>");
+
+                                for (var k = 0; k < aryimgs.length - 1; k++) {
+
+                                    //创建图片标签
+                                    var img = $('<img width="300" height:200px;" height="200" />');
+
+
+                                    //创建
+
+                                  
+                                    img.attr("src", "/Areas/Teaching/Images/ProjectShowImages/" + aryimgs[k]);
+
+                                    if (k == 0) {
+
+                                        //将第一张图片存储下来
+
+                                        img1 = img[0];
+
+                                    }
+
+                                    imgparent.append(img);
+
+
+
+                                }
+
+                                $($(".lunbotudiv")[i]).append(imgparent);
+
+                                test(imgparent, img1, "myactive");
+
+
+                            }
+
+
+
+                        }, function (error) {
+
+
+                        });
+
+
+                    }
+
+
+
+                });
+            }
+            var layer = layui.layer;
+
+
+
+            var carousel = layui.carousel;
+            //建造实例
+            var ins = carousel.render({
+                elem: '.images'
+                , width: '300px' //设置容器宽度
+                , height: "200px"
+                , arrow: 'always' //始终显示箭头
+                //,anim: 'updown' //切换动画方式
+            });
+
+
+
+
+            load("/Teaching/Project/GetAllProject");
+
+                $(".box").each(function (index, elem) {
+                    Inagme(elem);
+                });
+
+            //添加项目
+            $("#AddProjectBtn").click(function () {
+
+                //window.location.href = "/Teaching/Project/AddProjectView";
+
+                //弹窗
+                layer.open({
+
+                    type: 2,
+                    title: "新项目",
+                    area: ['800px', '600px'],
+                    content: "/Teaching/Project/CreateProjectView"
+
+                });
+
+            });
+
+            $(document).off("mouseover", ".projecttitle").on('mouseover', '.projecttitle', function () {
+
+                $(this).addClass("projecttitleselect");
+            });
+
+            $(document).off("mouseout", ".projecttitle").on('mouseout', '.projecttitle', function () {
+
+                $(this).removeClass("projecttitleselect");
+            });
+
+            $(document).off("click", ".projecttitle").on('click', '.projecttitle', function () {
+
+
+
+
+            });
+
+
+
+            $(document).off("click", ".editgroup").on('click', '.editgroup', function () {
+
+
+                //获取项目ID
+                var projectid = $(this).parent().parent().parent().attr("projectid");
+
+                window.location.href = "/Teaching/Project/operasProjectView/" + projectid
+
+
+            });
+
+
+
+
+            ///查看项目进度
+
+            $(document).off("click", ".schedule").on('click', '.schedule', function () {
+
+
+                //获取项目ID
+                var projectid = $(this).parent().parent().parent().attr("projectid");
+
+                layer.open({
+
+                    type: 2,
+                    area: ['1200px', '1000px'],
+                    title: "项目进度",
+                    content: "/Teaching/Project/Projectschedule?projectid=" + projectid,
+
+
+                });
+
+
+
+
+            });
+
+
+            ///项目展示图片管理
+
+
+            $(document).off("click", ".showImageManage").on('click', '.showImageManage', function () {
+                var projectid = $(this).parent().parent().parent().attr("projectid");
+
+                layer.open({
+                    type: 2,
+                    title: "项目展示图片管理",
+                    area: ['1300px', '800px'],
+                    content: "/Teaching/Project/ProjectShowImage?projectid=" + projectid
+
+
+                });
+
+
+
+            });
+
+
+            //下拉框
+            $(".typea").click(function () {
+
+
+                $("#dropdownMenu1 .selecttext").text($(this).text());
+
+
+                $("#dropdownMenu1").attr("projecttype", $(this).attr("typeid"));
+
+
+            });
+
+            //查询
+
+
+
+            $(document).off("click", "#seacherbtn1").on('click', '#seacherbtn1', function () {
+
+                //获取各种条件内容
+
+                //获取项目名称
+                var projectname = $("#projectnameinput").val();
+
+                //获取时间上限
+                var mydate = $("#date").val();
+
+                //获取项目类型
+                var projecttypeid = $("#dropdownMenu1").attr("projecttype");
+
+                $("#projectlist").html("");
+
+                load("/Teaching/Project/preparationProject", { projectname: projectname, date: mydate, projecttypeid: projecttypeid });
+
+
+
+            });
+        });
+    </script>
+
+
+
+
+}

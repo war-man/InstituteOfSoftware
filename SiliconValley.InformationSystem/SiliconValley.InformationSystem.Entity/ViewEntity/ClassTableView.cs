@@ -17,5 +17,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string MajorName { get; set; }
         public string GradeName { get; set; }
 
+        public string Headmaster { get; set; }//班主任
+
+        public string qqGroup { get; set; } //qq群号
+
+        public int ClassSize { get; set; }//班级人数
+
     }
 }
