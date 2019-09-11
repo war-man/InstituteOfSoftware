@@ -34,7 +34,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="limit"></param>
         /// <param name="AppCondition"></param>
         /// <returns></returns>
-        public ActionResult GetData(int page,int limit,string AppCondition) {
+        public ActionResult GetData(int page,int limit,string AppCondition){
             NetClientRecordManage ncrmanage = new NetClientRecordManage();
             ChannelStaffBusiness channel = new ChannelStaffBusiness();
             var list= ncrmanage.GetList();
