@@ -139,7 +139,7 @@
 
            
             $(document).off("click", ".dep_a").on("click", ".dep_a", function () {
-
+                
                 var depid = $(this).attr("depid");
 
                 $(this).parent().parent().parent().find("button").attr("DepID", depid).find(".text").text($(this).text());
