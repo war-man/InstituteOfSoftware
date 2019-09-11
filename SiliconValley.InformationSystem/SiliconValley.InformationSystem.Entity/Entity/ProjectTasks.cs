@@ -27,6 +27,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> ProjectType { get; set; }
         public string StudentNO { get; set; }
 
+        public bool IsStop { get; set; }  //项目是已经终止开发
+
+        public Nullable<System.DateTime> EndDate { get; set; } //项目结束日期
+
+        public string ProjectIntroduce { get; set; } //项目介绍
+
+        public string ShowImages { get; set; }
 
     }
 }

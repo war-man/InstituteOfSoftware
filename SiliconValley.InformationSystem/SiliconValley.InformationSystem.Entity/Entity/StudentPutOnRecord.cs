@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table(name: "StudentPutOnRecord")]
-    public partial class StudentPutOnRecord
+    public partial class StudentPutOnRecord: IEqualityComparer<StudentPutOnRecord>
     {
       
         [Key]
@@ -40,5 +40,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<int> Region_id { get; set; }
 
+        public bool Equals(StudentPutOnRecord x, StudentPutOnRecord y)
+        {
+            if (x.StuName == y.StuName && x.StuPhone == y.StuPhone)
+                return true;
+
+            return false;
+        }
+
+        public int GetHashCode(StudentPutOnRecord obj)
+        {
+            return 0;
+        }
     }
 }

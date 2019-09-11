@@ -25,7 +25,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsDel { get; set; }
         public Nullable<int> ChekTeacher { get; set; }
         public string StudentNumber { get; set; }
-    
-       
+        public DateTime ReleaseDate { get; set; }//作业布置的时间
+
+
+
     }
 }

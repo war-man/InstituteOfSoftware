@@ -1,0 +1,275 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ProjectShowImage</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #imagelist {
+            
+            width:80%;
+            margin:0 auto;
+        
+        }
+        #fixdbottom {
+        
+            position:fixed;
+            width:100%;
+            height:150px;
+            bottom:0px;
+            background-color:#5ee4aa;
+            opacity:0.9;
+            text-align:center;
+            line-height:150px;
+        
+        }
+
+        .myclose1 {
+            /* still bad on picking color */
+            background: #00ff90;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            font-size: 18px;
+            padding: 1px;
+        }
+            /* use cross as close button */
+            .myclose1::before {
+                content: "\2716";
+            }
+        /* place the button on top-right 2656 */
+        .myclose1 {
+            top: -10px;
+            right: -7px;
+            position: absolute;
+        }
+
+        .myclose2 {
+            /* still bad on picking color */
+            background: #00ff90;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            font-size: 18px;
+            padding: 1px;
+        }
+            /* use cross as close button */
+            .myclose2::before {
+                content: "\2656";
+            }
+        /* place the button on top-right 2656 */
+        .myclose2 {
+            top: -10px;
+            right: -7px;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        <h1 style="text-align:center; margin-top:30px;">@ViewBag.Project.ProjectName</h1>
+
+        <input type="hidden" id="projectid" value="@ViewBag.Project.ProjectID" />
+        <hr />
+
+
+        <div id="imagelist" class="layui-row">
+
+
+            @{
+                foreach (var item in ViewBag.imagelist as List<string>)
+                {
+
+                    <div style="float:left; position:relative; margin-top:10px; margin-left:20px;">
+                        <img width="250" height="200" src="~/Areas/Teaching/Images/ProjectShowImages/@item" />
+
+                        <span image="@item" class="myclose2"></span>
+                    </div>
+
+                }
+
+            }
+
+        </div>
+
+        <div id="fixdbottom">
+
+            <button type="button" style="width:150px;height:60px;" class="layui-btn" id="test1">
+                <i class="layui-icon">&#xe67c;</i>上传图片
+            </button>
+
+
+            <button id="Okbtn"  style="font-size:16px; width:150px;height:60px;"  class="layui-btn layui-btn-primary">
+                提交
+            </button>
+
+        </div>
+
+        <script type="text/template" id="moban1">
+            <div style="float:left;margin-top:10px;position:relative; margin-left:20px;">
+                <img width="250" height="200" src="{{=src}}" />
+
+                <span class="myclose1"></span>
+            </div>
+        </script>
+
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+
+
+    <script>
+
+
+        //当网络连通的情况触发该事件
+        window.addEventListener("online", function (e) {
+
+            layer.msg("网络链接成功");
+
+        });
+        //当网络断开的情况触发该事件
+        window.addEventListener("offline", function (e) {
+            layer.msg("抱歉 当前网络已断开......");
+        })
+
+
+        layui.use(['layer', 'upload'], function () {
+
+            var projectid = $("#projectid").val();
+
+            var upload = layui.upload;
+            
+            var uploadInst = upload.render({
+                elem: '#test1' //绑定元素
+                , url: '/Teaching/Project/ProjectImageUpload?projectid=' + projectid //上传接口
+                , auto: false,
+                
+                size:1024,
+                accept: "images",
+                bindAction:"#Okbtn"
+                , choose: function (obj) { //obj参数包含的信息，跟 choose回调完全一致，可参见上文。
+
+                    //将每次选择的文件追加到文件队列
+                    var files = obj.pushFile();
+
+                    obj.preview(function (index, file, result) {
+                        console.log(index); //得到文件索引
+                        console.log(file); //得到文件对象
+                        //console.log(result); //得到文件base64编码，比如图片
+
+
+                        var html2 = _.template($("#moban1").html());
+
+                        var data2 = html2({ src: result});
+
+                        $("#imagelist").append($(data2));
+
+
+                        //obj.resetFile(index, file, '123.jpg'); //重命名文件名，layui 2.3.0 开始新增
+
+                        //这里还可以做一些 append 文件列表 DOM 的操作
+
+                        //obj.upload(index, file); //对上传失败的单个文件重新上传，一般在某个事件中使用
+                        //delete files[index]; //删除列表中对应的文件，一般在某个事件中使用
+
+                       
+                    }); 
+                   
+                }
+                , allDone: function (obj) { //当文件全部被提交后，才触发
+                    console.log(obj.total); //得到总文件数
+                    console.log(obj.successful); //请求成功的文件数
+                    console.log(obj.aborted); //请求失败的文件数
+                }
+                
+                , done: function (res) {
+
+                    layer.msg("上传成功!");
+
+                }
+                , error: function () {
+                    //请求异常回调
+                }
+            });
+
+
+            //删除还未上产的图片
+            $(document).off("click", ".myclose1").on('click', '.myclose1', function () {
+
+                $(this).parent().remove();
+
+            });
+
+
+            //删除图片
+            $(document).off("click", ".myclose2").on('click', '.myclose2', function () {
+
+                var current = this;
+
+                layer.confirm("删除？", function (index) {
+
+                    var image = $(current).attr("image");
+
+
+                    console.log($(this).parent()[0]);
+                    //发送请求
+
+                    Ajax("/Teaching/Project/RemoveProjectImage", { projectid: projectid, image: image }, 'post', function (data) {
+
+
+                        if (data.ErrorCode == 200) {
+
+                            layer.msg("移除成功");
+
+                            //移除dom元素
+                            $(current).parent().remove();
+
+                        } else {
+
+                            layer.msg("非常抱歉！ 发生错误了");
+                        }
+
+
+                    }, function (error) {
+
+                        layer.msg("发生错误了");
+
+                        });
+
+
+
+                    layer.close(index);
+                });
+
+            });
+
+            
+        });
+
+       
+      
+    </script>
+</body>
+</html>

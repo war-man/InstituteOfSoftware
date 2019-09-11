@@ -1,0 +1,262 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>选择项目成员</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #warp {
+        
+            
+        
+        }
+        #classlist {
+            
+            margin-top:15px;
+
+
+        }
+        #studentlist {
+            margin-top:20px;
+        
+        }
+    </style>
+</head>
+<body>
+    <div id="warp">
+
+
+        <div id="classlist">
+
+            @{
+                foreach (var item in ViewBag.classlist)
+                {
+
+                    <button class="layui-btn classbtn layui-btn-primary" type="button" classid="@item.ClassNumber">@item.ClassNumber</button>
+
+                }
+            }
+
+        </div>
+        <hr />
+        <div id="studentlist">
+
+        </div>
+
+
+        <div style="margin-top:100px;line-height:40px; text-align:center;">
+            <button style="width:450px;" id="truebtn" type="button" class="layui-btn layui-btn-primary">确定</button>
+        </div>
+    </div>
+
+    <script type="text/template" id="studenthtml">
+        <div style="display:inline-block;margin-top:10px;margin-left:10px;">
+            <button class="layui-btn studentbtn layui-btn-primary" type="button" studentnumber="{{=studentnumber}}"><i class="layui-icon">&#xe612;</i><span>{{=StudentName}}</span></button>
+        </div>
+     </script>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
+
+    <script>
+
+     
+        //获取url参数
+       var selecttype = getQueryVariable("type");
+       var projectid = getQueryVariable("projectid");
+
+        //获取班级学员
+        function GetClassStudent(classnumber, successcallback, errorcallback) {
+
+            Ajax("/Teaching/Project/UngetProjectItem", { classnumber: classnumber, projectid: projectid }, 'post', function (data) {
+                successcallback(data);
+
+            }, function (error) {
+
+                errorcallback(error);
+
+
+                });
+
+        }
+
+
+
+
+        function loadStudent(studentlist) {
+
+            for (var i = 0; i < studentlist.length; i++) {
+
+
+                //创建学生元素
+                var studenthtml = _.template($("#studenthtml").html());
+                var studenthtmldata = studenthtml({ studentnumber: studentlist[i].StudentNumber, StudentName: studentlist[i].Name });
+                $("#studentlist").append(studenthtmldata);
+
+            }
+
+        }
+
+
+
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+
+
+            //学员初始化
+
+            var classnumber1 = $("#classlist .classbtn").attr("classid");
+
+            
+
+            GetClassStudent(classnumber1, function (data) {
+
+                $("#studentlist").html("");
+
+                loadStudent(data);
+
+            }, function (error) {
+
+                layer.msg("数据加载异常");
+
+            }); 
+
+            //点击班级事件
+
+            $(document).off("click", ".classbtn").on('click', '.classbtn', function () {
+
+                $(this).toggleClass("layui-btn-normal");
+
+                $(this).siblings().removeClass("layui-btn-normal")
+
+                //获取班级编号
+                var classnumber = $(this).attr("classid");
+                GetClassStudent(classnumber, function (data) {
+                    $("#studentlist").html("");
+                        loadStudent(data);
+
+                }, function (error) {
+
+                    layer.msg("数据加载异常");
+
+                    });                
+            });
+
+            var selectstudentlist = new Array();
+
+            //学生按钮点击事件
+            //SelectStudent
+            $(document).off("click", ".studentbtn").on('click', '.studentbtn', function () {
+
+
+                
+                if (selecttype == "learder") {
+
+                    //改变颜色
+                    $(this).toggleClass("layui-btn-normal");
+
+                    $(this).toggleClass("selectstudent");
+
+                    $(this).parent().siblings().children().removeClass("layui-btn-normal");
+                    $(this).parent().siblings().children().removeClass("selectstudent");
+
+                }
+                else {
+                    //改变颜色
+                    $(this).toggleClass("layui-btn-normal");
+
+                    $(this).toggleClass("selectstudent");
+                }
+
+              
+
+            });
+            var studentnumber="";
+            //确定事件
+            $("#truebtn").click(function () {
+
+                selectstudentlist = new Array();
+
+                $(".selectstudent").each(function (index, elem) {
+
+                    //将学生加入到数组中
+                 
+                     studentnumber += $(this).attr("studentnumber")+",";
+
+
+
+                });
+
+                //将数据传送到父窗口
+                //window.parent.SelectStudent(selectstudentlist);
+                //var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+
+                if (selecttype == "learder") {
+
+                    var stunumber = studentnumber.substring(0, studentnumber.indexOf(','));
+
+                  
+
+                    Ajax("/Teaching/Project/updateGroupLearder", { newstudentnumber: stunumber, projectid: projectid }, 'post', function (data) {
+
+                        if (data.ErrorCode == 200) {
+
+                            layer.msg("成功", { time: 1500 }, function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭   
+                            });
+                        }
+
+
+                    }, function (error) {
+
+                        layer.msg("网络出现异常");
+
+                    });
+                }
+                else {
+
+                    Ajax("/Teaching/Project/AddGroupItem", { studentnumber: studentnumber, projectid: projectid }, 'post', function (data) {
+
+                        if (data.ErrorCode == 200) {
+
+                            layer.msg("添加成功", { time: 1500 }, function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭   
+                            });
+                        }
+                        
+
+                    }, function (error) {
+
+                        layer.msg("网络出现异常");
+
+                        });
+
+
+                }
+
+              
+                //parent.layer.close(index); //再执行关闭   
+            });
+
+
+        });
+
+    </script>
+
+</body>
+</html>

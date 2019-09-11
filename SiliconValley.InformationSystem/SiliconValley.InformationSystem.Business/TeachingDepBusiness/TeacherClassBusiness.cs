@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
+    using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
 
@@ -132,8 +133,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public ClassTableView GetClassTableView(ClassSchedule classSchedule)
         {
-
+            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
             ClassTableView classTableView = new ClassTableView();
+            BaseBusiness<HeadClass> headerclass = new BaseBusiness<HeadClass>();
+            BaseBusiness<Headmaster> headermaster = new BaseBusiness<Headmaster>();
+            BaseBusiness<EmployeesInfo> emp = new BaseBusiness<EmployeesInfo>();
+
+            BaseBusiness<GroupManagement> classgroup = new BaseBusiness<GroupManagement>();
+            
 
             classTableView.ClassNumber = classSchedule.ClassNumber;
             classTableView.ClassRemarks = classSchedule.ClassRemarks;
@@ -142,7 +149,91 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             classTableView.IsDelete = classSchedule.IsDelete;
             classTableView.MajorName = db_major.GetSpecialtyByID((int)classSchedule.Major_Id).SpecialtyName;
 
+            classTableView.ClassSize= scheduleForTraineesBusiness.ClassStudent(classSchedule.ClassNumber).Count;//班级人数
+
+            try
+            {
+
+                var master = headerclass.GetList().Where(d => d.IsDelete == false && d.ClassID == classSchedule.ClassNumber).FirstOrDefault();
+
+                var temp1 = headermaster.GetList().Where(d => d.IsDelete == false && d.ID == master.LeaderID).FirstOrDefault();//获取到班主任
+                classTableView.Headmaster = emp.GetList().Where(d => d.IsDel == false && d.EmployeeId == temp1.informatiees_Id).FirstOrDefault().EmpName;
+
+            }
+            catch (Exception ex)
+            {
+
+                classTableView.Headmaster = "暂无";
+            }
+
+
+            try
+            {
+                classTableView.qqGroup = classgroup.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classSchedule.ClassNumber).FirstOrDefault().QQGroupnumber;
+            }
+            catch (Exception ex)
+            {
+
+                classTableView.qqGroup = "暂无";
+            }
+
+           
+
             return classTableView;
+
+        }
+
+
+        /// <summary>
+        /// 获取班级
+        /// </summary>
+        /// <param name="classnumber">班级编号</param>
+        /// <returns></returns>
+        public ClassSchedule GetClassByClassNumber(string classnumber)
+        {
+            return db_class.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classnumber).FirstOrDefault();
+
+        }
+
+
+        /// <summary>
+        /// 获取班级班干部
+        /// </summary>
+        /// <param name="classnumber"></param>
+        /// <returns></returns>
+        public Dictionary<string, StudentInformation> GetClassCadres(string classnumber)
+        {
+
+            Dictionary<string, StudentInformation> result = new Dictionary<string, StudentInformation>();
+
+            //获取班干部名称
+            BaseBusiness<Members> db_members = new BaseBusiness<Members>();
+            var memberlist = db_members.GetList().Where(d => d.IsDelete == false).ToList();
+
+
+           var temp = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classnumber).ToList();
+
+            foreach (var item in memberlist)
+            {
+                var obj = temp.Where(d => d.Typeofposition == item.ID).FirstOrDefault();
+
+                if (obj != null)
+                {
+                    result[item.Nameofmembers] = db_student.GetList().Where(d => d.IsDelete == false && d.StudentNumber == obj.Studentnumber).FirstOrDefault();
+
+
+                }
+                else
+                {
+                    result[item.Nameofmembers] = null;
+                }
+
+               
+            }
+
+            return result;
+
+
 
         }
 

@@ -31,7 +31,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             {
 
                 str = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                
             }
             return str;
 

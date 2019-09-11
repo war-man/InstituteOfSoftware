@@ -69,13 +69,13 @@
     <Compile Include="Transaction\DistributedTransaction.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Util\01.SiliconValley.InformationSystem.Util.csproj">
       <Project>{59b37762-4cc3-45cf-b910-ae11eb6ee79b}</Project>
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

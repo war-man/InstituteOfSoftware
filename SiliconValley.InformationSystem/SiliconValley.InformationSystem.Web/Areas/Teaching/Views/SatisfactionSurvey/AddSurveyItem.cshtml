@@ -1,0 +1,168 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddSurveyItem</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <hr />
+
+        <form class="layui-form">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">内容：</label>
+                <div class="layui-input-block">
+                    <input style="width:511px;" type="text" name="ItemContent" lay-verify="required" autocomplete="off" placeholder="请输入标题" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">部门：</label>
+                    <div class="layui-input-inline">
+                        <select  lay-verify="required" lay-filter="depselect" name="dep">
+
+                            <option value="">---请选择部门---</option>
+
+                            @{
+                                foreach (var item in ViewBag.Dep as List<Department>)
+                                {
+                                    <option value="@item.DeptId">@item.DeptName</option>
+                                }
+                            }
+
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">调查项</label>
+                    <div class="layui-input-inline">
+                        <select id="item" lay-filter="item" lay-verify="required" name="ItemType">
+                            <option value="">---请选择---</option>
+
+
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注：</label>
+                <div class="layui-input-block">
+                    <textarea name="Remark" style="border:1px solid gray; width:515px;" class="layui-textarea" cols="65" rows="6"></textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="text-align:center;margin-top:50px;">
+                <button class="layui-btn" lay-submit="" lay-filter="tijiao">确定</button>
+            </div>
+
+        </form>
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
+    <script>
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+
+            var layer = layui.layer;
+
+
+            //下拉款联动
+            form.on('select(depselect)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Teaching/SatisfactionSurvey/GetGetSurveyItemTypeDataByDepid",
+                    data: { depid: value },
+                    method:"post",
+                    dataType: "json",
+                    success: function (resultData) {
+
+                        console.log(resultData.Data);
+
+                        console.log(resultData.ErrorCode);
+
+                        if (resultData.Data.length>0) {
+                            //清空赋值
+                            $("#item").empty();
+                           
+                            $("#item").append(new Option("请选择", ""));
+                           
+
+                            $.each(resultData.Data, function (index, item) {
+                                //赋值
+                               
+
+                                console.log(item);
+
+                                $('#item')
+                                    .append(new Option(item.TypeName, item.ID));
+                            });
+                        } else {
+
+                            $("#item").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+
+            ///跳单提交
+            form.on('submit(tijiao)', function (data) {
+              
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                Ajax('/Teaching/SatisfactionSurvey/AddSurveyItem', data.field, 'post', function (data) {
+
+
+                    if (data.ErrorCode == 200) {
+
+
+                        layer.msg("成功", { time: 1500 }, function () {
+
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭   
+
+
+                        });
+
+                    }
+
+                    else {
+                        layer.msg("异常 ! 抱歉");
+                    }
+
+                }, function (error) {
+
+                    layer.msg("网络异常");
+
+                    });
+
+                return false;
+            });
+
+
+           
+        });
+    </script>
+</body>
+</html>

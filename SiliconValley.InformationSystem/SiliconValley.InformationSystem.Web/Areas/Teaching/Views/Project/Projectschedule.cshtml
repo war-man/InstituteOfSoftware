@@ -1,0 +1,515 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>项目进度</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .layui-timeline .layui-timeline-item {
+         
+            width: 200px;
+        }
+
+        .TeamItemDiv {
+            width: 200px;
+            display: inline-block;
+            margin-top: 10px;
+           
+            vertical-align:top;
+        }
+        .model {
+            color:red;
+        }
+
+        .layui-timeline-title {
+            cursor:pointer;
+        
+        }
+        #fixd {
+            height:300px;
+           width:80px;
+           position:fixed;
+         right:0px; 
+           top:300px;
+           font-size:25px;
+          
+           text-align:center;
+           background-color:#00ff21;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div style="text-align:center; margin-top:20px;">
+
+        <input type="hidden" id="projectid" value="@ViewBag.Project.ProjectID" />
+
+        <div class="layui-form-item">
+
+            <div class="layui-inline">
+
+                <div class="layui-input-inline">
+
+                    <button type="button" style="border:0px solid red; font-size:23px;" class="layui-btn layui-btn-primary">@ViewBag.Project.ProjectName</button>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <label style="font-size:18px; color:gray;">指导老师:</label><span style="color:gray;">@ViewBag.Project.TutorEmp.EmpName</span> <label style="font-size:18px; margin-left:100px; color:gray;">项目组长:</label><span style="color:gray;">@ViewBag.Project.GroupLeader.Name</span>
+
+        <br />
+        <hr />
+        <span style="font-size:14px; color:gray; margin-left:0px;">点击模块名称可以设置模块的完成情况</span>
+    </div>
+
+    <hr />
+
+    <div id="fixd">
+
+
+        @{
+
+            if (@ViewBag.Project.IsStop == true)
+            {
+                <div style="width:30px; margin:0 auto;">
+
+                    项目已结束
+                </div>
+            }
+            else
+            {
+                <div id="false" style="width:30px; margin:0 auto;">
+
+                    项目进行中
+                </div>
+
+                <button  id="projectstop" type="button" style="width:50px; margin-top:20px; font-size:23px;" class="">结束项目</button>
+            }
+
+        }
+
+
+
+
+    </div>
+
+    <div id="list">
+
+        @{
+            foreach (var item in @ViewBag.Project.TeamImte as List<StudentInformation>)
+            {
+
+                <div class="TeamItemDiv">
+
+                    <label style="clear:left; font-size:20px; ">@item.Name</label>
+
+                    <ul style="margin-top:20px;" class="layui-timeline" studnetnumber="@item.StudentNumber"></ul>
+                </div>
+
+
+
+
+
+            }
+        }
+
+
+
+    </div>
+
+    <script type="text/template" id="moban1">
+        <div>
+            <label style="font-size:20px;">{{=teamitemname}}</label>
+            <br />
+            <br />
+            <ul class="layui-timeline" studentnumber="{{=studentnumber}}"></ul>
+        </div>
+    </script>
+
+    <script type="text/template" id="moban2">
+        <li class="layui-timeline-item">
+            <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+            <div class="layui-timeline-content layui-text">
+
+                <h3 style="" modelid="{{=modelid}}" class="layui-timeline-title">{{=modulername}}</h3>
+                <p>
+                    {{=status}}
+                </p>
+
+            </div>
+        </li>
+
+    </script>
+
+    <script type="text/template" id="moban3">
+        <hr />
+        <button type="button" status="false" style="margin-left:40px;" class="layui-btn layui-btn-primary BtnStatus1">开发中</button>
+
+        <button type="button" status="true"  class="layui-btn layui-btn-primary BtnStatus1">已完成</button>
+        <hr />
+    </script>
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+
+    <script>
+
+
+
+
+        function initsss(dataurl) {
+
+            //获取项目ID
+            var projectid = $("#projectid").val();
+
+            Ajax(dataurl, { projectid: projectid }, 'post', function (data) {
+
+                console.log(data);
+
+                var ary = new Array();
+
+                for (var i = 0; i < data.Data.length; i++) {
+
+                    var is = true;
+
+                    for (var j = 0; j < ary.length; j++) {
+
+
+
+                        if (ary[j].studentnumber == data.Data[i].Student.StudentNumber) {
+                            is = false;
+                            //增加模块
+
+                            var moduler = {
+                                ModulerName: data.Data[i].Task,
+                                status: data.Data[i].IsAccomplish
+                            };
+
+                            ary[j].Moduler.push(moduler);
+
+                        }
+
+
+                    }
+
+                    if (is) {
+
+                        var obj = {
+
+                            studentnumber: data.Data[i].Student.StudentNumber,
+
+                            studentName: data.Data[i].Student.Name,
+
+                            Moduler: [{ ModulerName: data.Data[i].Task, status: data.Data[i].IsAccomplish }],
+
+                        }
+
+                        ary.push(obj);
+
+                    }
+
+                }
+                console.log(ary);
+
+
+                for (var i = 0; i < ary.Moduler.length; i++) {
+
+
+                    //渲染
+
+                    var html3 = _.template($("#moban2").html());
+
+                    var data3 = html3({ modulername: ary[i].Moduler.ModulerName, status: ary[i].Moduler.status });
+
+                    $(".layui-timeline").each(function (index, elem) {
+
+                        console.log(elem);
+
+                        if (ary[i].Moduler.ModulerName != null || ary[i].Moduler.ModulerName != undefined) {
+                            if ($(this).attr("studnetnumber") == ary[i].studentnumber) {
+
+                                $(this).append($(data3));
+                            }
+
+                        }
+
+
+
+
+                    });
+
+                }
+
+
+
+
+            }, function (error) {
+
+                layer.msg("数据加载异常");
+
+            });
+
+
+        }
+
+
+        function init() {
+            $(".layui-timeline").each(function () {
+
+                var studentnumber = $(this).attr("studnetnumber");
+
+                var projectid = $("#projectid").val();
+
+                var current = this;
+
+                Ajax("/Teaching/Project/GetModuler", { projectid: projectid, studentnumber: studentnumber }, 'post', function (data) {
+
+
+                    if (data.ErrorCode == 200 && data.Data.length > 0) {
+
+                        for (var i = 0; i < data.Data.length; i++) {
+
+
+                            if (data.Data[i].Task != null || data.Data[i].Task != undefined)
+
+                                var status = data.Data[i].IsAccomplish == false ? "开发中" : "已完成"
+
+                            var html3 = _.template($("#moban2").html());
+
+                            var data3 = html3({ modulername: data.Data[i].Task, status: status, modelid: data.Data[i].Id });
+
+                            $(current).append(data3);
+                        }
+
+                    }
+
+
+                }, function (error) {
+
+                    alert("error");
+
+                });
+
+            });
+        };
+
+        ///判断项目模块是否已经全部完成
+
+        function IsFish() {
+
+
+
+        }
+
+        layui.use(['layer'], function () {
+
+
+
+
+            //当网络连通的情况触发该事件
+            window.addEventListener("online", function (e) {
+
+                layer.msg("网络链接成功");
+
+            });
+            //当网络断开的情况触发该事件
+            window.addEventListener("offline", function (e) {
+                layer.msg("抱歉 当前网络已断开......");
+            })
+
+
+
+            var layer = layui.layer;
+
+            //init("/Teaching/Project/ProjectTeaminfo");
+            init();
+           
+
+            $(document).off("mouseover", ".layui-timeline-title").on('mouseover', '.layui-timeline-title', function () {
+
+                $(this).attr("style", "color:red");
+
+
+            });
+
+            $(document).off("mouseout", ".layui-timeline-title").on('mouseout', '.layui-timeline-title', function () {
+
+                $(this).removeAttr("style");
+            });
+
+            var modelid = "";
+          
+            $(document).off("click", ".layui-timeline-title").on('click', '.layui-timeline-title', function () {
+
+                modelid = $(this).attr("modelid");
+
+
+                var html = $("#moban3").html();
+
+                layer.open({
+
+                    area: ["300px", '180px'],
+                    type: 1,
+                    content: html,
+
+                });
+
+            });
+
+
+            $(document).off("dblclick", ".BtnStatus1").on('dblclick', '.BtnStatus1', function () {
+
+                var status = $(this).attr("status");
+
+                var projectid = $("#projectid").val();
+                //发送请求
+                Ajax("/Teaching/Project/EditModelStatus", { modelid: modelid, status: status, projectid: projectid }, 'post', function (data) {
+
+
+                    if (data.ErrorCode == 200) {
+
+
+                        layer.msg("成功");
+
+                        $(".layui-timeline").html("");
+
+                        init();
+
+
+                        Ajax('/Teaching/Project/GetNoFinshModel', { projectid: projectid }, 'post', function (data) {
+
+
+                            if (data.ErrorCode == 200) {
+
+                                if (data.Data.length == 0) {
+
+                                    Ajax("/Teaching/Project/StopProject", { projectid: projectid }, 'post', function (data) {
+
+                                        if (data.ErrorCode == 200) {
+
+                                            layer.msg("操作成功.....项目结束");
+
+                                            $("#fixd #false").text("项目已结束");
+                                            $("#projectstop").attr("disabled");
+
+                                        }
+
+
+
+                                    }, function (error) {
+
+                                        layer.msg("数据加载异常");
+
+                                    });
+
+
+                                }
+                            }
+
+
+                        }, function (error) {
+
+
+
+                        });
+
+                    }
+
+                    if (data.ErrorCode == 300) {
+
+                        layer.msg("抱歉  开项目已经停止开发");
+                    }
+
+
+                }, function (error) {
+
+                        layer.msg("抱歉 网络出现异常");
+
+                    });
+
+            });
+
+
+            //结束项目
+            $("#projectstop").click(function () {
+
+                var projectid = $("#projectid").val();
+
+                //判断所有模块是否已经完成
+                Ajax('/Teaching/Project/GetNoFinshModel', { projectid: projectid }, 'post', function (data) {
+
+                    if (data.ErrorCode == 200) {
+
+                        if (data.Data.length > 0) {
+
+                            layer.confirm("项目的所有模块还没有完成，确定提前结束项目? ", function (index) {
+
+
+                                //结束项目
+
+                                Ajax("/Teaching/Project/StopProject", { projectid: projectid }, 'post', function (data) {
+
+                                    console.log(data);
+
+                                    if (data.ErrorCode == 200) {
+
+                                        layer.msg("操作成功.....项目结束");
+
+                                        $("#fixd #false").text("项目已结束");
+                                        $("#projectstop").remove();
+
+                                    }
+                                    
+                               
+
+                                }, function (error) {
+
+                                    layer.msg("数据加载异常");
+
+                                    });
+
+                                layer.close(index);
+
+
+                            });
+
+                        }
+
+
+                    } else {
+
+                        layer.msg("网络异常.......");
+                    }
+
+                }, function (error) {
+
+
+
+
+                    });
+
+
+
+
+            });
+        });
+
+    </script>
+
+</body>
+</html>

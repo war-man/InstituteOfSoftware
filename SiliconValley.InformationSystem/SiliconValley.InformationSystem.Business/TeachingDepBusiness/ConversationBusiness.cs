@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
 
@@ -21,9 +22,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         BaseBusiness<EmployeesInfo> db_emp = new BaseBusiness<EmployeesInfo>();
       
 
+        /// <summary>
+        /// 获取我所有的谈话记录
+        /// </summary>
+        /// <returns></returns>
         public List<ConversationRecord> GetConversationRecords()
         {
-            return this.GetList().Where(d=>d.IsDel==false).ToList();
+            var currentlogin = Base_UserBusiness.GetCurrentUser();
+            return this.GetList().Where(d=>d.IsDel==false && d.EmployeeId==currentlogin.EmpNumber).ToList();
 
         }
 
@@ -58,13 +64,15 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         /// <summary>
         /// 筛选谈话记录
-        /// </summary>
+        /// </summary> 
         /// <param name="begindate"></param>
         /// <param name="enddate"></param>
         /// <param name="studentname"></param>
         /// <returns></returns>
-        public List<ConversationRecordView> GetScreenConversationRecord(string begindate, string enddate, string studentname)
+        public List<ConversationRecordView> GetScreenConversationRecord(string begindate, string studentname)
         {
+
+            var currentlogin = Base_UserBusiness.GetCurrentUser();
 
             var studentlist = db_student.GetList().Where(d => d.Name.Contains(studentname)).ToList();
 
@@ -74,7 +82,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in studentlist)
             {
-                var list = GetConversationRecords().Where(d => d.Time <= DateTime.Parse(begindate) && d.Time >= DateTime.Parse(enddate) && d.StudenNumber == item.StudentNumber).ToList();
+                var list = GetConversationRecords().Where(d => d.Time >= DateTime.Parse(begindate)  && d.StudenNumber == item.StudentNumber  &&d.EmployeeId== currentlogin.EmpNumber).ToList();
+
+
+
 
                 foreach (var item1 in list)
                 {
@@ -89,6 +100,31 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 }
             }
 
+
+            return resultlist;
+
+        }
+
+
+
+        /// <summary>
+        /// 获取学员的被访谈记录
+        /// </summary>
+        /// <param name="studentnumber">学员编号</param>
+        /// <returns></returns>
+        public List<ConversationRecordView> GetConversationRecordByStudentNumber(string studentnumber)
+        {
+
+         var temp = this.GetConversationRecords().Where(d=>d.StudenNumber==studentnumber).ToList();
+
+            List<ConversationRecordView> resultlist = new List<ConversationRecordView>();
+
+            foreach (var item in temp)
+            {
+               var obj = this.GetConversationRecordView(item);
+                if (obj != null)
+                    resultlist.Add(obj);
+            }
 
             return resultlist;
 

@@ -10,13 +10,14 @@
     <style>
 
         #torbar {
-            height: 300px;
-            border: 1px solid red;
+            height: 50px;
+           
         }
 
         #list {
             height: 700px;
-            border: 1px solid #00ffff;
+            border: 1px solid #808080;
+            margin-top:10px;
         }
     </style>
 
@@ -26,11 +27,31 @@
 
     <div id="warp">
 
-        <h1>我的谈话记录</h1>
+        <h1 style="text-align:center;">我的谈话记录</h1>
       
         <div id="torbar">
-            <button class="layui-btn" id="addrecord"><i class="layui-icon">&#xe608;</i>新建谈话记录</button>
+            <button style="margin-left:20px;" class="layui-btn" id="addrecord"><i class="layui-icon">&#xe608;</i>新建谈话记录</button>
+
+
+            <div style="display:inline-block;" class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">时间</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="test1">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">姓名</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="name" id="name" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
         </div>
+
+
 
         <div id="list">
         </div>
@@ -41,7 +62,7 @@
 
     <div class="media" style="margin-top:20px;margin-left:20px;float:left; width:400px;">
         <div class="media-left">
-            <button class="layui-btn" style="width:150px;height:150px;">{{=studentname}}</button>
+            <button class="layui-btn" id="detailbtn" recordid="{{=recorid}}" style="width:100px;height:100px;">{{=studentname}}</button>
         </div>
         <div class="media-body">
             <h4 class="media-heading"><strong style="font-size:18px;">主题</strong>:{{=title}}</h4>
@@ -66,10 +87,10 @@
 
         ///////////////////////////谈话记录业务////////////////////////////////////
 
+        
+        function GetConversationRecord(begindate, studentname, successcallback, errorcallback) {
 
-        function GetConversationRecord(begindate, enddate, studentname, successcallback, errorcallback) {
-
-            Ajax('/Teaching/RecordOfConversation/GetConversationRecord', { begindate: begindate, enddate: enddate, studentname: studentname }, "post", function (data) {
+            Ajax('/Teaching/RecordOfConversation/GetConversationRecord', { begindate: begindate, studentname: studentname }, "post", function (data) {
 
                 successcallback(data);
 
@@ -94,49 +115,59 @@
             });
 
         }
-       
 
-        layui.use(['layer'], function () {
+        function GetConversationRecordByStudentNumber(studentnumber, successcallback, errorcallback) {
 
-            var layer = layui.layer;
-            GetConversationRecords(function (data) {
+            Ajax("GetConversationRecordByStudentNumber", { studentnumber: studentnumber }, 'post', function (data) {
 
-                console.log(data);
-
-                //渲染数据
-                if (data.ErrorCode == 200) {
-
-                    for (var i = 0; i < data.Data.length; i++) {
-
-                        var recordmoban = _.template($("#recordmuban").html());
-
-                        /Date(1564761600000)/
-
-                        var time = data.Data[i].Time;
-                        var temp = time.substring(time.indexOf('(')+1, time.indexOf(')'));
-
-                        var d = new Date(parseInt(temp));
-
-                        var dd = formatDate(d);
-
-                      
-                        var record = recordmoban({ studentname: data.Data[i].StudentName, title: data.Data[i].Theme, content: data.Data[i].Content, date: dd });
-
-                        $("#list").append($(record));
-
-                    }
-
-                }
-
-
-              
-
+                successcallback(data);
             }, function (error) {
-                layer.msg("抱歉网络出现了问题");
-                console.log(error);
+                errorcallback(error);
 
                 });
 
+        };
+
+        function load(data) {
+
+
+            for (var i = 0; i < data.Data.length; i++) {
+
+                var recordmoban = _.template($("#recordmuban").html());
+
+                /Date(1564761600000)/
+
+                var time = data.Data[i].Time;
+                var temp = time.substring(time.indexOf('(') + 1, time.indexOf(')'));
+
+                var d = new Date(parseInt(temp));
+
+                var dd = formatDate(d);
+
+
+                var record = recordmoban({ studentname: data.Data[i].StudentName, title: data.Data[i].Theme, content: data.Data[i].Content.substring(0, 10), date: dd, recorid:data.Data[i].ID});
+
+                $("#list").append($(record));
+
+            }
+
+        }        
+
+
+        layui.use(['layer','laydate'], function () {
+
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+
+            var currentdate = new Date();
+
+            laydate.render({
+                elem: '#test1',//指定元素
+                value: currentdate.getFullYear() + '-' + (currentdate.getMonth() + 1) + '-' + currentdate.getDate()
+            });
+
+
+      
 
             ////////新建访谈记录
             $("#addrecord").click(function () {
@@ -146,11 +177,130 @@
                     type: 2,
                     area: ['800px', '600px'],
                     title: "添加学生谈话记录",
-                    content:'/Teaching/RecordOfConversation/Operations'
+                    content: '/Teaching/RecordOfConversation/Operations',
+                    end: function () {
+
+                        $("#list").html("");
+
+
+                        //重新加载数据
+                        GetConversationRecords(function (data) {
+
+                            console.log(data);
+
+                            if (data.ErrorCode == 200) {
+
+                                load(data);
+
+                            }
+
+                        });
+
+                    }
                 
 
                 });
             });
+
+            //查询
+            $("#serchBtn1").click(function () {
+
+
+                var date = $("#test1").val();
+
+                var name = $("#name").val();
+
+                GetConversationRecord(date, name, function (data) {
+
+
+                    console.log(data);
+
+                    if (data.ErrorCode == 200) {
+                        $("#list").html("");
+                        load(data);
+                    }
+
+                }, function (error) {
+
+
+                    });
+
+            });
+
+
+            //查看详细
+
+
+            $(document).off("click", "#detailbtn").on('click', '#detailbtn', function () {
+
+
+                var ID = $(this).attr("recordid");
+
+                layer.open({
+
+                    type: 2,
+                    area: ['800px', '600px'],
+                    title: "添加学生谈话记录",
+                    content: '/Teaching/RecordOfConversation/Detail/' + ID,
+                  
+
+                });
+
+            });
+
+
+
+            //监听跳转查询事件
+            var querystudentnumber = getQueryVariable("studentnumber");
+
+            console.log(querystudentnumber + '.....................');
+
+            if (querystudentnumber == undefined || querystudentnumber == null || querystudentnumber == false) {
+
+
+                //初始化
+                GetConversationRecords(function (data) {
+
+                    if (data.ErrorCode == 200) {
+                        $("#list").html("");
+                        load(data);
+
+                    }
+
+                });
+
+            } else {
+
+                //获取这个学员的被谈话记录
+
+
+
+                GetConversationRecordByStudentNumber(querystudentnumber, function (data) {
+
+                    console.log(data);
+
+                    if (data.ErrorCode == 200) {
+
+                        $("#list").html("");
+
+                      
+                        load(data);
+                    } else {
+                        layer.msg("数据加载异常......");
+                    }
+
+
+                }, function (error) {
+                    layer.msg("数据加载异常......");
+
+                    });
+
+
+              
+
+            }
+            
+
 
         });
     </script>

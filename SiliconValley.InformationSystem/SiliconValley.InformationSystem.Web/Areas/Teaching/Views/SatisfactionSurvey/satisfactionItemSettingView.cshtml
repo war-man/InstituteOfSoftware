@@ -1,0 +1,253 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>satisfactionItemSettingView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+
+    <style>
+
+        #warp {
+            width: 100%;
+        }
+
+        .toordiv {
+            margin-left: 30px;
+            margin-top: 15px;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div id="warp">
+
+        <div class="toordiv">
+
+            <div style="display:inline-block; margin-left:50px;" id="depdiv" DepID="2" class="dropdown">
+                <button DepID="2" style="width:150px !important;" class="btn btn-default dropdown-toggle" type="button" id="Dep" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="text">教学部</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="Dep">
+
+                    @{
+                        foreach (var item in ViewBag.Department as List<Department>)
+                        {
+
+                            <li><a depid="@item.DeptId" class="dep_a" href="javascript:void(0);">@item.DeptName</a></li>
+
+                        }
+                    }
+
+                </ul>
+            </div>
+
+
+            <div style="display:inline-block; margin-left:50px;" id="itemtypediv" itemtypeid="0" class="dropdown">
+                <button itemtypeid="0" style="width:150px !important;" class="btn btn-default dropdown-toggle" type="button" id="itemType" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="text">
+                        全部事项
+                    </span>
+                    <span class="caret"></span>
+                </button>
+
+                <ul class="dropdown-menu" id="typelistul" aria-labelledby="itemtype">
+
+                    <li><a class="itemtype_a" itemtype_id="0" href="javascript:void(0);">全部事项</a></li>
+
+                    <li><a class="itemtype_a" itemtype_id="1" href="javascript:void(0);">学术能力</a></li>
+                    <li><a class="itemtype_a" itemtype_id="2" href="javascript:void(0);">教学态度</a></li>
+                    <li><a class="itemtype_a" itemtype_id="3" href="javascript:void(0);">教学能力</a></li>
+
+                </ul>
+            </div>
+
+            <div style="display:inline-block; margin-left:50px;" class="">
+
+                <button id="AddItem" class="layui-btn layui-btn-primary">
+                    新
+
+                    <i class="layui-icon layui-icon-add-1"></i>
+                </button>
+
+            </div>
+
+        </div>
+
+
+
+        <hr />
+        <div>
+
+            <table class="layui-hide" id="list"></table>
+
+        </div>
+
+
+    </div>
+
+    <script type="text/template" id="mobanyi">
+        <li><a class="itemtype_a" itemtype_id="{{=typeid}}" href="javascript:void(0);">{{=name}}</a></li>
+    </script>
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+
+
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+
+            //获取初始参数
+            var itemtypeid = $("#itemType").attr("itemtypeid");
+
+            var depid = $("#Dep").attr("DepID");
+
+
+
+          
+
+            
+
+
+            table.render({
+                elem: '#list'
+                , id: "list"
+                , url: '/Teaching/SatisfactionSurvey/GetSurveyItemData?DepID=' + depid + '&itemTypeid=' + itemtypeid
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { field: 'ItemID', width: 80, title: 'ID', sort: true }
+                    , { field: 'ItemContent', width: 400, title: '内容' }
+                    , { field: 'TypeName', width: 120, title: '所属项', templet: '<div>{{d.ItemType.TypeName}}</div>'  }
+                    , { field: 'Remark', width: 200, title: '备注' }
+                ]]
+                , page: true
+            });
+
+
+           
+            $(document).off("click", ".dep_a").on("click", ".dep_a", function () {
+
+                var depid = $(this).attr("depid");
+
+                $(this).parent().parent().parent().find("button").attr("DepID", depid).find(".text").text($(this).text());
+
+
+                //下拉款二级联动
+
+                //发送请求
+                Ajax('/Teaching/SatisfactionSurvey/GetGetSurveyItemTypeDataByDepid', { depid: depid }, 'post', function (data) {
+
+                    console.log(data);
+
+                    if (data.ErrorCode == 200) {
+                        $($("#typelistul").children()[0]).siblings().remove();
+
+                        $("#itemtypediv").find("button").attr("DepID", "0").find(".text").text("全部事项");
+
+                        for (var i = 0; i < data.Data.length; i++) {
+
+
+                            var moban1 = _.template($("#mobanyi").html());
+                            var moban1data = moban1({ typeid: data.Data[i].ID, name: data.Data[i].TypeName });
+
+                            $("#typelistul").append($(moban1data));
+                        }
+
+
+
+                    }
+
+
+
+                }, function (error) {
+
+
+                });
+
+
+
+                //获取类型ID
+
+                var typeid = $("#itemType").parent().attr("itemtypeid");
+
+                console.log(typeid);
+
+                //重载表格
+                table.reload('list', {
+                    url: '/Teaching/SatisfactionSurvey/GetSurveyItemData'
+                    , where: {
+                        DepID: depid,
+                        itemTypeid: typeid
+
+
+                    } //设定异步数据接口的额外参数
+                    //,height: 300
+                });
+
+            });
+
+            $(document).off("click", ".itemtype_a").on("click", ".itemtype_a", function () {
+
+                var itemtype_id = $(this).attr("itemtype_id");
+
+                $(this).parent().parent().parent().find("button").attr("itemtypeid", itemtype_id).find(".text").text($(this).text());
+
+
+                //获取类型ID
+
+                var depid = $("#depdiv").find("button").attr("DepID");
+
+                //重载表格
+                table.reload('list', {
+                    url: '/Teaching/SatisfactionSurvey/GetSurveyItemData'
+                    , where: {
+                        DepID: depid,
+                        itemTypeid: itemtype_id
+
+
+                    } //设定异步数据接口的额外参数
+                    //,height: 300
+                });
+
+
+
+
+
+            });
+
+           
+
+            $("#AddItem").click(function () {
+
+
+
+                layer.open({
+
+                    type: 2,
+                    area: ['650px', '500px'],
+                    title: "新建",
+                    content:"/Teaching/SatisfactionSurvey/AddSurveyItem"
+
+
+                });
+
+
+            });
+
+        });
+    </script>
+</body>
+</html>

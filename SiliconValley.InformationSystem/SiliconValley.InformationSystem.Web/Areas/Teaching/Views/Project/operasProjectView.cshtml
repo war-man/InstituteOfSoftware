@@ -1,0 +1,672 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddProjectView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #warp {
+        
+            width:100%;
+            height:1400px;
+
+            background-image:url(/Areas/Teaching/Images/1_190805224637_2.jpg);
+        
+        }
+
+        #warp1 {
+            width:70%;
+            height:100%;
+            margin:0 auto;
+            background-color:#ffffff;
+        }
+        #project {
+            position: relative;
+            width: 100%;
+        }
+
+        .addprojectdiv {
+          
+            width:60%;
+
+            height:300px;
+            margin:0 auto;
+            border:1px solid #cbb9b9;
+
+        }
+
+            .addprojectdiv input, .addprojectdiv textarea {
+                border-radius: 20px;
+            }
+
+        #huliimage {
+            position:absolute;
+            top:-30px;
+            left:73px;
+        }
+
+        #projectGroup {
+            width:90%;
+            margin:0 auto;
+            border: 1px solid #cbb9b9;
+            padding:10px;
+
+        }
+        .myclose,.myclose1 {
+            /* still bad on picking color */
+            background: orange;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            font-size: 18px;
+            padding: 1px;
+        }
+            /* use cross as close button */
+            .myclose::before,.myclose1::before {
+                content: "\2716";
+            }
+        /* place the button on top-right */
+        .myclose,.myclose1 {
+            top: -10px;
+            right: 20px;
+            position: absolute;
+        }
+
+
+        .myclose1 {
+            /* still bad on picking color */
+            background: orange;
+            color: red;
+            /* make a round button */
+            border-radius: 12px;
+            /* center text */
+            line-height: 20px;
+            text-align: center;
+            height: 20px;
+            width: 20px;
+            font-size: 18px;
+            padding: 1px;
+        }
+            /* use cross as close button */
+          .myclose1::before {
+                content: "\2716";
+            }
+        /* place the button on top-right */
+        .myclose1{
+            top: -10px;
+            right: -7px;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div id="warp">
+        
+        <div id="warp1">
+
+            <div id="project">
+
+                <hr />
+                <h1 style="text-align:center;"> <i class="layui-icon">&#xe857;</i> 新项目</h1>
+
+                <hr />
+                <div class="addprojectdiv">
+                    <br />
+                    <form class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+
+                                <input id="projectid" type="hidden" value="@ViewBag.Project.ProjectID" />
+                                <label class="layui-form-label">项目名称：</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" readonly style="" value="@ViewBag.Project.ProjectName" lay-verify="required" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">项目类型：</label>
+                                <div class="layui-input-inline">
+                                    <select readonly name="interest" lay-filter="aihao">
+                                        <option value="@ViewBag.Project.ProjectType.Id">@ViewBag.Project.ProjectType.TypeName</option>
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="layui-form-item layui-form-text">
+                            <label class="layui-form-label">项目介绍：</label>
+                            <div class="layui-input-block">
+                                <textarea readonly placeholder="请输入内容" class="layui-textarea">@ViewBag.Project.ProjectIntroduce</textarea>
+                            </div>
+                        </div>
+
+                        <img id="huliimage" src="~/Areas/Teaching/Images/huli1.gif" />
+
+                    </form>
+                </div>
+
+            </div>
+
+            <div id="projectGroup">
+
+
+                <div id="window1"></div>
+
+                <h1 style="text-align:center;">项目团队</h1>
+
+
+                @{
+
+                    if (ViewBag.Project.IsStop == false)
+                    {
+                        <div style="margin-top:20px;display:inline-block;" id="addGroupleader">
+                            <span style="font:bold;">组长：</span><div style="display:inline-block;border:1px solid gray; line-height:60px; text-align:center; width:60px;height:60px;border-radius:50%;"><i class="layui-icon">&#xe654;</i></div>
+
+                        </div>
+
+
+
+                        <div style="margin-top:20px;" id="addTeammember">
+                            <span style="font:bold;">组员：</span><div style="display:inline-block;border:1px solid gray; line-height:60px; text-align:center; width:60px;height:60px;border-radius:50%;"><i class="layui-icon">&#xe654;</i></div>
+                        </div>
+                    }
+                }
+
+
+
+
+            </div>
+
+
+            <div style="width:80%;margin:0 auto;">
+                <button type="button" id="CreateBtn" style="  width:100%;height:60px;margin-top:30px;" class="layui-btn-primary">提交项目建立</button>
+            </div>
+            <script type="text/template" id="groupleaderhtml">
+                <div style="margin-top:20px;" class="projectitem" studentnumber="{{=studentnumber}}" id="{{=jobEneclishname}}">
+                    <span style="font:bold;">{{=jobName}}：</span><div class="studentbtn" style="display:inline-block;border:1px solid gray; position:relative; background-color:#5fee22;  line-height:60px; text-align:center; width:60px;height:60px;border-radius:50%;">
+    {{=name}}
+
+    @{
+
+        if (ViewBag.Project.IsStop == false)
+        {
+            <span style="display:none;" class='myclose'></span>
+        }
+    }
+
+</div>
+
+                    <span>负责模块</span>
+
+                    <div class="Modular" style="display:inline-block;">
+
+                    </div>
+
+
+                    
+                @{
+
+                    if (ViewBag.Project.IsStop == false)
+                    {
+                    <div class="AddProjectItem" style="display:inline-block;border:1px solid gray; line-height:60px; text-align:center; width:60px;height:60px;border-radius:50%;"><i class="layui-icon">&#xe654;</i></div>
+                    }
+                }
+
+                    
+                </div>
+            </script>
+
+
+            <script type="text/ng-template" id="Modularhtml">
+                <div Modularid="{{=Modularid}}" clsss="Modulars" style="display:inline-block; cursor:pointer; border:1px solid gray; font-size:20px; position:relative; line-height:40px; text-align:center;padding:5px; height:40px;">{{=ModularName}}
+                <span style="display:none;" class="myclose1"></span>
+                </div>
+
+                <div style="width:20px;display:inline-block;border:1px solid gray;"></div>
+            </script>
+
+            <script type="text/template" id="addModular">
+
+           
+                    <div class="layui-inline">
+                        <label class="layui-form-label">模块名称：</label>
+
+                        <div class="layui-input-inline">
+                            <input type="text"  id="ModularName"  autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+              
+
+
+            </script>
+        </div>
+        </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+
+    <script>
+
+        function SelectStudent(studentlist) {
+
+            console.log(studentlist);
+
+
+        }
+
+        function laodstudent(studentlist, jobName, englishjobName) {
+
+
+            for (var i = 0; i < studentlist.length; i++) {
+
+                var isok = true;
+
+                $(".projectitem").each(function () {
+
+                    var studentnumber = $(this).attr("studentnumber");
+
+                    if (studentnumber == studentlist[i].studentnumber) {
+
+                        isok = false;
+
+                    }
+
+
+                });
+
+                if (isok) {
+                    var html1 = _.template($("#groupleaderhtml").html());
+
+                    var data1 = html1({ jobName: jobName, jobEneclishname: englishjobName, name: studentlist[i].studentname, studentnumber: studentlist[i].studentnumber });
+
+                    $("#projectGroup").append($(data1));
+                }
+                
+
+            } 
+
+        }
+
+        function init(projectid) {
+            //发送请求
+            Ajax("/Teaching/Project/GetProejctGroup", { projectid: projectid }, 'post', function (data) {
+
+              
+
+                if (data.GroupLeader != null || data.GroupLeader != undefined) {
+
+                    //加载组长
+                    var html1 = _.template($("#groupleaderhtml").html());
+
+                    var data1 = html1({ jobName: "组长", jobEneclishname: "groupleader", name: data.GroupLeader.Name, studentnumber: data.GroupLeader.StudentNumber });
+
+                    $("#projectGroup").append($(data1));
+
+
+                    if (data.TeamImte.length > 0 || data.TeamImte != undefined) {
+
+
+                        var groupleader = $("#groupleader").attr("studentnumber");
+
+
+                        for (var i = 0; i < data.TeamImte.length; i++) {
+
+
+                            if (groupleader != data.TeamImte[i].StudentNumber) {
+                                //加载组员
+                                var html2 = _.template($("#groupleaderhtml").html());
+
+                                var data2 = html2({ jobName: "组员", jobEneclishname: "Teammember", name: data.TeamImte[i].Name, studentnumber: data.TeamImte[i].StudentNumber });
+
+                                $("#projectGroup").append($(data2));
+
+
+                            }
+
+
+
+                        }
+
+                    }
+
+                    //加载项目模块
+                    $(".projectitem").each(function (index, elem) {
+
+
+                        var studentnumber = $(this).attr("studentnumber");
+                        var projectid = $("#projectid").val();
+
+                     
+
+                        Ajax("/Teaching/Project/GetProjectModularByStudent", { studentnumber: studentnumber, projectid: projectid }, "post", function (data) {
+
+                           
+
+                            if (data.ErrorCode == 200) {
+
+                                if (data.Data.length > 0) {
+
+                                    for (var i = 0; i < data.Data.length; i++) {
+
+                                        //////////////////////////有问题
+
+                                        console.log(data.Data[i].Task == null);
+
+                                        if (data.Data[i].Task != null || data.Data[i].Task != undefined) {
+
+                                         
+
+                                            var html3 = _.template($("#Modularhtml").html());
+
+                                            var data3 = html3({ ModularName: data.Data[i].Task, Modularid: data.Data[i].Id });
+
+                                            console.log($(elem).find(".Modular"));
+
+                                            $(elem).find(".Modular").append(data3);
+                                        }
+
+                                     
+
+
+                                    }
+
+
+                                }
+
+                            }
+
+
+                        }, function (error) {
+
+                        });
+
+
+                    });
+
+
+                }
+
+
+            }, function (error) {
+
+                layer.msg("数据加载异常");
+
+            });
+        }
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+
+            $("#CreateBtn").click(function () {
+
+                layer.confirm("组员和组员的模块确定之后将无法更改 确定继续?", function (index) {
+
+                    layer.close(index);
+
+                });
+
+            });
+
+
+            //初始化项目组员
+
+
+            var projectid = $("#projectid").val();
+
+            init(projectid);
+
+
+
+            //添加组长
+
+            $("#addGroupleader").click(function () {
+
+
+                if ($("#groupleader")[0] == undefined) {
+
+
+                    layer.open({
+
+                        type: 2,
+                        area: ['500px', '500px'],
+                        title: '选择项目开发人员',
+                        content: '/Teaching/Project/SelectStudentView?type=learder&projectid=' + projectid,
+                        end: function () {
+
+                            init(projectid);
+                        }
+                    });
+
+
+                 
+
+
+                } else {
+
+                   
+                    layer.msg("组长已存在");
+                }
+
+            
+            });
+
+            //添加组员
+
+            $("#addTeammember").click(function () {
+
+              
+
+                console.log($("#groupleader")[0]);
+
+                if ($("#groupleader")[0] == undefined) {
+
+                    layer.msg("请先确定项目组长");
+
+                } else {
+
+
+                    layer.open({
+
+                        type: 2,
+                        area: ['500px', '500px'],
+                        title: '选择项目开发人员',
+                        content: '/Teaching/Project/SelectStudentView?type=item&projectid=' + projectid,
+                        end: function () {
+
+                            window.location.reload();
+                        }
+                    });
+
+
+
+                  
+                }
+
+            });
+
+
+            //增加模块
+          
+
+            $(document).off("click", ".AddProjectItem").on('click', '.AddProjectItem', function () {    
+                var html = $("#addModular").html();
+
+                var elem = this;
+
+                layer.open({
+                    type: 1,
+                    area: ["500px", "200px"],
+                    title: "添加模块",
+                    btn: ['确定', '关闭'],
+                    content: html,
+                    yes: function () {
+
+                        var modourname = $("#ModularName").val();
+                        var studentnumber = $(elem).parent().attr("studentnumber");
+                        //发送请求
+
+                     
+
+                        Ajax("/Teaching/Project/AddModular", { projectid: projectid, studentnumber: studentnumber, ModularName: modourname },'post', function (data) {
+
+
+                            if (data.ErrorCode == 200) {
+
+
+                                layer.msg("成功", { time: 1500 }, function () {
+
+
+                                   
+
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭   
+
+                                });
+
+
+                                window.location.reload();
+
+                            }
+
+                        }, function (error) {
+
+                            layer.msg("抱歉 网络异常...");
+
+                            });
+
+                    }
+
+
+                });
+
+
+            });
+
+
+
+            $(document).off("mouseover", ".studentbtn").on('mouseover', '.studentbtn', function () {
+ 
+
+                $(this).find("span").show();
+
+            });
+
+            
+            $(document).off("mouseleave", ".studentbtn").on('mouseleave', '.studentbtn', function () {
+                $(this).find("span").hide();
+
+
+            });
+
+
+            //*********************************&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&有问题
+
+            $(document).off("mouseover", ".Modulars").on('mouseover', '.Modulars', function () {
+
+                alert("dd");
+
+                $(this).find("span").show();
+
+            });
+
+
+            $(document).off("mouseleave", ".Modulars").on('mouseleave', '.Modulars', function () {
+
+                $(this).find("span").hide();
+
+            });
+
+            //移除组员
+
+            $(document).off("click", ".myclose").on('click', '.myclose', function () {
+
+
+                var ss = $(this).parent().parent().attr("id");
+
+                var studentnumber = $(this).parent().parent().attr("studentnumber");
+
+                if (ss == "Teammember") {
+
+                    layer.confirm("确定移除组员吗？", function (index) {
+
+
+                        //发送请求移除组员
+
+                        Ajax("/Teaching/Project/RemoveTeamItem", { projectid: projectid, studentnumber: studentnumber }, 'post', function (data) {
+
+
+                            if (data.ErrorCode == 200) {
+                                //刷新
+                                window.location.reload();
+
+                                layer.msg("移除成功");
+
+                               
+                            }
+
+
+
+                        }, function (error) {
+                            layer.msg("抱歉，网络出现错误");
+
+
+                        });
+
+                        layer.close(index);
+
+                    });
+                }
+                else {
+
+                    layer.confirm("修改组长之后，原组长的模块会跟随新组长", function (index) {
+
+
+                        layer.open({
+
+                            type: 2,
+                            area: ['500px', '500px'],
+                            title: '选择项目开发人员',
+                            content: '/Teaching/Project/SelectStudentView?type=learder&projectid=' + projectid,
+                            end: function () {
+
+                                window.location.reload();
+                            }
+                        });
+
+                        layer.close(index);
+                    });
+
+                  
+
+                }
+
+
+               
+
+
+            });
+           
+
+        });
+
+    </script>
+
+        </body>
+</html>

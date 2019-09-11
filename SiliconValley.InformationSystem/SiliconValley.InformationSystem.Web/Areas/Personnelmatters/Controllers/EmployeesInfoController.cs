@@ -113,9 +113,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //获取所属岗位的所属部门对象
         public Department GetDept(int pid) {
             DepartmentManage deptmanage = new DepartmentManage();
-            var deptlist = deptmanage.GetList();//获取公司部门数据集
-            ViewBag.DeptList = deptlist;
-            var str = deptlist.Where(d => d.DeptId == GetPosition(pid).DeptId).FirstOrDefault();
+            //ar deptlist = deptmanage.GetList();//获取公司部门数据集
+            //ViewBag.DeptList = deptlist;
+            var str = deptmanage.GetEntity(GetPosition(pid).DeptId);
             return str;
         }
 
@@ -166,6 +166,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+          
             try
             {
                 emp.EmployeeId = EmpId();
@@ -174,9 +175,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 emp.IsDel = false;
                 empinfo.Insert(emp);
-                if (GetPosition(emp.PositionId).PositionName=="就业专员") {
-                    var s = esmanage.AddEmploystaff(emp.EmployeeId);
-                        empinfo.Success().Success = s;
+                if (GetDept(emp.PositionId).DeptName == "就业部")
+                {
+                    bool s = esmanage.AddEmploystaff(emp.EmployeeId);
+                    empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
                 AjaxResultxx = empinfo.Success();
@@ -260,15 +262,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 else
                 {
                     string newstr = (int.Parse(endfournum) + 1).ToString();
-                    if (newstr.Length < 10)
+                    if (int.Parse(newstr) < 10)
                     {
                         mingci = "000" + newstr;
                     }
-                    else if (newstr.Length >= 10 && newstr.Length < 100)
+                    else if (int.Parse(newstr) >= 10 && int.Parse(newstr) < 100)
                     {
                         mingci = "00" + newstr;
                     }
-                    else if (newstr.Length >= 100 && newstr.Length < 1000)
+                    else if (int.Parse(newstr) >= 100 && int.Parse(newstr) < 1000)
                     {
                         mingci = "0" + newstr;
                     }

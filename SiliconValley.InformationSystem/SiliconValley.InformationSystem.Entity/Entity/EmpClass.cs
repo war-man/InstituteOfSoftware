@@ -20,9 +20,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int ID { get; set; }
         public int EmpStaffID { get; set; }
         public string ClassNO { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public bool IsDel { get; set; }
+        public System.DateTime Date { get; set; }
         public string Remark { get; set; }
-    
+        public System.DateTime StartTime { get; set; }
+        public Nullable<System.DateTime> EndingTime { get; set; }
+
     }
 }

@@ -188,7 +188,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+                //BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
                 ajaxResult.Success = false;
                 ajaxResult.Msg = ex.Message;
             }

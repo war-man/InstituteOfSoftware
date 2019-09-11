@@ -96,7 +96,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             catch (Exception ex)
             {
 
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据异常);
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
                 return Json("数据有误", JsonRequestBehavior.AllowGet);
             }
         }
@@ -146,7 +146,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
                     retus.Success = false;
                     retus.ErrorCode = 500;
-                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据异常);
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                
 
                 }
@@ -154,9 +154,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
             return Json(retus, JsonRequestBehavior.AllowGet);
         }
-        
+        //查看班级的学员
         public ActionResult ClassStudent()
         {
+            string ClassNumber = Request.QueryString["ClassNumber"];
             return View();
         }
        
