@@ -6,11 +6,31 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
 {
     using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Entity.MyEntity;
+    using SiliconValley.InformationSystem.Business.PositionBusiness;
+    using SiliconValley.InformationSystem.Business.DepartmentBusiness;
     /// <summary>
     /// 员工业务类
     /// </summary>
     public class EmployeesInfoManage:BaseBusiness<EmployeesInfo>
     {
+
+        //获取所属岗位对象
+        public Position GetPosition(int pid)
+        {
+            PositionManage pmanage = new PositionManage();
+            var str = pmanage.GetEntity(pid);
+            return str;
+        }
+        //获取所属岗位的所属部门对象
+        public Department GetDept(int pid)
+        {
+            DepartmentManage deptmanage = new DepartmentManage();
+            //ar deptlist = deptmanage.GetList();//获取公司部门数据集
+            //ViewBag.DeptList = deptlist;
+            var str = deptmanage.GetEntity(GetPosition(pid).DeptId);
+            return str;
+        }
+
 
         /// <summary>
         /// 渠道
@@ -131,5 +151,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             }
             return isfuzhuren;
         }
+
+
     }
 }

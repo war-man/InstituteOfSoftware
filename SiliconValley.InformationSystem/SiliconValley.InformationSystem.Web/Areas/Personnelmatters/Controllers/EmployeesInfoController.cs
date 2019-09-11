@@ -50,7 +50,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 list = list.Where(e => e.EmpName.Contains(ename)).ToList();
                 if (!string.IsNullOrEmpty(deptname)) {
 
-                    list = list.Where(e => GetDept((int)e.PositionId).DeptId == int.Parse(deptname)).ToList();
+                    list = list.Where(e => empinfo.GetDept((int)e.PositionId).DeptId == int.Parse(deptname)).ToList();
                 }
                 if (!string.IsNullOrEmpty(pname)) {
                     list = list.Where(e => e.PositionId == int.Parse(pname)).ToList();
@@ -86,8 +86,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                               e.EmployeeId,
                               e.DDAppId,
                               e.EmpName,
-                              Position = GetPosition((int)e.PositionId).PositionName,
-                              Depart = GetDept((int)e.PositionId).DeptName,
+                              Position =empinfo.GetPosition((int)e.PositionId).PositionName,
+                              Depart =empinfo.GetDept((int)e.PositionId).DeptName,
                               e.Sex,
                               e.Age,
                               e.Nation,
@@ -142,8 +142,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e1.EmployeeId,
                 e1.DDAppId,
                 e1.EmpName,
-                Position = GetPosition((int)e1.PositionId).PositionName,
-                Depart = GetDept((int)e1.PositionId).DeptName,
+                Position = empinfo.GetPosition((int)e1.PositionId).PositionName,
+                Depart =empinfo.GetDept((int)e1.PositionId).DeptName,
                 e1.Sex,
                 e1.Age,
                 e1.Nation,
@@ -187,21 +187,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-        //获取所属岗位对象
-        public Position GetPosition(int pid) {
-            PositionManage pmanage = new PositionManage();
-            var str = pmanage.GetEntity(pid);
-            return str;
-        }
-        //获取所属岗位的所属部门对象
-        public Department GetDept(int pid) {
-            DepartmentManage deptmanage = new DepartmentManage();
-            //ar deptlist = deptmanage.GetList();//获取公司部门数据集
-            //ViewBag.DeptList = deptlist;
-            var str = deptmanage.GetEntity(GetPosition(pid).DeptId);
-            return str;
-        }
-
+      
         //添加员工页面显示
         [HttpGet]
         public ActionResult AddEmp() {
@@ -275,24 +261,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 emp.IsDel = false;
                 empinfo.Insert(emp);
-                if (GetDept(emp.PositionId).DeptName == "就业部")
+                if (empinfo.GetDept(emp.PositionId).DeptName == "就业部")
                 {
                     bool s = esmanage.AddEmploystaff(emp.EmployeeId);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
-                if (GetDept(emp.PositionId).DeptName == "市场部")
+                if (empinfo.GetDept(emp.PositionId).DeptName == "市场部")
                 {
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
-                if (GetDept(emp.PositionId).DeptName == "教质部") {
+                if (empinfo.GetDept(emp.PositionId).DeptName == "教质部") {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
-                if (GetPosition(emp.PositionId).PositionName == "咨询师" || GetPosition(emp.PositionId).PositionName == "咨询主任") {
+                if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任") {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
@@ -489,12 +475,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //岗位信息获取
         public ActionResult GetPositions() {
             PositionManage deptmanage = new PositionManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
             var deptlist = deptmanage.GetList();//获取公司部门数据集
 
             var newlist = from p in deptlist
                           select new {
                               p.Pid,
-                              deptname = GetDept(p.Pid).DeptName,
+                              deptname = emanage.GetDept(p.Pid).DeptName,
                               p.PositionName,
                               p.IsDel
                           };
@@ -659,6 +646,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditPositionIsDel(int id, bool isdel)
         {
             PositionManage deptmanage = new PositionManage();
+            EmployeesInfoManage emanag = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
@@ -670,7 +658,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 else
                 {
-                    if (GetDept(id).IsDel == true)
+                    if (emanag.GetDept(id).IsDel == true)
                     {
                         AjaxResultxx = deptmanage.Success();
                         AjaxResultxx.Msg = "不能启用";
@@ -827,8 +815,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EmpDetail(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
              var emp= empmanage.GetEntity(id);
-            ViewBag.dname = GetDept((int)emp.PositionId).DeptName;
-            ViewBag.pname = GetPosition((int)emp.PositionId).PositionName;
+            ViewBag.dname =empmanage.GetDept((int)emp.PositionId).DeptName;
+            ViewBag.pname =empmanage.GetPosition((int)emp.PositionId).PositionName;
             return View(emp);
         }
 
@@ -852,8 +840,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditEmp(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
              var emp= empmanage.GetEntity(id);
-            ViewBag.dname = GetDept((int)emp.PositionId).DeptName;
-            ViewBag.pname = GetPosition((int)emp.PositionId).PositionName;
+            ViewBag.dname =empmanage.GetDept((int)emp.PositionId).DeptName;
+            ViewBag.pname = empmanage.GetPosition((int)emp.PositionId).PositionName;
             return View(emp);
         }
         [HttpPost]
@@ -875,6 +863,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(ajaxresult,JsonRequestBehavior.AllowGet);
         }
+
+
 
     }
 }

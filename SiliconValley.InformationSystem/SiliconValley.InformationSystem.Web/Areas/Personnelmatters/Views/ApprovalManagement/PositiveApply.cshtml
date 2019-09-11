@@ -1,0 +1,200 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.ApplyForFullMember
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PositiveApply</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height:300px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div class="layui-container">
+                <input type="hidden" name="EmployeeId" id="EmployeeId" value="@ViewBag.eid" />
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 ">
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EmpName" id="EmpName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 ">
+                        <label class="layui-form-label">部门</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dname" id="dname" readonly style="border:0px;"  class="layui-input"  />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">岗位</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pname" id="pname" readonly style="border:0px;"  class="layui-input"  />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">入职时间</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EntryTime" id="EntryTime" readonly style="border:0px;"  class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div>
+                        <label class="layui-form-label">试用期结束时间</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.ProbationEndDate, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">试用期个人总结</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.ProbationPersonalSummary, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:100px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+
+        $(function () {
+            loademp();// 初始化编辑数据加载
+        });
+        function loademp() {
+            var id = $("#EmployeeId").val();
+            console.log(id);
+            $.get("/Personnelmatters/ApprovalManagement/GetEmpid/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    $("#EmpName").val(data.EmpName);
+                    $("#dname").val(data.dname);
+                    $("#pname").val(data.pname);
+                    data.EntryTime = GetYMD(data.EntryTime);
+                    $("#EntryTime").val(data.EntryTime);
+
+                    data.PositiveDate = GetYMD(data.PositiveDate);
+                    form.val("formtest", data);
+
+                });
+            })
+        }
+
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+            //日期验证
+            laydate.render({
+                elem: '#ProbationEndDate',
+            });
+
+            //添加提交
+            form.on('submit(demo1)', function (data) {
+                $.post("/Personnelmatters/ApprovalManagement/PositiveApply", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("添加成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            //parent.layui.table.reload('myEmpInfo');
+                            parent.layer.close(index);
+
+                        });
+                    } else {
+                        layer.alert("添加失败!");
+                    }
+                });
+                return false;
+            });
+
+            //关闭添加页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+        });
+
+
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+
+    </script>
+
+</body>
+</html>
