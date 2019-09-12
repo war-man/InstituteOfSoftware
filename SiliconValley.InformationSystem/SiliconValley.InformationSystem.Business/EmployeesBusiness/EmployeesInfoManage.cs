@@ -8,27 +8,64 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Business.PositionBusiness;
     using SiliconValley.InformationSystem.Business.DepartmentBusiness;
+    using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
     /// <summary>
     /// 员工业务类
     /// </summary>
     public class EmployeesInfoManage:BaseBusiness<EmployeesInfo>
     {
 
-        //获取所属岗位对象
+        /// <summary>
+        ///  获取所属岗位对象
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public Position GetPosition(int pid)
         {
             PositionManage pmanage = new PositionManage();
             var str = pmanage.GetEntity(pid);
             return str;
         }
-        //获取所属岗位的所属部门对象
+
+        /// <summary>
+        /// 获取所属岗位的所属部门对象
+        /// </summary>
+        /// <param name="pid"></param>
+        /// <returns></returns>
         public Department GetDept(int pid)
         {
             DepartmentManage deptmanage = new DepartmentManage();
-            //ar deptlist = deptmanage.GetList();//获取公司部门数据集
-            //ViewBag.DeptList = deptlist;
             var str = deptmanage.GetEntity(GetPosition(pid).DeptId);
             return str;
+        }
+        /// <summary>
+        /// 根据部门编号获取部门对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        public Department GetDeptById(int id) {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var dept = deptmanage.GetEntity(id);
+            return dept;
+        }
+        /// <summary>
+        /// 根据岗位编号获取岗位对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Position GetPobjById(int id) {
+            PositionManage pmanage = new PositionManage();
+            return pmanage.GetEntity(id);
+        }
+        /// <summary>
+        /// 根据类型编号获取员工异动类型对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public MoveType GetETById(int id) {
+            MoveTypeManage mtmanage = new MoveTypeManage();
+            return mtmanage.GetEntity(id);
         }
 
 
@@ -49,7 +86,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// <param name="empinfoid">员工编号</param>
         /// <returns></returns>
         public EmployeesInfo GetInfoByEmpID(string empinfoid) {
-           return this.GetAll().Where(a => a.EmployeeId == empinfoid).FirstOrDefault();
+            return this.GetEntity(empinfoid);
         }
 
         /// <summary>

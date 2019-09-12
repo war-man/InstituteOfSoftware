@@ -1,0 +1,174 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PositiveDetail</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 120px;
+        }
+    </style>
+
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div class="layui-container" style="margin-top:20px;">
+                <input type="hidden" name="TransactionId" id="TransactionId" />
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            <input type="text" name="EmpName" id="EmpName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">异动类型:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            <input type="text" name="type" id="type" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">异动时间:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            <input type="text" name="TransactionTime" id="TransactionTime" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">所属部门:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">所属岗位:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="Remark" name="Remark" readonly class="layui-input" style="border:0px;" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:100px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+        $(function () {
+            loadnetinfo();// 初始化编辑数据加载
+        });
+        function loadnetinfo() {
+            var id = $("#TransactionId").val();
+            $.get("/Personnelmatters/EmployeesInfo/GetertById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    data.TransactionTime = GetYMD(data.TransactionTime);
+               
+                    form.val("formtest", data);
+
+                });
+            })
+        }
+
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+ 
+            laydate.render({
+                elem: '#TransactionTime',
+
+            });//出生日期
+           
+            //关闭添加页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layui.table.reload('myETR');
+                parent.layer.close(index);
+            });
+
+        });
+
+
+        
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+</body>
+</html>

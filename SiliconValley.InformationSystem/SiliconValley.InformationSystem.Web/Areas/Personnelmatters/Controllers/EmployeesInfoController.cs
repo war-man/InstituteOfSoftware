@@ -19,6 +19,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Consult_Business;
     using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
+    using SiliconValley.InformationSystem.Business;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -26,6 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
+
         /// <summary>
         ///获取在职员工员工信息数据
         /// </summary>
@@ -126,6 +128,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// 获取离职员工信息
         /// </summary>
@@ -187,20 +190,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-      
+
+  
         //添加员工页面显示
         [HttpGet]
         public ActionResult AddEmp() {
             return View();
         }
-
-        //部门及岗位管理页面显示
-        [HttpGet]
-        public ActionResult DeptOperation()
-        {
-            return View();
-        }
-
         /// <summary>
         ///添加员工时获取未禁用的部门信息 
         /// </summary>
@@ -333,7 +329,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string c = a.ToString();
             return c;
         }
-
         /// <summary>
         ///生成员工编号
         /// </summary>
@@ -385,7 +380,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string EmpidResult = n + y + d + mingci;
             return EmpidResult;
         }
-
         /// <summary>
         ///计算员工年龄
         /// </summary>
@@ -458,6 +452,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return result;
         }
 
+
+
+        //部门及岗位管理页面显示
+        [HttpGet]
+        public ActionResult DeptOperation()
+        {
+            return View();
+        }
         //部门信息获取
         public ActionResult GetDepts()
         {
@@ -561,7 +563,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-
         //部门伪删除即,将部门禁用
         [HttpPost]
         public ActionResult DelDepts(string list) {
@@ -593,7 +594,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-
 
         //岗位表添加显示页
         public ActionResult AddPosition() {
@@ -702,6 +702,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+
         //员工婚姻状态和性别的修改 
         public ActionResult EditEmphunyin(string id, string name, bool ismarry)
         {
@@ -712,7 +713,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 switch (name)
                 {
                     case "IdCardIndate":
-                        var emp1 = empinfo.GetEntity(id);
+                        var emp1 = empinfo.GetInfoByEmpID(id);
                         if (ismarry == false)
                         {
                             emp1.MaritalStatus = true;
@@ -724,7 +725,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         empinfo.Update(emp1);
                         break;
                     case "Sex":
-                        var emp2 = empinfo.GetEntity(id);
+                        var emp2 = empinfo.GetInfoByEmpID(id);
                         if (ismarry == false)
                         {
                             emp2.Sex = "女";
@@ -753,17 +754,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 switch (Attrbute)
                 {
                     case "EmpName"://员工姓名
-                        var emp1 = empinfo.GetEntity(id);
+                        var emp1 = empinfo.GetInfoByEmpID(id);
                         emp1.EmpName = endvalue;
                         empinfo.Update(emp1);
                         break;
                     case "Phone"://员工电话号码
-                        var emp2 = empinfo.GetEntity(id);
+                        var emp2 = empinfo.GetInfoByEmpID(id);
                         emp2.Phone = endvalue;
                         empinfo.Update(emp2);
                         break;
                     case "IdCardNum"://员工身份证号码
-                        var emp12 = empinfo.GetEntity(id);
+                        var emp12 = empinfo.GetInfoByEmpID(id);
                         emp12.IdCardNum = endvalue;
                         if (emp12.IdCardNum != null)
                         {
@@ -773,7 +774,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         empinfo.Update(emp12);
                         break;
                     case "Remark"://备注
-                        var emp11 = empinfo.GetEntity(id);
+                        var emp11 = empinfo.GetInfoByEmpID(id);
                         emp11.Remark = endvalue;
                         empinfo.Update(emp11);
                         break;
@@ -793,7 +794,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
 
-                        var emp2 = empinfo.GetEntity(id);
+                        var emp2 = empinfo.GetInfoByEmpID(id);
                         emp2.SSStartMonth = endvalue;
                         empinfo.Update(emp2);
                         AjaxResultxx = empinfo.Success();
@@ -814,9 +815,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult EmpDetail(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-             var emp= empmanage.GetEntity(id);
-            ViewBag.dname =empmanage.GetDept((int)emp.PositionId).DeptName;
-            ViewBag.pname =empmanage.GetPosition((int)emp.PositionId).PositionName;
+             var emp= empmanage.GetInfoByEmpID(id);
             return View(emp);
         }
 
@@ -825,23 +824,55 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
         public ActionResult GetempById(string id) {
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var emp = emanage.GetEntity(id);
-            return Json(emp,JsonRequestBehavior.AllowGet);
+            var e = emanage.GetInfoByEmpID(id);
+            var empobj = new {
+                #region 获取属性值 
+                e.EmployeeId,
+                e.DDAppId,
+                e.EmpName,
+                e.PositionId,
+                pname = emanage.GetPosition((int)e.PositionId).PositionName,
+                dname = emanage.GetDept((int)e.PositionId).DeptName,
+                e.Sex,
+                e.Age,
+                e.Nation,
+                e.Phone,
+                e.IdCardNum,
+                e.ContractStartTime,
+                e.ContractEndTime,
+                e.EntryTime,
+                e.Birthdate,
+                e.Birthday,
+                e.PositiveDate,
+                e.UrgentPhone,
+                e.DomicileAddress,
+                e.Address,
+                e.Education,
+                e.MaritalStatus,
+                e.IdCardIndate,
+                e.PoliticsStatus,
+                e.WorkExperience,
+                e.ProbationSalary,
+                e.Salary,
+                e.SSStartMonth,
+                e.BCNum,
+                e.Material,
+                e.Remark,
+                e.IsDel
+                #endregion
+            };
+            return Json(empobj,JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 编辑员工信息
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-
         public ActionResult EditEmp(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-             var emp= empmanage.GetEntity(id);
-            ViewBag.dname =empmanage.GetDept((int)emp.PositionId).DeptName;
-            ViewBag.pname = empmanage.GetPosition((int)emp.PositionId).PositionName;
+             var emp= empmanage.GetInfoByEmpID(id);
             return View(emp);
         }
         [HttpPost]
@@ -850,7 +881,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var ajaxresult= new AjaxResult();
             try
             {
-                var emp2 = empmanage.GetEntity(emp.EmployeeId);
+                var emp2 = empmanage.GetInfoByEmpID(emp.EmployeeId);
                 emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
                 emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 emp.IsDel = emp2.IsDel;
@@ -865,6 +896,111 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
+        //员工异动表显示页
+        public ActionResult EmpTransactionRecord() {
+            return View();
+        }
+        //获取员工异动表数据
+        public ActionResult GetEtrData(int page,int limit) {
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = etmanage.GetList().ToList();
+            var mylist = list.OrderBy(e => e.TransactionId).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in mylist
+                         select new
+                         {
+                             e.TransactionId,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             type = emanage.GetETById(e.TransactionType).MoveTypeName,
+                             e.TransactionTime,
+                             predname= e.PreviousDept==null?null:emanage.GetDeptById((int)e.PreviousDept).DeptName,
+                             prepname=e.PreviousPosition==null?null:emanage.GetPobjById((int)e.PreviousPosition).PositionName,
+                             nowdname = e.PresentDept == null ? null : emanage.GetDeptById((int)e.PresentDept).DeptName,
+                             nowpname = e.PresentPosition == null ? null : emanage.GetPobjById((int)e.PresentPosition).PositionName,
+                             e.Remark,
+                             e.PreviousSalary,
+                             e.PresentSalary,
+                             e.Reason,
+                             e.IsDel
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
 
+
+        }
+        //编辑员工异动信息      
+        public ActionResult EditETR(int id) {
+            return View();
+        }
+        //根据编号获取异动对象信息
+        public ActionResult GetertById(int id)
+        {
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var e = etmanage.GetEntity(id);
+            var empobj = new
+            {
+                #region 获取属性值 
+                e.TransactionId,
+                empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                dname=emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                pname= emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                type = emanage.GetETById(e.TransactionType).MoveTypeName,
+                e.TransactionTime,
+                predname = e.PreviousDept == null ? null : emanage.GetDeptById((int)e.PreviousDept).DeptName,
+                prepname = e.PreviousPosition == null ? null : emanage.GetPobjById((int)e.PreviousPosition).PositionName,
+                nowdname = e.PresentDept == null ? null : emanage.GetDeptById((int)e.PresentDept).DeptName,
+                nowpname = e.PresentPosition == null ? null : emanage.GetPobjById((int)e.PresentPosition).PositionName,
+                e.Remark,
+                e.PreviousSalary,
+                e.PresentSalary,
+                e.Reason,
+                e.IsDel
+                #endregion
+            };
+            return Json(empobj, JsonRequestBehavior.AllowGet);
+        }
+        //员工异动详情信息
+        public object EmpETRDetail(int id) {
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage mt = new MoveTypeManage();
+            object viewobj = new object();
+             var etobj=etmanage.GetEntity(id);
+
+            var mtobj1 = mt.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault();//找到转正申请的异动
+            if (etobj.TransactionType==mtobj1.ID) {
+                viewobj = PositiveDetail(id);
+            }
+            var mtobj2 = mt.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault();//找到离职申请的异动
+            if (etobj.TransactionType == mtobj2.ID) {
+                viewobj = DimissionDetail(id);
+            }
+            return viewobj;
+        }
+        //转正异动的详情页
+        public ActionResult PositiveDetail(int id)
+        {
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            var etobj = etmanage.GetEntity(id);
+            return View(etobj);
+        }
+        //离职异动的详情页
+        public ActionResult DimissionDetail(int id) {
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            var etobj = etmanage.GetEntity(id);
+            return View(etobj);
+        }
+
+
+        //员工审批状态管理
+        public ActionResult EmpApproval() {
+            return View();
+        }
     }
 }

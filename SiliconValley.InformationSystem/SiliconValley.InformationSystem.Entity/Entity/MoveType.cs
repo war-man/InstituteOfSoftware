@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SiliconValley.InformationSystem.Entity.Entity
+namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     [Table("MoveType")]
     public class MoveType

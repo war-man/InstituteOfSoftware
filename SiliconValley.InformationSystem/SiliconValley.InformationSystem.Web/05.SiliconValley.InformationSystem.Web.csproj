@@ -536,6 +536,8 @@
     <Content Include="Areas\Teachingquality\StuImages\+name" />
     <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\ApprovalIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\PositiveApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpTransactionRecord.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\PositiveDetail.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
