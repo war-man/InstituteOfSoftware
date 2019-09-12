@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public string Student_number { get; set; }
+        public string Studentnumber { get; set; }
         public Nullable<bool> Dateofregistration { get; set; }
         public Nullable<System.DateTime> Inrtiationtime { get; set; }
         public string Remarks { get; set; }

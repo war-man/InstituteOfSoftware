@@ -1,0 +1,103 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HeadmasterEntity</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div style="margin-left:5%;margin-top:10px;">
+        老师： <span style="color:forestgreen;"> @ViewBag.Name</span>
+    </div>
+    <div style="margin-top:10px;">
+
+        <div id="test2" class="demo-transfer" style="height:300px;"></div>
+    </div>
+    <div style="position:absolute;bottom:10px; left:45%;">
+        <button type="button" id="but1" class="layui-btn layui-btn-normal">完成</button>
+    </div>
+
+
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+
+    var mycars = [];
+    var data4 = JSON.parse('@Html.Raw(ViewBag.HeadMa)');
+    mycars
+    //$.post("/Teachingquality/Headteacher/HeadmasreClass", function (data) {
+    //    data3 = data.d1;
+    //    data4 = data.d2;
+        for (var i = 0; i < data4.d2.length; i++) {
+            mycars[i] = data4.d2[i].ClassNumber;
+        }
+
+
+    //});
+
+    layui.use(['layer', 'transfer','util'], function () {
+        var transfer = layui.transfer;
+        var util = layui.util;
+
+        //实例调用
+        transfer.render({
+            elem: '#test2'
+            , title: ['未带班级', '已带班级']
+            , data: data4.d1
+            , value: mycars
+            , id: 'key123' //定义唯一索引
+            , showSearch: true
+            , width: 300
+            , height:390
+            , onchange: function (data, index) {
+             //得到当前被穿梭的数据
+
+                //$.post("/Teachingquality/Headteacher/HeadmasreEntity/" + index + "?ClassName=" + xda, function (datas) {
+                //    console.log(datas);
+
+
+                //});
+
+
+            }
+        })
+
+
+        $("#but1").click(function () {
+            var getData = transfer.getData('key123');
+            var xda = "";
+            for (var i = 0; i < getData.length; i++) {
+                xda += getData[i].value + ",";
+            }
+            layer.confirm('您真的要选择吗?', function (index) {
+
+                  $.post("/Teachingquality/Headteacher/HeadmasreEntity?ClassName=" + xda, function (datas) {
+                      console.log(datas);
+                      if (datas == true) {
+                          layer.alert('操作成功', { icon: 1 });
+                          parent.layer.close(parent.layer.index);
+                      } else {
+                          Errye("操作失败");
+                      }
+                   //   layer.close(index);
+
+                });
+
+
+            });
+
+        });
+
+
+    });
+</script>
+

@@ -21,6 +21,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int ID { get; set; }
         public string ClassID { get; set; }
         public string StudentID { get; set; }
+        /// <summary>
+        /// 是否为当前班级
+        /// </summary>
         public Nullable<bool> CurrentClass { get; set; }
          public DateTime AddDate { get; set; }
 

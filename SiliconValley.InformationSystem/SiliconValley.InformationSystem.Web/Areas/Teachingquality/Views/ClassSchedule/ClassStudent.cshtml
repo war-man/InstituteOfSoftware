@@ -25,11 +25,23 @@
             background-color: #1cc09f;
             color: #fff;
         }
+        .TiDIV {
+            width: 120px;
+            height: 120px;
+            border: 1px solid red;
+            padding: 10px;
+            margin-left: 80px;
+            margin-top: 20px;
+            background-color: #C0C0C0;
+            color: #fff;
+        }
 
-            .Mydiv:host {
-                background-color: aqua;
-            }
-
+        .Mydiv:hover {
+            background-color: burlywood;
+        }
+           .color{
+               background-color:red;
+           }
         table {
             margin-left: 10px;
         }
@@ -60,9 +72,7 @@
             color: #fff;
         }
 
-        .mycolor {
-            background-color: burlywood;
-        }
+    
 
         .backRed {
             background-color: red;
@@ -216,6 +226,37 @@
             </div>
         </div>
     </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title"> 班级异动</h2>
+        <div class="layui-colla-content layui-anim">
+            <div>
+                <button type="button" id="DropoutofSchool" class="layui-btn layui-btn-fluid mybut">学员退学</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">学员重修</button>
+            </div>
+            <div>
+                <button type="button" id="Transferoftraunees" class="layui-btn layui-btn-fluid mybut">学员转班</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">学员复学</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">学员修学</button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title"> 拆班/合并</h2>
+        <div class="layui-colla-content layui-anim">
+            <div>
+                <button type="button" id="Dismantleclasses"  class="layui-btn layui-btn-fluid mybut">拆分班级</button>
+            </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">合并班级</button>
+            </div>
+        </div>
+    </div>
 
 </div>
 
@@ -275,24 +316,40 @@
     </div>
     @{
 
-        <div class="layui-row" id="MyShutdown">
-            @foreach (var item in Model as List<ClassStudentView>)
+    <div class="layui-row" id="MyShutdown">
+        @foreach (var item in Model as List<ClassStudentView>)
+        {
+            if (item.ClassNameView == null)
             {
-                <div class="Mydiv layui-col-xs4">
-                    <div style="display:none;">@item.StuNameID</div>
-                    <div style="text-align:center;margin-top:20px;line-height:23px;">
+        <div class="Mydiv layui-col-xs4">
+            <div style="display:none;">@item.StuNameID</div>
+            <div style="text-align:center;margin-top:20px;line-height:23px;">
 
-                        <div class="Name">@item.Name</div>
-
-
-                    </div>
+                <div class="Name">@item.Name</div>
 
 
-                </div>
+            </div>
+            
 
-
-            }
         </div>
+            }
+            else
+            {
+        <div class="TiDIV layui-col-xs4">
+            <div style="display:none;">@item.StuNameID</div>
+            <div style="text-align:center;margin-top:20px;line-height:23px;">
+
+                <div class="Name">@item.Name</div>
+            </div>
+            <div>现班级:@item.ClassNameView</div>
+
+        </div>
+            }
+
+
+
+        }
+    </div>
     }
 
 
@@ -453,18 +510,7 @@
             }
 
         });
-        //移入
-        $(".Mydiv").mouseover(function () {
-            $(".Mydiv").removeClass("mycolor");
-            $(this).addClass("mycolor");
-
-
-
-        });
-        //移出
-        $(".Mydiv").mouseleave(function () {
-            $(this).removeClass("mycolor");
-        });
+      
         ////添加班会记录
         $("#banhui2").click(function () {
             // var stuid = $("#ClassName").text();
@@ -482,8 +528,18 @@
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
-
-
+      
+        //点击事件
+        
+        $(".Mydiv").click(function () {
+            if (!$(this).is(".color")) {
+                $(this).addClass("color");
+            }
+            else {
+                $(this).removeClass("color");
+            }
+        });
+   
         //双击详细
         $(".Mydiv").dblclick(function () {
             var stuid = $($(this).children()[0]).text();
@@ -528,7 +584,49 @@
             }
 
         });
+        //退学业务
+        $("#DropoutofSchool").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                console.log(x);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+           
+        });
+        //业务 Transferoftraunees
+        $("#Transferoftraunees").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                console.log(x);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
 
+        });
+
+       //拆班业务
+        $("#Dismantleclasses").click(function () {
+            if ($(".color").length > 0) {
+                var x = "";
+                var list = $(".color");
+                for (var i = 0; i < list.length; i++) {
+                    x += $($(list[i]).children()[0]).text() + ",";
+                }
+             
+                layer.open({
+                    title: "拆班",
+                    type: 2,
+                    area: ['700px', '700px']
+                    , content: "/Teachingquality/ClassSchedule/Dismantleclasses?StudentID=" + x
+                    , end: function () { table.reload('idTest'); }
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+        });
     });
 
     //设置班委
@@ -677,5 +775,7 @@
         return false;
         document.addEventListener('contextmenu', onContextMenu, false);
     });
-
+    function GetPartsItmesMy() {
+        location.reload();
+    }
 </script>

@@ -125,6 +125,8 @@
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\InterviewStudentsBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\StudentAttendanceBusiness.cs" />
+    <Compile Include="StudentmanagementBusinsess\StudentFeeStandardBusinsess.cs" />
+    <Compile Include="StudentmanagementBusinsess\StudentUnionBusiness.cs" />
     <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
     <Compile Include="StudentManeger\StudentInformationManeger.cs" />
     <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />

@@ -9,6 +9,8 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
+
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
    public class ClassScheduleBusiness:BaseBusiness<ClassSchedule>
@@ -27,6 +29,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
         //班会
         BaseBusiness<Assmeetings> myassmeetings = new BaseBusiness<Assmeetings>();
+        //拆班记录
+        BaseBusiness<RemovalRecords> Dismantle = new BaseBusiness<RemovalRecords>();
+        //班级异动表
+        BaseBusiness<ClassDynamics> CLassdynamic = new BaseBusiness<ClassDynamics>();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -60,6 +66,33 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 {
                     listview.Add(classStudentView);
                 }
+            }
+            return listview;
+
+
+
+        }
+
+        public List<ClassStudentView> ClassStudentneViewList(string classid)
+        {
+            //学员班级
+            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+            //学员信息表
+            StudentInformationBusiness student = new StudentInformationBusiness();
+
+            List<ClassStudentView> listview = new List<ClassStudentView>();
+            var x = scheduleForTraineesBusiness.GetList().Where(a => a.ClassID == classid).ToList();
+            foreach (var item in x)
+            {
+                ClassStudentView classStudentView = new ClassStudentView();
+                classStudentView.Name = student.GetEntity(item.StudentID).Name;
+                classStudentView.StuNameID = student.GetEntity(item.StudentID).StudentNumber;
+                if (item.CurrentClass==false)
+                {
+                    var z = scheduleForTraineesBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.CurrentClass == true).FirstOrDefault();
+                    classStudentView.ClassNameView = z.ClassID;
+                }
+                listview.Add(classStudentView);
             }
             return listview;
 
@@ -328,6 +361,84 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
          
             return retus;
         }
+        /// <summary>
+        /// 拆班数据操作
+        /// </summary>
+        /// <param name="Addtime">拆班日期</param>
+        /// <param name="FormerClass">原班级</param>
+        /// <param name="List">现班级param>
+        /// <param name="Reasong">原因</param>
+        /// <param name="Remarks">备注</param>
+        /// <param name="StudentID">学号</param>
+        /// <returns></returns>
+       public AjaxResult Dismantleclasses(string Addtime, string FormerClass, string List, string Reasong, string Remarks, string StudentID)
+        {
+        var x=  Dismantle.GetList().Where(a => a.IsDelete == false && a.FormerClass == FormerClass).Count();
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                retus.Success = true;
+                if (x < 1)
+                {
 
+                    RemovalRecords removalRecords = new RemovalRecords();
+                    removalRecords.Addtime = Convert.ToDateTime(Addtime);
+                    removalRecords.FormerClass = FormerClass;
+                    removalRecords.Reasong = Reasong;
+                    removalRecords.Remarks = Remarks;
+                    removalRecords.IsDelete = false;
+                    Dismantle.Insert(removalRecords);
+                }
+             
+                    string[] Student = StudentID.Split(',');
+                    List<ClassDynamics> MyDynamise = new List<ClassDynamics>();
+
+                List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
+
+                List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
+                foreach (var item in Student)
+                    {
+                        ClassDynamics classDynamics = new ClassDynamics();
+                        classDynamics.Addtime = Convert.ToDateTime(Addtime);
+                        classDynamics.FormerClass = FormerClass;
+                        classDynamics.CurrentClass = List;
+                        classDynamics.Studentnumber = item;
+                        classDynamics.Remarks = Remarks;
+                        classDynamics.Reason = Reasong;
+                        classDynamics.IsDelete = false;
+                        MyDynamise.Add(classDynamics);
+                    var UpdateSche = ss.GetList().Where(a => a.StudentID == item && a.ClassID == FormerClass).FirstOrDefault();
+                    if (UpdateSche!=null)
+                    {
+                        UpdateSche.CurrentClass = false;
+                        UpdateScheduleFor.Add(UpdateSche);
+                    }
+                    ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                    scheduleForTrainees.ClassID = List;
+                    scheduleForTrainees.StudentID = item;
+                    scheduleForTrainees.CurrentClass = true;
+                    scheduleForTrainees.AddDate = Convert.ToDateTime(Addtime); 
+                    AddScheduleFor.Add(scheduleForTrainees);
+                    }
+                     ss.Update(UpdateScheduleFor);
+                 ss = new ScheduleForTraineesBusiness();
+                ss.Insert(AddScheduleFor);
+                    CLassdynamic.Insert(MyDynamise);
+             
+                BusHelper.WriteSysLog("拆班数据添加", EnumType.LogType.添加数据);
+                retus.Msg = "拆班成功";
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
     }
 }

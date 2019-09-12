@@ -12,17 +12,25 @@ using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business;
+
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
     [CheckLogin]
     public class StudentInformationController : Controller
     {
+        //拆班记录
+        BaseBusiness<RemovalRecords> Dismantle = new BaseBusiness<RemovalRecords>();
+        //备案提供方法
+        StudentDataKeepAndRecordBusiness dataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
         //班级表
         ClassScheduleBusiness classschedu = new ClassScheduleBusiness();
         //学员班级表
         ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
-        //备案id
-       
+        //班级阶段
+        BaseBusiness<Grand> MyGrand = new BaseBusiness<Grand>();
+
+
         private static int NameKeysid = 0;
         public class Student { }
 
@@ -156,7 +164,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //学员注册编辑
         public ActionResult Registeredtrainees()
         {
-            ViewBag.List = classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
+          
+            var Dismantl = Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
+            var List = classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
+            foreach (var item in Dismantl)
+            {
+                List = List.Where(a => a.ClassNumber != item.FormerClass).ToList();
+            }
+            ViewBag.List = List.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id)&&id!= "undefined")
             {
@@ -308,6 +323,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         studentInformation.IsDelete = false;
+                        dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
                         scheduleForTrainees.ClassID = List;//班级名称
@@ -414,7 +430,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult Viewdetails()
         {
             string stuid = Request.QueryString["id"];
-            @ViewBag.stuid = stuid;
+            ViewBag.stuid = stuid;
             return View();
         }
         //修改密码视图
@@ -459,6 +475,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
             var x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
             return Json(x, JsonRequestBehavior.AllowGet);
+        }
+
+        //添加缴费记录
+        public ActionResult Cost()
+        {
+
+            ViewBag.Stage = MyGrand.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
+                return View();
         }
 
     }

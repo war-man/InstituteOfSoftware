@@ -288,6 +288,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             string StudentID = Request.QueryString["StudentID"];
             string InteStu = Request.QueryString["InteStu"];
+            string UnName = Request.QueryString["UnName"];
             if (!string.IsNullOrEmpty(InteStu))
             {
                 ViewBag.InteStu = InteStu;
@@ -297,18 +298,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 ViewBag.InteStu = "";
             }
             ViewBag.Classe=StudentID;
-        //    ViewBag.InteStu = "";
+            //    ViewBag.InteStu = "";
             //1710NA
-            var classStu = Stuclass.GetList().Where(a => a.CurrentClass == true && a.ClassID == StudentID).ToList();
-
-            List<StudentInformation> list = new List<StudentInformation>();
-            foreach (var item in classStu)
+            if (!string.IsNullOrEmpty(UnName))
             {
-                list.Add(student.GetEntity(item.StudentID));
+                StudentUnionBusiness studentUnionBusiness = new StudentUnionBusiness();
+                return View(studentUnionBusiness.StudentList(StudentID));
             }
-           
-           
-            return View(list);
+            else
+            {
+                var classStu = Stuclass.GetList().Where(a => a.CurrentClass == true && a.ClassID == StudentID).ToList();
+
+                List<StudentInformation> list = new List<StudentInformation>();
+                foreach (var item in classStu)
+                {
+                    list.Add(student.GetEntity(item.StudentID));
+                }
+
+
+                return View(list);
+            }
         }
         //查询班级学员表
         public ActionResult stuclassSelete()

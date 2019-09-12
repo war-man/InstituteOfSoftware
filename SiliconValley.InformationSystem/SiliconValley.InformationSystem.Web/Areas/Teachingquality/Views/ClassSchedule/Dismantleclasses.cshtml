@@ -1,0 +1,146 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model  SiliconValley.InformationSystem.Entity.MyEntity.RemovalRecords
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dismantleclasses</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .Nation{
+            width:100%;
+            height:130px;
+        }
+        .mysql{
+            margin-top:10px;
+        }
+        .linu{
+            width:190px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" id="form">
+            <div class="layui-container">
+                <fieldset>
+
+                    <legend>基础数据</legend>
+                   
+                    <div class="layui-row layui-form-item" style="margin-left:60px;">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">拆分班级</label>
+                            <div class="layui-input-inline" style="margin-top:10px;">
+
+                                <input type="text" style="border:0px;" readonly="readonly" name="FormerClass" value=" @ViewBag.ClassName" />
+
+                                <input value="@ViewBag.StudentID" name="StudentID" type="text" style="display:none;" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">分配班级</label>
+                            <div class="layui-input-inline">
+
+                                @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "list" } })
+
+
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">已选学员</label>
+                            <div class="layui-input-block" id="xue">
+                                @{
+                                    foreach (var item in ViewBag.Mylist as List<StudentInformation>)
+                                    {
+                                        <button type='button' style='width:100px;margin-top:10px;' class='layui-btn'><i class='layui-icon'>&#xe770;</i> @item.Name </button>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">拆班日期</label>
+                            <div class="layui-input-block" >
+                                @Html.TextBoxFor(a => a.Addtime, new Dictionary<string, object>() { { "lay-verify", "date|required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                     
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">拆班原因</label>
+                            <div class="layui-input-block">
+                                @Html.TextAreaFor(a => a.Reasong, new Dictionary<string, object>() { { "placeholder", "拆班原因" }, { "class", "llayui-textarea Nation" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">备注</label>
+                            <div class="layui-input-block">
+                                @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "llayui-textarea Nation" } })
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </fieldset>
+            </div>
+            <div class="layui-row layui-form-item" style="margin-top:20px;">
+                <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                        <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+  
+    layui.use(['form', 'layedit', 'layer', 'laydate'], function () {
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+        laydate.render({
+            elem: '#Addtime',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date(value).getTime();
+                var mydate = new Date();
+                if (startDate > mydate.getTime()) {
+                    layer.msg('不能超过当前日期');
+                    $('#Addtime').val(getNowFormatDate(mydate));
+                }
+
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            data = data.field;
+            console.log(data);
+            var db = {
+                Addtime: data.Addtime,
+                FormerClass: data.FormerClass,
+                List: data.List,
+                Reasong: data.Reasong,
+                Remarks:data.Remarks,
+                StudentID: data.StudentID
+      };
+            console.log(db);
+            ajaxUniomss("/Teachingquality/ClassSchedule/Dismantleclasses", db);
+           
+        });
+
+    });
+</script>

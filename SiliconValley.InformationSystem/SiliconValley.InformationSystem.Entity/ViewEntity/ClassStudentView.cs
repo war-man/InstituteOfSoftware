@@ -20,5 +20,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 班委名称
         /// </summary>
         public object Nameofmembers { get; set; }//
+         /// <summary>
+         /// 当前班级
+         /// </summary>
+        public object ClassNameView { get; set; }//
     }
 }

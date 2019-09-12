@@ -1,0 +1,142 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Detailed</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .layui-col-xs12 {
+            border: 1px;
+            border-bottom-style: solid;
+            
+        }
+    </style>
+</head>
+<body>
+
+    <div style="text-align:center;margin-top:30px;height:30px;">
+        <h3>详细资料</h3>
+    </div>
+    <input type="text" style="display:none;" value="@ViewBag.stuid" id="stuid" />
+    <div class="layui-container" style="text-align:center;">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学号</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="StudentNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" i>
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Name" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Sex" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+    
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">班级</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="classa" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">部门</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="department" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">职位</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="position" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">入会日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Inrtiationtime" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="Departuretimes">
+                <label class="layui-form-label">离会日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Departuretime" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Remarks" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div style="text-align:center;margin-top:30px;height:30px;">
+        <button class="layui-btn" type="button" id="but1">确认</button>
+    </div>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/Datetime.js"></script>
+<script>
+
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var layer = layui.layer;
+
+        var id = $("#stuid").val();
+        //去掉所有的空格
+        function trim(str) {
+            return str.replace(/(^\s+)|(\s+$)/g, "");
+        }
+
+        $.post("/Teachingquality/StudentUnion/StudentUnionMembersDetailed?stuid=" + id, function (data) {
+            console.log(data);
+            $("#StudentNumber").val(data.StudentNumber);//学号
+            $("#Name").val(data.Name);//姓名
+           
+            data.Sex == true ? $("#Sex").val("男") : $("#Sex").val("女");//性别
+        
+            $("#Remarks").val(data.Remarks)//备注
+            $("#classa").val(data.classa)//班级号
+            $("#department").val(data.department)//部门
+            $("#position").val(data.position)//职位
+            $("#Inrtiationtime").val(TimeChange(data.Inrtiationtime))//入会日期
+            if (data.Departuretime == null) {
+                $("#Departuretimes").css("display", "none");
+            }
+            $("#Departuretime").val(TimeChange(data.Departuretime))//离会日期
+            //
+          
+
+          
+           
+
+
+
+        });
+
+        //关闭详细宽
+        $("#but1").click(function () {
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭 
+
+        });
+    });
+</script>

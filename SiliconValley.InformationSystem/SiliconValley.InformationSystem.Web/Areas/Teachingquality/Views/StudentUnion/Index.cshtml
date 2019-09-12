@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<div>
+
+</div>
+@section style{
+    <style>
+        .bordent {
+            width: 200px;
+            height: 200px;
+            border: 1px solid red;
+            float: left;
+            margin-left: 20px;
+            margin: 20px;
+            background-color: #1cc09f;
+        }
+        .bordent:hover{
+            background-color:burlywood;
+        }
+    </style>
+}
+
+
+<img style="width:100%;height:200px;" src="~/Areas/Teachingquality/images/77e5233c03e544179e6564b413f4c47b.jpeg" />
+
+
+<div style="float:left;width:20%;height:100%;margin-top:20px;">
+
+    <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="demo" style="width:90%;">
+        <li class="layui-nav-item layui-nav-itemed">
+            <a href="javascript:;">部门管理</a>
+            <dl class="layui-nav-child">
+                <dd><a href="javascript:void(0);">新增部门</a></dd>
+                <dd><a href="javascript:void(0);">撤销部门</a></dd>
+
+            </dl>
+        </li>
+
+    </ul>
+</div>
+
+@{
+    <div id="Bumeng" style="float:left;width:80%;margin:auto;">
+        @foreach (var item in ViewBag.list as List<StudentUnionDepartmentView>)
+        {
+
+            <div class="bordent" style="text-align:center;line-height:30px;color:#3d3d4f;">
+                <div style="font-size:12pt;margin-top:30px;"><label><input name="Fruit" type="radio" value="@item.Name" />选择 </label></div>
+                <div style="font-size:16pt;margin-top:10px;">@item.Name</div>
+
+                <div style="font-size:12pt;margin-top:10px; ">人数:<text>@item.count</text>人</div>
+            </div>
+
+        }
+    </div>
+}
+
+
+@section script{
+    <script>
+        $(function () {
+            $('input:radio').click(function () {
+                //alert(this.checked);
+                //
+
+                var domName = $(this).attr('name');
+
+                var $radio = $(this);
+                // if this was previously checked
+                if ($radio.data('waschecked') == true) {
+                    $radio.prop('checked', false);
+                    $("input:radio[name='" + domName + "']").data('waschecked', false);
+                    //$radio.data('waschecked', false);
+                } else {
+                    $radio.prop('checked', true);
+                    $("input:radio[name='" + domName + "']").data('waschecked', false);
+                    $radio.data('waschecked', true);
+                }
+            });
+        });
+        layui.use(['element', 'layer'], function () {
+            var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+            var layer = layui.layer;
+            //新增部门
+
+         
+            function EntityAdd() {
+                layer.open({
+                    title: '新增部门',
+                    type: 2,
+                    area: ['520px', '310px']
+                    , content: "/Teachingquality/StudentUnion/Department"
+
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            }
+
+            //监听导航点击
+            element.on('nav(demo)', function (elem) {
+
+                switch ($(elem).text()) {
+                    case "新增部门":
+                        EntityAdd();
+                        break;
+                    case "撤销部门":
+                        var name = $('input:checked').val();
+                        console.log($('input:checked'));
+                        var myx = $('input:checked').parent().parent().parent();
+                        if ($('input:checked').length>0) 
+                            $.post("/Teachingquality/StudentUnion/count?name=" + name, function (da) {
+                                if (da == 0) {
+                                    $.post("/Teachingquality/StudentUnion/UodateDepa?name=" + name, function (dat) {
+                                        if (dat == "True") {
+                                            myx.remove();
+                                        } else {
+                                            layer.alert('系统问题！', { icon: 0 });
+                                        }
+                                    })
+                                } else { 
+                                    layer.alert('该部门有成员暂时无法撤销！', { icon: 0 });
+                                }
+                            });
+                        
+                        else 
+                            layer.alert('请选择您要撤销的部门！', { icon: 0 });
+                        
+                        break;
+                }
+
+            });
+
+            //部门双击事件
+            $(".bordent").dblclick(function () {
+                var name = $($($($(this).children()[0]).children()[0]).children()[0]).val();
+                console.log(name);
+                window.location = "/Teachingquality/StudentUnion/StudentUnionMemberss/" + name
+            });
+        });
+        function GetPartsItmes(name) {
+            console.log(name);
+            var Bumeng = $("#Bumeng");
+            var x = $('<div class="bordent" style="text-align:center;line-height:30px;color:#3d3d4f;"><div style="font-size:12pt;margin-top:30px;"><label><input name="Fruit" type="radio" value="' + name + '" />选择 </label></div> <div style="font-size:16pt;margin-top:10px;">' + name + '</div><div style="font-size:12pt;margin-top:10px; ">人数:<text>0</text>人</div></div>');
+            Bumeng.append(x);
+
+        }
+    </script>
+}

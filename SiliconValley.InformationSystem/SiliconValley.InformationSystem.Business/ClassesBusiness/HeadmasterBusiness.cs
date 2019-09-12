@@ -11,6 +11,8 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 {
   public  class HeadmasterBusiness:BaseBusiness<Headmaster>
     {
+        //班主任带班
+        BaseBusiness<HeadClass> Hoadclass = new BaseBusiness<HeadClass>();
         //添加班主任
         public bool AddHeadmaster(string informatiees_Id)
         {
@@ -56,6 +58,112 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             
             }
             return str;
+        }
+        /// <summary>
+        /// 带班业务左右回调操作
+        /// </summary>
+        /// <param name="id">带班人id</param>
+        /// <param name="ClassName">班级名称</param>
+        /// <param name="Index">添加或者删除(1则删除)</param>
+        /// <returns></returns>
+        public bool HeadClassEnti(string id,string ClassName,int Index)
+        {
+            bool str = true;
+            List<HeadClass> list = new List<HeadClass>();
+            ClassName = ClassName.Substring(0, ClassName.Length - 1);
+            string[] ClassNames = ClassName.Split(',');
+            foreach (var item in ClassNames)
+            {
+                var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.LeaderID == int.Parse(id) && a.ClassID == item).FirstOrDefault();
+
+                if (Index==0)
+                {
+                    HeadClass headClass = new HeadClass();
+                    headClass.AddTime = DateTime.Now;
+                    headClass.LeadTime = DateTime.Now;
+                    headClass.ClassID = item;
+                    headClass.IsDelete = false;
+                    headClass.LeaderID = int.Parse(id);
+                    list.Add(headClass);
+                }
+                else
+                {
+                    list.Add(mysex);
+                }
+                    
+               
+            }
+            try
+            {
+                if (Index == 1)
+                {
+                   
+                    Hoadclass.Delete(list);
+                    BusHelper.WriteSysLog("删除数据", Entity.Base_SysManage.EnumType.LogType.删除数据);
+                }
+                else
+                {
+                    Hoadclass.Insert(list);
+                    BusHelper.WriteSysLog("添加数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                  
+                }
+            }
+            catch (Exception ex)
+            {
+                str = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.系统异常);
+                
+            }
+            return str;
+        
+        }
+
+        /// <summary>
+        /// 带班业务按钮操作
+        /// </summary>
+        /// <param name="id">带班人id</param>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public bool HeadClassEntis(string id, string ClassName)
+        {
+            bool str = true;
+            List<HeadClass> list = new List<HeadClass>();
+            if (!string.IsNullOrEmpty( ClassName))
+            {
+                ClassName = ClassName.Substring(0, ClassName.Length - 1);
+                string[] ClassNames = ClassName.Split(',');
+                foreach (var item in ClassNames)
+                {
+                    HeadClass headClass = new HeadClass();
+                    headClass.AddTime = DateTime.Now;
+                    headClass.LeadTime = DateTime.Now;
+                    headClass.ClassID = item;
+                    headClass.IsDelete = false;
+                    headClass.LeaderID = int.Parse(id);
+                    list.Add(headClass);
+                }
+            }
+         
+            try
+            {
+                 var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.LeaderID == int.Parse(id)).ToList();
+                    Hoadclass.Delete(mysex);
+                    BusHelper.WriteSysLog("删除数据", Entity.Base_SysManage.EnumType.LogType.删除数据);
+                if (list.Count>0)
+                {
+                    Hoadclass.Insert(list);
+                    BusHelper.WriteSysLog("添加数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                }
+                  
+            }
+            catch (Exception ex)
+            {
+                str = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.系统异常);
+
+            }
+            return str;
+
         }
     }
 }
