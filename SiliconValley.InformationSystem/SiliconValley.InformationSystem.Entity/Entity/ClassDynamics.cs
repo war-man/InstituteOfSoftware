@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string FormerClass { get; set; }
         public string CurrentClass { get; set; }
         public string Studentnumber { get; set; }
-        public Nullable<int> Reason { get; set; }
+        public string Reason { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<int> States { get; set; }
     

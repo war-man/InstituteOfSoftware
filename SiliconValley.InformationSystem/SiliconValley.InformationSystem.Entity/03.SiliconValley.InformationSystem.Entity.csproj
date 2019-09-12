@@ -248,6 +248,7 @@
     <Compile Include="Entity\Studentmate.cs" />
     <Compile Include="Entity\StudentPutOnRecord.cs" />
     <Compile Include="Entity\StudentUnionDepartment.cs" />
+    <Compile Include="Entity\StudentUnionLeaves.cs" />
     <Compile Include="Entity\StudentUnionMembers.cs" />
     <Compile Include="Entity\StudentUnionPosition.cs" />
     <Compile Include="Entity\StudnetIntention.cs" />

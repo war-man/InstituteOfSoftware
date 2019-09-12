@@ -3,6 +3,82 @@
     ViewBag.Title = "StudentUnionMembers";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section style{
+    <style>
+        .title{
+            width:150px;
+           
+            
+        }
+    </style>
+    }
+<form class="layui-form" action="">
+    <div class="layui-container">
+        <div class="layui-row ">
+
+
+            <div class="layui-row layui-form-item" style="width:100%;">
+
+
+                <div class="layui-col-xs4">
+                    <label class="layui-form-label" style="margin-left:6%;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
+                    <div class="layui-input-inline" style="margin-left:12%;">
+                        <input type="tel" name="StuName" lay-verify="Name" id="StuName" autocomplete="off" class="layui-input linu">
+                    </div>
+                </div>
+                <div class="layui-col-xs6">
+
+
+                    <div class="layui-inline" style="margin-left:20px;">
+                        <label for="" class="layui-form-label" style="width:100px;">入职时间</label>
+                        <div class="layui-input-inline startTime">
+                            <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="年-月-日" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">到</div>
+                        <div class="layui-input-inline endTime">
+
+                            <input type="text" name="qEndTime" id="qEndTime" readonly="readonly"  placeholder="年-月-日" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-col-xs6  layui-col-sm6 layui-col-md6">
+
+                    <label class="layui-form-label title">学生会成员状态</label>
+                    <div class="layui-input-inline">
+                        <select name="quiz1">
+                            <option value="0">全部</option>
+                            <option value="1" selected="">在职</option>
+                            <option value="2">离会</option>
+
+                        </select>
+                    </div>
+
+                </div>
+                <div class="layui-col-xs6" style="margin-left:-14%">
+
+                    <label class="layui-form-label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="全部" title="全部" checked="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="sex" value="true" title="男">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="sex" value="false" title="女">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div style="position:absolute;left:85%;top:0%">
+                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+            </div>
+
+
+        </div>
+
+    </div>
+</form>
+
 <table class="layui-hide" id="test" lay-filter="test"></table>
 @section script{
     <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
@@ -10,7 +86,7 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>添加成员</button>
-
+            <button class="layui-btn layui-btn-sm" lay-event="GetUpdate"><i class="layui-icon">&#xe654;</i>学生会离职</button>
 
 
         </div>
@@ -20,11 +96,11 @@
 
     </script>
     <script>
-        layui.use(['table', 'layer', 'tree', 'form'], function () {
+        layui.use(['table', 'layer', 'laydate', 'tree', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
-
+            var laydate = layui.laydate;
             //表格渲染
             table.render({
                 elem: '#test'
@@ -37,7 +113,7 @@
                     { type: 'radio' }
                     , { field: 'Studentnumber', title: '学号', sort: true }
                     , { field: 'StidentName', title: '姓名' }
-                  
+
                     , {
                         field: 'StudentSex', width: 80, title: '性别', templet: function (c) {
                             if (c.StudentSex == 0) {
@@ -54,24 +130,81 @@
                             return TimeChange(c.Inrtiationtime);
                         }
                     }
+                    ,  {
+                        field: 'Departuretime', title: '状态', templet: function (e) {
+                            if (e.Departuretime == null) {
+                                return '在职';
+                            } else {
+                                return '离会';
+                            }
+                         
+                        }
+                    }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true
                 , limit: 8
                 , limits: [8, 10, 15]
             });
-            //查看班级学员
+
+            // 时间选择器初始化 开始时间
+            laydate.render({
+                elem: '#qBeginTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+
+                    var startDate = new Date(value).getTime();
+                    var endTime = new Date($('#qEndTime').val()).getTime();
+
+                    // console.log(ri);
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qBeginTime').val($('#qEndTime').val());
+                    }
+                    if (startDate > curDate.getTime()) {
+                        layer.msg('开始时间不能大于当前时间');
+                        $('#qBeginTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#qEndTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date($('#qBeginTime').val()).getTime();
+                    var endTime = new Date(value).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qEndTime').val($('#qBeginTime').val());
+                    }
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#qEndTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+            //学生会成员详细
             table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
                 var data = obj.data; //获得当前行数据
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
 
                 if (layEvent === 'select') { //查看
-                    console.log(data);
+
+                    layer.open({
+                        title: "学生会成员详细",
+                        type: 2,
+                        area: ['500px', '550px']
+                        , content: "/Teachingquality/StudentUnion/Detailed?StudentID="+data.Studentnumber
+                    
+                        , anim: 1,
+                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    });
                 }
 
             });
-            //开设班级
+            //添加学生会成员
             function Registeredtrainees() {
 
                 layer.open({
@@ -79,7 +212,20 @@
                     type: 2,
                     area: ['700px', '650px']
                     , content: "/Teachingquality/StudentUnion/UnionMemberAdd"
-                    , end: function () { table.reload('idTest');  }
+                    , end: function () { table.reload('idTest'); }
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            }
+            //学生会成员离职
+            function StudentunionCheng(id) {
+
+                layer.open({
+                    title: "学生会离职",
+                    type: 2,
+                    area: ['700px', '600px']
+                    , content: "/Teachingquality/StudentUnion/StudentunionCheng?UnID=" + id
+                    , end: function () { table.reload('idTest'); }
                     , anim: 1,
                     //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                 });
@@ -91,8 +237,17 @@
                     case 'getAdd':
                         Registeredtrainees();
                         break;
+                    //GetUpdate
+                    case 'GetUpdate':
+                        if (checkStatus.data.length > 0) {
 
-
+                            var id = checkStatus.data[0].ID;
+                            StudentunionCheng(id);
+                            console.log(id.ID);
+                        } else {
+                            layer.alert('请选择一条数据', { icon: 0 });
+                        }
+                        break;
 
 
                 };
@@ -102,27 +257,23 @@
             form.on('submit(demo2)', function (data) {
 
                 var x = data.field;
-                if (x.ClassNumber == "" && x.Major_Id == "" && x.grade_Id == "" && x.BaseDataEnum_Id == "") {
-                    layer.msg("至少选择一个查询", {
-                        time: 5000, //20s后自动关闭
-                        btn: ['确定']
-                    });
-                } else {
+             
                     table.reload('idTest', {
                         where: {
-                            ClassNumber: x.ClassNumber,
-                            Major_Id: x.Major_Id,
-                            grade_Id: x.grade_Id,
-                            BaseDataEnum_Id: x.BaseDataEnum_Id
+                            StuName: x.StuName,
+                            qBeginTime: x.qBeginTime,
+                            qEndTime: x.qEndTime,
+                            quiz1: x.quiz1,
+                            sex: x.sex
                         }, page: {
                             curr: 1
                         }
                     });
-                }
-
+             
 
                 return false;
             });
+
         });
 
 

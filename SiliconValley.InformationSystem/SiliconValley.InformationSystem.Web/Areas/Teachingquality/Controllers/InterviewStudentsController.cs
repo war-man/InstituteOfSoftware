@@ -38,9 +38,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return View();
         }
         //主页面获取表格数据
-        public ActionResult GetDate(int page, int limit)
+        public ActionResult GetDate(int page, int limit, string Name, string StudentNumberID, string qBeginTime, string InterviewTopicsm, string qEndTime)
         {
-            var list = dbtext.GetList();
+            var list = dbtext.GetList().Where(a=>a.IsDelete==false).ToList();
+            if (!string.IsNullOrEmpty(Name))
+            {
+               var x= student.GetList().Where(a => a.IsDelete == false && a.Name.Contains(Name)).ToList();
+                List<InterviewStudents> interviewStudents = new List<InterviewStudents>();
+                foreach (var item in x)
+                {
+                    var stu = list.Where(a => a.StudentNumberID == item.StudentNumber).FirstOrDefault();
+                    if (stu != null)
+                    {
+                        interviewStudents.Add(stu);
+                    }
+
+                }
+                list = interviewStudents;
+            }
+            if (!string.IsNullOrEmpty(StudentNumberID))
+            {
+             
+                list = list.Where(a=>a.StudentNumberID.Contains(StudentNumberID)).ToList();
+            }
+            if (!string.IsNullOrEmpty(InterviewTopicsm))
+            {
+                list = list.Where(a => a.InterviewTopics.Contains(InterviewTopicsm)).ToList();
+            }
+            if (!string.IsNullOrEmpty(qBeginTime))
+            {
+                list = list.Where(a => a.Dateofinterview >= Convert.ToDateTime(qBeginTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(qEndTime))
+            {
+                list = list.Where(a => a.Dateofinterview <= Convert.ToDateTime(qEndTime)).ToList();
+            }
+
+
             var mylist = list.Select(a => new
             {
                 ID=a.ID,

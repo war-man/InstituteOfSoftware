@@ -83,10 +83,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
 
         //获取学生会成员
-        public ActionResult MebersGetDate(int page,int limit)
+        public ActionResult MebersGetDate(int page,int limit, string StuName, string qEndTime, string qBeginTime, string quiz1, string sex)
         {
       
-            var dataList = dbtext.UnionMembersList(UnName, page, limit);
+            var dataList = dbtext.UnionMembersList(UnName, page, limit, StuName, qEndTime, qBeginTime, quiz1, sex);
             //  var x = dbtext.GetList();
             return Json(dataList, JsonRequestBehavior.AllowGet);
         }
@@ -99,7 +99,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.department = UnName;
             return View();
         }
-
+        //添加学生会数据操作
         [HttpPost] 
         public ActionResult UnionMemberAdd(StudentUnionMembers studentUnionMembers)
         {
@@ -107,6 +107,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             studentUnionMembers.department = UnionDepart.GetList().Where(a => a.Dateofregistration == false && a.Departmentname == UnName).FirstOrDefault().ID;
             string Studentid = Request.QueryString["StudentID"];
           return Json( dbtext.UnionMembersEntity(studentUnionMembers, Studentid),JsonRequestBehavior.AllowGet);
+        }
+        //学生会成员离职
+        [HttpGet]
+        public ActionResult StudentunionCheng()
+        {
+            string UnID = Request.QueryString["UnID"];
+         var x= dbtext.GetList().Where(a => a.Dateofregistration == false && a.Departuretime == null && a.ID == int.Parse(UnID)).FirstOrDefault();
+            ViewBag.Studentnumber = x.Studentnumber;
+          ViewBag.department = UnName;
+         
+            ViewBag.Union_id = x.ID;
+         
+            return View();
+        }
+        //学生会成员离职数据操作
+        [HttpPost]
+        public ActionResult StudentunionCheng(StudentUnionLeaves studentUnionLeaves)
+        {
+            return Json(dbtext.StudentunionCheng(studentUnionLeaves), JsonRequestBehavior.AllowGet);
+        }
+
+        //学生会详细
+        [HttpGet]
+        public ActionResult Detailed()
+        {
+            ViewBag.stuid = Request.QueryString["StudentID"];
+            return View();
+        }
+        public ActionResult StudentUnionMembersDetailed()
+        {
+            var stuid = Request.QueryString["stuid"];
+            return Json( dbtext.StudentUnionMembersDetailed(stuid),JsonRequestBehavior.AllowGet);
         }
     }
 }

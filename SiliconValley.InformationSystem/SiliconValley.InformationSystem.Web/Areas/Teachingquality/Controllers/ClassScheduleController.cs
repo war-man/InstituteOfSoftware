@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -27,6 +28,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             dbtext = new ClassScheduleBusiness();
 
         }
+        //拆班记录
+        BaseBusiness<RemovalRecords> Dismantle = new BaseBusiness<RemovalRecords>();
+        //学员信息
+        StudentInformationBusiness student = new StudentInformationBusiness();
+
         //学员班级表
         ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
         //班主任带班
@@ -109,6 +115,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
                 Major_Id = Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
+                IsBool= Dismantle.GetList().Where(c=>c.IsDelete==false&&c.FormerClass==a.ClassNumber).FirstOrDefault()==null?"正常":"不可使用",
                  stuclasss = Stuclass.GetList().Where(c=>c.ClassID==a.ClassNumber&&c.CurrentClass==true).Count()//专业
             }).ToList();
             var dataList = listx.OrderBy(a => a.ClassNumber).Skip((page - 1) * limit).Take(limit).ToList();
@@ -188,7 +195,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
 
             classNumberss = Request.QueryString["ClassNumber"];
-            var x = dbtext.ClassStudentneList(classNumberss);
+            var x = dbtext.ClassStudentneViewList(classNumberss);
             ViewBag.ClassName = classNumberss;
             ViewBag.ClassdetailsView = dbtext.Listdatails(classNumberss);
             ViewBag.Members = dbtext.MembersList();
@@ -308,5 +315,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var x= SS.StudentList("aa");
             return View();
         }
-    }
+        //拆班页面
+        [HttpGet]
+        public ActionResult Dismantleclasses()
+        {
+            string studentID = Request.QueryString["StudentID"];
+          
+          var Dismantl=  Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
+            var List = dbtext.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
+            foreach (var item in Dismantl)
+            {
+                List = List.Where(a => a.ClassNumber != item.FormerClass).ToList();
+            }
+            ViewBag.List= List.Where(a=>a.ClassNumber!= classNumberss).Select(a => new SelectListItem { Value = a.ClassNumber, Text = a.ClassNumber }).ToList();
+            studentID = studentID.Substring(0, studentID.Length - 1);
+            string[] stu = studentID.Split(',');
+            List<StudentInformation> list = new List<StudentInformation>();
+            foreach (var item in stu)
+            {
+                list.Add(student.GetEntity(item));
+            }
+
+            ViewBag.StudentID = studentID;
+            ViewBag.ClassName = classNumberss;
+            ViewBag.Mylist = list;
+
+
+            return View();
+        }
+        //拆班数据操作
+        [HttpPost]
+        public ActionResult Dismantleclasses(string Addtime,string FormerClass,string List,string Reasong,string Remarks,string StudentID)
+        {
+           return Json(dbtext. Dismantleclasses(Addtime, FormerClass, List, Reasong, Remarks, StudentID),JsonRequestBehavior.AllowGet);
+
+        }
+      }
 }

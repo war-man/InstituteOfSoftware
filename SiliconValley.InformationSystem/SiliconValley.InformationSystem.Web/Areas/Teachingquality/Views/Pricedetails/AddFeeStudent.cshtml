@@ -1,0 +1,144 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.StudentFeeStandard 
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddFeeStudent</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+  
+    <form class="layui-form" action="" style="margin-top:20px;" id="form">
+        <h3 style="text-align:center;height:50px;">学员学费详情录入</h3>
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">阶段</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("Grand_Id", ViewBag.Grand_Id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Grand_Id" }, { "name", "list" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">专业</label>
+                        <div class="layui-input-inline">
+
+
+                            @Html.DropDownList("Major_Id", ViewBag.Major_Id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Major_Id" }, { "name", "list" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学费</label>
+                        <div class="layui-input-inline" style="margin-top:10px;">
+                            @Html.TextBoxFor(a => a.Tuition, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input" } })
+
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">伙食费</label>
+                        <div class="layui-input-inline" style="margin-top:10px;">
+                            @Html.TextBoxFor(a => a.Foodandlodging, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+>
+</html><script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        //   $('select').attr('disabled', 'disabled');
+        
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+        $($('select')[1]).attr('disabled', 'disabled');
+        form.render('select');
+        //监听第一个下拉框
+        form.on('select(Grand_Id)', function (data) {
+            if (data.value != "") {
+                $($('select')[1]).removeAttr('disabled');
+                var valie = $($("#Major_Id")[0]).val();
+            
+                if (valie != "") {
+                    Verification(data.value, valie);
+                }
+            } else {
+                $($('select')[1]).attr('disabled', 'disabled');
+                $($('select')[1]).val("");
+           //     $($('select')[1]).find("option[value='']").attr('selected', 'selected');
+            }
+           
+            form.render('select');
+        })
+        //验证下拉框是否有重复
+        var couwu = "";
+        //去数据库查询是否有重复
+        function Verification(valie, valie2) {
+            $.post("/Teachingquality/Pricedetails/BoolFeeStude?Grand_Id=" + valie + "&Major_Id=" + valie2, function (data) {
+                if (data != "False") {
+                    layer.msg("该价格已存在数据库", {
+                        time: 5000, //20s后自动关闭
+                        btn: ['确定']
+                    });
+                    $($('select')[1]).val("");
+                    form.render('select');
+                    couwu = "111";
+                } else {
+                    couwu = "";
+                }
+                //   console.log(data);
+            });
+
+        }
+        //监听第二个下拉框
+        form.on('select(Major_Id)', function (data) {
+            var valie = $("#Grand_Id").val();
+            Verification(valie, data.value);
+
+        })
+
+        //查询功能
+        form.on('submit(demo1)', function (data) {
+            var x = data.field;
+            var da = {
+                Foodandlodging:x.Foodandlodging,
+                Tuition:x.Tuition,
+                Grand_Id:x.Grand_Id,
+                Major_Id:x.Major_Id
+            };
+            console.log(da);
+            ajaxUniom("/Teachingquality/Pricedetails/AddFeeStudent", da);
+
+            return false;
+        });
+    });
+</script>

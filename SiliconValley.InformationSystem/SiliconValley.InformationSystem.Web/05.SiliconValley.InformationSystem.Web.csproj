@@ -222,6 +222,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\HeadteacherController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
@@ -392,6 +393,12 @@
     <Content Include="Areas\Teachingquality\Views\StudentUnion\Department.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentUnion\StudentUnionMemberss.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentUnion\UnionMemberAdd.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentUnion\StudentunionCheng.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentUnion\Detailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Dismantleclasses.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Cost.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Pricedetails\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Pricedetails\AddFeeStudent.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

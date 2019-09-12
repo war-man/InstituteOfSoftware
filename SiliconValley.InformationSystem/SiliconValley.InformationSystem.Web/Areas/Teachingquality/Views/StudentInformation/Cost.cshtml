@@ -1,0 +1,150 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.StudentFeeRecord
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Cost</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .Stuid {
+            border: 0px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="" id="form">
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-inline" style="margin-top:10px;">
+                            @Html.TextBoxFor(a => a.Studentnumber, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input Stuid" } })
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">阶段</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownListFor(a => a.Stage, ViewBag.Stage as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">专业</label>
+                        <div class="layui-input-inline">
+
+
+                            @Html.DropDownList("Major_Id", ViewBag.Major_Id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Major_Id" }, { "name", "list" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">是否迟交</label>
+                        <div class="layui-input-block">
+                            <input type="radio" lay-filter="erweima" name="Isthecostpaid" value="true" title="是">
+                            <input type="radio" lay-filter="erweima" name="Isthecostpaid" value="false" title="否" checked="checked">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学费</label>
+                        <div class="layui-input-inline" style="margin-top:10px;">
+                            @Html.TextBoxFor(a => a.Tuition, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">食宿费</label>
+                        <div class="layui-input-inline" style="margin-top:10px;">
+                            @Html.TextBoxFor(a => a.Foodandlodging, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">缴费日期</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.Addtime, new Dictionary<string, object>() { { "lay-verify", "date|required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "llayui-textarea Nation" } })
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+        //监听下拉框
+        form.on('select(Stage)', function (data) {
+
+
+        })
+
+        laydate.render({
+            elem: '#Addtime',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date(value).getTime();
+                var mydate = new Date();
+                if (startDate > mydate.getTime()) {
+                    layer.msg('不能超过当前日期');
+                    $('#Addtime').val(getNowFormatDate(mydate));
+                }
+
+            }
+        });
+
+        form.on('radio(erweima)', function (data) {
+     
+            console.log(data.value);//判断单选框的选中值
+            var Tuition = $("#Tuition");
+            var Foodandlodging = $("#Foodandlodging");
+            if (data.value == "true") {
+             
+                Tuition.removeAttr("disabled");
+                Foodandlodging.removeAttr("disabled");
+            } else {
+                Tuition.attr("disabled", "disabled");
+                Foodandlodging.attr("disabled", "disabled");
+            }
+            form.render();
+     
+        });
+
+    });
+    
+</script>

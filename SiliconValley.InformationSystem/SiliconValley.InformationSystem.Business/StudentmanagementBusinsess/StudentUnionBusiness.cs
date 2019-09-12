@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -14,6 +15,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
     //学生会
   public class StudentUnionBusiness:BaseBusiness<StudentUnionMembers>
     {
+    
         //学员信息
         BaseBusiness<StudentInformation> Student = new BaseBusiness<StudentInformation>();
         //班级学员
@@ -22,34 +24,98 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         BaseBusiness<StudentUnionDepartment> UnionDepart = new BaseBusiness<StudentUnionDepartment>();
         //学生会职位
         BaseBusiness<StudentUnionPosition> SUnionPosition = new BaseBusiness<StudentUnionPosition>();
+        //班级表
+        ClassScheduleBusiness classschedu = new ClassScheduleBusiness();
         //班级学员表 
         ScheduleForTraineesBusiness ClassStudent = new ScheduleForTraineesBusiness();
+        //学生会成员撤销表
+        BaseBusiness<StudentUnionLeaves> UnLeaves = new BaseBusiness<StudentUnionLeaves>();
         /// <summary>
         /// 获取学生会所有成员
         /// </summary>
         /// <param name="Name">学生会部门名称</param>
         /// <returns></returns>
-        public object UnionMembersList(string Name,int page,int limit)
+        public object UnionMembersList(string Name,int page,int limit,string StuName,string qEndTime,string qBeginTime,string quiz1,string sex)
         {
+        
           int UnId=  UnionDepart.GetList().Where(a => a.Dateofregistration == false && a.Departmentname == Name).FirstOrDefault().ID;
-         var list=this.GetList().Where(a => a.Dateofregistration == false && a.department == UnId).OrderByDescending(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            var list = this.GetList().Where(a => a.Dateofregistration == false && a.Departuretime == null && a.department == UnId).ToList();
+            if (!string.IsNullOrEmpty(quiz1))
+            {
+                if (quiz1 == "0")
+                {
+                    list = this.GetList().Where(a => a.Dateofregistration == false && a.department == UnId).ToList();
+                }
+                else
+                if (quiz1 == "2")
+                {
+                    list = this.GetList().Where(a => a.Dateofregistration == false && a.department == UnId&& a.Departuretime != null).ToList();
+                }
+            }
+            if (!string.IsNullOrEmpty(StuName))
+            {
+                var x = Student.GetList().Where(a => a.IsDelete == false && a.Name.Contains(StuName)).ToList();
+                List<StudentUnionMembers> studentUnions = new List<StudentUnionMembers>();
+                foreach (var item in x)
+                {
+                    var stu=list.Where(a => a.Studentnumber == item.StudentNumber).FirstOrDefault();
+                    if (stu!=null)
+                    {
+                        studentUnions.Add(stu);
+                    }
+                 
+                }
+                list = studentUnions;
+
+            }
+            if (!string.IsNullOrEmpty(qBeginTime))
+            {
+                list = list.Where(a => a.Inrtiationtime >= Convert.ToDateTime(qBeginTime)).ToList();
+            }
+            if (!string.IsNullOrEmpty(qEndTime))
+            {
+                list = list.Where(a =>Convert.ToDateTime( a.Inrtiationtime.ToString().Split(' ')[0]) <= Convert.ToDateTime(qEndTime)).ToList();
+            }
+           
+            if (!string.IsNullOrEmpty(sex))
+            {
+                if (sex!="全部")
+                {
+                    var x = Student.GetList().Where(a => a.IsDelete == false && a.Sex==Convert.ToBoolean(sex)).ToList();
+                    List<StudentUnionMembers> studentUnions = new List<StudentUnionMembers>();
+                    foreach (var item in x)
+                    {
+                        var stu = list.Where(a => a.Studentnumber == item.StudentNumber).FirstOrDefault();
+                        if (stu!=null)
+                        {
+                            studentUnions.Add(stu);
+                        }
+                       
+                    }
+                    list = studentUnions;
+                }
+            }
+        
          var dataList =  list.Select(
                 aa => new
                 {
+                    aa.ID,
                     aa.Studentnumber,//学号
                     StidentName = Student.GetList().Where(a => a.IsDelete == false && a.State == null && a.StudentNumber == aa.Studentnumber).First().Name,
                     StudentSex = Student.GetList().Where(a => a.IsDelete == false && a.State == null && a.StudentNumber == aa.Studentnumber).First().Sex,
                     ClassName = ClassSche.GetList().Where(a => a.CurrentClass == true && a.StudentID == aa.Studentnumber).First().ClassID,
                     Department= UnionDepart.GetList().Where(a=>a.Dateofregistration==false&&a.ID==aa.department).First().Departmentname,
                     Position= SUnionPosition.GetList().Where(a=>a.Dateofregistration==false&&a.ID==aa.position).First().Jobtitle,
-                    aa.Inrtiationtime
+                    aa.Inrtiationtime,
+                    aa.Departuretime
                 });
+            var mydatalist= dataList.OrderByDescending(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
                 code = "",
                 msg = "",
-                count = list.Count,
-                data = dataList
+                count = mydatalist.Count,
+                data = mydatalist
             };
             return data;
         }
@@ -204,6 +270,67 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         public List<StudentUnionPosition> UnionPositionList()
         {
           return  SUnionPosition.GetList().Where(a => a.Dateofregistration == false).ToList();
+        }
+
+        /// <summary>
+        /// 学生会成员撤销
+        /// </summary>
+        /// <param name="studentUnionLeaves">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult StudentunionCheng(StudentUnionLeaves studentUnionLeaves)
+        {
+            AjaxResult retus = null;
+            try
+            {
+                studentUnionLeaves.Datetimes = DateTime.Now;
+           
+                UnLeaves.Insert(studentUnionLeaves);
+                //修改离职时间
+                var m = this.GetList().Where(a => a.Dateofregistration == false && a.Departuretime == null && a.ID == studentUnionLeaves.Union_id).FirstOrDefault();
+                m.Departuretime = DateTime.Now;
+                this.Update(m);
+                retus = new SuccessResult();
+                retus.Success = true;
+                retus.Msg = "操作成功";
+                BusHelper.WriteSysLog("数据添加数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
+          
+        }
+        /// <summary>
+        /// 学生会详细
+        /// </summary>
+        /// <param name="Studentnumber">学号</param>
+        /// <returns></returns>
+        public  object StudentUnionMembersDetailed(string Studentnumber)
+        {
+            var ClassID = ClassStudent.GetList().Where(c => c.StudentID == Studentnumber && c.CurrentClass == true).First().ClassID;
+            var Studentu = Student.GetEntity(Studentnumber);
+          
+
+          
+            var list = this.GetList().Where(a => a.Dateofregistration == false  && a.Studentnumber == Studentnumber).FirstOrDefault();
+            var datalist = new
+            {
+                StudentNumber = list.Studentnumber,
+                classa = classschedu.GetList().Where(q => q.IsDelete == false && q.ClassStatus == false && q.ClassNumber == ClassID).FirstOrDefault().ClassNumber,//班级号
+                Name = Studentu.Name,
+                Sex = Studentu.Sex,
+                Remarks = list.Remarks,
+                department = UnionDepart.GetEntity( list.department).Departmentname,
+                position = SUnionPosition.GetEntity(list.position).Jobtitle,
+                Inrtiationtime = list.Inrtiationtime,
+                Departuretime = list.Departuretime
+            };
+            return datalist;
         }
     }
 }

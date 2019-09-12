@@ -3,71 +3,75 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section style{
+    <style>
+        .title {
+            width: 100px;
+        }
+    </style>
+}
 <form class="layui-form" action="">
-    <div class="layui-container">
-        <div class="layui-row ">
-
-            <div class="layui-col-xs12">
+    <div class="layui-container" style="margin-left:20%;">
+       
+         
                 <div class="layui-row layui-form-item">
 
 
-                    <div class="layui-col-xs4">
-                        <label class="layui-form-label">学员姓名</label>
+                    <div class="layui-col-xs6">
+                        <label class="layui-form-label title">学员姓名</label>
                         <div class="layui-input-inline">
                             <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                   
-                </div>
-                
-                <div class="layui-col-xs4">
+                    <div class="layui-col-xs6" style="margin-left:-200px;">
 
-                    <label class="layui-form-label">谈话标题</label>
-                    <div class="layui-input-inline">
-                        <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                        <label class="layui-form-label title">学&nbsp;&nbsp;&nbsp;&nbsp;号</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" style="width:100%;" name="StudentNumberID" lay-verify="" id="StudentNumberID" autocomplete="off" class="layui-input">
 
-                    </div>
-
-                </div>
-                <div class="layui-col-xs4">
-
-                    <label class="layui-form-label">学号</label>
-                    <div class="layui-input-inline">
-                        <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
-
-                    </div>
-
-                </div>
-                <div class="layui-col-xs6">
-
-
-                    <div class="layui-inline">
-                        <label for="" class="layui-form-label">时间段</label>
-                        <div class="layui-input-inline startTime">
-                            <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                         </div>
-                        <div class="layui-form-mid">到</div>
-                        <div class="layui-input-inline endTime">
 
-                            <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                        </div>
                     </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4" style="margin-left:-100px;">
+
+                        <label class="layui-form-label title">谈话标题</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="InterviewTopics" lay-verify="Name" id="InterviewTopics" autocomplete="off" class="layui-input">
+
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs6">
+
+
+                        <div class="layui-inline" style="margin-left:-100px;">
+                            <label for="" class="layui-form-label title">时间段</label>
+                            <div class="layui-input-inline startTime">
+                                <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                            </div>
+                            <div class="layui-form-mid">到</div>
+                            <div class="layui-input-inline endTime">
+
+                                <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                    </div>
+
 
                 </div>
 
-
-
-
-                <div style="position:absolute;left:90%;top:20px;">
+                <div style="position:absolute;left:65%;top:20px;">
                     <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
                 </div>
 
 
             </div>
 
-            </div>
 
-        </div>
   
 </form>
 <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -85,24 +89,8 @@
         <a class="layui-btn layui-btn-xs" lay-event="select">详细</a>
 
     </script>
+    <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
     <script>
-        //时间转换方法
-        function TimeChange(newtime) {
-            if (newtime == null)
-                return "";
-            var date = new Date(parseInt(newtime.slice(6)));
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            if (month < 10) {
-                month = "0" + (parseInt(month) + 1);
-            }
-            var day = date.getDate();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            var result = year + '-' + month + '-' + day;
-            return result;
-        }
 
         //月份小于10的前面加个0
         function MoDay(a) {
@@ -111,11 +99,48 @@
             }
             return a;
         }
-        layui.use(['table', 'layer','laydate', 'tree', 'form'], function () {
+        layui.use(['table', 'layer', 'laydate', 'tree', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
             var laydate = layui.laydate;
+            // 时间选择器初始化 开始时间
+            laydate.render({
+                elem: '#qBeginTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+
+                    var startDate = new Date(value).getTime();
+                    var endTime = new Date($('#qEndTime').val()).getTime();
+
+                    // console.log(ri);
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qBeginTime').val($('#qEndTime').val());
+                    }
+                    if (startDate > curDate.getTime()) {
+                        layer.msg('开始时间不能大于当前时间');
+                        $('#qBeginTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#qEndTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date($('#qBeginTime').val()).getTime();
+                    var endTime = new Date(value).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qEndTime').val($('#qBeginTime').val());
+                    }
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#qEndTime').val(curYearMonthrDay);
+                    }
+                }
+            })
             //表格渲染
             table.render({
                 elem: '#test'
@@ -127,18 +152,18 @@
                 , cols: [[
                     { type: 'radio' }
                     , { field: 'InterviewTopics', title: '谈话标题' }
-                    , { field: 'Interviewcontent',  title: '谈话内容'}
+                    , { field: 'Interviewcontent', title: '谈话内容' }
                     , { field: 'StudentNumberID', title: '访谈学员学号' }
                     , { field: 'StudentNumberName', title: '访谈学员姓名' }
                     , { field: 'StuClass', title: '访谈学员班级' }
                     , { field: 'InterviewRecorderID', title: '记录人工号 ' }
                     , { field: 'InterviewRecorderName', title: '记录人姓名 ' }
                     , {
-                        field: 'Dateofinterview',  title: '谈话日期', templet: function (c) {
+                        field: 'Dateofinterview', title: '谈话日期', templet: function (c) {
                             return TimeChange(c.Dateofinterview);
                         }
                     }
-                  
+
                 ]]
                 , page: true
                 , limit: 8
@@ -148,7 +173,7 @@
             function Registeredtrainees(name, id) {
 
                 layer.open({
-                    title: name, 
+                    title: name,
                     type: 2,
                     area: ['680px', '740px']
                     , content: "/Teachingquality/InterviewStudents/StudIenterEntiy?id=" + id
@@ -178,7 +203,7 @@
                         break;
                 };
             });
-          
+
 
             //查询功能
             form.on('submit(demo2)', function (data) {
@@ -189,10 +214,10 @@
                 table.reload('idTest', {
                     where: {
                         Name: x.Name,
-                        Attendancestatus: x.Attendancestatus,
+                        StudentNumberID: x.StudentNumberID,
                         qBeginTime: x.qBeginTime,
-                        identitydocument: x.identitydocument,
-                        qEndTime:x.qEndTime
+                        InterviewTopics: x.InterviewTopics,
+                        qEndTime: x.qEndTime
                     }, page: {
                         curr: 1
                     }
