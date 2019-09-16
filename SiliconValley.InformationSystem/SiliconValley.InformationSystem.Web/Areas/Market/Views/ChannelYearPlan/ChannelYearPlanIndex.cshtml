@@ -50,8 +50,9 @@
 
     <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
 </div>
-<table class="layui-hide" id="channelstaff" lay-filter="channelstafffilter"></table>
 
+<table class="layui-hide" id="channelstaff" lay-filter="channelstafffilter"></table>
+<div></div>
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="distribution">分配区域</a>
 </script>
@@ -65,6 +66,11 @@
 
         var MrDtableIns;
         var MrDLayer;
+        var mrdempid;
+        var mrdplanID;
+        $(function () {
+            mrdplanID =@Html.Raw(ViewBag.NowYearName.SchoolPlanID);
+        });
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -82,7 +88,6 @@
             var result = year + '-' + month + '-' + day;
             return result;
         }
-
         //显示条件查询
         function WhyShow(planid, empid) {
 
@@ -104,12 +109,23 @@
                 async: true,
                 success: function (data) {
                     $("#Zhurenlist").children().remove();
+                    var mrdcompiled = _.template($("#muban").html());
+                    var mrdhtml = mrdcompiled({ EmpName: '主任团队', EmployeeId:'0' });
+                    $("#Zhurenlist").append($(mrdhtml));
+                    var iscunzibulo = false;
                     for (var i = 0; i < data.length; i++) {
                         var compiled = _.template($("#muban").html());
                         var EmpName = data[i].EmpName;
                         var EmployeeId = data[i].EmployeeId;
                         var html = compiled({ EmpName: EmpName, EmployeeId: EmployeeId });
+                        if (EmployeeId == mrdempid) {
+                            iscunzibulo = true;
+                        }
                         $("#Zhurenlist").append($(html));
+                    }
+                    if (!iscunzibulo) {
+                        $("#selectZhuren")[0].innerHTML = '主任团队' + " <span class='caret'></span>";
+                        mrdempid = 0;
                     }
                 },
                 error: function (data) {
@@ -137,7 +153,7 @@
                     , { field: 'ChannelYearPlanID', title: '年度计划id', width: 165, hide: true }
                     , { field: 'EmpName', title: '员工姓名', width: 145 }
                     , { field: 'Phone', title: '联系方式', width: 165 }
-                    , { field: 'Region', title: '带领区域', width: 89 }
+                    , { field: 'Region', title: '带领区域', width: 165 }
                     , { field: 'RegionID', title: '区域id', width: 89, hide: true }
                     , { field: 'BeianNumber', title: '备案数量', width: 89 }
                     , { field: 'GoSchoolNumber', title: '上门数量', width: 89 }
@@ -195,30 +211,19 @@
 
 
         });
-
         $("#grandlist li a").click(function () {
             var grand = $(this).text();
             $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-            var a = $(this).attr("planid");
-            var b = $("#Zhurenlist").val();
-            console.log($("#Zhurenlist"));
-            console.log(b);
-            WhyShow(a, b);
+            mrdplanID = $(this).attr("planid");
+            WhyShow(mrdplanID, mrdempid);
         });
-
-        //$("#Zhurenlist li a").click(function () {
-        //    console.log("1");
-        //    var zhuren = $(this).text();
-        //    $("#selectZhuren")[0].innerHTML = zhuren + " <span class='caret'></span>";
-        //    var a = $("#grandlist").val();
-        //    var b = $(this).attr("ZhurenID");
-        //    WhyShow(a, b);
-        //});
-
         $(document).off("click", "#Zhurenlist li").on('click', '#Zhurenlist li', function () {
-            console.log("11");
+            var dudu = $(this).text();
+            $("#selectZhuren")[0].innerHTML = dudu + " <span class='caret'></span>";
+            
+            mrdempid = $($(this)[0].firstChild).attr('ZhurenID');
+            WhyShow(mrdplanID, mrdempid);
         });
-
         $("#SearchEnter").click(function () {
             var empname = $("#empname").val();
             var classnumber = $("#classnumber").val();

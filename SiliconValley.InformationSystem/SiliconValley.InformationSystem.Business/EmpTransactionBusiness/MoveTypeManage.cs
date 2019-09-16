@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
 {
-    using SiliconValley.InformationSystem.Entity.MyEntity;
+    using SiliconValley.InformationSystem.Entity.Entity;
    public  class MoveTypeManage:BaseBusiness<MoveType>
     {
         /// <summary>

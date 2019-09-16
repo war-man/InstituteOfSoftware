@@ -41,7 +41,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return ary;
         }
         /// <summary>
-        /// 这个方法是在学生报名之后就修改学生状态的方法
+        /// 这个方法是就修改学生状态的方法
         /// </summary>
         /// <param name="id">备案id</param>
         /// <returns></returns>
