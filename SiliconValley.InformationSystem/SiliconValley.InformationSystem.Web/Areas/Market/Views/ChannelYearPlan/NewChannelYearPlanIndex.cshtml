@@ -7,27 +7,29 @@
     #left {
         width: 12%;
         border: 1px solid pink;
-        float:left
+        float: left
     }
 
     #echartshow {
         width: 70%;
         border: 1px solid pink;
-        height:830px;
-        margin-left:1%;
-       float:left;
-       overflow:hidden
+        height: 830px;
+        margin-left: 1%;
+        float: left;
+        overflow: hidden
     }
-     #channelshow {
+
+    #channelshow {
         width: 13%;
         border: 1px solid pink;
-         height:530px;
-        margin-left:1%;
-         float:left;
-             overflow:hidden
+        height: 580px;
+        margin-left: 1%;
+        float: left;
+        overflow: hidden
     }
+
     .mydiv {
-    display:block
+        display: block
     }
 </style>
 <dvi id="top">
@@ -83,11 +85,6 @@
 
     </div>
     <div id="echartshow">
-        <div id="showtop1">
-            <div class="mydiv">本月备案量最多的是：小明,备案数量为：100</div>
-            <div class="mydiv">本月上门量最多的是：小白,上门量量为：100</div>
-            <div class="mydiv">本月报名量最多的是：小赵,报名数量为：100</div>
-        </div>
         <div id="main" style="width:99%;height:500px"></div>
         <div id="baoquandiv" style="width:99%;height:300px">
             <div id="quan" style="width:100%;height:100%"></div>
@@ -99,10 +96,26 @@
         <div><label>备案量:</label><label>1200人</label></div>
         <div><label>上门量:</label><label>800人</label></div>
         <div><label>报名量:</label><label>790人</label></div>
-        <div><label>Top1:</label><label>徐宝平招生人数：300人</label></div>
-        <div><label>Top2:</label><label>马飞招生人数：200人</label></div>
-        <div><label>Top3:</label><label>赵俊招生人数：190人</label></div>
-        
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>荣誉榜</legend>
+            <div><label>Top1:</label><label>徐宝平招生数：300人</label></div>
+            <div><label>Top2:</label><label>马  飞招生数：200人</label></div>
+            <div><label>Top3:</label><label>赵  俊招生数：190人</label></div>
+        </fieldset>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>荣誉榜</legend>
+            <div><label>Top1:</label><label>徐宝平备案数量：300人</label></div>
+            <div><label>Top2:</label><label>马  飞备案数量：200人</label></div>
+            <div><label>Top3:</label><label>赵  俊备案数量：190人</label></div>
+        </fieldset>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+            <legend>荣誉榜</legend>
+            <div><label>Top1:</label><label>徐宝平上门量：300人</label></div>
+            <div><label>Top2:</label><label>马  飞上门量数：200人</label></div>
+            <div><label>Top3:</label><label>赵  俊上门量：190人</label></div>
+        </fieldset>
+
+
     </div>
 </div>
 <script type="text/template" id="muban">
@@ -120,11 +133,33 @@
         var myCharts;
         var quanCharts;
         var isteam = false;
-        
-          @*$(function () {
+
+        $(function () {
             mrdplanID =@Html.Raw(ViewBag.NowYearName.SchoolPlanID);
+            
+            
             LoadTree(mrdplanID);
             LoadECharts(mrdplanID, isteam, mrdempid);
+            loadquanquan();
+            
+            
+            
+        });
+
+        //加载右侧的显示数据：有几种可能，第一种是全校；第二种是团队，第三种是个人
+        function loadrightshow(mrdplanID,mrdisteam,mrdempinfoid) {
+
+        }
+        //加载下面的圈圈，两种情况：年跟月
+        function loadquanquan() {
+            var quanoption = optionFactorytoquanquan();
+            if (quanCharts != null && quanCharts != "" && quanCharts != undefined) {
+                quanCharts.dispose();
+            }
+            quanCharts = echarts.init(document.getElementById('quan'));
+            quanCharts.setOption(quanoption);
+        }
+        function optionFactorytoquanquan(res) {
             var mrddataStyle = {
                 normal: {
                     label: {
@@ -137,7 +172,7 @@
                     shadowColor: '#203665'
                 }
             };
-            quanoption = {
+            var quanoption = {
                 //backgroundColor: "#20263f",
                 series: [{
                     name: '第一个圆环',
@@ -165,7 +200,7 @@
                                     }
                                 },
                                 formatter: function (params) {
-                                    return "{b|在线统计}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
+                                    return "{b|招生数比去年}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
                                 },
                                 position: 'center',
                                 show: true,
@@ -221,7 +256,7 @@
                                     }
                                 },
                                 formatter: function (params) {
-                                    return "{b|离线统计}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
+                                    return "{b|上门数比去年}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
                                 },
                                 position: 'center',
                                 show: true,
@@ -277,7 +312,7 @@
                                     }
                                 },
                                 formatter: function (params) {
-                                    return "{b|缺报统计}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
+                                    return "{b|备案数比去年}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
                                 },
                                 position: 'center',
                                 show: true,
@@ -308,15 +343,10 @@
                         }
                     }]
                 }]
-            }
-            if (quanCharts != null && quanCharts != "" && quanCharts != undefined) {
-                quanCharts.dispose();
-            }
-            quanCharts = echarts.init(document.getElementById('quan'));
-            quanCharts.setOption(quanoption);
-        });*@
-         
-       
+            };
+            return quanoption;
+        }
+
         //加载主任
         function LoadZhuren(mrdplanID) {
             $.ajax({
@@ -324,7 +354,7 @@
                 data: { Plan: mrdplanID },
                 async: true,
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     $("#Zhurenlist").children().remove();
                     var mrdcompiled = _.template($("#muban").html());
                     var mrdhtml = mrdcompiled({ EmpName: '主任团队',EmployeeId:""});
@@ -355,6 +385,7 @@
             $.ajax({
                 url:'/Market/ChannelYearPlan/LoadTree_Zhuren',
                 type: 'GET',
+                
                 data: {Plan:mrdplanID,zhurenid:mrdempid},
                 success: function (successdata) {
                     //console.log(mytree);
@@ -379,9 +410,13 @@
         };
         //创建option
         function optionFactory(res) {
-            console.log(res);
-            console.log(res.KeepOnRecordCount);
+            //console.log(res);
+            //console.log(res.KeepOnRecordCount);
             var option = {
+                grid: {
+                    x: 80,
+                    y:80
+                },
                 title: {
                     text: '2019计划',
                 },
@@ -396,7 +431,7 @@
                 },
                 toolbox: {
                     feature: {
-                        dataView: { show: true, readOnly: false },
+                        dataView: { show: true, readOnly: true },
                         magicType: { show: true, type: ['line', 'bar'] },
                         restore: { show: true },
                         saveAsImage: { show: true }
@@ -411,7 +446,9 @@
                         data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                         axisPointer: {
                             type: 'shadow'
-                        }
+                        },
+                        //设置点击事件
+                        triggerEvent:true
                     }
                 ],
                 yAxis: [
@@ -453,7 +490,7 @@
                 data: { planid: mrdplanID, IsTeam: mrdisteam, EmpinfoID: mrdempinfoid },
                 success: function (SuccessData) {
                     var all = new Object();
-                    console.log(SuccessData);
+                    //console.log(SuccessData);
                     var KeepOnRecordArray = new Array();
                     var GoSchooArray = new Array();
                     var SignUpArray = new Array();
@@ -474,12 +511,20 @@
                     all.SignUpCount = SignUpArray;
 
                     var option = optionFactory(all);
-                    //console.log(option);
+                    
+
+                    //j解决了There is a chart instance already initialized on the dom.
+                    //中文：在dom上已经初始化了一个图表实例。
                     if (myCharts != null && myCharts != "" && myCharts != undefined) {
                         myCharts.dispose();
                     }
-                     myCharts= echarts.init(document.getElementById('main'));
+                    myCharts = echarts.init(document.getElementById('main'));
                     myCharts.setOption(option);
+                    myCharts.on('click', function (params) {
+                        var xAxisValue = params.value;
+                        var querymonth = xAxisValue.slice(0, 1);
+                        
+                    });
                 }
             });
         }
@@ -533,6 +578,7 @@
         });
 
 
+        
 
     </script>
 }

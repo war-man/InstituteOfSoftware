@@ -44,7 +44,9 @@ namespace SiliconValley.InformationSystem.Business.Psychro
                 {
                     if (regionlist[i].ID==item.RegionID)
                     {
+                        
                         regionlist.Remove(regionlist[i]);
+                        i--;
                     }
                 }
             }
