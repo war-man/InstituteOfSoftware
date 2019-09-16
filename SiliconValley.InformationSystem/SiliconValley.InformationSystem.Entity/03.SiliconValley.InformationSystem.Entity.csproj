@@ -298,6 +298,7 @@
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
+    <Compile Include="ViewEntity\ShowEchartsView.cs" />
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
