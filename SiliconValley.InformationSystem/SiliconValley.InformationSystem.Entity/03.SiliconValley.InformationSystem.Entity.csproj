@@ -274,7 +274,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
-    <Compile Include="ViewEntity\ChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />
