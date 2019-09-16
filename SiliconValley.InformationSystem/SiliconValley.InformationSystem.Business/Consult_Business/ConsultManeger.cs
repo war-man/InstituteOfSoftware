@@ -234,6 +234,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             {
                 //未完成的量
                 List<Consult> no_all = Getlist_all.Where(c => c.TeacherName == teacherid && (Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month != monthName || GetSingleStudent(c.StuName).StatusTime == null)).ToList();
+
                 ALLDATA aa_list = new ALLDATA();//未完成的
                 List<DivTwoData> towdata2 = new List<DivTwoData>();
                 foreach (Consult item1 in no_all)
