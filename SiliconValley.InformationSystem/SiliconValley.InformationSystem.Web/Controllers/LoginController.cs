@@ -8,6 +8,7 @@ using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.UserManeger;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
@@ -35,6 +36,14 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                     err.Success = true;
                     err.Msg = "登陆成功!";
                     err.Data = "/Base_SysManage/Base_SysMenu/Index";
+
+                    //获取权限
+
+                    var permisslist = PermissionManage.GetOperatorPermissionValues();
+
+                    SessionHelper.Session["OperatorPermission"] = permisslist;
+
+
                     return Json(err, JsonRequestBehavior.AllowGet);
                 }
                 else

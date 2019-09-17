@@ -171,44 +171,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return View();
 
         }
-        /// <summary>
-        /// 添加教员
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult AddTeacher(Teacher teacher)
-        {
-
-            teacher.IsDel = false;
-            teacher.MinimumCourseHours = 0;
-
-            AjaxResult result = new AjaxResult();
-
-            try
-            {
-                db_teacher.Insert(teacher);
-
-                //更新缓存
-                RedisCache redisCache = new RedisCache();
-                redisCache.RemoveCache("TeacherList");
-
-
-                result.ErrorCode = 200;
-                result.Msg = "成功";
-                result.Data = null;
-            }
-            catch (Exception)
-            {
-
-                result.ErrorCode = 500;
-                result.Msg = "错误";
-                result.Data = null;
-            }
-
-            return Json(result,JsonRequestBehavior.AllowGet);
-
-
-        }
+       
 
         /// <summary>
         /// 对教员的操作的视图

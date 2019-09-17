@@ -33,6 +33,9 @@
             width:200px !important;
             height:60px !important;
         }
+        .deleteActive {
+            color:#ff6a00;
+        }
     </style>
 </head>
 <body>
@@ -69,6 +72,13 @@
 
                     <i class="layui-icon layui-icon-release"></i>
                 </button>
+
+            </div>
+
+            <div ondrop="drop(event)" ondragover="allowDrop(event)" style="display:inline-block; margin-left:785px;">
+
+              
+                <i id="delete" style="font-size:44px;" class="layui-icon layui-icon-delete "> </i>
 
             </div>
 
@@ -122,7 +132,7 @@
     </script>
 
     <script type="text/template" id="moban2">
-        <li><button typeid="{{=typeid}}" class="layui-btn layui-btn-primary"><i style="font-size:30px;" class="layui-icon layui-icon-templeate-1"></i>{{=name}}</button></li>
+        <li><button typeid="{{=typeid}}" ondragstart="drag(event)" draggable="true" class="layui-btn layui-btn-primary"><i style="font-size:30px;" class="layui-icon layui-icon-templeate-1"></i>{{=name}}</button></li>
     </script>
 
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -134,6 +144,10 @@
 
     <script>
 
+
+        var load;
+
+
         layui.use(['layer', 'form'], function () {
 
             var layer = layui.layer;
@@ -144,7 +158,7 @@
 
             //加载数据
 
-            function load(depid) {
+            load = function (depid) {
 
 
                 Ajax('/Teaching/SatisfactionSurvey/GetGetSurveyItemTypeDataByDepid', { depid: depid }, 'post', function (data) {
@@ -296,9 +310,98 @@
             });
 
 
+            $(document).off("click", "#list ul li button").on("click", "#list ul li button", function () {
+
+
+                var typeid = $(this).attr("typeid");
+
+                layer.open({
+                    type: 2,
+                    area: ["600px", '500px'],
+                    title: "",
+                    content: "/Teaching/SatisfactionSurvey/SurveylistView?itemtypeid=" + typeid
+
+                });
+
+            });
+
+            $("#delete").mouseover(function () {
+
+                $(this).addClass("deleteActive");
+
+                layer.msg("拖放至此处删除");
+
+            });
+
+
+            $("#delete").mouseout(function () {
+
+                $(this).removeClass("deleteActive");
+
+            });
+
 
         });
 
+
+        var BeginDelElement;
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+
+           
+            BeginDelElement = ev.srcElement
+          
+            ev.dataTransfer.setData("Text", ev.target.id);
+        }
+
+        function drop(ev) {
+
+            if (BeginDelElement != undefined) {
+
+                layer.confirm("确定删除？ 删除之后这个大项的子项都会被删除。", function (index) {
+
+
+                    //获取项ID
+                    var typeid = $(BeginDelElement).attr("typeid");
+
+                    //发送请求
+                    Ajax('/Teaching/SatisfactionSurvey/DelItemType', { typeid: typeid }, 'post', function (data) {
+
+
+                        if (data.ErrorCode == 200) {
+
+
+                            layer.msg("删除成功");
+
+                            layer.close(index);
+
+                            //刷新前清空内容
+                            $("#list ul li").remove();
+
+
+                            var depid = $("#Dep").attr("DepID");
+
+                            load(depid);
+                            
+
+                        }
+
+
+                    }, function (error) {
+
+                        layer.msg("异常错误");
+
+                        });
+
+
+                });
+            }
+
+        }
     </script>
 </body>
 </html>

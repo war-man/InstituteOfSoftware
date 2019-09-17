@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using SiliconValley.InformationSystem.Business;
-
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     /// <summary>
     /// 满意度调查控制器
     /// </summary>
@@ -27,12 +27,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         BaseBusiness<Department> db_dep = new BaseBusiness<Department>();
 
         private readonly SatisfactionSurveyBusiness db_survey;
+        private readonly TeacherBusiness db_teacher;
+
         public SatisfactionSurveyController()
         {
             db_survey = new SatisfactionSurveyBusiness();
+
+
+
+            db_teacher = new TeacherBusiness();
         }
         public ActionResult SatisfactionIndex()
         {
+
+
+            var permisslist = PermissionManage.GetOperatorPermissionValues();
+
+            ViewBag.Permisslist = permisslist;
+
             return View();
         }
 
@@ -268,6 +280,169 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
             return Json(result);
+
+        }
+
+
+        /// <summary>
+        /// 调查项内容列表视图
+        /// </summary>
+        /// <param name="itemtypeid">类型id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult SurveylistView(int itemtypeid)
+        {
+
+            //提供具体调查项
+
+            ViewBag.itemlist = db_survey.GetAllSatisfactionItems().Where(d => d.ItemType == itemtypeid).ToList();
+
+
+            return View();
+
+        }
+
+
+        /// <summary>
+        /// 删除调查项类型
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DelItemType(int typeid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+
+            try
+            {
+                db_survey.RemoveItemType(typeid);
+
+                result.Data = null;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+
+
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+            }
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+        /// <summary>
+        /// 删除调查具体项
+        /// </summary>
+        /// <param name="itemid">具体项ID</param>
+        /// <returns></returns>
+
+        [HttpPost]
+        public ActionResult delSurveyItem(int itemid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var delobj = db_survey.GetAllSatisfactionItems().Where(d => d.ItemID == itemid).FirstOrDefault();
+
+                db_survey.Delete(delobj);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = ex.Message;
+                result.Data = null;
+            }
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        /// <summary>
+        /// 满意度调查记录视图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SurveyHistoryView()
+        {
+
+            //判断登录的角色
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+            //获取员工的岗位
+
+            var teacherview = db_teacher.GetTeacherView(teacher.TeacherID);
+
+            //获取员工权限
+
+            ViewBag.TeacherView = teacherview;
+           
+
+            return View();
+
+
+
+
+
+
+        }
+
+
+        /// <summary>
+        /// 获取员工的满意度调查记录
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SurveyHistoryData(string empid, string date)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            var ss = DateTime.Parse(date);
+
+            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
+
+
+            try
+            {
+
+                resultlist = db_survey.SurveyHistoryData(empid, date);
+
+                result.ErrorCode = 200;
+                result.Data = resultlist;
+                result.Msg = "成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = resultlist;
+                result.Msg = ex.Message;
+            }
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);
 
         }
 

@@ -777,6 +777,35 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
-      
+
+        /// <summary>
+        /// 添加教员
+        /// </summary>
+        /// <returns></returns>
+        
+        public void AddTeacher(Teacher teacher)
+        {
+
+                teacher.IsDel = false;
+
+                teacher.MinimumCourseHours = 0;
+
+         
+
+                this.Insert(teacher);
+
+                //更新缓存
+                RedisCache redisCache = new RedisCache();
+
+                redisCache.RemoveCache("TeacherList");
+
+
+              
+            
+           
+
+        }
+
+
     }
 }

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
+
 
 
     /// <summary>
@@ -15,6 +17,19 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     /// </summary>
   public  class SatisfactionSurveyBusiness:BaseBusiness<SatisficingItem>
     {
+        CourseBusiness db_course = new CourseBusiness();
+
+        BaseBusiness<EmployeesInfo> db_emp = new BaseBusiness<EmployeesInfo>();
+
+        BaseBusiness<StudentInformation> db_student = new BaseBusiness<StudentInformation>();
+
+        BaseBusiness<ClassSchedule> db_class = new BaseBusiness<ClassSchedule>();
+
+        BaseBusiness<SatisficingResult> db_satisresult = new BaseBusiness<SatisficingResult>();
+
+        BaseBusiness<SatisficingConfig> db_satisconfig = new BaseBusiness<SatisficingConfig>();
+
+        BaseBusiness<SatisficingResultDetail> db_satisresultdetail = new BaseBusiness<SatisficingResultDetail>();
 
 
         private readonly BaseBusiness<SatisficingType> db_saitemtype;
@@ -169,6 +184,105 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+
+        /// <summary>
+        /// 删除调查项类型
+        /// </summary>
+        /// <param name="typeid">类型ID</param>
+        public void RemoveItemType(int typeid)
+        {
+
+            //首先删除这个类型下面的具体项
+
+           var list = this.GetAllSatisfactionItems().Where(d => d.ItemType == typeid).ToList();
+
+       
+           this.Delete(list);
+
+           var obj = db_saitemtype.GetList().Where(d => d.ID == typeid).FirstOrDefault();
+
+            db_saitemtype.Delete(obj);
+
+        }
+
+
+
+        public SatisfactionSurveyDetailView ConvertToViewModel(SatisficingResult satisficingResult)
+        {
+            SatisfactionSurveyDetailView detailView = new SatisfactionSurveyDetailView();
+
+
+           
+
+            var satisficingConfig = db_satisconfig.GetList().Where(d=>d.IsDel==false && d.ID== satisficingResult.SatisficingConfig).FirstOrDefault();
+
+
+            detailView.Curriculum = db_course.GetCurriculas().Where(d => d.CurriculumID == satisficingConfig.CurriculumID).FirstOrDefault();
+
+            detailView.Emp = db_emp.GetList().Where(d => d.EmployeeId == satisficingConfig.EmployeeId && d.IsDel == false).FirstOrDefault();
+
+            detailView.investigationClass = db_class.GetList().Where(d => d.ClassNumber == satisficingConfig.ClassNumber).FirstOrDefault();
+
+            detailView.FillInPerson = db_student.GetList().Where(d => d.StudentNumber == satisficingResult.Answerer).FirstOrDefault();
+
+            detailView.investigationDate =(DateTime)satisficingConfig.CreateTime;
+
+            detailView.Proposal = satisficingResult.Suggest;
+
+          var templist =  db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
+
+            foreach (var item in templist)
+            {
+
+               detailView.TotalScore += (int)item.Scores;
+
+            }
+
+
+
+
+            return detailView;
+
+        }
+
+
+        /// <summary>
+        /// 获取满意度调查详细数据
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string date)
+        {
+
+            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
+
+           var templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >= DateTime.Parse(date) && d.CreateTime < (DateTime.Parse(date)).AddMonths(1)).ToList();
+
+
+            foreach (var item in templist)
+            {
+
+               var temp1list = db_satisresult.GetList().Where(d => d.SatisficingConfig == item.ID).ToList();
+
+                foreach (var item1 in temp1list)
+                {
+
+                   var obj = this.ConvertToViewModel(item1);
+
+                    if (obj != null)
+                    {
+
+                        resultlist.Add(obj);
+                    }
+
+                }
+
+            }
+
+            return resultlist;
+
+        }
 
     }
 }
