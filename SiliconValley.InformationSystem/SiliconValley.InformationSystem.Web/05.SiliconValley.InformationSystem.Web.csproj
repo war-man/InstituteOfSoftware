@@ -411,6 +411,8 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\satisfactionItemSettingView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\satisfactionItemTypeSettingView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\AddSurveyItem.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveylistView.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistoryView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -1118,7 +1120,6 @@
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
-      <UserProperties Config_4Province_1json__JSONSchema="http://json.schemastore.org/apple-app-site-association" />
     </VisualStudio>
   </ProjectExtensions>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

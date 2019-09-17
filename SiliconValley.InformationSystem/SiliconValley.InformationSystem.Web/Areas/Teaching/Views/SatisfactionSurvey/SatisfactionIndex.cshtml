@@ -10,6 +10,7 @@
 
         #SatisfactionWarp {
             width:80%;
+           
 
             margin:0 auto;
 
@@ -34,6 +35,22 @@
                 cursor:pointer;
             }
 
+        #tirp div {
+            display: inline-block;
+            cursor: pointer;
+            text-align: center;
+            
+            height: 60px;
+            line-height: 60px;
+            margin-top: 20px;
+            border-top: 1px solid #808080;
+            border-bottom: 1px solid #808080;
+        }
+
+        .mouseoverfontSize {
+            font-size:18px;
+            color:white;
+        }
     </style>    
     
 }
@@ -42,30 +59,69 @@
     <div id="SatisfactionWarp">
         <h2 style="text-align:center;">欢迎来到满意度调查</h2>
 
-        <div class="SatisfactionItems" id="SatisfactionConfig">
+        @{
+
+            foreach (var item in ViewBag.Permisslist as List<string>)
+            {
+
+                if (item.Trim() == "SatisfactionSurvey.ConfigSetting")
+                {
+
+                    <div class="SatisfactionItems" id="SatisfactionConfig">
+                        <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
+                        <br />
+                        <span>满意度调查项配置</span>
+                    </div>
+
+                }
+
+            }
+        }
+
+
+        @{
+
+            foreach (var item in ViewBag.Permisslist as List<string>)
+            {
+
+                if (item.Trim() == "SatisfactionSurvey.SurveyHistoryView")
+                {
+
+
+                    <div class="SatisfactionItems" id="SatisfactionSurveyHistory">
+                        <i class="layui-icon layui-icon-log" style="font-size: 50px; color: #1E9FFF;"></i>
+                        <br />
+                        <span>
+                            满意度历史记录
+                        </span>
+                    </div>
+
+                }
+
+            }
+        }
+
+
+
+        <div class="SatisfactionItems" id="SatisfactionSurveyView">
+            <i class="layui-icon layui-icon-form" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>本月满意度调查</span>
+        </div>
+
+        <div class="SatisfactionItems">
             <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
             <br />
             <span>满意度调查项配置</span>
         </div>
 
-        <div class="SatisfactionItems">
-            <i class="layui-icon layui-icon-log" style="font-size: 50px; color: #1E9FFF;"></i>
-            <br />
-            <span>
-                满意度历史记录
-            </span>
-        </div>
 
-        <div class="SatisfactionItems">
-            <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
-            <br />
-            <span>满意度调查项配置</span> 
-        </div>
+        <div id="tirp" style="display:none; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
 
-        <div class="SatisfactionItems">
-            <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
-            <br />
-            <span>满意度调查项配置</span>
+            <div style="margin-left:35%; ">教员满意度调查问卷</div>
+
+            <div style="margin-left:20px;">班主任满意度调查问卷</div>
+
         </div>
 
     </div>
@@ -94,6 +150,8 @@
 
             var element = layui.element;
 
+            //满意度调查配置
+
             $("#SatisfactionConfig").click(function () {
 
                 layer.open({
@@ -109,7 +167,54 @@
             });
 
 
+            //满意度调查历史记录
+            $("#SatisfactionSurveyHistory").click(function () {
 
+
+                window.location.href = '/Teaching/SatisfactionSurvey/SurveyHistoryView';
+                
+
+            });
+
+            //本月满意度调查
+            $("#SatisfactionSurveyView").click(function () {
+
+                //发送请求
+
+                $("#tirp").fadeIn();
+
+                return false;
+
+            });
+
+            $("#tirp div").mouseover(function () {
+
+                $(this).addClass("mouseoverfontSize");
+
+            });
+
+            $("#tirp div").mouseout(function () {
+
+                $(this).removeClass("mouseoverfontSize");
+
+            });
+
+
+
+        });
+
+        $(document).bind('click', function (e) {
+            var e = e || window.event; //浏览器兼容性 
+            var elem = e.target || e.srcElement;
+            while (elem) { //循环判断至跟节点，防止点击的是div子元素 
+                if (elem.id && elem.id == 'tirp') {
+                    return;
+                }
+                elem = elem.parentNode;
+            }
+            //$('#tirp').css('display', 'none'); //点击的不是div或其子元素 
+
+            $('#tirp').fadeOut();
         });
 
       

@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-             var teacher = db_teacher.GetTeachers().Where(d=>d.EmployeeId==user.EmpNumber).FirstOrDefault();
+            var teacher = db_teacher.GetTeachers().Where(d=>d.EmployeeId==user.EmpNumber).FirstOrDefault();
 
             var myclasslist =  db_teacherclass.GetCrrentMyClass(teacher.TeacherID);
 
