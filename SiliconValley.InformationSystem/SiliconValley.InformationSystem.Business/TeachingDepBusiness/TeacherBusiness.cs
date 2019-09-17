@@ -783,40 +783,21 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <returns></returns>
         
-        public bool AddTeacher(Teacher teacher)
+        public void AddTeacher(Teacher teacher)
         {
 
                 teacher.IsDel = false;
 
                 teacher.MinimumCourseHours = 0;
 
+         
 
-            bool result = true;
-
-            try
-            {
                 this.Insert(teacher);
+
                 //更新缓存
                 RedisCache redisCache = new RedisCache();
 
                 redisCache.RemoveCache("TeacherList");
-
-            }
-            catch (Exception)
-            {
-                result = false;
-
-
-            }
-
-
-
-            return result;
-
-
-              
-            
-           
 
         }
 
