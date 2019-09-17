@@ -949,6 +949,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 #region 获取属性值 
                 e.TransactionId,
                 empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                esex=emanage.GetInfoByEmpID(e.EmployeeId).Sex,
                 dname=emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                 pname= emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
                 type = emanage.GetETById(e.TransactionType).MoveTypeName,
@@ -964,40 +965,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.IsDel
                 #endregion
             };
+           
             return Json(empobj, JsonRequestBehavior.AllowGet);
         }
         //员工异动详情信息
-        public object EmpETRDetail(int id) {
+        public ActionResult EmpETRDetail(int id) {
             EmpTransactionManage etmanage = new EmpTransactionManage();
             MoveTypeManage mt = new MoveTypeManage();
             object viewobj = new object();
              var etobj=etmanage.GetEntity(id);
-
-            var mtobj1 = mt.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault();//找到转正申请的异动
-            if (etobj.TransactionType==mtobj1.ID) {
-                viewobj = PositiveDetail(id);
-            }
-            var mtobj2 = mt.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault();//找到离职申请的异动
-            if (etobj.TransactionType == mtobj2.ID) {
-                viewobj = DimissionDetail(id);
-            }
-            return viewobj;
-        }
-        //转正异动的详情页
-        public ActionResult PositiveDetail(int id)
-        {
-            EmpTransactionManage etmanage = new EmpTransactionManage();
-            var etobj = etmanage.GetEntity(id);
+            ViewBag.id = id;
             return View(etobj);
         }
-        //离职异动的详情页
-        public ActionResult DimissionDetail(int id) {
-            EmpTransactionManage etmanage = new EmpTransactionManage();
-            var etobj = etmanage.GetEntity(id);
-            return View(etobj);
-        }
-
-
+       
         //员工审批状态管理
         public ActionResult EmpApproval() {
             return View();
