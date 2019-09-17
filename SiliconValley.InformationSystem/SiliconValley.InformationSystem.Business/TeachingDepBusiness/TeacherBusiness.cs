@@ -799,11 +799,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                 redisCache.RemoveCache("TeacherList");
 
-
-              
-            
-           
-
         }
 
 

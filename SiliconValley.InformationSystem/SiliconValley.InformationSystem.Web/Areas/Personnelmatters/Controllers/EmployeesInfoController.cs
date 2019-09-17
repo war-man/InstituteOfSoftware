@@ -19,6 +19,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Consult_Business;
     using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business;
     public class EmployeesInfoController : Controller
     {
@@ -245,6 +246,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             HeadmasterBusiness hm = new HeadmasterBusiness();
             ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
             ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+            TeacherBusiness teamanage = new TeacherBusiness();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -276,6 +278,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任") {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
+                    empinfo.Success().Success = s;
+                    AjaxResultxx = empinfo.Success();
+                }
+                if (empinfo.GetPosition(emp.PositionId).PositionName == "教学部" )
+                {
+                    Teacher tea = new Teacher();
+                    tea.EmployeeId = emp.EmployeeId;
+                 //   bool s = teamanage.AddTeacher(tea);
                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
