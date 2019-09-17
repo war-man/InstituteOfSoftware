@@ -796,6 +796,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             try
             {
                 this.Insert(teacher);
+
                 //更新缓存
                 RedisCache redisCache = new RedisCache();
 
