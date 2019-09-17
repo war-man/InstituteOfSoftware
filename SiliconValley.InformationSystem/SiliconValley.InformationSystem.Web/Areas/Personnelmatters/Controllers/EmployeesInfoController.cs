@@ -285,8 +285,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
-                 //   bool s = teamanage.AddTeacher(tea);
-                   // empinfo.Success().Success = s;
+                     bool s = teamanage.AddTeacher(tea);
+                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
                 AjaxResultxx = empinfo.Success();
