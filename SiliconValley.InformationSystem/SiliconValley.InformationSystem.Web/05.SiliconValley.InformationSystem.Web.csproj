@@ -557,6 +557,7 @@
     <Content Include="Areas\Teaching\Views\Project\Projectschedule.cshtml" />
     <Content Include="Areas\Teaching\Views\Project\ProjectShowImage.cshtml" />
     <Content Include="Areas\Teaching\Views\Project\SelectStudentView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpApproval.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

@@ -44,50 +44,61 @@
         @*转正异动的详情页*@
         <form class="layui-form" action="" id="Positive" lay-filter="Positive" hidden>
             <div class="layui-container">
+                
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名:</label>
-                        <div class="layui-input-inline" style="width:190px;">
+                        <div class="layui-input-block">
                             <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="esex" name="esex" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">所属部门:</label>
                         <div class="layui-input-block">
                             <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">所属岗位:</label>
                         <div class="layui-input-block">
                             <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
-
                 </div>
 
                 <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="EntryTime" name="EntryTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">转正时间:</label>
-                        <div class="layui-input-inline" style="width:190px;">
+                        <div class="layui-input-block">
                             <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
+                </div>
 
-                   
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">备注:</label>
-                        <div class="layui-input-inline" style="width:190px;">
+                        <div class="layui-input-inline" >
                             <input type="text" id="Remark" name="Remark" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
 
                 </div>
-
 
             </div>
 
@@ -97,6 +108,7 @@
                 </div>
             </div>
         </form>
+
         @*离职异动的详情页*@
         <form class="layui-form" action="" lay-filter="Dimission" id="Dimission" hidden>
             <div class="layui-container">
@@ -179,6 +191,7 @@
                     var form = layui.form;
                     if (data.type == "转正") {
                         $("#Positive").show();
+                        data.EntryTime = GetYMD(data.EntryTime);
                          data.TransactionTime = GetYMD(data.TransactionTime);
                         form.val("Positive", data);
                     } else if (data.type == "离职") {
@@ -197,15 +210,10 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
-            //日期验证
-            laydate.render({
-                elem: '#TransactionTime',
-            }); //入职时间
            
             //关闭页面
             $(".btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('myETR');
                 parent.layer.close(index);
             });
         });

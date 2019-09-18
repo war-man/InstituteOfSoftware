@@ -20,7 +20,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
-    using SiliconValley.InformationSystem.Business;
+    using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
+
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -962,6 +963,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 esex=emanage.GetInfoByEmpID(e.EmployeeId).Sex,
                 dname=emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                 pname= emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                EntryTime = emanage.GetInfoByEmpID(e.EmployeeId).EntryTime,
                 type = emanage.GetETById(e.TransactionType).MoveTypeName,
                 e.TransactionTime,
                 predname = e.PreviousDept == null ? null : emanage.GetDeptById((int)e.PreviousDept).DeptName,
@@ -991,6 +993,98 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //员工审批状态管理
         public ActionResult EmpApproval() {
             return View();
+        }
+        /// <summary>
+        /// 获取所有转正申请数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetPositiveData(int page,int limit) {
+            ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = affmmanage.GetList();
+            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var empobj = from e in  newlist
+                          select new
+            {
+                #region 获取属性值 
+                e.Id,
+                empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                e.IsBuySS,
+                e.ProbationEndDate,
+                e.ProbationPersonalSummary,
+                e.ApplicationDate,
+                e.IsDel
+                #endregion
+            };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = empobj
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改员工的转正申请的审批状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult EditApprovalState(int id) {
+            ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage m = new MoveTypeManage();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                var positive = affmmanage.GetEntity(id);
+                positive.IsDel = false;//表示转正申请通过
+                affmmanage.Update(positive);
+                ajaxresult= affmmanage.Success();
+                if (ajaxresult.Success)
+                {//转正申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                    EmpTransaction et = new EmpTransaction();
+                    et.EmployeeId = positive.EmployeeId;
+                    et.IsDel = false;
+                    et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault().ID;
+                    etmanage.Insert(et);
+                    ajaxresult = etmanage.Success();
+                }
+                else {
+                    ajaxresult = etmanage.Error();
+                }
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = affmmanage.Error(ex.Message);
+            }
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 获取所有离职申请数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDimissionData(int page, int limit)
+        {
+            DimissionApplyManage damanage = new DimissionApplyManage();
+            var list = damanage.GetList();
+            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = newlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
         }
     }
 }

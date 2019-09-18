@@ -35,7 +35,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //转正申请
         public ActionResult PositiveApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908150003";//为测试，暂时设置的死数据
+            string eid = "201908150002";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }

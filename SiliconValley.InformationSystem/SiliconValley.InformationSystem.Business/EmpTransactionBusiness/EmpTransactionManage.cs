@@ -8,6 +8,7 @@ namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
 {
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
    public class EmpTransactionManage:BaseBusiness<EmpTransaction>
     {
       
