@@ -41,12 +41,11 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 5
                 , cols: [[
-                    , { type: 'checkbox',width: 18 }
-                    , { field: 'TransactionId', title: '编号', width: 130, sort: true }
+                    , { field: 'TransactionId',  width:38}
                     , { field: 'empName', title: '姓名', width: 160, sort: true }
                     , { field: 'type', title: '异动类型', width: 120, sort: true }
-                    , { field: 'TransactionTime', title: '异动确认时间', sort: true, width: 140, templet: function (d) { return GetYMD(d.EntryTime) } }
-                    , { field: 'Remark', title: '备注', width: 200, sort: true }
+                    , { field: 'TransactionTime', title: '异动确认时间', sort: true, width: 140, templet: function (d) { return GetYMD(d.TransactionTime) } }
+                    , { field: 'Remark', title: '备注', width: 315, sort: true }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 220 }
                 ]]
                 , page: true
@@ -60,7 +59,7 @@
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/EmployeesInfo/EditETR/?id=' + data.TransactionId
-                        , area: ["400px", "400px"]
+                        , area: ["800px", "500px"]
                         , title: '编辑员工异动信息'
                         , shade: 0.8
                         , anim: 4
@@ -107,13 +106,7 @@
                 }
             });
 
-            //关闭页面
-            $(".btnclose1").click(function () {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('myETR');
-                parent.layer.close(index);
-            });
-
+          
         });
 
 

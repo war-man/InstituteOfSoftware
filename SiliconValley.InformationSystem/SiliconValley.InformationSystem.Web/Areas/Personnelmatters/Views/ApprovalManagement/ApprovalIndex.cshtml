@@ -15,7 +15,7 @@
             <label class="layui-form-label" style="width:100px;">转正申请</label>
           
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="dimission">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
@@ -81,6 +81,20 @@
                    , area: ["600px", "600px"]
                    , title: "转正"
                    , content: '/Personnelmatters/ApprovalManagement/PositiveApply'
+                   , anim: 2
+               });
+
+           })
+
+       });
+       $("#dimission").click(function () {
+           layui.use(['layer'], function (args) {
+               var layer = layui.layer;      //layui对象
+               layer.open({
+                   type: 2
+                   , area: ["600px", "500px"]
+                   , title: "离职"
+                   , content: '/Personnelmatters/ApprovalManagement/DimissionApply'
                    , anim: 2
                });
 

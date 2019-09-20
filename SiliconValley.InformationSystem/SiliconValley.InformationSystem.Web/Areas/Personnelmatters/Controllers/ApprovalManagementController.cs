@@ -24,6 +24,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var emp = empmanage.GetEntity(id);
             var empobj = new {
                 emp.EmployeeId,
+                emp.Sex,
                 emp.EmpName,
                 emp.EntryTime,
                  dname=empmanage.GetDept(emp.PositionId).DeptName,
@@ -50,8 +51,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                affm.ApplicationDate = DateTime.Now;           
-                affm.IsDel = true;//表示申请单默认未通过状态
+                affm.ApplicationDate = DateTime.Now;  //转正申请时间默认当前提交时间         
+                affm.IsApproval = false;//默认为未审批状态
+                affm.IsPass = false;//表示申请单默认未通过状态
                 amanage.Insert(affm);
                 AjaxResultxx = amanage.Success();
             }
@@ -61,5 +63,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
+        //离职申请
+        public ActionResult DimissionApply() {
+            // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
+            string eid = "201909040026";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult DimissionApply(DimissionApply da) {
+            DimissionApplyManage damanage = new DimissionApplyManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                da.DimissionDate = DateTime.Now;//离职申请时间默认当前提交时间
+                da.IsApproval = false;//默认为未审批状态
+                da.IsPass = false;//表示申请单默认未通过状态
+                damanage.Insert(da);
+                AjaxResultxx = damanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = damanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

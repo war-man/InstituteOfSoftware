@@ -15,7 +15,14 @@
     <script src="~/Scripts/layui/layui.js"></script>
 </head>
 <body>
-
+    @*审批状态显示*@
+    <script type="text/html" id="myState">
+        {{# if(d.IsPass==true){ }}
+        {{ d.IsPass="已通过"}}
+        {{# }else{ }}
+        {{ d.IsPass="未通过" }}
+        {{# } }}
+    </script>
     <div class="layui-tab layui-tab-card">
         <ul class="layui-tab-title">
             <li class="layui-this">转正申请</li>
@@ -25,17 +32,10 @@
             <div class="layui-tab-item layui-show">
                 @*操作栏*@
                 <script type="text/html" id="barDemo1">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState">审批通过</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState1">审批</a>
                 </script>
                 <table id="positiveApply" lay-filter="positiveApply"></table>
-                @*审批状态显示*@
-                <script type="text/html" id="myState">
-                    {{# if(d.IsDel==false){ }}
-                    {{ d.IsDel="已通过"}}
-                    {{# }else{ }}
-                    {{ d.IsDel="未通过" }}
-                    {{# } }}
-                </script>
+
                 @*是否购买社保显示*@
                 <script type="text/html" id="mySS">
                     {{# if(d.IsBuySS==false){ }}
@@ -47,6 +47,10 @@
             </div>
 
             <div class="layui-tab-item">
+                @*操作栏*@
+                <script type="text/html" id="barDemo2">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState2">审批通过</a>
+                </script>
                 <table id="dimissionApply" lay-filter="dimissionApply"></table>
             </div>
         </div>
@@ -69,15 +73,16 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 5
                 , cols: [[
-                    , { field: 'Id',  width: 38}
+                    , { field: 'Id', width: 38 }
                     , { field: 'empName', title: '姓名', width: 90, sort: true }
                     , { field: 'esex', title: '性别', width: 90, sort: true }
-                    , { field: 'dname', title: '所属部门', width: 115, sort: true }
+                    , { field: 'dname', title: '所属部门', width: 110, sort: true }
                     , { field: 'pname', title: '所属岗位', width: 130, sort: true }
-                    , { field: 'IsBuySS', title: '是否购买社保', width: 135, sort: true, templet: '#mySS'}
-                    , { field: 'ProbationEndDate', title: '试用期结束时间', width: 140, templet: function (d) { return GetYMD(d.EntryTime) } }
-                    , { field: 'ProbationPersonalSummary', title: '试用期个人总结', width: 200}
-                    , { field: 'IsDel', title: '审批状态', width: 110, sort: true, templet: '#myState'}
+                    , { field: 'IsBuySS', title: '是否购买社保', width: 135, sort: true, templet: '#mySS' }
+                    , { field: 'ProbationEndDate', title: '试用期结束时间', width: 140, templet: function (d) { return GetYMD(d.ProbationEndDate) } }
+                    , { field: 'ApplicationDate', title: '申请时间', width: 140, templet: function (d) { return GetYMD(d.ApplicationDate) } }
+                    , { field: 'ProbationPersonalSummary', title: '试用期个人总结', width: 200 }
+                    , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 110 }
                 ]]
                 , page: true
@@ -86,15 +91,17 @@
             //监听行工具事件
             table.on('tool(positiveApply)', function (obj) {
                 var data = obj.data;
-                if (obj.event === 'editApprovalState') {
-                    if (data.IsDel == false) {
+                if (obj.event === 'editApprovalState1') {
+                    if (data.IsApproval == true) {
                         layer.msg('该申请已完成审批', { icon: 1 });
                     } else {
+                        var s = true;
                         layer.open({
-                            content: '审批确认通过？',
-                            btn: ['确认', '取消'],
-                            yes: function (index, layero) {
-                                $.post("/Personnelmatters/EmployeesInfo/EditApprovalState", { 'id': data.Id }, function (data) {
+                            content: '是否通过审批？'
+                            , btn: ['已通过', '未通过']
+                            , yes: function (index, layero) {
+                                console.log("已通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -108,10 +115,28 @@
                                     }
                                 });
                             }
+                            , btn2: function (index, layero) {
+                                s = false;
+                                console.log("未通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply1");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+
                         });
                     }
-                  
-                } 
+
+                }
             });
 
         });
@@ -127,22 +152,74 @@
             table.render({
                 elem: '#dimissionApply'
                 , url: '/Personnelmatters/EmployeesInfo/GetDimissionData'
-                , id: "myapply1"
+                , id: "myapply2"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 5
                 , cols: [[
-                    , { type: 'checkbox', width: 18 }
-                    , { field: 'TransactionId', title: '编号', width: 130, sort: true }
-                    , { field: 'empName', title: '姓名', width: 160, sort: true }
-                    , { field: 'type', title: '异动类型', width: 120, sort: true }
-                    , { field: 'TransactionTime', title: '异动确认时间', sort: true, width: 140, templet: function (d) { return GetYMD(d.EntryTime) } }
-                    , { field: 'Remark', title: '备注', width: 200, sort: true }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 220 }
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'esex', title: '性别', width: 80, sort: true }
+                    , { field: 'dname', title: '所属部门', width: 110, sort: true }
+                    , { field: 'pname', title: '所属岗位', width: 130, sort: true }
+                    , { field: 'DimissionDate', title: '申请时间', width: 130, templet: function (d) { return GetYMD(d.DimissionDate) } }
+                    , { field: 'DimissionReason', title: '离职原因', width: 110 }
+                    , { field: 'OpinionOrAdvice', title: '对学校或部门的意见或建议', width: 220 }
+                    , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo2', width: 110 }
                 ]]
                 , page: true
             });
 
+            //监听行工具事件
+            table.on('tool(dimissionApply)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'editApprovalState2') {
+                    if (data.IsApproval == true) {
+                        layer.msg('该申请已完成审批', { icon: 1 });
+                    } else {
+                        var s = true;
+                        layer.open({
+                            content: '是否通过审批？'
+                             , btn: ['已通过', '未通过']
+                            , yes: function (index, layero) {
+                                console.log("已通过的状态:"+s);
+                                $.post("/Personnelmatters/EmployeesInfo/DimissionIsPassed", { 'id': data.Id ,'state':s}, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply2");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+                            , btn2: function (index, layero) {
+                                s = false;
+                                console.log("未通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/DimissionIsPassed", { 'id': data.Id, 'state': s}, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply2");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
 
+                        });
+                    }
+
+                }
+            });
 
         });
 
