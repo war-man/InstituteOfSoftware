@@ -2153,6 +2153,12 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Business\04.SiliconValley.InformationSystem.Business.csproj">
       <Project>{572473ad-730a-4e3b-9ae5-078d96dacdac}</Project>
       <Name>04.SiliconValley.InformationSystem.Business</Name>
@@ -2169,12 +2175,6 @@
       <Project>{59b37762-4cc3-45cf-b910-ae11eb6ee79b}</Project>
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

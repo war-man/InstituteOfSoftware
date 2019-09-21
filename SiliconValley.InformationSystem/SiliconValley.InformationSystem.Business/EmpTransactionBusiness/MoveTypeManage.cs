@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
 {
     using SiliconValley.InformationSystem.Entity.Entity;
-   public  class MoveTypeManage:BaseBusiness<MoveType>
+    using SiliconValley.InformationSystem.Entity.MyEntity;
+
+    public  class MoveTypeManage:BaseBusiness<MoveType>
     {
         /// <summary>
         /// 根据异动类型编号获取异动类型对象
