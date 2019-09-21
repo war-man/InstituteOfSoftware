@@ -1,0 +1,47 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head> 
+    <meta name="viewport" content="width=device-width" />
+    <title>SurveylistView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #list {
+            margin-top:50px;
+            margin-left:50px;
+        }
+
+        #list li {
+            margin-top: 20px;
+            color:gray;
+          
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        <ul id="list">
+
+            @{ 
+
+                foreach (var item in ViewBag.itemlist as List<SatisficingItem>)
+                {
+                    <li> <i class="layui-icon layui-icon-flag" ></i> @item.ItemContent</li>
+                }
+            }
+
+        </ul>
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</body>
+</html>

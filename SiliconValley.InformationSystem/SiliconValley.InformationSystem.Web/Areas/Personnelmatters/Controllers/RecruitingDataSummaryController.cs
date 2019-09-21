@@ -341,19 +341,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     item.InstantEntryNum = s.Entrynum;
                     if (s.invitednum != 0)
                     {
-                        item.InstantToFacesRate = (decimal)s.Facednum / (decimal)s.invitednum;
+                        item.InstantToFacesRate =Convert.ToDecimal(s.Facednum) / Convert.ToDecimal(s.invitednum);
                     }
                     if (s.PhoneCommunicatenum != 0)
                     {
-                        item.InstantInviteRate = (decimal)s.invitednum / (decimal)s.PhoneCommunicatenum;
+                        item.InstantInviteRate = Convert.ToDecimal(s.invitednum) / Convert.ToDecimal(s.PhoneCommunicatenum);
                     }
                     if (s.Refacednum != 0)
                     {
-                        item.InstantRetestPassrate = (decimal)s.Refacepassednum / (decimal)s.Refacednum;
+                        item.InstantRetestPassrate = Convert.ToDecimal(s.Refacepassednum) / Convert.ToDecimal(s.Refacednum);
                     }
                     if (s.Refacepassednum != 0)
                     {
-                        item.EntryRate = (decimal)s.Entrynum / (decimal)s.Refacepassednum;
+                        item.EntryRate = Convert.ToDecimal(s.Entrynum) / Convert.ToDecimal(s.Refacepassednum);
                     }
                     var rds = rdsmanage.GetList().Where(a => a.Pid == item.Pid && Condition((DateTime)a.YearAndMonth, "month") == Condition((DateTime)item.YearAndMonth, "month")).FirstOrDefault();
                     if (rds != null)
@@ -371,7 +371,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         rds.InstantInviteRate = item.InstantInviteRate;
                         rds.InstantRetestPassrate = item.InstantRetestPassrate;
                         rds.EntryRate = item.EntryRate;
-                        rds.RecruitPercentage = (decimal)rds.InstantEntryNum / (decimal)rds.PlanRecruitNum;
+                        rds.RecruitPercentage = Convert.ToDecimal(rds.InstantEntryNum) / Convert.ToDecimal(rds.PlanRecruitNum);
                         rdsmanage.Update(rds);
                     }
                     else if (rdsmanage.GetList().Count() == 0)

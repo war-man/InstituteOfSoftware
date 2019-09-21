@@ -22,7 +22,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string EmployeeId { get; set; }
         public Nullable<System.DateTime> DimissionDate { get; set; }
         public string OpinionOrAdvice { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-    
+        public Nullable<bool> IsPass { get; set; }
+        public Nullable<bool> IsApproval { get; set; }
+        public string DimissionReason { get; set; }
     }
 }

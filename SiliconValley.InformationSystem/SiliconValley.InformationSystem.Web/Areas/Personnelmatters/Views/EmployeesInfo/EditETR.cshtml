@@ -2,14 +2,13 @@
 @{
     Layout = null;
 }
-@model SiliconValley.InformationSystem.Entity.MyEntity.ApplyForFullMember
-@using SiliconValley.InformationSystem.Entity.MyEntity;
+
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>PositiveApply</title>
+    <title>EditETR</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -34,147 +33,134 @@
         }
 
         .linu {
-            height:200px;
+            width: 200px;
         }
     </style>
 </head>
 <body>
-
     <div>
-        <form class="layui-form" action="" lay-filter="formtest">
+       
+        <form class="layui-form" action="" id="Positive" lay-filter="Positive" >
             <div class="layui-container">
-                <input type="hidden" name="EmployeeId" id="EmployeeId" value="@ViewBag.eid" />
+                <input type="hidden" id="TransactionId" name="TransactionId" value="@ViewBag.id" />
                 <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 ">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="EmpName" id="EmpName" readonly style="border:0px;" class="layui-input" />
+                            <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">部门:</label>
+                        <label class="layui-form-label">性别:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="dname" id="dname" readonly style="border:0px;" class="layui-input" />
+                            <input type="text" id="esex" name="esex" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
-
                 </div>
 
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">岗位:</label>
+                        <label class="layui-form-label">所属部门:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="pname" id="pname" readonly style="border:0px;" class="layui-input" />
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
 
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">入职时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" name="EntryTime" id="EntryTime" readonly style="border:0px;" class="layui-input" />
+                            <input type="text" id="EntryTime" name="EntryTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">是否购买社保：</label>
+                        <label class="layui-form-label">异动时间:</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="IsBuySS" value="True" title="是" checked>
-                            <input type="radio" name="IsBuySS" value="False" title="否">
+                            <input type="text" id="TransactionTime" name="TransactionTime"  class="layui-input" />
                         </div>
                     </div>
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">试用期结束时间</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ProbationEndDate, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">试用期个人总结</label>
+                        <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.ProbationPersonalSummary, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            <textarea id="Remark" name="Remark"  class="layui-input" style="width:600px;height:200px;" ></textarea>
                         </div>
                     </div>
                 </div>
 
             </div>
 
-            <div class="layui-form-item" style="margin-left:100px;margin-top:40px;">
+            <div class="layui-form-item" style="margin-left:150px;margin-top:50px;">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
                     <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
                 </div>
             </div>
         </form>
+
     </div>
 
 
     <script>
-
-        $(function () {
-            loademp();// 初始化编辑数据加载
-        });
-        function loademp() {
-            var id = $("#EmployeeId").val();
-            console.log(id);
-            $.get("/Personnelmatters/ApprovalManagement/GetEmpid/" + id, function (data) {
-                layui.use(['layer', 'form', 'table', 'laydate'], function () {
-                    var form = layui.form, laydate = layui.laydate;
-                    $("#EmpName").val(data.EmpName);
-                    $("#Sex").val(data.Sex);
-                    $("#dname").val(data.dname);
-                    $("#pname").val(data.pname);
-                    $("#EntryTime").val(data.EntryTime);
-                    data.EntryTime = GetYMD(data.EntryTime);
-                    data.PositiveDate = GetYMD(data.PositiveDate);
-                    form.val("formtest", data);
-                    var mytime = $("#EntryTime").val();
-                    //日期验证
-                    laydate.render({
-                        elem: '#ProbationEndDate',
-                        min: mytime
-                    });
-                });
-            })
-        }
-
-
-        layui.use(['form', 'layedit'], function () {
+    
+       
+        layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
-                , layedit = layui.layedit;
-
-            //添加提交
-            form.on('submit(demo1)', function (data) {
-                console.log(data);
-                $.post("/Personnelmatters/ApprovalManagement/PositiveApply", data.field, function (data) {
-                    if (data.Success) {
-                        layer.alert("申请成功!", { icon: 1 }, function () {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index);
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            $(function () {
+                loademp();// 初始化编辑数据加载
+            });
+            function loademp() {
+                var id = $("#TransactionId").val();
+                console.log(id);
+                $.get("/Personnelmatters/EmployeesInfo/GetertById/" + id, function (data) {
+                    layui.use(['layer', 'form', 'table'], function () {
+                        var form = layui.form;
+                        data.EntryTime = GetYMD(data.EntryTime);
+                        data.TransactionTime = GetYMD(data.TransactionTime);
+                        form.val("Positive", data);
+                       var mytime = $("#EntryTime").val();
+                        laydate.render({
+                            elem: '#TransactionTime',
+                            min: mytime
 
                         });
+                    });
+                })
+            }
+
+
+            //提交
+            form.on('submit(demo1)', function (data) {
+                $.post("/Personnelmatters/EmployeesInfo/EditETR", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layui.table.reload('myETR');
+                            parent.layer.close(index);
+                        });
                     } else {
-                        layer.alert("申请失败!");
+                        layer.alert("编辑失败!");
                     }
                 });
                 return false;
             });
 
-            //关闭添加页面
+            //关闭页面
             $("#btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
+                parent.layui.table.reload('myETR');
                 parent.layer.close(index);
             });
         });
@@ -202,8 +188,8 @@
                 return "";
             }
         }
-
     </script>
+
 
 </body>
 </html>

@@ -1,0 +1,417 @@
+﻿
+@{
+    ViewBag.Title = "SurveyHistoryView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+
+@section style{
+
+    <style>
+        #toptitle {
+            position: relative;
+            width: 80%;
+            margin: 0 auto;
+            height: 200px;
+        }
+
+        #Surveycontent {
+            width: 100%;
+        }
+
+        #SurveyHistoryList {
+            float: left;
+            width: 79%;
+            height: 100px;
+        }
+
+        #rightSurveyImages {
+            float: left;
+            width: 21%;
+            height: 100px;
+            border-left: 0.5px solid #e5e0e0;
+        }
+
+        .SurveyItem {
+            float: left;
+            width: 300px;
+            height: 200px;
+            background-color: #e5e0e0;
+            margin-left: 15px;
+            margin-top: 15px;
+        }
+
+            .SurveyItem div {
+                margin-left: 30px;
+                color: gray;
+                margin-top: 10px;
+            }
+
+        #tirp div {
+            display: inline-block;
+            cursor: pointer;
+            text-align: center;
+            height: 60px;
+            line-height: 60px;
+            margin-top: 20px;
+            border-top: 1px solid #808080;
+            border-bottom: 1px solid #808080;
+            margin-left: 50px;
+        }
+
+        .mouseoverfontSize {
+            font-size: 18px;
+            color: white;
+        }
+
+        #month {
+            background-color:transparent;
+            border:0px solid white;
+        }
+    </style>
+
+}
+
+<div id="toptitle">
+
+    <h2 style="text-align:center; color:gray;">
+
+        满意度调查历史记录
+
+    </h2>
+
+
+    @{
+
+        if (ViewBag.TeacherView.Position.Pid == 3 || ViewBag.TeacherView.Position.Pid == 2011)
+        {
+            <!--教学主任的操作页面-->
+
+    <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+
+        <div class="dropdown">
+            <button style="background-color:#92d4a5;" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="text">班主任</span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a class="empSelect" empid="201908150002" href="#">大类</a></li>
+                <li><a class="empSelect" empid="201908150002" href="#">臣还是</a></li>
+                <li><a class="empSelect" empid="" href="#">钟伦攀</a></li>
+                <li><a class="empSelect" empid="" href="#">同名</a></li>
+                <li><a class="empSelect" empid="" href="#">丁宏远</a></li>
+            </ul>
+        </div>
+
+        <div>
+
+            <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择教员</button>
+
+        </div>
+        <div>
+
+            <input  id="month" type="month" />
+
+        </div>
+
+    </div>
+        }
+
+    }
+
+    @{
+
+
+
+        if (ViewBag.TeacherView.Position.Pid == 2008)
+        {
+            <!--教质主任的操作页面-->
+
+            <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+
+                <div class="dropdown">
+                    <button empid="" style="background-color:#92d4a5;" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="text">教员</span>
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a class="empSelect" empid="" href="#">大类</a></li>
+                        <li><a class="empSelect" empid="" href="#">臣还是</a></li>
+                        <li><a class="empSelect" empid="" href="#">钟伦攀</a></li>
+                        <li><a class="empSelect" empid="" href="#">同名</a></li>
+                        <li><a class="empSelect" empid="" href="#">丁宏远</a></li>
+                    </ul>
+                </div>
+                <div>
+
+                    <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择班主任</button>
+
+                </div>
+                <div>
+
+                    <input id="month"  type="month" />
+
+                </div>
+            </div>
+        }
+    }
+
+    @{
+
+        if (ViewBag.TeacherView.Position.Pid == 2012)
+        {
+            <!--教学主任的操作页面-->
+
+            <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+
+                <div>
+                    <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择教员</button>
+                </div>
+               
+
+                <div>
+
+                    <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择教员</button>
+
+                </div>
+
+                <div>
+                    <input id="month" type="month" />
+                </div>
+
+
+
+
+            </div>
+        }
+
+    }
+
+           
+
+</div>
+
+<hr />
+
+<div id="Surveycontent">
+
+    <div id="SurveyHistoryList">
+
+
+
+        <div class="SurveyItem">
+
+            <div>
+                <label>满意度填写人:钟伦攀</label>
+            </div>
+
+            <div>
+                <label>总分:100</label>
+            </div>
+
+            <div>
+                <label>建议:你好啊 老师 我的意见是</label>
+            </div>
+
+        </div>
+
+        <div class="SurveyItem">
+
+            <div>
+                <label>满意度填写人:钟伦攀</label>
+            </div>
+
+            <div>
+                <label>总分:100</label>
+            </div>
+
+            <div>
+                <label>建议:你好啊 老师 我的意见是</label>
+            </div>
+
+        </div>
+
+        <div class="SurveyItem">
+
+            <div>
+                <label>满意度填写人:钟伦攀</label>
+            </div>
+
+            <div>
+                <label>总分:100</label>
+            </div>
+
+            <div>
+                <label>建议:你好啊 老师 我的意见是</label>
+            </div>
+
+        </div>
+
+        <div class="SurveyItem">
+
+            <div>
+                <label>满意度填写人:钟伦攀</label>
+            </div>
+
+            <div>
+                <label>总分:100</label>
+            </div>
+
+            <div>
+                <label>建议:你好啊 老师 我的意见是</label>
+            </div>
+
+        </div>
+
+        <div class="SurveyItem">
+
+            <div>
+                <label>满意度填写人:钟伦攀</label>
+            </div>
+
+            <div>
+                <label>总分:100</label>
+            </div>
+
+            <div>
+                <label>建议:你好啊 老师 我的意见是</label>
+            </div>
+
+        </div>
+
+        <div class="SurveyItem">
+
+            <div>
+                <label>满意度填写人:钟伦攀</label>
+            </div>
+
+            <div>
+                <label>总分:100</label>
+            </div>
+
+            <div>
+                <label>建议:你好啊 老师 我的意见是</label>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <div id="rightSurveyImages">
+
+
+        <h2 style="text-align:center;"> 图形区域</h2>
+
+    </div>
+
+
+</div>
+
+<script type="text/template" id="moban1">
+    <div class="SurveyItem">
+
+        <div>
+            <label>满意度填写人:</label><label>{{=studentname}}</label>
+        </div>
+
+        <div>
+            <label>总分:</label><label>{{=Toatlscore}}</label>
+        </div>
+
+        <div>
+            <label>建议:</label> <label>{{=proposal}}</label>
+        </div>
+
+    </div>
+</script>
+
+@section script{
+<script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        layui.use(['form', 'layer'], function () {
+
+
+            var layer = layui.layer;
+
+            function load(empid, month) {
+
+                Ajax('/Teaching/SatisfactionSurvey/SurveyHistoryData', { empid: empid, date: month }, 'post', function (data) {
+
+                    console.log(data);
+
+                    if (data.ErrorCode = 200) {
+
+                        //渲染
+
+
+                        //首先清空
+                        $("#SurveyHistoryList").html("");
+
+                        for (var i = 0; i < data.Data.length; i++) {
+
+
+
+                            var html1 = _.template($("#moban1").html());
+
+                            var data1 = html1({ studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal});
+
+                            $("#SurveyHistoryList").append($(data1));
+
+                        }
+
+                      
+
+
+
+                    }
+
+
+                }, function (error) {
+
+
+
+                    layer.msg("数据加载异常");
+
+
+
+                });
+
+
+
+
+            }
+
+
+            $(document).off("click", ".empSelect").on("click", ".empSelect", function () {
+
+                var text = $(this).text();
+                var empid = $(this).attr("empid");
+
+                $(this).parent().parent().parent().find("button").attr("empid", empid);
+                $(this).parent().parent().parent().find("button").find(".text").text(text);
+
+                //获取月份
+               var month = $("#month").val();
+
+                //发送请求获取数据
+
+                console.log(month);
+
+                load(empid, month);
+
+                
+
+
+            });
+
+        });
+    </script>
+
+}
+
+

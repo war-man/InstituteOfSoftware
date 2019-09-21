@@ -1,0 +1,265 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EmpETRDetail</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+        <input type="hidden" id="TransactionId" name="TransactionId" value="@ViewBag.id" />
+        @*转正异动的详情页*@
+        <form class="layui-form" action="" id="Positive" lay-filter="Positive" hidden>
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="esex" name="esex" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="EntryTime" name="EntryTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">转正时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            <textarea id="Remark" name="Remark" class="layui-input" readonly style="border:0px;width:400px;height:100px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:230px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+
+        @*离职异动的详情页*@
+        <form class="layui-form" action="" lay-filter="Dimission" id="Dimission" hidden>
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="esex" name="esex" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">离职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">离职原因:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="Reason" name="Reason" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            <textarea id="Remark" name="Remark" class="layui-input" readonly style="border:0px;width:400px;height:100px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+                <div class="layui-form-item" style="margin-left:200px;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-warm btnclose1">关闭</button>
+                    </div>
+                </div>
+</form>
+    </div>
+
+
+    <script>
+
+        $(function () {
+            loademp();// 初始化编辑数据加载
+        });
+        function loademp() {
+            var id = $("#TransactionId").val();
+            console.log(id);
+            $.get("/Personnelmatters/EmployeesInfo/GetertById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    if (data.type == "转正") {
+                        $("#Positive").show();
+                        data.EntryTime = GetYMD(data.EntryTime);
+                         data.TransactionTime = GetYMD(data.TransactionTime);
+                        form.val("Positive", data);
+                    } else if (data.type == "离职") {
+                        $("#Dimission").show();
+                        data.TransactionTime = GetYMD(data.TransactionTime);
+                        console.log(data);
+                        form.val("Dimission", data);
+                    }
+                });
+            })
+        }
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+           
+            //关闭页面
+            $(".btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+        });
+
+
+        //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+
+</body>
+</html>

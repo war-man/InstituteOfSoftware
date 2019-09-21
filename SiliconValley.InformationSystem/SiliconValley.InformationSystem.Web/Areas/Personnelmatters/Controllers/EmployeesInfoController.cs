@@ -19,7 +19,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Consult_Business;
     using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
-    using SiliconValley.InformationSystem.Business;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
+
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -245,6 +247,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             HeadmasterBusiness hm = new HeadmasterBusiness();
             ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
             ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+            TeacherBusiness teamanage = new TeacherBusiness();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -277,6 +280,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任") {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
                     empinfo.Success().Success = s;
+                    AjaxResultxx = empinfo.Success();
+                }
+                if (empinfo.GetPosition(emp.PositionId).PositionName == "教学部" )
+                {
+                    Teacher tea = new Teacher();
+                    tea.EmployeeId = emp.EmployeeId;
+                     bool s = teamanage.AddTeacher(tea);
+                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
                 }
                 AjaxResultxx = empinfo.Success();
@@ -807,7 +818,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-
         /// <summary>
         /// 员工信息详情页面
         /// </summary>
@@ -896,6 +906,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
+
+
         //员工异动表显示页
         public ActionResult EmpTransactionRecord() {
             return View();
@@ -936,7 +948,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         //编辑员工异动信息      
         public ActionResult EditETR(int id) {
-            return View();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            var et = etmanage.GetEntity(id);
+            ViewBag.id = id;
+            return View(et);
         }
         //根据编号获取异动对象信息
         public ActionResult GetertById(int id)
@@ -949,8 +964,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 #region 获取属性值 
                 e.TransactionId,
                 empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                esex=emanage.GetInfoByEmpID(e.EmployeeId).Sex,
                 dname=emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                 pname= emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                EntryTime = emanage.GetInfoByEmpID(e.EmployeeId).EntryTime,
                 type = emanage.GetETById(e.TransactionType).MoveTypeName,
                 e.TransactionTime,
                 predname = e.PreviousDept == null ? null : emanage.GetDeptById((int)e.PreviousDept).DeptName,
@@ -964,43 +981,241 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.IsDel
                 #endregion
             };
+           
             return Json(empobj, JsonRequestBehavior.AllowGet);
         }
-        //员工异动详情信息
-        public object EmpETRDetail(int id) {
+        [HttpPost]
+        public ActionResult EditETR(EmpTransaction et) {
             EmpTransactionManage etmanage = new EmpTransactionManage();
+            var ajaxresult = new AjaxResult();
+            var e = etmanage.GetEntity(et.TransactionId);
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
             MoveTypeManage mt = new MoveTypeManage();
-            object viewobj = new object();
-             var etobj=etmanage.GetEntity(id);
-
-            var mtobj1 = mt.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault();//找到转正申请的异动
-            if (etobj.TransactionType==mtobj1.ID) {
-                viewobj = PositiveDetail(id);
+           var m = mt.GetList().Where(s=>s.MoveTypeName=="转正").FirstOrDefault().ID;
+            try
+            {
+                e.TransactionTime = et.TransactionTime;
+                e.Remark = et.Remark;
+                etmanage.Update(e);
+                ajaxresult = etmanage.Success();
+                try
+                {
+                    if (ajaxresult.Success && e.TransactionType==m)//当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
+                    {
+                        var emp = empmanage.GetEntity(e.EmployeeId);
+                        emp.PositiveDate = e.TransactionTime;
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ajaxresult = empmanage.Error(ex.Message);
+                }
             }
-            var mtobj2 = mt.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault();//找到离职申请的异动
-            if (etobj.TransactionType == mtobj2.ID) {
-                viewobj = DimissionDetail(id);
+            catch (Exception ex)
+            {
+                ajaxresult = etmanage.Error(ex.Message);
             }
-            return viewobj;
+          
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
         }
-        //转正异动的详情页
-        public ActionResult PositiveDetail(int id)
-        {
+        //员工异动详情信息
+        public ActionResult EmpETRDetail(int id) {
             EmpTransactionManage etmanage = new EmpTransactionManage();
-            var etobj = etmanage.GetEntity(id);
-            return View(etobj);
+             var et=etmanage.GetEntity(id);
+            ViewBag.id = id;
+            return View(et);
         }
-        //离职异动的详情页
-        public ActionResult DimissionDetail(int id) {
-            EmpTransactionManage etmanage = new EmpTransactionManage();
-            var etobj = etmanage.GetEntity(id);
-            return View(etobj);
-        }
-
-
+       
         //员工审批状态管理
         public ActionResult EmpApproval() {
             return View();
         }
+        /// <summary>
+        /// 获取所有转正申请数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetPositiveData(int page,int limit) {
+            ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = affmmanage.GetList();
+            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var empobj = from e in  newlist
+                          select new
+            {
+                #region 获取属性值 
+                e.Id,
+                empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                e.IsBuySS,
+                e.ProbationEndDate,
+                e.ProbationPersonalSummary,
+                e.ApplicationDate,
+                e.IsApproval,
+                e.IsPass
+                #endregion
+            };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = empobj
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改员工的转正申请的审批状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult PositiveIsPassed(int id,bool state) {
+            ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage m = new MoveTypeManage();
+            var positive = affmmanage.GetEntity(id);
+            EmpTransaction et = new EmpTransaction();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                if (state == true)
+                {
+                    positive.IsApproval = true;
+                    positive.IsPass = true;//表示转正申请通过
+                    affmmanage.Update(positive);
+                    ajaxresult = affmmanage.Success();
+                    try
+                    {
+                        if (ajaxresult.Success)//转正申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        {
+                            et.EmployeeId = positive.EmployeeId;
+                            et.IsDel = true;
+                            et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault().ID;
+                            etmanage.Insert(et);
+                            ajaxresult = etmanage.Success();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ajaxresult = etmanage.Error(ex.Message);
+                    }
+                }
+                else {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = false;//表示离职申请未通过
+                    affmmanage.Update(positive);
+                    ajaxresult = affmmanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = affmmanage.Error(ex.Message);
+            }
+       
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取所有离职申请数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDimissionData(int page, int limit)
+        {
+            DimissionApplyManage damanage = new DimissionApplyManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = damanage.GetList();
+            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                             dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                             pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                             e.DimissionDate,
+                             e.DimissionReason,
+                             e.OpinionOrAdvice,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改员工离职申请的审批状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult DimissionIsPassed(int id,bool state)
+        {
+            DimissionApplyManage dammanage = new DimissionApplyManage();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage m = new MoveTypeManage();
+            var positive = dammanage.GetEntity(id);
+            EmpTransaction et = new EmpTransaction();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                if (state == true)
+                {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = true;//表示离职申请通过
+                    dammanage.Update(positive);
+                    ajaxresult = dammanage.Success();
+                    try
+                    {
+                        if (ajaxresult.Success)//离职申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        {
+                            et.EmployeeId = positive.EmployeeId;
+                            et.IsDel = true;
+                            et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
+                            et.Reason = positive.DimissionReason;
+                            etmanage.Insert(et);
+                            ajaxresult = etmanage.Success();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        ajaxresult = etmanage.Error(ex.Message);
+                    }
+                }
+                else {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = false;//表示离职申请未通过
+                    dammanage.Update(positive);
+                    ajaxresult = dammanage.Success();
+                }
+               
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = dammanage.Error(ex.Message);
+            }
+           
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
+
+       
+
     }
 }

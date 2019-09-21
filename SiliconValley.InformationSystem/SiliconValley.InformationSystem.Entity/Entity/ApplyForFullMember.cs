@@ -23,6 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> ProbationEndDate { get; set; }
         public string ProbationPersonalSummary { get; set; }
         public Nullable<System.DateTime> ApplicationDate { get; set; }
-        public Nullable<bool> IsDel { get; set; } 
+        public Nullable<bool> IsPass { get; set; }
+        public Nullable<bool> IsApproval { get; set; }
     }
 }
