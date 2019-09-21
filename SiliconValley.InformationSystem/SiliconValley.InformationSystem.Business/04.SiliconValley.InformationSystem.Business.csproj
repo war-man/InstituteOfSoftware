@@ -97,6 +97,7 @@
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
     <Compile Include="EmpTransactionBusiness\MoveTypeManage.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
+    <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerFactory.cs" />
