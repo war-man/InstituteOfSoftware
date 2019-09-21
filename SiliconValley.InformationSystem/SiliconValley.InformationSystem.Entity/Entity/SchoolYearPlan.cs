@@ -25,11 +25,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 渠道预计人数
         /// </summary>
-        public Nullable<int> MarketForecast { get; set; }
+        public int MarketForecast { get; set; }
         /// <summary>
         /// 口碑预计人数
         /// </summary>
-        public Nullable<int> Estimatednumberofwordofmouth { get; set; }
+        public int Estimatednumberofwordofmouth { get; set; }
         /// <summary>
         /// 区域量
         /// </summary>

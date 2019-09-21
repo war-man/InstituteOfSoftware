@@ -1810,6 +1810,19 @@
     <Content Include="Scripts\layui\lay\modules\upload.js" />
     <Content Include="Scripts\layui\lay\modules\util.js" />
     <Content Include="Scripts\layui\prefixfree.min.js" />
+    <Content Include="Scripts\live2d\assets\autoload.js" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.svg" />
+    <Content Include="Scripts\live2d\assets\jquery-ui.min.js" />
+    <Content Include="Scripts\live2d\assets\jquery.min.js" />
+    <Content Include="Scripts\live2d\assets\live2d.js" />
+    <Content Include="Scripts\live2d\assets\live2d.min.js" />
+    <Content Include="Scripts\live2d\assets\waifu-tips.js" />
+    <Content Include="Scripts\live2d\assets\waifu-tips.min.js" />
+    <Content Include="Scripts\live2d\assets\waifu.css" />
+    <Content Include="Scripts\live2d\assets\waifu.min.css" />
+    <Content Include="Scripts\live2d\demo1-default.html" />
+    <Content Include="Scripts\live2d\demo2-autoload.html" />
+    <Content Include="Scripts\live2d\demo3-waifu-tips.html" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\Util.js" />
@@ -2096,6 +2109,10 @@
     <Content Include="Scripts\layui\font\iconfont.eot" />
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.eot" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
+    <Content Include="Scripts\live2d\assets\waifu-tips.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

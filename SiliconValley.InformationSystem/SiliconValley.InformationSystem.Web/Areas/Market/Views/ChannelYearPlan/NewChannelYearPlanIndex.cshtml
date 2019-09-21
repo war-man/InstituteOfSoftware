@@ -10,7 +10,7 @@
         float: left
     }
 
-    #echartshow {
+    #alldata {
         width: 70%;
         border: 1px solid pink;
         height: 830px;
@@ -32,6 +32,8 @@
         display: block
     }
 </style>
+
+@*顶部*@
 <dvi id="top">
     <div class="btn-group">
         <div class="btn-group">
@@ -76,51 +78,160 @@
         <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
     </div>
 </dvi>
+@*内容页面*@
 <div id="content">
     <div id="left">
         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
             <legend>员工列表</legend>
         </fieldset>
         <div id="test4" class="demo-tree"></div>
-
     </div>
-    <div id="echartshow">
-        <div id="main" style="width:99%;height:500px"></div>
-        <div id="baoquandiv" style="width:99%;height:300px">
-            <div id="quan" style="width:100%;height:100%"></div>
+    <div id="alldata">
+        <div class="layui-carousel" id="showdata" lay-filter="showdata">
+            <div carousel-item>
+                <div id="echartsandquan">
+                    <div id="main" style="width:99%;height:500px"></div>
+                    <div id="baoquandiv" style="width:99%;height:300px">
+                        <div id="quan" style="width:100%;height:100%"></div>
+                    </div>
+                </div>
+                <div id="tabledata">
+                    <div id="showtabledata"></div>
+                </div>
+            </div>
         </div>
     </div>
+    
+   
     <div id="channelshow">
-        <div><label>标题:</label><label>2019计划</label></div>
-        <div><label>预计人数:</label><label>780人</label></div>
-        <div><label>备案量:</label><label>1200人</label></div>
-        <div><label>上门量:</label><label>800人</label></div>
-        <div><label>报名量:</label><label>790人</label></div>
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>荣誉榜</legend>
-            <div><label>Top1:</label><label>徐宝平招生数：300人</label></div>
-            <div><label>Top2:</label><label>马  飞招生数：200人</label></div>
-            <div><label>Top3:</label><label>赵  俊招生数：190人</label></div>
-        </fieldset>
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>荣誉榜</legend>
-            <div><label>Top1:</label><label>徐宝平备案数量：300人</label></div>
-            <div><label>Top2:</label><label>马  飞备案数量：200人</label></div>
-            <div><label>Top3:</label><label>赵  俊备案数量：190人</label></div>
-        </fieldset>
-        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-            <legend>荣誉榜</legend>
-            <div><label>Top1:</label><label>徐宝平上门量：300人</label></div>
-            <div><label>Top2:</label><label>马  飞上门量数：200人</label></div>
-            <div><label>Top3:</label><label>赵  俊上门量：190人</label></div>
-        </fieldset>
-
 
     </div>
 </div>
+
+<!-- waifu-tips.js 依赖 JQuery 库 -->
+@*<script src="~/Scripts/jquery-3.3.1.min.js"></script>*@
+
+<!-- 实现拖动效果，需引入 JQuery UI -->
+@*<script src="~/Scripts/live2d/assets/jquery-ui.min.js"></script>*@
+@*live右侧*@
+@*<div class="waifu">
+        <div class="waifu-tips"></div>
+        <canvas id="live2d" class="live2d"></canvas>
+        <div class="waifu-tool">
+            <span class="fui-home"></span>
+            <span class="fui-chat"></span>
+            <span class="fui-eye"></span>
+            <span class="fui-user"></span>
+            <span class="fui-photo"></span>
+            <span class="fui-info-circle"></span>
+            <span class="fui-cross"></span>
+        </div>
+    </div>*@
+@*<script src="~/Scripts/live2d/assets/waifu-tips.min.js"></script>
+    <script src="~/Scripts/live2d/assets/live2d.min.js"></script>*@
+@*live2d*@
+@*<script type="text/javascript">
+        /* 可直接修改部分参数 */
+        live2d_settings['modelId'] = 1;                  // 默认模型 ID
+        live2d_settings['modelTexturesId'] = 87;         // 默认材质 ID
+        live2d_settings['modelStorage'] = false;         // 不储存模型 ID
+        live2d_settings['canCloseLive2d'] = false;       // 隐藏 关闭看板娘 按钮
+        live2d_settings['canTurnToHomePage'] = false;    // 隐藏 返回首页 按钮
+        live2d_settings['waifuSize'] = '600x535';        // 看板娘大小
+        live2d_settings['waifuTipsSize'] = '570x150';    // 提示框大小
+        live2d_settings['waifuFontSize'] = '30px';       // 提示框字体
+        live2d_settings['waifuToolFont'] = '36px';       // 工具栏字体
+        live2d_settings['waifuToolLine'] = '50px';       // 工具栏行高
+        live2d_settings['waifuToolTop'] = '-60px';       // 工具栏顶部边距
+        live2d_settings['waifuDraggable'] = 'axis-x';    // 拖拽样式
+        /* 在 initModel 前添加 */
+        initModel("~/Scripts/live2d/assets/waifu-tips.json?v=1.4.2")
+    </script>*@
+
+@*年计划模板*@
+<script type="text/template" id="plandetailmubao">
+    <div id="plandetail_title">
+
+    </div>
+    <div id="plandetail_amount">
+
+    </div>
+    <div id="plandetail_honorroll">
+
+    </div>
+</script>
+
+@*团队模板*@
+<script type="text/template" id="teamdetailmubao">
+    <div id="team_title">
+
+    </div>
+    <div><label>团队名称:</label><label>{{=captainname}}团队</label></div>
+    <div><label>团队人数:</label><label>{{=teamsize}}人</label></div>
+    <div id="team_amount">
+
+    </div>
+    <div id="team_honorroll">
+
+    </div>
+    <div id="team_contribution">
+
+    </div>
+</script>
+
+@*个人模板*@
+<script type="text/template" id="personaldetailmubao">
+    <div id="personal_title">
+
+    </div>
+    <div><label>姓名:</label><label>{{=personalempname}}</label></div>
+    <div><label>入职时间:</label><label>{{=personaldate}}</label></div>
+    <div><label>负责区域:</label><label>{{=personalregion}}</label></div>
+    <div id="personal_amount">
+
+    </div>
+    <div id="personal_contribution">
+
+    </div>
+</script>
+
+@*占全校招生比列*@
+<script type="text/template" id="contributionmubao">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>贡献值</legend>
+        <div>占据全校招生比例</div>
+    </fieldset>
+</script>
+
+@*各种量*@
+<script type="text/template" id="amountmubao">
+    <div><label>预计人数:</label><label>{{=marketforecast}}</label></div>
+    <div><label>备案量:</label><label>{{=beiancount}}</label></div>
+    <div><label>上门量:</label><label>{{=goschoolcount}}</label></div>
+    <div><label>报名量:</label><label>{{=baomingcount}}</label></div>
+</script>
+
+@*标题*@
+<script type="text/template" id="titlemubao">
+    <div><label>标题:</label><label id="labeltitle">{{=title}}</label></div>
+</script>
+
+
+@*荣誉榜*@
+<script type="text/template" id="honorrollmubao">
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>{{=countname}}荣誉榜</legend>
+        <div><label>Top1:</label><label>{{=top1name}}{{=countname}}：{{=top1count}}人</label></div>
+        <div><label>Top2:</label><label>{{=top2name}}{{=countname}}：{{=top2count}}人</label></div>
+        <div><label>Top3:</label><label>{{=top3name}}{{=countname}}：{{=top3count}}人</label></div>
+    </fieldset>
+</script>
+
+@*主任下拉框模板*@
 <script type="text/template" id="muban">
     <li><a href="javascript:void(0);" ZhurenID={{=EmployeeId}}>{{=EmpName}}</a></li>
 </script>
+
 <script src="~/Scripts/ECharts4.2.1/incubator-echarts-master/dist/echarts.js"></script>
 <script src="~/Scripts/underscore.js"></script>
 @section script{
@@ -132,34 +243,207 @@
         var mytree;
         var myCharts;
         var quanCharts;
+        var month;
+        var dataarray;
         var isteam = false;
-
+        var yearcircleviewdata;
         $(function () {
             mrdplanID =@Html.Raw(ViewBag.NowYearName.SchoolPlanID);
-            
-            
+
             LoadTree(mrdplanID);
             LoadECharts(mrdplanID, isteam, mrdempid);
-            loadquanquan();
-            
-            
-            
+            loadrightandbottom(mrdplanID, isteam, mrdempid,month);
         });
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+
+        //加载右边跟底部
+        function loadrightandbottom(mrdplanID, mrdisteam, mrdempinfoid,mrdmonth) {
+            $.ajax({
+                url: '/Market/ChannelYearPlan/LoadRightAndBottom' ,
+                type: 'GET',
+                data: {planid:mrdplanID,IsTeam:mrdisteam,EmpinfoID:mrdempinfoid,month:mrdmonth},
+                success: function (successdata) {
+                    yearcircleviewdata = successdata.circleView;
+                    if (month == 1 || month == "" || month==undefined) {
+                        loadquanquan(successdata.circleView);
+                    }
+                    loadrightshow(successdata.rightView);
+
+                },
+                error: function (errordata) {
+
+                }
+            });
+
+
+        };
 
         //加载右侧的显示数据：有几种可能，第一种是全校；第二种是团队，第三种是个人
-        function loadrightshow(mrdplanID,mrdisteam,mrdempinfoid) {
+        function loadrightshow(rightviewdata) {
+            console.log(rightviewdata);
+            console.log(mrdempid);
+            console.log(isteam);
+            console.log(month);
+             $("#channelshow").children().remove();
+            //如果是团队
+            if (isteam) {
+                if (mrdempid == "" || mrdempid == undefined) {
+                    //显示全校
+                    console.log("点击的是主任团队");
+                    loadrightdatabyall(rightviewdata);
+                }
+                //显示当前团队
+                else {
+                    console.log(mrdempid + "主任");
+                    //整体
+                    var jsplancompiled = _.template($("#teamdetailmubao").html());
+                    var jsplamhtml = jsplancompiled({ captainname: rightviewdata.captainname, teamsize: rightviewdata.teamsize });
+                    $("#channelshow").append($(jsplamhtml));
 
+                    //标题
+                    var jstitlehtml = loadrighttitle(rightviewdata);
+                    $("#team_title").append($(jstitlehtml));
+
+                    //量
+                    var jsamounthtml = loadrightamount(rightviewdata);
+                    $("#team_amount").append($(jsamounthtml));
+
+                    //荣誉榜
+                    for (var i = 0; i < rightviewdata.top.length; i++) {
+                        var jshonorrollhtml = loadrighttop(rightviewdata.top[i]);
+                        $("#team_honorroll").append($(jshonorrollhtml));
+                    }
+
+                }
+            }
+            //没点击团队
+            else {
+                console.log("isteam--false");
+                if (mrdempid == "" || mrdempid == undefined) {
+                    //显示全校
+                    console.log("没有点击团队，没有empid");
+                    loadrightdatabyall(rightviewdata);
+
+                } else {
+                    if (mrdempid == "201908290017") {
+                        //显示全校
+                        console.log("杨校编号");
+                        loadrightdatabyall(rightviewdata);
+                    }
+                    //显示个人
+                    else {
+                        console.log(mrdempid + "个人");
+                        //整体
+                        var jsplancompiled = _.template($("#personaldetailmubao").html());
+                        var jsdate= TimeChange(rightviewdata.personaldate);
+                        var jsplamhtml = jsplancompiled({ personalempname:rightviewdata.personalempname, personaldate:jsdate , personalregion: rightviewdata.personalregion });
+                        $("#channelshow").append($(jsplamhtml));
+
+                        //标题
+                        var jstitlehtml = loadrighttitle(rightviewdata);
+                        $("#personal_title").append($(jstitlehtml));
+
+                        //量
+                        var jsamounthtml = loadrightamount(rightviewdata);
+                        $("#personal_amount").append($(jsamounthtml));
+                        
+                    }
+                }
+
+            }
+        }
+
+        //加载右侧标题
+        function loadrighttitle(rightviewdata) {
+
+            var jstitlecompiled = _.template($("#titlemubao").html());
+            var jstitlehtml = jstitlecompiled({ title: rightviewdata.title });
+            return jstitlehtml;
+        }
+        //加载右侧各种量
+        function loadrightamount(rightviewdata) {
+
+            var jsmarketforecast = rightviewdata.MarketForecast;
+            var jsbeiancount = rightviewdata.BeianCount;
+            var jsgoschoolcount = rightviewdata.GoSchoolCount;
+            var jsbaomingcount = rightviewdata.BaomingCount;
+
+            var jsamountcompiled = _.template($("#amountmubao").html());
+            var jsamounthtml = jsamountcompiled({ marketforecast: jsmarketforecast, beiancount: jsbeiancount, goschoolcount: jsgoschoolcount, baomingcount: jsbaomingcount });
+            return jsamounthtml;
+        }
+        //加载右侧的top榜
+        function loadrighttop(topdata) {
+            var jscountname = topdata.countname;
+
+                var jstop1name = topdata.top1name;
+                var jstop2name = topdata.top2name;
+                var jstop3name = topdata.top3name;
+
+                var jstop1count = topdata.top1count;
+                var jstop2count = topdata.top2count;
+                var jstop3count = topdata.top3count;
+                console.log(jstop1name + jscountname + jstop1count);
+                console.log(jstop1name + jscountname + jstop2count);
+                console.log(jstop1name + jscountname + jstop3count);
+
+                var jshonorrollcompiled = _.template($("#honorrollmubao").html());
+            var jshonorrollhtml = jshonorrollcompiled({ countname: jscountname, top1name: jstop1name, top1count: jstop1count, top2name: jstop2name, top2count: jstop2count, top3name: jstop3name, top3count: jstop3count });
+            return jshonorrollhtml;
+        }
+        //显示全校右侧数据
+        function loadrightdatabyall(rightviewdata) {
+            //整体
+            console.log(rightviewdata);
+            var jsplancompiled = _.template($("#plandetailmubao").html());
+            var jsplamhtml = jsplancompiled({});
+            $("#channelshow").append($(jsplamhtml));
+
+            //标题
+            var jstitlehtml = loadrighttitle(rightviewdata);
+            $("#plandetail_title").append($(jstitlehtml));
+
+            //量
+            var jsamounthtml=loadrightamount(rightviewdata);
+            $("#plandetail_amount").append($(jsamounthtml));
+
+            //荣誉榜
+            for (var i = 0; i < rightviewdata.top.length; i++) {
+
+                var jshonorrollhtml = loadrighttop(rightviewdata.top[i]);
+                $("#plandetail_honorroll").append($(jshonorrollhtml));
+            }
         }
         //加载下面的圈圈，两种情况：年跟月
-        function loadquanquan() {
-            var quanoption = optionFactorytoquanquan();
+        function loadquanquan(circleviewdata) {
+
+            var quanoption = optionFactorytoquanquan(circleviewdata);
             if (quanCharts != null && quanCharts != "" && quanCharts != undefined) {
                 quanCharts.dispose();
             }
             quanCharts = echarts.init(document.getElementById('quan'));
             quanCharts.setOption(quanoption);
         }
+        //创建圈圈option
         function optionFactorytoquanquan(res) {
+            console.log(res);
+
             var mrddataStyle = {
                 normal: {
                     label: {
@@ -183,7 +467,7 @@
                     hoverAnimation: false,
                     center: ['15%', '50%'],
                     data: [{
-                        value: 25,
+                        value: Math.abs(res.beianCount),
                         label: {
                             normal: {
                                 rich: {
@@ -200,7 +484,28 @@
                                     }
                                 },
                                 formatter: function (params) {
-                                    return "{b|招生数比去年}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
+                                    var jsbeianRatio = res.beianRatio.toFixed(1);
+
+                                    if (res.isExistData) {
+                                        if (res.isMonth) {
+
+                                            if (Number(res.beianRatio) >= 0) {
+                                                return "{b|备案量比上个月}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|增长 " + jsbeianRatio + " %}";
+                                            } else {
+                                                return "{b|备案量比上个月}\n\n" + "{a|-" + params.value + "人}" + "\n\n{b|降低 -" + Math.abs(jsbeianRatio) + " %}";
+                                            }
+
+                                        } else {
+                                            if (Number(res.beianRatio) >= 0) {
+                                                return "{b|备案量比去年}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|增长 " + jsbeianRatio + " %}";
+                                            } else {
+                                                return "{b|备案量比去年}\n\n" + "{a|-" + params.value + "人}" + "\n\n{b|降低 -" + Math.abs(jsbeianRatio) + " %}";
+                                            }
+                                        }
+                                    } else {
+                                        return "{b|备案数}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|无上个季度的记录}";
+                                    }
+
                                 },
                                 position: 'center',
                                 show: true,
@@ -239,7 +544,7 @@
                     hoverAnimation: false,
                     center: ['50%', '50%'],
                     data: [{
-                        value: 50,
+                        value: Math.abs(res.goSchoolCount),
                         label: {
                             normal: {
                                 rich: {
@@ -256,7 +561,25 @@
                                     }
                                 },
                                 formatter: function (params) {
-                                    return "{b|上门数比去年}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
+                                    var jsgoSchoolRatio = res.goSchoolRatio.toFixed(1);
+                                    if (res.isExistData) {
+                                        if (res.isMonth) {
+                                            if (Number(res.goSchoolRatio) >= 0) {
+                                                return "{b|上门量比上个月}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|增长 " + jsgoSchoolRatio + " %}";
+                                            } else {
+                                                return "{b|上门量比上个月}\n\n" + "{a|-" + params.value + "人}" + "\n\n{b|降低 -" + Math.abs(jsgoSchoolRatio) + " %}";
+                                            }
+
+                                        } else {
+                                            if (Number(res.goSchoolRatio) >= 0) {
+                                                return "{b|上门量比去年}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|增长 " + jsgoSchoolRatio + " %}";
+                                            } else {
+                                                return "{b|上门量比去年}\n\n" + "{a|-" + params.value + "人}" + "\n\n{b|降低 -" + Math.abs(jsgoSchoolRatio) + " %}";
+                                            }
+                                        }
+                                    } else {
+                                        return "{b|上门量}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|无上个季度的记录}";
+                                    }
                                 },
                                 position: 'center',
                                 show: true,
@@ -275,17 +598,17 @@
                             }
                         }
                     }, {
-                        value: 50,
-                        name: 'invisible',
-                        itemStyle: {
-                            normal: {
-                                color: '#412a4e'
-                            },
-                            emphasis: {
-                                color: '#412a4e'
+                            value: 50,
+                            name: 'invisible',
+                            itemStyle: {
+                                normal: {
+                                    color: '#412a4e'
+                                },
+                                emphasis: {
+                                    color: '#412a4e'
+                                }
                             }
-                        }
-                    }]
+                        }]
                 }, {
                     name: '第三个圆环',
                     type: 'pie',
@@ -294,8 +617,8 @@
                     itemStyle: mrddataStyle,
                     hoverAnimation: false,
                     center: ['85%', '50%'],
-                    data: [{
-                        value: 75,
+                        data: [{
+                            value: Math.abs(res.baomingCount),
                         label: {
                             normal: {
                                 rich: {
@@ -312,7 +635,25 @@
                                     }
                                 },
                                 formatter: function (params) {
-                                    return "{b|备案数比去年}\n\n" + "{a|" + params.value + "个}" + "\n\n{b|增长2%}";
+                                    var jsbaomingRatio = res.baomingRatio.toFixed(1);
+                                    if (res.isExistData) {
+                                      if (res.isMonth) {
+                                            if (Number(res.baomingRatio) >= 0) {
+                                                return "{b|报名量比上个月}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|增长 " + jsbaomingRatio + " %}";
+                                            } else {
+                                                return "{b|报名量比上个月}\n\n" + "{a|-" + params.value + "人}" + "\n\n{b|降低 -" + Math.abs(jsbaomingRatio) + " %}";
+                                            }
+
+                                        } else {
+                                            if (Number(res.baomingRatio) >= 0) {
+                                                return "{b|报名量比去年}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|增长 " + jsbaomingRatio + " %}";
+                                            } else {
+                                                return "{b|报名量比去年}\n\n" + "{a|-" + params.value + "人}" + "\n\n{b|降低 -" + Math.abs(jsbaomingRatio) + " %}";
+                                            }
+                                        }
+                                    } else {
+                                        return "{b|报名量}\n\n" + "{a|" + params.value + "人}" + "\n\n{b|无上个季度的记录}";
+                                    }
                                 },
                                 position: 'center',
                                 show: true,
@@ -346,7 +687,6 @@
             };
             return quanoption;
         }
-
         //加载主任
         function LoadZhuren(mrdplanID) {
             $.ajax({
@@ -385,7 +725,7 @@
             $.ajax({
                 url:'/Market/ChannelYearPlan/LoadTree_Zhuren',
                 type: 'GET',
-                
+
                 data: {Plan:mrdplanID,zhurenid:mrdempid},
                 success: function (successdata) {
                     //console.log(mytree);
@@ -398,7 +738,8 @@
                                 {
                                     title: "杨奇军"
                                     , children: successdata
-                                    ,spread:true
+                                    , spread: true
+                                    ,id:201908290017
                                 }]
 
                         });
@@ -409,8 +750,9 @@
             });
         };
         //创建option
-        function optionFactory(res) {
-            //console.log(res);
+        function optionFactory(res,plan) {
+            var dataarray = new Array();
+            console.log(res);
             //console.log(res.KeepOnRecordCount);
             var option = {
                 grid: {
@@ -418,7 +760,7 @@
                     y:80
                 },
                 title: {
-                    text: '2019计划',
+                    text: plan.Title,
                 },
                 tooltip: {
                     trigger: 'axis',
@@ -442,6 +784,7 @@
                 },
                 xAxis: [
                     {
+                        name:'年计划',
                         type: 'category',
                         data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                         axisPointer: {
@@ -489,29 +832,30 @@
                 type: 'GET',
                 data: { planid: mrdplanID, IsTeam: mrdisteam, EmpinfoID: mrdempinfoid },
                 success: function (SuccessData) {
+                    var nowplan = SuccessData.plan;
                     var all = new Object();
-                    //console.log(SuccessData);
+                    dataarray=SuccessData.ShowEchartsViewData;
                     var KeepOnRecordArray = new Array();
                     var GoSchooArray = new Array();
                     var SignUpArray = new Array();
                     for (var i = 0; i < 12; i++) {
-                        var KeepOnRecordCount = SuccessData[i].KeepOnRecordCount;
+                        var KeepOnRecordCount = dataarray[i].KeepOnRecordCount;
                         KeepOnRecordArray.push(KeepOnRecordCount);
                     }
                     for (var i = 0; i < 12; i++) {
-                        var GoSchoolCount = SuccessData[i].GoSchoolCount;
+                        var GoSchoolCount = dataarray[i].GoSchoolCount;
                         GoSchooArray.push(GoSchoolCount);
                     }
                     for (var i = 0; i < 12; i++) {
-                        var SignUpCount = SuccessData[i].SignUpCount;
+                        var SignUpCount = dataarray[i].SignUpCount;
                         SignUpArray.push(SignUpCount);
                     }
                     all.KeepOnRecordCount = KeepOnRecordArray;
                     all.GoSchoolCount = GoSchooArray;
                     all.SignUpCount = SignUpArray;
 
-                    var option = optionFactory(all);
-                    
+                    var option = optionFactory(all,nowplan);
+
 
                     //j解决了There is a chart instance already initialized on the dom.
                     //中文：在dom上已经初始化了一个图表实例。
@@ -520,21 +864,130 @@
                     }
                     myCharts = echarts.init(document.getElementById('main'));
                     myCharts.setOption(option);
-                    myCharts.on('click', function (params) {
-                        var xAxisValue = params.value;
-                        var querymonth = xAxisValue.slice(0, 1);
-                        
+                    myCharts.on('click', function (params)
+                    {
+                        console.log(params);
+                        //点击的是月份
+                        if (params.targetType == "axisLabel")
+                        {
+                            console.log("树叶子e");
+                            var xAxisValue = params.value;
+                            month = parseInt(xAxisValue);
+                            var clickmonthis1 = loadrightandbottom(mrdplanID, isteam, mrdempid, month);
+                            console.log(clickmonthis1)
+                            if (month!=1)
+                            {
+                                //js 解决
+                                var clickmonthdata= dataarray[month-1];
+                                var thepreviousdata = dataarray[month - 2];
+                                var objectquandata = new Object();
+                                console.log(clickmonthdata);
+
+                                var beiandisparity = clickmonthdata.KeepOnRecordCount - thepreviousdata.KeepOnRecordCount;
+                                var goschooldisparity = clickmonthdata.GoSchoolCount - thepreviousdata.GoSchoolCount;
+
+                                var baomingdisparity = clickmonthdata.SignUpCount - thepreviousdata.SignUpCount;
+
+                                objectquandata.baomingCount =baomingdisparity;
+                                objectquandata.baomingRatio = percentage(baomingdisparity, thepreviousdata.SignUpCount);
+                                console.log( objectquandata.baomingRatio);
+                                objectquandata.beianCount =  beiandisparity;
+                                objectquandata.beianRatio = percentage(beiandisparity, thepreviousdata.KeepOnRecordCount);
+
+                                objectquandata.goSchoolCount = goschooldisparity;
+                                objectquandata.goSchoolRatio = percentage(goschooldisparity, thepreviousdata.GoSchoolCount);
+
+                                objectquandata.isExistData = true;
+                                objectquandata.isMonth = true;
+                                console.log(objectquandata);
+                                loadquanquan(objectquandata);
+
+                                $("#labeltitle").text("");
+
+                                $("#labeltitle").text(plan.Title+ month + "月");
+                            }
+                        }
+                        //点击的是年计划
+                        else {
+                            month = "";
+                            console.log("全部");
+                            loadrightandbottom(mrdplanID, isteam, mrdempid, month);
+                        }
+
                     });
                 }
             });
         }
-
+        //算百分比
+        function percentage(fenmu, thepreviouscount) {
+            var Ratio;
+              //分子为0
+            if (thepreviouscount == 0) {
+                //Infinity
+                Ratio = fenmu * 100;
+            }
+            //分子分母为0
+            else if (fenmu == 0 && thepreviouscount == 0) {
+                //NaN
+                Ratio = 0;
+            }
+            //分母为0
+            else if (fenmu == 0) {
+                //0
+                Ratio = thepreviouscount * 100;
+            } else if (fenmu < 0) {
+                Ratio = fenmu * 100;
+            }
+            //正常情况
+            else if (fenmu > 0) {
+                Ratio = (fenmu / thepreviouscount) * 100;
+            }
+            return Ratio;
+        }
         //layui
-        layui.use(['tree', 'util'], function () {
+        layui.use(['tree', 'util','carousel','table'], function () {
             var tree = layui.tree
                 , layer = layui.layer
                 , util = layui.util
+            var carousel = layui.carousel;
+            var table = layui.table;
             mytree = tree;
+
+           var tableIns =  table.render({
+                elem: '#showtabledata'
+                , url: '' //数据接口
+                , page: true //开启分页
+                //, skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 15
+                , limits: [15, 30, 45, 60, 75]
+                , cols: [[ 
+                    //标题栏
+                    , { type: 'checkbox' }
+                    , { field: 'StudentName', title: '学生姓名', width: 80}
+                    , { field: 'ClassNo', title: '所在班级', width: 165 }
+                    , { field: 'ProfessionalTeacher', title: '专业课老师', width: 165 }
+                    , { field: 'Headmaster', title: '班主任', width: 100 }
+                    , { field: 'ChannelStaffName', title: '引路人', width: 178 }
+                    , { field: 'OldSchoolName', title: '学校名称', width: 178 }
+                    , {
+                        field: 'BeianDate', title: '备案时间', width: 178, templet: function (v) {
+                            return TimeChange(v.BeianDate);
+                        }
+                    }
+                    , {
+                        field: 'GoSchoolDate', title: '上门时间', width: 165, templet: function (v) {
+                            return TimeChange(v.GoSchoolDate);
+                        }
+                    }
+                    , {
+                        field: 'BaomingDate', title: '报名时间', width: 165, templet: function (v) {
+                            return TimeChange(v.BaomingDate);
+                        }
+                    }
+                ]]
+
+            });
             //手风琴模式
             tree.render({
                 elem: '#test4'
@@ -549,11 +1002,48 @@
                     isteam = false;
                     mrdempid = obj.data.id;
                     LoadECharts(mrdplanID, isteam, mrdempid);
+                    if (mrdempid=="201908290017") {
+                        LoadTree(mrdplanID, mrdempid);
+                        LoadZhuren(mrdplanID);
+                    }
+                    loadrightandbottom(mrdplanID, isteam, mrdempid,month);
 
                 }
                 , showLine: false
             });
 
+             //建造实例
+            carousel.render({
+                elem: '#showdata'
+                , width: '100%' //设置容器宽度
+                ,height:'100%'
+                , arrow: 'always' //始终显示箭头
+                //,anim: 'updown' //切换动画方式
+                , autoplay: false
+            });
+            //监听轮播切换事件
+            carousel.on('change(showdata)', function (obj) {
+                //showdata来源于对应HTML容器的 lay-filter="showdata" 属性值
+                if (obj.index == 1) {
+                    tableIns.reload(
+                        {
+                            elem: '#showtabledata'
+                            , url: '/Market/ChannelYearPlan/GetBaomingData' //设置异步接口
+                            , id: 'showtabledata'
+                            , where: { //设定异步数据接口的额外参数，任意设
+                                myplanid: mrdplanID
+                                , myistema: isteam
+                                , myempid: mrdempid
+                                , mymonth: month
+
+                            }
+                            , page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        }
+                    );
+                }
+            });
         });
 
         //年度计划下拉框触发事件
@@ -565,6 +1055,7 @@
             LoadZhuren(mrdplanID);
             LoadTree(mrdplanID,mrdempid);
             LoadECharts(mrdplanID, isteam, mrdempid);
+            loadrightandbottom(mrdplanID, isteam, mrdempid,month);
         });
         //团队下拉框触发事件
         $(document).off("click", "#Zhurenlist li").on('click', '#Zhurenlist li', function () {
@@ -575,10 +1066,9 @@
             isteam = true;
             LoadTree(mrdplanID, mrdempid);
             LoadECharts(mrdplanID, isteam, mrdempid);
+            loadrightandbottom(mrdplanID, isteam, mrdempid,month);
         });
 
-
-        
 
     </script>
 }
