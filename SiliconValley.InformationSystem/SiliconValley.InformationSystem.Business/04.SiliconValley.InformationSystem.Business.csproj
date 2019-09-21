@@ -96,7 +96,6 @@
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
-    <Compile Include="EmpTransactionBusiness\MoveTypeManage.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
@@ -147,6 +146,11 @@
     <Compile Include="UserManeger\UsersInfoManeger.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="obj\Release\04.SiliconValley.InformationSystem.Business.csproj.CoreCompileInputs.cache" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Depository\02.SiliconValley.InformationSystem.Depository.csproj">
       <Project>{8a91cd26-c6bb-4f0e-819c-8ef3be0a0d6e}</Project>
       <Name>02.SiliconValley.InformationSystem.Depository</Name>
@@ -160,11 +164,5 @@
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="obj\Release\04.SiliconValley.InformationSystem.Business.csproj.CoreCompileInputs.cache" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
