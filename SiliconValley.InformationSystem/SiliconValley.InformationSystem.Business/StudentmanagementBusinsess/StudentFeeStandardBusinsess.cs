@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
+using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 
@@ -13,110 +16,71 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
     {
         //专业表
         BaseBusiness<Specialty> special = new BaseBusiness<Specialty>();
+
+        //班主任表
+        HeadmasterBusiness headmasters = new HeadmasterBusiness();
+        //学员班级
+        ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
         //阶段专业表
         BaseBusiness<StageGrade> stagegrade = new BaseBusiness<StageGrade>();
         //阶段表
-
         BaseBusiness<Grand> geand = new BaseBusiness<Grand>();
-        /// <summary>
-        /// 获取数据
-        /// </summary>
-        /// <param name="page">第几个</param>
-        /// <param name="limit">当前几页</param>
-        /// <returns></returns>
-        public object StudentFeeList(int page, int limit)
+
+        //学费详情
+        BaseBusiness<Studenttuitionfeestandard> Feestandard = new BaseBusiness<Studenttuitionfeestandard>();
+        //学员信息
+        StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+
+        //获取所有数据
+        public object GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument)
         {
+            //班主任带班
+            BaseBusiness<HeadClass> Hoadclass = new BaseBusiness<HeadClass>();
+            //    List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
+            List<StudentInformation> list = studentInformationBusiness.Mylist("StudentInformation").Where(a => a.IsDelete ==false).ToList();
+           
 
-          var list=  this.GetList().Where(a => a.IsDelete == false).Select(a => new
+                if (!string.IsNullOrEmpty(Name))
+                {
+                    list = list.Where(a => a.Name.Contains(Name)).ToList();
+                }
+                if (!string.IsNullOrEmpty(Sex))
+                {
+                    bool sex = Convert.ToBoolean(Sex);
+                    list = list.Where(a => a.Sex == sex).ToList();
+                }
+                if (!string.IsNullOrEmpty(StudentNumber))
+                {
+                    list = list.Where(a => a.StudentNumber.Contains(StudentNumber)).ToList();
+                }
+                if (!string.IsNullOrEmpty(identitydocument))
+                {
+                    list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
+                }
+
+
+           var xz= list.Select(a => new
             {
+                a.StudentNumber,
+                a.Name,
+                a.Sex,
+                a.BirthDate,
+                a.identitydocument,
+                ClassName= scheduleForTraineesBusiness.GetList().Where(q=>q.CurrentClass==true&&q.StudentID==a.StudentNumber).FirstOrDefault().ClassID,
+                Headmasters=headmasters.Listheadmasters(a.StudentNumber).EmpName
 
-              a.ID,
-                a.Foodandlodging,
-                a.Tuition,
-                grade_Id = geand.GetEntity(stagegrade.GetList().Where(c => c.IsDelete == false && c.Id == a.Stage).FirstOrDefault().Grand_Id).GrandName,
-                Major_Id = special.GetEntity(stagegrade.GetList().Where(c => c.IsDelete == false && c.Id == a.Stage).FirstOrDefault().Major_Id).SpecialtyName
-            }).ToList();
-            var dataList = list.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+           }).ToList();
+            var dataList = xz.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
             {
                 code = "",
                 msg = "",
-                count = list.Count,
+                count = xz.Count,
                 data = dataList
             };
             return data;
-        }
-        /// <summary>
-        /// 查询是否数据库存在学员学费单
-        /// </summary>
-        /// <param name="Grand_Id">阶段id</param>
-        /// <param name="Major_Id">专业id</param>
-        /// <returns></returns>
-        public bool BoolFeeStude(int Grand_Id,int Major_Id)
-        {
-            bool str = false;
-          var id=  stagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == Grand_Id && a.Major_Id == Major_Id).FirstOrDefault();
-            if (id!=null)
-            {
-                var count = this.GetList().Where(a => a.IsDelete == false && a.Stage == id.Id).Count();
-                if (count>0)
-                {
-                    str = true;
-                }
-            }
-            return str;
-         
-        }
-        /// <summary>
-        /// 录入学员学费价格单
-        /// </summary>
-        /// <param name="Foodandlodging">伙食费</param>
-        /// <param name="Tuition">学费</param>
-        /// <param name="Grand_Id">阶段id</param>
-        /// <param name="Major_Id">专业id</param>
-        /// <returns></returns>
-        public AjaxResult AddFeeStudent(decimal Foodandlodging,decimal Tuition,int Grand_Id,int Major_Id)
-        {
-            AjaxResult retus = null;
 
-            try
-            {
-                var x = stagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == Grand_Id && a.Major_Id == Major_Id).FirstOrDefault();
-                StudentFeeStandard studentFeeStandard = new StudentFeeStandard();
-                if (x == null)
-                {
-                    StageGrade stage = new StageGrade();
-                    stage.Major_Id = Major_Id;
-                    stage.Grand_Id = Grand_Id;
-                    stage.IsDelete = false;
-                    stage.AddTime = DateTime.Now;
-                    stagegrade.Insert(stage);
-                    var my_stage = stagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == Grand_Id && a.Major_Id == Major_Id).FirstOrDefault();
-                    x.Id = my_stage.Id;
-                }
-                studentFeeStandard.Stage = x.Id;
-                studentFeeStandard.Foodandlodging = Foodandlodging;
-                studentFeeStandard.Tuition = Tuition;
-                studentFeeStandard.Addtime = DateTime.Now;
-                studentFeeStandard.IsDelete = false;
-                this.Insert(studentFeeStandard);
-                retus = new SuccessResult();
-                retus.Success = true;
-                retus.Msg = "添加数据";
-                BusHelper.WriteSysLog("添加数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            catch (Exception ex)
-            {
-                retus = new ErrorResult();
-                retus.Msg = "服务器错误";
-                retus.Success = false;
-                retus.ErrorCode = 500;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-          
-            }
-            return retus;
-        
         }
     }
     

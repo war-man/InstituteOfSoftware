@@ -53,6 +53,14 @@
 
                         </div>
                     </div>
+                  
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">说明</label>
+                        <div class="layui-input-block">
+
+                            @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                        </div>
+                    </div>
                 </div>
 
 
@@ -103,8 +111,8 @@
         var couwu = "";
         //去数据库查询是否有重复
         function Verification(valie, valie2) {
-            $.post("/Teachingquality/Pricedetails/BoolFeeStude?Grand_Id=" + valie + "&Major_Id=" + valie2, function (data) {
-                if (data != "False") {
+            $.post("/Finance/Pricedetails/BoolFeeStude?Grand_Id=" + valie + "&Major_Id=" + valie2, function (data) {
+                if (data == "False") {
                     layer.msg("该价格已存在数据库", {
                         time: 5000, //20s后自动关闭
                         btn: ['确定']
@@ -136,7 +144,7 @@
                 Major_Id:x.Major_Id
             };
             console.log(da);
-            ajaxUniom("/Teachingquality/Pricedetails/AddFeeStudent", da);
+            ajaxUniom("/Finance/Pricedetails/AddFeeStudent", da);
 
             return false;
         });

@@ -1,0 +1,102 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.CostitemsX
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Typeeyesight</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <form class="layui-form" action="" style="margin-top:20px;" id="form">
+        <h3 style="text-align:center;height:50px;">费用名目录入</h3>
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+                    
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">名称</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input" } })
+
+                        </div>
+                        <label id="lab1" style="color:red; display:none; line-height:40px;">名称重复</label>
+                       
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        //   $('select').attr('disabled', 'disabled');
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+
+        var erre = "";
+        function Boolfeestandard(Name) {
+            $.post("/Finance/Pricedetails/TypeName/" + Name, function (data) {
+                if (data > 0) {
+
+                    $("#lab1").css("display", "block");
+                    erre = "aa";
+                    $("#Amountofmoney").attr("readonly", "readonly");
+                } else {
+                    erre = "";
+                    $("#lab1").css("display", "none");
+                    $("#Amountofmoney").removeAttr("readonly");
+
+                }
+
+            });
+        }
+        //监听是否有重复的值
+        $("#Name").keyup(function (event) {
+          
+            if ($(this).val() != "") {
+               
+                    Boolfeestandard($(this).val());
+                
+            }
+        });
+
+        //监听功能
+        form.on('submit(demo1)', function (data) {
+            var x = data.field;
+            if (erre == "") {
+                ajaxUniomss("/Finance/Pricedetails/Typeeyesight ", x);
+            } else {
+                Errye("名称存在重复！")
+            }
+          
+
+            return false;
+        });
+    });
+</script>

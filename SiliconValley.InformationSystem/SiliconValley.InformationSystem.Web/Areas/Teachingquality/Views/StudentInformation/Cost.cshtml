@@ -16,6 +16,19 @@
         .Stuid {
             border: 0px;
         }
+
+        .Nation {
+            width: 80%;
+            height: 100px;
+        }
+
+        .mysql {
+            margin-top: 10px;
+        }
+
+        .width {
+            width: 40px;
+        }
     </style>
 </head>
 <body>
@@ -28,55 +41,64 @@
                 <div class="layui-row layui-form-item" style="margin-left:60px;">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">学号</label>
-                        <div class="layui-input-inline" style="margin-top:10px;">
-                            @Html.TextBoxFor(a => a.Studentnumber, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input Stuid" } })
-
+                        <div class="layui-input-inline">
+                            <input @*value="@ViewBag.Stuid"*@ name="Studentnumber" id="Studentnumber" type="text" readonly="readonly" class="layui-input Stuid" />
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">阶段</label>
                         <div class="layui-input-inline">
-                            @Html.DropDownListFor(a => a.Stage, ViewBag.Stage as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
+                            @Html.DropDownList("Stage", ViewBag.Stage as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">专业</label>
-                        <div class="layui-input-inline">
+                        <label class="layui-form-label">缴费类型</label>
+                        <div class="layui-input-block">
+                            <input type="radio" lay-filter="Tuition" name="Tuition" value="学费" title="学费" checked="checked">
+                            <input type="radio" lay-filter="Tuition" name="Tuition" value="伙食费" title="伙食费">
+                            <input type="radio" lay-filter="Tuition" name="Tuition" value="自考本科费" title="自考本科费">
+                            <input type="radio" lay-filter="Tuition" name="Tuition" value="驾校费" title="驾校费">
 
-
-                            @Html.DropDownList("Major_Id", ViewBag.Major_Id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Major_Id" }, { "name", "list" } })
                         </div>
+
+
                     </div>
+                    @* <div>
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">专业</label>
+                            <div class="layui-input-inline ">
+                                <select name="Major_Id" id="Major_Id" lay-verify="required" lay-filter="Major_Id">
+                                    <option value="">请选择</option>
+
+                                </select>
+                            </div>
+                        </div>*@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">是否迟交</label>
                         <div class="layui-input-block">
-                            <input type="radio" lay-filter="erweima" name="Isthecostpaid" value="true" title="是">
-                            <input type="radio" lay-filter="erweima" name="Isthecostpaid" value="false" title="否" checked="checked">
+                            <input type="radio" lay-filter="erweima" class="Isthecostpaid" name="Isthecostpaid" value="true" title="是">
+                            <input type="radio" lay-filter="erweima" class="Istecostpaid" name="Isthecostpaid" value="false" title="否" checked="checked">
                         </div>
                     </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">学费</label>
-                        <div class="layui-input-inline" style="margin-top:10px;">
-                            @Html.TextBoxFor(a => a.Tuition, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
+                    @*<div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">学费</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.Tuition, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
 
-                        </div>
+                            </div>
+                        </div>*@
+                    @*<div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">食宿费</label>
+                            <div class="layui-input-inline">
+                                @Html.TextBoxFor(a => a.Foodandlodging, new Dictionary<string, object>() { { "disabled", "disabled" }, { "class", "layui-input " } })
+
+                            </div>
+                        </div>*@
+
+
+                    <div id="domes">
+
                     </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">食宿费</label>
-                        <div class="layui-input-inline" style="margin-top:10px;">
-                            @Html.TextBoxFor(a => a.Foodandlodging, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
-
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">缴费日期</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Addtime, new Dictionary<string, object>() { { "lay-verify", "date|required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
-                        </div>
-                    </div>
-
-
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">备注</label>
                         <div class="layui-input-block">
@@ -101,19 +123,138 @@
     </form>
 </body>
 </html>
+@*加载学费页面*@
+<script type="text/template" id="studenthtml">
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+        <label class="layui-form-label">专业</label>
+        <div class="layui-input-inline">
+            <select name="Major_Id" id="Major_Id" lay-verify="required" lay-filter="Major_Id">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+        <label class="layui-form-label">费用名称</label>
+        <div class="layui-input-block" id="Unitpricename" >
+          
+      
+        </div>
+    </div>
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+        <label class="layui-form-label">学费</label>
+        <div class="layui-input-inline">
+            <input name="Tuition" lay-verify="required" disabled="disabled" id="Tuition" type="text" class="layui-input" />
+        </div>
+    </div>
+</script>
+@*食宿费*@
+<script type="text/template" id="boardandlodginghtml">
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+        <label class="layui-form-label">食宿费</label>
+        <div class="layui-input-inline">
+            <input name="Foodandlodging" lay-verify="required" disabled="disabled" id="Foodandlodging" type="text" class="layui-input" />
+        </div>
+    </div>
+</script>
+<script src="~/Scripts/underscore.js"></script>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
-    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
 
+
+
+
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        var money = "";
         var form = layui.form
             , layer = layui.layer
             , layedit = layui.layedit
             , laydate = layui.laydate;
-        //监听下拉框
+        //第一次加载学费
+        Tuition();
+        //加载专业数据
+        function select(value) {
+            $.post("/Teachingquality/StudentInformation/Stage/" + value, function (data) {
+                var optionstring = "";
+                $.each(data, function (i, item) {
+                    optionstring += "<option value=\"" + item.code + "\" >" + item.name + "</option>";
+                });
+                $("#Major_Id").html('<option value=""></option>' + optionstring);
+                form.render('select'); //这个很重要
+            });
+        }
+        //加载费用名称
+        function checkbox(value) {
+            $.post("/Teachingquality/StudentInformation/Studenttuitionfeestandard/" + value, function (data) {
+                var optionstring = "";
+               
+                    $.each(data, function (i, item) {
+                        optionstring += "<input type='checkbox' name='Unitpricename' value=\"" + item.code + "\"title=" + item.name + " checked='checked'>";
+                });
+                $("#Unitpricename").html(optionstring);
+                form.render();
+                //form.render('select'); //这个很重要
+            });
+        }
+        //监听第一个下拉框
         form.on('select(Stage)', function (data) {
-
-
+            $("#Foodandlodging").val("");
+            $("#Tuition").val("");
+            if (data.value != "") {
+                if ($($("input[name='Isthecostpaid']")[0]).is(":checked")) {
+                    Latetuitionfee(data.value);
+                }
+                checkbox(data.value);
+                select(data.value);
+            } else {
+                $($("#Major_Id").children()).remove();
+                $($("input[name='Isthecostpaid']")[1]).prop("checked", true);
+                $($("input[name='Isthecostpaid']")[0]).removeProp("checked", false);
+                var Tuition = $("#Tuition");
+                var Foodandlodging = $("#Foodandlodging");
+                Tuition.attr("disabled", "disabled");
+                Foodandlodging.attr("disabled", "disabled");
+                form.render();
+            }
         })
 
+        //学费
+        function Tuition() {
+            $($("#domes").children()).remove();
+            var templates = _.template($("#studenthtml").html());
+            var dates = templates({});
+            $("#domes").append($(dates));
+            if ($("#Stage").val() != "") {
+                select($("#Stage").val());
+                checkbox($("#Stage").val());
+            }
+        }
+        form.on('radio(Tuition)', function (data) {
+            switch (data.value) {
+                case "学费":
+                    Tuition();
+                    break;
+            }
+        });
+        //监听第二个下拉框
+        form.on('select(Major_Id)', function (data) {
+
+            if (data.value != "") {
+
+                if ($($("input[name='Isthecostpaid']")[1]).is(":checked")) {
+                  
+                    var Stageid = $("#Stage").val();
+                    var database = {
+                        Stage: Stageid,
+                        Major_Id: data.value
+                    };
+                    GetFeestandard(database);
+                }
+
+            } else {
+                $("#Foodandlodging").val("");
+                $("#Tuition").val("");
+            }
+        });
         laydate.render({
             elem: '#Addtime',
             format: 'yyyy-MM-dd',
@@ -128,23 +269,84 @@
             }
         });
 
+        //学员学费赋值
+        function GetFeestandard(database) {
+            $.post("/Teachingquality/StudentInformation/GetFeestandard", database, function (da) {
+                $("#Foodandlodging").val(da.Foodandlodging);
+                $("#Tuition").val(da.Tuition);
+            });
+        }
+        //迟交学员学费赋值
+        function Latetuitionfee(Stage) {
+            $.post("/Teachingquality/StudentInformation/Latetuitionfee/" + Stage, function (da) {
+                money = da.Minimumcost;
+                $("#Tuition").val(da.Minimumcost);
+                $("#Foodandlodging").val("");
+            });
+        }
+        //监听单选框
         form.on('radio(erweima)', function (data) {
-     
-            console.log(data.value);//判断单选框的选中值
             var Tuition = $("#Tuition");
             var Foodandlodging = $("#Foodandlodging");
+        
             if (data.value == "true") {
-             
-                Tuition.removeAttr("disabled");
-                Foodandlodging.removeAttr("disabled");
+
+                if ($("#Stage").val() == "") {
+
+                    $($("input[name='Isthecostpaid']")[1]).prop("checked", true);
+                    $($("input[name='Isthecostpaid']")[0]).removeProp("checked", false);
+                    var database = {
+                        Stage: $("#Stage").val(),
+                        Major_Id: $("#Major_Id").val()
+                    };
+
+                    GetFeestandard(database);
+                    //lay-verify="required"
+                } else {
+                    Tuition.removeAttr("disabled");
+                    Foodandlodging.removeAttr("disabled");
+                 
+                }
             } else {
+
                 Tuition.attr("disabled", "disabled");
                 Foodandlodging.attr("disabled", "disabled");
+                //Foodandlodging
+                if ($("#Major_Id").val() == "") {
+                    $("#Tuition").val("");
+                } else {
+                    var database = {
+                        Stage: $("#Stage").val(),
+                        Major_Id: $("#Major_Id").val()
+                    };
+
+                }
+
+                GetFeestandard(database);
             }
             form.render();
-     
-        });
 
+        });
+        //提交数据
+        form.on('submit(demo1)', function (data) {
+            var x = data.field;
+            if ($($("input[name='Isthecostpaid']")[0]).is(":checked")) {
+                x.Foodandlodging = x.Foodandlodging == "" ? "0" : x.Foodandlodging;
+                x.Tuition = x.Tuition == "" ? "0" : x.Tuition;
+                var nome = parseInt(x.Tuition) + parseInt(x.Foodandlodging);
+                if (nome >= money) {
+                    ajaxUniom("/Teachingquality/StudentInformation/Cosr", x);
+                } else {
+                    Errye("当前最低缴费不能低于" + money + "元");
+                }
+            } else {
+                ajaxUniom("/Teachingquality/StudentInformation/Cosr", x);
+            }
+
+
+            console.log(x);
+            return false;
+        });
     });
-    
+
 </script>

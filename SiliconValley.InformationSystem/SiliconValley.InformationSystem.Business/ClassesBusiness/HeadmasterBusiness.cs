@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
@@ -11,6 +12,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 {
   public  class HeadmasterBusiness:BaseBusiness<Headmaster>
     {
+
         //班主任带班
         BaseBusiness<HeadClass> Hoadclass = new BaseBusiness<HeadClass>();
         //添加班主任
@@ -38,8 +40,10 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             return str;
 
         }
-
-
+        //员工表
+        EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+        //学员班级
+        ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
         //班主任离职时间
         public bool QuitEntity(string informatiees_Id)
         {
@@ -164,6 +168,18 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             }
             return str;
 
+        }
+        /// <summary>
+        /// 根据学员学号获取当前班主任
+        /// </summary>
+        /// <param name="StudentID">学员id</param>
+        /// <returns></returns>
+        public EmployeesInfo Listheadmasters(string StudentID)
+        {
+          var ClassID=  scheduleForTraineesBusiness.GetList().Where(q => q.CurrentClass == true && q.StudentID == StudentID).FirstOrDefault().ClassID;//获取班级号
+            var leid = Hoadclass.GetList().Where(c => c.IsDelete == false && c.EndingTime == null && c.ClassID == ClassID).FirstOrDefault().LeaderID;//查询带班班长id
+          var Empid = this.GetEntity(leid).informatiees_Id;//员工编号
+            return employeesInfoManage.GetEntity(Empid);
         }
     }
 }

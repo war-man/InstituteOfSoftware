@@ -13,6 +13,7 @@ using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -29,7 +30,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         ScheduleForTraineesBusiness Stuclass = new ScheduleForTraineesBusiness();
         //班级阶段
         BaseBusiness<Grand> MyGrand = new BaseBusiness<Grand>();
-
+        //专业
+        SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
 
         private static int NameKeysid = 0;
         public class Student { }
@@ -478,11 +480,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
 
         //添加缴费记录
+        [HttpGet]
         public ActionResult Cost()
         {
-
+            ViewBag.Stuid = Request.QueryString["Stuid"];
+            //阶段
             ViewBag.Stage = MyGrand.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
                 return View();
+        }
+       //添加缴费记录数据操作
+       public ActionResult Cost(StudentFeeRecord studentFeeRecord)
+        {
+            return Json(dbtext.Cost(studentFeeRecord), JsonRequestBehavior.AllowGet);
+        }
+        //根据阶段查找专业
+        public ActionResult Stage(int id)
+        {
+          
+
+            return Json(dbtext.Stage(id), JsonRequestBehavior.AllowGet);
+        
+        }
+        //学费赋值
+        public ActionResult GetFeestandard(int Stage,int Major_Id)
+        {
+            //int Stage = Convert.ToInt32(Request.QueryString["Stage"]);
+            //int Major_Id = Convert.ToInt32(Request.QueryString["Major_Id"]);
+          return Json(  dbtext.GetFeestandard(Stage, Major_Id),JsonRequestBehavior.AllowGet);
+        }
+        //迟交信息
+        public ActionResult Latetuitionfee(int id)
+        {
+            return Json(dbtext.Latetuitionfee(id), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Studenttuitionfeestandard(int id)
+        {
+            return Json(dbtext.Studenttuitionfeestandard(id),JsonRequestBehavior.AllowGet);
         }
 
     }

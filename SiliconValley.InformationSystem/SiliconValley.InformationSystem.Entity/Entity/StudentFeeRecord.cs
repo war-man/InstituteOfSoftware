@@ -14,20 +14,18 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    //学员费用表
     [Table(name: "StudentFeeRecord")]
     public partial class StudentFeeRecord
     {
         [Key]
         public int ID { get; set; }
-        public string Studentnumber { get; set; }
-        public Nullable<decimal> Tuition { get; set; }
-        public Nullable<decimal> Foodandlodging { get; set; }
-        public Nullable<int> Stage { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
-        public Nullable<bool> Isthecostpaid { get; set; }
+        public string StudenID { get; set; }
+        public Nullable<decimal> Amountofmoney { get; set; }
+        public Nullable<int> FinanceModelid { get; set; }
+        public Nullable<System.DateTime> AddDate { get; set; }
+        public int Costitemsid { get; set; }
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
-
     }
 }
