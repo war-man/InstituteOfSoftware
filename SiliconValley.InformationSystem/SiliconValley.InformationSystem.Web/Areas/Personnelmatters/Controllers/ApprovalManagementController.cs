@@ -29,6 +29,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.EntryTime,
                  dname=empmanage.GetDept(emp.PositionId).DeptName,
                  pname=empmanage.GetPosition(emp.PositionId).PositionName,
+                 emp.ProbationSalary,
+                 emp.Salary,
             };
             return Json(empobj, JsonRequestBehavior.AllowGet);
         }
@@ -36,15 +38,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //转正申请
         public ActionResult PositiveApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908150002";//为测试，暂时设置的死数据
+            string eid = "201908150004";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
-        /// <summary>
-        /// 转正申请提交
-        /// </summary>
-        /// <param name="affm"></param>
-        /// <returns></returns>
+        // 转正申请提交
         [HttpPost]
         public ActionResult PositiveApply(ApplyForFullMember affm) {
             ApplyForFullMemberManage amanage = new ApplyForFullMemberManage();
@@ -63,13 +61,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
+
+
         //离职申请
         public ActionResult DimissionApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201909040026";//为测试，暂时设置的死数据
+            string eid = "201909040025";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
+        //离职申请提交
         [HttpPost]
         public ActionResult DimissionApply(DimissionApply da) {
             DimissionApplyManage damanage = new DimissionApplyManage();
@@ -85,6 +86,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             catch (Exception ex)
             {
                 AjaxResultxx = damanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+
+        //转岗申请
+        public ActionResult TransferPositionApply() {
+            // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
+            string eid = "201909040025";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
+            return View();
+        }
+        //转岗提交申请
+        [HttpPost]
+        public ActionResult TransferPositionApply(JobTransferAppply jta) {
+            JobTransferApplyManage jtamanage = new JobTransferApplyManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                jta.ApplicationTime = DateTime.Now;
+                jta.IsPass = false;
+                jta.IsApproval = false;
+                jtamanage.Insert(jta);
+                AjaxResultxx = jtamanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = jtamanage.Error(ex.Message);
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }

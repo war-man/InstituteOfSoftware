@@ -557,12 +557,10 @@
     <Content Include="Areas\Teaching\Views\Project\Projectschedule.cshtml" />
     <Content Include="Areas\Teaching\Views\Project\ProjectShowImage.cshtml" />
     <Content Include="Areas\Teaching\Views\Project\SelectStudentView.cshtml" />
-    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\selectEmpView.cshtml" />
-    <Content Include="Config\UserMapRole.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\selectClassView.cshtml" />
-    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyDetail.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpApproval.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditETR.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DimissionApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\TransferPositionApply.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
