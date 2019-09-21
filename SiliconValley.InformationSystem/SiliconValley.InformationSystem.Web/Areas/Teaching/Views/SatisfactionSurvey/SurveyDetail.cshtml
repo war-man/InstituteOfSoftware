@@ -1,0 +1,107 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SurveyDetail</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #warp {
+            margin-left:50px;
+            margin-top:50px;
+        }
+
+        .item {
+            margin-top:20px;
+        }
+        .title {
+            font-size:18px;
+            color:#e46d6d;
+        }
+        .itemScore {
+            width:40px;
+            height:40px;
+            text-align:center;
+            line-height:40px;
+            border:3px solid #00ff21;
+            border-radius:50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="warp">
+
+        <div class="item">
+            <label class="title">当事人:</label><label>@ViewBag.SurveyDetail.Emp.EmpName</label>------<label>@ViewBag.SurveyDetail.Curriculum.CourseName</label>
+        </div>
+
+        <div class="item">
+            <label class="title">满意度填写人:</label><label>@ViewBag.SurveyDetail.FillInPerson.Name</label>------<label>@ViewBag.SurveyDetail.investigationClass.ClassNumber</label>
+        </div>
+        <div class="item">
+
+            <label class="title">总分:</label><label>@ViewBag.SurveyDetail.TotalScore</label>
+
+        </div>
+
+        <div class="item">
+
+            <label class="title">调查时间:</label><label id="Surveydate">@ViewBag.SurveyDetail.investigationDate</label>
+
+        </div>
+
+        <div class="item">
+
+            <label class="title">建议:</label> 
+            
+           
+
+            <label style="color:gray; font-size:10px;">“调查对象亦称“调查总体”。需要进行调查的总体范围。由许多性质相同的调查单位所组成。确定调查对象，要明确总体的界限，划清调查的范围，以防在调查工作中产生重复或遗漏。如，调查的目的是为了搜集某地区国有及国有控股企业经营活动情况的资料，则调查对象就是该地区所有国有及国有控股企业。”</label>
+
+        </div>
+
+        <hr />
+
+        <h4 style="text-align:center;color:gray;">详细得分列表</h4>
+
+
+        @{
+            foreach (var item in @ViewBag.SurveyDetail.detailitem as List<SatisficingResultDetailView>)
+            {
+
+                <div>
+
+                    <div style="display:inline-block;">@item.SatisficingItem.ItemContent 。</div>
+                    <div class="itemScore" style="display:inline-block;">@item.Scores <span style="font-size:10px;">分</span></div>
+
+                </div>
+
+            }
+        }
+
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+        var Surveydate = $("#Surveydate").text();
+
+        var date = new Date(Surveydate);
+
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var day = date.getDate();
+
+       
+        $("#Surveydate").text(year + "年" + month + "月" + day +"日");
+    </script>
+</body>
+</html>

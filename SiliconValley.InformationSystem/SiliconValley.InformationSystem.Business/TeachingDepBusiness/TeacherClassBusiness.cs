@@ -237,5 +237,25 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+
+        /// <summary>
+        /// 获取学员的技术老师
+        /// </summary>
+        /// <param name="studentnumber">学员编号</param>
+        /// <returns></returns>
+        public Teacher GetTeacherByStudent(string studentnumber)
+        {
+            //获取学员班级
+
+             var dd = db_studentclass.GetList().Where(d => d.StudentID == studentnumber && d.CurrentClass == true).FirstOrDefault();
+
+            TeacherBusiness db = new TeacherBusiness();
+
+           return db.GetTeachers().Where(x=>x.TeacherID== this.GetList().Where(d => d.ClassNumber == dd.ClassID && d.IsDel == false).FirstOrDefault().TeacherID) .FirstOrDefault();
+
+
+
+        }
+
     }
 }

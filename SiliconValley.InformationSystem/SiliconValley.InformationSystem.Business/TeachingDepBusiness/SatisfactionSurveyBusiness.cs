@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
 
@@ -211,9 +213,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             SatisfactionSurveyDetailView detailView = new SatisfactionSurveyDetailView();
 
-
-           
-
             var satisficingConfig = db_satisconfig.GetList().Where(d=>d.IsDel==false && d.ID== satisficingResult.SatisficingConfig).FirstOrDefault();
 
 
@@ -229,6 +228,8 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             detailView.Proposal = satisficingResult.Suggest;
 
+            detailView.SurveyResultID = satisficingResult.ID;
+
           var templist =  db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
 
             foreach (var item in templist)
@@ -238,37 +239,112 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             }
 
+            List<SatisficingResultDetailView> templist1 = new List<SatisficingResultDetailView>();
+
+           var ss = db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
+
+            foreach (var item in ss)
+            {
+
+               var obj1= this.ConvertToSatisfactionSurveyDetailView(item);
+
+                templist1.Add(obj1);
+
+            }
 
 
-
+            detailView.detailitem = templist1;
             return detailView;
 
         }
 
 
+        public SatisficingResultDetailView ConvertToSatisfactionSurveyDetailView(SatisficingResultDetail detail)
+        {
+
+
+
+            SatisficingResultDetailView detailview = new SatisficingResultDetailView();
+
+            detailview.ID = detail.ID;
+            detailview.SatisficingBill = detail.SatisficingBill;
+            detailview.SatisficingItem = this.GetList().Where(d => d.ItemID == detail.SatisficingItem).FirstOrDefault();
+            detailview.Scores = detail.Scores;
+
+            return detailview;
+
+
+
+        }
         /// <summary>
         /// 获取满意度调查详细数据
         /// </summary>
         /// <param name="empid"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string date)
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string date , int? Curriculum, string classnumber)
         {
+
 
             List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
 
-           var templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >= DateTime.Parse(date) && d.CreateTime < (DateTime.Parse(date)).AddMonths(1)).ToList();
+           //判断部门
 
+           var emp = db_emp.GetList().Where(d => d.EmployeeId == empid).FirstOrDefault();
+
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+
+            var dep = empmanage.GetDept(emp.PositionId);
+
+            if (dep.DeptId == 1)
+            {
+                //教质部
+                resultlist = SurveyHistoryData(empid, classnumber, date);
+
+
+            }
+
+            if (dep.DeptId == 2)
+            {
+                //教学部
+                resultlist = SurveyHistoryData(empid, (int)Curriculum, classnumber);
+
+            }
+           
+
+
+            return resultlist;
+
+        }
+
+
+        /// <summary>
+        /// 获取满意度调查详细数据 --教员
+        /// </summary>
+        /// <returns></returns>
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid , int Curriculum, string classnumber)
+        {
+            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
+            List<SatisficingConfig> templist = new List<SatisficingConfig>();
+
+            if (string.IsNullOrEmpty(classnumber))
+            {
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CurriculumID == Curriculum).ToList();
+            }
+            else
+            {
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CurriculumID == Curriculum && d.ClassNumber == classnumber).ToList();
+            }
 
             foreach (var item in templist)
             {
 
-               var temp1list = db_satisresult.GetList().Where(d => d.SatisficingConfig == item.ID).ToList();
+                var temp1list = db_satisresult.GetList().Where(d => d.SatisficingConfig == item.ID).ToList();
 
                 foreach (var item1 in temp1list)
                 {
 
-                   var obj = this.ConvertToViewModel(item1);
+                    var obj = this.ConvertToViewModel(item1);
 
                     if (obj != null)
                     {
@@ -284,5 +360,63 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string classnumber,string date)
+        {
+            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
+            List<SatisficingConfig> templist = new List<SatisficingConfig>();
+
+            if (classnumber == null)
+            {
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >=DateTime.Parse(date) && d.CreateTime< DateTime.Parse(date).AddMonths(1)).ToList();
+            }
+            else
+            {
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >= DateTime.Parse(date) && d.CreateTime < DateTime.Parse(date).AddMonths(1) && d.ClassNumber == classnumber).ToList();
+            }
+
+            foreach (var item in templist)
+            {
+
+                var temp1list = db_satisresult.GetList().Where(d => d.SatisficingConfig == item.ID).ToList();
+
+                foreach (var item1 in temp1list)
+                {
+
+                    var obj = this.ConvertToViewModel(item1);
+
+                    if (obj != null)
+                    {
+
+                        resultlist.Add(obj);
+                    }
+
+                }
+
+            }
+
+            return resultlist;
+        }
+
+
+        /// <summary>
+        /// 返回满意度调查结果
+        /// </summary>
+        /// <param name="id">iD</param>
+        /// <returns></returns>
+        public SatisficingResult GetSatisficingResultByID(int id)
+        {
+
+
+          return  db_satisresult.GetList().Where(d => d.IsDel == false && d.ID == id).FirstOrDefault();
+
+
+        }
+
+        public SatisfactionSurveyDetailView GetSatisficingBy(SatisficingResult satisficingResult)
+        {
+
+            return this.ConvertToViewModel(satisficingResult);
+
+        }
     }
 }

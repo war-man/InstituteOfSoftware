@@ -31,6 +31,7 @@ function GetClassInfo(classnumber,successcallback, errorcallback) {
 function loadclassinfohtml(data) {
 
     //渲染数据
+   
     var classinfohtml = _.template($("#classinfohtml").html());
 
     var classdata = classinfohtml({ classnumber: data.ClassNumber, studentcount: data.ClassSize, headermaster: data.Headmaster, qqgourp: data.qqGroup, grandName: data.GradeName });
