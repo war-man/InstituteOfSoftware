@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 
   public  class ScheduleForTraineesBusiness:BaseBusiness<ScheduleForTrainees>
     {
+        
 
         /// <summary>
         /// 通过班级名称获取学员
@@ -40,6 +41,16 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 
             return resullist;
         }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        /// <summary>
+        /// 根据学号获取班级名称(ClassID班级名称)
+        /// </summary>
+        /// <param name="Sutdentid">学员学号</param>
+        /// <returns></returns>
+        public ScheduleForTrainees SutdentCLassName(string Sutdentid)
+        {
+            return this.GetList().Where(q => q.CurrentClass == true && q.StudentID == Sutdentid).FirstOrDefault();
+        }
+
+
     }
 }

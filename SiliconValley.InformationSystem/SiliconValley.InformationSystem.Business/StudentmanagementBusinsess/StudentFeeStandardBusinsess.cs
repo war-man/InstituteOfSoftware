@@ -66,8 +66,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 a.Sex,
                 a.BirthDate,
                 a.identitydocument,
-                ClassName= scheduleForTraineesBusiness.GetList().Where(q=>q.CurrentClass==true&&q.StudentID==a.StudentNumber).FirstOrDefault().ClassID,
-                Headmasters=headmasters.Listheadmasters(a.StudentNumber).EmpName
+                ClassName= scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
+                Headmasters =headmasters.Listheadmasters(a.StudentNumber).EmpName
 
            }).ToList();
             var dataList = xz.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
