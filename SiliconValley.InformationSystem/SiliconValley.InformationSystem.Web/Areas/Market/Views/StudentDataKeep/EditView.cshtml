@@ -87,6 +87,10 @@
             color: #fff;
             border: none;
         }
+        .layui-unselect
+        {
+            width: 150px;
+        }
     </style>
 </head>
 <body>
@@ -99,7 +103,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名</label><input type="hidden" id="Id" name="Id" value="@ViewBag.id"/>
                         <div class="layui-input-block">                          
-                            <input name="StuName" id="StuName" readonly="readonly" class="layui-input linu"/>
+                            <span name="StuName" id="StuName" class="LableCss1" style="color:red"></span>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -118,7 +122,7 @@
 
                         <label class="layui-form-label">电话</label>
                         <div class="layui-input-block">            
-                            <input name="StuPhone" id="StuPhone" readonly="readonly" placeholder="联系电话" class="layui-input linu"/>
+                            <span name="StuPhone" id="StuPhone" class="LableCss1" style="color:red"></span>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -183,7 +187,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">录入人员</label>
                         <div class="layui-input-block">
-                            <input type="text" id="StuEntering_1" name="StuEntering_1" placeholder="录入人员" lay-verify="required" class="layui-input linu" readonly="readonly" />
+                            <span id="StuEntering_1" name="StuEntering_1" class="LableCss1"></span>
                             <input type="hidden" id="StuEntering" name="StuEntering" />
                         </div>
                     </div>
@@ -212,17 +216,18 @@
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">学生状态</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
+                            
                         </div>
                     </div>
-                    <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备案人</label>
                         <div class="layui-input-block">
                             <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />
-                            <input name="e_Name" id="e_Name" lay-verify="required" class="layui-input linu" readonly="readonly" placeholder="备案人" />
+                            <span name="e_Name" id="e_Name" class="LableCss1"></span>
                         </div>
                     </div>                    
                 </div>
@@ -378,6 +383,11 @@
                         successdata.StuIsGoto = successdata.StuIsGoto.toString();
                         layui.use(['form', 'layedit', 'laydate'], function () {
                             var form = layui.form;
+                            $("#StuName")[0].innerText = successdata.StuName;
+                            $("#StuPhone")[0].innerText = successdata.StuPhone;
+                            $("#e_Name")[0].innerText = successdata.e_Name;
+                            $("#StuEntering_1")[0].innerText = successdata.StuEntering_1;
+                            $("#StuAddress").attr("title", successdata.StuAddress);
                             form.val("myform1", successdata);
                         });
                         IsDisable(successdata.StuIsGoto);
@@ -386,7 +396,7 @@
                             var layer = layui.layer;
                             layer.msg("信息加载错误!请重试", {
                                 icon: 1,
-                                time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                                time: 3000 
                             });
                         });
                     }

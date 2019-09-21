@@ -9,112 +9,91 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>FollwingInfoView</title>
-    <style>
-        *
-        {
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
 
-        body
-        {
-            background: #ccc;
-        }
-        /* accordion */
-        .accordion
-        {
-            width: 900px;
-            height: 370px;
-            overflow: hidden;
-            margin-top: 80px;
-            margin-left:auto;
-            margin-right:auto;
-            box-shadow: 0 0 10px 2px rgba(0,0,0,0.4);
-        }
-
-            .accordion ul
-            {
-                width: 3000px;
-            }
-
-            .accordion li
-            {
-                display: block;
-                height: 370px;
-                overflow: hidden;
-                position: relative;
-                float: left;
-                border-left: 1px solid #aaa;
-                box-shadow: 0 0 25px 10px rgba(0,0,0,0.4);
-                -webkit-transition: all .5s;
-                -moz-transition: all .5s;
-                -ms-transition: all .5s;
-                -o-transition: all .5s;
-                transition: all .5s;
-            }
-
-                .accordion li img
-                {
-                    display: block;
-                }
-
-            .accordion ul:hover li
-            {
-                width: 40px;
-            }
-
-            .accordion ul li:hover
-            {
-                width: 80%;
-            }
-
-            .accordion .title
-            {
-                position: absolute;
-                left: 0;
-                bottom: 0;
-                width: 640px;
-                background: rgba(0,0,0,0.5);
-            }
-
-                .accordion .title a
-                {
-                    display: block;
-                    color: #fff;
-                    font-size: 16px;
-                    padding: 20px;
-                }
-
-        .divCssEnght2
-        {
-            width: 300px;
-            height: 300px;
-        }
-    </style>
+    <link href="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Css/normalize.css" rel="stylesheet" />
+    <link href="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Css/jquery.wiper.css" rel="stylesheet" />
+    <link href="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Css/default.css" rel="stylesheet" />
 </head>
 <body>
-    <div id="div_right_middle_bttom">
-            <div class='accordion'>
-                <ul>
-                    @{
-                            List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
-                            int wid = 900 / f_list.Count;
-                            foreach (var item in f_list)
-                            {
-                            <li style="width:@wid">
-                                <div class='title'>@item.FollwingDate</div>
-                                <div class="divCssEnght2">
-                                    <span>等级:</span><span>@item.Rank</span>
-                                    <h3>
-                                       @item.TailAfterSituation
-                                    </h3>
-                                </div>
+    <article id="test">
+        <section id="acordion_box">
+            <ul id="acordion_main">
+                @{
+                    List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
+                    if (f_list.Count <= 0)
+                    {
+                        <li>
+                            <h2>系统温馨提示</h2>
+                            <section class="sample_text" style="width:600px;font-family:STSong;font-size:25px;">该学生目前没有跟踪信息！！!</section>
+
+                        </li>
+                                }
+                                else
+                                {
+                                    int i = 0;
+                                    foreach (var item in f_list)
+                                    {
+                            i++;
+                            <li style="background-color:rgba(238,240,240,1)" class="active">
+                                <h2>第<span>《</span><span>@i</span><span>》次跟踪</span></h2>
+                                <section class="sample_text">
+                                    <h3 style="width:600px;">跟踪日期:<span>@item.FollwingDate</span></h3>
+                                    <h3>等级:<span>@item.Rank</span></h3>
+                                    <h3>跟踪内容:</h3>
+                                    <div style="width:600px;font-family:STSong;font-size:25px;">  
+                                          @item.TailAfterSituation
+                                    </div>
+                                    @{ 
+                                        if (item.Rmark!=null)
+                                        {
+                                            <h3>说明:</h3>
+                                            <div style="width:600px;font-family:STSong;font-size:25px;">
+                                                @item.Rmark
+                                            </div>
+                                        }
+                                    }   
+                                  
+                                </section>
                             </li>
                         }
                     }
-                </ul>
-            </div>
-        </div>
+                }
+            </ul>
+        </section>
+    </article>
+    <script src="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Js/jquery.min.js"></script>
+    <script src="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Js/jquery.wiper.js"></script>
+    <script>
+        //---------------wiper------------------
+        $(function () {
+            $("ul#acordion_main").Wiper();
+
+            //easing: 'linear',
+            //easing: 'ease',
+            //easing: 'ease-in',
+            //easing: 'ease-out',
+            //easing: 'ease-in-out',
+
+            //Demonstration1
+            $("ul#inner_wiper").Wiper({
+                easing: 'ease-out',
+                offset: -1,
+                duration: 2000,
+                binder: $("#inner_wiper_demo"),
+                menuColors: ['#000000', '#333333', '#666666', '#999999', '#cccccc']
+            });
+
+            //Demonstration2
+            $("ul#inner_wiper2").Wiper({
+                easing: 'ease-out',
+                offset: -1,
+                duration: 800,
+                binder: $("#inner_wiper_demo2"),
+                menuColors: [false, false, '#ffd700', '#adff2f', '#4169e1'],
+            });
+
+        });
+
+    </script>
 </body>
 </html>

@@ -175,55 +175,55 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-block">
-                            <input name="StuName" id="StuName" class="layui-input linu" readonly="readonly" />
+                            <span name="StuName" id="StuName" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
                         <label class="layui-form-label">性别</label>
                         <div class="layui-input-block">
-                            <input id="Sexone" type="radio" name="StuSex" value="true" title="男" checked="checked" readonly="readonly">
-                            <input id="Sextwo" type="radio" name="StuSex" value="false" title="女" readonly="readonly">
+                            <span name="StuSex" id="StuSex" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
 
                 </div>
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
                         <label class="layui-form-label">电话</label>
                         <div class="layui-input-block">
-                            <input name="StuPhone" id="StuPhone" placeholder="联系电话" class="layui-input linu" readonly="readonly" />
-                        </div>
+                            <span name="StuPhone" id="StuPhone" class="LableCss1">
 
+                            </span>
+                        </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
                         <label class="LableCss1">出生日期</label>
                         <div class="layui-input-block">
-                            <input name="StuBirthy" id="StuBirthy" placeholder="YY-MM-DD" lay-verify="StuBirthy" class="layui-input linu" disabled="disabled"/>
-                        </div>
+                            <span name="StuBirthy" id="StuBirthy" class="LableCss1">
 
+                            </span>
+                        </div>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">学校名称</label>
                         <div class="layui-input-block">
-                            <input name="StuSchoolName" id="StuSchoolName" placeholder="学校名称" class="layui-input linu" readonly="readonly" />
+                            <span name="StuSchoolName" id="StuSchoolName" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
                     <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                         <label class="layui-form-label">学历</label>
-                        <div class="layui-input-block">
-                            <select style="width:200px;" class="layui-select" id="StuEducational" name="StuEducational">
-                                <option value="初中">初中</option>
-                                <option value="高中">高中</option>
-                                <option value="大专">大专</option>
-                                <option value="本科">本科</option>
-                                <option value="中专">中专</option>
-                            </select>
+                        <div class="layui-input-block">                          
+                            <span id="StuEducational" name="StuEducational" class="LableCss1">
+
+                            </span>
                         </div>
 
                     </div>
@@ -232,13 +232,17 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">家庭住址</label>
                         <div class="layui-input-block">
-                            <input name="StuAddress" id="StuAddress" placeholder="家庭住址" class="layui-input linu" readonly="readonly" />
+                            <span name="StuAddress" id="StuAddress" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">微信</label>
                         <div class="layui-input-block">
-                            <input name="StuWeiXin" id="StuWeiXin" placeholder="微信" class="layui-input linu" readonly="readonly" />
+                            <span class="LableCss1" name="StuWeiXin" id="StuWeiXin">
+
+                            </span>
                         </div>
 
                     </div>
@@ -247,13 +251,17 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">QQ</label>
                         <div class="layui-input-block">
-                            <input name="StuQQ" id="StuQQ" placeholder="QQ" class="layui-input linu" readonly="readonly" />
+                            <span name="StuQQ" id="StuQQ" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="LableCss1">信息来源</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>)
+                            <span class="LableCss1" id="InfomationTypeName" name="InfomationTypeName">
+
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -261,13 +269,19 @@
                     <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
                         <label class="LableCss1">录入人员</label>
                         <div class="layui-input-block">
-                            <input type="text" id="StuEntering_1" name="StuEntering_1" placeholder="录入人员" lay-verify="required" class="layui-input linu" readonly="readonly" />
+                            <span id="StuEntering_1" name="StuEntering_1" class="LableCss1">
+
+                            </span>
+ 
                         </div>
                     </div>
                     <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
                         <label class="LableCss1">备案日期</label>
                         <div class="layui-input-block">
-                            <input type="text" id="StuDateTime" name="StuDateTime" placeholder="录入人员" lay-verify="required" class="layui-input linu" disabled="disabled" />
+                       
+                            <span id="StuDateTime" name="StuDateTime" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -276,29 +290,36 @@
 
                         <label class="LableCss1">是否上门</label>
                         <div class="layui-input-block">
-                            <input id="visitone" type="radio" name="StuIsGoto" value="true" title="是" checked="checked" lay-filter="radio1" readonly="readonly">
-                            <input id="visitwo" type="radio" name="StuIsGoto" value="false" title="否" lay-filter="radio1" readonly="readonly">
+                            <span  name="StuIsGoto" id="StuIsGoto" class="LableCss1">
+
+                            </span>
                         </div>
 
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">上门日期</label>
                         <div class="layui-input-block">
-                            <input name="StuVisit" id="StuVisit" class="layui-input linu" placeholder="YY-MM-DD" lay-verify="StuDateTime|IsVisit" disabled="disabled"/>
+                            <span class="LableCss1" name="StuVisit" id="StuVisit">
+
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
                         <label class="LableCss1">学生状态</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
+                        <div class="layui-input-block">                        
+                            <span class="LableCss1" name="StatusName" id="StatusName">
+
+                            </span>
                         </div>
                     </div>
                     <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
                         <label class="layui-form-label">备案人</label>
                         <div class="layui-input-block">
-                            <input name="e_Name" id="e_Name"  class="layui-input linu" readonly="readonly" placeholder="备案人" />
+                            <span name="e_Name" id="e_Name" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>                   
                 </div>
@@ -308,7 +329,9 @@
 
                         <label class="layui-form-label">备注</label>
                         <div class="layui-input-block">
-                            <input name="Reak" id="Reak" placeholder="备注" class="layui-input TextAreCss1" readonly="readonly"/>
+                            <span name="Reak" id="Reak" class="LableCss1">
+
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -408,14 +431,23 @@
                     if (this.success != "学生ID未拿到") {
                         var date1 = new Date(parseInt(successdata.StuDateTime.slice(6)));
                         successdata.StuBirthy = TimeChange(successdata.StuBirthy);
-                        successdata.StuVisit = TimeChange(successdata.StuVisit);
-                        successdata.StuSex = successdata.StuSex.toString();
-                        successdata.StuIsGoto = successdata.StuIsGoto.toString();
-                        successdata.StuDateTime = formatDate(date1);
-                        layui.use(['form', 'layedit', 'laydate'], function () {
-                            var form = layui.form;
-                            form.val("myform2", successdata);
-                        });
+                        $("#StuName")[0].innerText = successdata.StuName;
+                        $("#StuSex")[0].innerText = successdata.StuSex.toString() == "true" ? "女" : "男";
+                        $("#StuPhone")[0].innerText = successdata.StuPhone;
+                        $("#StuBirthy")[0].innerText = successdata.StuBirthy;
+                        $("#StuSchoolName")[0].innerText = successdata.StuSchoolName;
+                        $("#StuEducational")[0].innerText = successdata.StuEducational;
+                        $("#StuAddress")[0].innerText = successdata.StuAddress;
+                        $("#StuWeiXin")[0].innerText = successdata.StuWeiXin;
+                        $("#StuQQ")[0].innerText = successdata.StuQQ;
+                        $("#InfomationTypeName")[0].innerText = successdata.InfomationTypeName;
+                        $("#StuEntering_1")[0].innerText = successdata.StuEntering_1;
+                        $("#StuDateTime")[0].innerText = formatDate(date1);
+                        $("#StuIsGoto")[0].innerText = successdata.StuIsGoto.toString() == "true" ? "是" : "否";
+                        $("#StuVisit")[0].innerText = TimeChange(successdata.StuVisit);
+                        $("#StatusName")[0].innerText = successdata.StatusName;
+                        $("#e_Name")[0].innerText = successdata.e_Name;
+                        $("#Reak")[0].innerText = successdata.Reak;
                     } else {
                         layui.use(['layer'], function () {
                             var layer = layui.layer;

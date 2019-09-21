@@ -20,5 +20,14 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
            StuStatus find_s= this.GetList().Where(s => s.StatusName == name).FirstOrDefault();
             return find_s;
         }
+        /// <summary>
+        /// 模糊查询
+        /// </summary>
+        /// <param name="name">状态名称</param>
+        /// <returns></returns>
+        public StuStatus GetId(string name)
+        {
+           return this.GetList().Where(s => s.StatusName.Contains(name)).FirstOrDefault();
+        }
     }
 }

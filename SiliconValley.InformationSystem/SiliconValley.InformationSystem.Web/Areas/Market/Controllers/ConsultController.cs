@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     {
         ConsultManeger CM_Entity = new ConsultManeger();
 
-        // GET: /Market/Consult/FollwingInfoView
+        // GET: /Market/Consult/ListStudentView
         public ActionResult ConsultIndex()
         {
             ViewBag.data = CM_Entity.GetConsultTeacher().Select(c => new ConsultShowData
@@ -58,10 +58,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="monthName">月份</param>
         /// <param name="myid">咨询师Id</param>
         /// <returns></returns>
-        public ActionResult GetTwoDivData(int MonthName, int Myid,string Staue)
-        {
-            int number = Staue == "完成量" ? 0 : 1;
-           List<ALLDATA> list= CM_Entity.GetTeacherMonthCount(MonthName, Myid, number);
+        public ActionResult GetTwoDivData(int MonthName, int Myid,int Staue)
+        {           
+           List<ALLDATA> list= CM_Entity.GetTeacherMonthCount(MonthName, Myid, Staue);
             return Json(list,JsonRequestBehavior.AllowGet);
         }
         /// <summary>
@@ -73,20 +72,47 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             int stuId = Convert.ToInt32(id);
             Consult find_c= CM_Entity.TongStudentIdFindConsult(stuId);
             List<FollwingInfo> f_list = CM_Entity.GetFllowInfoData(find_c.Id);
-            if (f_list.Count > 0)
-            {
-                ViewBag.Flowingdata = f_list;
-            }
-            else
-            {
-                FollwingInfo f = new FollwingInfo();
-                f.Rank = "无";
-                f.TailAfterSituation = "目前还没有跟踪信息";
-                f.FollwingDate = Convert.ToDateTime("0000-00-00");
-                f_list.Add(f);
-                ViewBag.Flowingdata = f_list;
-            }
-             
+            ViewBag.Flowingdata = f_list;            
+            return View();
+        }
+        //显示查询学生信息页面
+        public ActionResult SerachStudentDataView()
+        {
+            return View();
+        }       
+        //获取所有咨询师
+        public ActionResult GetConsultTeacherData(int id)
+        {            
+                List<ConsultTeacher> list_ConsultTeacher = CM_Entity.GetConsultTeacher();//获取所有咨询师
+                List<ZhuanghuanluData> list_Zhang = new List<ZhuanghuanluData>();
+                foreach (ConsultTeacher item in list_ConsultTeacher)
+                {                   
+                    ZhuanghuanluData zhanghua = new ZhuanghuanluData();
+                    zhanghua.TeacherName =CM_Entity.GetEmplyeesInfo( item.Employees_Id).EmpName;
+                    int count = CM_Entity.GetCount(item.Id, id);//得到分量
+                    int wangchen = CM_Entity.GetWangcenCount(item.Id, id);//得到完成量
+                    if (wangchen!=0 && count!=0)
+                    {
+                       zhanghua.Number =Convert.ToDouble(wangchen) / Convert.ToDouble(count);
+                    }else
+                    {
+                     zhanghua.Number = 0;
+                }
+                     
+                    list_Zhang.Add(zhanghua);
+                }
+                 var data = list_Zhang.OrderByDescending(c => c.Number).ToList();
+                return Json(data, JsonRequestBehavior.AllowGet);                
+        }
+        //查看是否有这个学生
+        public ActionResult SeracherIsno(string id)
+        {
+            List<StudentPutOnRecord> find = CM_Entity.GetStudentPutRecored().Where(s => s.StuName == id).ToList();
+            return Json(find,JsonRequestBehavior.AllowGet);
+        }
+        //查到多个学生的页面显示
+        public ActionResult ListStudentView()
+        {
             return View();
         }
     }

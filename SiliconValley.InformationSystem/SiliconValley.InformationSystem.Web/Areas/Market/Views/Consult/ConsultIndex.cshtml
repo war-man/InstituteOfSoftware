@@ -21,13 +21,7 @@
             transform-style: preserve-3d;
         }
 
-        .front, .back
-        {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            backface-visibility: hidden;
-        }
+
 
         .front
         {
@@ -36,16 +30,10 @@
             cursor: pointer;
         }
 
-        .back
-        {
-            transform: rotateY(-90deg);
-            text-align: center;
-            cursor: pointer;
-        }
 
         .container:hover .flip
         {
-            transform: rotateY(90deg);
+            transform: rotateY(0deg);
         }
 
         .SpanCssenght1
@@ -73,30 +61,30 @@
             margin-left: 30px;
             float: left;
             width: 85%;
-            border: 1px solid black;
         }
-        .RedCss{
-        background-color:red;
+
+        .RedCss
+        {
+            background-color: red;
         }
+
         .GreenCss
         {
             background-color: #009688;
         }
-        .btnCenDivCss{
-         text-align:center;
-         margin-top:10px;
-        }
-        .btnCssEnght1{
-        width:70px;
-        height:35px;
-        text-align:center;
-        line-height:35px;
-        }
-        body .demo-class .layui-layer-title
+
+        .btnCenDivCss
         {
-            background: #009688;
-            color: #fff;
-            border: none;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .btnCssEnght1
+        {
+            width: 70px;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
         }
 
         body .demo-class2 .layui-layer-title
@@ -105,16 +93,25 @@
             color: #fff;
             border: none;
         }
+
         .spanCssone
         {
             font-size: 25px;
             font-family: STSong
         }
+
         .demo-class2 .layui-layer-btn a
         {
             background: #ffd800;
             color: #fff;
             border: none;
+        }
+
+        .DivCssfont
+        {
+            font-size: 24px;
+            font-family: STSong;
+            color: black;
         }
     </style>
 }
@@ -138,9 +135,6 @@
                     <div class="front RedCss">
                         <span class="SpanCssenght1" id="Tang" myid="-1">整体</span>
                     </div>
-                    <div class="back">
-                        <img src="~/Images/redLove.jpg.gif" class="ImageCssEight1" />
-                    </div>
                 </div>
             </div>
         </div>
@@ -156,9 +150,6 @@
                             <div class="front GreenCss">
                                 <span class="SpanCssenght1" id=" @item.empId" myid="@item.Id ">@item.empName</span>
                             </div>
-                            <div class="back">
-                                <img src="~/Images/redLove.jpg.gif" class="ImageCssEight1" />
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -171,7 +162,7 @@
     <div id="div_right_top" style="height:500px">
         <div id="dada" style="width:100%;height:100%"></div>
     </div>
-    <input type="hidden" id="TeacherStuation" name="TeacherStuation" value="tangminGood"/>
+    <input type="hidden" id="TeacherStuation" name="TeacherStuation" value="tangminGood" />
     <div id="div_right_middle" style="margin-top:50px;">
         <h3>咨询师工作完成详情</h3>
         <div id="div_right_middle_left" style="margin-top:30px;">
@@ -183,18 +174,52 @@
                     </div>
                 </fieldset>
             </form>
-        </div>    
-        
+        </div>
+
+    </div>
+
+    <div id="div_right_bttom" style="margin-top:50px;">
+        <div id="div_right_bttom_left" style="width:50%;height:400px;float:left">
+            <div id="Yuang" style="width:100%;height:100%;">
+
+            </div>
+        </div>
+        <div id="div_right_bttom_left" style="width: 29%;float: right;text-align:center;background-image:url('../../../../Images/58c84f57.jpg');background-size:cover;z-index:1;">
+            <h3 style="margin-top:60px;margin-left:20px">本月TOP</h3>
+            <div style="text-align:left;margin-left:40%;margin-top:10px">
+                <div id="divone">
+                    <img src="~/Images/23897.jpg" style="width:30px;height:30px;z-index:4" />
+                    <div id="divone1" style="display:inline-block">
+
+                    </div>
+                </div>
+                <div id="divtwo">
+                    <img src="~/Images/3382.jpg" style="width:30px;height:30px;z-index:4" />
+                    <div id="divone2" style="display:inline-block">
+
+                    </div>
+                </div>
+                <div id="divthree">
+                    <img src="~/Images/562108.jpg" style="width:30px;height:30px;z-index:4" />
+                    <div id="divone3" style="display:inline-block">
+
+                    </div>
+                </div>
+
+                <div id="div_right_bttom_left_center">
+
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
 
-
 @section script{
     <script>
-        var Is;
         $(function () {
             HiddenMiddle();
+            HiddenBttom();
             //注册鼠标点击事件(查询)
             $(".container").click(function (event) {
                 HiddenMiddle();
@@ -202,7 +227,8 @@
                 var id = spanelem.getAttribute("id");
                 var myid = spanelem.getAttribute("myid");
                 var empName = spanelem.innerText;
-                if (empName != "整体") {                   
+                if (empName != "整体") {
+                    HiddenBttom();
                     $("#TeacherStuation").val(myid);
                     $(".front").each(function (index, elem) {
                         $(elem).removeClass("RedCss");
@@ -220,14 +246,14 @@
                         }
                     });
                     $("#TeacherStuation").val(myid);
-                } else {
+                } else {                     
                     $(".front").each(function (index, elem) {
                         $(elem).removeClass("RedCss");
                         $(elem).addClass("GreenCss");
                     });
                     var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
                     $(Myspanelem).removeClass("GreenCss");
-                    console.log(Myspanelem);
+                    // console.log(Myspanelem);
                     $(Myspanelem).addClass("RedCss");
                     $("#TeacherStuation").val("tangminGood");
                     $.ajax({
@@ -237,71 +263,99 @@
                             // 使用刚指定的配置项和数据显示图表。
                             myChart.setOption(myoption(data));
                         }
-                    });                    
+                    });
                 }
-                 
+
             });
+        });
+        $.ajax({
+            type: "GET",
+            url: '/Market/Consult/GetImageData',
+            success: function (data) {
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(myoption(data));
+            }
         });
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('dada'));
         myChart.title = '折柱混合';
         //当鼠标移动到某个月份，显示未完成数据和完成数据
         myChart.on('click', function (params) {
-            var mystatus= params.seriesName;
             var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为完成量和完成量
-            Is = mystatus;
-            if (values != "tangminGood") {
-                switch (params.name) {
-                    case "一月":
-                        GetTwoDivData(values, "1", mystatus);
-                        break;
-                    case "二月":
-                        GetTwoDivData(values, "2", mystatus);
-                        break;
-                    case "三月":
-                        GetTwoDivData(values, "3", mystatus);
-                        break;
-                    case "四月":
-                        GetTwoDivData(values, "4", mystatus);
-                        break;
-                    case "五月":
-                        GetTwoDivData(values, "5", mystatus);
-                        break;
-                    case "六月":
-                        GetTwoDivData(values, "6", mystatus);
-                        break;
-                    case "七月":
-                        GetTwoDivData(values, "7", mystatus);
-                        break;
-                    case "八月":
-                        GetTwoDivData(values, "8", mystatus);
-                        break;
-                    case "九月":
-                        GetTwoDivData(values, "9", mystatus);
-                        break;
-                    case "十月":
-                        GetTwoDivData(values, "10", mystatus);
-                        break;
-                    case "十一月":
-                        GetTwoDivData(values, "11", mystatus);
-                        break;
-                    case "十二月":
-                        GetTwoDivData(values, "12", mystatus);
-                        break;
+            if (params.componentType == "series") {
+                var mystatus = params.seriesName;
+                if (values != "tangminGood") {
+                    HiddenBttom();
+                    ShowMiddle();
+                    var monthName = parseInt(params.name);
+                    GetTwoDivData(values, monthName, mystatus);
+                    switch (params.name) {
+                        case "一月":
+
+                            break;
+                        case "二月":
+                            GetTwoDivData(values, "2", mystatus);
+                            break;
+                        case "三月":
+                            GetTwoDivData(values, "3", mystatus);
+                            break;
+                        case "四月":
+                            GetTwoDivData(values, "4", mystatus);
+                            break;
+                        case "五月":
+                            GetTwoDivData(values, "5", mystatus);
+                            break;
+                        case "六月":
+                            GetTwoDivData(values, "6", mystatus);
+                            break;
+                        case "七月":
+                            GetTwoDivData(values, "7", mystatus);
+                            break;
+                        case "八月":
+                            GetTwoDivData(values, "8", mystatus);
+                            break;
+                        case "九月":
+                            GetTwoDivData(values, "9", mystatus);
+                            break;
+                        case "十月":
+                            GetTwoDivData(values, "10", mystatus);
+                            break;
+                        case "十一月":
+                            GetTwoDivData(values, "11", mystatus);
+                            break;
+                        case "十二月":
+                            GetTwoDivData(values, "12", mystatus);
+                            break;
+                    }
                 }
-            }  
+            }
+            else if (params.componentType == "xAxis") {
+                ShowBttom();
+                HiddenMiddle();
+                //如果是整体就显示一个饼状图
+                if (values == "tangminGood") {
+                    var monthName = parseInt(params.value);
+                    ShowRangImage(monthName);
+                }
+
+            }
         });
         function myoption(res) {
             var wangchengarry = new Array();
+            var fengliangarry = new Array();
             var nowanchengarry = new Array();
+
             for (var i = 0; i < res.length; i++) {
                 wangchengarry.push(res[i].wanchengcount);
             }
             for (var i = 0; i < res.length; i++) {
+                fengliangarry.push(res[i].fengliangarry);
+            }
+            for (var i = 0; i < res.length; i++) {
                 nowanchengarry.push(res[i].nowanchengcount);
             }
-             
-          var  option = {
+
+            var option = {
                 tooltip: {
                     trigger: 'axis',
                     axisPointer: {
@@ -313,22 +367,24 @@
                 },
                 toolbox: {
                     feature: {
-                        dataView: { show: true, readOnly: false },
+                        dataView: { show: false, readOnly: false },
                         magicType: { show: true, type: ['line', 'bar'] },
-                        restore: { show: true },
+                        restore: { show: false },
                         saveAsImage: { show: true }
                     }
                 },
                 legend: {
-                    data: ['完成量', '未完成量']
+                    data: ['完成量', '分量数', '未完成量']
                 },
                 xAxis: [
                     {
                         type: 'category',
-                        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                        data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                         axisPointer: {
                             type: 'shadow'
-                        }
+                        },
+                        triggerEvent: true
+
                     }
                 ],
                 yAxis: [
@@ -349,34 +405,34 @@
                         data: wangchengarry
                     },
                     {
+                        name: '分量数',
+                        type: 'bar',
+                        data: fengliangarry
+                    },
+                    {
                         name: '未完成量',
                         type: 'bar',
                         data: nowanchengarry
                     }
                 ]
-          };
+            };
             return option;
         }
-        $.ajax({
-            type: "GET",
-            url: '/Market/Consult/GetImageData',
-            success: function (data) {
-                // 使用刚指定的配置项和数据显示图表。
-                myChart.setOption(myoption(data));
-            }
-        });
-        function GetTwoDivData(values, name,status) {
-            ShowMiddle();
-            if (Is == "完成量") {
+        function GetTwoDivData(values, name, status) {
+            var number = 0;
+            if (status == "完成量") {
                 $("#spanText")[0].innerText = "已报名学生";
-            } else {
+            } else if (status == "未完成量") {
                 $("#spanText")[0].innerText = "未报名学生";
+                number = 1;
+            } else if (status == "分量数") {
+                $("#spanText")[0].innerText = "本月分量总人数";
+                number = 2;
             }
-            
             $.ajax({
                 type: "GET",
                 url: '/Market/Consult/GetTwoDivData',
-                data: { "Myid": values, "MonthName": name, "Staue": status},
+                data: { "Myid": values, "MonthName": name, "Staue": number },
                 success: function (data) {
                     // 使用刚指定的配置项和数据显示图表。
                     //myChart.setOption(myoption(data));
@@ -384,39 +440,170 @@
                     var Sucwc = $("#wangchen");
                     $("#wangchen")[0].innerHTML = "";
                     for (var i = 0; i < data[0].list.length; i++) {
-                        $('<div class="layui-col-sm1 btnCenDivCss"><input onclick=InputClick(' + data[0].list[i].StudentId+') type="button" class="layui-btn btnCssEnght1"  StudentId=' + data[0].list[i].StudentId + ' value=' + data[0].list[i].StudentName + '></div>').appendTo(Sucwc);
-                    }                    
+                        $('<div class="layui-col-sm1 btnCenDivCss"><input onclick=InputClick(' + data[0].list[i].StudentId + ') type="button" class="layui-btn btnCssEnght1"  StudentId=' + data[0].list[i].StudentId + ' value=' + data[0].list[i].StudentName + '></div>').appendTo(Sucwc);
+                    }
                 }
-            });       
+            });
         }
         function HiddenMiddle() {
             $("#div_right_middle").hide();
             $("#wangchen")[0].innerHTML = "";
         }
         function ShowMiddle() {
-            $("#div_right_middle").show();   
+            $("#div_right_middle").show();
             $("#wangchen")[0].innerHTML = "";
         }
-        function InputClick(studentid) {
-        layui.use('layer', function () {
-            var layer = layui.layer;
-            layer.confirm('<span>是否查看跟踪信息？</span>',
-                { icon: 3, title: '系统温馨提示', skin: 'demo-class2', shade: 0.8 },
-                function (index) {
-                    //打开详情页面
-                    layer.close(index);//关闭弹出层
-                    layer.open({
-                        type: 2,
-                        content: '/Market/Consult/FollwingInfoView/' + studentid
-                        , area: ['1000px', '650px'],
-                        title: '添加备案信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                });
-        });
+        function HiddenBttom() {
+            $("#div_right_bttom").hide();
         }
+        function ShowBttom() {
+            $("#div_right_bttom").show();
+        }
+        function InputClick(studentid) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.confirm('<span>是否查看跟踪信息？</span>',
+                    { icon: 3, title: '系统温馨提示', skin: 'demo-class2', shade: 0.8 },
+                    function (index) {
+                        //打开详情页面
+                        layer.close(index);//关闭弹出层
+                        layer.open({
+                            type: 2,
+                            content: '/Market/Consult/FollwingInfoView/' + studentid
+                            , area: ['1000px', '650px'],
+                            title: false
+                            , shade: 0.8
+                            , anim: 4
+                        });
+                    });
+            });
+        }
+        ////这个方法是用于显示饼状图的
+        var myChart2 = echarts.init(document.getElementById('Yuang'));
+        function ShowRangImage(MonthName) {
+            var legendData = [];
+            var seriesData = [];
+            var selected = {};//自定义了一个对象
+            $.ajax({
+                url: '/Market/Consult/GetConsultTeacherData/' + MonthName,
+                success: function (SucData) {
+                    $("#divone1")[0].innerHTML = "";
+                    $("#divone2")[0].innerHTML = "";
+                    $("#divone3")[0].innerHTML = "";
+                    $("#div_right_bttom_left_center")[0].innerHTML = "";
+                    var legendData = [];
+                    var seriesData = [];
+                    var selected = {};
+                    for (var i = 0; i < SucData.length; i++) {
+                        legendData.push(SucData[i].TeacherName);
+                        seriesData.push({
+                            name: SucData[i].TeacherName,
+                            value: SucData[i].Number
+                        });
+                        selected[SucData[i].TeacherName] = i < SucData.length;
+                        if (i == 0) {
+                            $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone1"));
+                        } else if (i == 1) {
+                            $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone2"));
+                        } else if (i==2) {
+                            $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone3"));
+                        } else {
+                            $("<div><span class='DivCssfont'>" + SucData[i].TeacherName + "<span></div>").appendTo($("#div_right_bttom_left_center"));
+                        }
+                         
+                    }
+                    var option2 = {
+                        title: {
+                            text: '转化量统计',
+                            x: 'center'
+                        },
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                        },
+                        legend: {
+                            type: 'scroll',
+                            orient: 'vertical',
+                            right: 10,
+                            top: 20,
+                            bottom: 20,
+                            data: legendData,
+                            selected: selected
+                        },
+                        series: [
+                            {
+                                name: '姓名',
+                                type: 'pie',
+                                radius: '60%',
+                                center: ['50%', '50%'],
+                                data: seriesData,
+                                itemStyle: {
+                                    emphasis: {
+                                        shadowBlur: 10,
+                                        shadowOffsetX: 0,
+                                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                    }
+                                }
+                            }
+                        ]
+                    };
+                    myChart2.setOption(option2);
+
+                }
+            });
+        }
+
+        //查询这个学生的信息
+        $("#serchBtn1").click(function () {
+            var StudentName = $("#JangzMan").val();
+            if (StudentName.length <= 0) {
+                layui.ues('layer', function () {
+                    var layer = layui.layer;
+                    layer.msg('学生姓名不能为空!!!', {icon:2})
+                });
+            } else {
+                $.ajax({
+                    url: '/Market/Consult/SeracherIsno/' + StudentName,
+                    success: function (SucData) {
+                        if (SucData.length < 0) {
+                            layui.ues('layer', function () {
+                                var layer = layui.layer;
+                                layer.msg('该学生没有备案!!!', { icon: 2 })
+                            });
+                        } else if (SucData.length == 1) {
+                             layui.use('layer', function () {
+                             var layer = layui.layer;
+                             layer.open({
+                                 type: 2,
+                                 content: '/Market/Consult/SerachStudentDataView/' + SucData[0].Id
+                                 , area: ['1000px', '650px'],
+                                 title: false
+                                 , shade: 0.8
+                                 , anim: 4
+                             });
+                         });
+                        } else if (SucData.length > 1) {
+                            var str = "";
+                            for (var i = 0; i < SucData.length; i++) {
+                                str = str + SucData[i].Id + ",";
+                            }
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.open({
+                                    type: 2,
+                                    content: '/Market/Consult/ListStudentView/' + str
+                                    , area: ['1000px', '650px'],
+                                      title: '查询结果'
+                                    , shade: 0.8
+                                    , anim: 4
+                                });
+
+                        }
+                    }
+                });
+                
+            }
+        });
     </script>
 }
 

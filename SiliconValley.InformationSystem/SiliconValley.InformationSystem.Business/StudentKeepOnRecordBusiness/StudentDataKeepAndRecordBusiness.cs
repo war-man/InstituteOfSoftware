@@ -13,6 +13,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
     {
         StuStateManeger Statu_Entity = new StuStateManeger();
         SchoolYearPlanBusiness Syb_Entity = new SchoolYearPlanBusiness();
+        #region 给市场用的方法
         /// <summary>
         /// 这是一个获取报名学生的方法
         /// </summary>
@@ -175,5 +176,6 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             return resultlist;
         }
+        #endregion
     }
 }
