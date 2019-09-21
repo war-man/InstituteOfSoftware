@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.FinanceBusiness
 {
+    //财务业务层
  public   class FinanceModelBusiness:BaseBusiness<FinanceModel>
     {
         /// <summary>
