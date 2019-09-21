@@ -106,6 +106,7 @@
 
                         <div class="layui-row layui-form-item" id="index">
 
+
                         </div>
 
 
@@ -124,6 +125,7 @@
 
         </div>
     </div>
+
     @*普通借资原因*@
     <script type="text/template" id="Borrowmoneymuban">
 
@@ -135,13 +137,15 @@
 
         </div>
     </script>
+
     @*预资原因*@
     <script type="text/template" id="Prefundingmuban">
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-            <label class="layui-form-label">{{=content}}</label>
+            <label class="layui -form-label">{{=content}}</label>
             <div id="test4" class="demo-transfer"></div>
         </div>
     </script>
+
     <script>
         var mytransfer;
         var type;
@@ -155,6 +159,7 @@
 
             $("#index").append($(html));
         }
+
         function loadPrefunding(content) {
             $("#index").children().remove();
             var compiled = _.template($("#Prefundingmuban").html());

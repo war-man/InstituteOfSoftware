@@ -228,6 +228,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
             var zhuren= this.GetChannelByEmpID(ZhurenEmpID);
             List<ChannelArea> listarea = new List<ChannelArea>();
             List<EmployeesInfo> result = new List<EmployeesInfo>();
+
             foreach (var item in data)
             {
                 var mydata = dbchannelarea.GetAreaByPaln(item.ID, nowschoolplan);
@@ -325,6 +326,23 @@ namespace SiliconValley.InformationSystem.Business.Channel
             return result;
         }
 
-        
+        /// <summary>
+        /// 判断当前这个员工是不是主任
+        /// </summary>
+        /// <param name="empinfoid"></param>
+        /// <returns></returns>
+        public bool IsZhuren(string empinfoid, List<ChannelStaff> querylist) {
+
+            bool IsZhuren = false;
+            //循环判断这个值是不是主任
+            foreach (var item in querylist)
+            {
+                if (item.EmployeesInfomation_Id == empinfoid)
+                {
+                    IsZhuren = true;
+                }
+            }
+            return IsZhuren;
+        }
     }
 }

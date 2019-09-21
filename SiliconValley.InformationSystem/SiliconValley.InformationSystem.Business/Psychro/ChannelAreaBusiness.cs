@@ -41,15 +41,69 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         }
 
         /// <summary>
-        /// 根据区域id获取对象
+        /// 根据年度计划来找到这个该年度的员工管理区域
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="nowschoolplan"></param>
+        /// <param name="dbschoolpaln"></param>
         /// <returns></returns>
-        public ChannelArea GetAreaByID(int id)
+        public List<ChannelArea> GetAreasByPlan(SchoolYearPlan nowschoolplan, SchoolYearPlanBusiness dbschoolpaln)
         {
-            return this.GetChannelAreas().Where(a => a.ID == id).FirstOrDefault();
-        }
+            var nextdata = dbschoolpaln.GetNextPlan(nowschoolplan);
+            List<ChannelArea> resultlist = new List<ChannelArea>();
+            List<ChannelArea> all = this.GetIQueryable().ToList();
+            foreach (var item in all)
+            {
+                //员工区域停止使用
+                if (item.IsDel)
+                {
+                    if (item.StaffAreaDate<nowschoolplan.PlanDate)
+                    {
+                        if (item.StopDate > nowschoolplan.PlanDate)
+                        {
+                            resultlist.Add(item);
+                        }
+                    }
+                    else
+                    {
+                        if (nextdata.ID!=0)
+                        {
+                            if (item.StaffAreaDate < nextdata.PlanDate)
+                            {
+                                resultlist.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            resultlist.Add(item);
+                        }
+                    }
+                }
+                //员工区域仍在使用
+                else
+                {
+                    if (item.StaffAreaDate < nowschoolplan.PlanDate)
+                    {
+                        resultlist.Add(item);
 
+                    }
+                    else
+                    {
+                        if (nextdata.ID != 0)
+                        {
+                            if (item.StaffAreaDate < nextdata.PlanDate)
+                            {
+                                resultlist.Add(item);
+                            }
+                        }
+                        else
+                        {
+                            resultlist.Add(item);
+                        }
+                    }
+                }
+            }
+            return resultlist;
+        }
         /// <summary>
         /// 根据渠道员工id获取员工现在负责区域
         /// </summary>
@@ -208,5 +262,25 @@ namespace SiliconValley.InformationSystem.Business.Psychro
 
         }
 
+
+        /// <summary>
+        /// 获取上级
+        /// </summary>
+        /// <param name="channelAreas"></param>
+        /// <param name="channelArea"></param>
+        /// <returns></returns>
+        public ChannelArea forquerychannelarea(List<ChannelArea> channelAreas, ChannelArea channelArea)
+        {
+            ChannelArea result = new ChannelArea();
+            foreach (var items in channelAreas)
+            {
+                if (items.ChannelStaffID == channelArea.RegionalDirectorID)
+                {
+                    result= items;
+                }
+            }
+            return result;
+
+        }
     }
 }

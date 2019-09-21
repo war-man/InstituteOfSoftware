@@ -29,7 +29,13 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             return this.GetAll().Where(a => a.ID == PlanID).FirstOrDefault();
         }
 
-        public SchoolYearPlan GetNextPlan(SchoolYearPlan nowschoolplan) {
+        /// <summary>
+        /// 根据当前的年度计划获取下一个年度计划
+        /// </summary>
+        /// <param name="nowschoolplan"></param>
+        /// <returns></returns>
+        public SchoolYearPlan GetNextPlan(SchoolYearPlan nowschoolplan)
+        {
             //获取年度计划列表
             var planlist = this.GetAll();
             //找到要查询的年度计划对象
@@ -50,6 +56,30 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             return nextdata;
         }
 
+        /// <summary>
+        /// 根据当前的年度计划获取上一个年度计划
+        /// </summary>
+        /// <param name="nowschoolplan"></param>
+        /// <returns></returns>
+        public SchoolYearPlan GetThePreviousPlan(SchoolYearPlan nowschoolplan)
+        {
+            //获取年度计划列表
+            var planlist = this.GetAll();
+            //找到要查询的年度计划对象
+            var ThePreviousdata = new SchoolYearPlan();
 
+            for (int i = 0; i < planlist.Count; i++)
+            {
+                if (planlist[i].ID == nowschoolplan.ID)
+                {
+                    if (i!=0)
+                    {
+                        ThePreviousdata = planlist[i - 1];
+                        break;
+                    }
+                }
+            }
+            return ThePreviousdata;
+        }
     }
 }

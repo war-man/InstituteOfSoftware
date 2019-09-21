@@ -120,6 +120,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             var nowplan = Syb_Entity.GetPlanByID(PlanId);
             //拿到下一个计划
             var nextplan = Syb_Entity.GetNextPlan(nowplan);
+
             List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId).ToList();
             List<StudentPutOnRecord> resultlist = new List<StudentPutOnRecord>();
             foreach (var item in list_s)
@@ -128,7 +129,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 {
                     if (nextplan.ID != 0)
                     {
-                        if (item.StuVisit <= nextplan.PlanDate)
+                        if (item.StuDateTime <= nextplan.PlanDate)
                         {
                             resultlist.Add(item);
                         }
@@ -161,7 +162,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 {
                     if (nextplan.ID != 0)
                     {
-                        if (item.StuVisit <= nextplan.PlanDate)
+                        if (item.StatusTime <= nextplan.PlanDate)
                         {
                             resultlist.Add(item);
                         }

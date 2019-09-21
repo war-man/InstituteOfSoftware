@@ -272,6 +272,9 @@
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
+    <Compile Include="ViewEntity\AmountTopView.cs" />
+    <Compile Include="ViewEntity\ChannelReportFormView.cs" />
+    <Compile Include="ViewEntity\ChannelSortView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
@@ -286,10 +289,14 @@
     <Compile Include="ViewEntity\EnterdetailView.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
+    <Compile Include="ViewEntity\MrdCircleRightView.cs" />
+    <Compile Include="ViewEntity\MrdCircleView.cs" />
     <Compile Include="ViewEntity\MrDDetailSpecView.cs" />
     <Compile Include="ViewEntity\MrDEmployStaffView.cs" />
+    <Compile Include="ViewEntity\MrdRightView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
+    <Compile Include="ViewEntity\ShowBaomingListView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\ShowEchartsView.cs" />
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
