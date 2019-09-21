@@ -97,6 +97,7 @@
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
+    <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
     <Compile Include="Logger\ILogger.cs" />
     <Compile Include="Logger\LoggerFactory.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\ApplyForFullMemberManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />

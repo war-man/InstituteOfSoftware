@@ -991,7 +991,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var e = etmanage.GetEntity(et.TransactionId);
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             MoveTypeManage mt = new MoveTypeManage();
-           var m = mt.GetList().Where(s=>s.MoveTypeName=="转正").FirstOrDefault().ID;
+        
             try
             {
                 e.TransactionTime = et.TransactionTime;
@@ -1000,18 +1000,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 ajaxresult = etmanage.Success();
                 try
                 {
-                    if (ajaxresult.Success && e.TransactionType==m)//当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
+                    var mtype1 = mt.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault().ID;
+                    var mtype2 = mt.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
+                    var mtype3 = mt.GetList().Where(s => s.MoveTypeName == "调岗").FirstOrDefault().ID;
+                    var emp = empmanage.GetEntity(e.EmployeeId);
+                    if (ajaxresult.Success && e.TransactionType == mtype1)//当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
                     {
-                        var emp = empmanage.GetEntity(e.EmployeeId);
                         emp.PositiveDate = e.TransactionTime;
-                        empmanage.Update(emp);
-                        ajaxresult = empmanage.Success();
                     }
+                    else if (ajaxresult.Success && e.TransactionType == mtype2)//当异动时间修改好之后且是离职异动的情况下将该员工的在职状态改为离职状态
+                    {
+                        emp.IsDel = true;
+                    } else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的在职状态改为离职状态
+                    {
+                        emp.PositionId = (int)e.PresentPosition;
+                        if (emp.Salary == null)
+                        {
+                            emp.ProbationSalary = e.PresentSalary;
+                        }
+                        else {
+                            emp.Salary = e.PresentSalary;
+                        }
+                    }
+                    empmanage.Update(emp);
+                    ajaxresult = empmanage.Success();
                 }
                 catch (Exception ex)
                 {
                     ajaxresult = empmanage.Error(ex.Message);
                 }
+        
             }
             catch (Exception ex)
             {
@@ -1095,7 +1113,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         if (ajaxresult.Success)//转正申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
                         {
                             et.EmployeeId = positive.EmployeeId;
-                            et.IsDel = true;
+                            et.IsDel = false;
                             et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault().ID;
                             etmanage.Insert(et);
                             ajaxresult = etmanage.Success();
@@ -1163,8 +1181,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// 修改员工离职申请的审批状态
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="state"></param>
         /// <returns></returns>
-        [HttpPost]
+        [HttpPost] 
         public ActionResult DimissionIsPassed(int id,bool state)
         {
             DimissionApplyManage dammanage = new DimissionApplyManage();
@@ -1186,7 +1205,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         if (ajaxresult.Success)//离职申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
                         {
                             et.EmployeeId = positive.EmployeeId;
-                            et.IsDel = true;
+                            et.IsDel = false;
                             et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
                             et.Reason = positive.DimissionReason;
                             etmanage.Insert(et);
@@ -1215,7 +1234,105 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
-       
+        /// <summary>
+        /// 获取所有转岗申请数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetTransferPositionData(int page,int limit) {
+            JobTransferApplyManage jtfamanage = new JobTransferApplyManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = jtfamanage.GetList();
+            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                             dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                             pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary: emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
+                             nowdname = emanage.GetDeptById((int)e.PlanTurnDeptId).DeptName,
+                             nowpname=emanage.GetPobjById((int)e.PlanTurnPositionId).PositionName,
+                             e.TurnAfterSalary,
+                             e.Reason,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj,JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改员工转岗申请的审批状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult TransferPositionIsPassed(int id, bool state) {
+            JobTransferApplyManage jammanage = new JobTransferApplyManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage m = new MoveTypeManage();
+            var positive = jammanage.GetEntity(id);
+            EmpTransaction et = new EmpTransaction();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                if (state == true)
+                {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = true;//表示离职申请通过
+                    jammanage.Update(positive);
+                    ajaxresult = jammanage.Success();
+                    try
+                    {
+                        if (ajaxresult.Success)//离职申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        {
+                            et.EmployeeId = positive.EmployeeId;
+                            et.IsDel = false;
+                            et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "调岗").FirstOrDefault().ID;
+                            et.Reason = positive.Reason;
+                            et.PreviousDept = emanage.GetDept(emanage.GetInfoByEmpID(et.EmployeeId).PositionId).DeptId;
+                            et.PreviousPosition = emanage.GetPosition(emanage.GetInfoByEmpID(et.EmployeeId).PositionId).Pid;
+                            et.PreviousSalary = emanage.GetInfoByEmpID(et.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(et.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(et.EmployeeId).Salary;
+                            et.PresentDept = positive.PlanTurnDeptId;
+                            et.PresentPosition = positive.PlanTurnPositionId;
+                            et.PresentSalary = positive.TurnAfterSalary;
+                            et.Reason = positive.Reason;
+                            etmanage.Insert(et);
+                            ajaxresult = etmanage.Success();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ajaxresult = etmanage.Error(ex.Message);
+                    }
+                }
+                else
+                {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = false;//表示离职申请未通过
+                    jammanage.Update(positive);
+                    ajaxresult = jammanage.Success();
+                }
 
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = jammanage.Error(ex.Message);
+            }
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
     }
 }

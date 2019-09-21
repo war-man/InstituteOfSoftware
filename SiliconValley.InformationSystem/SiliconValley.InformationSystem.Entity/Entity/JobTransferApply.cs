@@ -13,8 +13,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    [Table(name: "JobTransferApply")]
-    public partial class JobTransferApply
+    [Table(name: "JobTransferAppply")]
+    public partial class JobTransferAppply
     {
         [Key]
         public int Id { get; set; }
@@ -24,8 +24,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> TurnAfterSalary { get; set; }
         public string Reason { get; set; }
         public Nullable<System.DateTime> ApplicationTime { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-
-        public virtual EmployeesInfo EmployeesInfo { get; set; }
+        public Nullable<bool> IsPass { get; set; }
+        public Nullable<bool> IsApproval { get; set; }
+        public  EmployeesInfo EmployeesInfo { get; set; }
     }
 }
