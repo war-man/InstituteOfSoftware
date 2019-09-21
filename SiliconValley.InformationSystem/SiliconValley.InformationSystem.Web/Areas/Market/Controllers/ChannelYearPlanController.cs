@@ -1,7 +1,10 @@
 ﻿using SiliconValley.InformationSystem.Business.Channel;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Psychro;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -54,6 +57,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// 异动业务类
         /// </summary>
         private MrdEmpTransactionBusiness dbyidong;
+
+        private TeacherClassBusiness dbteacher;
+
+        private HeadmasterBusiness dbheadermaster;
+
+        private StudentInformationBusiness dbstudent;
         // GET: Market/ChannelYearPlan
         public ActionResult ChannelYearPlanIndex()
         {
@@ -1024,6 +1033,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbschoolpaln = new SchoolYearPlanBusiness();
             dbempstaff = new EmployeesInfoManage();
             dbbeian = new StudentDataKeepAndRecordBusiness();
+            dbteacher = new TeacherClassBusiness();
+            dbheadermaster = new HeadmasterBusiness();
             SchoolYearPlan nowplan = dbschoolpaln.GetPlanByID(myplanid);
             //根据选择的的条件获取对应的员工
             List<ChannelStaff> Querylist = this.Resultbytiaojian(myempid, myistema, nowplan);
@@ -1055,6 +1066,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             foreach (var item in baominglist)
             {
                 var empinfo= dbempstaff.GetInfoByEmpID(item.EmployeesInfo_Id);
+                var student = dbstudent.GetIQueryable().Where(a => a.IsDelete == false && a.StudentPutOnRecord_Id == item.Id).FirstOrDefault();
+
+
+
+                var mrdteacher = dbteacher.GetTeacherByStudent(student.StudentNumber);
+
+                var headermaster = dbheadermaster.Listheadmasters(student.StudentNumber);
+
                 ShowBaomingListView listView = new ShowBaomingListView();
                 listView.BaomingDate = Convert.ToDateTime(item.StatusTime);
                 listView.BeianDate = item.StuDateTime;
@@ -1062,7 +1081,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 listView.GoSchoolDate = Convert.ToDateTime(item.StuVisit);
                 listView.StudentName = item.StuName;
                 listView.OldSchoolName = item.StuSchoolName;
-
+                listView.ProfessionalTeacher = dbempstaff.GetInfoByEmpID(mrdteacher.EmployeeId).EmpName;
+                listView.Headmaster = dbempstaff.GetInfoByEmpID(headermaster.EmployeeId).EmpName;
+                listView.ClassNo = "";
 
                 resultdataviewlist.Add(listView);
 
