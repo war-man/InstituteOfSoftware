@@ -30,5 +30,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         {
             get;set;
         }
+        /// <summary>
+        /// 分量数量
+        /// </summary>
+        public int fengliangarry
+        {
+            get;set;
+        }
     }
 }

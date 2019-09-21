@@ -1,0 +1,73 @@
+/*
+ * jQuery Plugin: dynamic & easy moving menu. for your web site.
+ * Version 1.0.0
+ *
+ * Copyright (c) 2013 M&Co.Ltd. (http://m-and.co/)
+ * Licensed jointly under the GPL and MIT licenses,
+ *
+ */
+/* line 9, ../sass/jquery.wiper.scss */
+body{
+font: 14px/1.5 Lato, "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-weight: normal;
+color: #778899;}
+
+a{
+  text-decoration: none;
+}
+
+ul {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+  /*MENU*/
+  /*h2*/
+  /*MENU1*/
+  /*li:nth-child(1)*/
+  /*MENU2*/
+  /*li:nth-child(2)*/
+  /*MENU3*/
+  /*li:nth-child(3)*/
+  /*MENU4*/
+  /*li:nth-child(4)*/
+  /*MENU5*/
+  /*li:nth-child(5)*/
+  /*MENU6*/
+  /*li:nth-child(6)*/
+}
+/* line 17, ../sass/jquery.wiper.scss */
+ul h2 {
+  color: #fff;
+  margin: 0;
+  line-height: 30px;
+  padding-right: 30px;
+  text-align: right;
+  -moz-transform: translateX(-100%) rotate(-90deg);
+  -moz-transform-origin: right top;
+  -webkit-transform: translateX(-100%) rotate(-90deg);
+  -webkit-transform-origin: right top;
+}
+/* line 27, ../sass/jquery.wiper.scss */
+ul li {
+  position: absolute;
+  height: 100%;
+  min-height: 100%;
+  display: block;
+  box-shadow: 5px -5px 14px rgba(0, 0, 0, 0.4);
+  -moz-transform: translateX(0%) rotate(0deg);
+  -moz-transform-origin: right top;
+  -webkit-transform: translateX(0%) rotate(0deg);
+  -webkit-transform-origin: right top;
+}
+/* line 38, ../sass/jquery.wiper.scss */
+ul li:nth-child(1) {
+  background: url(../images/p_back.png) repeat;
+  /*h2*/
+}
+/* line 45, ../sass/jquery.wiper.scss */
+ul li:nth-child(2) {
+  background: url(../images/e_back.png) repeat;
+  /*h2*/
+}

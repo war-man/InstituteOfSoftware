@@ -86,10 +86,14 @@
         color: #fff;
         border: none;
     }
-
+    body .demo-class3 .layui-layer-title
+    {
+       background-color:#c02828;
+       color:#fff;
+    }
 </style>
 <div>
-    <form class="layui-form">
+    <form class="layui-form" style="margin-top:30px;">
         <div class="layui-container">
              
                 <div class="layui-row layui-form-item">
@@ -275,20 +279,24 @@
             $.ajax({
                 url: "/Market/StudentDataKeep/FindStudent/" + name,
                 success: function (successdata) {
-                    if (successdata!="ok") {
+                    if (successdata != "ok") {
                         //有相同的名称
                         layui.use('layer', function () {
                             var layer = layui.layer;
-                            layer.confirm('已有该学员名称', { icon: 3, title: '提示', btn: ['去看看', '关闭'], skin: 'demo-class2'}, function (index) {
-                                //do something
-                                layer.close(index);
-                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layer.close(index); //再执行关闭
-                                window.parent.LoadTableSeache(name);
-                            }, function (index) {
-                                //将名字相同的数据加载给用户看
-                                layer.close(index);
-                            });
+                            var str = "";
+                            for (var i = 0; i < successdata.length; i++) {
+                                str = str + successdata[i].Id + ",";
+                            }
+                            console.log(str);
+                            layer.open({
+                                type: 2,
+                                content: '/Market/StudentDataKeep/StudentSomeData/' + str  
+                                , area: ['900px', '600px'],
+                                title: '疑似数据显示！'
+                                , shade: 0.8
+                                , anim: 4
+                                , skin: 'demo-class3'
+                            });                             
                         })
                     }
                 }

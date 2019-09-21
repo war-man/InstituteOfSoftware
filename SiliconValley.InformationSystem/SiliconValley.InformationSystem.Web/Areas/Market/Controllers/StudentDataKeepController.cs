@@ -59,8 +59,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 return Get_List_stustate.StatusName;
             }
-
-            return "未填写";
+            else
+            {
+                return "未填写";
+            }
         }
         //获取信息来源名称
         public string GetStuInfomationTypeValue(int? id)
@@ -118,8 +120,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这个方法是用于通过员工姓名来查询员工的员工编号
         public string GetNameSreachEmploId(string name)
         {
-            EmployeesInfo e = Enplo_Entity.GetList().Where(es=>es.EmpName==name).FirstOrDefault();
-            return e.EmployeeId;
+            EmployeesInfo e = Enplo_Entity.GetList().Where(es => es.EmpName == name).FirstOrDefault();
+            if (e == null)
+            {
+                return "无";
+            }
+            else
+            {
+                return e.EmployeeId;
+            }
+
         }
         //缓存
         public List<StudentPutOnRecord> GetList()
@@ -159,7 +169,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         //这是一个数据备案的主页面
         public ActionResult StudentDataKeepIndex()
-        {
+        {         
             //获取信息来源的所有数据
             List<SelectListItem> se=  StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
             SelectListItem e = new SelectListItem();
@@ -231,7 +241,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             {
                 #region 分页转前端数据格式类型
                 int SunLimit = stu_IQueryable.Count();//总行数
-                int SunPage = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(SunLimit / limit)));//总页数
+                int SunPage = Convert.ToInt32(Math.Ceiling((double)SunLimit / limit));//总页数
                 stu_IQueryable = stu_IQueryable.Skip((page - 1) * limit).Take(limit).ToList();
                 var Get_List_studentPutOnRecord = stu_IQueryable.Select(s => new {
                     Id = s.Id,
@@ -253,8 +263,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuEntering = s.StuEntering,
                     Reak = s.Reak,
                     Regin_id = s.Region_id,
-                    ReginName = region_Entity.GetEntity(s.Region_id).RegionName
-                });//获取了数据库中所有数据备案信息;                                                                                                         
+                    ReginName = GetAreValue(s.Region_id.ToString(), true)
+                }).ToList();//获取了数据库中所有数据备案信息;                                                                                                         
                 var JsonData = new {     
                     code=0, //解析接口状态,
                     msg="", //解析提示文本,
@@ -295,7 +305,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult ShowEmployeInfomation()
         {
             List<EmployeesInfo> list_Enploy = Enplo_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有在职员工
-            List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),name=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
+            List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),title=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
             List<Position> list_Position = Position_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有岗位有用的数据
             foreach (TreeClass item1 in list_Tree)
             {
@@ -310,7 +320,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             {
                                 TreeClass tcc2 = new TreeClass();
                                 tcc2.id = item3.EmployeeId;
-                                tcc2.name = item3.EmpName;
+                                tcc2.title = item3.EmpName;
                                 bigTree.Add(tcc2);
                             }
                         }
@@ -485,6 +495,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
 
+        //显示有疑似的数据
+        public ActionResult StudentSomeData(string id)
+        {
+            string[] id_list = id.Split(',');
+            List<StudentPutOnRecord> Student_list = new List<StudentPutOnRecord>();
+            List<StudentPutOnRecord> list = s_Entity.GetList();
+            foreach (StudentPutOnRecord item1 in list)
+            {
+                foreach (string item2 in id_list)
+                {
+                    if (!string.IsNullOrEmpty(item2))
+                    {
+                        if (item1.Id == Convert.ToInt32(item2))
+                        {
+                            Student_list.Add(item1);
+                        }
+                    }
+                     
+                }
+            }
+            var data = Student_list.Select(s=>new StudentData
+            {
+                stuSex=s.StuSex==false?"男":"女",
+                StuName=s.StuName,
+                StuPhone=s.StuPhone,
+                StuSchoolName = s.StuSchoolName,
+                StuAddress=s.StuAddress,
+                StuInfomationType_Id = GetStuInfomationTypeValue(s.StuInfomationType_Id),
+                StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
+                StuIsGoto = s.StuIsGoto==false?"否":"是",
+                StuVisit=s.StuVisit,
+                EmployeesInfo_Id= GetEmployeeValue(s.EmployeesInfo_Id,true),
+                StuDateTime=s.StuDateTime,
+                StuEntering = GetEmployeeValue(s.StuEntering,true),
+                AreName= GetAreValue(s.Region_id.ToString(),true)
+            }).ToList();
+            ViewBag.Student =data;
+            return View(data);
+        }
         #region Excle文件导入
         ///一个删除文件的方法
         public void DeleteFile()

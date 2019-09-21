@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
             get;
             set;
         }
-        public string name//节点标题
+        public string title//节点标题
         {
             get;
             set;
