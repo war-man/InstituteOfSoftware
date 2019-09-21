@@ -1,0 +1,68 @@
+﻿
+@{
+    ViewBag.Title = "Studenttuitionfeestandard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<table class="layui-hide" id="test" lay-filter="test"></table>
+@section script{
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>录入学费详情</button>
+
+
+
+        </div>
+    </script>
+    <script>
+        layui.use(['table', 'layer', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/Finance/Pricedetails/Datefeestandard'
+                , toolbar: '#toolbarDemo'
+                , id: 'idTest'
+                , page: true
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' }
+                    , { field: 'id', title: '编号 ' }
+                    , { field: 'Stage', title: '阶段' }
+                    , { field: 'Unitpricename', title: '名称 ' }
+                    , { field: 'UnitPrice', title: '单价 ' }
+
+
+                ]]
+                , page: true
+                , limit: 8
+                , limits: [8, 10, 15]
+            });
+
+            //监听头部工具栏
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getAdd':
+                        layer.open({
+                            title: "录入学员学费详情",
+                            type: 2,
+                            area: ['500px', '450px']
+                            , content: "/Finance/Pricedetails/Addfeestandard"
+                            , end: function () { table.reload('idTest'); }
+                            , anim: 1,
+                            //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                        });
+                        break;
+
+                };
+            });
+       
+        });
+
+    </script>
+}

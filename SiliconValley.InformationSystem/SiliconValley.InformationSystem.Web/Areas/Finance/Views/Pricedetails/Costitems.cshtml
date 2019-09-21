@@ -1,0 +1,218 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Costitems
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Costitems</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+</head>
+<body>
+    <form class="layui-form" action="" style="margin-top:20px;" id="form">
+
+        <h3 style="text-align:center;height:50px;">费用名目录入</h3>
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+                    <div id="domes">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                            <label class="layui-form-label">阶段</label>
+                            <div class="layui-input-inline">
+                                @Html.DropDownListFor(a => a.Grand_id, ViewBag.Grand_id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Grand_id" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">类别</label>
+                        <div class="layui-input-block">
+                            @{
+                                int b = 0;
+                                foreach (var item in ViewBag.TypeDate as List<CostitemsX>)
+                                {
+                                    b++;
+                                    if (b == 3)
+                                    {
+
+                                        <br />
+                                    }
+                                    if (b > 5)
+                                    {
+                                        b = 2;
+                                    }
+                                    if (item.Name == "学费")
+                                    {
+                                        <input type="radio" name="Rategory" lay-verify="required" lay-filter="erweima" value="@item.id" title="@item.Name" checked>
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" name="Rategory" lay-verify="required" lay-filter="erweima" value="@item.id" title="@item.Name">
+                                    }
+
+                                }
+                            }
+
+
+                        </div>
+                        <div id="CostitemsX" style="position:relative;left:320px;bottom:60px;width:100px;"><a href="javascript:void(0);" style="text-decoration:underline;color:mediumblue;">新增类别？</a></div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">名称</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input" } })
+
+                        </div>
+                        <label id="lab1" style="color:red; display:none; line-height:40px;">名称重复</label>
+                        <label id="lab2" style="color:red;display:none; line-height:40px;">请选择阶段</label>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">金额</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script src="~/Scripts/underscore.js"></script>
+<script type="text/template" id="studenthtml">
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+        <label class="layui-form-label">阶段</label>
+        <div class="layui-input-inline">
+            @Html.DropDownListFor(a => a.Grand_id, ViewBag.Grand_id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Grand_id" } })
+        </div>
+    </div>
+</script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        //   $('select').attr('disabled', 'disabled');
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+     
+        //这个是阶段是否显示
+        function Tuition() {
+            $($("#domes").children()).remove();
+            var templates = _.template($("#studenthtml").html());
+            var dates = templates({});
+            $("#domes").append($(dates));
+            form.render();
+        }
+        form.on('select(Grand_id)', function (data) {
+            if (data.value != "") {
+                if ($("#Name").val() != "") {
+                    $("#lab2").css("display", "none");
+                    Boolfeestandard(data.value, $("#Name").val());
+                }
+            } else {
+                $("#lab2").css("display", "block");
+                $("#Amountofmoney").attr("readonly", "readonly"); $("#lab1").css("display", "none");
+            }
+        });
+        function Boolfeestandard(id, Name) {
+            $.post("/Finance/Pricedetails/costiBoolName/" + id + "?Name=" + Name, function (data) {
+                if (data > 0) {
+
+                    $("#lab1").css("display", "block");
+
+                    $("#Amountofmoney").attr("readonly", "readonly");
+                } else {
+                    $("#lab1").css("display", "none");
+                    $("#Amountofmoney").removeAttr("readonly");
+
+                }
+
+            });
+        }
+        //监听是否有重复的值
+        $("#Name").keyup(function (event) {
+            var stage = $("#Grand_id").val();
+            if ($(this).val() != "") {
+                if (stage != "") {
+                    $("#lab2").css("display", "none");
+                    Boolfeestandard(stage, $(this).val());
+                } else {
+                    $("#lab2").css("display", "block");
+
+                }
+            } else {
+                $("#lab2").css("display", "none");
+            }
+
+        });
+
+        //添加明目数据操作
+        form.on('submit(demo1)', function (data) {
+            var x = data.field;
+            $.post("/Finance/Pricedetails/BoolCostitems", x, function (da) {
+                if (da < 1) {
+                    ajaxUniom("/Finance/Pricedetails/Costitems", x);
+                } else {
+                    Errye("请勿添加重复的名目数据!");
+                }
+            });
+          
+
+            return false;
+        });
+        //监听单选框
+        form.on('radio(erweima)', function (data) {
+
+            if (data.elem.title == "学费" || data.elem.title == "食宿费") {
+                Tuition();
+            } else {
+                $($("#domes").children()).remove();
+                $("#lab1").css("display", "none");
+                $("#Amountofmoney").removeAttr("readonly");
+            }
+        });
+        //添加新明目类别
+        $("#CostitemsX").click(function () {
+            Errye("该功能正在开发中！")
+            //layer.open({
+            //    title: "新增费用类别",
+            //    type: 2,
+            //    area: ['500px', '400px']
+            //    , content: "/Finance/Pricedetails/Typeeyesight"
+
+            //    , anim: 1,
+            //    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            //});
+        });
+    });
+    function GetPartsItmesMy() {
+        location.reload();
+    }
+</script>

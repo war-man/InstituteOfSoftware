@@ -1,29 +1,15 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Latepage";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<ul class="layui-nav layui-bg-green">
-    <li class="layui-nav-item"><a href="">墨绿导航</a></li>
-    <li class="layui-nav-item layui-this"><a href="">产品</a></li>
-    <li class="layui-nav-item"><a href="">大数据</a></li>
-    <li class="layui-nav-item">
-        <a href="javascript:;">解决方案</a>
-        <dl class="layui-nav-child">
-            <dd><a href="">移动模块</a></dd>
-            <dd><a href="">后台模版</a></dd>
-            <dd><a href="">电商平台</a></dd>
-        </dl>
-    </li>
-    <li class="layui-nav-item"><a href="">社区</a></li>
-</ul>
+<h2>Latepage</h2>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 @section script{
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>录入学费价格</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>录入迟交信息</button>
 
 
 
@@ -38,19 +24,17 @@
             //表格渲染
             table.render({
                 elem: '#test'
-                , url: '/Teachingquality/Pricedetails/StudentFeeList'
+                , url: '/Finance/Pricedetails/LateDate'
                 , toolbar: '#toolbarDemo'
                 , id: 'idTest'
                 , page: true
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     { type: 'radio' }
-
-                    , { field: 'grade_Id', title: '阶段' }
-                    , { field: 'Major_Id', title: '专业 ' }
-                    , { field: 'Tuition', title: '学费 ' }
-
-                    , { field: 'Foodandlodging', title: '食宿费 ' }
+                    , { field: 'id', title: '编号 ' }
+                    , { field: 'Stage', title: '阶段' }
+                    , { field: 'Latestdays', title: '期限天数 ' }
+                    , { field: 'Minimumcost', title: '最低金额 ' }
 
 
                 ]]
@@ -58,35 +42,23 @@
                 , limit: 8
                 , limits: [8, 10, 15]
             });
-            //查看班级学员
-            table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-                var data = obj.data; //获得当前行数据
-                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-                var tr = obj.tr; //获得当前行 tr 的DOM对象
-
-                if (layEvent === 'select') { //查看
-                    window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + data.ClassNumber;
-                    console.log(data);
-                }
-
-            });
-
+          
             //监听头部工具栏
             table.on('toolbar(test)', function (obj) {
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'getAdd':
                         layer.open({
-                            title: "录入学员学费详情",
+                            title: "录入学员迟交学费信息",
                             type: 2,
                             area: ['500px', '500px']
-                            , content: "/Teachingquality/Pricedetails/AddFeeStudent"
+                            , content: "/Finance/Pricedetails/AddLate"
                             , end: function () { table.reload('idTest'); }
                             , anim: 1,
                             //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                         });
                         break;
-              
+
                 };
             });
             //查询功能

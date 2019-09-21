@@ -1,0 +1,152 @@
+﻿
+
+
+
+
+
+
+
+
+
+
+
+
+
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Tuitionallocation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddLate</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .width {
+            width: 60px;
+        }
+        .mysql {
+            margin-top: 10px;
+        }
+        #Explain{
+            width:90%;
+            height:100px;
+        }
+    </style>
+</head>
+
+<body>
+    <form class="layui-form" action="" style="margin-top:20px;" id="form">
+        <h3 style="text-align:center;height:50px;">学员学费详情录入</h3>
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">阶段</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("Stage", ViewBag.Stage as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Grand_Id" }, { "name", "list" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">最低费用</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Minimumcost, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input" } })
+
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">期限天数</label>
+                        <div class="layui-input-inline">
+
+                            @Html.TextBoxFor(a => a.Latestdays, new Dictionary<string, object>() { { "placeholder", "天" }, { "class", "layui-input width" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">说明</label>
+                        <div class="layui-input-block">
+
+                            @Html.TextAreaFor(a => a.Explain, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        //   $('select').attr('disabled', 'disabled');
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+    
+        form.render('select');
+        //监听第一个下拉框
+        form.on('select(Grand_Id)', function (data) {
+            if (data.value != "") {
+                Verification(data.value);
+             //   $($('select')[0]).val("");
+            }
+
+        })
+        //验证下拉框是否有重复
+        var couwu = "";
+        //去数据库查询是否有重复
+        function Verification(valie) {
+            $.post("/Finance/Pricedetails/BoolLate/" + valie , function (data) {
+                if (data != "False") {
+                    layer.msg("该价格已存在数据库", {
+                        time: 5000, //20s后自动关闭
+                        btn: ['确定']
+                    });
+                    $($('select')[0]).val("");
+                    form.render('select');
+                   
+                } 
+                //   console.log(data);
+            });
+
+        }
+        //监听第二个下拉框
+        form.on('select(Major_Id)', function (data) {
+            var valie = $("#Grand_Id").val();
+            Verification(valie, data.value);
+
+        })
+
+        //提交数据
+        form.on('submit(demo1)', function (data) {
+            var x = data.field;
+            ajaxUniom("/Finance/Pricedetails/AddLate", x);
+
+            return false;
+        });
+    });
+</script>

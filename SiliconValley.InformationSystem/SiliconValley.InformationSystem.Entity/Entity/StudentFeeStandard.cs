@@ -25,7 +25,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
-    
-       
+
+
+
     }
 }
