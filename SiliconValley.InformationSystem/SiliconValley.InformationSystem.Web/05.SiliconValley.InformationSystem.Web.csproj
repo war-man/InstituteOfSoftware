@@ -560,6 +560,7 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpApproval.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditETR.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DimissionApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\TransferPositionApply.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

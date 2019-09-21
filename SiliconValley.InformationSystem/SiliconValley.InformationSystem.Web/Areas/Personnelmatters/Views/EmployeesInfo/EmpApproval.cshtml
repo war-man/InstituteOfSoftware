@@ -27,15 +27,15 @@
         <ul class="layui-tab-title">
             <li class="layui-this">转正申请</li>
             <li>离职申请</li>
+            <li>转岗申请</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
+                <table id="positiveApply" lay-filter="positiveApply"></table>
                 @*操作栏*@
                 <script type="text/html" id="barDemo1">
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState1">审批</a>
                 </script>
-                <table id="positiveApply" lay-filter="positiveApply"></table>
-
                 @*是否购买社保显示*@
                 <script type="text/html" id="mySS">
                     {{# if(d.IsBuySS==false){ }}
@@ -44,14 +44,25 @@
                     {{ d.IsBuySS="是" }}
                     {{# } }}
                 </script>
+
             </div>
 
             <div class="layui-tab-item">
+
+                <table id="dimissionApply" lay-filter="dimissionApply"></table>
                 @*操作栏*@
                 <script type="text/html" id="barDemo2">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState2">审批通过</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState2">审批</a>
                 </script>
-                <table id="dimissionApply" lay-filter="dimissionApply"></table>
+            </div>
+
+            <div class="layui-tab-item">
+
+                <table id="transferPositionApply" lay-filter="transferPositionApply"></table>
+                @*操作栏*@
+                <script type="text/html" id="barDemo3">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState3">审批</a>
+                </script>
             </div>
         </div>
     </div>
@@ -71,7 +82,7 @@
                 , url: '/Personnelmatters/EmployeesInfo/GetPositiveData'
                 , id: "myapply1"
                 , limits: [5, 10, 15, 20, 25, 30]
-                , limit: 5
+                , limit: 10
                 , cols: [[
                     , { field: 'Id', width: 38 }
                     , { field: 'empName', title: '姓名', width: 90, sort: true }
@@ -154,7 +165,7 @@
                 , url: '/Personnelmatters/EmployeesInfo/GetDimissionData'
                 , id: "myapply2"
                 , limits: [5, 10, 15, 20, 25, 30]
-                , limit: 5
+                , limit: 10
                 , cols: [[
                     , { field: 'Id', width: 38 }
                     , { field: 'empName', title: '姓名', width: 80, sort: true }
@@ -206,6 +217,90 @@
                                             layui.use(['table'], function () {
                                                 var table = layui.table;
                                                 table.reload("myapply2");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+
+                        });
+                    }
+
+                }
+            });
+
+        });
+
+        //转岗申请数据加载
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#transferPositionApply'
+                , url: '/Personnelmatters/EmployeesInfo/GetTransferPositionData'
+                , id: "myapply3"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'esex', title: '性别', width: 80, sort: true }
+                    , { field: 'dname', title: '转岗前部门', width: 110, sort: true }
+                    , { field: 'pname', title: '转岗前岗位', width: 130, sort: true }
+                    , { field: 'presalary', title: '转岗前工资', width: 130, templet: function (d) { return GetYMD(d.DimissionDate) } }
+                    , { field: 'nowdname', title: '拟转部门', width: 110, sort: true }
+                    , { field: 'nowpname', title: '拟转岗位', width: 130, sort: true }
+                    , { field: 'TurnAfterSalary', title: '转岗后工资', width: 110 }
+                    , { field: 'Reason', title: '转岗原因', width: 110 }
+                    , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo3', width: 110 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(transferPositionApply)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'editApprovalState3') {
+                    if (data.IsApproval == true) {
+                        layer.msg('该申请已完成审批', { icon: 1 });
+                    } else {
+                        var s = true;
+                        layer.open({
+                            content: '是否通过审批？'
+                            , btn: ['已通过', '未通过']
+                            , yes: function (index, layero) {
+                                console.log("已通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/TransferPositionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply3");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+                            , btn2: function (index, layero) {
+                                s = false;
+                                console.log("未通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/TransferPositionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply3");
                                             });
                                             layer.close(index);
                                         });

@@ -423,6 +423,9 @@
                     , title: "部门及岗位管理"
                     , content: '/Personnelmatters/EmployeesInfo/DeptOperation'
                     , anim: 2
+                    , cancel: function (index, layero) {
+                        layui.table.reload('myEmpInfo');
+                    }
                 });
 
             })
@@ -441,6 +444,9 @@
                     , title: "员工异动管理"
                     , content: '/Personnelmatters/EmployeesInfo/EmpTransactionRecord'
                     , anim: 2
+                    , cancel: function (index, layero) {
+                        layui.table.reload('myEmpInfo');
+                    }
                 });
 
             })
@@ -458,6 +464,9 @@
                     , title: "员工审批状态管理"
                     , content: '/Personnelmatters/EmployeesInfo/EmpApproval'
                     , anim: 2
+                    , cancel: function (index, layero) {
+                        layui.table.reload('myEmpInfo');
+                    }
                 });
 
             })

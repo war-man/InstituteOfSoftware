@@ -1,0 +1,304 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+@model SiliconValley.InformationSystem.Entity.MyEntity.JobTransferAppply
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TransferPositionApply</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 180px;
+        }
+    </style>
+</head>
+<body>
+
+    <div>
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div class="layui-container">
+                <input type="hidden" name="EmployeeId" id="EmployeeId" value="@ViewBag.eid" />
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EmpName" id="EmpName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Sex" id="Sex" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EntryTime" id="EntryTime" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">现部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="dname" id="dname" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">现岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pname" id="pname" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">现工资标准:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="presalary" id="presalary" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">拟转部门：</label>
+                        <div class="layui-input-block">
+                            <select name="PlanTurnDeptId" id="PlanTurnDeptId" lay-filter="deptidfilter" lay-verify="required">
+                                <option value="-1">请选择</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">拟转岗位：</label>
+                        <div class="layui-input-block">
+                            <select name="PlanTurnPositionId" id="PlanTurnPositionId" lay-verify="required" lay-search=""></select>
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" >转岗工资标准:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="TurnAfterSalary" id="TurnAfterSalary"  class="layui-input salary" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">转岗原因：</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:200px;margin-top:40px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <script>
+
+        $(function () {
+            loademp();// 初始化编辑数据加载
+        });
+        function loademp() {
+            var id = $("#EmployeeId").val();
+            console.log(id);
+            $.get("/Personnelmatters/ApprovalManagement/GetEmpid/" + id, function (data) {
+                layui.use(['layer', 'form', 'table', 'laydate'], function () {
+                    var form = layui.form, laydate = layui.laydate;
+                    $("#EmpName").val(data.EmpName);
+                    $("#Sex").val(data.Sex);
+                    data.EntryTime = GetYMD(data.EntryTime);
+                    $("#EntryTime").val(data.EntryTime);
+                    $("#dname").val(data.dname);
+                    $("#pname").val(data.pname);
+                    if (data.Salary == null) {
+                        $("#presalary").val(data.ProbationSalary);
+                    } else {
+                        $("#presalary").val(data.Salary);
+                    }
+                    form.val("formtest", data);
+                });
+            })
+        }
+
+
+        layui.use(['form', 'layedit'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit;
+
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
+
+            //添加提交
+            form.on('submit(demo1)', function (data) {
+                console.log("转岗数据：" + data.field);
+                $.post("/Personnelmatters/ApprovalManagement/TransferPositionApply", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("申请成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index);
+
+                        });
+                    } else {
+                        layer.alert("申请失败!");
+                    }
+                });
+                return false;
+            });
+
+            //关闭添加页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
+        });
+
+
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+
+    </script>
+
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#PlanTurnDeptId").empty();
+                    if (resultData.code == 0) {
+
+                        $("#PlanTurnDeptId").append(new Option("请选择", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $('#PlanTurnDeptId').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#PlanTurnDeptId").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PlanTurnPositionId").empty();
+                            console.log(resultData.data);
+                            $("#PlanTurnPositionId").append(new Option("请选择", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#PlanTurnPositionId').append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PlanTurnPositionId").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
+    </script>
+
+
+</body>
+</html>

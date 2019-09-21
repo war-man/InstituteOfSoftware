@@ -22,7 +22,7 @@
             <label class="layui-form-label" style="width:100px;">离职申请</label>
           
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="transferPosition">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px;  color:white;"></i>
             </div>
@@ -73,6 +73,7 @@
     </div>
 </fieldset>
    <script>
+       //转正申请
        $("#positive").click(function () {
            layui.use(['layer'], function (args) {
                var layer = layui.layer;      //layui对象
@@ -87,6 +88,7 @@
            })
 
        });
+       //离职申请
        $("#dimission").click(function () {
            layui.use(['layer'], function (args) {
                var layer = layui.layer;      //layui对象
@@ -100,6 +102,20 @@
 
            })
 
+       });
+       //调岗申请
+       $("#transferPosition").click(function () {
+           layui.use(['layer'], function (args) {
+               var layer = layui.layer;      //layui对象
+               layer.open({
+                   type: 2
+                   , area: ["800px", "500px"]
+                   , title: "调岗"
+                   , content: '/Personnelmatters/ApprovalManagement/TransferPositionApply'
+                   , anim: 2
+               });
+
+           })
        });
    </script>
 
