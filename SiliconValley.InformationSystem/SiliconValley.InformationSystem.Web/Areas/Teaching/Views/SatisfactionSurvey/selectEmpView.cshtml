@@ -1,0 +1,81 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>selectEmpView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+        <table class="layui-hide" id="test"></table>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <script>
+
+        function callbackdata() {
+            var checkStatus = layui.table.checkStatus('test'); //idTest 即为基础参数 id 对应的值
+            return checkStatus;
+        }
+        var url = "";
+       var emptype = getQueryVariable("emptype");
+
+        if (emptype == 'teacher') {
+             url = "/Teaching/SatisfactionSurvey/selectTeacherByGrand";
+        }
+        if (emptype == "classmaster") {
+             url = "/Teaching/SatisfactionSurvey/selectClassLaderByGrand";
+        }
+        if (emptype == 'allclassmaster') {
+
+            url = "/Teaching/SatisfactionSurvey/AllClassmasterData";
+        }
+
+        if (emptype == 'allteacher') {
+
+            url = "/Teaching/SatisfactionSurvey/selectClassLaderByGrand";
+        }
+
+        
+
+
+        layui.use(['table', 'layer'], function () {
+
+            var table = layui.table;
+            var layer = layui.layer;
+
+            table.render({
+                elem: '#test'
+                , url: url
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' }
+                    ,{ field: 'EmployeeId', width: 200, title: '员工编号', sort: true }
+                    , { field: 'EmpName', width: 200, title: '姓名' } 
+                ]],
+
+
+                page: true
+                , yes: function (index) {
+
+                }, done: function (res) {   //返回数据执行回调函数
+                    layer.close(index);    //返回数据关闭loading
+
+                }
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>

@@ -69,128 +69,149 @@
             background-color:transparent;
             border:0px solid white;
         }
+
+        .bg {
+            background-color:white;
+        }
     </style>
 
 }
 
-<div id="toptitle">
+    <div id="toptitle">
 
-    <h2 style="text-align:center; color:gray;">
+        <h2 style="text-align:center; color:gray;">
 
-        满意度调查历史记录
+            满意度调查历史记录 
 
-    </h2>
+        </h2>
 
 
-    @{
+        @{
 
-        if (ViewBag.TeacherView.Position.Pid == 3 || ViewBag.TeacherView.Position.Pid == 2011)
-        {
-            <!--教学主任的操作页面-->
+            if (ViewBag.TeacherView.Position.Pid == 3 || ViewBag.TeacherView.Position.Pid == 2011)
+            {
+                <!--教学主任的操作页面-->
 
-    <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+        <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
 
-        <div class="dropdown">
-            <button style="background-color:#92d4a5;" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span class="text">班主任</span>
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a class="empSelect" empid="201908150002" href="#">大类</a></li>
-                <li><a class="empSelect" empid="201908150002" href="#">臣还是</a></li>
-                <li><a class="empSelect" empid="" href="#">钟伦攀</a></li>
-                <li><a class="empSelect" empid="" href="#">同名</a></li>
-                <li><a class="empSelect" empid="" href="#">丁宏远</a></li>
-            </ul>
-        </div>
 
-        <div>
+            <div>
 
-            <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择教员</button>
+                <button style="background-color:transparent;" class="layui-btn layui-btn-primary grandselectEmpBtn1">选择教员</button>
 
-        </div>
-        <div>
+            </div>
+            <div>
 
-            <input  id="month" type="month" />
+                <input id="month" value="" type="month" />
+
+            </div>
+
+            <div id="mybtn">
+                <i style="font-size:25px;" class="layui-icon">&#xe66f;</i>
+            </div>
+            <div>
+                <button style="background-color:transparent;" class="layui-btn layui-btn-primary selectClassBtn">选择班级</button>
+            </div>
+
 
         </div>
+            }
+
+        }
+
+        @{
+
+
+
+            if (ViewBag.TeacherView.Position.Pid == 2008)
+            {
+                <!--教质主任的操作页面-->
+
+                <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+
+
+                    <div>
+
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary btnselectheaderall">选择班主任</button>
+
+                    </div>
+
+                    <div>
+
+                        <input id="month" type="month" />
+
+                    </div>
+                    <div id="mybtn">
+                        <i style="font-size:30px;" class="layui-icon">&#xe66f;</i> 我
+                    </div>
+                    <div>
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary selectClassBtn">选择班级</button>
+                    </div>
+
+                </div>
+            }
+        }
+
+        @{
+
+            if (ViewBag.TeacherView.Position.Pid == 2012)
+            {
+                <!--教学主任的操作页面-->
+
+                <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+
+                    <div>
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary btnselectheaderall ">选阵班主任</button>
+                    </div>
+
+
+                    <div>
+
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary grandselectEmpBtn1">选择教员</button>
+
+                    </div>
+
+                    <div>
+                        <input id="month" type="month" />
+                    </div>
+
+                    <div id="mybtn"><i style="font-size:30px;" class="layui-icon">&#xe66f;</i> 我</div>
+
+                    <div>
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary selectClassBtn">选择班级</button>
+                    </div>
+
+
+                </div>
+            }
+
+            if (ViewBag.TeacherView.Position.Pid == 2 || ViewBag.TeacherView.Position.Pid == 4)
+            {
+                <!--教员或班主任-->
+
+
+                <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+
+                    <div>
+                        <input id="month" type="month" />
+                    </div>
+
+                    <div id="mybtn"><i style="font-size:30px;" class="layui-icon">&#xe66f;</i> 我</div>
+
+
+                    <div>
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary selectClassBtn">选择班级</button>
+                    </div>
+
+                </div>
+
+
+            }
+
+        }
+
 
     </div>
-        }
-
-    }
-
-    @{
-
-
-
-        if (ViewBag.TeacherView.Position.Pid == 2008)
-        {
-            <!--教质主任的操作页面-->
-
-            <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
-
-                <div class="dropdown">
-                    <button empid="" style="background-color:#92d4a5;" class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <span class="text">教员</span>
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a class="empSelect" empid="" href="#">大类</a></li>
-                        <li><a class="empSelect" empid="" href="#">臣还是</a></li>
-                        <li><a class="empSelect" empid="" href="#">钟伦攀</a></li>
-                        <li><a class="empSelect" empid="" href="#">同名</a></li>
-                        <li><a class="empSelect" empid="" href="#">丁宏远</a></li>
-                    </ul>
-                </div>
-                <div>
-
-                    <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择班主任</button>
-
-                </div>
-                <div>
-
-                    <input id="month"  type="month" />
-
-                </div>
-            </div>
-        }
-    }
-
-    @{
-
-        if (ViewBag.TeacherView.Position.Pid == 2012)
-        {
-            <!--教学主任的操作页面-->
-
-            <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
-
-                <div>
-                    <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择教员</button>
-                </div>
-               
-
-                <div>
-
-                    <button style="background-color:transparent;" class="layui-btn layui-btn-primary">选择教员</button>
-
-                </div>
-
-                <div>
-                    <input id="month" type="month" />
-                </div>
-
-
-
-
-            </div>
-        }
-
-    }
-
-           
-
-</div>
 
 <hr />
 
@@ -200,102 +221,7 @@
 
 
 
-        <div class="SurveyItem">
-
-            <div>
-                <label>满意度填写人:钟伦攀</label>
-            </div>
-
-            <div>
-                <label>总分:100</label>
-            </div>
-
-            <div>
-                <label>建议:你好啊 老师 我的意见是</label>
-            </div>
-
-        </div>
-
-        <div class="SurveyItem">
-
-            <div>
-                <label>满意度填写人:钟伦攀</label>
-            </div>
-
-            <div>
-                <label>总分:100</label>
-            </div>
-
-            <div>
-                <label>建议:你好啊 老师 我的意见是</label>
-            </div>
-
-        </div>
-
-        <div class="SurveyItem">
-
-            <div>
-                <label>满意度填写人:钟伦攀</label>
-            </div>
-
-            <div>
-                <label>总分:100</label>
-            </div>
-
-            <div>
-                <label>建议:你好啊 老师 我的意见是</label>
-            </div>
-
-        </div>
-
-        <div class="SurveyItem">
-
-            <div>
-                <label>满意度填写人:钟伦攀</label>
-            </div>
-
-            <div>
-                <label>总分:100</label>
-            </div>
-
-            <div>
-                <label>建议:你好啊 老师 我的意见是</label>
-            </div>
-
-        </div>
-
-        <div class="SurveyItem">
-
-            <div>
-                <label>满意度填写人:钟伦攀</label>
-            </div>
-
-            <div>
-                <label>总分:100</label>
-            </div>
-
-            <div>
-                <label>建议:你好啊 老师 我的意见是</label>
-            </div>
-
-        </div>
-
-        <div class="SurveyItem">
-
-            <div>
-                <label>满意度填写人:钟伦攀</label>
-            </div>
-
-            <div>
-                <label>总分:100</label>
-            </div>
-
-            <div>
-                <label>建议:你好啊 老师 我的意见是</label>
-            </div>
-
-        </div>
-
+       
 
 
     </div>
@@ -303,7 +229,39 @@
     <div id="rightSurveyImages">
 
 
-        <h2 style="text-align:center;"> 图形区域</h2>
+
+        <div id="studentevaluateImage" style="text-align:center;display:none;">
+            <h3 style="text-align:center;"> 学生个人的评价</h3>
+
+            <hr />
+
+            <label class="EmpName"></label>--------<label class="corsour"></label>
+
+            <div id="yuangImage" style="width:100%;height:200px;">
+
+            </div>
+        </div>
+
+
+        <div id="ClassevaluateImageDiv" style="text-align:center;">
+            <h3 style="text-align:center;"> 班级评价</h3>
+
+            <hr />
+
+            <label class="EmpName"></label>--------<label class="corsour"></label>
+
+            <div id="ClassevaluateImage" style="width:100%;height:200px;">
+
+
+
+
+            </div>
+        </div>
+
+
+
+
+
 
     </div>
 
@@ -311,10 +269,10 @@
 </div>
 
 <script type="text/template" id="moban1">
-    <div class="SurveyItem">
+    <div class="SurveyItem" SurveyResultID="{{=SurveyResultID}}">
 
-        <div>
-            <label>满意度填写人:</label><label>{{=studentname}}</label>
+        <div class="studentnamediv">
+            <label>满意度填写人:</label><label class="studentnamelable">{{=studentname}}</label>
         </div>
 
         <div>
@@ -329,18 +287,49 @@
 </script>
 
 @section script{
+<script src="~/Scripts/ECharts4.2.1/incubator-echarts-master/dist/echarts.js"></script>
 <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
     <script src="~/Scripts/underscore.js"></script>
     <script>
+
+     
+     
+
+        var CurrentEmp;
+
+        var currentClass;
+
+        function callbackdata() {
+            var checkStatus = layui.table.checkStatus('idTest'); //idTest 即为基础参数 id 对应的值
+            return checkStatus;
+        }
+
+        //日期初始化
+        var currentdate = new Date();
+
+       
+
+        var year= currentdate.getFullYear();
+
+        var month = currentdate.getMonth()+1;
+
+        if (month <= 9) {
+
+            month = "0" + month;
+        }
+
+        console.log(year + '-' + month);
+
+        $("#month").val(year + '-' + month);
 
         layui.use(['form', 'layer'], function () {
 
 
             var layer = layui.layer;
 
-            function load(empid, month) {
+            function load(empid, month,classnumber,kechengid) {
 
-                Ajax('/Teaching/SatisfactionSurvey/SurveyHistoryData', { empid: empid, date: month }, 'post', function (data) {
+                Ajax('/Teaching/SatisfactionSurvey/SurveyHistoryData', { empid: empid, date: month, classnumber: classnumber, Curriculum: kechengid }, 'post', function (data) {
 
                     console.log(data);
 
@@ -358,14 +347,11 @@
 
                             var html1 = _.template($("#moban1").html());
 
-                            var data1 = html1({ studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal});
+                            var data1 = html1({SurveyResultID: data.Data[i].SurveyResultID, studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal });
 
                             $("#SurveyHistoryList").append($(data1));
 
                         }
-
-                      
-
 
 
                     }
@@ -386,9 +372,13 @@
 
             }
 
+            //初始化自己的满意度调查
+            //获取月份
+            var month = $("#month").val();
+            load(null, month, null,3);
 
             $(document).off("click", ".empSelect").on("click", ".empSelect", function () {
-
+                $(".selectClassBtn").text("选择班级");
                 var text = $(this).text();
                 var empid = $(this).attr("empid");
 
@@ -409,7 +399,337 @@
 
             });
 
+
+            ///获取阶段教员列表
+            $(document).off('click', '.grandselectEmpBtn1').on('click', '.grandselectEmpBtn1', function () {
+
+                var cur = this;
+
+                $(".selectClassBtn").text("选择班级");
+
+
+                layer.open({
+                    type: 2
+                    , area: ["600px", "300px"],
+                    shade: [0],
+                    title: "选择员工",
+                    btn: ['确定', '关闭'],
+                    content: '/Teaching/SatisfactionSurvey/selectEmpView?emptype=teacher'
+                    //, end: function () { table.reload('idTest', {}); }
+                    , yes: function (index) {
+                        //当点击‘确定’按钮的时候，获取弹出层返回的值
+                        var res = window["layui-layer-iframe" + index].callbackdata();
+                        console.log(res);
+
+                        //打印返回的值，看是否有我们想返回的值。
+                        if (res) {
+                            //获取月份
+                            var month = $("#month").val();
+
+                            CurrentEmp = res.data[0].EmployeeId;
+
+                            $(cur).text(res.data[0].EmpName);
+
+                            //加载数据
+                            load(res.data[0].EmployeeId, month);
+
+                        } else {
+                            layer.msg('请选择员工', { icon: 0 });
+                        }
+
+                        layer.close(index);
+                    }
+
+                });
+
+
+            });
+
+
+            //获取所有班主任
+
+            $(document).off('click', '#btnselectheaderall').on('click', '#btnselectheaderall', function () {
+                $(".selectClassBtn").text("");
+                layer.open({
+                    type: 2
+                    , area: ["600px", "300px"],
+                    shade: [0],
+                    title: "选择员工",
+                    btn: ['确定', '关闭'],
+                    content: '/Teaching/SatisfactionSurvey/selectEmpView?emptype=allclassmaster'
+                    //, end: function () { table.reload('idTest', {}); }
+                    , yes: function (index) {
+                        //当点击‘确定’按钮的时候，获取弹出层返回的值
+                        var res = window["layui-layer-iframe" + index].callbackdata();
+                        console.log(res);
+
+                        //打印返回的值，看是否有我们想返回的值。
+                        if (res) {
+                            //获取月份
+                            var month = $("#month").val();
+                            CurrentEmp = res.data[0].EmployeeId;
+                            //加载数据
+                            load(res.data[0].EmployeeId, month);
+
+                        } else {
+                            layer.msg('请选择员工', { icon: 0 });
+                        }
+
+                        layer.close(index);
+                    }
+
+                });
+            });
+
+
+            //自己的满意度历史记录
+            $(document).off("click", "#mybtn").on("click", '#mybtn', function () {
+                $(".selectClassBtn").text("选择班级");
+                //获取月份
+                var month = $("#month").val();
+
+                load(null, month);
+
+
+            });
+
+            document.getElementById("month").onchange = function () {
+
+             
+                load(CurrentEmp, this.value, currentClass);
+
+            }
+
+
+            //选择班级
+
+
+            $(".selectClassBtn").click(function () {
+
+
+                if (CurrentEmp == undefined) {
+
+                    layer.msg("请先选择员工");
+                    return
+                }
+
+                var cur = this;
+
+                layer.open({
+                    type: 2
+                    , area: ["600px", "300px"],
+                    shade: [0],
+                    title: "选择班级",
+                    btn: ['确定', '关闭'],
+                    content: '/Teaching/SatisfactionSurvey/selectClassView?empid=' + CurrentEmp
+                    //, end: function () { table.reload('idTest', {}); }
+                    , yes: function (index) {
+                        //当点击‘确定’按钮的时候，获取弹出层返回的值
+                        var res = window["layui-layer-iframe" + index].callbackdata();
+                        console.log(res);
+
+                        //打印返回的值，看是否有我们想返回的值。
+                        if (res) {
+                            //获取月份
+
+                            currentClass = res.data[0].ClassNumber;
+                            var month = $("#month").val();
+
+                            $(cur).text(res.data[0].ClassNumber);
+
+                            load(CurrentEmp, month, res.data[0].ClassNumber);
+
+
+                        } else {
+                            layer.msg('请选择员工', { icon: 0 });
+                        }
+
+                        layer.close(index);
+                    }
+
+                });
+
+
+            });
+
+
+            //双击查看详细
+            $(document).off("dblclick", '.SurveyItem').on("dblclick", '.SurveyItem', function () {
+
+                //获取resultID
+                var SurveyResultID = $(this).attr("SurveyResultID");
+
+                layer.open({
+                    type: 2,
+                    title:"",
+                    area: ['600px', '800px'],
+                    content: "/Teaching/SatisfactionSurvey/SurveyDetail/" + SurveyResultID
+
+                });
+
+            });
+
         });
+
+
+       
+
+        //环形图
+        function ImageShow(elem, SurveyResultID) {
+
+            //发送请求获取数据
+
+            Ajax('/Teaching/SatisfactionSurvey/SurveyHistoryDataByID/' + SurveyResultID, {}, 'get', function (data) {
+
+             
+
+                $("#studentevaluateImage").find(".EmpName").text(data.Data.Data.Emp.EmpName);
+
+                $("#studentevaluateImage").find(".corsour").text(data.Data.Data.Curriculum.CourseName);
+
+
+                var myChart = echarts.init(document.getElementById(elem));
+                var option = {
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
+                    },
+                    legend: {
+                        orient: 'vertical',
+                        x: 'left',
+                        data: data.Data.itemTypelist
+                    },
+
+                    calculable: true,
+                    series: [
+                        {
+                            name: '访问来源',
+                            type: 'pie',
+                            radius: ['50%', '70%'],
+                            itemStyle: {
+                                normal: {
+                                    label: {
+                                        show: false
+                                    },
+                                    labelLine: {
+                                        show: false
+                                    }
+                                },
+                                emphasis: {
+                                    label: {
+                                        show: true,
+                                        position: 'center',
+                                        textStyle: {
+                                            fontSize: '30',
+                                            fontWeight: 'bold'
+                                        }
+                                    }
+                                }
+                            },
+                            
+                            data: data.Data.itemTypeScores
+                        }
+                    ]
+                };
+                myChart.setOption(option);
+
+
+
+
+            }, function (error) {
+
+
+                });
+
+        }
+       
+        //饼状图
+        function PieImage(elem, legendData, seriesData) {
+
+
+            alert("dd");
+            var myChart = echarts.init(document.getElementById(elem));
+            option = {
+                title: {
+                    text: '某站点用户访问来源',
+                    
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: legendData
+                },
+                series: [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: seriesData,
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+
+
+        }
+       
+        //显示当前满意度调查结果的各项分数
+
+        $.post('/Teaching/SatisfactionSurvey/GetPieImageData', { EmpID: "201908150002", ClassNumber: "1710NA", courseid: '3', date: null }, function (data) {
+
+            PieImage("ClassevaluateImage", data.typelist, data.tyepscorelist);
+
+        });
+
+
+        $(document).off("click", ".SurveyItem").on("click", '.SurveyItem', function () {
+
+            //显示图片
+            $("#studentevaluateImage").show();
+
+            //获取ID
+            var SurveyResultID = $(this).attr("SurveyResultID");
+
+            var studentname = $(this).find(".studentnamediv").find(".studentnamelable").text();
+
+            $("#studentevaluateImage").find("h3").text(studentname+"对教员的评价");
+
+
+
+            ImageShow("yuangImage", SurveyResultID);
+
+
+        });
+
+
+        $(document).off("mouseover", '.SurveyItem').on("mouseover", '.SurveyItem', function () {
+
+            $(this).addClass("bg");
+
+        });
+
+
+        $(document).off("mouseout", '.SurveyItem').on("mouseout", '.SurveyItem', function () {
+
+            $(this).removeClass("bg");
+
+        });
+
+
     </script>
 
 }

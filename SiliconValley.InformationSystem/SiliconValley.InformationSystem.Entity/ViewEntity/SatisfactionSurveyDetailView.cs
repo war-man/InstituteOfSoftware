@@ -23,6 +23,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 
         public Curriculum Curriculum { get; set; }//调查的课程
 
+        public List<SatisficingResultDetailView> detailitem;
+
+        public int SurveyResultID { get; set; }
+
+        
+
     }
 
 }
