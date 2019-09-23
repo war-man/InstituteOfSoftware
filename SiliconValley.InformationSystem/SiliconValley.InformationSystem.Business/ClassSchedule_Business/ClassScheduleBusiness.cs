@@ -452,14 +452,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public object GetClassGrand(string ClassNumber)
         {
-         var CLaaNuma=   this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
-
-            return new
-            {
-                Major_Id = Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName,
-                grade_Id = Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName
-            };
-
+         var CLaaNuma=   this.GetList().Where(a => a.ClassNumber == ClassNumber).Select(a=>new { Major_Id= Techarcontext.GetEntity(a.Major_Id).SpecialtyName,a.ClassNumber, grade_Id= Grandcontext.GetEntity(a.grade_Id).GrandName }).FirstOrDefault();
+            return CLaaNuma;
         }
     }
 }
