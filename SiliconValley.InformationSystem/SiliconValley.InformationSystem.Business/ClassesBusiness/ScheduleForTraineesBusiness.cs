@@ -11,9 +11,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 {
 
   public  class ScheduleForTraineesBusiness:BaseBusiness<ScheduleForTrainees>
-    {
-        
-
+    {       
         /// <summary>
         /// 通过班级名称获取学员
         /// </summary>
@@ -50,7 +48,5 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         {
             return this.GetList().Where(q => q.CurrentClass == true && q.StudentID == Sutdentid).FirstOrDefault();
         }
-
-
     }
 }
