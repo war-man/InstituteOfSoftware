@@ -1043,7 +1043,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                     ajaxresult = empmanage.Success();
                                     ajaxresult.Success = es;
                                     break;
-
+                                case "咨询部":
+                                    ConsultTeacherManeger ctmanage = new ConsultTeacherManeger();
+                                    bool ct = ctmanage.DeltConsultTeacher(emp.EmployeeId);
+                                    ajaxresult = empmanage.Success();
+                                    ajaxresult.Success = ct;
+                                    break;
+                                case "教质部":
+                                    HeadmasterBusiness hmmanage = new HeadmasterBusiness();
+                                    bool hm= hmmanage.QuitEntity(emp.EmployeeId);
+                                    ajaxresult = empmanage.Success();
+                                    ajaxresult.Success = hm;
+                                    break;
+                                case "教学部":
+                                    TeacherBusiness tmanage = new TeacherBusiness();
+                                    bool t = tmanage.dimission(emp.EmployeeId);
+                                    ajaxresult = empmanage.Success();
+                                    ajaxresult.Success = t;
+                                    break;
                             }
                            
                         }

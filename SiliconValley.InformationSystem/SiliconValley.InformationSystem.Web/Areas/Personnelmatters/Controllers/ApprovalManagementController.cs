@@ -137,7 +137,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-
+                sra.IsPass = false;
+                sra.IsApproval = false;
                 sramanage.Insert(sra);
                 AjaxResultxx = sramanage.Success();
             }

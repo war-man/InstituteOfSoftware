@@ -87,10 +87,16 @@
                 </div>
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">异动类型:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="type" name="type" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
-                            <textarea id="Remark" name="Remark" class="layui-input" readonly style="border:0px;width:400px;height:100px;"></textarea>
+                            <textarea id="Remark" name="Remark" class="layui-input" readonly style="border:0px;width:160px;height:100px;"></textarea>
                         </div>
                     </div>
                 </div>
@@ -140,17 +146,153 @@
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="EntryTime" name="EntryTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">离职时间:</label>
                         <div class="layui-input-block">
                             <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">异动类型:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="type" name="type" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">离职原因:</label>
                         <div class="layui-input-block">
                             <input type="text" id="Reason" name="Reason" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                   
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            <textarea id="Remark" name="Remark" class="layui-input" readonly style="border:0px;width:400px;height:60px;"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:200px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+
+        @*调岗异动的详情页*@
+        <form class="layui-form" action="" lay-filter="TransferPosition" id="TransferPosition" hidden>
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="esex" name="esex" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="EntryTime" name="EntryTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">异动类型:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="type" name="type" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗前部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="predname" name="predname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗前岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="prepname" name="prepname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗前工资:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="PreviousSalary" name="PreviousSalary" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗后部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="nowpname" name="nowpname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗后岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="nowpname" name="nowpname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗后工资:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="PresentSalary" name="PresentSalary" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">调岗原因:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="Reason" name="Reason" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                  
                 </div>
 
                 <div class="layui-row layui-form-item">
@@ -164,12 +306,12 @@
 
             </div>
 
-                <div class="layui-form-item" style="margin-left:200px;">
-                    <div class="layui-input-block">
-                        <button class="layui-btn layui-btn-warm btnclose1">关闭</button>
-                    </div>
+            <div class="layui-form-item" style="margin-left:200px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm btnclose1">关闭</button>
                 </div>
-</form>
+            </div>
+        </form>
     </div>
 
 
@@ -187,13 +329,21 @@
                     if (data.type == "转正") {
                         $("#Positive").show();
                         data.EntryTime = GetYMD(data.EntryTime);
-                         data.TransactionTime = GetYMD(data.TransactionTime);
+                        data.TransactionTime = GetYMD(data.TransactionTime);
                         form.val("Positive", data);
                     } else if (data.type == "离职") {
                         $("#Dimission").show();
+                        data.EntryTime = GetYMD(data.EntryTime);
                         data.TransactionTime = GetYMD(data.TransactionTime);
                         console.log(data);
                         form.val("Dimission", data);
+                    } else if (data.type == "调岗") {
+                        $("#TransferPosition").show();
+                        data.EntryTime = GetYMD(data.EntryTime);
+                        data.TransactionTime = GetYMD(data.TransactionTime);
+                        console.log(data);
+                        form.val("TransferPosition", data);
+
                     }
                 });
             })

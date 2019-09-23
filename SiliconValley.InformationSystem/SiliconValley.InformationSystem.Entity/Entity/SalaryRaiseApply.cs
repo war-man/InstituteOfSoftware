@@ -22,8 +22,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> RaisesLimit { get; set; }
         public Nullable<System.DateTime> ApplyTime { get; set; }
         public string RaisesReason { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-    
-       
+        public Nullable<bool> IsPass { get; set; }
+        public Nullable<bool> IsApproval { get; set; }
+
+
     }
 }
