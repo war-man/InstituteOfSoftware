@@ -84,7 +84,7 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    , { field: 'Id', width: 38 }
+                      { field: 'Id', width: 38 }
                     , { field: 'empName', title: '姓名', width: 90, sort: true }
                     , { field: 'esex', title: '性别', width: 90, sort: true }
                     , { field: 'dname', title: '所属部门', width: 110, sort: true }
@@ -94,7 +94,7 @@
                     , { field: 'ApplicationDate', title: '申请时间', width: 140, templet: function (d) { return GetYMD(d.ApplicationDate) } }
                     , { field: 'ProbationPersonalSummary', title: '试用期个人总结', width: 200 }
                     , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 110 }
+                    , { title: '操作', toolbar: '#barDemo1', width: 110, fixed: 'right' }
                 ]]
                 , page: true
             });
@@ -167,7 +167,7 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    , { field: 'Id', width: 38 }
+                      { field: 'Id', width: 38 }
                     , { field: 'empName', title: '姓名', width: 80, sort: true }
                     , { field: 'esex', title: '性别', width: 80, sort: true }
                     , { field: 'dname', title: '所属部门', width: 110, sort: true }
@@ -176,7 +176,7 @@
                     , { field: 'DimissionReason', title: '离职原因', width: 110 }
                     , { field: 'OpinionOrAdvice', title: '对学校或部门的意见或建议', width: 220 }
                     , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo2', width: 110 }
+                    , { title: '操作', toolbar: '#barDemo2', width: 110, fixed: 'right' }
                 ]]
                 , page: true
             });

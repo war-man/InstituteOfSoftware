@@ -814,5 +814,37 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         }
 
 
+        /// <summary>
+        ///教员离职
+        /// </summary>
+        /// <param name="empid">员工编号</param>
+        /// <returns></returns>
+        public bool dimission(string empid)
+        {
+
+            bool result = true;
+
+            try
+            {
+
+               var obj = this . GetTeachers().Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
+
+                obj.IsDel = true;
+
+                this.Update(obj);
+
+
+            }
+            catch (Exception)
+            {
+
+                result = false;
+            }
+
+            return result;
+
+        }
+
+
     }
 }
