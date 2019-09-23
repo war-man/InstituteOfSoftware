@@ -24,11 +24,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
         //阶段
         GrandBusiness Grandcontext = new GrandBusiness();
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+       
 
 
 
@@ -98,8 +94,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.GetDate(page, limit, Name, Sex, StudentNumber, identitydocument),JsonRequestBehavior.AllowGet);
         }
-
-
+        //录入学费页面
+        public ActionResult Finance()
+        {
+            ViewBag.Stuid = Request.QueryString["Stuid"];
+            //阶段
+            ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
+            return View();
+        }
 
 
 

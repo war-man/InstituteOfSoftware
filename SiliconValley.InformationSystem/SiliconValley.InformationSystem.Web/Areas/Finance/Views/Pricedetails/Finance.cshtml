@@ -1,0 +1,77 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.StudentFeeRecord
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Finance</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <form class="layui-form" action="" id="form">
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-inline">
+                            <input value="@ViewBag.Stuid" name="StudenID" id="StudenID" type="text" style="border:0px;" readonly="readonly" class="layui-input Stuid" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">阶段</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("Stage", ViewBag.Stage as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
+                        </div>
+                    </div>
+
+
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学费</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+
+
+
+                    <div id="domes">
+
+                    </div>
+
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+    });
+</script>
