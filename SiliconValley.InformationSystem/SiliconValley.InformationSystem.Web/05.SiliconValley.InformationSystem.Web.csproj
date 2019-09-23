@@ -218,6 +218,7 @@
     <Compile Include="Areas\Market\Controllers\ChannelYearPlanController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultTeacherController.cs" />
+    <Compile Include="Areas\Market\Controllers\FollwingInfoController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
