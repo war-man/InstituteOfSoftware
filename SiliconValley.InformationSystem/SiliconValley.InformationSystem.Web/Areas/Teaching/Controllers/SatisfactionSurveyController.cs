@@ -15,6 +15,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+
     /// <summary>
     /// 满意度调查控制器
     /// </summary>
@@ -1062,7 +1064,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <param name="EmpID"></param>
         /// <param name="ClassNumber"></param>
         /// <returns></returns>
-        public ActionResult GetPieImageData(string EmpID, string ClassNumber,int courseid,string date)
+        public ActionResult GetPieImageData(string EmpID, string ClassNumber, int courseid, string date)
         {
 
             //首先判断员工部门
@@ -1072,8 +1074,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             var dep = empmanage.GetDept(emp.PositionId);
 
-          
-            var list =  db_survey.SurveyHistoryData(EmpID, date, courseid, ClassNumber);
+
+            var list = db_survey.SurveyHistoryData(EmpID, date, courseid, ClassNumber);
 
             //下面进行组装数据
 
@@ -1081,9 +1083,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             List<SatisficingType> temptypelist = new List<SatisficingType>();
 
-            List<string> typelist = new List<string>(); 
+            List<string> typelist = new List<string>();
 
-          
+
             temptypelist = temptypelist = db_survey.GetSatisficingTypes().Where(d => d.DepartmentID == dep.DeptId).ToList();
 
             foreach (var item in temptypelist)
@@ -1093,7 +1095,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
             List<PieServiceHelper> tyepscorelist = new List<PieServiceHelper>();
-            
+
             //创建帮助类
             foreach (var item in temptypelist)
             {
@@ -1114,7 +1116,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 foreach (var item1 in item.detailitem)
                 {
 
-                    tyepscorelist.Where(d => d.id == item1.SatisficingItem.ItemType).FirstOrDefault().value+=(int)item1.Scores;
+                    tyepscorelist.Where(d => d.id == item1.SatisficingItem.ItemType).FirstOrDefault().value += (int)item1.Scores;
 
                 }
 
@@ -1122,16 +1124,81 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
 
-                var obj = new {
+            var obj = new {
 
-                typelist=typelist,
+                typelist = typelist,
 
-                tyepscorelist=tyepscorelist
+                tyepscorelist = tyepscorelist
             };
 
 
 
             return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 获取教员在班级教过的课程
+        /// </summary>
+        /// <param name="empid">员工ID/param>
+        /// <param name="classnumber">班级编号 </param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult GetCursor(string empid, string classnumber)
+        {
+
+
+            AjaxResult result = new AjaxResult();
+            List<Curriculum> list = new List<Curriculum>();
+            CourseBusiness db_course = new CourseBusiness();
+            List<Curriculum> Resultlist = new List<Curriculum>();
+            try
+            {
+                //获取教员
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == empid).FirstOrDefault();
+
+                //排课业务类
+                BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
+
+                //排课集合
+                var templist = db_reconile.GetList().Where(d => d.Teacher_Id == teacher.TeacherID && d.ClassSchedule_Id == classnumber).ToList();
+
+              
+
+              
+
+                foreach (var item in templist)
+                {
+                    list.Add(db_course.GetCurriculas().Where(d => d.CurriculumID == item.Curriculum_Id &&d.IsDelete==false).FirstOrDefault());
+                }
+
+                //去掉重复项
+
+                foreach (var item in list)
+                {
+                    if (!db_course.isContain(Resultlist, item))
+                    {
+                        Resultlist.Add(item);
+                    }
+                }
+
+                result.ErrorCode = 200;
+                result.Data = Resultlist;
+                result.Msg = "成功";
+
+            }
+            catch (Exception ex)
+            {
+                result.ErrorCode = 500;
+                result.Data = Resultlist;
+                result.Msg = ex.Message;
+
+            }
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+
+
         }
     }
 } 
