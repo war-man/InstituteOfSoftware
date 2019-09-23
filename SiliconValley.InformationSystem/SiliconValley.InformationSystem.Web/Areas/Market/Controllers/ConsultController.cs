@@ -8,14 +8,16 @@ using SiliconValley.InformationSystem.Business.Consult_Business;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class ConsultController : BaseMvcController
     {
         ConsultManeger CM_Entity = new ConsultManeger();
-        StudentInformationBusiness ST_Entity = new StudentInformationBusiness();
-
+        StudentInformationBusiness ST_Entity = new StudentInformationBusiness();//获取在读学生
+        ScheduleForTraineesBusiness SB_Entity = new ScheduleForTraineesBusiness();//获取班级
+        HeadmasterBusiness HB_Entity = new HeadmasterBusiness();//获取班主任
         // GET: /Market/Consult/ListStudentView
         public ActionResult ConsultIndex()
         {
@@ -111,15 +113,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult ListStudentView(string id,string type)
         {
             if (type == "1")
-            {
+            {               
+               My_StudentDataOne mystudentdata = new My_StudentDataOne();
                 //单个数据
                int stu_id= Convert.ToInt32(id);//得到学生备案Id
+                //获取备案信息
+               StudentPutOnRecord find_spt= CM_Entity.GetSingleStudent(stu_id);
+                if (find_spt!=null)
+                {
+                    mystudentdata.RecordData = find_spt.StuDateTime;
+                    mystudentdata.IsVistSchool = find_spt.StuIsGoto == true ? "是" : "否";
+                    mystudentdata.IsExitsSchool = string.IsNullOrEmpty(find_spt.StuDateTime.ToString()) == true ? "否" : "是";
+                    Consult find_c= CM_Entity.FindStudentIdGetConultdata(find_spt.Id);//获取分量数据
+                    if (find_c!=null)
+                    {
+                        mystudentdata.CoultData = find_c.ComDate;//分量日期
+                        mystudentdata.ConultNumber = CM_Entity.GetFollwingCount(find_c.Id);//获取跟踪次数
+                        ConsultTeacher find_ct = CM_Entity.GetSingleFollwingData(find_c.TeacherName);//获取咨询师信息
+                        if (find_ct != null)
+                        {
+                            mystudentdata.ConsultTeacherName = CM_Entity.GetEmplyeesInfo(find_ct.Employees_Id).EmpName;//获取咨询师名称
+                        }                        
+                    }
+                    
+                }
                 //根据学生备案Id去找学生学号
                StudentInformation find_s= ST_Entity.GetList().Where(s => s.StudentPutOnRecord_Id == stu_id).FirstOrDefault();
                 if (find_s!=null)
                 {
                     //根据学号找班级
-
+                   ScheduleForTrainees  className= SB_Entity.SutdentCLassName(find_s.StudentNumber);
+                    if (className!=null)
+                    {
+                        mystudentdata.ClassName = className.ClassID;//获取班级名称
+                    }
+                }
+               EmployeesInfo find_e= HB_Entity.Listheadmasters(find_s.StudentNumber);
+                if (find_e!=null)
+                {
+                    mystudentdata.ClassTeacher = find_e.EmpName;//获取班主任
                 }
             }
             else  

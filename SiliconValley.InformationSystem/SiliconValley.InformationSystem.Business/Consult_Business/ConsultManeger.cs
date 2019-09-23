@@ -15,7 +15,34 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         EmployeesInfoManage emp_Entity = new EmployeesInfoManage();
         ConsultTeacherManeger Ct_Entity = new ConsultTeacherManeger();
         FollwingInfoManeger Fi_Entity = new FollwingInfoManeger();
-        StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();
+        StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();        
+        /// <summary>
+        /// 获取咨询次数
+        /// </summary>
+        /// <param name="consult_id"></param>
+        /// <returns></returns>
+        public int GetFollwingCount(int consult_id)
+        {
+           return  Fi_Entity.GetList().Where(f => f.Consult_Id == consult_id).ToList().Count;
+        }
+        /// <summary>
+        /// 根据咨询师Id找咨询师
+        /// </summary>
+        /// <param name="id">咨询师</param>
+        /// <returns></returns>
+        public ConsultTeacher GetSingleFollwingData(int? id)
+        {
+           return Ct_Entity.GetEntity(id);
+        }
+        /// <summary>
+        /// 根据学生Id找分量
+        /// </summary>
+        /// <param name="id">学生Id</param>
+        /// <returns></returns>
+        public Consult FindStudentIdGetConultdata(int id)
+        {
+           return this.GetList().Where(c => c.StuName == id).FirstOrDefault();
+        }
         /// <summary>
         /// 根据分量Id或g根据咨询Id查询分量数据
         /// </summary>
