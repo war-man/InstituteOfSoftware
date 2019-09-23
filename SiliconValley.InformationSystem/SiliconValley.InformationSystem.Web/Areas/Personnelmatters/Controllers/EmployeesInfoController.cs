@@ -21,6 +21,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
+    using SiliconValley.InformationSystem.Business.FinanceBusiness;
 
     public class EmployeesInfoController : Controller
     {
@@ -248,6 +249,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
             ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
             TeacherBusiness teamanage = new TeacherBusiness();
+            FinanceModelBusiness fmmanage = new FinanceModelBusiness();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -263,32 +265,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (empinfo.GetDept(emp.PositionId).DeptName == "就业部")
                 {
                     bool s = esmanage.AddEmploystaff(emp.EmployeeId);
-                    empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
+                    AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "市场部")
                 {
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
-                    empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
+                    AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "教质部") {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
-                    empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
+                    AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任") {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
-                    empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
+                    AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetPosition(emp.PositionId).PositionName == "教学部" )
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
                      bool s = teamanage.AddTeacher(tea);
-                     empinfo.Success().Success = s;
                     AjaxResultxx = empinfo.Success();
+                    AjaxResultxx.Success = s;
+                }
+                if (empinfo.GetPosition(emp.PositionId).PositionName == "财务部")
+                {
+                    bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
+                    AjaxResultxx = empinfo.Success();
+                    AjaxResultxx.Success = s;
                 }
                 AjaxResultxx = empinfo.Success();
             }
@@ -1007,23 +1015,54 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     if (ajaxresult.Success && e.TransactionType == mtype1)//当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
                     {
                         emp.PositiveDate = e.TransactionTime;
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
                     }
                     else if (ajaxresult.Success && e.TransactionType == mtype2)//当异动时间修改好之后且是离职异动的情况下将该员工的在职状态改为离职状态
                     {
                         emp.IsDel = true;
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
+                        if (ajaxresult.Success) {
+                            switch (empmanage.GetDept(emp.PositionId).DeptName) {
+                            case "财务部":
+                                    FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+                                    bool fm = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
+                                    ajaxresult = empmanage.Success();
+                                    ajaxresult.Success = fm;
+                                    break;
+                                case "市场部":
+                                    ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+                                    bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
+                                    ajaxresult = empmanage.Success();
+                                    ajaxresult.Success = cs;
+                                    break;
+                                case "就业部":
+                                    EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+                                    bool es = esmanage.DelEmploystaff(emp.EmployeeId);
+                                    ajaxresult = empmanage.Success();
+                                    ajaxresult.Success = es;
+                                    break;
+
+                            }
+                           
+                        }
                     } else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的在职状态改为离职状态
                     {
                         emp.PositionId = (int)e.PresentPosition;
                         if (emp.Salary == null)
                         {
                             emp.ProbationSalary = e.PresentSalary;
+                            empmanage.Update(emp);
+                            ajaxresult = empmanage.Success();
                         }
                         else {
                             emp.Salary = e.PresentSalary;
+                            empmanage.Update(emp);
+                            ajaxresult = empmanage.Success();
                         }
                     }
-                    empmanage.Update(emp);
-                    ajaxresult = empmanage.Success();
+                   
                 }
                 catch (Exception ex)
                 {
@@ -1334,5 +1373,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(ajaxresult,JsonRequestBehavior.AllowGet);
         }
+
+       
     }
 }
