@@ -53,5 +53,17 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 目前所在阶段
         /// </summary>
         public string Grand { get; set; }
+        /// <summary>
+        /// 备案人
+        /// </summary>
+        public string DataputRecordMan { get; set; }
+        /// <summary>
+        /// 所在区域
+        /// </summary>
+        public string AreaName { get; set; }
+        /// <summary>
+        /// 专业名称
+        /// </summary>
+        public string ZhuanyeName { get; set; }
     }
 }

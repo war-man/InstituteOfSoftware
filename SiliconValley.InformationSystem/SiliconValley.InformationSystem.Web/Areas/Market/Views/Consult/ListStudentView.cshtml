@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-
+@using SiliconValley.InformationSystem.Entity.ViewEntity
 <!DOCTYPE html>
 
 <html>
@@ -14,14 +14,36 @@
 <body>
     <div class="layui-tab" lay-filter="demo">
         <ul class="layui-tab-title">
-            <li class="layui-this">网站设置</li>
-            <li>商品管理</li>
-            <li>订单管理</li>
+            @{
+                List<My_StudentDataOne> list = ViewBag.Mystudents as List<My_StudentDataOne>;
+                int i = 0;
+                foreach (My_StudentDataOne item in list)
+                {
+                    if (i == 0)
+                    {
+                        <li class="layui-this">结果<span>@i</span></li>
+                    }
+                    else
+                    {
+                        <li>结果<span>@i</span></li>
+                    }
+                    i++;
+                }
+            }
         </ul>
         <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">内容1</div>
-            <div class="layui-tab-item">内容2</div>
-            <div class="layui-tab-item">内容3</div>
+            @{
+                int j = 0;
+                if (j == 0)
+                {
+                    <div class="layui-tab-item layui-show">内容1</div>
+                }
+                else
+                {
+                    <div class="layui-tab-item">内容2</div>
+                }
+                j++;
+            }
         </div>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -29,10 +51,9 @@
     <script>
         layui.use('element', function () {
             var element = layui.element;
-
             //一些事件监听
             element.on('tab(demo)', function (data) {
-                console.log(data);
+                
             });
         });
     </script>

@@ -7,6 +7,7 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+using SiliconValley.InformationSystem.Business.RegionManage;
 
 namespace SiliconValley.InformationSystem.Business.Consult_Business
 {
@@ -15,7 +16,17 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         EmployeesInfoManage emp_Entity = new EmployeesInfoManage();
         ConsultTeacherManeger Ct_Entity = new ConsultTeacherManeger();
         FollwingInfoManeger Fi_Entity = new FollwingInfoManeger();
-        StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();        
+        StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();
+        RegionManeges RM_Entity = new RegionManeges();
+        /// <summary>
+        /// 获取区域名称
+        /// </summary>
+        /// <param name="regionId">区域Id</param>
+        /// <returns></returns>
+        public Region GetRegionName(int? regionId)
+        {
+           return RM_Entity.GetEntity(regionId);
+        }
         /// <summary>
         /// 获取咨询次数
         /// </summary>
