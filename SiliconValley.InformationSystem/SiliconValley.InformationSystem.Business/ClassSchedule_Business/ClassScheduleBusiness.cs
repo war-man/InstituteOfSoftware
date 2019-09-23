@@ -442,7 +442,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 retus.ErrorCode = 500;
                 BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
             }
-            
             return retus;
         }
 
@@ -450,20 +449,17 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// 根据班级名称获取阶段跟专业
         /// </summary>
         /// <param name="ClassNumber">班级名称</param>
-        /// // <param name="type">1是专业名称，否则是阶段</param>
         /// <returns></returns>
-        public string GetClassGrand(string ClassNumber,int type)
+        public object GetClassGrand(string ClassNumber)
         {
-            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
-            if (type == 1)
+         var CLaaNuma=   this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
+
+            return new
             {
-                return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
-            }
-            else
-            {
-                return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
-            }
+                Major_Id = Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName,
+                grade_Id = Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName
+            };
+
         }
-        
     }
 }
