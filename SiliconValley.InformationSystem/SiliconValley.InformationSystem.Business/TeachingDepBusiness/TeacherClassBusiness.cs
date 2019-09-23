@@ -264,14 +264,25 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public EmployeesInfo ClassTeacher(string classNumber)
         {
+            var tempobj = this.GetList().Where(d => d.ClassNumber == classNumber).FirstOrDefault();
+            if (tempobj!=null)
+            {
+                var tempobj1 = db_teacher.GetTeachers().Where(d => d.TeacherID == tempobj.TeacherID).FirstOrDefault();
+                if (tempobj1!=null)
+                {
+                    BaseBusiness<EmployeesInfo> empmanage = new BaseBusiness<EmployeesInfo>();
 
-           var tempobj = this.GetList().Where(d => d.ClassNumber == classNumber).FirstOrDefault();
-
-           var tempobj1 = db_teacher.GetTeachers().Where(d => d.TeacherID == tempobj.TeacherID).FirstOrDefault();
-
-            BaseBusiness<EmployeesInfo> empmanage = new BaseBusiness<EmployeesInfo>();
-
-           return empmanage.GetList().Where(d => d.EmployeeId == tempobj1.EmployeeId).FirstOrDefault();
+                    return empmanage.GetList().Where(d => d.EmployeeId == tempobj1.EmployeeId).FirstOrDefault();
+                }else
+                {
+                    return new EmployeesInfo();
+                }
+            }
+            else
+            {
+                return new EmployeesInfo();
+            }
+                             
         }
 
     }

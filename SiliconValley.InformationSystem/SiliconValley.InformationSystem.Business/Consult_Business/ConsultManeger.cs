@@ -8,6 +8,7 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Business.RegionManage;
+ 
 
 namespace SiliconValley.InformationSystem.Business.Consult_Business
 {
@@ -18,6 +19,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         FollwingInfoManeger Fi_Entity = new FollwingInfoManeger();
         StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();
         RegionManeges RM_Entity = new RegionManeges();
+         
         /// <summary>
         /// 获取区域名称
         /// </summary>

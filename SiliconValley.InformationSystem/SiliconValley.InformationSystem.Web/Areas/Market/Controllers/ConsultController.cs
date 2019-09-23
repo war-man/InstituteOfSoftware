@@ -11,7 +11,7 @@ using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
-
+using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class ConsultController : BaseMvcController
@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         HeadmasterBusiness HB_Entity = new HeadmasterBusiness();//获取班主任
         TeacherClassBusiness TB_Entity = new TeacherClassBusiness();//获取任课老师
         ClassScheduleBusiness CB_Entity = new ClassScheduleBusiness();//获取专业跟阶段
-
+        StuStateManeger SM_Entity = new StuStateManeger();//获取状态
         // GET: /Market/Consult/ListStudentView
         public ActionResult ConsultIndex()
         {
@@ -128,25 +128,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 mystudentdata.Sex = find_spt.StuSex == false ? "男" : "女";
                 mystudentdata.RecordData = find_spt.StuDateTime;
                 mystudentdata.IsVistSchool = find_spt.StuIsGoto == true ? "是" : "否";
-                mystudentdata.IsExitsSchool = string.IsNullOrEmpty(find_spt.StuDateTime.ToString()) == true ? "否" : "是";
+                StuStatus find_status = SM_Entity.GetEntity(find_spt.StuStatus_Id);
+                if (find_status!=null)
+                {
+                    mystudentdata.IsExitsSchool = find_status.StatusName;
+                }
+                 
                 EmployeesInfo find_e1 = CM_Entity.GetEmplyeesInfo(find_spt.EmployeesInfo_Id);
                 if (find_e1 != null)
                 {
                     mystudentdata.DataputRecordMan = find_e1.EmpName;//获取备案人
-                }
-                else
-                {
-                    mystudentdata.DataputRecordMan = "无";
-                }
+                }                 
                 Region find_r = CM_Entity.GetRegionName(find_spt.Region_id);
                 if (find_r != null)
                 {
                     mystudentdata.AreaName = find_r.RegionName;//获取区域名称
                 }
-                else
-                {
-                    mystudentdata.AreaName = "无";
-                }
+                 
                 Consult find_c = CM_Entity.FindStudentIdGetConultdata(find_spt.Id);//获取分量数据
                 if (find_c != null)
                 {
@@ -157,16 +155,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     {
                         mystudentdata.ConsultTeacherName = CM_Entity.GetEmplyeesInfo(find_ct.Employees_Id).EmpName;//获取咨询师名称
                     }
-                    else
-                    {
-                        mystudentdata.ConsultTeacherName = "无";
-                    }
-                }
-                else
-                {
-                    mystudentdata.CoultData = null;
-                    mystudentdata.ConultNumber = 0;
-                }
+                     
+                }                
 
             }
                 //根据学生备案Id去找学生学号
@@ -179,22 +169,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     mystudentdata.ClassName = className.ClassID;//获取班级名称
                     mystudentdata.Teacher = TB_Entity.ClassTeacher(className.ClassID).EmpName;//获取任课老师
-                                                                                              //mystudentdata.Grand = (object)CB_Entity.GetClassGrand(className.ClassID).grade_Id;
-                }
-                else
-                {
-                    mystudentdata.ClassName = "无";
-                    mystudentdata.Teacher = "无";
-                }
+                    mystudentdata.Grand = CB_Entity.GetClassGrand(className.ClassID, 2);//阶段
+                    mystudentdata.ZhuanyeName = CB_Entity.GetClassGrand(className.ClassID, 1);//专业
+                }                
                 EmployeesInfo find_e = HB_Entity.Listheadmasters(find_s.StudentNumber);
                 if (find_e != null)
                 {
                     mystudentdata.ClassTeacher = find_e.EmpName;//获取班主任
-                }
-                else
-                {
-                    mystudentdata.ClassTeacher = "无";
-                }
+                }                 
             }                       
                 return mystudentdata;
         }

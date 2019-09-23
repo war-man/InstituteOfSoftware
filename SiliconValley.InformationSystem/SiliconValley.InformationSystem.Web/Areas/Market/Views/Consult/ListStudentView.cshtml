@@ -108,10 +108,10 @@
         <ul class="layui-tab-title">
             @{
                 List<My_StudentDataOne> list = ViewBag.Mystudents as List<My_StudentDataOne>;
-                int i = 0;
+                int i = 1;
                 foreach (My_StudentDataOne item in list)
                 {
-                    if (i == 0)
+                    if (i == 1)
                     {
                         <li class="layui-this">结果<span>@i</span></li>
                     }
@@ -157,7 +157,7 @@
                                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                             <label class="layui-form-label">咨询师</label>
                                             <div class="layui-input-block">
-                                                <span name="StuPhone" id="StuPhone" class="LableCss1">
+                                                <span name="StuPhone" id="StuPhone" class="LableCss1 colorRed">
                                                     @item.ConsultTeacherName
                                                 </span>
                                             </div>
@@ -243,6 +243,26 @@
 
                                                 <span class="LableCss1 colorRed">
                                                     @item.ZhuanyeName
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">区域</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.AreaName
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">咨询跟踪次数</label>
+                                            <div class="layui-input-block">
+
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ConultNumber
                                                 </span>
                                             </div>
                                         </div>
