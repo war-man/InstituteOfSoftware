@@ -106,5 +106,18 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             this.Update(curriculum);
 
         }
+
+        public bool isContain(List<Curriculum> sources, Curriculum curriculum)
+        {
+            foreach (var item in sources)
+            {
+                if (item.CurriculumID == curriculum.CurriculumID)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }
