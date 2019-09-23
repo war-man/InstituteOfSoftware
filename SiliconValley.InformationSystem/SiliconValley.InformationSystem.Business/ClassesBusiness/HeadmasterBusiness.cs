@@ -40,6 +40,31 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             return str;
 
         }
+          /// <summary>
+          /// 班主任离职
+          /// </summary>
+          /// <param name="informatiees_Id">员工编号</param>
+          /// <returns></returns>
+        public bool removeHeadmaster(string informatiees_Id)
+        {
+            bool str = true;
+
+            try
+            {
+             var x=   this.GetList().Where(a => a.informatiees_Id == informatiees_Id).FirstOrDefault();
+                x.IsDelete = true;
+                BusHelper.WriteSysLog("修改班主任状态", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+
+            }
+            catch (Exception ex)
+            {
+
+                str = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            return str;
+
+        }
         //员工表
         EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
         //学员班级
