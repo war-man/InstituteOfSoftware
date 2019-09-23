@@ -27,6 +27,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.Sex,
                 emp.EmpName,
                 emp.EntryTime,
+                emp.Education,
+                emp.PositiveDate,
                  dname=empmanage.GetDept(emp.PositionId).DeptName,
                  pname=empmanage.GetPosition(emp.PositionId).PositionName,
                  emp.ProbationSalary,
@@ -116,6 +118,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 AjaxResultxx = jtamanage.Error(ex.Message);
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+
+        //加薪申请
+        public ActionResult RaisesApply()
+        {
+            // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
+            string eid = "201909040025";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
+            return View();
+        }
+        //加薪提交申请
+        [HttpPost]
+        public ActionResult RaisesApply(SalaryRaiseApply sra)
+        {
+            SalaryRaiseApplyManage sramanage = new SalaryRaiseApplyManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+
+                sramanage.Insert(sra);
+                AjaxResultxx = sramanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = sramanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
     }
