@@ -10,6 +10,7 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -17,7 +18,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
     {
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
-
+        //专业
+        SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
+        //阶段
+        GrandBusiness Grandcontext = new GrandBusiness();
         //班级群号
         BaseBusiness<GroupManagement> GriupMan = new BaseBusiness<GroupManagement>();
         //学生委员
@@ -439,6 +443,23 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
             }
             return retus;
+        }
+
+        /// <summary>
+        /// 根据班级名称获取阶段跟专业
+        /// </summary>
+        /// <param name="ClassNumber">班级名称</param>
+        /// <returns></returns>
+        public object GetClassGrand(string ClassNumber)
+        {
+         var CLaaNuma=   this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
+
+            return new
+            {
+                Major_Id = Techarcontext.GetEntity(a.Major_Id).SpecialtyName,
+                grade_Id = Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName
+            };
+
         }
     }
 }
