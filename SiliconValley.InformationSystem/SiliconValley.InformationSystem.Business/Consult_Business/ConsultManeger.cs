@@ -344,6 +344,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             int year = DateTime.Now.Year;
             return this.GetList().Where(c => c.TeacherName == id && GetSingleStudent(c.StuName).StatusTime != null && Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month == monthName && Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Year==year).Count();
         }
+        
         #region  给跟踪业务使用的方法
         //给咨询分量的数据
         public List<StudentPutOnRecord> GetStudentData(int monName,string Status,int? consultTeacherId)
