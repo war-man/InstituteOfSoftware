@@ -327,9 +327,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
             List<SatisficingConfig> templist = new List<SatisficingConfig>();
 
-            if (string.IsNullOrEmpty(classnumber))
+            if (string.IsNullOrEmpty(classnumber) ||Curriculum == 0)
             {
-                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CurriculumID == Curriculum).ToList();
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid ).ToList();
             }
             else
             {
@@ -412,11 +412,22 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        public List<SatisficingResult> SatisficingResults()
+        {
+
+            return db_satisresult.GetList();
+        }
+
         public SatisfactionSurveyDetailView GetSatisficingBy(SatisficingResult satisficingResult)
         {
 
             return this.ConvertToViewModel(satisficingResult);
 
+        }
+
+        public List<SatisficingConfig> satisficingConfigs()
+        {
+            return db_satisconfig.GetList().Where(d => d.IsDel == false).ToList();
         }
     }
 }

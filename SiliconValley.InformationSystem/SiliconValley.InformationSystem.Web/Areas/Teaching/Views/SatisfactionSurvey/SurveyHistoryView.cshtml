@@ -308,7 +308,7 @@
 
         var currentClass;
 
-        var currentCourseID;
+        var currentCourseID=0;
 
         function callbackdata() {
             var checkStatus = layui.table.checkStatus('idTest'); //idTest 即为基础参数 id 对应的值
@@ -442,7 +442,9 @@
                             $(cur).text(res.data[0].EmpName);
 
                             //加载数据
-                            load(res.data[0].EmployeeId, month);
+                            load(res.data[0].EmployeeId, month,null,0);
+
+                            
 
                         } else {
                             layer.msg('请选择员工', { icon: 0 });
@@ -506,8 +508,8 @@
 
             document.getElementById("month").onchange = function () {
 
-             
-                load(CurrentEmp, this.value, currentClass);
+
+                load(CurrentEmp, this.value, currentClass, currentCourseID);
 
             }
 
@@ -516,12 +518,19 @@
             //加载课程方法
             function getCursor(empid, classnumber) {
 
+                $("#cusordiv").html("");
+
 
                 Ajax("/Teaching/SatisfactionSurvey/GetCursor", { empid: empid, classnumber: classnumber }, 'post', function (data) {
 
                     if (data.ErrorCode = 200) {
 
                         for (var i = 0; i < data.Data.length; i++) {
+
+                            if (i == 0) {
+
+                                currentCourseID = data.Data[i].CurriculumID;
+                            }
 
                             var btn = $("<button class= 'layui-btn layui-btn-primary'></button>");
                             btn.attr("CurriculumID", data.Data[i].CurriculumID);
@@ -530,6 +539,17 @@
 
                             $("#cusordiv").append(btn);
                         }
+
+
+                        $.post('/Teaching/SatisfactionSurvey/GetPieImageData', { EmpID: CurrentEmp, ClassNumber: currentClass, courseid: currentCourseID, date: null }, function (data) {
+
+
+                            console.log(data);
+
+
+                            PieImage("ClassevaluateImage", data.typelist, data.tyepscorelist);
+
+                        });
 
                     }
                     else {
@@ -588,6 +608,7 @@
                             //加载课程
                             getCursor(CurrentEmp, currentClass);
 
+
                         } else {
                             layer.msg('请选择员工', { icon: 0 });
                         }
@@ -624,6 +645,8 @@
 
                 //获取课程ID
                 var courseid = $(this).attr("CurriculumID");
+
+                currentCourseID = courseid;
 
                 load(CurrentEmp, month, currentClass, courseid);
 
@@ -708,7 +731,7 @@
         function PieImage(elem, legendData, seriesData) {
 
 
-            alert("dd");
+           
             var myChart = echarts.init(document.getElementById(elem));
             option = {
                 title: {
@@ -750,11 +773,6 @@
        
         //显示当前满意度调查结果的各项分数
 
-        $.post('/Teaching/SatisfactionSurvey/GetPieImageData', { EmpID: "201908150002", ClassNumber: "1710NA", courseid: '3', date: null }, function (data) {
-
-            PieImage("ClassevaluateImage", data.typelist, data.tyepscorelist);
-
-        });
 
 
         $(document).off("click", ".SurveyItem").on("click", '.SurveyItem', function () {

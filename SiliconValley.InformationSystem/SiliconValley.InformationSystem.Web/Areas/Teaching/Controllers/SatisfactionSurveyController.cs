@@ -1072,6 +1072,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
 
+
+           var sss =  db_survey.satisficingConfigs().Where(d=>d.ClassNumber == ClassNumber && d.CurriculumID==courseid).ToList();
+
+           var bbb = db_survey.SatisficingResults().Where(d => d.SatisficingConfig == sss.FirstOrDefault().ID).ToList();
+
+            var ccc = db_survey.ConvertToViewModel(bbb.FirstOrDefault());
+
+            
+
+
+
+
             var dep = empmanage.GetDept(emp.PositionId);
 
 
@@ -1128,7 +1140,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 typelist = typelist,
 
-                tyepscorelist = tyepscorelist
+                tyepscorelist = tyepscorelist,
+
+                Data= ccc
             };
 
 
