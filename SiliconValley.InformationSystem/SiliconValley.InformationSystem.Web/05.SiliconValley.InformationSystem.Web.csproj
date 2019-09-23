@@ -537,7 +537,6 @@
     <Content Include="Areas\Market\Views\FollwingInfo\FollwingInfoIndex.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\AddFollwingInfo.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\EditView.cshtml" />
-    <Content Include="Areas\Market\Views\Consult\SerachStudentDataView.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ListStudentView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentSomeData.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

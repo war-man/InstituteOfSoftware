@@ -7,12 +7,14 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.Consult_Business;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class ConsultController : BaseMvcController
     {
         ConsultManeger CM_Entity = new ConsultManeger();
+        StudentInformationBusiness ST_Entity = new StudentInformationBusiness();
 
         // GET: /Market/Consult/ListStudentView
         public ActionResult ConsultIndex()
@@ -74,12 +76,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<FollwingInfo> f_list = CM_Entity.GetFllowInfoData(find_c.Id);
             ViewBag.Flowingdata = f_list;            
             return View();
-        }
-        //显示查询学生信息页面
-        public ActionResult SerachStudentDataView()
-        {
-            return View();
-        }       
+        }  
         //获取所有咨询师
         public ActionResult GetConsultTeacherData(int id)
         {            
@@ -110,10 +107,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<StudentPutOnRecord> find = CM_Entity.GetStudentPutRecored().Where(s => s.StuName == id).ToList();
             return Json(find,JsonRequestBehavior.AllowGet);
         }
-        //查到多个学生的页面显示
-        public ActionResult ListStudentView()
+        //查到一个或多个学生的页面显示
+        public ActionResult ListStudentView(string id,string type)
         {
+            if (type == "1")
+            {
+                //单个数据
+               int stu_id= Convert.ToInt32(id);//得到学生备案Id
+                //根据学生备案Id去找学生学号
+               StudentInformation find_s= ST_Entity.GetList().Where(s => s.StudentPutOnRecord_Id == stu_id).FirstOrDefault();
+                if (find_s!=null)
+                {
+                    //根据学号找班级
+
+                }
+            }
+            else  
+            {
+                //多个数据
+
+            }
             return View();
         }
+
     }
 }
