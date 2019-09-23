@@ -56,5 +56,18 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         {
             return e_Entity.GetList().Where(e=>e.IsDel==false).ToList();
         }
+        //这是一个咨询师的离职方法
+        public bool DeltConsultTeacher(string Empyee_Id)
+        {
+           ConsultTeacher find_c= this.GetList().Where(c => c.Employees_Id == Empyee_Id).FirstOrDefault();
+            bool result = false;
+            if (find_c!=null)
+            {
+                find_c.IsDelete = true;
+                this.Update(find_c);
+                result = true;
+            }            
+                return result;
+        }
     }
 }

@@ -9,6 +9,7 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -18,6 +19,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         StudentInformationBusiness ST_Entity = new StudentInformationBusiness();//获取在读学生
         ScheduleForTraineesBusiness SB_Entity = new ScheduleForTraineesBusiness();//获取班级
         HeadmasterBusiness HB_Entity = new HeadmasterBusiness();//获取班主任
+        TeacherClassBusiness TB_Entity = new TeacherClassBusiness();//获取任课老师
         // GET: /Market/Consult/ListStudentView
         public ActionResult ConsultIndex()
         {
@@ -109,23 +111,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<StudentPutOnRecord> find = CM_Entity.GetStudentPutRecored().Where(s => s.StuName == id).ToList();
             return Json(find,JsonRequestBehavior.AllowGet);
         }
-        //查到一个或多个学生的页面显示
-        public ActionResult ListStudentView(string id,string type)
-        {
-            if (type == "1")
-            {               
-               My_StudentDataOne mystudentdata = new My_StudentDataOne();
+        //获取学生综合数据的方法
+        public My_StudentDataOne GetDataStudent(string id)
+        {             
+                My_StudentDataOne mystudentdata = new My_StudentDataOne();
                 //单个数据
-               int stu_id= Convert.ToInt32(id);//得到学生备案Id
+                int stu_id = int.Parse(id);//得到学生备案Id
+                mystudentdata.Studentputoneread_Id = stu_id;
                 //获取备案信息
-               StudentPutOnRecord find_spt= CM_Entity.GetSingleStudent(stu_id);
-                if (find_spt!=null)
+                StudentPutOnRecord find_spt = CM_Entity.GetSingleStudent(stu_id);
+                if (find_spt != null)
                 {
                     mystudentdata.RecordData = find_spt.StuDateTime;
                     mystudentdata.IsVistSchool = find_spt.StuIsGoto == true ? "是" : "否";
                     mystudentdata.IsExitsSchool = string.IsNullOrEmpty(find_spt.StuDateTime.ToString()) == true ? "否" : "是";
-                    Consult find_c= CM_Entity.FindStudentIdGetConultdata(find_spt.Id);//获取分量数据
-                    if (find_c!=null)
+                    EmployeesInfo find_e1 = CM_Entity.GetEmplyeesInfo(find_spt.EmployeesInfo_Id);
+                    if (find_e1 != null)
+                    {
+                        mystudentdata.DataputRecordMan = find_e1.EmpName;//获取备案人
+                    }
+                    Region find_r = CM_Entity.GetRegionName(find_spt.Region_id);
+                    if (find_r != null)
+                    {
+                        mystudentdata.AreaName = find_r.RegionName;//获取区域名称
+                    }
+                    Consult find_c = CM_Entity.FindStudentIdGetConultdata(find_spt.Id);//获取分量数据
+                    if (find_c != null)
                     {
                         mystudentdata.CoultData = find_c.ComDate;//分量日期
                         mystudentdata.ConultNumber = CM_Entity.GetFollwingCount(find_c.Id);//获取跟踪次数
@@ -133,33 +144,50 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         if (find_ct != null)
                         {
                             mystudentdata.ConsultTeacherName = CM_Entity.GetEmplyeesInfo(find_ct.Employees_Id).EmpName;//获取咨询师名称
-                        }                        
+                        }
                     }
-                    
+
                 }
                 //根据学生备案Id去找学生学号
-               StudentInformation find_s= ST_Entity.GetList().Where(s => s.StudentPutOnRecord_Id == stu_id).FirstOrDefault();
-                if (find_s!=null)
+                StudentInformation find_s = ST_Entity.GetList().Where(s => s.StudentPutOnRecord_Id == stu_id).FirstOrDefault();
+                if (find_s != null)
                 {
                     //根据学号找班级
-                   ScheduleForTrainees  className= SB_Entity.SutdentCLassName(find_s.StudentNumber);
-                    if (className!=null)
+                    ScheduleForTrainees className = SB_Entity.SutdentCLassName(find_s.StudentNumber);
+                    if (className != null)
                     {
                         mystudentdata.ClassName = className.ClassID;//获取班级名称
+                        mystudentdata.Teacher = TB_Entity.ClassTeacher(className.ClassID).EmpName;//获取任课老师
                     }
-                }
-               EmployeesInfo find_e= HB_Entity.Listheadmasters(find_s.StudentNumber);
-                if (find_e!=null)
-                {
-                    mystudentdata.ClassTeacher = find_e.EmpName;//获取班主任
-                }
-            }
-            else  
+                    EmployeesInfo find_e = HB_Entity.Listheadmasters(find_s.StudentNumber);
+                    if (find_e != null)
+                    {
+                        mystudentdata.ClassTeacher = find_e.EmpName;//获取班主任
+                    }
+            }                       
+            return mystudentdata;
+        }
+        //查到一个或多个学生的页面显示
+        public ActionResult ListStudentView(string id)
+        {
+            List<My_StudentDataOne> list = new List<My_StudentDataOne>();
+            if (id.IndexOf(",") <= -1)
             {
-                //多个数据
-
+                list.Add(GetDataStudent(id));
             }
-            return View();
+            else
+            {
+                string[] id_list = id.Split(',');
+                foreach (string myid in id_list)
+                {
+                    if (!string.IsNullOrEmpty(myid))
+                    {
+                        list.Add(GetDataStudent(myid));
+                    }                     
+                }
+            }
+            ViewBag.Mystudents = list;
+                return View();
         }
 
     }

@@ -9,7 +9,6 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
 {
    public class FollwingInfoManeger:BaseBusiness<FollwingInfo>
     {
- 
-        
+               
     }
 }
