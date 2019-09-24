@@ -62,6 +62,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
         public ChannelStaff GetChannelByEmpID(string empid)
         {
             return this.GetChannelStaffs().Where(a => a.EmployeesInfomation_Id == empid).FirstOrDefault();
+
         }
 
 
@@ -119,15 +120,15 @@ namespace SiliconValley.InformationSystem.Business.Channel
 
         }
 
-        /// <summary>
-        /// 获取所有的备案数据
-        /// </summary>
-        /// <returns></returns>
-        public List<StudentPutOnRecord> GetbeianAll()
-        {
-            StudentDataKeepAndRecordBusiness dbbeian = new StudentDataKeepAndRecordBusiness();
-            return dbbeian.GetIQueryable().Where(a => a.IsDelete == false).ToList();
-        }
+        ///// <summary>
+        ///// 获取所有的备案数据
+        ///// </summary>
+        ///// <returns></returns>
+        //public List<StudentPutOnRecord> GetbeianAll()
+        //{
+        //    StudentDataKeepAndRecordBusiness dbbeian = new StudentDataKeepAndRecordBusiness();
+        //    return dbbeian.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+        //}
         /// <summary>
         /// 根据年度计划的id获取该年度的人员情况
         /// </summary>

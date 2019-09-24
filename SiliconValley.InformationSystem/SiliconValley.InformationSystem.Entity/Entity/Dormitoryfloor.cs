@@ -14,15 +14,28 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 宿舍楼层表
+    /// </summary>
     [Table(name: "Dormitoryfloor")]
     public partial class Dormitoryfloor
     {
        
         [Key]
         public int ID { get; set; }
-        public Nullable<int> Name { get; set; }
-        public string Picture { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 楼层名称
+        /// </summary>
+        public string FloorName { get; set; }
+
+        /// <summary>
+        /// false可用，true 不可用
+        /// </summary>
+        public bool IsDelete { get; set; }
+        public string Remark { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreationTime { get; set; }
     }
 }

@@ -14,17 +14,49 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 宿舍房间信息
+    /// </summary>
     [Table(name: "DormInformation")]
     public partial class DormInformation
     {
+        /// <summary>
+        /// 主键id
+        /// </summary>
         [Key]
-    
         public int ID { get; set; }
-        public Nullable<bool> Types { get; set; }
-        public Nullable<int> floor { get; set; }
-        public Nullable<int> Roomtype { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
-        public string Remarks { get; set; }
-    
+        /// <summary>
+        /// 0的意思是房间类型不是学生入住的，1为男生，2为女生
+        /// </summary>
+        public int SexType { get; set; }
+        /// <summary>
+        /// 栋楼层id
+        /// </summary>
+        public int TungFloorId { get; set; }
+        /// <summary>
+        /// 房间类型id
+        /// </summary>
+        public int RoomTypeId { get; set; }
+        /// <summary>
+        /// false可用，true 不可用
+        /// </summary>
+        public bool IsDelete { get; set; }
+        public string Remark { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreationTime { get; set; }
+        /// <summary>
+        ///房间号码
+        /// </summary>
+        public string DormInfoName { get; set; }
+
+       
+
+        /// <summary>
+        /// 房间数量id
+        /// </summary>
+        public int RoomStayNumberId { get; set; }
+
     }
 }

@@ -211,6 +211,8 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\DormitoryInfoController.cs" />
+    <Compile Include="Areas\Dormitory\DormitoryAreaRegistration.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\BiddingRecordController.cs" />
@@ -540,6 +542,9 @@
     <Content Include="Areas\Market\Views\Consult\SerachStudentDataView.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ListStudentView.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\StudentSomeData.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\NewChannelYearPlanIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\web.config" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\DormitoryIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2238,6 +2243,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Dormitory\Models\" />
+    <Folder Include="Areas\Dormitory\Views\Shared\" />
     <Folder Include="Areas\Finance\Controllers\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />

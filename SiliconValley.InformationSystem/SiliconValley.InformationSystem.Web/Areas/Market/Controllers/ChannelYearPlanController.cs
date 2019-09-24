@@ -63,6 +63,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         private HeadmasterBusiness dbheadermaster;
 
         private StudentInformationBusiness dbstudent;
+
+        private ScheduleForTraineesBusiness dbclass;
         // GET: Market/ChannelYearPlan
         public ActionResult ChannelYearPlanIndex()
         {
@@ -1035,6 +1037,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbbeian = new StudentDataKeepAndRecordBusiness();
             dbteacher = new TeacherClassBusiness();
             dbheadermaster = new HeadmasterBusiness();
+            dbclass = new ScheduleForTraineesBusiness();
             SchoolYearPlan nowplan = dbschoolpaln.GetPlanByID(myplanid);
             //根据选择的的条件获取对应的员工
             List<ChannelStaff> Querylist = this.Resultbytiaojian(myempid, myistema, nowplan);
@@ -1068,7 +1071,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 var empinfo= dbempstaff.GetInfoByEmpID(item.EmployeesInfo_Id);
                 var student = dbstudent.GetIQueryable().Where(a => a.IsDelete == false && a.StudentPutOnRecord_Id == item.Id).FirstOrDefault();
 
-
+                
 
                 var mrdteacher = dbteacher.GetTeacherByStudent(student.StudentNumber);
 
@@ -1083,7 +1086,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 listView.OldSchoolName = item.StuSchoolName;
                 listView.ProfessionalTeacher = dbempstaff.GetInfoByEmpID(mrdteacher.EmployeeId).EmpName;
                 listView.Headmaster = dbempstaff.GetInfoByEmpID(headermaster.EmployeeId).EmpName;
-                listView.ClassNo = "";
+                listView.ClassNo = dbclass.SutdentCLassName(student.StudentNumber).ClassID;
 
                 resultdataviewlist.Add(listView);
 

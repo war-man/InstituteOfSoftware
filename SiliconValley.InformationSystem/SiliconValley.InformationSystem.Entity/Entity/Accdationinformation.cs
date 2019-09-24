@@ -13,17 +13,38 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 学员入住宿舍信息表
+    /// </summary>
     [Table("Accdationinformation")]
     public partial class Accdationinformation
     {      
         [Key]
         public int ID { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
-        public Nullable<System.DateTime> Endtime { get; set; }
+        /// <summary>
+        /// 入住时间
+        /// </summary>
+        public DateTime StayDate { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public Nullable<System.DateTime> EndDate { get; set; }
         public string Studentnumber { get; set; }
-        public Nullable<int> Bednumber { get; set; }
-        public Nullable<int> Remarks { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
-        public Nullable<int> Dorm { get; set; }   
+        /// <summary>
+        /// 床位id
+        /// </summary>
+        public int BedId { get; set; }
+        public string Remark { get; set; }
+        public bool IsDel { get; set; }
+        /// <summary>
+        ///房间id
+        /// </summary>
+        public int DormId { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreationTime { get; set; }
     }
 }

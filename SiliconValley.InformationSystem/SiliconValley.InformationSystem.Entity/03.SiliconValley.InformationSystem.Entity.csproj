@@ -81,7 +81,7 @@
     <Compile Include="Entity\Awardwinningtrainees.cs" />
     <Compile Include="Entity\BaseDataEnum.cs" />
     <Compile Include="Entity\Basicdat.cs" />
-    <Compile Include="Entity\bedroom.cs" />
+    <Compile Include="Entity\BenNumber.cs" />
     <Compile Include="Entity\BeOnDuty.cs" />
     <Compile Include="Entity\BiddingRecord.cs" />
     <Compile Include="Entity\BookInformation.cs" />
@@ -223,6 +223,7 @@
     <Compile Include="Entity\ReplenishmentRecord.cs" />
     <Compile Include="Entity\Restudy.cs" />
     <Compile Include="Entity\RoomPerformance.cs" />
+    <Compile Include="Entity\RoomStayNumber.cs" />
     <Compile Include="Entity\Roomtype.cs" />
     <Compile Include="Entity\SalaryRaiseApply.cs" />
     <Compile Include="Entity\Satisfaction.cs" />
@@ -274,6 +275,8 @@
     <Compile Include="Entity\TreeClass.cs" />
     <Compile Include="Entity\Trialapplication.cs" />
     <Compile Include="Entity\Tuitionallocation.cs" />
+    <Compile Include="Entity\Tung.cs" />
+    <Compile Include="Entity\TungFloor.cs" />
     <Compile Include="Entity\Undergra.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
