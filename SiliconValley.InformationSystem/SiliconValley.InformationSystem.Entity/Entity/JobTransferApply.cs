@@ -26,6 +26,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> ApplicationTime { get; set; }
         public Nullable<bool> IsPass { get; set; }
         public Nullable<bool> IsApproval { get; set; }
-        public  EmployeesInfo EmployeesInfo { get; set; }
+        //public  EmployeesInfo EmployeesInfo { get; set; }
     }
 }

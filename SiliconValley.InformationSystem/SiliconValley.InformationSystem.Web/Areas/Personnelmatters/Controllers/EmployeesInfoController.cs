@@ -284,7 +284,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetPosition(emp.PositionId).PositionName == "教学部" )
+                if (empinfo.GetDept(emp.PositionId).DeptName == "教学部" )
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
@@ -292,7 +292,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetPosition(emp.PositionId).PositionName == "财务部")
+                if (empinfo.GetDept(emp.PositionId).DeptName == "财务部")
                 {
                     bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
                     AjaxResultxx = empinfo.Success();
@@ -976,6 +976,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 dname=emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                 pname= emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
                 EntryTime = emanage.GetInfoByEmpID(e.EmployeeId).EntryTime,
+                education = emanage.GetInfoByEmpID(e.EmployeeId).Education,
+                positiveDate = emanage.GetInfoByEmpID(e.EmployeeId).PositiveDate,
                 type = emanage.GetETById(e.TransactionType).MoveTypeName,
                 e.TransactionTime,
                 predname = e.PreviousDept == null ? null : emanage.GetDeptById((int)e.PreviousDept).DeptName,
@@ -1291,7 +1293,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         /// <summary>
-        /// 获取所有转岗申请数据
+        /// 获取所有调岗申请数据
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
@@ -1329,7 +1331,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj,JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// 修改员工转岗申请的审批状态
+        /// 修改员工调岗申请的审批状态
         /// </summary>
         /// <param name="id"></param>
         /// <param name="state"></param>
@@ -1348,12 +1350,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (state == true)
                 {
                     positive.IsApproval = true;//表示该员工申请已审批
-                    positive.IsPass = true;//表示离职申请通过
+                    positive.IsPass = true;//表示调岗申请通过
                     jammanage.Update(positive);
                     ajaxresult = jammanage.Success();
                     try
                     {
-                        if (ajaxresult.Success)//离职申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        if (ajaxresult.Success)//调岗申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
                         {
                             et.EmployeeId = positive.EmployeeId;
                             et.IsDel = false;
@@ -1391,6 +1393,105 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(ajaxresult,JsonRequestBehavior.AllowGet);
         }
 
-       
+        /// <summary>
+        /// 获取所有加薪申请数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetIncreaseSalaryData(int page, int limit)
+        {
+            SalaryRaiseApplyManage sramanage = new SalaryRaiseApplyManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = sramanage.GetList();
+            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                             dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                             pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                             EntryTime = emanage.GetInfoByEmpID(e.EmployeeId).EntryTime,
+                             Education = emanage.GetInfoByEmpID(e.EmployeeId).Education,
+                             PositiveDate = emanage.GetInfoByEmpID(e.EmployeeId).PositiveDate,
+                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
+                             e.RaisesLimit,
+                             e.RaisesReason,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 修改员工加薪申请的审批状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult IncreaseSalaryIsPassed(int id, bool state)
+        {
+            SalaryRaiseApplyManage sramanage = new SalaryRaiseApplyManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage m = new MoveTypeManage();
+            var positive = sramanage.GetEntity(id);
+            EmpTransaction et = new EmpTransaction();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                if (state == true)
+                {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = true;//表示加薪申请通过
+                    sramanage.Update(positive);
+                    ajaxresult = sramanage.Success();
+                    try
+                    {
+                        if (ajaxresult.Success)//加薪申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        {
+                            et.EmployeeId = positive.EmployeeId;
+                            et.IsDel = false;
+                            et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "加薪").FirstOrDefault().ID;
+                            et.PreviousSalary = emanage.GetInfoByEmpID(et.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(et.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(et.EmployeeId).Salary;
+                            et.PresentSalary = (decimal)et.PreviousSalary + (decimal)positive.RaisesLimit;
+                            et.Reason = positive.RaisesReason;
+                            etmanage.Insert(et);
+                            ajaxresult = etmanage.Success();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ajaxresult = etmanage.Error(ex.Message);
+                    }
+                }
+                else
+                {
+                    positive.IsApproval = true;//表示该员工申请已审批
+                    positive.IsPass = false;//表示离职申请未通过
+                    sramanage.Update(positive);
+                    ajaxresult = sramanage.Success();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = sramanage.Error(ex.Message);
+            }
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

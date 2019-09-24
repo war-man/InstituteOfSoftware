@@ -40,7 +40,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //转正申请
         public ActionResult PositiveApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908150004";//为测试，暂时设置的死数据
+            string eid = "201908230013";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -96,7 +96,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //转岗申请
         public ActionResult TransferPositionApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201909040025";//为测试，暂时设置的死数据
+            string eid = "201908230013";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -125,7 +125,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult RaisesApply()
         {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201909040025";//为测试，暂时设置的死数据
+            string eid = "201908230013";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
