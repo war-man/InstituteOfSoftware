@@ -45,14 +45,17 @@
     <div>
         <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-container" style="margin-top:20px;">
+                <input type="hidden" id="mydname" value="@ViewBag.dname" />
+                <input type="hidden" id="mypname" value="@ViewBag.pname" />
+                <input type="hidden" id="mydid" value="@ViewBag.deptid" />
+                <input type="hidden" id="mypid" value="@ViewBag.pid" />
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">员工编号:</label>
                         <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.EmployeeId, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.EmployeeId, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
                         </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -74,41 +77,30 @@
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">所属部门:</label>
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属部门:</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="dname" name="dname"  readonly class="layui-input" />
+                            <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search=""></select>
+
                         </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">所属岗位:</label>
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属岗位:</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="pname" name="pname"  readonly class="layui-input" />
-                            <input type="hidden" id="PositionId" name="PositionId"   class="layui-input" />
+                            <select name="PositionId" id="PositionId" lay-search="" style="width:130px;"></select>
                         </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">钉钉工号:</label>
                         <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "number" }, { "class", "layui-input" } })
                         </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
                     </div>
 
                 </div>
 
                 <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">年龄:</label>
-                        <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.Age, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input" } })
-                        </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
-                    </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">民族:</label>
@@ -120,35 +112,15 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">手机号码:</label>
                         <div class="layui-input-block" style="width:190px;">
-                            @Html.TextBoxFor(a => a.Phone, new Dictionary<string, object>() {{ "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.Phone, new Dictionary<string, object>() { { "lay-verify", "myUrgentPhone" }, { "class", "layui-input" } })
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">身份证号:</label>
                         <div class="layui-input-block" style="width:190px;">
-                            @Html.TextBoxFor(a => a.IdCardNum, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.IdCardNum, new Dictionary<string, object>() { { "lay-verify", "myIdCardNum" }, { "class", "layui-input " } })
                         </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">入职时间:</label>
-                        <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.EntryTime, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input" } })
-                        </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">转正日期:</label>
-                        <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.PositiveDate, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input" } })
-                        </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
                     </div>
 
                 </div>
@@ -156,23 +128,22 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">合同起始时间:</label>
+                        <label class="layui-form-label">入职时间:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.EntryTime, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">合同起始时间:</label>
                         <div class="layui-input-block" style="width:190px;">
                             @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">合同终止时间:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">合同终止时间:</label>
                         <div class="layui-input-block" style="width:190px;">
                             @Html.TextBoxFor(a => a.ContractEndTime, new Dictionary<string, object>() { { "class", "layui-input" } })
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">生日:</label>
-                        <div class="layui-input-block" style="width:190px;">
-                            @Html.TextBoxFor(a => a.Birthday, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
@@ -181,9 +152,40 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">紧急联系电话:</label>
+                        <label class="layui-form-label">转正日期:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.PositiveDate, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs86 layui-col-sm8 layui-col-md8">
+                        <label class="layui-form-label">生日:</label>
+                        <div class="layui-input-inline">
+                            <input style="width:50px;height:30px;display:inline-block;" id="month" name="month" class="layui-input" lay-verify="mymonth" />
+                            <label style="margin-left:5px;display:inline-block;">月</label>
+                        </div>
+
+                        <div class="layui-input-inline" style="margin-left:-120px;">
+                            <input type="text" style="width:50px;height:30px;display:inline-block;" id="day" name="day" class="layui-input" lay-verify="myday" />
+                            <label style="margin-left:5px;display:inline-block;">日</label>
+                        </div>
+
+                        <div class="layui-input-inline" style="margin-left:-100px;" id="myyinyang">
+                            <input type="radio" name="yinyang" value="农历" title="农历">
+                            <input type="radio" name="yinyang" value="阳历" title="阳历">
+                        </div>
+                        <input type="hidden" id="Birthday" value="Birthday" />
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">紧急联系电话:</label>
                         <div class="layui-input-block" style="width:190px;">
-                            @Html.TextBoxFor(a => a.UrgentPhone, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.UrgentPhone, new Dictionary<string, object>() { { "class", "layui-input" }, { "lay-verify", "myUrgentPhone" } })
                         </div>
                     </div>
 
@@ -234,16 +236,16 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">身份证有效期:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">身份证有效期:</label>
                         <div class="layui-input-block" style="width:190px;">
-                            @Html.TextBoxFor(a => a.IdCardIndate, new Dictionary<string, object>() {{ "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.IdCardIndate, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">政治面貌:</label>
                         <div class="layui-input-block" style="width:190px;">
-                            <select name="PoliticsStatus" id="PoliticsStatus" >
+                            <select name="PoliticsStatus" id="PoliticsStatus">
                                 <option value="党员">党员</option>
                                 <option value="团员">团员</option>
                                 <option value="群众">群众</option>
@@ -252,7 +254,7 @@
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">社保起始月份:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">社保起始月份:</label>
                         <div class="layui-input-block" style="width:190px;">
                             @Html.TextBoxFor(a => a.SSStartMonth, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
@@ -272,17 +274,17 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资:</label>
                         <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                         </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
+
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label" >转正后工资:</label>
+                        <label class="layui-form-label">转正后工资:</label>
                         <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "readonly", "true" }, { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                         </div>
-                        <i class="layui-icon layui-icon-tips myicon" style="font-size: 20px; color: #ff6a00;"></i>
+
                     </div>
 
                 </div>
@@ -292,14 +294,14 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() {  { "class", "layui-input linu" } })
+                            @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">工作经验:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() {  { "class", "layui-input linu" } })
+                            @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
@@ -329,11 +331,11 @@
         function loadnetinfo() {
             var id = $("#EmployeeId").val();
             $.get("/Personnelmatters/EmployeesInfo/GetempById/" + id, function (data) {
-                layui.use(['layer', 'form', 'table'], function () {
+                layui.use(['layer', 'form', 'table','laydate'], function () {
                     var form = layui.form;
+                      var laydate = layui.laydate;
                     data.Sex = data.Sex.toString();
                     data.MaritalStatus = data.MaritalStatus.toString();
-                    // data.PoliticsStatus = data.PoliticsStatus.toString();
                     data.EntryTime = GetYMD(data.EntryTime);
                     data.PositiveDate = GetYMD(data.PositiveDate);
                     data.ContractStartTime = GetYMD(data.ContractStartTime);
@@ -341,8 +343,67 @@
                     data.Birthdate = GetYMD(data.Birthdate);
                     data.IdCardIndate = GetYMD(data.IdCardIndate);
                     data.SSStartMonth = GetYearAndMonth(data.SSStartMonth);
-                    form.val("formtest", data);
+                    if (data.Birthday != null) {
+                        var birthmon = data.Birthday.split(/月/);
+                        var mymonth = birthmon[0];//月份
+                        var mystr = birthmon[1];
+                        var birthstr = mystr.split(/日/);
+                        var myday = birthstr[0];//日期
+                        var myyinyang = birthstr[1];//阴阳历
+                        $("#month").val(mymonth);
+                        $("#day").val(myday);
 
+                        $("input[name='yinyang']").each(function () {
+                            if (this.value == myyinyang) {
+                                this.checked = true;
+                                form.render();
+                            }
+                        });
+                    }
+                   
+              
+                    form.val("formtest", data);
+                    //日期
+                    var startTime = laydate.render({
+                        elem: '#ContractStartTime',
+                        done: function (value, date) {
+                            console.log(value);
+                            console.log(date);
+                            endTime.config.min = {
+                                year: date.year,
+                                month: date.month - 1,//关键
+                                date: date.date,
+                                hours: date.hours,
+                                minutes: date.minutes,
+                                seconds: date.seconds
+                            }
+                        }
+                    });//合同起始时间
+                    var endTime = laydate.render({
+                        elem: '#ContractEndTime',
+                        done: function (value, date) {
+                            startTime.config.max = {
+                                year: date.year,
+                                month: date.month - 1,//关键
+                                date: date.date,
+                                hours: date.hours,
+                                minutes: date.minutes,
+                                seconds: date.seconds
+                            }
+                        }
+                    });//合同终止时间
+                    laydate.render({
+                        elem: '#EntryTime',
+
+                    });//入职时间
+                    laydate.render({
+                        elem: '#PositiveDate',
+                        min: data.EntryTime
+                    });//转正日期
+                    laydate.render({
+                        elem: '#SSStartMonth',
+                        type: 'month'
+                    });//社保起始月份
                 });
             })
         }
@@ -351,46 +412,70 @@
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
-                , layedit = layui.layedit
-                , laydate = layui.laydate;
+                , layedit = layui.layedit;              
 
-            //日期
-            var startTime = laydate.render({
-                elem: '#ContractStartTime',
-                done: function (value, date) {
-                    console.log(value);
-                    console.log(date);
-                    endTime.config.min = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
+
+            //自定义验证
+            form.verify({
+                myIdCardNum: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var ver = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                        if (!ver.test(value)) {
+                            return '身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X';
+                        }
                     }
-                }
-            });//合同起始时间
-            var endTime = laydate.render({
-                elem: '#ContractEndTime',
-                done: function (value, date) {
-                    startTime.config.max = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
+                },//身份证号
+                myUrgentPhone: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^1[3456789]\d{9}$/;
+                        if (!v.test(value)) {
+                            return '号码格式输入错误';
+                        }
                     }
+                },//联系电话
+                mymonth: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^0[1-9]$|^[1-9]$|^1[0-2]$/;
+                        if (!v.test(value)) {
+                            return '月份只能是1至12之间';
+                        }
+                    }
+                },//验证月份
+                myday: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^0[1-9]$|^[1-9]$|^1[0-9]$|^2[0-9]$|^3[0-1]$/;
+                        if (!v.test(value)) {
+                            return '月份只能是1至31之间';
+                        }
+                    }
+                }//验证哪天
+            });
+
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
                 }
-            });//合同终止时间
-            laydate.render({
-                elem: '#Birthdate',
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
           
-            });//出生日期
-            laydate.render({
-                elem: '#SSStartMonth',
-                 type: 'month'
-            });//社保起始月份
             //小图标悬停事件
             window.onload = $(".myicon").each(function () {
                 //将遍历到的类赋给li
@@ -404,6 +489,8 @@
 
             //添加提交
             form.on('submit(demo1)', function (data) {
+                console.log(data.field);
+                data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
                 $.post("/Personnelmatters/EmployeesInfo/EditEmp", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
@@ -421,7 +508,7 @@
             //关闭添加页面
             $("#btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('myEmpInfo');
+               // parent.layui.table.reload('myEmpInfo');
                 parent.layer.close(index);
             });
 
@@ -472,6 +559,65 @@
                 return "";
             }
         }
+    </script>
+
+     @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#deptid").append(new Option($("#mydname").val(), $("#mydid").val()));
+                        $("#PositionId").append(new Option($("#mypname").val(), $("#mypid").val()));
+                        $.each(resultData.data, function (index, item) {
+                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PositionId").empty();
+                            console.log(resultData.data);
+                            $("#PositionId").append(new Option("请选择岗位", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#PositionId').append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PositionId").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
+
+      
     </script>
 
 

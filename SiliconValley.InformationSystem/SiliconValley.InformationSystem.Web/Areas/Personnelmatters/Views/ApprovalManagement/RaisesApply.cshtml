@@ -110,7 +110,7 @@
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">加薪生效日期：</label>
+                        <label class="layui-form-label">加薪申请日期：</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.ApplyTime, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
@@ -199,8 +199,7 @@
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log("转岗数据：" + data.field);
-                $.post("/Personnelmatters/ApprovalManagement/TransferPositionApply", data.field, function (data) {
+                $.post("/Personnelmatters/ApprovalManagement/RaisesApply", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("申请成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
