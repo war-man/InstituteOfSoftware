@@ -22,6 +22,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
     using SiliconValley.InformationSystem.Business.FinanceBusiness;
+    using SiliconValley.InformationSystem.Entity.Entity;
 
     public class EmployeesInfoController : Controller
     {
@@ -479,6 +480,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
+        //将所有部门及岗位用树形格式显示
+        public ActionResult GetDeptAndPosition() {
+            DepartmentManage deptmanage = new DepartmentManage();
+            PositionManage pmanage = new PositionManage();
+            int mygrade=1;
+            List<TreeClass> list_Tree = deptmanage.GetList().Select(d => new TreeClass() { id = d.DeptId.ToString(), title = d.DeptName, children = new List<TreeClass>(), disable = false, @checked = false, spread = false,grade=mygrade }).ToList();
+            List<Position> list_Position = pmanage.GetList().Where(s => s.IsDel == false).ToList();//获取所有岗位有用的数据
+            foreach (TreeClass item1 in list_Tree)
+            {
+                List<TreeClass> bigTree = new List<TreeClass>();
+                foreach (Position item2 in list_Position)
+                {
+                    if (item1.id == item2.DeptId.ToString())
+                    {
+                                TreeClass tcc2 = new TreeClass();
+                                tcc2.id = item2.Pid.ToString();
+                                tcc2.title = item2.PositionName;
+                                tcc2.grade = 2;
+                                bigTree.Add(tcc2);
+                        item1.children = bigTree;
+                    }
+                }
+            }
+            return Json(list_Tree, JsonRequestBehavior.AllowGet);
+        }
+
         //部门信息获取
         public ActionResult GetDepts()
         {
@@ -891,6 +918,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditEmp(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
              var emp= empmanage.GetInfoByEmpID(id);
+            ViewBag.dname = empmanage.GetDept(emp.PositionId).DeptName; 
+            ViewBag.deptid = empmanage.GetDept(emp.PositionId).DeptId;
+            ViewBag.pname = empmanage.GetPosition(emp.PositionId).PositionName;
+            ViewBag.pid = empmanage.GetPosition(emp.PositionId).Pid;
             return View(emp);
         }
         [HttpPost]
@@ -925,7 +956,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             EmpTransactionManage etmanage = new EmpTransactionManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = etmanage.GetList().ToList();
-            var mylist = list.OrderBy(e => e.TransactionId).Skip((page - 1) * limit).Take(limit).ToList();
+            var mylist = list.OrderByDescending(e => e.TransactionId).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in mylist
                          select new
                          {
@@ -1118,7 +1149,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = affmmanage.GetList();
-            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var empobj = from e in  newlist
                           select new
             {
@@ -1209,7 +1240,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             DimissionApplyManage damanage = new DimissionApplyManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = damanage.GetList();
-            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
@@ -1302,7 +1333,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             JobTransferApplyManage jtfamanage = new JobTransferApplyManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = jtfamanage.GetList();
-            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
@@ -1404,7 +1435,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             SalaryRaiseApplyManage sramanage = new SalaryRaiseApplyManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = sramanage.GetList();
-            var newlist = list.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
