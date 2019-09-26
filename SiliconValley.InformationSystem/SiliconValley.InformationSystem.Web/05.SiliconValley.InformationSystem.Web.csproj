@@ -593,6 +593,8 @@
     <Content Include="Areas\Teachingquality\Views\StudentUnion\StudentUnionMemberss.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentUnion\UnionMemberAdd.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Finance.cshtml" />
+    <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
+    <Content Include="Areas\Market\Views\FollwingInfo\ListStudentView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2233,6 +2235,20 @@
     <Content Include="Scripts\vendor\util\upload-time.js" />
     <Content Include="Scripts\vendor\util\util.js" />
     <Content Include="Scripts\vendor\vue\vue.js" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\1.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190904052834Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092555Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092957Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093344Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093931Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094235Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094606Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094823Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095037Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095258Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095330Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100014Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100125Admin.jpg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -2286,6 +2302,11 @@
     <Content Include="Scripts\layui-v2.5.4\文档与示例\在线示例.url" />
     <Content Include="Scripts\layui-v2.5.4\文档与示例\快速上手.url" />
     <Content Include="Scripts\layui-v2.5.4\更新日志.url" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls~HEAD" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\~%24Sheet1.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\测试.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2311,7 +2332,6 @@
     <Folder Include="assets\img\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
-    <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

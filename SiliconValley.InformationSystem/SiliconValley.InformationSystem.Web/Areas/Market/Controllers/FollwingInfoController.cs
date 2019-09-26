@@ -10,14 +10,15 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class FollwingInfoController : BaseMvcController
     {
         ConsultManeger CM_Entity = new ConsultManeger();
-
-        // GET: /Market/FollwingInfo/EditFunction
+        StuStateManeger ST_Entity = new StuStateManeger();
+        // GET: /Market/FollwingInfo/ListStudentView
         //获取当前上传的操作人
         string UserName = Base_UserBusiness.GetCurrentUser().UserName;
         public ActionResult FollwingInfoIndex()
@@ -105,7 +106,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             StudentPutOnRecord find_Stu= CM_Entity.GetSingleStudent(id);
             int consult_id = CM_Entity.GetList().Where(c=>c.StuName==id).FirstOrDefault().Id;           
-             SessionHelper.Session["consult_id"] = consult_id;
+            SessionHelper.Session["consult_id"] = consult_id;
             int Number= CM_Entity.GetFollwingManeger().GetList().Where(c => c.Consult_Id == consult_id).ToList().Count;
             ViewBag.Name = find_Stu.StuName;
             ViewBag.Sex = find_Stu.StuSex;
@@ -194,5 +195,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
              
         }
+        //这是找到多个学生显示的页面
+        public ActionResult ListStudentView(string id)
+        {
+            string[] stulist = id.Split(',');
+            List<StudentPutOnRecord> student = CM_Entity.GetStudentPutRecored();
+            List<StudentPutOnRecord> findresult = new List<StudentPutOnRecord>();
+            foreach (string item1 in stulist)
+            {
+                if (!string.IsNullOrEmpty(item1))
+                {
+                    foreach (StudentPutOnRecord item2 in student)
+                    {
+                        if (item2.Id==Convert.ToInt32(item1))
+                        {
+                            findresult.Add(item2);
+                        }
+                    }
+                }
+            }
+            List<StudentData> data = findresult.Select(s => new StudentData() {
+                Id=s.Id,
+                stuSex = s.StuSex == false ? "男" : "女",
+                StuName = s.StuName,
+                StuPhone = s.StuPhone,
+                StuSchoolName = s.StuSchoolName,
+                StuAddress = s.StuAddress,
+                StuInfomationType_Id = CM_Entity.getTypeName(s.StuInfomationType_Id.ToString(), true).Name,
+                StuStatus_Id = ST_Entity.GetIdGiveName(s.StuStatus_Id).StatusName,
+                StuIsGoto = s.StuIsGoto == false ? "否" : "是",
+                StuVisit = s.StuVisit,
+                EmployeesInfo_Id = CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
+                StuDateTime = s.StuDateTime,
+                StuEntering = CM_Entity.GetEmplyeesInfo(s.StuEntering).EmpName,
+                AreName =CM_Entity.GetRegionName(s.Region_id).RegionName
+            }).ToList();
+            ViewBag.Student = data;
+            return View();
+        }
+
     }
 }

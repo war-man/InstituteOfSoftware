@@ -1,0 +1,196 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.Entity
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ConsultView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        fieldset{
+         border:0px solid #ffffff;
+        }
+        legend{
+        font-size:25px;
+        font-family:STSong;
+        }
+        #div_bttom{
+        margin-top:30px;
+        }
+        #fengliang{
+           position:fixed;
+           margin-top:30px;
+           margin-left:1000px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="div_left" class="layui-col-sm6">
+            <form class="layui-form">
+                <fieldset>
+                    <legend>
+                        咨询师
+                    </legend>
+                    @{
+                        List<TreeClass> Con_list = ViewBag.Teacher as List<TreeClass>;
+                       
+                        foreach (TreeClass item in Con_list)
+                        {
+   
+                          <input type="radio" name="treacher" value="@item.id" title="@item.title" lay-filter="ttone">                          
+                        }
+                    }
+                </fieldset>
+            </form>            
+        </div>
+        <div id="div_right" class="layui-col-sm6">
+            <form class="layui-form">
+                <fieldset>
+                    <legend>
+                        月份
+                    </legend>
+                    @{
+                        for (int i = 1; i <= 12; i++)
+                        {
+                            string str = i + "月";                            
+                             
+                            <input type="radio" name="month" value="@i" title="@str" lay-filter="tttwo">                        
+
+                        }
+
+                    }
+                </fieldset>
+            </form>
+        </div>
+        <div id="div_bttom">
+            <form class="layui-form" style="height:600px">
+                <fieldset>
+                    <legend>结果显示:</legend>
+                    <div id="Student_div">
+                        <table class="layui-tab" id="mystudenttable"></table>
+                    </div>
+                </fieldset>
+            </form>
+            <div id="fengliang">
+                <button type="button" id="consult_btn" class="layui-btn">分量</button>
+                <button type="button" class="layui-btn" onclick="Claose()">关闭</button>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        //关闭弹出层
+        function Claose() {
+            layui.use(['layer', 'form', 'table'], function () {
+                var layer = layui.layer;
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            });
+
+        }
+        $(function () {   
+            var consultId = -1;
+            var mon = -1;
+            layui.use(['layer','form','table'], function () {               
+                var layer = layui.layer;
+                var form = layui.form;
+                var table = layui.table;
+                //监听radio单选
+                //获取选择的咨询师
+                form.on('radio(ttone)', function (data) {
+                    consultId= data.value; //被点击的radio的value值
+                });
+                //获取那个月份
+                form.on('radio(tttwo)', function (data) {
+                    var monthName = data.value;  
+                    mon = monthName;
+                    GetstudentMonth(monthName);
+                });
+
+                //获取表格数据
+                function GetstudentMonth(month) {
+                    $.ajax({
+                        url: '/Market/Consult/MonthStudentData/' + month
+                        , success: function (YesSudata) {                              
+                            table.render({
+                                    height: 400,
+                                    elem: '#mystudenttable'
+                                    , cols: [[
+                                        { type: 'checkbox' }
+                                        , { field: 'StuName', title: '姓名', sort: true }
+                                        , {
+                                            field: 'StuSex', title: '性别', templet: function (res) {
+                                                if (res.StuSex == false) {
+                                                    return "男";
+                                                } else {
+                                                    return "女";
+                                                }
+                                            }
+                                        }
+                                        , { field: 'StuPhone', title: '电话号码', sort: true }
+                                        , { field: 'EmployeesInfo_Id',  title: '备案人' }
+                                        , { field: 'Region_id', title: '区域' }
+                                        , { field: 'StuStatus_Id', title: '状态' }
+                                    ]]
+                                    , data: YesSudata
+                                    , page: true
+                              , limits: [8]
+                              , limit:8
+                                });   
+                        }
+                    });
+                     
+                }                
+
+                //分量
+                $("#consult_btn").click(function () {
+                    //获取选择的咨询师                   
+                    if (consultId == -1) {
+                        layer.msg('请选择咨询师！！！', { icon: 5 });
+                    } else {
+                        if (mon == -1) {
+                            layer.msg('请选择月份！！！', { icon: 5 });
+                        } else {
+                            var checkStatus = table.checkStatus('mystudenttable'); //idTest 即为基础参数 id 对应的值                        
+                            if (checkStatus.data.length <= 0) {
+                                layer.msg('请选择学生！！！', { icon: 5 });
+                            } else {
+                                //获取选中行的数据
+                                var stuId = "";
+                                for (var i = 0; i < checkStatus.data.length; i++) {
+                                    stuId = stuId + checkStatus.data[i].Id + ",";
+                                }
+                                $.ajax({
+                                    url: '/Market/Consult/Insertconsult',
+                                    data: { consultTeacher: consultId, listid: stuId },
+                                    type: "POST",
+                                    success: function (SuccessData) {
+                                        if (SuccessData != "ok") {
+                                            layer.msg(SuccessData, { icon: 2 });
+                                        } else {
+                                            layer.msg('分量成功！！！', { icon: 1 }, function () {
+                                                Claose();
+                                            });
+
+                                        }
+                                    }
+                                });
+                            }    
+                        }
+                                            
+                    }
+                });
+            });
+        });
+         
+    </script>
+</body>
+</html>

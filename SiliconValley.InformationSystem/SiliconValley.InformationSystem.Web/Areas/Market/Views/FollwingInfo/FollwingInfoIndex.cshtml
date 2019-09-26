@@ -37,9 +37,7 @@
                 <div class="btn-group layui-container" style="width:120px;">
                     <input type="text" class="form-control" id="studentName" placeholder="学生姓名">
                 </div>
-                <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="AddFollwingData()">填写跟踪信息</button>
-                <button id="serchBtn2" class="layui-btn layui-btn-radius layui-btn-primary" onclick="LookFollwingData()">查看跟踪信息</button>
-                <button id="serchBtn3" class="layui-btn layui-btn-radius layui-btn-primary" onclick="EditFollwingData()">编辑跟踪信息</button>
+                <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="AddFollwingData()">查询</button>
             </div>
             <hr />
         </div>
@@ -59,6 +57,22 @@
 @section script{
 <script src="~/Scripts/ECharts4.2.1/incubator-echarts-master/dist/echarts.js"></script>
     <script>
+        //这是获取到多个学生的数据显示方法
+        function StudentShow(url, mytitle, myskin, mycloseBtn) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: url
+                    , area: ['1000px', '650px'],
+                    title: mytitle
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: myskin
+                    , closeBtn: mycloseBtn
+                });
+            });
+        }
         // 基于准备好的dom，初始化echarts实例
         var myChart = echarts.init(document.getElementById('div_top'));
         myChart.title = '折柱混合';
@@ -225,7 +239,7 @@
                     });
             });
         }
-        //添加咨询信息
+        //查询信息
         function AddFollwingData() {
             //判断是否有值
             var Name = $("#studentName").val();
@@ -234,33 +248,15 @@
                 $.ajax({
                     url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
                     success: function (SucData) {
-                        if (SucData.data.length > 1) {
+                        if (SucData.data.length > 0) {
                             //找到了多个
-
-                        } else if (SucData.data.length == 1) {
-                            //就找到了一个        
-                            if (SucData.Number < 5) {
-                                layui.use('layer', function () {
-                                    var layer = layui.layer;
-                                    layer.open({
-                                        type: 2,
-                                        content: '/Market/FollwingInfo/AddFollwingInfo/' + SucData.data[0].Id
-                                        , area: ['800px', '550px'],
-                                        title: '添加跟踪信息'
-                                        , shade: 0.8
-                                        , anim: 4
-                                        , skin: 'demo-class'
-                                        , closeBtn: 0
-                                    });
-                                });
-                            } else {
-                                layui.use('layer', function () {
-                                    var layer = layui.layer;
-                                    layer.msg('跟踪信息不能超过5条！！！', { icon: 5 });
-                                });
+                            var stuid = "";
+                            for (var i = 0; i < SucData.data.length; i++) {
+                                stuid = stuid + SucData.data[i].Id+",";
                             }
-                               
-                           
+                            var url = "/Market/FollwingInfo/ListStudentView/" + stuid;
+                            StudentShow(url, "查询结果","demo-class",1);
+
                         } else if (SucData.data.length <= 0) {
                             layui.use('layer', function () {
                                 var layer = layui.layer;
@@ -276,77 +272,7 @@
                     layer.msg('学生姓名不能为空！！！', { icon:2 });
                 });
             }
-        }
-        //查看咨询信息
-        function LookFollwingData() {
-            var Name = $("#studentName").val();
-            if (Name.length > 0) {
-                //去查找有没有这个学生
-                $.ajax({
-                    url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
-                    success(SucData) {
-                        if (SucData.data.length > 0) {
-                            layer.open({
-                                type: 2,
-                                content: '/Market/Consult/FollwingInfoView/' + SucData.data[0].Id
-                                , area: ['1000px', '650px'],
-                                title: false
-                                , shade: 0.8
-                                , anim: 4
-                            });
-                        } else {
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.msg('该学生名称无效！！！', { icon: 2 });
-                            });
-                        }
-                    }
-                });
-
-            } else {
-                layui.use('layer', function () {
-                    var layer = layui.layer;
-                    layer.msg('学生姓名不能为空！！！', { icon: 2 });
-                });
-            }
-            
-        }
-        //编辑跟踪信息
-        function EditFollwingData() {
-            var Name = $("#studentName").val();
-            if (Name.length > 0) {
-                //去查找有没有这个学生
-                $.ajax({
-                    url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
-                    success(SucData) {
-                        if (SucData.data.length > 0) {
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.open({
-                                    type: 2,
-                                    content: '/Market/FollwingInfo/EditView/' + SucData.data[0].Id
-                                    , area: ['1000px', '650px'],
-                                    title: false
-                                    , shade: 0.8
-                                    , anim: 4
-                                });
-                            });
-                        } else {
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.msg('该学生名称无效！！！', { icon: 2 });
-                            });
-                        }
-                    }
-                });
-
-            } else {
-                layui.use('layer', function () {
-                    var layer = layui.layer;
-                    layer.msg('学生姓名不能为空！！！', { icon: 2 });
-                });
-            }
-        }
+        }        
     </script>
     }
 

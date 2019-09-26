@@ -8,7 +8,7 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Business.RegionManage;
- 
+using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;
 
 namespace SiliconValley.InformationSystem.Business.Consult_Business
 {
@@ -19,7 +19,67 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         FollwingInfoManeger Fi_Entity = new FollwingInfoManeger();
         StudentDataKeepAndRecordBusiness Stu_Entity = new StudentDataKeepAndRecordBusiness();
         RegionManeges RM_Entity = new RegionManeges();
-         
+        StuInfomationTypeManeger ST_Entity = new StuInfomationTypeManeger();
+        /// <summary>
+        /// 根据主键或名称查询类型
+        /// </summary>
+        /// <param name="idorname">Id或名字</param>
+        /// <param name="IsKey">是否为主键</param>
+        /// <returns></returns>
+        public StuInfomationType getTypeName(string idorname, bool IsKey)
+        {
+            if (IsKey)
+            {
+                int id = Convert.ToInt32(idorname);
+                StuInfomationType type = ST_Entity.GetEntity(id);
+                if (type != null)
+                {
+                    return type;
+                }
+                else
+                {
+                    StuInfomationType t = new StuInfomationType();
+                    t.Name = "区域外";
+                    t.Id = -1;
+                    return t;
+                }
+            }
+            else
+            {
+                StuInfomationType type = ST_Entity.GetList().Where(t => t.Name == idorname).FirstOrDefault();
+                if (type != null)
+                {
+                    return type;
+                }
+                else
+                {
+                    StuInfomationType t = new StuInfomationType();
+                    t.Name = "区域外";
+                    t.Id = -1;
+                    return t;
+                }
+            }
+             
+        }
+        //获取某个月份所有备案数据
+        public List<StudentPutOnRecord> GetMonStudent(int monName)
+        {
+            List<StudentPutOnRecord> All_stu= Stu_Entity.GetList().Where(s => Convert.ToDateTime(s.StuDateTime).Month == monName).ToList();//获取某个月份备案的所有数据
+            List<Consult> All_con = this.GetList();//获取所有分量数据
+            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            //去分量的地方筛选没有被分量的学生
+            for (int i = 0; i < All_stu.Count; i++)
+            {
+                for (int j = 0; j < All_con.Count; j++)
+                {
+                    if (All_stu[i].Id==All_con[j].StuName)
+                    {
+                        All_stu.Remove(All_stu[i]);
+                    }
+                }
+            }
+            return All_stu;
+        }
         /// <summary>
         /// 获取区域名称
         /// </summary>
@@ -27,7 +87,16 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         /// <returns></returns>
         public Region GetRegionName(int? regionId)
         {
-           return RM_Entity.GetEntity(regionId);
+            Region r = RM_Entity.GetEntity(regionId);
+            if (r==null)
+            {
+                Region r1 = new Region();
+                r1.RegionName = "区域外";
+                r1.ID = -1;
+                return r1;
+            }
+             
+           return r ;
         }
         /// <summary>
         /// 获取咨询次数

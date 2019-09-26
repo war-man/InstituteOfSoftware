@@ -12,6 +12,9 @@ using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
+using SiliconValley.InformationSystem.Entity.Base_SysManage;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
+
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     public class ConsultController : BaseMvcController
@@ -23,7 +26,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         TeacherClassBusiness TB_Entity = new TeacherClassBusiness();//获取任课老师
         ClassScheduleBusiness CB_Entity = new ClassScheduleBusiness();//获取专业跟阶段
         StuStateManeger SM_Entity = new StuStateManeger();//获取状态
-        // GET: /Market/Consult/ListStudentView
+
+        //获取当前上传的操作人
+        string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+
+        // GET: /Market/Consult/Insertconsult
         public ActionResult ConsultIndex()
         {
             ViewBag.data = CM_Entity.GetConsultTeacher().Select(c => new ConsultShowData
@@ -202,6 +209,69 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Mystudents = list;
                 return View();
         }
-
+        //这是一个分量页面
+        public ActionResult ConsultView()
+        {
+          List<TreeClass> list_treacher = CM_Entity.GetConsultTeacher().Where(ct=>ct.IsDelete==false).Select(ct=>new TreeClass() { id=ct.Id.ToString(),title=CM_Entity.GetEmplyeesInfo(ct.Employees_Id).EmpName}).ToList();
+            ViewBag.Teacher = list_treacher;//咨询师
+            return View();
+        }
+        /// <summary>
+        /// 获取某个月份未分量的学生
+        /// </summary>
+        /// <param name="month">月份名称</param>
+        /// <returns></returns>
+        public ActionResult MonthStudentData(int id)
+        {
+            List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != SM_Entity.GetStu("已报名").Id).ToList();
+            var data = list_stu.Select(s => new {
+                Id = s.Id,
+                StuName=s.StuName,
+                StuSex = s.StuSex,
+                StuStatus_Id= SM_Entity.GetEntity(s.StuStatus_Id).StatusName,
+                StuPhone=s.StuPhone,
+                EmployeesInfo_Id=CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
+                Region_id=CM_Entity.GetRegionName(s.Region_id).RegionName
+            }).ToList();
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        //添加
+        [HttpPost]
+        public ActionResult Insertconsult()
+        {
+            try
+            {
+                string studentlist = Request.Form["listid"];
+                string consulteacherid = Request.Form["consultTeacher"];
+                if (!string.IsNullOrEmpty(studentlist) && !string.IsNullOrEmpty(consulteacherid))
+                {
+                    string[] idlist = studentlist.Split(',');
+                    foreach (string item1 in idlist)
+                    {
+                        if (!string.IsNullOrEmpty(item1))
+                        {
+                            Consult new_c = new Consult();
+                            new_c.ComDate = DateTime.Now;
+                            new_c.IsDelete = false;
+                            new_c.StuName = Convert.ToInt32(item1);
+                            new_c.TeacherName = Convert.ToInt32(consulteacherid);
+                            CM_Entity.Insert(new_c);
+                        }
+                    }
+                }
+                else
+                {
+                    WriteSysLog("用户:"+ UserName + "添加分量操作错误", EnumType.LogType.添加数据);
+                    return Json("系统错误，请重试!!!",JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteSysLog("用户:" + UserName + "添加分量操作出现"+ex.Message, EnumType.LogType.添加数据);
+                return Json("系统错误，请重试!!!", JsonRequestBehavior.AllowGet);
+            }
+            WriteSysLog("用户:" + UserName + "添加分量信息成功" , EnumType.LogType.添加数据);
+            return Json("ok",JsonRequestBehavior.AllowGet);
+        }
     }
 }
