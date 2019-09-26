@@ -75,7 +75,7 @@
 
         .btnCenDivCss
         {
-            text-align: center;
+            text-align:left;
             margin-top: 10px;
         }
 
@@ -83,8 +83,9 @@
         {
             width: 70px;
             height: 35px;
-            text-align: center;
+            padding-left:8px;
             line-height: 35px;
+             
         }
 
         body .demo-class2 .layui-layer-title
@@ -93,7 +94,12 @@
             color: #fff;
             border: none;
         }
-
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
         .spanCssone
         {
             font-size: 25px;
@@ -569,6 +575,20 @@
                 });
 
             }
+        });
+        $("#serchBtn2").click(function () {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: '/Market/Consult/ConsultView'
+                    , area: ['1200px', '750px'],
+                    title: '分量'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            });
         });
     </script>
 }

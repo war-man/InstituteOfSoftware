@@ -718,37 +718,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json("no", JsonRequestBehavior.AllowGet);
             }
 
-        }         
+        }                 
+        //判断是否有重复的值
+        public List<StudentPutOnRecord> Repeatedly(List<StudentPutOnRecord> ExcelList)
+        {
+            List<StudentPutOnRecord> All_list= s_Entity.GetList();
+            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            foreach (StudentPutOnRecord a1 in All_list)
+            {
+                foreach (StudentPutOnRecord a2 in ExcelList)
+                {
+                    if(a1.StuName==a2.StuName && a1.StuPhone == a2.StuPhone)
+                    {
+                        result.Add(a2);
+                    }
+                }
+            }
+            return result;
+        }
         //将文件中的内容写入到数据库中
         public ActionResult IntoServer()
         {
             List<StudentPutOnRecord> listStudent = GetExcelFunction();//获取Excle文件数据
-            List<StudentPutOnRecord> serverData = GetList();//获取缓存数据
             string UserName = Base_UserBusiness.GetCurrentUser().UserName;//获取当前登录人
-            List<StudentPutOnRecord> equally_list = serverData.Intersect<StudentPutOnRecord>(listStudent, new StudentPutOnRecord()).ToList(); //两个数据集合之间比较取交集
+            List<StudentPutOnRecord> equally_list = Repeatedly(listStudent); //两个数据集合之间比较取交集(挑出相同的)
             if (equally_list.Count > 0)
             {
-                //有重复的值
-                //获取并集
-              List<StudentPutOnRecord> Notstudent_list=  listStudent.Except<StudentPutOnRecord>(serverData, new StudentPutOnRecord()).ToList();
+                //有重复的值                
+                
                 try
                 {
-                    foreach (StudentPutOnRecord item in Notstudent_list)
-                    {
-                        item.StuDateTime = DateTime.Now;
-                        item.IsDelete = false;
-                        //从登陆那里获取当前的登录人员的员工编号
-                        item.StuEntering = "201908150001";
-                        s_Entity.Insert(item);
-                    }
+                    //foreach (StudentPutOnRecord item in Notstudent_list)
+                    //{
+                    //    item.StuDateTime = DateTime.Now;
+                    //    item.IsDelete = false;
+                    //    //从登陆那里获取当前的登录人员的员工编号
+                    //    item.StuEntering = "201908150001";
+                    //    s_Entity.Insert(item);
+                    //}
  
-                    BusHelper.WriteSysLog(UserName+"成功导入了Excl文件，但是有数据冲突", Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
+                    //BusHelper.WriteSysLog(UserName+"成功导入了Excl文件，但是有数据冲突", Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
                     //将有冲突的数据写入Excle文件中
                     CreateExcleFile(equally_list, UserName);
                 }
                 catch (Exception ex)
                 {
-
+                    BusHelper.WriteSysLog(UserName + "导入了Excl文件出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
                     return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
                 }
 
@@ -770,6 +785,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 catch (Exception ex)
                 {
+                    BusHelper.WriteSysLog(UserName + "导入了Excl文件出现：" + ex.Message, Entity.Base_SysManage.EnumType.LogType.Excle文件导入);
                     return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
                 }
             }
@@ -782,7 +798,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// </summary>
         public void CreateExcleFile(List<StudentPutOnRecord> equally_list,string UserName)
         {
-            List<MyExcelClass> exlist1 = GetExcel();
+            List<MyExcelClass> exlist1 = GetExcel();//获取Excle中的数据
             List<MyExcelClass> exlist2 = new List<MyExcelClass>();
             if (exlist1.Count > 0)
             {
