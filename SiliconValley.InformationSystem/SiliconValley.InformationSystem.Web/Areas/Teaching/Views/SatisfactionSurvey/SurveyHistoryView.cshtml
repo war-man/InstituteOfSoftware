@@ -252,8 +252,8 @@
         </div>
 
 
-        <div id="ClassevaluateImageDiv" style="text-align:center;">
-            <h3 style="text-align:center;"> 班级评价</h3>
+        <div id="ClassevaluateImageDiv" style="text-align:center;display:none;">
+            <h3 style="text-align:center;"> <span class="classnumber"></span>班级评价</h3>
 
             <hr />
 
@@ -261,16 +261,8 @@
 
             <div id="ClassevaluateImage" style="width:100%;height:200px;">
 
-
-
-
             </div>
         </div>
-
-
-
-
-
 
     </div>
 
@@ -352,19 +344,24 @@
                         //首先清空
                         $("#SurveyHistoryList").html("");
 
+
                         for (var i = 0; i < data.Data.length; i++) {
 
 
 
                             var html1 = _.template($("#moban1").html());
 
-                            var data1 = html1({SurveyResultID: data.Data[i].SurveyResultID, studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal });
+                            var data1 = html1({ SurveyResultID: data.Data[i].SurveyResultID, studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal });
 
                             $("#SurveyHistoryList").append($(data1));
 
                         }
 
 
+                    } else {
+                        $("#SurveyHistoryList").html("");
+
+                        layer.msg("数据加载异常");
                     }
 
 
@@ -386,7 +383,8 @@
             //初始化自己的满意度调查
             //获取月份
             var month = $("#month").val();
-            load(null, month, null,3);
+
+            load(null, month, null, currentCourseID);
 
             $(document).off("click", ".empSelect").on("click", ".empSelect", function () {
                 $(".selectClassBtn").text("选择班级");
@@ -498,10 +496,12 @@
             //自己的满意度历史记录
             $(document).off("click", "#mybtn").on("click", '#mybtn', function () {
                 $(".selectClassBtn").text("选择班级");
+                $(".grandselectEmpBtn1").text("选择员工");
+
                 //获取月份
                 var month = $("#month").val();
 
-                load(null, month);
+                load(null, month, currentClass, currentCourseID);
 
 
             });
@@ -522,7 +522,10 @@
 
 
                 Ajax("/Teaching/SatisfactionSurvey/GetCursor", { empid: empid, classnumber: classnumber }, 'post', function (data) {
+                    var mo = $("#month").val();
 
+                    //加载
+                    load(CurrentEmp, mo, currentClass, currentCourseID);
                     if (data.ErrorCode = 200) {
 
                         for (var i = 0; i < data.Data.length; i++) {
@@ -531,6 +534,11 @@
 
                                 currentCourseID = data.Data[i].CurriculumID;
                             }
+
+                            var mo = $("#month").val();
+
+                            //加载
+                            load(CurrentEmp, mo, currentClass, currentCourseID);
 
                             var btn = $("<button class= 'layui-btn layui-btn-primary'></button>");
                             btn.attr("CurriculumID", data.Data[i].CurriculumID);
@@ -543,9 +551,14 @@
 
                         $.post('/Teaching/SatisfactionSurvey/GetPieImageData', { EmpID: CurrentEmp, ClassNumber: currentClass, courseid: currentCourseID, date: null }, function (data) {
 
+                               
+                            //显示班级名称  教员名称  课程
+                            $("#ClassevaluateImageDiv").find(".EmpName").text(data.Data.Emp.EmpName);
 
-                            console.log(data);
 
+                            $("#ClassevaluateImageDiv").find(".corsour").text(data.Data.Curriculum.CourseName);
+
+                            $("#ClassevaluateImageDiv").find("h3").find(".classnumber").text(data.Data.investigationClass.ClassNumber);
 
                             PieImage("ClassevaluateImage", data.typelist, data.tyepscorelist);
 
@@ -570,8 +583,6 @@
 
 
             //选择班级
-
-
             $(".selectClassBtn").click(function () {
 
 
@@ -730,12 +741,12 @@
         //饼状图
         function PieImage(elem, legendData, seriesData) {
 
-
+            $("#ClassevaluateImageDiv").show();
            
             var myChart = echarts.init(document.getElementById(elem));
             option = {
                 title: {
-                    text: '某站点用户访问来源',
+                    text: '',
                     
                     x: 'center'
                 },

@@ -555,6 +555,10 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistoryView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveylistView.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\StudentSurveyIndex.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\HeadMasterSatisfactionQuestionnaire.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateTeacherSurveyConfig.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

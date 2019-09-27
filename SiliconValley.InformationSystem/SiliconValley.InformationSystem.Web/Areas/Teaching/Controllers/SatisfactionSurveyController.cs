@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.ClassesBusiness;
 
     /// <summary>
     /// 满意度调查控制器
@@ -1214,5 +1215,356 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
         }
+
+
+
+        /// <summary>
+        /// 学生满意度主页面
+        /// </summary>
+        /// <returns></returns>
+
+        [HttpGet]
+        public ActionResult StudentSurveyIndex()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 班主任满意度调查表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult HeadMasterSatisfactionQuestionnaire()
+        {
+
+            //获取当前学员所在班级的班主任
+
+            return View();
+
+        }
+
+
+        /// <summary>
+        /// 获取班主任的调查问卷
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetSurveyQuectionHeadMaster()
+        {
+            AjaxResult result = new AjaxResult();
+
+            List<SatisficingItem> resultlist = new List<SatisficingItem>();
+
+            try
+            {
+               resultlist = db_survey.Screen(1, 0);
+
+                result.Data = resultlist;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = resultlist;
+                result.ErrorCode = 500;
+                result.Msg =ex.Message;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+            
+
+        }
+
+        /// <summary>
+        ///  提交班主任调查问卷
+        /// </summary>
+        /// <param name="surveyCommit">项分数对象</param>
+        /// <param name="headmaster">班主任</param>
+        /// <param name="sug">建议</param>
+        /// <returns></returns>
+        public ActionResult SurveyQuectionCommitHeadMaster(SurveyCommitView surveyCommit, string headmaster,string sug)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            SatisficingConfig satisficingConfig = new SatisficingConfig();
+
+            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+
+            satisficingConfig.ClassNumber = scheduleForTraineesBusiness.SutdentCLassName(SessionHelper.Session["StudentNumber"].ToString()).ClassID;
+
+            var date = DateTime.Now;
+            satisficingConfig.CreateTime = date;
+            satisficingConfig.CurriculumID = null;
+            satisficingConfig.EmployeeId = headmaster;
+            satisficingConfig.IsDel = false;
+            satisficingConfig.IsPastDue = false;
+
+            db_survey.AddSatisficingConfig(satisficingConfig);
+
+            ////////////////////////////////////////////////////////////////
+
+           var  db_survey1 = new SatisfactionSurveyBusiness();
+
+            SatisficingResult satisficingResult = new SatisficingResult();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+       
+
+
+
+        /// <summary>
+        /// 创建 班主任满意度调查问卷总单
+        /// </summary>
+        /// <returns></returns>
+        /// 
+
+        [HttpGet]
+        public ActionResult CreateHeadMasterSurveyConfig()
+        {
+            //获取当前登录的班主任
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            //获取班主任的班级
+
+            BaseBusiness<HeadClass> headclass = new BaseBusiness<HeadClass>();
+
+            BaseBusiness<Headmaster> headmaster = new BaseBusiness<Headmaster>();
+
+           var head = headmaster.GetList().Where(d => d.informatiees_Id == user.EmpNumber && d.IsDelete==false).FirstOrDefault();
+
+           var list = headclass.GetList().Where(d => d.IsDelete == false && d.EndingTime == null && d.LeaderID == head.ID).ToList();
+
+            ViewBag.classlist = list;
+
+            return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult CreateHeadMasterSurveyConfig( string classnumber)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                //获取当前登录的班主任
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                //首先判断是否已经存在
+
+                var date = DateTime.Now;
+
+                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmpNumber && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month).ToList();
+
+                if (templist == null)
+                {
+                    result.ErrorCode = 300;
+                    result.Data = null;
+                    result.Msg = "本月满意度单已存在";
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+                SatisficingConfig satisficingConfig = new SatisficingConfig();
+
+                
+
+                satisficingConfig.ClassNumber = classnumber;
+
+                satisficingConfig.CreateTime = DateTime.Now;
+                satisficingConfig.CurriculumID = null;
+                satisficingConfig.EmployeeId = user.EmpNumber;
+                satisficingConfig.IsDel = false;
+                satisficingConfig.IsPastDue = false;
+
+                db_survey.AddSatisficingConfig(satisficingConfig);
+
+
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = ex.Message;
+            }
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+            
+
+        }
+
+
+        /// <summary>
+        /// 生成教员满意度调查问卷
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult CreateTeacherSurveyConfig()
+        {
+
+            //需要给视图提供班级  课程
+
+            //获取当前登录的班主任
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+            
+
+            //获取老师的班级
+
+           var classlist = db_teacherclass.GetCrrentMyClass(teacher.TeacherID);
+
+            ViewBag.classlist = classlist;
+
+            return View();
+        }
+
+        /// <summary>
+        /// 获取教员在班级上过的课程
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetCorsueOnReconile(string classnumber)
+        {
+
+
+            AjaxResult result = new AjaxResult();
+            List<Curriculum> resultlist = new List<Curriculum>();
+            try
+            {
+
+             
+
+
+                //排课业务类
+                BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
+
+                CourseBusiness db_course = new CourseBusiness();
+
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+                //排课筛选之后的数据
+                var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.Teacher_Id == teacher.TeacherID && d.ClassSchedule_Id == classnumber).ToList();
+
+                List<Curriculum> list = new List<Curriculum>();
+
+                foreach (var item in templist)
+                {
+                    var tempobj = db_course.GetList().Where(d => d.CurriculumID == item.Curriculum_Id).FirstOrDefault();
+                    list.Add(tempobj);
+                }
+
+                //去掉重复项
+
+                foreach (var item in list)
+                {
+                    if (!db_course.isContain(resultlist, item))
+                    {
+                        resultlist.Add(item);
+                    }
+                }
+
+                result.ErrorCode = 200;
+                result.Data = resultlist;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+
+                result.ErrorCode = 500;
+                result.Data = resultlist;
+                result.Msg = ex.Message;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+            
+
+
+        }
+
+
+        [HttpPost]
+        public ActionResult CreateTeacherSurveyConfig(string classnumber, int Curriculum)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+
+            try
+            {
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                //首先判断是否已经存在
+
+               var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == classnumber && d.CurriculumID == Curriculum).ToList();
+
+                if (templist != null)
+                {
+                    //已经存在
+                    result.ErrorCode = 300;
+                    result.Data = null;
+                    result.Msg = "失败";
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+
+                SatisficingConfig satisficingConfig = new SatisficingConfig();
+
+                satisficingConfig.ClassNumber = classnumber;
+                satisficingConfig.CreateTime = DateTime.Now;
+                satisficingConfig.CurriculumID = Curriculum;
+                satisficingConfig.EmployeeId = user.EmpNumber;
+                satisficingConfig.IsDel = false;
+                satisficingConfig.IsPastDue = false;
+
+                db_survey.AddSatisficingConfig(satisficingConfig);
+
+                result.Data = null;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = ex.Message;
+                result.ErrorCode = 500;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+
+        }
+ 
+
+        /// <summary>
+        /// 是否可以进行本月的班主任满意度调查
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult IsOkHeadMasterSurvey()
+        {
+            return null;
+        }
+
     }
 } 

@@ -456,7 +456,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
             return new
             {
-                Major_Id = Techarcontext.GetEntity(a.Major_Id).SpecialtyName,
+                Major_Id = Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName,
                 grade_Id = Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName
             };
 

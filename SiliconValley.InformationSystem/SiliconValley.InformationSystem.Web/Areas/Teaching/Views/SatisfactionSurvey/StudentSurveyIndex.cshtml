@@ -1,0 +1,99 @@
+﻿
+@{
+    ViewBag.Title = "StudentSurveyIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+
+
+        #currentwarp {
+            width: 80%;
+            margin: 0 auto;
+            height: 600px;
+            background-color: #ffffff;
+        }
+
+        .SatisfactionItems {
+            display: inline-block;
+            width: 200px;
+            height: 80px;
+            /*border:1px solid red;*/
+            text-align: center;
+            font-size: 15px;
+            color: gray;
+            margin-left: 50px;
+            margin-top: 100px;
+        }
+
+    </style>
+    }
+
+
+
+
+
+    <div id="currentwarp">
+
+
+        <div class="SatisfactionItems" id="Headmaster">
+            <i class="layui-icon layui-icon-friends" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>班主任</span>
+        </div>
+
+        <div class="SatisfactionItems" id="Teacher">
+            <i class="layui-icon layui-icon-friends" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>教员</span>
+        </div>
+
+
+    </div>
+
+
+
+@section script{
+    
+    <script>
+
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+            //班主任点击事件
+            $("#Headmaster").click(function () {
+
+
+                //首先判断是否能够评价 本月的满意度单是否已经生成了  是否已经评价过了
+
+
+
+
+
+                layer.open({
+
+                    type: 2,
+                    area:['1500px','1200px'],
+                    content:"/Teaching/SatisfactionSurvey/HeadMasterSatisfactionQuestionnaire"
+
+
+                });
+
+
+
+
+            });
+
+
+        //教员点击事件
+
+        });
+
+
+    </script>
+    
+    }
+
