@@ -26,6 +26,8 @@ using Microsoft.Office.Interop;
 using Excel = Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Microsoft.Office.Interop.Excel;
+using System.Reflection;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -562,7 +564,61 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Student =data;
             return View(data);
         }
-        #region Excle文件导入
+        #region
+        //Excle文件导入
+        private PropertyInfo[] GetPropertyInfoArray()
+        {
+            PropertyInfo[] props = null;
+            try
+            {
+                Type type = typeof(MyExcelClass);
+                object obj = Activator.CreateInstance(type);
+                props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            }
+            catch (Exception)
+            {
+
+            }
+            return props;
+        }
+        public bool DaoruExcel(List<MyExcelClass> list, string mypath)
+        {
+            bool IsCuss = false;
+            object misValue = System.Reflection.Missing.Value;
+            Application xlApp = new Application();
+            Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+            Worksheet xlWorkSheet = (Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            PropertyInfo[] props = GetPropertyInfoArray();
+            for (int i = 0; i < props.Length; i++)
+            {
+                xlWorkSheet.Cells[1, i + 1] = props[i].Name; //write the column name
+            }
+            for (int i = 0; i < list.Count; i++)
+            {
+                xlWorkSheet.Cells[i + 2, 1] = list[i].StuName;
+                xlWorkSheet.Cells[i + 2, 2] = list[i].StuSex;
+                xlWorkSheet.Cells[i + 2, 3] = list[i].StuPhone;
+                xlWorkSheet.Cells[i + 2, 4] = list[i].StuSchoolName;
+                xlWorkSheet.Cells[i + 2, 5] = list[i].StuAddress;
+                xlWorkSheet.Cells[i + 2, 6] = list[i].Region_id;
+                xlWorkSheet.Cells[i + 2, 7] = list[i].StuInfomationType_Id;
+                xlWorkSheet.Cells[i + 2, 8] = list[i].StuEducational;
+                xlWorkSheet.Cells[i + 2, 9] = list[i].Reak;
+            }
+            try
+            {                     
+                xlWorkBook.SaveAs(mypath, XlFileFormat.xlExcel8, null, null, false, false, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+                IsCuss = true;
+            }
+            catch (Exception )
+            {
+                return IsCuss;
+            }
+            return IsCuss;
+        }
         ///一个删除文件的方法
         public void DeleteFile()
         {
@@ -583,7 +639,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public List<StudentPutOnRecord> GetExcelFunction()
         {
             string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
-            DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
+            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
             List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
                 if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
             {                
@@ -616,7 +672,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public List<MyExcelClass> GetExcel()
         {
             string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
-            DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
+            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
             List<MyExcelClass> new_listStudent = new List<MyExcelClass>();
             if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
             {
@@ -814,59 +870,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             }
                         }
                     }
-
-                    DataTable dt = exlist2.ToDataTable<MyExcelClass>();
-                    int rowNumber = dt.Rows.Count;
-                    int columnNumber = dt.Columns.Count;
-                    int colIndex = 0;
-                    if (rowNumber == 0)
+                  
+                    //获取当前年月日
+                    string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + UserName + "ErrorExcel.xls";
+                    string path = "~/uploadXLSXfile/ConsultUploadfile/ConflictExcel/" + filename;
+                    SessionHelper.Session["filename"] = path;
+                    bool s= DaoruExcel(exlist2,Server.MapPath( path));
+                    if (s)
                     {
-
                         
                     }
-                    //获取当前年月日
-                    //string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + UserName + "ErrorExcel.xls";
-                    //string path = "~/uploadXLSXfile/ConflictExcel/" + filename;
-                    //FileStream stream = new FileStream(Server.MapPath(path), FileMode.Append);
-                    //建立Excel对象 
-                    Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();                   
-                   // excel.Application.Workbooks.Add(true);
-                   excel.Application.Workbooks.Open(Server.MapPath("~/uploadXLSXfile/ConflictExcel/测试.xls"));
-                   excel.Visible = true;//是否打开该Excel文件 
-                    var jj = CreateJsonFile();
-
-                    JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
-                    //生成字段名称 
-                    foreach (DataColumn col in dt.Columns)
+                    else
                     {
-                        colIndex++;
-                        excel.Cells[1, colIndex] = jo[col.ColumnName];
+                        DeleteFile();
                     }
-
-                    //填充数据 
-                    for (int c = 1; c <= rowNumber; c++)
-                    {
-
-                        for (int j = 0; j < columnNumber; j++)
-                        {
-                            excel.Cells[c + 1, j + 1] = dt.Rows[c - 1].ItemArray[j];
-                        }
-                    }
-                    
-                    //设置禁止弹出保存和覆盖的询问提示框   
-                    excel.DisplayAlerts = false;
-                    excel.AlertBeforeOverwriting = false;
-
-                    //保存工作簿   
-                    excel.Application.Workbooks.Add(true).Save();
-                    excel.Application.Workbooks.Close();
-
-                    //保存excel文件   
-                    excel.Save(Server.MapPath("~/uploadXLSXfile/ConflictExcel/测试.xls"));
-                   
-                    //确保Excel进程关闭   
-                    excel.Quit();
-                    excel = null;
                 }
                 catch (Exception ex)
                 {

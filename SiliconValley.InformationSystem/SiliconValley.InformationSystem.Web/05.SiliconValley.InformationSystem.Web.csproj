@@ -2305,8 +2305,8 @@
     <Content Include="uploadXLSXfile\Template\Excle模板.xls" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~HEAD" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
-    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\~%24Sheet1.xlsx" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\测试.xls" />
+    <Content Include="uploadXLSXfile\Sheet1.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
