@@ -1457,5 +1457,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
+        
+        public ActionResult EmpOvertimeRecord() {
+            return View();
+        }
+
     }
 }

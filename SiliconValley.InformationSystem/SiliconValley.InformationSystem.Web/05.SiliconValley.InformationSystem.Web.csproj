@@ -611,6 +611,7 @@
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\ListStudentView.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Studentfees.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\OvertimeApply.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

@@ -149,5 +149,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+
+        //加班申请
+        public ActionResult OvertimeApply() {
+            // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
+            string eid = "201908230013";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
+            return View();
+        }
+        //加班申请提交
+        [HttpPost]
+        public ActionResult OvertimeApply(OvertimeRecord or) {
+            OvertimeRecordManage ormanage = new OvertimeRecordManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                or.IsPassYear = false;//默认未过年限
+                or.IsPass = false;//默认审批未通过
+                or.IsApproval = false;//默认未审批
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
     }
 }

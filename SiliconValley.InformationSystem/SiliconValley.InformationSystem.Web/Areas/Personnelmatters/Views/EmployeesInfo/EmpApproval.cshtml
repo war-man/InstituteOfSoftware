@@ -243,7 +243,8 @@
             });
 
             element.on('tab(mytab)', function (data) {
-                table.resize('myapply2');
+                console.log(data);
+                table.resize();
             });
         });
 
@@ -329,9 +330,7 @@
                 }
             });
 
-            element.on('tab(mytab)', function (data) {
-                table.resize('myapply2');
-            });
+          
         });
 
         //加薪申请数据加载
@@ -417,9 +416,6 @@
                 }
             });
 
-            element.on('tab(mytab)', function (data) {
-                table.resize('myapply2');
-            });
         });
 
 

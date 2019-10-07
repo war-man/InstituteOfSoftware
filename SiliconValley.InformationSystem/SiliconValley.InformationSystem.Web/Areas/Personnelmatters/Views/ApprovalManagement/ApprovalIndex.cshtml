@@ -13,63 +13,61 @@
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
             <label class="layui-form-label" style="width:100px;">转正申请</label>
-          
         </div>
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="dimission">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">离职申请</label>
-          
+            <label class="layui-form-label" style="width:100px;">离职申请</label>    
         </div>
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="transferPosition">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px;  color:white;"></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">调岗申请</label>
-           
+            <label class="layui-form-label" style="width:100px;">调岗申请</label>           
         </div>
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="Raises">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px;  color:white;"></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">加薪申请</label>
-            
+            <label class="layui-form-label" style="width:100px;">加薪申请</label>            
         </div>
+
     </div>
+
     <div class="layui-row layui-form-item" style="margin-left:100px;">
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " >
+
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " id="overtime" >
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">加班</label>
-          
-
+            <label class="layui-form-label" style="width:100px;">加班</label>         
         </div>
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 ">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">请假</label>
-            
-
+            <label class="layui-form-label" style="width:100px;">请假</label>          
         </div>
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " >
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">出差</label>
-           
-
+            <label class="layui-form-label" style="width:100px;">出差</label>           
         </div>
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " >
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">外出</label>
-          
-
+            <label class="layui-form-label" style="width:100px;">外出</label>          
         </div>
+
     </div>
 </fieldset>
    <script>
@@ -126,6 +124,21 @@
                    , area: ["900px", "500px"]
                    , title: "加薪"
                    , content: '/Personnelmatters/ApprovalManagement/RaisesApply'
+                   , anim: 2
+               });
+
+           })
+       });
+
+       //加班申请
+       $("#overtime").click(function () {
+           layui.use(['layer'], function (args) {
+               var layer = layui.layer;      //layui对象
+               layer.open({
+                   type: 2
+                   , area: ["600px", "600px"]
+                   , title: "加班"
+                   , content: '/Personnelmatters/ApprovalManagement/OvertimeApply'
                    , anim: 2
                });
 
