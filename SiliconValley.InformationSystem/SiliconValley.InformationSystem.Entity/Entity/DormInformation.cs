@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 房间类型id
         /// </summary>
-        public int RoomTypeId { get; set; }
+        public int RoomStayTypeId { get; set; }
         /// <summary>
         /// false可用，true 不可用
         /// </summary>
@@ -58,5 +58,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public int RoomStayNumberId { get; set; }
 
+        /// <summary>
+        /// 方向左右，false为左，true为右
+        /// </summary>
+        public bool Direction { get; set; }
     }
 }

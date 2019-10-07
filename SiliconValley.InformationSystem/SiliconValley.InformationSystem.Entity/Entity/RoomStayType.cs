@@ -14,16 +14,16 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-    [Table(name: "Roomtype")]
-    public partial class Roomtype
+    [Table(name: "RoomStayType")]
+    public partial class RoomStayType
     {
 
         [Key]
-        public int ID { get; set; }
-        public Nullable<int> Name { get; set; }
-        public string Typename { get; set; }
-        public Nullable<int> Numberofbeds { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
+        public int Id { get; set; }
+        public string RoomStayTypeName { get; set; }
+        public string Remark { get; set; }
+        public bool IsDel { get; set; }
+        public DateTime CreationTime { get; set; }
 
 
     }

@@ -730,7 +730,7 @@
 
                 data: {Plan:mrdplanID,zhurenid:mrdempid},
                 success: function (successdata) {
-                    //console.log(mytree);
+                    console.log(successdata);
                     treedata = successdata;
                     //可以重载所有基础参数
                     mytree.reload(
@@ -989,7 +989,8 @@
                     }
                 ]]
 
-            });
+           });
+
             //手风琴模式
             tree.render({
                 elem: '#test4'
@@ -1012,6 +1013,8 @@
 
                 }
                 , showLine: false
+
+
             });
 
              //建造实例

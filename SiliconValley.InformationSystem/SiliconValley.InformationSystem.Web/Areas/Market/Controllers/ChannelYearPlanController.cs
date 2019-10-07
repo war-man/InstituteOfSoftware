@@ -1038,6 +1038,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbteacher = new TeacherClassBusiness();
             dbheadermaster = new HeadmasterBusiness();
             dbclass = new ScheduleForTraineesBusiness();
+            dbstudent = new StudentInformationBusiness();
             SchoolYearPlan nowplan = dbschoolpaln.GetPlanByID(myplanid);
             //根据选择的的条件获取对应的员工
             List<ChannelStaff> Querylist = this.Resultbytiaojian(myempid, myistema, nowplan);
@@ -1069,10 +1070,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             foreach (var item in baominglist)
             {
                 var empinfo= dbempstaff.GetInfoByEmpID(item.EmployeesInfo_Id);
-                var student = dbstudent.GetIQueryable().Where(a => a.IsDelete == false && a.StudentPutOnRecord_Id == item.Id).FirstOrDefault();
-
-                
-
+                var sutdentlist =dbstudent.GetIQueryable().ToList();
+                var student = sutdentlist.Where(a => a.IsDelete == false && a.StudentPutOnRecord_Id == item.Id).FirstOrDefault();
                 var mrdteacher = dbteacher.GetTeacherByStudent(student.StudentNumber);
 
                 var headermaster = dbheadermaster.Listheadmasters(student.StudentNumber);

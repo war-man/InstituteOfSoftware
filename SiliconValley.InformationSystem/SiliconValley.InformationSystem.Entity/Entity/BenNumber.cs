@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.Entity
 {
+    /// <summary>
+    /// 床位数量表
+    /// </summary>
     [Table(name: "BenNumber")]
     public class BenNumber
     {

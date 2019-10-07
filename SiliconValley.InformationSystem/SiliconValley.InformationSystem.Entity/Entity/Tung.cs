@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.Entity
 {
+    /// <summary>
+    /// 栋表
+    /// </summary>
     [Table(name: "Tung")]
     public class Tung
     {
@@ -25,7 +28,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// <summary>
         /// false可用，true 不可用
         /// </summary>
-        public bool IsDelete { get; set; }
+        public bool IsDel { get; set; }
         public string Remark { get; set; }
         /// <summary>
         /// 创建时间

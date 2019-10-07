@@ -89,6 +89,12 @@
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
+    <Compile Include="DormitoryBusiness\DormInformationBusiness.cs" />
+    <Compile Include="DormitoryBusiness\DormitoryfloorBusiness.cs" />
+    <Compile Include="DormitoryBusiness\RoomStayNumberBusiness.cs" />
+    <Compile Include="DormitoryBusiness\RoomStayTypeBusiness.cs" />
+    <Compile Include="DormitoryBusiness\TungBusiness.cs" />
+    <Compile Include="DormitoryBusiness\TungFloorBusiness.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />

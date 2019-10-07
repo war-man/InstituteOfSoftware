@@ -224,7 +224,7 @@
     <Compile Include="Entity\Restudy.cs" />
     <Compile Include="Entity\RoomPerformance.cs" />
     <Compile Include="Entity\RoomStayNumber.cs" />
-    <Compile Include="Entity\Roomtype.cs" />
+    <Compile Include="Entity\RoomStayType.cs" />
     <Compile Include="Entity\SalaryRaiseApply.cs" />
     <Compile Include="Entity\Satisfaction.cs" />
     <Compile Include="Entity\SatisficingConfig.cs" />
@@ -300,6 +300,7 @@
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\DormitoryView.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />
