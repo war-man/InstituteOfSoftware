@@ -485,7 +485,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             DepartmentManage deptmanage = new DepartmentManage();
             PositionManage pmanage = new PositionManage();
             int mygrade=1;
-            List<TreeClass> list_Tree = deptmanage.GetList().Select(d => new TreeClass() { id = d.DeptId.ToString(), title = d.DeptName, children = new List<TreeClass>(), disable = false, @checked = false, spread = false,grade=mygrade }).ToList();
+            List<TreeClass> list_Tree = deptmanage.GetList().Where(s=>s.IsDel==false).Select(d => new TreeClass() { id = d.DeptId.ToString(), title = d.DeptName, children = new List<TreeClass>(), disable = false, @checked = false, spread = false,grade=mygrade }).ToList();
             List<Position> list_Position = pmanage.GetList().Where(s => s.IsDel == false).ToList();//获取所有岗位有用的数据
             foreach (TreeClass item1 in list_Tree)
             {
@@ -506,43 +506,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(list_Tree, JsonRequestBehavior.AllowGet);
         }
 
-        //部门信息获取
-        public ActionResult GetDepts()
-        {
-            DepartmentManage deptmanage = new DepartmentManage();
-            var deptlist = deptmanage.GetList();//获取公司部门数据集
-            var newstr = new
-            {
-                code = 0,
-                msg = "",
-                count = deptlist.Count(),
-                data = deptlist
-            };
-            return Json(newstr, JsonRequestBehavior.AllowGet);
-        }
-        //岗位信息获取
-        public ActionResult GetPositions() {
-            PositionManage deptmanage = new PositionManage();
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var deptlist = deptmanage.GetList();//获取公司部门数据集
-
-            var newlist = from p in deptlist
-                          select new {
-                              p.Pid,
-                              deptname = emanage.GetDept(p.Pid).DeptName,
-                              p.PositionName,
-                              p.IsDel
-                          };
-            var newstr = new
-            {
-                code = 0,
-                msg = "",
-                count = deptlist.Count(),
-                data = newlist
-            };
-            return Json(newstr, JsonRequestBehavior.AllowGet);
-        }
-
         //部门增加显示页
         public ActionResult DeptUpdate() {
             return View();
@@ -556,7 +519,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 foreach (var d in deptmanage.GetList())
                 {
-                    if (dname == d.DeptName) {
+                    if (dname == d.DeptName && d.IsDel==false) {
                         AjaxResultxx = deptmanage.Success();
                     }
                 }
@@ -583,56 +546,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-        //修改部门表的IsDel属性
+        //修改部门表属性
         [HttpPost]
-        public ActionResult EditDeptIsDel(int id, bool isdel) {
+        public ActionResult EditDept(int id, string dname) {
             DepartmentManage deptmanage = new DepartmentManage();
             PositionManage pmanage = new PositionManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
                 var dept = deptmanage.GetEntity(id);
-                dept.IsDel = isdel;
+                dept.DeptName = dname;
                 deptmanage.Update(dept);
-                var plist = pmanage.GetList().Where(p => p.DeptId == id);
-                foreach (var p in plist)
-                {
-                    p.IsDel = true;
-                    pmanage.Update(p);
-                }
                 AjaxResultxx = deptmanage.Success();
             }
             catch (Exception ex)
             {
                 AjaxResultxx = deptmanage.Error(ex.Message);
             }
-
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
         //部门伪删除即,将部门禁用
         [HttpPost]
-        public ActionResult DelDepts(string list) {
+        public ActionResult DelDepts(int id) {
             DepartmentManage deptmanage = new DepartmentManage();
             PositionManage pmanage = new PositionManage();
             var AjaxResultxx = new AjaxResult();
-            string[] str = list.Split(',');
             try
-            {
-                for (int i = 0; i < str.Length - 1; i++)
-                {
-                    int id = int.Parse(str[i]);
-                    var dept = deptmanage.GetEntity(id);
-                    dept.IsDel = true;
-                    deptmanage.Update(dept);
-                    var plist = pmanage.GetList().Where(p => p.DeptId == id);
+            {            
+                var dept = deptmanage.GetEntity(id);
+                dept.IsDel = true;
+                deptmanage.Update(dept);
+                AjaxResultxx = deptmanage.Success();
+                if (AjaxResultxx.Success) {
+                    var plist = pmanage.GetList().Where(p => p.DeptId == id).ToList();
                     foreach (var p in plist)
                     {
                         p.IsDel = true;
                         pmanage.Update(p);
+                        AjaxResultxx = pmanage.Success();
                     }
-
                 }
-                AjaxResultxx = deptmanage.Success();
             }
             catch (Exception ex)
             {
@@ -687,58 +640,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-        //修改岗位表的IsDel属性
+        //修改岗位表属性
         [HttpPost]
-        public ActionResult EditPositionIsDel(int id, bool isdel)
+        public ActionResult EditPosition(int id, string pname)
         {
-            PositionManage deptmanage = new PositionManage();
+            PositionManage pmanage = new PositionManage();
             EmployeesInfoManage emanag = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
             try
             {
-                var dept = deptmanage.GetEntity(id);
-                if (isdel == true) {
-                    dept.IsDel = isdel;
-                    deptmanage.Update(dept);
-                    AjaxResultxx = deptmanage.Success();
-                }
-                else
-                {
-                    if (emanag.GetDept(id).IsDel == true)
-                    {
-                        AjaxResultxx = deptmanage.Success();
-                        AjaxResultxx.Msg = "不能启用";
-                    }
-                    else {
-                        dept.IsDel = isdel;
-                        deptmanage.Update(dept);
-                        AjaxResultxx = deptmanage.Success();
-                    }
-                }
+                var dept = pmanage.GetEntity(id);
+                dept.PositionName = pname;
+                pmanage.Update(dept);
+                AjaxResultxx = pmanage.Success();
             }
             catch (Exception ex)
             {
-                AjaxResultxx = deptmanage.Error(ex.Message);
+                AjaxResultxx = pmanage.Error(ex.Message);
             }
 
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
         //岗位伪删除即 将岗位禁用
         [HttpPost]
-        public ActionResult DelPositions(string list)
+        public ActionResult DelPositions(int id)
         {
             PositionManage deptmanage = new PositionManage();
             var AjaxResultxx = new AjaxResult();
-            string[] str = list.Split(',');
             try
             {
-                for (int i = 0; i < str.Length; i++)
-                {
-                    var dept = deptmanage.GetEntity(str[i]);
+                    var dept = deptmanage.GetEntity(id);
                     dept.IsDel = true;
                     deptmanage.Update(dept);
-
-                }
                 AjaxResultxx = deptmanage.Success();
             }
             catch (Exception ex)

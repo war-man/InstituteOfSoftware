@@ -50,371 +50,162 @@
 
 </head>
 <body>
-    <div id="uldiv" class="demo-tree demo-tree-box" style="margin-top:30px; overflow: scroll;"></div>
+    <div class="layui-btn-container" >
+        <button class="layui-btn layui-btn-radius layui-btn-normal" type="button" id="addDept" style="margin-left:40px;">添加部门</button>
+        <button class="layui-btn layui-btn-radius layui-btn-normal" type="button" id="addPosition" style="margin-left:40px;">添加岗位</button>
+    </div>
+   
+    <div id="uldiv" class="demo-tree demo-tree-box" style="margin-top:20px; overflow: scroll;"></div>
 
     <script>
+
+        //var mytree;
         $(function () {
-            layui.use(['tree', 'layer'], function () {
+            layui.use(['tree', 'layer', 'util'], function () {
                 var tree = layui.tree;
                 var layer = layui.layer;
+                var util = layui.util;
+                mytree = tree;
+              
+                loadtree();
+                tree.render({
+                    elem: '#uldiv',
+                    id: 'mytree',
+                    edit: ['update', 'del'] //操作节点的图标
+                    , operate: function (obj) {
+                        var type = obj.type; //得到操作类型：add、edit、del
+                        var data = obj.data; //得到当前节点的数据
+                        var elem = obj.elem; //得到当前节点元素
 
-                //渲染
-                function Tree(Successdata) {
-                    tree.render({
-                        elem: '#uldiv',
-                        data: [{
-                            title: '部门与岗位管理',
-                            id: "-1",
-                            spread: true,
-                            children: Successdata
-                        }],
-                       
-                        edit: [ 'update', 'del'], //操作节点的图标
-                        operate: function (obj) {
-                            var type = obj.type; //得到操作类型：add、edit、del
-                            var data = obj.data; //得到当前节点的数据
-                            var elem = obj.elem; //得到当前节点元素
+                        //Ajax 操作
+                        var id = data.id; //得到节点编号
+                        if (type === 'update') { 
+                            var editeddata = elem.find('.layui-tree-txt').html();//得到修改后的内容
+ 
+                            if (data.grade==1) {//表示点击编辑的是部门节点
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    url: "/Personnelmatters/EmployeesInfo/EditDept",
+                                    data: { id: id, dname: editeddata},
+                                    success: function (data) {
+                                        console.log(editeddata);
+                                       
+                                    }
+                                });
 
-                            //Ajax 操作
-                            var id = data.id; //得到节点索引
-                            if (type === 'add') { //增加节点
-                              
+                            } else if (data.grade==2) {
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    url: "/Personnelmatters/EmployeesInfo/EditPosition",
+                                    data: { id: id, pname: editeddata },
+                                    success: function (data) {
+                                        console.log(editeddata);
+                                    }
+                                });
+                            }
 
-                            } else if (type === 'update') { //修改节点
-                                //  console.log(elem.find('.layui-tree-txt').html()); //得到修改后的内容
-                                if (data.grade == 1) {//即添加部门
-                                    layui.use(['layer'], function (args) {
-                                        var layer = layui.layer;      //layui对象
-                                        layer.open({
-                                            type: 2
-                                            , area: ["400px", "300px"]
-                                            , title: "添加部门"
-                                            , content: '/Personnelmatters/EmployeesInfo/DeptUpdate'
-                                            , anim: 2
-                                        });
+                          
+                        } else if (type === 'del') { //删除节点
+                            if (data.grade == 1) {
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    url: "/Personnelmatters/EmployeesInfo/DelDepts",
+                                    data: { id: id },
+                                    success: function (data) {
+                                        if (data.Success) {
+                                           // layer.tips('已删除 ', obj.othis);
+                                        } else {
+                                           // layer.tips('删除成功 ', obj.othis);
+                                        }
+                                    }
+                                });
+                            } else if (data.grade==2) {
+                                $.ajax({
+                                    type: "POST",
+                                    dataType: "json",
+                                    url: "/Personnelmatters/EmployeesInfo/DelPositions",
+                                    data: { id: id },
+                                    success: function (data) {
+                                        if (data.Success) {
+                                          //  layer.tips('已删除 ', obj.othis);
+                                        } else {
+                                           // layer.tips('删除失败 ', obj.othis);
+                                        }
+                                       
+                                    }
+                                });
+                            }
+                        };
+                    }
+                });
 
-                                    })
-                                } else if (data.grade == 2) {
-                                    layui.use(['layer'], function (args) {
-                                        var layer = layui.layer;      //layui对象
+                //添加部门操作
+                $("#addDept").click(function () {
+                    layui.use(['layer'], function (args) {
+                        var layer = layui.layer;      //layui对象
+                        layer.open({
+                            type: 2
+                            , area: ["400px", "300px"]
+                            , title: "添加部门"
+                            , content: '/Personnelmatters/EmployeesInfo/DeptUpdate'
+                            , anim: 2
+                            , end: function () {
+                                loadtree();
+                            }
+                        });
 
-                                        layer.open({
-                                            type: 2
-                                            , area: ["400px", "300px"]
-                                            , title: "添加岗位"
-                                            , content: '/Personnelmatters/EmployeesInfo/AddPosition'
-                                            , anim: 2
-                                        });
+                    })
+                });
 
-                                    })
-                                }
+                //添加岗位操作
+                $("#addPosition").click(function () {
+                    layui.use(['layer'], function (args) {
+                        var layer = layui.layer;      //layui对象
+                        layer.open({
+                            type: 2
+                            , area: ["400px", "400px"]
+                            , title: "添加岗位"
+                            , content: '/Personnelmatters/EmployeesInfo/AddPosition'
+                            , anim: 2
+                            , end: function () {
+                                loadtree();
+                            }
+                        });
 
-                                console.log("修改的节点索引：" + id);
-                            } else if (type === 'del') { //删除节点
-                                console.log("删除的节点索引：" + id);
-                            };
-                        }
+                    })
+                });
 
+
+            });
+           
+
+        });
+        function loadtree() {
+            //初始数据加载
+            $.ajax({
+                url: "/Personnelmatters/EmployeesInfo/GetDeptAndPosition",
+                success: function (Successdata) {
+                    mytree.reload('mytree', {
+                        data: Successdata
+                    });
+                },
+                error: function () {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('加载数据有误，请重试', {
+                            icon: 1,
+                            time: 5000 //2秒关闭（如果不配置，默认是3秒）
+                        }, function () {
+
+                        });
                     });
                 }
-
-                //初始数据加载
-                $.ajax({
-                    url: "/Personnelmatters/EmployeesInfo/GetDeptAndPosition",
-                    success: function (Successdata) {
-                        console.log(Successdata);
-                        Tree(Successdata);
-                    },
-                    error: function () {
-                        layui.use('layer', function () {
-                            var layer = layui.layer;
-                            layer.msg('加载数据有误，请重试', {
-                                icon: 1,
-                                time: 5000 //2秒关闭（如果不配置，默认是3秒）
-                            }, function () {
-
-                            });
-                        });
-                    }
-                });
-
             });
-
-
-        });
+        }
     </script>
 </body>
-@*<body>*@
-@*<fieldset id="left">
-    <legend>部门管理</legend>
-    <div >
-        <table id="deptTab" lay-filter="test1"></table>
-*@
-@*头部工具栏*@
-@* <script type="text/html" id="toolbarDemo1">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="addDept">部门添加</button>
-            <button class="layui-btn layui-btn-sm" lay-event="delDept">部门删除</button>
-        </div>
-    </script>
 
-    </div>
-    </fieldset>
-
-    <fieldset id="right">
-        <legend>岗位管理</legend>
-        <div>
-            <table id="positionTab" lay-filter="test2"></table>*@
-@*头部工具栏*@
-@* <script type="text/html" id="toolbarDemo2">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="AddPosition">岗位添加</button>
-            <button class="layui-btn layui-btn-sm" lay-event="delPosition">岗位删除</button>
-        </div>
-    </script>
-
-    </div>
-    </fieldset>
-*@
-
-<!-- 部门是否禁用修改-->
-@*<script type="text/html" id="checkboxTpl">
-        <input type="checkbox" name="IsDel" value="{{d.DeptId}}" title="禁用" lay-filter="lockDemo" {{d.IsDel == true ? 'checked' : ''}}>
-    </script>*@
-<!-- 岗位是否禁用修改-->
-@*<script type="text/html" id="checkboxTp2">
-        <input type="checkbox" name="IsDel" value="{{d.Pid}}" title="禁用" lay-filter="lockDemo2" {{d.IsDel == true ? 'checked' : ''}}>
-    </script>*@
-
-@*<script>
-        layui.use(['form', 'layedit', 'laydate', 'table'], function () {
-            var form = layui.form
-                , layer = layui.layer
-                , layedit = layui.layedit
-                , laydate = layui.laydate
-                , table = layui.table;
-            table.render({
-                elem: '#deptTab'
-                , url: '/Personnelmatters/EmployeesInfo/GetDepts'
-                , id: "myDept"
-                , toolbar: '#toolbarDemo1'
-                , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'DeptId', title: '部门编号', width: 90 }
-                    , { field: 'DeptName', title: '部门名称', width: 140, sort: true }
-                    , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, templet: '#checkboxTpl', unresize: true }
-                ]]
-
-            });
-
-            //头工具栏事件
-            table.on('toolbar(test1)', function (obj) {
-                var checkStatus = table.checkStatus(obj.config.id);
-                switch (obj.event) {
-                    case 'addDept':
-                        EditDept();
-                        break;
-                    case 'delDept':
-                        var data = checkStatus.data;
-
-                        var list = "";
-                        for (var i = 0; i < data.length; i++) {
-                            list += data[i].DeptId + ',';
-                        }
-                        if (data.length >= 1) {
-                            layer.open({
-                                content: '确定删除？',
-                                btn: ['确认', '取消'],
-                                yes: function (index, layero) {
-                                    $.post("/Personnelmatters/EmployeesInfo/DelDepts", { 'list': list }, function (data) {
-                                        if (data.Success) {
-                                            layer.alert("删除成功", { icon: 1 }, function (index) {
-                                                layui.use(['table'], function () {
-                                                    var table = layui.table;
-                                                    table.reload("myDept");
-                                                    table.reload("myPosition");
-                                                });
-                                                layer.close(index);
-                                            });
-                                        } else {
-                                            layer.alert("删除失败");
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            layer.open({
-                                title: '提示'
-                                , content: '请至少选中一条数据进行删除'
-                            });
-                        }
-                        break;
-                };
-            });
-
-            //监听锁定操作
-            form.on('checkbox(lockDemo)', function (obj) {
-                var id = this.value; var name = this.name;
-                console.log(id);
-                console.log(name);
-                console.log(obj.elem.checked);
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "/Personnelmatters/EmployeesInfo/EditDeptIsDel",
-                    data: { id: id, isdel: obj.elem.checked },
-                    success: function (data) {
-                        if (data.Success) {
-                            console.log(obj.elem.checked);
-                            if (obj.elem.checked == true) {
-                                table.reload("myPosition");
-                                // layer.tips( '已禁用 ' , obj.othis);
-                            }
-                            else {
-                                layer.tips('已启用', obj.othis);
-                            }
-
-                        } else {
-                            layer.alert("修改失败!");
-                        }
-                    }
-                });
-
-            });
-
-            //添加部门的方法
-            function EditDept() {
-                layui.use(['layer'], function (args) {
-                    var layer = layui.layer;      //layui对象
-                    layer.open({
-                        type: 2
-                        , area: ["400px", "300px"]
-                        , title: "添加部门"
-                        , content: '/Personnelmatters/EmployeesInfo/DeptUpdate'
-                        , anim: 2
-                    });
-
-                })
-
-            }
-
-        });
-
-        layui.use(['form', 'layedit', 'laydate', 'table'], function () {
-            var form = layui.form
-                , layer = layui.layer
-                , layedit = layui.layedit
-                , laydate = layui.laydate
-                , table = layui.table;
-            table.render({
-                elem: '#positionTab'
-                , url: '/Personnelmatters/EmployeesInfo/GetPositions'
-                , id: "myPosition"
-                , toolbar: '#toolbarDemo2'
-                , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'Pid', title: '岗位编号', width: 110 }
-                    , { field: 'deptname', title: '所属部门', width: 110 }
-                    , { field: 'PositionName', title: '岗位名称', width: 140, sort: true }
-                    , { field: 'IsDel', title: '是否禁用', width: 110, sort: true, templet: '#checkboxTp2', unresize: true }
-                ]],
-            });
-
-            //头工具栏事件
-            table.on('toolbar(test2)', function (obj) {
-                var checkStatus = table.checkStatus(obj.config.id);
-                switch (obj.event) {
-                    case 'AddPosition':
-                        addPosition();
-                        break;
-                    case 'delPosition':
-                        var data = checkStatus.data;
-                        console.log("岗位勾选数据" + data);
-                        var list = "";
-                        for (var i = 0; i < data.length; i++) {
-                            list += data[i].Pid + ',';
-                        }
-                        if (data.length >= 1) {
-                            layer.open({
-                                content: '确定删除？',
-                                btn: ['确认', '取消'],
-                                yes: function (index, layero) {
-                                    $.post("/Personnelmatters/EmployeesInfo/DelPositions", { 'list': list }, function (data) {
-                                        if (data.Success) {
-                                            layer.alert("删除成功", { icon: 1 }, function (index) {
-                                                layui.use(['table'], function () {
-                                                    var table = layui.table;
-
-                                                    table.reload("myPosition");
-                                                });
-                                                layer.close(index);
-                                            });
-                                        } else {
-                                            layer.alert("删除失败");
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            layer.open({
-                                title: '提示'
-                                , content: '请至少选中一条数据进行删除'
-                            });
-                        }
-                        break;
-                };
-            });
-
-            //监听锁定操作
-            form.on('checkbox(lockDemo2)', function (obj) {
-                var id = this.value;
-                var name = this.name;
-                $.ajax({
-                    type: "POST",
-                    dataType: "json",
-                    url: "/Personnelmatters/EmployeesInfo/EditPositionIsDel",
-                    data: { id: id, isdel: obj.elem.checked },
-                    success: function (data) {
-                        if (data.Success) {
-                            if (obj.elem.checked == true) {
-                                layer.tips('已禁用 ', obj.othis);
-                            } else if (data.Msg == "不能启用") {
-                                layer.tips('该岗位所属部门已禁用，则无法启用该岗位 ', obj.othis);
-                                table.reload("myPosition");
-                            }
-                            else {
-                                layer.tips('已启用', obj.othis);
-                            }
-
-                        } else {
-                            layer.alert("修改失败!");
-                        }
-                    }
-                });
-
-            });
-
-
-            //添加岗位的方法
-            function addPosition() {
-                layui.use(['layer'], function (args) {
-                    var layer = layui.layer;      //layui对象
-
-                    layer.open({
-                        type: 2
-                        , area: ["400px", "300px"]
-                        , title: "添加岗位"
-                        , content: '/Personnelmatters/EmployeesInfo/AddPosition'
-                        , anim: 2
-                    });
-
-                })
-
-            }
-
-        });
-    </script>*@
-
-
-@*</body>*@
 </html>
