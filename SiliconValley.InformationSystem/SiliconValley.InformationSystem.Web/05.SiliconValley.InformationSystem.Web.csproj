@@ -606,6 +606,11 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpTransactionRecord.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\PositiveDetail.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\InfomationAndStatuView.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\NewChannelYearPlanIndex.cshtml" />
+    <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
+    <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
+    <Content Include="Areas\Market\Views\FollwingInfo\ListStudentView.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Studentfees.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
