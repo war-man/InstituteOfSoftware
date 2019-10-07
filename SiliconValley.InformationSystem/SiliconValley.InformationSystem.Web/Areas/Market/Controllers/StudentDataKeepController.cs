@@ -28,6 +28,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Microsoft.Office.Interop.Excel;
 using System.Reflection;
+using SiliconValley.InformationSystem.Business.NewExcel;
+using DataTable = System.Data.DataTable;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -51,6 +53,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         RegionManeges region_Entity = new RegionManeges();
         //创建一个用于缓存的实体
         RedisCache my_redis = new RedisCache();
+
+        ExcelHelper Excel_Entity = new ExcelHelper();
+
+        string UserName = Base_UserBusiness.GetCurrentUser().UserName;//获取当前登录人
         #endregion
         #region 获取各种外键的值
         //获取学生状态名称
@@ -564,61 +570,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Student =data;
             return View(data);
         }
-        #region
-        //Excle文件导入
-        private PropertyInfo[] GetPropertyInfoArray()
-        {
-            PropertyInfo[] props = null;
-            try
-            {
-                Type type = typeof(MyExcelClass);
-                object obj = Activator.CreateInstance(type);
-                props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            }
-            catch (Exception)
-            {
-
-            }
-            return props;
-        }
-        public bool DaoruExcel(List<MyExcelClass> list, string mypath)
-        {
-            bool IsCuss = false;
-            object misValue = System.Reflection.Missing.Value;
-            Application xlApp = new Application();
-            Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
-            Worksheet xlWorkSheet = (Worksheet)xlWorkBook.Worksheets.get_Item(1);
-
-            PropertyInfo[] props = GetPropertyInfoArray();
-            for (int i = 0; i < props.Length; i++)
-            {
-                xlWorkSheet.Cells[1, i + 1] = props[i].Name; //write the column name
-            }
-            for (int i = 0; i < list.Count; i++)
-            {
-                xlWorkSheet.Cells[i + 2, 1] = list[i].StuName;
-                xlWorkSheet.Cells[i + 2, 2] = list[i].StuSex;
-                xlWorkSheet.Cells[i + 2, 3] = list[i].StuPhone;
-                xlWorkSheet.Cells[i + 2, 4] = list[i].StuSchoolName;
-                xlWorkSheet.Cells[i + 2, 5] = list[i].StuAddress;
-                xlWorkSheet.Cells[i + 2, 6] = list[i].Region_id;
-                xlWorkSheet.Cells[i + 2, 7] = list[i].StuInfomationType_Id;
-                xlWorkSheet.Cells[i + 2, 8] = list[i].StuEducational;
-                xlWorkSheet.Cells[i + 2, 9] = list[i].Reak;
-            }
-            try
-            {                     
-                xlWorkBook.SaveAs(mypath, XlFileFormat.xlExcel8, null, null, false, false, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-                xlWorkBook.Close(true, misValue, misValue);
-                xlApp.Quit();
-                IsCuss = true;
-            }
-            catch (Exception )
-            {
-                return IsCuss;
-            }
-            return IsCuss;
-        }
+        #region Excle文件导入
         ///一个删除文件的方法
         public void DeleteFile()
         {
@@ -677,7 +629,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
             {
                 //直接设为Excel实体
-                for (int i = 1; i < (t.Rows.Count); i++)
+                for (int i = 0; i < (t.Rows.Count); i++)
                 {
                     MyExcelClass create_s = new MyExcelClass();
                     create_s.StuName = t.Rows[i][0].ToString();
@@ -721,37 +673,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
                 file.SaveAs(ProName.ToString());//上传文件   
                 SessionHelper.Session["filename"] = ProName.ToString();
-                List<StudentPutOnRecord> studentlist = GetExcelFunction();
+                List<MyExcelClass> studentlist = GetExcel();              
+                studentlist.Remove(studentlist[0]);
                 if (studentlist.Count>0)//如果拿到值说明文件格式是可以读取的
-                {
-                    var mydata = studentlist.Select(s => new
-                    {
-                        #region
-                        Id = s.Id,
-                        StuName = s.StuName,
-                        StuSex = s.StuSex,
-                        StuBirthy = s.StuBirthy,
-                        StuPhone = s.StuPhone,
-                        StuSchoolName = s.StuSchoolName,
-                        StuEducational = s.StuEducational,
-                        StuAddress = s.StuAddress,
-                        StuWeiXin = s.StuWeiXin,
-                        StuQQ = s.StuQQ,
-                        StuInfomationType_Id = GetStuInfomationTypeValue(s.StuInfomationType_Id),
-                        StuStatus_Id = GetStuStatuValue(s.StuStatus_Id),
-                        StuIsGoto = s.StuIsGoto,
-                        StuVisit = s.StuVisit,
-                        EmployeesInfo_Id = GetEmployeeValue(s.EmployeesInfo_Id,false),
-                        StuDateTime = s.StuDateTime,
-                        StuEntering = s.StuEntering,
-                        Reak = s.Reak
-                        #endregion
-                    });
+                {                     
                     var jsondata = new
                     {
                         code = "",
                         msg = "ok",
-                        data = mydata,
+                        data = studentlist,
                     };
                     return Json(jsondata, JsonRequestBehavior.AllowGet);
                 }
@@ -776,13 +706,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         }                 
         //判断是否有重复的值
-        public List<StudentPutOnRecord> Repeatedly(List<StudentPutOnRecord> ExcelList)
+        public List<MyExcelClass> Repeatedly()
         {
+            List<MyExcelClass> ExcelList = GetExcel();//获取Excle文件数据     
             List<StudentPutOnRecord> All_list= s_Entity.GetList();
-            List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            List<MyExcelClass> result = new List<MyExcelClass>();
+            result.Add(ExcelList[0]);
             foreach (StudentPutOnRecord a1 in All_list)
             {
-                foreach (StudentPutOnRecord a2 in ExcelList)
+                foreach (MyExcelClass a2 in ExcelList)
                 {
                     if(a1.StuName==a2.StuName && a1.StuPhone == a2.StuPhone)
                     {
@@ -794,106 +726,54 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         //将文件中的内容写入到数据库中
         public ActionResult IntoServer()
-        {
-            List<StudentPutOnRecord> listStudent = GetExcelFunction();//获取Excle文件数据
-            string UserName = Base_UserBusiness.GetCurrentUser().UserName;//获取当前登录人
-            List<StudentPutOnRecord> equally_list = Repeatedly(listStudent); //两个数据集合之间比较取交集(挑出相同的)
+        {                  
+            List<MyExcelClass> equally_list = Repeatedly(); //两个数据集合之间比较取交集(挑出相同的)
             if (equally_list.Count > 0)
             {
-                //有重复的值                
-                
-                try
-                {
-                    //foreach (StudentPutOnRecord item in Notstudent_list)
-                    //{
-                    //    item.StuDateTime = DateTime.Now;
-                    //    item.IsDelete = false;
-                    //    //从登陆那里获取当前的登录人员的员工编号
-                    //    item.StuEntering = "201908150001";
-                    //    s_Entity.Insert(item);
-                    //}
- 
-                    //BusHelper.WriteSysLog(UserName+"成功导入了Excl文件，但是有数据冲突", Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
-                    //将有冲突的数据写入Excle文件中
-                    CreateExcleFile(equally_list, UserName);
-                }
-                catch (Exception ex)
-                {
-                    BusHelper.WriteSysLog(UserName + "导入了Excl文件出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
-                    return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
-                }
+                //有重复的值                                
+                //获取当前年月日
+                string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + equally_list[1].EmployeesInfo_Id + "ErrorExcel.xls";
+                string path = "~/uploadXLSXfile/ConsultUploadfile/ConflictExcel/" + filename;
+                SessionHelper.Session["filename"] = path;
+                //获取表头数据
+                string jsonfile = Server.MapPath("/Config/MyExcelClass.json");
+                System.IO.StreamReader file = System.IO.File.OpenText(jsonfile);
+                JsonTextReader reader = new JsonTextReader(file);
+                //转化为JObject
+                JObject ojb = (JObject)JToken.ReadFrom(reader);
 
+                var jj = ojb["MyExcelClass"].ToString();
+
+                JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
+                DataTable user = equally_list.ToDataTable<MyExcelClass>();
+                //生成字段名称 
+                List<string> Head = new List<string>();
+                foreach (DataColumn col in user.Columns)
+                {
+                    Head.Add(jo[col.ColumnName].ToString());
+                }
+                bool s = Excel_Entity.DaoruExcel(equally_list, Server.MapPath(path), Head);//将有重复的数据写入Excel表格中
+                if (s)
+                {
+                    //成功写入,两个数据进行对比
+                    return Json("系统错误", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    //写入出错
+                    return Json("系统错误", JsonRequestBehavior.AllowGet);
+                }
             }
             else
             {
                 //没有重复的值
-                try
-                {
-                    foreach (var item in listStudent)
-                    {
-                        item.StuDateTime = DateTime.Now;
-                        item.IsDelete = false;
-                        //从登陆那里获取当前的登录人员的员工编号
-                        item.StuEntering = "201908150001";
-                        s_Entity.Insert(item);
-                    }
-                    BusHelper.WriteSysLog(UserName + "成功导入了Excl文件", Entity.Base_SysManage.EnumType.LogType.Excle文件导入);//记录日志
-                }
-                catch (Exception ex)
-                {
-                    BusHelper.WriteSysLog(UserName + "导入了Excl文件出现：" + ex.Message, Entity.Base_SysManage.EnumType.LogType.Excle文件导入);
-                    return Json(Error("数据添加有误"), JsonRequestBehavior.AllowGet);
-                }
+                 
             }
                 
 
             return null;
         }
-        /// <summary>
-        /// 创建Excel文件
-        /// </summary>
-        public void CreateExcleFile(List<StudentPutOnRecord> equally_list,string UserName)
-        {
-            List<MyExcelClass> exlist1 = GetExcel();//获取Excle中的数据
-            List<MyExcelClass> exlist2 = new List<MyExcelClass>();
-            if (exlist1.Count > 0)
-            {
-                try
-                {
-                    foreach (StudentPutOnRecord item1 in equally_list)
-                    {
-                        foreach (MyExcelClass item2 in exlist1)
-                        {
-                            if(item2.StuName==item2.StuName && item2.StuPhone == item1.StuPhone)
-                            {
-                                exlist2.Add(item2);
-                            }
-                        }
-                    }
-                  
-                    //获取当前年月日
-                    string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + UserName + "ErrorExcel.xls";
-                    string path = "~/uploadXLSXfile/ConsultUploadfile/ConflictExcel/" + filename;
-                    SessionHelper.Session["filename"] = path;
-                    bool s= DaoruExcel(exlist2,Server.MapPath( path));
-                    if (s)
-                    {
-                        
-                    }
-                    else
-                    {
-                        DeleteFile();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string errmsg = ex.Message;
-                    DeleteFile();
-                }
-            }
-            
-             
-        }
+        
         /// <summary>
         /// 模板下载 
         /// </summary>
@@ -904,25 +784,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             FileStream stream = new FileStream(rr, FileMode.Open);
              return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
-        /// <summary>
-        /// 创建一个json数据
-        /// </summary>
-        public string  CreateJsonFile()
-        {
-            MyExcelClass myentity = new MyExcelClass();
-            myentity.StuName = "姓名";
-            myentity.StuPhone = "电话";
-            myentity.StuSex = "性别";
-            myentity.StuSchoolName = "学校名称";
-            myentity.StuAddress = "家庭住址";
-            myentity.Region_id = "区域";
-            myentity.StuInfomationType_Id = "信息来源";
-            myentity.StuEducational = "学历";
-            myentity.EmployeesInfo_Id = "备案人";
-            myentity.Reak = "说明";
-           string myvalue= JsonConvert.SerializeObject(myentity);
-            return myvalue;
-        }
+         
         #endregion
 
         #region 基础数据的添加（信息类型、学生状态）
