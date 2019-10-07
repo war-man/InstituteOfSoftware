@@ -211,6 +211,8 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\Educational\Controllers\BeOnDutyController.cs" />
+    <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
@@ -446,7 +448,7 @@
     <Content Include="Areas\Market\Views\SchoolYearPlan\AddSchoolYearPlan.cshtml" />
     <Content Include="Areas\Market\Views\SchoolYearPlan\SchoolYearPlanIndex.cshtml" />
     <Content Include="Config\Major.json" />
-    <Content Include="Config\StudentPutOnRecord.json" />
+    <Content Include="Config\MyExcelClass.json" />
     <Content Include="Areas\Market\Views\BiddingRecord\BiddingIndex.cshtml" />
     <Content Include="Areas\Market\Views\BiddingRecord\AddBiddingRecord.cshtml" />
     <Content Include="Areas\Market\Views\BiddingRecord\EditBR.cshtml" />
@@ -595,6 +597,9 @@
     <Content Include="Areas\Finance\Views\Pricedetails\Finance.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
     <Content Include="Areas\Market\Views\FollwingInfo\ListStudentView.cshtml" />
+    <Content Include="Areas\Educational\Views\web.config" />
+    <Content Include="Areas\Educational\Views\BeOnDuty\BeOnDutyIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\BeOnDuty\AddBeOnDutyView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2312,6 +2317,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Educational\Models\" />
+    <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
     <Folder Include="Areas\Logistics\Controllers\" />
