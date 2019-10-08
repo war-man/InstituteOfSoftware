@@ -475,18 +475,7 @@
                 }
             });
 
-          
-            //小图标悬停事件
-            window.onload = $(".myicon").each(function () {
-                //将遍历到的类赋给li
-                var li = $(this);
-                li.hover(function () {
-                    subtips=layer.tips('不可更改属性', li, { tips: [1, '#ff6700'], time: 30000 });
-                }, function () {
-                    layer.close(subtips);
-                });
-            });
-
+       
             //添加提交
             form.on('submit(demo1)', function (data) {
                 console.log(data.field);

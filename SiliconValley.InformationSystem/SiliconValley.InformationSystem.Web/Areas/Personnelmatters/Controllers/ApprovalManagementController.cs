@@ -10,6 +10,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
     public class ApprovalManagementController : Controller
     {
@@ -153,8 +154,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //加班申请
         public ActionResult OvertimeApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908230013";//为测试，暂时设置的死数据
+            string eid = "201908220012";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
+            BeOnDutyManeger bodmanage = new BeOnDutyManeger();
+            var typelist = bodmanage.GetList();
+            ViewBag.overtimetype = new SelectList(typelist,"Id","TypeName");
             return View();
         }
         //加班申请提交

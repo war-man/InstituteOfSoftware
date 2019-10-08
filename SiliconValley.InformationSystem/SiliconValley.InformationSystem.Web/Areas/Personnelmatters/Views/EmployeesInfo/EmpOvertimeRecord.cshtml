@@ -1,0 +1,282 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EmpOvertimeRecord</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+</head>
+<body>
+ 
+    <div class="layui-tab layui-tab-card " lay-filter="mytab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">未审批加班申请</li>
+            <li>已审批加班申请</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <table id="NoApproval" lay-filter="NoApproval"></table>
+                @*操作栏*@
+                <script type="text/html" id="barDemo">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ApprovalOvertime">审批</a>
+                </script>
+                @*是否不调休属性显示*@
+                <script type="text/html" id="mytiaoxiu">
+                    {{# if(d.IsNoDaysOff==false){ }}
+                    {{ d.IsNoDaysOff="调休"}}
+                    {{# }else{ }}
+                    {{ d.IsNoDaysOff="不调休" }}
+                    {{# } }}
+                </script>
+                @*是否过了年限属性显示*@
+                <script type="text/html" id="mynianxian">
+                    {{# if(d.IsPassYear==false){ }}
+                    {{ d.IsPassYear="否"}}
+                    {{# }else{ }}
+                    {{ d.IsPassYear="是" }}
+                    {{# } }}
+                </script>
+                @*审批是否通过属性显示*@
+                <script type="text/html" id="myshenpi">
+                    {{# if(d.IsPass==false){ }}
+                    {{ d.IsPass="审批中"}}
+                    {{# }else{ }}
+                    {{ d.IsPass="已通过" }}
+                    {{# } }}
+                </script>
+            </div>
+
+            <div class="layui-tab-item">
+                @*审批是否通过属性显示*@
+                <script type="text/html" id="myshenpi2">
+                    {{# if(d.IsPass==false){ }}
+                    {{ d.IsPass="未通过"}}
+                    {{# }else{ }}
+                    {{ d.IsPass="已通过" }}
+                    {{# } }}
+                </script>
+                <table id="Approved" lay-filter="Approved"></table>
+               
+            </div>
+
+        </div>
+    </div>
+
+   
+
+
+
+    <script>
+        //未审批
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#NoApproval'
+                , url: '/Personnelmatters/EmployeesInfo/GetOverTimeData'
+                , id: "myNoapproval"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
+                    , { field: 'StartTime', title: '开始时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
+                    , { field: 'EndTime', title: '结束时间', sort: true, width: 160, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'Duration', title: '加班时长（小时）', width: 130, sort: true }
+                    , { field: 'OvertimeReason', title: '加班原因', width: 120}
+                    , { field: 'typename', title: '加班类型', width: 120 }
+                    , { field: 'IsNoDaysOff', title: '是否调休', width: 130, sort: true, templet: '#mytiaoxiu'}
+                    , { field: 'IsPassYear', title: '是否过了年限', width: 150, sort: true, templet: '#mynianxian' }
+                    , { field: 'IsPass', title: '审批是否通过', width: 150, sort: true, templet: '#myshenpi' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 140 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(NoApproval)', function (obj) {
+                var data = obj.data;
+                console.log(data.TransactionId);
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/OvertimeEdit/?id=' + data.Id
+                        , area: ["800px", "500px"]
+                        , title: '编辑加班记录'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else if (obj.event === 'ApprovalOvertime') {                 
+                        var s = true;
+                        layer.open({
+                            content: '是否通过审批？'
+                            , btn: ['已通过', '未通过']
+                            , yes: function (index, layero) {
+                                console.log("已通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/overtimeIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myNoapproval");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批出错");
+                                    }
+                                });
+                            }
+                            , btn2: function (index, layero) {
+                                s = false;
+                                console.log("未通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批未通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myNoapproval");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批出错");
+                                    }
+                                });
+                            }
+
+                        });
+                
+            
+            });
+
+
+        });
+
+        //已审批
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#Approved'
+                , url: '/Personnelmatters/EmployeesInfo/GetOverTimeApprovedData'
+                , id: "myApproved"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    { type: 'checkbox' }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
+                    , { field: 'StartTime', title: '开始时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
+                    , { field: 'EndTime', title: '结束时间', sort: true, width: 160, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'Duration', title: '加班时长（小时）', width: 130, sort: true }
+                    , { field: 'OvertimeReason', title: '加班原因', width: 120 }
+                    , { field: 'typename', title: '加班类型', width: 120 }
+                    , { field: 'IsNoDaysOff', title: '是否调休', width: 130, sort: true, templet: '#mytiaoxiu' }
+                    , { field: 'IsPassYear', title: '是否过了年限', width: 150, sort: true, templet: '#mynianxian' }
+                    , { field: 'IsPass', title: '审批是否通过', width: 150, sort: true, templet: '#myshenpi2' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 140 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(Approved)', function (obj) {
+                var data = obj.data;
+                console.log(data.TransactionId);
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/EditETR/?id=' + data.TransactionId
+                        , area: ["800px", "500px"]
+                        , title: '编辑员工异动信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else if (obj.event === 'detail') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/EmpETRDetail/?id=' + data.TransactionId
+                        , area: ['700px', '400px'],
+                        title: '员工异动详细信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+                else if (obj.event === 'date') {  //监听单元格日期编辑事件
+                    var field = $(this).data('field');
+                    laydate.render({
+                        elem: this.firstChild,
+                        show: true //直接显示
+                        , type: 'month'
+                        , btns: ['now', 'confirm']
+                        , format: 'yyyy-MM-dd'
+                        , done: function (value, date) {
+                            $.ajax({
+                                type: "get",
+                                dataType: "json",
+                                url: "/Personnelmatters/EmployeesInfo/EditDateCell",
+                                data: { id: data.EmployeeId, endvalue: value },
+                                success: function (data) {
+                                    console.log(data.Msg);
+                                    if (data.Success) {
+                                        layui.table.reload('myEmpInfo');
+                                    }
+                                    else {
+                                        layer.msg("修改失败!");
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+
+        });
+
+        //时间格式转换
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
+                return "";
+            }
+        }
+    </script>
+</body>
+</html>

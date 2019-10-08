@@ -23,6 +23,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
     using SiliconValley.InformationSystem.Business.FinanceBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
+    using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
     public class EmployeesInfoController : Controller
     {
@@ -1457,9 +1458,136 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-        
+        //加班记录及管理
         public ActionResult EmpOvertimeRecord() {
             return View();
+        }
+        /// <summary>
+        /// 获取未审批的加班记录
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetOverTimeData(int page,int limit) {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            BeOnDutyManeger bodmanage = new BeOnDutyManeger();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = otrmanage.GetList();
+        
+            var newlist = list.Where(s=>s.IsApproval==false).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             e.EmployeeId,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                              e.StartTime,
+                              e.EndTime,
+                              e.Duration,
+                              e.OvertimeReason,
+                             typename=  bodmanage.GetSingleBeOnButy(e.OvertimeTypeId.ToString(),true).TypeName ,
+                              e.Remark,
+                              e.IsNoDaysOff,
+                              e.IsPassYear,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 获取已审批的加班记录
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetOverTimeApprovedData(int page, int limit)
+        {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            BeOnDutyManeger bodmanage = new BeOnDutyManeger();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = otrmanage.GetList();
+            var newlist = list.Where(s => s.IsApproval == true).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             e.EmployeeId,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             e.StartTime,
+                             e.EndTime,
+                             e.Duration,
+                             e.OvertimeReason,
+                             typename = bodmanage.GetSingleBeOnButy(e.OvertimeTypeId.ToString(), true).TypeName,
+                             e.Remark,
+                             e.IsNoDaysOff,
+                             e.IsPassYear,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        //审批加班申请
+        [HttpPost]
+        public ActionResult overtimeIsPassed(int id,bool state) {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                var otr = otrmanage.GetEntity(id);
+                otr.IsApproval = true;
+                otr.IsPass = state;
+                otrmanage.Update(otr);
+                ajaxresult = otrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = otrmanage.Error(ex.Message);
+            }
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
+
+        //加班编辑页面
+        public ActionResult OvertimeEdit(int id) {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            var otobj = otrmanage.GetEntity(id);
+            return View(otobj);
+        }
+        //加班编辑的提交
+        [HttpPost]
+        public ActionResult OvertimeEdit(OvertimeRecord otr) {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                //otr.IsApproval = true;
+                //   otr.IsPass = state;
+                otrmanage.Update(otr);
+                ajaxresult = otrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = otrmanage.Error(ex.Message);
+            }
+
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
     }
