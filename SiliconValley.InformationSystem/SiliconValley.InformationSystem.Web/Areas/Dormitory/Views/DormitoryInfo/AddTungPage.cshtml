@@ -1,0 +1,127 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registeredtrainees</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            width: 200px;
+        }
+    </style>
+
+</head>
+<body>
+
+
+
+
+   <div style="margin-top:20px"></div>
+    <div>
+        <form class="layui-form" action="">
+
+            <div class="layui-row layui-form-item">
+
+                <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                    <label class="layui-form-label">栋名称</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="TungName" lay-verify="title" autocomplete="off" placeholder="请输入栋名称" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+               <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+
+                    <label class="layui-form-label">地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="TungAddress" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input">
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-inline">
+                    <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                    <button class="layui-btn" id="clode">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  
+   
+
+
+    <script>
+        var jslayer;
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            jslayer = layui.layer
+           //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field;
+
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/AddTungPage',
+                    type: 'POST',
+                    data: { TungName: jsonStr.TungName, TungAddress: jsonStr.TungAddress },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            jslayer.msg('添加成功', { icon: 6, time: 2000 }, function () {
+                                 close();
+                            });
+                           
+                        }
+                    },
+                    error: function () {
+                        close();
+                    }
+                });
+                return false;
+            });
+        });
+
+        $("#clode").click(function () {
+            close();
+        });
+        function close() {
+             //先得到当前iframe层的索引
+             var index = parent.layer.getFrameIndex(window.name);
+            parent.jslayer.close(index); //再执行关闭
+        }
+    </script>
+
+
+</body>
+</html>

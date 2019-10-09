@@ -41,6 +41,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// false可用，true 不可用
         /// </summary>
         public bool IsDelete { get; set; }
+
         public string Remark { get; set; }
         /// <summary>
         /// 创建时间
@@ -51,7 +52,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public string DormInfoName { get; set; }
 
-       
 
         /// <summary>
         /// 房间数量id

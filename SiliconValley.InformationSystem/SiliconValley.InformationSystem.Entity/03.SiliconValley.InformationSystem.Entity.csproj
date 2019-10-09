@@ -293,14 +293,17 @@
     <Compile Include="ViewEntity\ConsultZhuzImageData.cs" />
     <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
+    <Compile Include="ViewEntity\DistinguishView.cs" />
     <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\DivTwoData.cs" />
+    <Compile Include="ViewEntity\DormInformationView.cs" />
+    <Compile Include="ViewEntity\dtreestatus.cs" />
+    <Compile Include="ViewEntity\dtreeview.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
-    <Compile Include="ViewEntity\DormitoryView.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />
@@ -313,6 +316,7 @@
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProjectDetailView.cs" />
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
+    <Compile Include="ViewEntity\resultdtree.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />

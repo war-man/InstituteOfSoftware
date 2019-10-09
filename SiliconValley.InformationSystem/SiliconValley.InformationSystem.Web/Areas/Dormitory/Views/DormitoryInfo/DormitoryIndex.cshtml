@@ -16,19 +16,19 @@
     #bottom {
         border: 1px solid pink;
         width: 99%;
-        height: 600px;
+        /*height: 600px;*/
         margin-top: 10px;
     }
 
     #left {
-        width: 12%;
+        width: 18%;
         border: 1px solid pink;
         float: left;
-        height: 500px;
+        /*height: 800px;*/
     }
 
     #cencont {
-        width: 86%;
+        width: 81%;
         border: 1px solid pink;
         height: 99%;
         margin-left: 1%;
@@ -94,19 +94,19 @@
         line-height: 60px;
         text-align: center;
     }
+
+    .mydtree {
+        width: 99%;
+    }
 </style>
+
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/dtree.css" rel="stylesheet" />
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
 <div id="top">
     <form class="layui-form" action="">
         <div class="layui-form-item">
-
             <div class="layui-inline">
-                <button class="layui-btn layui-btn-radius layui-btn-normal">添加栋</button>
-            </div>
-            <div class="layui-inline">
-                <button class="layui-btn layui-btn-radius layui-btn-normal">添加楼层</button>
-            </div>
-
-            <div class="layui-inline">
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="addtung">添加栋</button>
                 <label class="layui-form-label" id="querylable">搜索选择框</label>
                 <div class="layui-input-inline">
                     <select name="modules" lay-verify="required" lay-search="">
@@ -128,32 +128,23 @@
 </div>
 <div id="bottom">
     <div id="left">
-        <div id="test4" class="demo-tree"></div>
+        <div style="height: 650px;overflow: auto;" id="toolbarDiv5">
+            <ul id="toolbarTree5" class="dtree" data-id="0"></ul>
+        </div>
     </div>
 
     <div id="cencont">
         <div id="cencontleft">
             <div class="accommodate">
-                <div class="roomdiv">
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2001</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2002</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2003</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2004</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2005</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2006</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2007</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2008</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2009</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2010</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2011</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2012</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2013</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2014</button></div>
+                <div class="roomdiv" id="leftroomlist">
+                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
                     <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
 
                 </div>
                 <div class="btnadddiv">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">添加房间</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="leftaddroom">添加房间</button>
                 </div>
             </div>
         </div>
@@ -168,25 +159,14 @@
         </div>
         <div id="cencontright">
             <div class="accommodate">
-                <div class="roomdiv">
+                <div class="roomdiv" id="rightroomlist">
                     <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2002</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2003</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2004</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2005</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2006</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2007</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2008</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2009</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2010</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-danger  layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2011</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-danger  layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2012</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-danger  layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2013</button></div>
-                    <div class="room"><button type="button" class="layui-btn layui-btn-danger  layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2014</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
                     <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
                 </div>
                 <div class="btnadddiv">
-                    <button class="layui-btn layui-btn-radius layui-btn-normal">添加房间</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-normal" id="rightaddroom">添加房间</button>
                 </div>
             </div>
         </div>
@@ -194,11 +174,13 @@
 </div>
 
 
-@*<div id="right">
-
-    </div>*@
 
 
+@*房间模板*@
+<script type="text/template" id="roommuban">
+    <div class="room"><button type="button" class="layui-btn layui-btn-{{=isfull}} layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-{{=type}}"></i>{{=roomname}}</button></div>
+</script>
+<script src="~/Scripts/underscore.js"></script>
 @section script{
     <script>
 
@@ -206,37 +188,119 @@
         var jstungid;
         var jsfloorid;
         var mytree;
+        var dtreedata;
+        var myDTree;
+        var jslayer;
         $(function () {
-            loadtree();
-            loadroom(jstungid,jsfloorid);
+
+            loadroom(jstungid, jsfloorid);
         });
 
 
-        layui.use(['form', 'layedit', 'laydate', 'tree'], function () {
-            var form = layui.form;
-            var tree = layui.tree;
-            mytree = tree;
-            //手风琴模式
-            tree.render({
-                elem: '#test4'
-                , id: 'tungtree'
-                , accordion: true
-                , onlyIconControl: true
-                //是否显示复选框
-                , showCheckbox: true
-                //add、update、del
-                , edit: ['add', 'update', 'del']
-                , click: function (obj) {
-                    //console.log(obj.data.id); //得到当前点击的节点数据
-                    //console.log(obj.state); //得到当前节点的展开状态：open、close、normal
-                    //console.log(obj.elem); //得到当前节点元素
-                    //console.log(obj.data.children); //当前节点下是否有子节点
+        layui.extend({
+            dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dleiool/dtree'
+        }).use(['element', 'layer', 'table', 'code', 'util', 'dtree', 'form'], function () {
+
+            var element = layui.element, table = layui.table, util = layui.util, dtree = layui.dtree, form = layui.form, $ = layui.$;
+            jslayer = layui.layer,
+                myDTree = dtree.render({
+                    elem: "#toolbarTree5",
+                    url: '/Dormitory/DormitoryInfo/EstablishTree',
+                    initLevel: 1,
+                    nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
+                    leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
+                    icon: ["3", "11"], // 使用
+                    response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" },
+                    toolbar: true,
+                    toolbarWay: "fixed", // "contextmenu"：右键菜单（默认），"fixed"："固定在节点后","follow"："跟随节点动态呈现"
+                    toolbarBtn: [
+                        [
+                            { "label": "", "name": "name1", "type": "text", "readonly": true, "value": "添加成功" },
+                            { "value": "返回", "name": "name7", "type": "submit", "defElem": "btn" },
+                        ] // 这就是自定义新增中的内容
+                    ],
+                    toolbarFun: {
+                        addTreeNode: function (treeNode, $div) { //添加树节点后调用的函数，用于用户自定义，如未指定则树不会发生变化
+                            console.log(treeNode);
+                            $.ajax({
+                                url: '/Dormitory/DormitoryInfo/ForTungAddFloor',
+                                type: 'POST',
+                                data: { TungID: treeNode.context },
+                                success: function (successdata) {
+                                    console.log(successdata);
+                                    if (successdata.Success) {
+                                        jslayer.msg('添加成功', { icon: 6, time: 2000 }, function () {
+                                        });
+                                    } else {
+                                        jslayer.msg('添加失败', { icon: 6, time: 2000 }, function () {
+
+                                        });
+                                    }
+                                    reloaddtree();
+                                },
+                                error: function () {
+
+                                }
+                            });
+                            var param = new Object();
+                            param.nodeId = treeNode.context;
+                            param.context = treeNode.context;
+                            param.leaf = false;
+                            param.level = 2;
+                            param.parentId = "0";
+                            myDTree.changeTreeNodeAdd(param); // 调用内置函数，新增节点后改变节点内容。传入null或false，则树不会发生变化
+                        },
+
+                        editTreeNode: function (treeNode, $div) { //编辑树节点后调用的函数，用于用户自定义，如未指定则树不会发生变化
+                            console.log(treeNode);
+                            myDTree.changeTreeNodeEdit(true); // 调用内置函数，修改节点后改变节点内容。传入false，则树不会发生变化
+                        },
+
+                        delTreeNode: function (treeNode, $div) { //删除树后调用的函数，用于用户自定义，如未指定则树不会发生变化
+                            console.log(treeNode);
+                            myDTree.changeTreeNodeDel(true); // 调用内置函数，删除节点后改变节点内容。传入false，则树不会发生变化
+                        },
+
+                        loadToolbarBefore: function (buttons, param, $div) {
+                            //console.log(buttons);
+                            if (param.leaf) { // 如果是叶子节点
+                                buttons.addToolbar = "";  // 取消新增功能
+                                buttons.editToolbar = "";  // 取消修改的功能
+                            }
+                            return buttons; // 将按钮对象返回
+                        }
+                    }
+                });
+
+
+
+            dtree.on("node(toolbarTree5)", function (obj) {
+                jslayer.msg(JSON.stringify(obj.param));
+
+                var dtreeobj = obj.param;
+                console.log(dtreeobj);
+                //点击的是楼
+                if (dtreeobj.level == "2") {
 
                 }
-                , showLine: false
-            });
+                //点击的是栋
+                if (dtreeobj.level == "1") {
+
+                }
+            })
         });
 
+        $("#addtung").click(function () {
+            jslayer.open({
+                type: 2,
+                content: "/Dormitory/DormitoryInfo/AddTungPage",
+                title: "添加栋",
+                area: ['390px', '260px'],
+                end: function () {
+                    reloaddtree();
+                }
+            });
+        });
         //加载树
         function loadtree() {
             $.ajax({
@@ -244,13 +308,13 @@
                 type: 'GET',
                 success: function (successdata) {
                     console.log(successdata);
-                     // var nodes = JSON.parse(successdata);
+                    // var nodes = JSON.parse(successdata);
                     //console.log(nodes);
                     //可以重载所有基础参数
-                    mytree.reload(
-                        'tungtree',
+                    myDTree.reload(
+                        'demoTree',
                         {
-                            data:successdata
+                            data: successdata
 
                         });
                 },
@@ -260,18 +324,121 @@
             });
         }
 
+        function reloaddtree() {
+            myDTree.reload(toolbarTree5, {
+                url: '/Dormitory/DormitoryInfo/EstablishTree'
+            });
+        }
+
+        function loadmuban(dtreeobject) {
+            console.log(dtreeobject);
+            var leftroomobj = _.template($("#roommuban").html());
+
+            var leftroomobjhtml;
+           console.log(dtreeobject.RoomStayTypeId);
+
+            if (dtreeobject.RoomStayTypeId == "1") {
+                console.log("学生寝室");
+                console.log(dtreeobject.isfull);
+                //男 满人
+                if (dtreeobject.SexType == "1") {
+                    if (dtreeobject.isfull) {
+                           leftroomobjhtml = leftroomobj({ isfull: "danger", type: "male", roomname: dtreeobject.DormInfoName });
+                    } else {
+                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "male", roomname: dtreeobject.DormInfoName });
+                          console.log("/男 未满人");
+                    }
+                }
+
+                if (dtreeobject.SexType == "2") {
+                    if (dtreeobject.isfull) {
+                        leftroomobjhtml = leftroomobj({ isfull: "danger", type: "female", roomname: dtreeobject.DormInfoName });
+                    } else {
+                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "female", roomname: dtreeobject.DormInfoName });
+                        console.log("/女 未满人");
+                    }
+                }
+
+                
+            } else if (dtreeobject.RoomStayTypeId == "2") {
+                 console.log("参观寝室");
+                //参观寝室 满人
+                if (dtreeobject.isfull) {
+                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "group", roomname: dtreeobject.DormInfoName });
+                } else {
+                     // 未满人
+                      leftroomobjhtml = leftroomobj({ isfull: "primary", type: "group", roomname: dtreeobject.DormInfoName });
+                }
+
+            } else if (dtreeobject.RoomStayTypeId == "5") {
+                  console.log("仓库");
+                //仓库
+                leftroomobjhtml = leftroomobj({ isfull: "danger", type: "util", roomname: dtreeobject.DormInfoName });
+            } else {
+                  console.log("员工寝室");
+                //员工寝室
+                //满人
+                if (dtreeobject.isfull) {
+                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "user", roomname: dtreeobject.DormInfoName });
+                } else {
+                     leftroomobjhtml = leftroomobj({ isfull: "primary", type: "user", roomname: dtreeobject.DormInfoName });
+                }
+
+            }
+
+            console.log(leftroomobjhtml);
+            return leftroomobjhtml;
+        }
+        //加载房间
         function loadroom(tungid, floorid) {
             $.ajax({
                 url: '/Dormitory/DormitoryInfo/EstablishRoom',
                 type: 'GET',
                 data: { TungID: tungid, FloorID: floorid },
-                datatype:'json',
+                datatype: 'json',
                 success: function (successdata) {
                     console.log(successdata);
-                  
+                    @*男寝：male 女寝：female  满人：danger 没满：primary 仓库：util 参观寝：group 员工寝室：user  禁用disabled *@
+                    $("#leftroomlist").children().remove();
+
+                    $("#rightroomlist").children().remove();
+                    for (var i = 0; i < successdata.leftroom.length; i++) {
+                        var leftroomobjhtml = loadmuban(successdata.leftroom[i]);
+                        console.log("410"+leftroomobjhtml);
+                        $("#leftroomlist").append($(leftroomobjhtml));
+                    }
+
+                    for (var i = 0; i < successdata.rightroom.length; i++) {
+                       var  rightroomobjhtml= loadmuban(successdata.rightroom[i]);
+                        $("#rightroomlist").append($(rightroomobjhtml));
+                    }
+
+
                 },
                 error: function (errordata) {
 
+                }
+            });
+        }
+
+        $("#leftaddroom").click(function () {
+            console.log("left");
+            addroom("left");
+        });
+
+         $("#rightaddroom").click(function () {
+             console.log("right");
+              addroom("right");
+         });
+
+        function addroom(direction) {
+            jslayer.open({
+                type: 2,
+                content: "/Dormitory/DormitoryInfo/AddRoomPage?Direction="+direction+"",
+                title: "添加房间",
+                area: ['490px', '560px'],
+                end: function () {
+                    loadroom();
                 }
             });
         }

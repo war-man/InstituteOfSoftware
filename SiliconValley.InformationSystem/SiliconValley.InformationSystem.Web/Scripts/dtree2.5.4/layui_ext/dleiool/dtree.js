@@ -3246,51 +3246,91 @@ layui.define(['jquery','layer','form'], function(exports) {
 				_this.toolbarMethod().pullup($p_li);
 				break;
 			case defaultTool.addTool:
-				var content = _this.loadToolBar(title, defaultTool.addTool);
+                var content = _this.loadToolBar(title, defaultTool.addTool);
+                console.log("3250");
+                console.log(content);
+                layer.confirm('确定要添加该' + _this.toolbarStyle.title + '？', { icon: 3, title: '添加' + _this.toolbarStyle.title }, function (index) {
+                    
+                    var data = new Object();
+                    console.log("来了");
+                    data.addNodeName="111"
+                    var parentId = $div.attr("data-id"),
+                        id = $div.attr("data-id") + "_node_" + $ul[0].childNodes.length,
+                        leaf = true,
+                        checked = "0",
+                        level = parseInt($p_li.attr("data-index")) + 1;
+                    console.log(parentId);
+                    // 创建子节点的DOM，添加子节点
+                    var checkArr = [];
+                    if (_this.checkArrLen > 0) {
+                        for (var i = 0; i < _this.checkArrLen; i++) {
+                            checkArr.push({ "type": i, "checked": "0" });
+                        }
+                    }
+
+                    $ul.append(_this.getLiItemDom(id, parentId, parentId, parentId, true, "", "", checkArr, level, false, false, false, "", "", "item"));
+                    // 先将li节点隐藏
+                    $ul.find("li[data-id='" + id + "']").hide();
+                    // 重新赋值
+                    var $addDiv = $ul.find("div[data-id='" + id + "']");
+                    node = _this.getNodeParam($addDiv);
+
+                    //获取组装后的requestNode,组合参数
+                    var requestNode = _this.getRequestParam(node);
+                    requestNode = $.extend(requestNode, data);
+
+                    _this.temp = [id, $ul, $div, level];
+                    // 用户自定义想做的事情
+                    _this.toolbarFun.addTreeNode(requestNode, $div);
+
+                    layer.close(index);
+                    return false;
+                });
+
+				//layer.open({
+				//	title: "新增"+_this.toolbarStyle.title,
+				//	type: 1,
+				//	area: _this.toolbarStyle.area,
+				//	content: content,
+				//	success: function(layero, index){
+				//		form.render();
+				//		form.on("submit(dtree_addNode_form)",function(data){
+				//			var data = data.field;
+				//			var parentId = $div.attr("data-id"),
+				//				id = $div.attr("data-id")+"_node_"+$ul[0].childNodes.length,
+				//				leaf = true,
+				//				checked = "0",
+				//				level = parseInt($p_li.attr("data-index"))+1;
 	
-				layer.open({
-					title: "新增"+_this.toolbarStyle.title,
-					type: 1,
-					area: _this.toolbarStyle.area,
-					content: content,
-					success: function(layero, index){
-						form.render();
-						form.on("submit(dtree_addNode_form)",function(data){
-							var data = data.field;
-							var parentId = $div.attr("data-id"),
-								id = $div.attr("data-id")+"_node_"+$ul[0].childNodes.length,
-								leaf = true,
-								checked = "0",
-								level = parseInt($p_li.attr("data-index"))+1;
-	
-							// 创建子节点的DOM，添加子节点
-							var checkArr = [];
-							if (_this.checkArrLen > 0) {
-								for (var i = 0; i < _this.checkArrLen; i++) {
-									checkArr.push({"type":i,"checked":"0"});
-								}
-							}
+				//			// 创建子节点的DOM，添加子节点
+				//			var checkArr = [];
+				//			if (_this.checkArrLen > 0) {
+				//				for (var i = 0; i < _this.checkArrLen; i++) {
+				//					checkArr.push({"type":i,"checked":"0"});
+				//				}
+				//			}
 							
-							$ul.append(_this.getLiItemDom(id, parentId, data.addNodeName, data.addNodeName, true, "", "", checkArr, level, false, false, false, "", "", "item"));
-							// 先将li节点隐藏
-							$ul.find("li[data-id='"+id+"']").hide();
-							// 重新赋值
-							var $addDiv = $ul.find("div[data-id='"+id+"']");
-							node = _this.getNodeParam($addDiv);
+				//			$ul.append(_this.getLiItemDom(id, parentId, data.addNodeName, data.addNodeName, true, "", "", checkArr, level, false, false, false, "", "", "item"));
+				//			// 先将li节点隐藏
+				//			$ul.find("li[data-id='"+id+"']").hide();
+				//			// 重新赋值
+				//			var $addDiv = $ul.find("div[data-id='"+id+"']");
+				//			node = _this.getNodeParam($addDiv);
 	
-							//获取组装后的requestNode,组合参数
-							var requestNode = _this.getRequestParam(node);
-							requestNode = $.extend(requestNode, data);
+				//			//获取组装后的requestNode,组合参数
+				//			var requestNode = _this.getRequestParam(node);
+				//			requestNode = $.extend(requestNode, data);
 	
-							_this.temp = [id, $ul, $div, level];
-							// 用户自定义想做的事情
-							_this.toolbarFun.addTreeNode(requestNode, $div);
+				//			_this.temp = [id, $ul, $div, level];
+				//			// 用户自定义想做的事情
+				//			_this.toolbarFun.addTreeNode(requestNode, $div);
 	
-							layer.close(index);
-							return false;
-						});
-					}
-				});
+				//			layer.close(index);
+				//			return false;
+				//		});
+				//	}
+    //            });
+
 				break;
 			case defaultTool.editTool:
 				var content = _this.loadToolBar(title, defaultTool.editTool);
@@ -3349,7 +3389,8 @@ layui.define(['jquery','layer','form'], function(exports) {
 		
 		var html = "";
 		switch (name) {
-			case defaultTool.addTool:
+            case defaultTool.addTool:
+                console.log("11");
 				var addNodeBarDef = [{"label": "当前选中", "name": "nodeTitle", "type": "text", "value": title, "defElem": "nowChoose", "readonly": true}, 
 				                  {"label": "新增"+_this.toolbarStyle.title, "name": "addNodeName", "type": "text", "value": "", "defElem": "nowChange", "verify": "required"}, 
 				                  {"type": "submit", "value": "确认添加", "defElem": "btn", "filter": "dtree_addNode_form"}];

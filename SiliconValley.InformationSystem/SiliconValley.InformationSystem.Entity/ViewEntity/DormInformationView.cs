@@ -6,29 +6,40 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
-    public class DormitoryView
+    /// <summary>
+    /// 用于page的model
+    /// </summary>
+   public class DormInformationView
     {
-        public int ID { get; set; }
+
         /// <summary>
-        /// 0的意思是房间类型不是学生入住的，1为男生，2为女生
+        /// 房间id
         /// </summary>
-        public int SexType { get; set; }
+        public int Id { get; set; }
+
         /// <summary>
         /// 房间类型id
         /// </summary>
         public int RoomStayTypeId { get; set; }
+
+        /// <summary>
+        ///是否满人
+        /// </summary>
+        public bool isfull { get; set; }
+
+        /// <summary>
+        /// 1 男 2女
+        /// </summary>
+        public int SexType { get; set; }
+
+        /// <summary>
+        /// 房间居住数量
+        /// </summary>
+        public int RoomStayNumber { get; set; }
+
         /// <summary>
         ///房间号码
         /// </summary>
         public string DormInfoName { get; set; }
-        /// <summary>
-        /// 房间数量id
-        /// </summary>
-        public int RoomStayNumberId { get; set; }
-
-        /// <summary>
-        /// 方向左右，false为左，true为右
-        /// </summary>
-        public bool Direction { get; set; }
     }
 }

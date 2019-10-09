@@ -16,6 +16,17 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public List<RoomStayNumber> GetRoomStayNumbers()
         {
             return this.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+            
+        }
+
+        /// <summary>
+        /// 根据数量类型id获取数量对象
+        /// </summary>
+        /// <param name="RoomStayNumberId">数量类型id</param>
+        /// <returns></returns>
+        public RoomStayNumber GetRoomStayNumberByRoomStayNumberId(int RoomStayNumberId) {
+            return  this.GetRoomStayNumbers().Where(a => a.Id == RoomStayNumberId).FirstOrDefault();
+           
         }
     }
 }

@@ -548,7 +548,7 @@
     <Content Include="Scripts\dtree2.5.4\layui\lay\modules\util.js" />
     <Content Include="Scripts\dtree2.5.4\layui_ext\dist\dtree.js" />
     <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\dtree.css" />
-    <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\dtree.js" />
+    <Content Include="Scripts\dtree2.5.4\layui_ext\dleiool\dtree.js" />
     <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\font\dtreefont.css" />
     <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\font\dtreefont.svg" />
     <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\开发者日志.txt" />
@@ -672,6 +672,8 @@
     <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\font\dtreefont.woff" />
     <Content Include="Scripts\dtree2.5.4\layui_ext\dtree\font\icons.json" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\test.cshtml" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\AddTungPage.cshtml" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\AddRoomPage.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

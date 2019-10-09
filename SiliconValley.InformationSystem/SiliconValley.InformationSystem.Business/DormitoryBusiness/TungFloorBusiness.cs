@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Entity.Entity;
+﻿using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Entity.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,35 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public TungFloor GetTungFloorByTungIDAndFloorID(int? TungID,int? FloorID) {
             return this.GetTungFloors().Where(a => a.TungId == TungID && a.FloorId == FloorID).FirstOrDefault();
+        }
+
+
+        /// <summary>
+        /// 自定义添加栋与楼的关系
+        /// </summary>
+        /// <param name="TungID">栋id</param>
+        /// <param name="FloorID">楼id</param>
+        /// <returns></returns>
+        public bool CustomAdd(int TungID,int FloorID) {
+            TungFloor tungFloor = new TungFloor();
+            tungFloor.CreationTime = DateTime.Now;
+            tungFloor.FloorId = FloorID;
+            tungFloor.TungId = TungID;
+            tungFloor.IsDel = false;
+            tungFloor.Remark = "创建于" + tungFloor.CreationTime.Year + tungFloor.CreationTime.Month + tungFloor.CreationTime.Day + "添加楼层操作";
+            tungFloor.TungId = TungID;
+            try
+            {
+                this.Insert(tungFloor);
+                BusHelper.WriteSysLog(tungFloor.Remark + "Dormitory/DormitoryInfo/ForTungAddFloor", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                BusHelper.WriteSysLog(ex.Message + "Dormitory/DormitoryInfo/ForTungAddFloor", Entity.Base_SysManage.EnumType.LogType.添加数据error);
+                return false;
+            }
         }
     }
 }
