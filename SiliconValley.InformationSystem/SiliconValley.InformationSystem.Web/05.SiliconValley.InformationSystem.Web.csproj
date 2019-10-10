@@ -293,6 +293,11 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.js" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -674,6 +679,12 @@
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\test.cshtml" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\AddTungPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\AddRoomPage.cshtml" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\RoomdeWithPage.cshtml" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.eot" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.json" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.ttf" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
+    <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

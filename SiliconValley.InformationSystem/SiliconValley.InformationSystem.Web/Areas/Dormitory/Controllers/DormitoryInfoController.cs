@@ -48,6 +48,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         private RoomStayNumberBusiness dbroomnumber;
 
+        /// <summary>
+        /// 房间类型业务类
+        /// </summary>
+        private RoomStayTypeBusiness dbroomtype;
+
         // GET: Dormitory/DormitoryInfo
 
         /// <summary>
@@ -365,9 +370,80 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         }
 
         [HttpGet]
-        public ActionResult AddRoomPage(string Direction) {
+        public ActionResult AddRoomPage(string Direction,int Floorid) {
+            dbroomtype = new RoomStayTypeBusiness();
+            dbroomnumber = new RoomStayNumberBusiness();
+            ViewBag.Direction = Direction;
+            ViewBag.Floorid = Floorid;
+            var data = dbroomtype.GetRoomStayTypes();
+           var SelectListItemlist= data.Select(a => new SelectListItem()
+            {
+                Text = a.RoomStayTypeName,
+                Value = a.Id.ToString()
+            });
+            ViewBag.SelectListItemlist = SelectListItemlist;
+
+            var RoomNumber = dbroomnumber.GetRoomStayNumbers().Select(a => new SelectListItem()
+            {
+                Text = a.StayNumber + "人制",
+                Value = a.Id.ToString()
+            });
+            ViewBag.RoomNumber = RoomNumber;
             return View();
         }
+
+
+        [HttpPost]
+        /// <summary>
+        /// post 添加
+        /// </summary>
+        /// <param name="jsonStr"></param>
+        /// <returns></returns>
+        public ActionResult AddRoomPage(DormInformation jsonStr) {
+            AjaxResult result = new AjaxResult();
+            dbdorm = new DormInformationBusiness();
+            //仓库
+            if (jsonStr.RoomStayTypeId==5)
+            {
+                jsonStr.RoomStayNumberId = 0;
+            }
+            if (jsonStr.RoomStayTypeId!=1)
+            {
+                jsonStr.SexType = 0;
+            }
+            jsonStr.CreationTime = DateTime.Now;
+            try
+            {
+                dbdorm.Insert(jsonStr);
+                BusHelper.WriteSysLog("添加数据位置于Dormitory/DormitoryInfo/AddTungPage", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                result.Msg = "添加成功";
+                result.Success = true;
+            }
+            catch (Exception ex)
+            {
+
+                BusHelper.WriteSysLog(ex.Message + "Dormitory/DormitoryInfo/AddTungPage", Entity.Base_SysManage.EnumType.LogType.添加数据error);
+                result.Msg = "添加失败";
+                result.Success = false;
+            }
+            
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        /// <summary>
+        /// 房间详细页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RoomdeWithPage() {
+            dbdorm = new DormInformationBusiness();
+            dbroomnumber = new RoomStayNumberBusiness();
+            dbacc = new AccdationinformationBusiness();
+
+            return View();
+        }
+
         public ActionResult test() {
             return View();
         }

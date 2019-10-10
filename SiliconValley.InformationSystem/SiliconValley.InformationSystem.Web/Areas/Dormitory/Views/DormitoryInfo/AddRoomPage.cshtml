@@ -4,16 +4,188 @@
 }
 
 <!DOCTYPE html>
-
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model DormInformation
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>AddRoomPage</title>
+    <title>Registeredtrainees</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            width: 200px;
+        }
+    </style>
+
 </head>
 <body>
-    <div> 
-        <h1>hdfkshf</h1>
 
+
+
+
+    <div style="margin-top:20px"></div>
+    <div>
+        <form class="layui-form" action="">
+
+            <fieldset>
+                <legend>
+                    基础信息
+                </legend>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                        <label class="layui-form-label">房间号码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="DormInfoName" lay-verify="title" autocomplete="off" placeholder="请输入房间号" class="layui-input">
+                            <input type="text" name="Direction" id="Direction" value="@ViewBag.Direction" />
+                            <input type="text" name="TungFloorId" id="TungFloorId" value="@ViewBag.Floorid" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+
+                        <label class="layui-form-label">房间类型</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("RoomStayTypeId", ViewBag.SelectListItemlist as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "lay-filter", "myroomtype" }, { "id", "myroomtype" } })
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item" id="roomnumber">
+                    <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+
+                        <label class="layui-form-label">房间人数</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("RoomStayNumberId", ViewBag.RoomNumber as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "lay-filter", "myroomnumber" }, { "id", "myroomnumber" } })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-form-item" id="sextype">
+                    <label class="layui-form-label">寝室类型</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="SexType" value="1" title="男寝" checked="">
+                        <input type="radio" name="SexType" value="2" title="女寝">
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+
+                        <label class="layui-form-label">房间备注</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="Remark" lay-verify="title" autocomplete="off" placeholder="请输入地址" class="layui-input">
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                        <button class="layui-btn" id="clode">取消</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
     </div>
+
+
+
+
+    <script>
+        var jslayer;
+        $(function () {
+            var jsDirection='@Html.Raw(ViewBag.Direction)';
+            console.log('===========================' + jsDirection);
+            if (jsDirection == "left") {
+                $("#Direction").val("false");
+            } else {
+                 $("#Direction").val("true");
+            }
+
+        });
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            jslayer = layui.layer
+           //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field;
+                console.log(jsonStr);
+               
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/AddRoomPage',
+                    type: 'POST',
+                    data: { jsonStr:jsonStr },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            jslayer.msg('添加成功', { icon: 6, time: 2000 }, function () {
+                                 close();
+                            });
+
+                        }
+                    },
+                    error: function () {
+                        close();
+                    }
+                });
+                return false;
+            });
+
+            form.on('select(myroomtype)', function (data) {
+                console.log(data.elem); //得到select原始DOM对象
+                console.log(data.value); //得到被选中的值
+                console.log(data.othis); //得到美化后的DOM对象
+                if (data.value == "5") {
+                    $("#roomnumber").hide();
+
+                } else {
+                    $("#roomnumber").show();
+                }
+
+                if (data.value != "1") {
+                    $("#sextype").hide();
+                } else {
+                    $("#sextype").show();
+                }
+            });
+        });
+
+        $("#clode").click(function () {
+            close();
+        });
+        function close() {
+             //先得到当前iframe层的索引
+             var index = parent.layer.getFrameIndex(window.name);
+            parent.jslayer.close(index); //再执行关闭
+        }
+    </script>
+
+
 </body>
 </html>
