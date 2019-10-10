@@ -25,23 +25,51 @@
             display:inline-block;
             margin-top:20px;
         }
+        
+        .MytdCss1
+        {
+            height:30px;
+            border: 1px solid #009688;
+            width:10%;
+        }
+        .BtnCssthree
+        {
+            margin-top: 40px;
+            text-align: center;
+        }
+        body .mydemo-class{
+
+        }
+        body .mydemo-class .layui-layer-title
+        {
+            background: #c00;
+            color: #fff;
+            border: none;
+        }
+            body .mydemo-class .layui-layer-btn a
+            {
+                background: red;
+                border: 1px solid red;
+                color: #fff;
+            }
+        
     </style>
 </head>
 <body>
     <div>
         <form action="/Market/StudentDataKeep/IntoFunction" method="post" enctype="multipart/form-data">
-            <fieldset class="fieldsetCssTwo1">
+            <fieldset id="fieldDiv2" class="fieldsetCssTwo1">
                 <legend class="legendCssTwo1">文件选择区</legend>
                 <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>选择Excel文件</button>
                 <a href="/Market/StudentDataKeep/DownFile" class="layui-btn"><i class="layui-icon">&#xe601;</i>文件下载</a>
             </fieldset>
-            <fieldset class="fieldsetCssTwo1" style="height:420px;">
-                <legend class="legendCssTwo1">文件内容显示区</legend>
+            <fieldset id="fielsone" class="fieldsetCssTwo1" style="height:480px;">
+                <legend id="contentone" class="legendCssTwo1">文件内容显示区</legend>
                 <table id="tabletest2" lay-filter="tabletest2"></table>
             </fieldset>
-            <div class="divCssTwo1">
-                <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入"> 
-                <button class="layui-btn" id="No" name="No">取消</button>
+            <div id="InputDiv" class="divCssTwo1">
+                <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入" > 
+                <button class="layui-btn" id="No" name="No" onclick="myclose()">取消</button>
             </div>
         </form>
     </div>
@@ -80,8 +108,81 @@
             $.ajax({
                 url: '/Market/StudentDataKeep/IntoServer',
                 dataType: 'json',
-                success: function (successData) {
-                    alert(successData);
+                success: function (successData) {                   
+                    if (successData.resut == "okk") {                         
+                        layui.use(['layer', 'table'], function () {
+                            var table = layui.table;
+                            var layer = layui.layer;
+                            layer.confirm('<h3>'+successData.msg+'</h3>', { title: '系统提示', skin: "mydemo-class", btn: ['确定'], closeBtn:0 }, function (index) {
+                                //do something
+                                layer.close(index);
+                                $("#fieldDiv2")[0].innerHTML = "";
+                                $("#fieldDiv2").remove();
+                                $("#InputDiv")[0].innerHTML = "";
+                                $("#InputDiv").removeClass("divCssTwo1");
+                                $("#InputDiv").addClass("BtnCssthree");
+                                $('<button class="layui-btn" id="No" name="No" onclick="myclose()">关闭</button>').appendTo($("#InputDiv"));
+                                $("#fielsone")[0].innerHTML = "";
+                                $('<legend id="contentone" class="legendCssTwo1">疑似数据对比区</legend>').appendTo($("#fielsone"));
+                                $('<h3>系统已有数据</h3>').appendTo($("#fielsone"));
+                                var table1 = $('<table id="mytableone"></table>');
+                                table1.appendTo($("#fielsone"));
+                                $('<h3>疑似数据</h3>').appendTo($("#fielsone"));
+                                var table2 = $('<table id="mytabletwo"></table>');
+                                table2.appendTo($("#fielsone"));
+                                //展示已知数据
+                                table.render({
+                                    elem: '#mytableone'
+                                    , cols: [[ //标题栏
+                                        { field: 'StuName', title: '姓名' }
+                                        , { field: 'StuSex', title: '性别' }
+                                        , { field: 'StuPhone', title: '电话' }
+                                        , { field: 'StuSchoolName', title: '学校' }
+                                        , { field: 'StuInfomationType_Id', title: '信息来源' }
+                                        , { field: 'StuEducational', title: '学历' }
+                                        , { field: 'Region_id', title: '区域' }
+                                        , { field: 'StuAddress', title: '家庭住址' }
+                                        , { field: 'EmployeesInfo_Id', title: '备案人' }
+                                        , { field: 'Reak', title: '说明' }
+                                    ]],
+                                    data: successData.old
+                                    , page: true
+                                    , limits: [3]
+                                    , limit: 3
+
+                                });
+                                table.render({
+                                    elem: '#mytabletwo'
+                                    , cols: [[ //标题栏
+                                        { field: 'StuName', title: '姓名' }
+                                        , { field: 'StuSex', title: '性别' }
+                                        , { field: 'StuPhone', title: '电话' }
+                                        , { field: 'StuSchoolName', title: '学校' }
+                                        , { field: 'StuInfomationType_Id', title: '信息来源' }
+                                        , { field: 'StuEducational', title: '学历' }
+                                        , { field: 'Region_id', title: '区域' }
+                                        , { field: 'StuAddress', title: '家庭住址' }
+                                        , { field: 'EmployeesInfo_Id', title: '备案人' }
+                                        , { field: 'Reak', title: '说明' }
+                                    ]],
+                                    data: successData.news
+                                    , page: true
+                                    , limits: [3]
+                                    , limit: 3
+                                });
+                            });
+                        });                  
+                    } else if (successData == "ok") {                         
+                            layer.msg('没有重复数据，备案成功！！！', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                //关闭
+                                myclose();
+                            });                        
+                    } else {
+                        TiShi(successData.msg);
+                    }                  
                 }
                 , error: function () {
                     TiShi('导入失败!请重试');
@@ -89,14 +190,11 @@
             });
         });
         //取消
-        $("#No").click(function () {
+        function myclose() {             
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            parent.layer.close(index); //再执行关闭   
-            //将上传文件删除
-            $.ajax({
-                url: '/Market/StudentDataKeep/DeleteFile'
-            });
-        });         
+            parent.layer.close(index); //再执行关闭            
+        };
+       
         layui.use(['upload','table'], function () {
             var $ = layui.jquery
                 , upload = layui.upload;

@@ -24,7 +24,7 @@
 
                 s.o = $.extend({}, this.Wiper.defaults, options);
 
-								ua = window.navigator.userAgent.toLowerCase();
+				ua = window.navigator.userAgent.toLowerCase();
 
                 if (s.o.binder != $(window)) {
                     is_inner = true;
@@ -123,7 +123,7 @@
 
                     var next_num = li.nextAll("li").length;
                     if (li.attr("data-index") != 0) {
-                        var menu_translateX = options.binder.width() + cur_data_index * 15 - 250;
+                        var menu_translateX = options.binder.width() + cur_data_index * 15 - 300;
                         var move_width = menu_width * (next_num+1);
 												if (ua.indexOf("chrome") != -1){
 													li.css({
@@ -153,7 +153,7 @@
                         li.addClass("wiper_open");
                     }
                     li.nextAll("li").each(function() {
-                        var menu_translateX = options.binder.width() + (Number($(this).attr("data-index"))) * 15 - 250;
+                        var menu_translateX = options.binder.width() + (Number($(this).attr("data-index"))) * 15 - 300;
                         var move_width = menu_width * (menu_num - (Number($(this).attr("data-index"))));
 												if (ua.indexOf("chrome") != -1){
 													$(this).css({
@@ -184,7 +184,6 @@
                     });
                 } else {
                     //move left
-
                     var prev_num = li.prevAll("li").length;
 
 										if (ua.indexOf("chrome") != -1){

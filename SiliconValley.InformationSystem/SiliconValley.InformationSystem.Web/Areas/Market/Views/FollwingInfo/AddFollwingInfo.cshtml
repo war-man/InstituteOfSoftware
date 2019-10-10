@@ -165,7 +165,7 @@
                     <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
                         <label class="layui-form-label">跟踪情况:</label>
                         <div class="layui-input-block">
-                            @Html.TextArea("TailAfterSituation", new Dictionary<string, object>() { { "placeholder", "跟踪情况描述" }, { "class", "layui-input TextAreCss1" } })
+                            @Html.TextArea("TailAfterSituation", new Dictionary<string, object>() { { "placeholder", "跟踪情况描述" }, { "class", "layui-input TextAreCss1" }, { "lay-verify","required" } })
                         </div>
                     </div>
                 </div>

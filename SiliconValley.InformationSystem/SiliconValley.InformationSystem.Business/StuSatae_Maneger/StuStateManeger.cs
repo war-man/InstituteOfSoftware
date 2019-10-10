@@ -34,20 +34,27 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        public StuStatus GetIdGiveName(int? id)
+        public StuStatus GetIdGiveName(string id,bool IsKey)
         {
-            StuStatus finds=  this.GetEntity(id);
-            if (finds!=null)
+            StuStatus finds = new StuStatus();
+            if (IsKey)
             {
-                return finds;
+                //主键
+                int Id = Convert.ToInt32(id);
+                 finds = this.GetEntity(Id);
             }
             else
             {
-                StuStatus s = new StuStatus();
-                s.Id = -1;
-                s.StatusName = "无效状态";
-                return s;
+                //通过名称查询
+                finds= this.GetList().Where(s => s.StatusName == id).FirstOrDefault();
             }
+
+            if (string.IsNullOrEmpty(finds.StatusName))
+            {
+                finds.Id = -1;
+                finds.StatusName = "无效状态";
+            }             
+                return finds;            
         }
     }
 }

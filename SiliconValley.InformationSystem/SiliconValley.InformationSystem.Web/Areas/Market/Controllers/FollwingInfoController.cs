@@ -222,7 +222,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 StuSchoolName = s.StuSchoolName,
                 StuAddress = s.StuAddress,
                 StuInfomationType_Id = CM_Entity.getTypeName(s.StuInfomationType_Id.ToString(), true).Name,
-                StuStatus_Id = ST_Entity.GetIdGiveName(s.StuStatus_Id).StatusName,
+                StuStatus_Id = ST_Entity.GetIdGiveName(s.StuStatus_Id.ToString(),true).StatusName,
                 StuIsGoto = s.StuIsGoto == false ? "否" : "是",
                 StuVisit = s.StuVisit,
                 EmployeesInfo_Id = CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,

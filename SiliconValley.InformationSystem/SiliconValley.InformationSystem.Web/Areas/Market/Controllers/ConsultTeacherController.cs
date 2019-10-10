@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         ConsultTeacherManeger Ct_Entiry = new ConsultTeacherManeger();
         //获取当前上传的操作人
         string UserName = Base_UserBusiness.GetCurrentUser().UserName;
-        // GET: /Market/ConsultTeacher/GetFormData
+        // GET: /Market/ConsultTeacher/ConsultTeacherIndex
         public ActionResult ConsultTeacherIndex()
         {
             //获取所有咨询师数据
