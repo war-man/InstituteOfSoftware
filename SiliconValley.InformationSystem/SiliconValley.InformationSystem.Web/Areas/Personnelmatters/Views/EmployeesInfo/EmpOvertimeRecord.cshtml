@@ -23,6 +23,7 @@
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
+               
                 <table id="NoApproval" lay-filter="NoApproval"></table>
                 @*操作栏*@
                 <script type="text/html" id="barDemo">
@@ -56,6 +57,46 @@
             </div>
 
             <div class="layui-tab-item">
+              
+                <table id="Approved" lay-filter="Approved"></table>
+
+                @*头部工具栏*@
+                <script type="text/html" id="toolbarDemo">
+                    @*模糊查询*@
+                        <form class="layui-form" action="" lay-filter="formtest">
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                                    <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否过了年限:</label>
+                                    <div class="layui-input-block">
+                                        <select name="IsPassYear" id="IsPassYear">
+                                            <option value="">--请选择--</option>
+                                            <option value="false">否</option>
+                                            <option value="true">是</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                                    <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否调休:</label>
+                                    <div class="layui-input-block">
+                                        <select name="IsNoDaysOff" id="IsNoDaysOff">
+                                            <option value="">--请选择--</option>
+                                            <option value="false">调休</option>
+                                            <option value="true">不调休</option>
+                                        </select>
+
+                                    </div>
+                                </div>
+
+                                <button class="layui-btn" style="margin-left:50px;" type="button" lay-event="Conditionselect">查询</button>
+                            </div>
+                        </form>
+                       
+                        <div class="layui-btn-container">
+                            <button class="layui-btn layui-btn-sm" lay-event="editIsPassYear">编辑可用年限</button>
+                        </div>
+                </script>
+
                 @*审批是否通过属性显示*@
                 <script type="text/html" id="myshenpi2">
                     {{# if(d.IsPass==false){ }}
@@ -64,15 +105,11 @@
                     {{ d.IsPass="已通过" }}
                     {{# } }}
                 </script>
-                <table id="Approved" lay-filter="Approved"></table>
-               
+
             </div>
 
         </div>
     </div>
-
-   
-
 
 
     <script>
@@ -92,15 +129,15 @@
                 , limit: 10
                 , cols: [[
                     , { field: 'Id', width: 38 }
-                    , { field: 'empName', title: '姓名', width: 100, sort: true }
-                    , { field: 'StartTime', title: '开始时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
-                    , { field: 'EndTime', title: '结束时间', sort: true, width: 160, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
-                    , { field: 'Duration', title: '加班时长（小时）', width: 130, sort: true }
-                    , { field: 'OvertimeReason', title: '加班原因', width: 120}
-                    , { field: 'typename', title: '加班类型', width: 120 }
-                    , { field: 'IsNoDaysOff', title: '是否调休', width: 130, sort: true, templet: '#mytiaoxiu'}
-                    , { field: 'IsPassYear', title: '是否过了年限', width: 150, sort: true, templet: '#mynianxian' }
-                    , { field: 'IsPass', title: '审批是否通过', width: 150, sort: true, templet: '#myshenpi' }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'StartTime', title: '开始时间', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
+                    , { field: 'EndTime', title: '结束时间', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'Duration', title: '加班时长（小时）', width: 145 }
+                    , { field: 'OvertimeReason', title: '加班原因', width: 110 }
+                    , { field: 'typename', title: '加班类型', width: 110 }
+                    , { field: 'IsNoDaysOff', title: '是否调休', width: 120, templet: '#mytiaoxiu' }
+                    , { field: 'IsPassYear', title: '是否过了年限', width: 135, templet: '#mynianxian' }
+                    , { field: 'IsPass', title: '审批是否通过', width: 135, templet: '#myshenpi' }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 140 }
                 ]]
                 , page: true
@@ -114,59 +151,62 @@
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/EmployeesInfo/OvertimeEdit/?id=' + data.Id
-                        , area: ["800px", "500px"]
+                        , area: ["600px", "580px"]
                         , title: '编辑加班记录'
                         , shade: 0.8
                         , anim: 4
                         , skin: 'demo-class'
                     });
-                } else if (obj.event === 'ApprovalOvertime') {                 
-                        var s = true;
-                        layer.open({
-                            content: '是否通过审批？'
-                            , btn: ['已通过', '未通过']
-                            , yes: function (index, layero) {
-                                console.log("已通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/overtimeIsPassed", { 'id': data.Id, 'state': s }, function (data) {
-                                    if (data.Success) {
-                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
-                                            layui.use(['table'], function () {
-                                                var table = layui.table;
-                                                table.reload("myNoapproval");
-                                            });
-                                            layer.close(index);
+                } else if (obj.event === 'ApprovalOvertime') {
+                    var s = true;
+                    layer.open({
+                        content: '是否通过审批？'
+                        , btn: ['已通过', '未通过']
+                        , yes: function (index, layero) {
+                            console.log("已通过的状态:" + s);
+                            $.post("/Personnelmatters/EmployeesInfo/overtimeIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                if (data.Success) {
+                                    layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                        layui.use(['table'], function () {
+                                            var table = layui.table;
+                                            table.reload("myNoapproval");
+                                            table.reload("myApproved");
                                         });
-                                    } else {
-                                        layer.alert("审批出错");
-                                    }
-                                });
-                            }
-                            , btn2: function (index, layero) {
-                                s = false;
-                                console.log("未通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
-                                    if (data.Success) {
-                                        layer.alert("审批未通过", { icon: 1 }, function (index) {
-                                            layui.use(['table'], function () {
-                                                var table = layui.table;
-                                                table.reload("myNoapproval");
-                                            });
-                                            layer.close(index);
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.alert("审批出错");
+                                }
+                            });
+                        }
+                        , btn2: function (index, layero) {
+                            s = false;
+                            console.log("未通过的状态:" + s);
+                            $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                if (data.Success) {
+                                    layer.alert("审批未通过", { icon: 1 }, function (index) {
+                                        layui.use(['table'], function () {
+                                            var table = layui.table;
+                                            table.reload("myNoapproval");
+                                            table.reload("myApproved");
                                         });
-                                    } else {
-                                        layer.alert("审批出错");
-                                    }
-                                });
-                            }
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.alert("审批出错");
+                                }
+                            });
+                        }
 
-                        });
-                
-            
+                    });
+
+
+                };
+
+
             });
 
-
         });
-
         //已审批
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
@@ -179,81 +219,91 @@
                 elem: '#Approved'
                 , url: '/Personnelmatters/EmployeesInfo/GetOverTimeApprovedData'
                 , id: "myApproved"
+                , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
                     { type: 'checkbox' }
-                    , { field: 'empName', title: '姓名', width: 100, sort: true }
-                    , { field: 'StartTime', title: '开始时间', width: 160, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
-                    , { field: 'EndTime', title: '结束时间', sort: true, width: 160, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
-                    , { field: 'Duration', title: '加班时长（小时）', width: 130, sort: true }
-                    , { field: 'OvertimeReason', title: '加班原因', width: 120 }
-                    , { field: 'typename', title: '加班类型', width: 120 }
-                    , { field: 'IsNoDaysOff', title: '是否调休', width: 130, sort: true, templet: '#mytiaoxiu' }
-                    , { field: 'IsPassYear', title: '是否过了年限', width: 150, sort: true, templet: '#mynianxian' }
-                    , { field: 'IsPass', title: '审批是否通过', width: 150, sort: true, templet: '#myshenpi2' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 140 }
+                    , { field: 'empName', title: '姓名', width: 82, sort: true }
+                    , { field: 'StartTime', title: '开始时间', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
+                    , { field: 'EndTime', title: '结束时间', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'Duration', title: '加班时长（小时）', width: 150 }
+                    , { field: 'OvertimeReason', title: '加班原因', width: 105 }
+                    , { field: 'typename', title: '加班类型', width: 105 }
+                    , { field: 'IsNoDaysOff', title: '是否调休', width: 105, templet: '#mytiaoxiu' }
+                    , { field: 'IsPassYear', title: '是否过了年限', width: 140, templet: '#mynianxian' }
+                    , { field: 'IsPass', title: '审批是否通过', width: 140, templet: '#myshenpi2' }
+
                 ]]
                 , page: true
             });
 
-            //监听行工具事件
-            table.on('tool(Approved)', function (obj) {
-                var data = obj.data;
-                console.log(data.TransactionId);
-                if (obj.event === 'edit') {
-                    layer.open({
-                        type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EditETR/?id=' + data.TransactionId
-                        , area: ["800px", "500px"]
-                        , title: '编辑员工异动信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                } else if (obj.event === 'detail') {
-                    layer.open({
-                        type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EmpETRDetail/?id=' + data.TransactionId
-                        , area: ['700px', '400px'],
-                        title: '员工异动详细信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                }
-                else if (obj.event === 'date') {  //监听单元格日期编辑事件
-                    var field = $(this).data('field');
-                    laydate.render({
-                        elem: this.firstChild,
-                        show: true //直接显示
-                        , type: 'month'
-                        , btns: ['now', 'confirm']
-                        , format: 'yyyy-MM-dd'
-                        , done: function (value, date) {
-                            $.ajax({
-                                type: "get",
-                                dataType: "json",
-                                url: "/Personnelmatters/EmployeesInfo/EditDateCell",
-                                data: { id: data.EmployeeId, endvalue: value },
-                                success: function (data) {
-                                    console.log(data.Msg);
-                                    if (data.Success) {
-                                        layui.table.reload('myEmpInfo');
-                                    }
-                                    else {
-                                        layer.msg("修改失败!");
-                                    }
+            element.on('tab(mytab)', function (data) {
+                table.resize();
+            });
+
+            //头工具栏事件
+            table.on('toolbar(Approved)', function (obj) { 
+                var checkStatus = table.checkStatus("myApproved");
+                var datas = checkStatus.data;
+                switch (obj.event) {
+                    case 'editIsPassYear':
+                        if (datas.length==0) {
+                            layer.alert('请先选择要修改的数据行');
+                            return;
+                        } else {
+                            EditIsPassYear(datas);
+                            }
+                        
+                        break;
+                    case 'Conditionselect'://模糊查询点击事件
+                        var IsPassYear = $("#IsPassYear").val();//是否过了年限
+                        layui.use(['table'], function () {
+                            var table = layui.table;
+                            table.reload('myApproved', {
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }, where: {
+                                    AppCondition: IsPassYear
                                 }
                             });
-                        }
-                    });
+                        });
 
-                }
+
+                };
             });
 
 
         });
+        //修改是否过了年限属性
+        function EditIsPassYear(data) {
+            var list = "";
+            for (var i = 0; i < data.length; i++) {
+                list += data[i].Id + ",";
+            }
+            layer.confirm('确认修改为已过年限么？', function (index) {
+                $.post('/Personnelmatters/EmployeesInfo/EditIsPassYear', { 'list': list }, function (da) {
+                    console.log(da);
+                    if (da.Success) {
+                        layer.alert("修改成功!", { icon: 1 }, function (index) {
+                            layui.use(['table'], function () {
+                                var table = layui.table;
+                                table.reload('myApproved');
+                            });
+                            layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.alert("修改失败!");
+                        table.reload('myApproved');
+                    }
+                })
+
+
+            });
+         
+        }
+
 
         //时间格式转换
         function changeDateTimeFormat(cellval) {

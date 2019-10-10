@@ -1504,18 +1504,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// 获取已审批的加班记录
+        /// 获取已审批且未过年限（及当下年份）的加班记录
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetOverTimeApprovedData(int page, int limit)
+        public ActionResult GetOverTimeApprovedData(int page, int limit,string AppCondition)
         {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             BeOnDutyManeger bodmanage = new BeOnDutyManeger();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var list = otrmanage.GetList();
-            var newlist = list.Where(s => s.IsApproval == true).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var list = otrmanage.GetList().Where(s => s.IsApproval == true && s.IsPassYear==false).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string IsPassYear = str[0];
+               
+                if (!string.IsNullOrEmpty(IsPassYear))
+                {
+                    list = list.Where(e => e.IsPassYear==bool.Parse(IsPassYear)).ToList();
+                }                           
+            }
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
@@ -1563,11 +1573,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
-
+        //根据编号获取加班记录对象
+        public ActionResult GetOvertimeById(int id) {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            BeOnDutyManeger bodmanage = new BeOnDutyManeger();
+            var otobj = otrmanage.GetEntity(id);
+            var empobj = new
+            {
+                #region 获取属性值 
+               otobj.Id,
+               otobj.EmployeeId,
+               empName = emanage.GetInfoByEmpID(otobj.EmployeeId).EmpName,
+               otobj.StartTime,
+               otobj.EndTime,
+               otobj.Duration,
+               otobj.OvertimeReason,
+              otobj.OvertimeTypeId,
+               otobj.Remark,
+               otobj.IsNoDaysOff,
+               otobj.IsPassYear,
+               otobj.IsApproval,
+               otobj.IsPass
+                #endregion
+            };
+            return Json(empobj,JsonRequestBehavior.AllowGet);
+        }
         //加班编辑页面
         public ActionResult OvertimeEdit(int id) {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             var otobj = otrmanage.GetEntity(id);
+            ViewBag.Id = id;
             return View(otobj);
         }
         //加班编辑的提交
@@ -1577,8 +1613,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var ajaxresult = new AjaxResult();
             try
             {
-                //otr.IsApproval = true;
-                //   otr.IsPass = state;
+                 var myotr = otrmanage.GetEntity(otr.Id);
+                otr.IsPass = myotr.IsPass;
+                otr.IsApproval = myotr.IsApproval;
+                otr.IsPassYear = myotr.IsPassYear;
                 otrmanage.Update(otr);
                 ajaxresult = otrmanage.Success();
             }
@@ -1589,6 +1627,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
+        //修改过了年限的数据，将 是否过了年限 属性进行修改
+        [HttpPost]
+        public ActionResult EditIsPassYear(string list) {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            var ajaxresult = new AjaxResult();
+            string[] arr = list.Split(',');
+            for (int i = 0; i < arr.Length - 1; i++)
+            {
+                try
+                {
+                    int id = int.Parse(arr[i]);
+                    var otr = otrmanage.GetEntity(id);
+                    otr.IsPassYear = true;
+                    otrmanage.Update(otr);
+                    ajaxresult = otrmanage.Success();
 
+                }
+                catch (Exception ex)
+                {
+                    ajaxresult = otrmanage.Error(ex.Message);
+                }
+            }
+         
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
     }
 }

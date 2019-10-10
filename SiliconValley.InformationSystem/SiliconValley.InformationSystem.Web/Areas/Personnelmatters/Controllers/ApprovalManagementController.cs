@@ -168,16 +168,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                or.IsNoDaysOff = false;//默认为调休
                 or.IsPassYear = false;//默认未过年限
                 or.IsPass = false;//默认审批未通过
                 or.IsApproval = false;//默认未审批
+                ormanage.Insert(or);
+                AjaxResultxx = ormanage.Success();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                AjaxResultxx = ormanage.Error(ex.Message);
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
+
+        //请假申请
+        public ActionResult LeaveApply(LeaveRequest askforleave) {
+            return View();
         }
     }
 }
