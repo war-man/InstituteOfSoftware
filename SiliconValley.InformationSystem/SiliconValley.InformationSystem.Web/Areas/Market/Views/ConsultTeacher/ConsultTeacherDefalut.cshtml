@@ -27,7 +27,7 @@
                 <label class="layui-form-label">姓名:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="EmpName" id="EmpName" class="layui-input" readonly="readonly" lay-filter="filter"/>
+                <span name="EmpName" id="EmpName" class="layui-form-label"   lay-filter="filter"></span>
             </div>
 
             <div class="layui-col-sm6" style="text-align:center;width:200px;">
@@ -40,7 +40,7 @@
                 <label class="layui-form-label">联系电话:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="Phone" id="Phone" class="layui-input" readonly="readonly" lay-filter="filter"/>
+                <span name="Phone" id="Phone" class="layui-form-label"   lay-filter="filter"></span>
             </div>
         </div>
         <br />
@@ -49,7 +49,7 @@
                 <label class="layui-form-label">学历:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="Education" id="Education" class="layui-input" readonly="readonly" lay-filter="filter"/>
+                <span name="Education" id="Education" class="layui-form-label"   lay-filter="filter"></span>
             </div>
         </div>
         <br />
@@ -68,7 +68,7 @@
                 <label class="layui-form-label">政治面貌:</label>
             </div>
             <div class="layui-col-sm3">
-                <input name="Politicsstatus" id="Politicsstatus" class="layui-input" readonly="readonly" lay-filter="filter"/>
+                <span name="Politicsstatus" id="Politicsstatus" class="layui-form-label" lay-filter="filter"></span>
             </div>
 
             <div class="layui-col-sm5" style="text-align:center">
@@ -248,6 +248,10 @@
 
                                 }
                             });
+                            $("#EmpName")[0].innerText = SucData.EmpName;
+                            $("#Phone")[0].innerText = SucData.Phone;
+                            $("#Education")[0].innerText = SucData.Education;
+                            $("#Politicsstatus")[0].innerText = SucData.Politicsstatus;
                             form.val("MyFormServer1", SucData);
                         });
                     }

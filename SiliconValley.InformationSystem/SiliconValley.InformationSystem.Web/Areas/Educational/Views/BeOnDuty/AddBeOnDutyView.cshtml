@@ -111,18 +111,18 @@
                     </div>
                 </div>
             </div>
-            <div class="layui-row layui-form-item">
+            <div id="IsHide" class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">添加时间</label>
                     <div class="layui-input-block">
-                         <span class="LableCss1"></span>
+                         <span id="addDate" class="LableCss1"></span>
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-block">
-                        <input type="radio" title="激活" value="false" name="state" />
-                        <input type="radio" title="未激活" value="true" name="state" />
+                        <input type="radio" title="激活" value="false" name="state"/>
+                        <input type="radio" title="未激活" value="true" name="state"/>
                     </div>
                 </div>
             </div>
@@ -177,18 +177,31 @@
                 window.parent.LoadTable();
             });
         });
-        @*$(function () {
+        $(function () {
+            $("#IsHide").hide();
             var Id =  @ViewBag.Id;
             if (Id!=0) {
                 //编辑，需要加载数据
                 $.ajax({
                     url: '/Educational/BeOnDuty/FindSingleData/' + Id,
-                    success: function (SucData) {                         
+                    success: function (SucData) {   
+                        $("#IsHide").show();
+                        $("#MyTypeName").val(SucData.TypeName);
+                        $("#MyCost").val(SucData.Cost);
+                        SucData.IsDelete = SucData.IsDelete.toString();
+
+                        var dd = new Date(parseInt(SucData.AddDate.slice(6)));
+                        var dd2 = window.parent.formatDate(dd);
+                        $("#addDate")[0].innerText = dd2;
+                        layui.use(['form'], function () {
+                            var form = layui.form;
+                            form.render();
+                        });
                     }
                 
                 });
             }
-        });*@
+        });
     </script>
 </body>
 </html>

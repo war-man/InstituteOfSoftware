@@ -46,6 +46,19 @@ namespace SiliconValley.InformationSystem.Business.NewExcel
             {
                 xlWorkSheet.Cells[1, i + 1] = Head[i]; //write the column name
             }
+            for (int i = 0; i < list.Count; i++)
+            {
+                xlWorkSheet.Cells[i + 2, 1] = list[i].StuName;
+                xlWorkSheet.Cells[i + 2, 2] = list[i].StuSex;
+                xlWorkSheet.Cells[i + 2, 3] = list[i].StuPhone;
+                xlWorkSheet.Cells[i + 2, 4] = list[i].StuEducational;
+                xlWorkSheet.Cells[i + 2, 5] = list[i].StuAddress;
+                xlWorkSheet.Cells[i + 2, 6] = list[i].StuSchoolName;
+                xlWorkSheet.Cells[i + 2, 7] = list[i].Region_id;
+                xlWorkSheet.Cells[i + 2, 8] = list[i].StuInfomationType_Id;
+                xlWorkSheet.Cells[i + 2, 9] = list[i].EmployeesInfo_Id;
+                xlWorkSheet.Cells[i + 2, 10] = list[i].Reak;
+            }
             try
             {            
                 xlWorkBook.SaveAs(mypath, XlFileFormat.xlExcel8, null, null, false, false, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
