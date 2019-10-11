@@ -52,7 +52,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
             }
         }
-        // GET: /Market/MarketChair/EditMarketDataFunction
+        // GET: /Market/MarketChair/MarketChairIndex
         public ActionResult MarketChairIndex()
         {
             return View();
@@ -121,13 +121,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult AddMarketDataFunction()
         {
-            MarketChair findm = MarketChair_Entity.GetList().Where(m => m.ChairName == null && m.TerCharName == null && m.ChairAddress==null).FirstOrDefault();
+            MarketChair findm = MarketChair_Entity.GetList().Where(m => m.ChairName == null || m.TerCharName == null || m.ChairAddress==null || m.ManCount<=0).FirstOrDefault();
             if (findm==null)
             {
                 try
                 {
                     DateTime d1 = DateTime.Now;
-                    MarketChair_Entity.Insert(new MarketChair() { ChairTime = d1, Employees_Id = "201908150001" ,IsDelete=false});
+                    MarketChair new_M = new MarketChair() { ChairTime = d1, Employees_Id = "201908150001", IsDelete = false, TerCharName = "", ManCount = 0, ChairAddress = "" };
+                    MarketChair_Entity.Insert(new_M);
                     BusHelper.WriteSysLog("操作人:" + UserName + "触发了添加按钮" , Entity.Base_SysManage.EnumType.LogType.添加数据);
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
@@ -138,8 +139,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
             }
             else
-            {
-                return Json("有信息未补充完，请先填写！！！", JsonRequestBehavior.AllowGet);
+            {                
+                return Json("有信息未补充完，请先填写！！！", JsonRequestBehavior.AllowGet);               
             }                        
         }
         [HttpPost]

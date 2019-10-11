@@ -1,0 +1,152 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.StudentFeeRecord
+    @using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Tuitionandfees</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .mysql {
+            margin-top: 13px;
+        }
+
+        .textar {
+            width: 80%;
+            height: 80px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="" id="form">
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+                @Html.HiddenFor(a => a.Costitemsid)
+                <input style="display:none" id="Typeid" type="text" value="@ViewBag.Typeid" />
+                <div class="layui-row layui-form-item" style="margin-left:60px;">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">学号</label>
+                        <div class="layui-input-inline">
+                            <input value="@ViewBag.Stuid" name="StudenID" id="StudenID" type="text" style="border:0px;" readonly="readonly" class="layui-input Stuid" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">明目类型</label>
+                        <div class="layui-input-block">
+                            @{
+                                List<Costitems> costitems = ViewBag.Rategory as List<Costitems>;
+                                if (costitems.Count() > 0)
+                                {
+                                    foreach (var item in costitems)
+                                    {
+                                        <input type="checkbox" name="Rategorys" value="@item.id" lay-filter="Rategory" title="@item.Name" checked="">
+                                    }
+                                }
+                                else
+                                {
+                                    <lable style="color:red;line-height:30px;">很棒哦，已经交完学杂费了！！</lable>
+                                }
+
+
+                            }
+
+
+                        </div>
+                    </div>
+
+
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">费用</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" },{ "disabled", "disabled" }, { "class", "layui-input " } })
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+
+                            @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                        </div>
+                    </div>
+
+
+                </div>
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    //ViewBag.
+    var price = '@Html.Raw(ViewBag.price)';
+    price = price > 0 ? price : "";
+    $("#Amountofmoney").val(price)
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var like = "";
+        checkval();
+
+        function checkval() {
+            var arr = new Array();
+            $("input:checkbox[name='Rategorys']:checked").each(function (i) {
+                arr[i] = $(this).val();
+            });
+            like = arr.join(",");//将数组合并成字符串
+        }
+        //监听阶段下拉框
+        form.on('checkbox(Rategory)', function (data) {
+ 
+            checkval();
+            if (like.length > 0) {
+                var dbase = {
+                    Costitemsid: like
+                };
+                Otherexpenses(dbase, function (ds) {
+                    $("#Amountofmoney").val(ds);
+
+                });
+            } else {
+                $("#Amountofmoney").val("");
+            }
+         
+        });        
+
+       
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var db = data.field;
+          
+                db.Rategorys = like;
+               
+          
+            ajaxUniom("/Finance/Pricedetails/Tuitionandfees", db);
+           
+        });
+    });
+</script>

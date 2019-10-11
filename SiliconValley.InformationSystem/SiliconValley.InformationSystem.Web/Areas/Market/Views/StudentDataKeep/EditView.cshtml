@@ -159,7 +159,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">家庭住址</label>
                         <div class="layui-input-block">
-                            <input name="StuAddress" id="StuAddress" placeholder="家庭住址" class="layui-input linu"/>
+                            <input name="StuAddress" id="StuAddress" placeholder="家庭住址" class="layui-input"/>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -260,8 +260,10 @@
             var date = new Date(parseInt(newtime.slice(6)));
             var year = date.getFullYear();
             var month = date.getMonth();
-            if (month < 10) {
+            if ((month + 1) < 10) {
                 month = "0" + Number(month + 1);
+            } else {
+                month = Number(month + 1);
             }
             var day = date.getDate();
             if (day < 10) {
@@ -275,17 +277,17 @@
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
+            var Mew_date = new Date();
             //刷新界面 所有元素
             form.render();
             //日期
             laydate.render({
-                elem: '#StuDateTime'
-            });
-            laydate.render({
                 elem: '#StuVisit'
+                , max: Mew_date.toString()
             });
             laydate.render({
                 elem: '#StuBirthy'
+                , max: Mew_date.toString()
             });
             
             $("#quxiao").click(function () {

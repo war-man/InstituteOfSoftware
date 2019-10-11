@@ -14,7 +14,7 @@ using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
-   public class ClassScheduleBusiness:BaseBusiness<ClassSchedule>
+    public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
@@ -43,30 +43,30 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public List<ClassStudentView> ClassStudentneList(string classid)
         {
-           
+
             List<ClassStudentView> listview = new List<ClassStudentView>();
-       
+
             var list = ss.ClassStudent(classid);
             foreach (var item in list)
             {
                 List<ClassStudentView> Nameofmember = new List<ClassStudentView>();
                 ClassStudentView classStudentView = new ClassStudentView();
-                if (Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false).ToList().Count>0)
+                if (Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false).ToList().Count > 0)
                 {
-                   var mylist= Business.GetList().Where(a => a.Studentnumber == item.StudentNumber&&a.IsDelete==false).ToList();
+                    var mylist = Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false).ToList();
                     foreach (var item1 in mylist)
                     {
                         ClassStudentView view = new ClassStudentView();
-                        view.Nameofmembers = MemBers.GetList().Where(c => c.ID ==item1.Typeofposition&& c.IsDelete == false).FirstOrDefault().Nameofmembers;
+                        view.Nameofmembers = MemBers.GetList().Where(c => c.ID == item1.Typeofposition && c.IsDelete == false).FirstOrDefault().Nameofmembers;
                         Nameofmember.Add(view);
                     }
                     classStudentView.Nameofmembers = Nameofmember;
                 }
-               
+
                 classStudentView.Name = item.Name;
-            
+
                 classStudentView.StuNameID = item.StudentNumber;
-                if (classStudentView!=null)
+                if (classStudentView != null)
                 {
                     listview.Add(classStudentView);
                 }
@@ -91,7 +91,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 ClassStudentView classStudentView = new ClassStudentView();
                 classStudentView.Name = student.GetEntity(item.StudentID).Name;
                 classStudentView.StuNameID = student.GetEntity(item.StudentID).StudentNumber;
-                if (item.CurrentClass==false)
+                if (item.CurrentClass == false)
                 {
                     var z = scheduleForTraineesBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.CurrentClass == true).FirstOrDefault();
                     classStudentView.ClassNameView = z.ClassID;
@@ -109,12 +109,12 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// </summary>
         /// <param name="claassid"></param>
         /// <returns></returns>
-        public List< ClassdetailsView> Listdatails( string claassid)
+        public List<ClassdetailsView> Listdatails(string claassid)
         {
             int count = ss.ClassStudent(claassid).Count();
             List<ClassdetailsView> list = new List<ClassdetailsView>();
             ClassdetailsView classdetailsView = new ClassdetailsView();
-          var x=  GetBase.GetList().Where(a => a.ClassNumber == claassid && a.IsDelete == false).FirstOrDefault();
+            var x = GetBase.GetList().Where(a => a.ClassNumber == claassid && a.IsDelete == false).FirstOrDefault();
             if (x != null)
             {
                 classdetailsView.count = count;
@@ -140,7 +140,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public GroupManagement Grouselect(string className)
         {
-          return  GriupMan.GetList().Where(a => a.ClassNumber == className && a.IsDelete == false).FirstOrDefault();
+            return GriupMan.GetList().Where(a => a.ClassNumber == className && a.IsDelete == false).FirstOrDefault();
 
         }
         /// <summary>
@@ -150,18 +150,18 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public AjaxResult GroupAdd(GroupManagement groupManagement)
         {
             AjaxResult retus = null;
-          
+
             try
             {
-              
+
                 if (groupManagement.ID > 0)
                 {
-                  GroupManagement x = GriupMan.GetEntity(groupManagement.ID);
+                    GroupManagement x = GriupMan.GetEntity(groupManagement.ID);
                     groupManagement.Addtime = x.Addtime;
                     groupManagement.IsDelete = false;
                     GriupMan.Update(groupManagement);
-                   
-                   
+
+
                     BusHelper.WriteSysLog("数据修改", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
                 else
@@ -173,7 +173,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     GriupMan.Insert(groupManagement);
                     BusHelper.WriteSysLog("数据添加", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 }
-                  
+
                 retus = new SuccessResult();
                 retus.Msg = "操作成功";
                 retus.Success = true;
@@ -212,47 +212,47 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="ClassNumber">班级号</param>
         /// <param name="Entity">数据操作为空则添加</param>
         /// <returns></returns>
-        public AjaxResult Entityembers(string Stuid,string Typeofposition, string ClassNumber,string Entity)
+        public AjaxResult Entityembers(string Stuid, string Typeofposition, string ClassNumber, string Entity)
         {
             //获取班委id
-         
+
             AjaxResult retus = null;
 
             try
             {
-                    //如果不为空则进行删除委员
-                    if (Entity!= "undefined")
-                       {
-                   var x= Business.GetList().Where(a => a.IsDelete == false && a.Studentnumber == Stuid).ToList();
-                 
-                        Business.Delete(x);
+                //如果不为空则进行删除委员
+                if (Entity != "undefined")
+                {
+                    var x = Business.GetList().Where(a => a.IsDelete == false && a.Studentnumber == Stuid).ToList();
+
+                    Business.Delete(x);
 
                     retus = new SuccessResult();
                     retus.Msg = "班委撤销成功";
                     retus.Success = true;
                     BusHelper.WriteSysLog("数据删除", EnumType.LogType.删除数据);
                 }
-                    else
-                      {
+                else
+                {
                     int ID = MemBers.GetList().Where(a => a.Nameofmembers == Typeofposition && a.IsDelete == false).FirstOrDefault().ID;
                     //查询出同个职位有多少个
-                    var mylist=   Business.GetList().Where(a => a.Typeofposition == ID && a.ClassNumber == ClassNumber && a.IsDelete == false).ToList();
-                    if (mylist.Count()>0)
+                    var mylist = Business.GetList().Where(a => a.Typeofposition == ID && a.ClassNumber == ClassNumber && a.IsDelete == false).ToList();
+                    if (mylist.Count() > 0)
                     {
                         Business.Delete(mylist);
                     }
                     ClassMembers classMembers = new ClassMembers();
-                        classMembers.Typeofposition = ID;
-                        classMembers.ClassNumber = ClassNumber;
-                        classMembers.Studentnumber = Stuid;
-                        classMembers.IsDelete = false;
-                        classMembers.Addtime = DateTime.Now;
-                        Business.Insert(classMembers);
-                        retus = new SuccessResult();
-                        retus.Msg = "任命班委成功";
-                        retus.Success = true;
-                        BusHelper.WriteSysLog("数据添加", EnumType.LogType.添加数据);
-                        }
+                    classMembers.Typeofposition = ID;
+                    classMembers.ClassNumber = ClassNumber;
+                    classMembers.Studentnumber = Stuid;
+                    classMembers.IsDelete = false;
+                    classMembers.Addtime = DateTime.Now;
+                    Business.Insert(classMembers);
+                    retus = new SuccessResult();
+                    retus.Msg = "任命班委成功";
+                    retus.Success = true;
+                    BusHelper.WriteSysLog("数据添加", EnumType.LogType.添加数据);
+                }
             }
             catch (Exception ex)
             {
@@ -275,7 +275,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
             AjaxResult retus = null;
 
-          
+
             try
             {
                 retus = new SuccessResult();
@@ -297,9 +297,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     assmeetings.IsDelete = false;
                     myassmeetings.Insert(assmeetings);
                     BusHelper.WriteSysLog("添加数据", EnumType.LogType.添加数据);
-                 
+
                     retus.Msg = "数据添加成功";
-            
+
                 }
             }
             catch (Exception ex)
@@ -322,14 +322,14 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return myassmeetings.GetEntity(id);
         }
-       /// <summary>
-       /// 通过班级名称拿到所有班会数据
-       /// </summary>
-       /// <param name="ClassName">班级名称</param>
-       /// <returns></returns>
+        /// <summary>
+        /// 通过班级名称拿到所有班会数据
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
         public List<Assmeetings> AssmeetingsList(string ClassName)
         {
-            return myassmeetings.GetList().Where(a=>a.IsDelete==false&&a.ClassNumber==ClassName).ToList();
+            return myassmeetings.GetList().Where(a => a.IsDelete == false && a.ClassNumber == ClassName).ToList();
         }
 
         /// <summary>
@@ -339,30 +339,30 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="ClassNumber">班级号</param>
         /// /// <param name="Stuid">学号</param>
         /// <returns></returns>
-        public AjaxResult AssmeetingsBool(string Typeofposition, string ClassNumber,string Stuid)
+        public AjaxResult AssmeetingsBool(string Typeofposition, string ClassNumber, string Stuid)
         {
             AjaxResult retus = null;
             retus = new SuccessResult();
             retus.Success = true;
             int ID = MemBers.GetList().Where(a => a.Nameofmembers == Typeofposition && a.IsDelete == false).FirstOrDefault().ID;
-            var mylist = Business.GetList().Where(a => a.Typeofposition == ID && a.ClassNumber == ClassNumber && a.IsDelete == false&&a.Studentnumber!=Stuid).ToList().Count();
-            if (mylist>0)
+            var mylist = Business.GetList().Where(a => a.Typeofposition == ID && a.ClassNumber == ClassNumber && a.IsDelete == false && a.Studentnumber != Stuid).ToList().Count();
+            if (mylist > 0)
             {
-              
-                retus.Msg = "已有学员为"+ Typeofposition+"是否替换";
-               
+
+                retus.Msg = "已有学员为" + Typeofposition + "是否替换";
+
                 retus.Data = "aaa";
 
             }
-         
+
             //查询出同个职位有多少个
             var mylist1 = Business.GetList().Where(a => a.Typeofposition == ID && a.ClassNumber == ClassNumber && a.IsDelete == false && a.Studentnumber == Stuid).ToList().Count();
-            if (mylist1>0)
+            if (mylist1 > 0)
             {
-                retus.Msg = Typeofposition+"已任命该学员,请勿重复任命";
-             
+                retus.Msg = Typeofposition + "已任命该学员,请勿重复任命";
+
             }
-         
+
             return retus;
         }
         /// <summary>
@@ -375,9 +375,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="Remarks">备注</param>
         /// <param name="StudentID">学号</param>
         /// <returns></returns>
-       public AjaxResult Dismantleclasses(string Addtime, string FormerClass, string List, string Reasong, string Remarks, string StudentID)
+        public AjaxResult Dismantleclasses(string Addtime, string FormerClass, string List, string Reasong, string Remarks, string StudentID)
         {
-        var x=  Dismantle.GetList().Where(a => a.IsDelete == false && a.FormerClass == FormerClass).Count();
+            var x = Dismantle.GetList().Where(a => a.IsDelete == false && a.FormerClass == FormerClass).Count();
             AjaxResult retus = null;
             try
             {
@@ -394,26 +394,26 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     removalRecords.IsDelete = false;
                     Dismantle.Insert(removalRecords);
                 }
-             
-                    string[] Student = StudentID.Split(',');
-                    List<ClassDynamics> MyDynamise = new List<ClassDynamics>();
+
+                string[] Student = StudentID.Split(',');
+                List<ClassDynamics> MyDynamise = new List<ClassDynamics>();
 
                 List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
 
                 List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
                 foreach (var item in Student)
-                    {
-                        ClassDynamics classDynamics = new ClassDynamics();
-                        classDynamics.Addtime = Convert.ToDateTime(Addtime);
-                        classDynamics.FormerClass = FormerClass;
-                        classDynamics.CurrentClass = List;
-                        classDynamics.Studentnumber = item;
-                        classDynamics.Remarks = Remarks;
-                        classDynamics.Reason = Reasong;
-                        classDynamics.IsDelete = false;
-                        MyDynamise.Add(classDynamics);
+                {
+                    ClassDynamics classDynamics = new ClassDynamics();
+                    classDynamics.Addtime = Convert.ToDateTime(Addtime);
+                    classDynamics.FormerClass = FormerClass;
+                    classDynamics.CurrentClass = List;
+                    classDynamics.Studentnumber = item;
+                    classDynamics.Remarks = Remarks;
+                    classDynamics.Reason = Reasong;
+                    classDynamics.IsDelete = false;
+                    MyDynamise.Add(classDynamics);
                     var UpdateSche = ss.GetList().Where(a => a.StudentID == item && a.ClassID == FormerClass).FirstOrDefault();
-                    if (UpdateSche!=null)
+                    if (UpdateSche != null)
                     {
                         UpdateSche.CurrentClass = false;
                         UpdateScheduleFor.Add(UpdateSche);
@@ -422,14 +422,14 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     scheduleForTrainees.ClassID = List;
                     scheduleForTrainees.StudentID = item;
                     scheduleForTrainees.CurrentClass = true;
-                    scheduleForTrainees.AddDate = Convert.ToDateTime(Addtime); 
+                    scheduleForTrainees.AddDate = Convert.ToDateTime(Addtime);
                     AddScheduleFor.Add(scheduleForTrainees);
-                    }
-                     ss.Update(UpdateScheduleFor);
-                 ss = new ScheduleForTraineesBusiness();
+                }
+                ss.Update(UpdateScheduleFor);
+                ss = new ScheduleForTraineesBusiness();
                 ss.Insert(AddScheduleFor);
-                    CLassdynamic.Insert(MyDynamise);
-             
+                CLassdynamic.Insert(MyDynamise);
+
                 BusHelper.WriteSysLog("拆班数据添加", EnumType.LogType.添加数据);
                 retus.Msg = "拆班成功";
             }
@@ -442,7 +442,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 retus.ErrorCode = 500;
                 BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
             }
-            
             return retus;
         }
 
@@ -452,7 +451,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="ClassNumber">班级名称</param>
         /// // <param name="type">1是专业名称，否则是阶段</param>
         /// <returns></returns>
-        public string GetClassGrand(string ClassNumber,int type)
+        public string GetClassGrand(string ClassNumber, int type)
         {
             var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
             if (type == 1)
@@ -464,6 +463,5 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
             }
         }
-        
     }
 }

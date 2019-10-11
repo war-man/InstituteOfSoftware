@@ -29,5 +29,32 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
         {
            return this.GetList().Where(s => s.StatusName.Contains(name)).FirstOrDefault();
         }
+        /// <summary>
+        /// 通过主键找值
+        /// </summary>
+        /// <param name="id">主键</param>
+        /// <returns></returns>
+        public StuStatus GetIdGiveName(string id,bool IsKey)
+        {
+            StuStatus finds = new StuStatus();
+            if (IsKey)
+            {
+                //主键
+                int Id = Convert.ToInt32(id);
+                 finds = this.GetEntity(Id);
+            }
+            else
+            {
+                //通过名称查询
+                finds= this.GetList().Where(s => s.StatusName == id).FirstOrDefault();
+            }
+
+            if (string.IsNullOrEmpty(finds.StatusName))
+            {
+                finds.Id = -1;
+                finds.StatusName = "无效状态";
+            }             
+                return finds;            
+        }
     }
 }

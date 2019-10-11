@@ -29,9 +29,9 @@
         $(function () {
             layui.use(['tree', 'layer'], function () {
                   var tree = layui.tree;
-                var layer = layui.layer;
+                   var layer = layui.layer;
                 //渲染
-                function Tree(Successdata) {
+                function Tree(Successdata) {                 
                     tree.render({
                         elem: '#ultree',
                         data: [{
@@ -67,18 +67,12 @@
             $.ajax({
                 url: "/Market/StudentDataKeep/ShowEmployeInfomation",
                 success: function (Successdata) {
-                    console.log(Successdata)
                     Tree(Successdata);
                 },
                 error: function () {
-                    layui.use('layer', function () {
-                        var layer = layui.layer;
-                        layer.msg('加载数据有误，请重试', {
-                            icon: 1,
-                            time: 5000 //2秒关闭（如果不配置，默认是3秒）
-                        }, function () {
-
-                        });
+                    layer.msg('加载数据有误，请重试', {
+                        icon: 2,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
                     });
                 }
             });

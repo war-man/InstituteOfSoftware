@@ -113,8 +113,10 @@
             var date = new Date(parseInt(newtime.slice(6)));
             var year = date.getFullYear();
             var month = date.getMonth();
-            if (month < 10) {
+            if ((month + 1) < 10) {
                 month = "0" + Number(month + 1);
+            } else {
+                month = Number(month + 1);
             }
             var day = date.getDate();
             if (day < 10) {
@@ -245,8 +247,7 @@
                 , toolbar: '#toolbarDemo1'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'StuName', title: '姓名' }
+                    , { field: 'StuName', title: '姓名', fixed: 'left'  }
                     , {
                         field: 'StuSex', title: '性别', templet: function (res) {
                             if (res.StuSex == false) {
@@ -269,7 +270,15 @@
                         }
                     }
                     , { field: 'EmployeesInfo_Id', title: '备案人' }
-                    , { field:'ReginName',title:'区域'}
+                    , {
+                        field: 'ReginName', title: '区域', templet: function (res) {
+                            if (res.ReginName == null || res.ReginName.length == 0) {
+                                return "区域外";
+                            } else {
+                                return res.ReginName;
+                            }
+                        }
+                    }
                     , {
                         field: 'StuDateTime', title: '备案日期', templet: function (res) {
                             return TimeChange(res.StuDateTime);
@@ -299,11 +308,12 @@
                           layer.open({
                                 type: 2,
                                 content: '/Market/StudentDataKeep/ExcleIntoView'  
-                                , area: ['1000px', '650px'],
+                                , area: ['1000px', '720px'],
                                 title: '导入Excle文件'
                                 , shade: 0.8
                                 , anim: 4
-                                , skin: 'demo-class'
+                              , skin: 'demo-class'
+                              , closeBtn:0
                         });                      
                         break;
                     case 'getSerchType':

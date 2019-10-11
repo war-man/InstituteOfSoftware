@@ -116,6 +116,7 @@
     <Compile Include="Entity\CourseTime.cs" />
     <Compile Include="Entity\CourseType.cs" />
     <Compile Include="Entity\Curriculum.cs" />
+    <Compile Include="Entity\DaysOff.cs" />
     <Compile Include="Entity\Debit.cs" />
     <Compile Include="Entity\Department.cs" />
     <Compile Include="Entity\Detailedmaintenance.cs" />
@@ -310,6 +311,7 @@
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProjectDetailView.cs" />
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
+    <Compile Include="ViewEntity\PublicConvertView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />
@@ -326,6 +328,7 @@
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />
+    <Compile Include="ViewEntity\vierprice.cs" />
     <Compile Include="ViewEntity\ZhuanghuanluData.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,16 +10,108 @@
     <meta name="viewport" content="width=device-width" />
     <title>ListStudentView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+        .colorRed{
+        color:#cd3232;
+        }
+    </style>
 </head>
 <body>
     <div class="layui-tab" lay-filter="demo">
         <ul class="layui-tab-title">
             @{
                 List<My_StudentDataOne> list = ViewBag.Mystudents as List<My_StudentDataOne>;
-                int i = 0;
+                int i = 1;
                 foreach (My_StudentDataOne item in list)
                 {
-                    if (i == 0)
+                    if (i == 1)
                     {
                         <li class="layui-this">结果<span>@i</span></li>
                     }
@@ -34,21 +126,301 @@
         <div class="layui-tab-content">
             @{
                 int j = 0;
-                if (j == 0)
+                foreach (My_StudentDataOne item in list)
                 {
-                    <div class="layui-tab-item layui-show">内容1</div>
+                    if (j == 0)
+                    {
+                        <div class="layui-tab-item layui-show">
+                            <form class="layui-form" lay-filter="myform2">
+                                <div class="layui-container">
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="layui-form-label">姓名</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.StudentputonereadName
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                            <label class="layui-form-label">性别</label>
+                                            <div class="layui-input-block">
+                                                <span name="StuSex" id="StuSex" class="LableCss1">
+                                                    @item.Sex
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="layui-form-label">咨询师</label>
+                                            <div class="layui-input-block">
+                                                <span name="StuPhone" id="StuPhone" class="LableCss1 colorRed">
+                                                    @item.ConsultTeacherName
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">备案人</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.DataputRecordMan
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">班级</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ClassName
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                                            <label class="LableCss1">班主任</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ClassTeacher
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">教学老师</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.Teacher
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">分量日期</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1" name="StuWeiXin" id="StuWeiXin">
+                                                    @item.CoultData
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">是否报名</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.IsExitsSchool
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                            <label class="LableCss1">是否上门</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1">
+                                                    @item.IsVistSchool
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">所在阶段</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.Grand
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">专业</label>
+                                            <div class="layui-input-block">
+
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ZhuanyeName
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">区域</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.AreaName
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">咨询跟踪次数</label>
+                                            <div class="layui-input-block">
+
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ConultNumber
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn butCss1" id="quxiao" onclick="CloaseView()">关闭</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="layui-tab-item">
+                            <form class="layui-form" lay-filter="myform2">
+                                <div class="layui-container">
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="layui-form-label">姓名</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.StudentputonereadName
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                                            <label class="layui-form-label">性别</label>
+                                            <div class="layui-input-block">
+                                                <span name="StuSex" id="StuSex" class="LableCss1">
+                                                    @item.Sex
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="layui-form-label">咨询师</label>
+                                            <div class="layui-input-block">
+                                                <span name="StuPhone" id="StuPhone" class="LableCss1">
+                                                    @item.ConsultTeacherName
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">备案人</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.DataputRecordMan
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">班级</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ClassName
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                                            <label class="LableCss1">班主任</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ClassTeacher
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">教学老师</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.Teacher
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">分量日期</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1" name="StuWeiXin" id="StuWeiXin">
+                                                    @item.CoultData
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                            <label class="LableCss1">是否报名</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.IsExitsSchool
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                            <label class="LableCss1">是否上门</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1">
+                                                    @item.IsVistSchool
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">所在阶段</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1 colorRed">
+                                                    @item.Grand
+                                                </span>
+
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                            <label class="LableCss1">专业</label>
+                                            <div class="layui-input-block">
+
+                                                <span class="LableCss1 colorRed">
+                                                    @item.ZhuanyeName
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="layui-form-item">
+                                    <div class="layui-input-block">
+                                        <button class="layui-btn butCss1" id="quxiao" onclick="CloaseView()">关闭</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        }
+                        j++;
+                    }
                 }
-                else
-                {
-                    <div class="layui-tab-item">内容2</div>
-                }
-                j++;
-            }
-        </div>
-    </div>
+                        </div>
+                    </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
+        function CloaseView() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭  
+            });             
+        }
         layui.use('element', function () {
             var element = layui.element;
             //一些事件监听
