@@ -475,7 +475,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     StudentPutOnRecord s = new StudentPutOnRecord();
                     s.StuName = item1.StuName;
-                    s.StuSex = item1.StuSex == "男" ? false : true;
+                    s.StuSex = item1.StuSex == "男" ? true : false;
                     s.EmployeesInfo_Id = GetNameSreachEmploId(item1.EmployeesInfo_Id);
                     s.IsDelete = false;
                     s.Reak = item1.Reak;
@@ -583,7 +583,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             var data = Student_list.Select(s=>new StudentData
             {
-                stuSex=s.StuSex==false?"男":"女",
+                stuSex=s.StuSex==true?"男":"女",
                 StuName=s.StuName,
                 StuPhone=s.StuPhone,
                 StuSchoolName = s.StuSchoolName,
@@ -613,7 +613,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     if (item2.StuName==item1.StuName && item2.StuPhone==item1.StuPhone)
                     {
                         MyExcelClass m = new MyExcelClass();
-                        m.StuSex = item2.StuSex == false ? "男" : "女";
+                        m.StuSex = item2.StuSex == true ? "男" : "女";
                         m.StuName = item2.StuName;
                         m.StuPhone = item2.StuPhone;
                         m.StuSchoolName = item2.StuSchoolName;

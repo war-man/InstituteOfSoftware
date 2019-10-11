@@ -60,14 +60,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 string TypeName = Request.Form["MyTypeName"];
                 string Cost = Request.Form["MyCost"];
                 string Reamk = Request.Form["MyReak"];
-                BeOnDuty newBeonduty = new BeOnDuty();
-                newBeonduty.TypeName = TypeName;
-                newBeonduty.Cost = Convert.ToDecimal(Cost);
-                newBeonduty.Reak = Reamk;
-                newBeonduty.IsDelete = false;
-                newBeonduty.AddDate = DateTime.Now;
-                BD_Entity.Insert(newBeonduty);
-                BusHelper.WriteSysLog(UserName + "值班，加班费用成功添加数据", EnumType.LogType.添加数据);
+                string BeId = Request.Form["BeId"];
+                string State = Request.Form["IsDelete"];    
+                if (!string.IsNullOrEmpty(BeId) && !string.IsNullOrEmpty(State))
+                {
+                   int Id_My= Convert.ToInt32(BeId);
+                   BeOnDuty find_be= BD_Entity.GetEntity(Id_My);
+                    if (find_be!=null)
+                    {
+                        find_be.IsDelete =Convert.ToBoolean( State);
+                        find_be.Reak = Reamk;
+                        find_be.TypeName = TypeName;
+                        find_be.Cost = Convert.ToDecimal(Cost);
+                        BD_Entity.Update(find_be);
+                        BusHelper.WriteSysLog(UserName + "值班，加班费用成功编辑数据", EnumType.LogType.编辑数据);
+                    }
+                }
+                else
+                {
+                    BeOnDuty newBeonduty = new BeOnDuty();
+                    newBeonduty.TypeName = TypeName;
+                    newBeonduty.Cost = Convert.ToDecimal(Cost);
+                    newBeonduty.Reak = Reamk;
+                    newBeonduty.IsDelete = false;
+                    newBeonduty.AddDate = DateTime.Now;
+                    BD_Entity.Insert(newBeonduty);
+                    BusHelper.WriteSysLog(UserName + "值班，加班费用成功添加数据", EnumType.LogType.添加数据);
+                }                                  
                 return Json("ok",JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

@@ -123,7 +123,7 @@
 
                     var next_num = li.nextAll("li").length;
                     if (li.attr("data-index") != 0) {
-                        var menu_translateX = options.binder.width() + cur_data_index * 15 - 300;
+                        var menu_translateX = options.binder.width() + cur_data_index * 15 - 500;
                         var move_width = menu_width * (next_num+1);
 												if (ua.indexOf("chrome") != -1){
 													li.css({
@@ -153,7 +153,7 @@
                         li.addClass("wiper_open");
                     }
                     li.nextAll("li").each(function() {
-                        var menu_translateX = options.binder.width() + (Number($(this).attr("data-index"))) * 15 - 300;
+                        var menu_translateX = options.binder.width() + (Number($(this).attr("data-index"))) * 15 - 500;
                         var move_width = menu_width * (menu_num - (Number($(this).attr("data-index"))));
 												if (ua.indexOf("chrome") != -1){
 													$(this).css({
@@ -288,14 +288,14 @@
         }
     }
 
-    $.fn.Wiper.defaults = {
-        easing: 'cubic-bezier(0,0,0.25,1)',
-        duration: 1300,
-        offset: 1,
-        offsetDelay: 0,
-        binder: $(window),
-        menuColors: [ '#666699', '#660066', '#20aeb2', '#cc99cc', '#339999', '#228b22' ],
-    }
+    //$.fn.Wiper.defaults = {
+    //    easing: 'cubic-bezier(0,0,0.25,1)',
+    //    duration: 1300,
+    //    offset: 1,
+    //    offsetDelay: 0,
+    //    binder: $(window),
+    //    menuColors: [ '#666699', '#660066', '#20aeb2', '#cc99cc', '#339999', '#228b22' ],
+    //}
 
     $.fn.Wiper.settings = {}
 

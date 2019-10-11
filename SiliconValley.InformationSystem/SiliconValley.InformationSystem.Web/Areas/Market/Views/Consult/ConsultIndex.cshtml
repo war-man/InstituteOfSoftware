@@ -288,7 +288,7 @@
         myChart.title = '折柱混合';
         //当鼠标移动到某个月份，显示未完成数据和完成数据
         myChart.on('click', function (params) {
-            var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为完成量和完成量
+            var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为报名个数和报名个数
             if (params.componentType == "series") {
                 var mystatus = params.seriesName;
                 if (values != "tangminGood") {
@@ -343,7 +343,7 @@
                     }
                 },
                 legend: {
-                    data: ['完成量', '分量数', '未完成量']
+                    data: ['报名个数', '分量数', '未完成量']
                 },
                 xAxis: [
                     {
@@ -369,7 +369,7 @@
                 ],
                 series: [
                     {
-                        name: '完成量',
+                        name: '报名个数',
                         type: 'bar',
                         data: wangchengarry
                     },
@@ -389,7 +389,7 @@
         }
         function GetTwoDivData(values, name, status) {
             var number = 0;
-            if (status == "完成量") {
+            if (status == "报名个数") {
                 $("#spanText")[0].innerText = "已报名学生";
             } else if (status == "未完成量") {
                 $("#spanText")[0].innerText = "未报名学生";
@@ -440,9 +440,10 @@
                             type: 2,
                             content: '/Market/Consult/FollwingInfoView/' + studentid
                             , area: ['1000px', '650px'],
-                            title: false
+                            title: '跟踪信息'
                             , shade: 0.8
                             , anim: 4
+                            , skin:'demo-class'
                         });
                     });
             });

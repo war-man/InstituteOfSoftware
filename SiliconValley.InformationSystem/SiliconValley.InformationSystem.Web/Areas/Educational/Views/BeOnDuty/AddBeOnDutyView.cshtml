@@ -121,8 +121,8 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">状态</label>
                     <div class="layui-input-block">
-                        <input type="radio" title="激活" value="false" name="state"/>
-                        <input type="radio" title="未激活" value="true" name="state"/>
+                        <input type="radio" title="激活" value="false" name="IsDelete"/>
+                        <input type="radio" title="未激活" value="true" name="IsDelete"/>
                     </div>
                 </div>
             </div>
@@ -137,7 +137,7 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="AddBeOnButy" id="AddBeOnButy"><span>添加</span></button>
+                    <button class="layui-btn" lay-submit="" lay-filter="AddBeOnButy" id="AddBeOnButy"><span id="spanone">添加</span></button><input id="BeId" name="BeId" type="hidden"/>
                     <button class="layui-btn butCss1" id="BeOnButyNo">取消</button>
                 </div>
             </div>
@@ -149,7 +149,7 @@
         layui.use(['layer', 'form'], function () {
             var layer = layui.layer;
             var form = layui.form;
-            //添加数据
+            //添加或编辑数据
             form.on('submit(AddBeOnButy)', function (data) {
                 var jsondata = data.field; //当前容器的全部表单字段，名值对形式：{name: value}
                 $.ajax({
@@ -159,12 +159,24 @@
                     success: function (SucData) {
                         if (SucData != "ok") {
                             layer.msg(SucData, { icon: 2 });
+                             
+                            
                         } else {
-                            layer.msg("添加成功", { icon: 1 }, function () {
-                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layer.close(index); //再执行关闭   
-                                window.parent.LoadTable();
-                            });                            
+                            var str = $("#BeId").val();
+                            if (str.length <= 0) {
+                                layer.msg("添加成功", { icon: 1 }, function () {
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭   
+                                    window.parent.LoadTable();
+                                });  
+                            } else {
+                                layer.msg("编辑成功", { icon: 1 }, function () {
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭   
+                                    window.parent.LoadTable();
+                                });  
+                            }
+                                                       
                         }
                     }
                 });
@@ -182,19 +194,22 @@
             var Id =  @ViewBag.Id;
             if (Id!=0) {
                 //编辑，需要加载数据
+                $("#spanone")[0].innerText = "编辑";
                 $.ajax({
                     url: '/Educational/BeOnDuty/FindSingleData/' + Id,
                     success: function (SucData) {   
                         $("#IsHide").show();
                         $("#MyTypeName").val(SucData.TypeName);
                         $("#MyCost").val(SucData.Cost);
+                        $("#BeId").val(SucData.Id);
                         SucData.IsDelete = SucData.IsDelete.toString();
 
                         var dd = new Date(parseInt(SucData.AddDate.slice(6)));
                         var dd2 = window.parent.formatDate(dd);
                         $("#addDate")[0].innerText = dd2;
                         layui.use(['form'], function () {
-                            var form = layui.form;
+                            var form = layui.form;                           
+                            form.val("myform1", SucData);
                             form.render();
                         });
                     }
