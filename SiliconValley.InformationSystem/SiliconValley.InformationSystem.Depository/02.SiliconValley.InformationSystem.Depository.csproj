@@ -46,6 +46,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
@@ -56,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CellPhoneSMS\PhoneMsgHelper.cs" />
     <Compile Include="DbContext\BaseDbContext.cs" />
     <Compile Include="DbFactory.cs" />
     <Compile Include="IRepository\IRepository.cs" />

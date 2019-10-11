@@ -47,6 +47,10 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         {
             get;
             set;
-        }         
+        }
+        public Nullable<int> grade {//节点级别是多少
+            get;
+            set;
+        }
     }
 }

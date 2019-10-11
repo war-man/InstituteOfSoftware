@@ -10,6 +10,33 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>RaisesApply</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 200px;
+        }
+    </style>
 </head>
 <body>
     <div>
@@ -78,12 +105,12 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">加薪额度：</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.RaisesLimit, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.RaisesLimit, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">加薪生效日期：</label>
+                        <label class="layui-form-label">加薪申请日期：</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.ApplyTime, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
@@ -121,18 +148,28 @@
             console.log(id);
             $.get("/Personnelmatters/ApprovalManagement/GetEmpid/" + id, function (data) {
                 layui.use(['layer', 'form', 'table', 'laydate'], function () {
-                    var form = layui.form, laydate = layui.laydate;
+                    var form = layui.form, laydate = layui.laydate; 
                     $("#EmpName").val(data.EmpName);
-                    data.EntryTime = GetYMD(data.EntryTime);
-                    $("#EntryTime").val(data.EntryTime);
                     $("#dname").val(data.dname);
                     $("#pname").val(data.pname);
+                    data.EntryTime = GetYMD(data.EntryTime);
+                    $("#EntryTime").val(data.EntryTime);
+                    $("#Education").val(data.Education);
+                    data.PositiveDate = GetYMD(data.PositiveDate);
+                    $("#PositiveDate").val(data.PositiveDate);
                     if (data.Salary == null) {
                         $("#presalary").val(data.ProbationSalary);
                     } else {
                         $("#presalary").val(data.Salary);
                     }
                     form.val("formtest", data);
+                    var mytime = $("#EntryTime").val();
+                    //日期验证
+                    laydate.render({
+                        elem: '#ApplyTime',
+                        min: mytime
+                    });
+
                 });
             })
         }
@@ -162,8 +199,7 @@
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log("转岗数据：" + data.field);
-                $.post("/Personnelmatters/ApprovalManagement/TransferPositionApply", data.field, function (data) {
+                $.post("/Personnelmatters/ApprovalManagement/RaisesApply", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("申请成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引

@@ -75,7 +75,7 @@
 
         .btnCenDivCss
         {
-            text-align: center;
+            text-align:left;
             margin-top: 10px;
         }
 
@@ -83,8 +83,9 @@
         {
             width: 70px;
             height: 35px;
-            text-align: center;
+            padding-left:8px;
             line-height: 35px;
+             
         }
 
         body .demo-class2 .layui-layer-title
@@ -93,7 +94,12 @@
             color: #fff;
             border: none;
         }
-
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
         .spanCssone
         {
             font-size: 25px;
@@ -282,7 +288,7 @@
         myChart.title = '折柱混合';
         //当鼠标移动到某个月份，显示未完成数据和完成数据
         myChart.on('click', function (params) {
-            var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为完成量和完成量
+            var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为报名个数和报名个数
             if (params.componentType == "series") {
                 var mystatus = params.seriesName;
                 if (values != "tangminGood") {
@@ -337,7 +343,7 @@
                     }
                 },
                 legend: {
-                    data: ['完成量', '分量数', '未完成量']
+                    data: ['报名个数', '分量数', '未完成量']
                 },
                 xAxis: [
                     {
@@ -363,7 +369,7 @@
                 ],
                 series: [
                     {
-                        name: '完成量',
+                        name: '报名个数',
                         type: 'bar',
                         data: wangchengarry
                     },
@@ -383,7 +389,7 @@
         }
         function GetTwoDivData(values, name, status) {
             var number = 0;
-            if (status == "完成量") {
+            if (status == "报名个数") {
                 $("#spanText")[0].innerText = "已报名学生";
             } else if (status == "未完成量") {
                 $("#spanText")[0].innerText = "未报名学生";
@@ -434,9 +440,10 @@
                             type: 2,
                             content: '/Market/Consult/FollwingInfoView/' + studentid
                             , area: ['1000px', '650px'],
-                            title: false
+                            title: '跟踪信息'
                             , shade: 0.8
                             , anim: 4
+                            , skin:'demo-class'
                         });
                     });
             });
@@ -539,10 +546,11 @@
                                 layer.open({
                                     type: 2,
                                     content: '/Market/Consult/ListStudentView/' + SucData[0].Id
-                                    , area: ['1000px', '550px'],
+                                    , area: ['900px', '510px'],
                                     title: false
                                     , shade: 0.8
                                     , anim: 4
+                                    , closeBtn: 0
                                 });
                             });
                         } else if (SucData.length > 1) {
@@ -555,10 +563,11 @@
                                 layer.open({
                                     type: 2,
                                     content: '/Market/Consult/ListStudentView/' + str
-                                    , area: ['1000px', '550px'],
-                                    title: '查询结果'
+                                    , area: ['900px', '510px'],
+                                    title: false
                                     , shade: 0.8
                                     , anim: 4
+                                    , closeBtn: 0
                                 });
 
                             });
@@ -567,6 +576,20 @@
                 });
 
             }
+        });
+        $("#serchBtn2").click(function () {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: '/Market/Consult/ConsultView'
+                    , area: ['1200px', '750px'],
+                    title: '分量'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            });
         });
     </script>
 }

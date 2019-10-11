@@ -8,68 +8,79 @@
     <legend>审批管理</legend>
     <div class="layui-row layui-form-item" style="margin-left:100px;">
 
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " id="positive" >
+        <div style="width:20%;float:left;" id="positive">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
             <label class="layui-form-label" style="width:100px;">转正申请</label>
-          
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="dimission">
+
+        <div style="width:20%;float:left;" id="dimission">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
             <label class="layui-form-label" style="width:100px;">离职申请</label>
-          
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="transferPosition">
+
+        <div style="width:20%;float:left;" id="transferPosition">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px;  color:white;"></i>
             </div>
             <label class="layui-form-label" style="width:100px;">调岗申请</label>
-           
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" id="Raises">
+
+        <div style="width:20%;float:left;" id="Raises">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px;  color:white;"></i>
             </div>
             <label class="layui-form-label" style="width:100px;">加薪申请</label>
-            
+        </div>
+
+        <div style="width:20%;float:left;" id="positive">
+            <div style="width:100px;height:100px;background-color:#47d5b4;">
+                <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
+            </div>
+            <label class="layui-form-label" style="width:100px;">续签申请</label>
         </div>
     </div>
+
     <div class="layui-row layui-form-item" style="margin-left:100px;">
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " >
+
+        <div style="width:20%;float:left;" id="overtime">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">加班</label>
-          
-
+            <label class="layui-form-label" style="width:100px;">加班申请</label>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 ">
+
+        <div style="width:20%;float:left;" id="DaysOff">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">请假</label>
-            
-
+            <label class="layui-form-label" style="width:100px;">调休申请</label>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " >
+
+        <div style="width:20%;float:left;" id="AskForLeave">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">出差</label>
-           
-
+            <label class="layui-form-label" style="width:100px;">请假申请</label>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3 " >
+
+        <div style="width:20%;float:left;">
             <div style="width:100px;height:100px;background-color:#47d5b4;">
                 <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
             </div>
-            <label class="layui-form-label" style="width:100px;">外出</label>
-          
-
+            <label class="layui-form-label" style="width:100px;">出差申请</label>
         </div>
+
+        <div style="width:20%;float:left;">
+            <div style="width:100px;height:100px;background-color:#47d5b4;">
+                <i class="layui-icon layui-icon-form" style="font-size: 100px; color:white; "></i>
+            </div>
+            <label class="layui-form-label" style="width:100px;">外出申请</label>
+        </div>
+
     </div>
 </fieldset>
    <script>
@@ -80,7 +91,7 @@
                layer.open({
                    type: 2
                    , area: ["600px", "600px"]
-                   , title: "转正"
+                   , title: "转正申请"
                    , content: '/Personnelmatters/ApprovalManagement/PositiveApply'
                    , anim: 2
                });
@@ -126,6 +137,51 @@
                    , area: ["900px", "500px"]
                    , title: "加薪"
                    , content: '/Personnelmatters/ApprovalManagement/RaisesApply'
+                   , anim: 2
+               });
+
+           })
+       });
+
+
+       //加班申请
+       $("#overtime").click(function () {
+           layui.use(['layer'], function (args) {
+               var layer = layui.layer;      //layui对象
+               layer.open({
+                   type: 2
+                   , area: ["600px", "620px"]
+                   , title: "加班"
+                   , content: '/Personnelmatters/ApprovalManagement/OvertimeApply'
+                   , anim: 2
+               });
+
+           })
+       });
+       //调休申请
+       $("#DaysOff").click(function () {
+           layui.use(['layer'], function (args) {
+               var layer = layui.layer;      //layui对象
+               layer.open({
+                   type: 2
+                   , area: ["600px", "620px"]
+                   , title: "调休"
+                   , content: '/Personnelmatters/ApprovalManagement/DaysoffApply'
+                   , anim: 2
+               });
+
+           })
+       });
+
+       //请假申请
+       $("#AskForLeave").click(function () {
+           layui.use(['layer'], function (args) {
+               var layer = layui.layer;      //layui对象
+               layer.open({
+                   type: 2
+                   , area: ["600px", "680px"]
+                   , title: "请假申请"
+                   , content: '/Personnelmatters/ApprovalManagement/LeaveApply'
                    , anim: 2
                });
 

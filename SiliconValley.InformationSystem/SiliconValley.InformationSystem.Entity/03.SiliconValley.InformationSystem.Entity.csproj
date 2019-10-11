@@ -116,6 +116,7 @@
     <Compile Include="Entity\CourseTime.cs" />
     <Compile Include="Entity\CourseType.cs" />
     <Compile Include="Entity\Curriculum.cs" />
+    <Compile Include="Entity\DaysOff.cs" />
     <Compile Include="Entity\Debit.cs" />
     <Compile Include="Entity\Department.cs" />
     <Compile Include="Entity\Detailedmaintenance.cs" />

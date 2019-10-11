@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<int> TypeId { get; set; }
-        public Nullable<bool> IsDaysoff { get; set; }
+        public string Image { get; set; }
         public Nullable<System.DateTime> StartTime { get; set; }
         public Nullable<System.DateTime> EndTime { get; set; }
         public Nullable<int> Duration { get; set; }
