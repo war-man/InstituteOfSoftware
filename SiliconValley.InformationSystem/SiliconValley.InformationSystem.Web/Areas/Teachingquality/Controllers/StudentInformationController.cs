@@ -195,8 +195,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //获取所有数据
         public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
-            //    List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
-            List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true).ToList();
+            //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
+            //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
+              List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true&&a.State==null).ToList();
             try
             {
               

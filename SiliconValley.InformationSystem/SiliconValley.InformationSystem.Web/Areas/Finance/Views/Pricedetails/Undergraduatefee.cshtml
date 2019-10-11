@@ -8,10 +8,20 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Finance</title>
+    <title>Undergraduatefee</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .mysql {
+            margin-top: 13px;
+        }
+
+        .textar {
+            width: 80%;
+            height: 80px;
+        }
+    </style>
 </head>
 <body>
     <form class="layui-form" action="" id="form">
@@ -19,7 +29,8 @@
             <fieldset>
 
                 <legend>基础数据</legend>
-
+                @Html.HiddenFor(a => a.Costitemsid)
+                <input style="display:none" id="Typeid" type="text" value="@ViewBag.Typeid" />
                 <div class="layui-row layui-form-item" style="margin-left:60px;">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">学号</label>
@@ -28,27 +39,29 @@
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">阶段</label>
+                        <label class="layui-form-label">年期类型</label>
                         <div class="layui-input-inline">
-                            @Html.DropDownList("Stage", ViewBag.Stage as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
+                            @Html.DropDownList("Costitemsid", ViewBag.Costitemsid as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Costitemsid" } })
                         </div>
                     </div>
 
 
 
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label">学费</label>
+                        <label class="layui-form-label">费用</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
 
                         </div>
                     </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
 
-
-
-                    <div id="domes">
-
+                            @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar" } })
+                        </div>
                     </div>
+
 
                 </div>
 
@@ -68,10 +81,37 @@
     </form>
 </body>
 </html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
     layui.use(['table', 'layer', 'tree', 'form'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
+
+        //监听阶段下拉框
+        form.on('select(Costitemsid)', function (data) {
+            if (data.value != "") {
+                var Costitemsid = $("#Costitemsid").val();
+                var dbase = {
+                    Costitemsid: data.value
+                };
+               
+                Otherexpenses(dbase, function (ds) {
+                    $("#Amountofmoney").val(ds);
+                   
+                });
+
+
+            } else {
+                $("#Amountofmoney").val("");
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var db = data.field;
+            ajaxUniom("/Finance/Pricedetails/Tuitionandfees", db)
+            console.log(db);
+        });
     });
 </script>

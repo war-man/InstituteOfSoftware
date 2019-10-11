@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SiliconValley.InformationSystem.Entity.ViewEntity
+{
+    /// <summary>
+    /// 学员缴费记录查询
+    /// </summary>
+    public class vierprice
+    {
+        public string Date
+        {
+            get; set;
+        }
+        public decimal Amountofmoney { get; set; }
+        public string CostitemName { get; set; }
+        public List<vierprice> Chicked { get; set; }
+        public string GrandName { get; set; }
+
+        public string Rategory { get; set; }
+    }
+}

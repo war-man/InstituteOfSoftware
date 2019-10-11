@@ -9,11 +9,17 @@ using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.Entity;
+using SiliconValley.InformationSystem.Business;
+using Newtonsoft.Json;
+using System.Web.Script.Serialization;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 {
     public class PricedetailsController : Controller
     {
+ 
         private readonly StudentFeeStandardBusinsess dbtext;
         public PricedetailsController()
         {
@@ -24,17 +30,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
         //阶段
         GrandBusiness Grandcontext = new GrandBusiness();
-       
+        //明目类型
+        BaseBusiness<CostitemsX> costitemssX = new BaseBusiness<CostitemsX>();
 
-
-
+        //学员费用明目
+    CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
         //学员费用明目页面
         public ActionResult Studentfees()
         {
           
             return View();
         }
-        CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
+    
         //所有学生费用录入明目
         [HttpGet]
         public ActionResult Costitems()
@@ -87,6 +94,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         //学员缴费操作页面
         public ActionResult Studentpayment()
         {
+         
             return View();
         }
         //获取学员信息
@@ -94,18 +102,134 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.GetDate(page, limit, Name, Sex, StudentNumber, identitydocument),JsonRequestBehavior.AllowGet);
         }
-        //录入学费页面
-        public ActionResult Finance()
+       
+        //学员学费数据加载
+        public ActionResult Singlecostitems(int? Grand_id, int TypeID)
         {
-            ViewBag.Stuid = Request.QueryString["Stuid"];
-            //阶段
-            ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
+            var data = dbtext.Singlecostitems(Grand_id, TypeID);
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+      
+
+        //自考本科费用表单录入
+        public ActionResult Undergraduatefee(string id)
+        {
+            //学号
+            ViewBag.Stuid = id;
+            // ViewBag.Costitemsid
+            int Typeid = int.Parse(Request.QueryString["Typeid"]);
+            //明目类型id
+            ViewBag.Typeid = Typeid;
+            //名目名称
+            ViewBag.Costitemsid= costitemsBusiness.costitemslist().Where(a => a.Rategory == Typeid).Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() }).ToList();
+            return View();
+        }
+        //获取没有阶段的明目费用
+        public ActionResult Otherexpenses(string Costitemsid)
+        {
+            return Json( dbtext.Otherexpenses(Costitemsid),JsonRequestBehavior.AllowGet);
+        }
+        //自考本科表单
+        [HttpGet]
+        public ActionResult Tuitionandfees(string id)
+        {
+           int Typeid = int.Parse(Request.QueryString["Typeid"]);
+            int price = 0;
+            var list = dbtext.boolTuitionandfees(id, Typeid);
+            foreach (var item in list)
+            {
+            price=price+Convert.ToInt32( item.Amountofmoney);
+            }
+            ViewBag.price = price;
+            //学号
+            ViewBag.Stuid = id;
+            // ViewBag.Costitemsid
+            
+            //明目类型id  
+            ViewBag.Typeid = Typeid;
+            ViewBag.Rategory = dbtext.boolTuitionandfees(id, Typeid);
+
+
             return View();
         }
 
+        //接收自考本科表单数据
+        [HttpPost]
+        public ActionResult Tuitionandfees(StudentFeeRecord studentFeeRecord)
+        {
+           
+            return Json(dbtext.Tuitionandfees(studentFeeRecord),JsonRequestBehavior.AllowGet);
+        }
+        //学员缴费页面
+        [HttpGet]
+        public ActionResult StudentPrice(string id)
+        {
+           
+            //阶段
+            ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
+            ViewBag.student = JsonConvert.SerializeObject(dbtext.StudentFind(id));
+            return View();
+        }
+        [HttpPost]
+        //学员缴费数据操作
+        public ActionResult StudentPrices(string person, string Remarks,int Stage)
+        {
+            SessionHelper.Session["Stage"] = Stage;
+            //引入序列化
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //序列化
+            var list = serializer.Deserialize<List<StudentFeeRecord>>(person);
+            return Json(dbtext.StudentPrices(list, Remarks), JsonRequestBehavior.AllowGet);
+        }
+            //树形菜单明目类别
+            public ActionResult Tree()
+        {     
+            var list = costitemssX.GetList().Where(a => a.IsDelete == false).ToList();
+            List<TreeClass> listtree = new List<TreeClass>();
+            foreach (var item in list)
+            {
+                TreeClass seclass = new TreeClass();
+                seclass.title = item.Name;
+                seclass.id = item.id.ToString();
+                listtree.Add(seclass);
+            }
+             
+            return Json(listtree, JsonRequestBehavior.AllowGet);
+        }
+
+        //学员费用缴纳查询阶段费用
+        public ActionResult Studentfeepayment(int Grand_id,string studentid)
+        {
+            return Json(dbtext.Studentfeepayment(Grand_id, studentid), JsonRequestBehavior.AllowGet);
+         
+        }
+       
 
 
-
-
+        //费用收据发票数据
+        public ActionResult Receipt()
+        {
+          
+        
+                var personlist = SessionHelper.Session["person"] as List<StudentFeeRecord>;
+          
+            // 引入序列化
+            //JavaScriptSerializer serializer = new JavaScriptSerializer();
+            // string person = Request.QueryString["person"];
+            //序列化
+            // var  personlist = serializer.Deserialize<List<StudentFeeRecord>>(person);
+       
+            ViewBag.student = JsonConvert.SerializeObject(dbtext.StudentFind(personlist.FirstOrDefault().StudenID));
+            ViewBag.Receiptdata = JsonConvert.SerializeObject(dbtext.Receiptdata(personlist));
+            //ViewBag.Remarks = personlist.FirstOrDefault().Remarks;
+            return View();
+        }
+        //查看缴费记录
+        public ActionResult Printrecord()
+        {
+            string student = Request.QueryString["student"];
+            ViewBag.vier = dbtext.FienPrice(student);
+            return View();
+        }
     }
 }

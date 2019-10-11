@@ -30,6 +30,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string qq { get; set; }
         public string WeChat { get; set; }
         public string Picture { get; set; }
+        /// <summary>
+        /// 异动操作，需要在线生则为null
+        /// </summary>
         public Nullable<int> State { get; set; }
         public string Hobby { get; set; }
         public string Familyaddress { get; set; }
