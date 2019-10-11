@@ -79,14 +79,7 @@
                     </div>
                 </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">是否调休:</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="IsNoDaysOff" value="false" title="调休" checked>
-                        <input type="radio" name="IsNoDaysOff" value="true" title="不调休">
-                    </div>
-                </div>
-
+             
                 <div class="layui-form-item">
                     <label class="layui-form-label">加班类型:</label>
                     <div class="layui-input-block">
@@ -187,20 +180,19 @@
                         }
                     var myendtime = $("#EndTime").val();;
                     if (myendtime != "") {
-                       
-                        var stime = new Date(myendtime);
-                        if (stime.getHours() <= 17 && stime.getMinutes() < 30) {
-                            stime.setHours(17);
-                            stime.setMinutes(30);
-                            console.log("值：" + stime);
-                            time = getInervalHour(stime, value);
-                            console.log(time);
-                        } else {
-                            time = getInervalHour(myendtime, value);
-                        }
-
-                        var time = getInervalHour(value, $("#EndTime").val());
-                       
+                        var time;
+                        //var stime = new Date(myendtime);
+                        //if (stime.getHours() < 17 || (stime.getHours()== 17 && stime.getMinutes() < 30)) {
+                        //    time = 0;
+                        //} else if (date.hours > 17 || (date.hours == 17 && date.minutes >= 30)) {
+                        //    time = getInervalHour(value,myendtime);
+                        //} else {
+                        //    var start = new Date(value);
+                        //    start.setHours(17);
+                        //    start.setMinutes(30);
+                        //    time = getInervalHour(start, myendtime);
+                        //}
+                        time = getInervalHour(value, myendtime);
                         $("#Duration").val(time);
                     }
                     
@@ -230,25 +222,25 @@
                     var mystarttime = $("#StartTime").val();
                     var time;
                     if (mystarttime != "") {
-                        var stime = new Date(mystarttime);
-                        if (stime.getHours() <= 17 && stime.getMinutes() < 30) {
-                            stime.setHours(17);
-                            stime.setMinutes(30);
-                            console.log("值：" + stime);
-                            time = getInervalHour(stime, value);
-                            console.log(time);
-                        } else {
-                            time = getInervalHour(mystarttime, value);
-                        }
-                       
-                        $("#Duration").val(time);
+                        //var stime = new Date(mystarttime);
+                        //if (date.hours < 17 || (date.hours == 17 && date.minutes < 30)) {
+                        //    time = 0;
+                        //} else if (stime.getHours() > 17 || (stime.getHours() == 17 && stime.getMinutes() >= 30)) {
+                        //    time = getInervalHour(mystarttime, value);
+                        //} else {
+                        //    stime.setHours(17);
+                        //    stime.setMinutes(30);
+                        //    time = getInervalHour(stime, value);
+                        //}
+                        time = getInervalHour(mystarttime, value);
+                          $("#Duration").val(time);
                     }
                 }
             });//结束时间
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                $.post("/Personnelmatters/ApprovalManagement/RaisesApply", data.field, function (data) {
+                $.post("/Personnelmatters/ApprovalManagement/OvertimeApply", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("申请成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引

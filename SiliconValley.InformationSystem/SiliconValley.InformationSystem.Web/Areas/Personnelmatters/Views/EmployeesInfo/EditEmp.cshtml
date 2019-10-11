@@ -217,24 +217,6 @@
 
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">户籍地址:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.DomicileAddress, new Dictionary<string, object>() { { "class", "layui-input" } })
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">现居地址:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Address, new Dictionary<string, object>() { { "class", "layui-input " } })
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label" style="width:120px;margin-left:-40px;">身份证有效期:</label>
                         <div class="layui-input-block" style="width:190px;">
@@ -291,6 +273,24 @@
 
                 <div class="layui-row layui-form-item">
 
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">户籍地址:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.DomicileAddress, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">现居地址:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.Address, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
@@ -315,7 +315,7 @@
 
             </div>
 
-            <div class="layui-form-item" style="margin-left:400px;">
+            <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
                     <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
