@@ -593,6 +593,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentUnion\StudentUnionMemberss.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentUnion\UnionMemberAdd.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Finance.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Studentfees.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
