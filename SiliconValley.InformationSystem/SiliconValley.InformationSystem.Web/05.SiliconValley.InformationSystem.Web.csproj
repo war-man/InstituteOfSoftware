@@ -615,6 +615,8 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\PositiveDetail.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpOvertimeRecord.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\OvertimeEdit.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DaysOffApply.cshtml" />
+    <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2354,6 +2356,7 @@
     <Folder Include="assets\img\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
+    <Folder Include="uploadXLSXfile\DaysOffImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -70,7 +70,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label" style="width:120px;margin-left:-40px;">加班时长(小时):</label>
                     <div class="layui-input-block">
-                        @Html.TextBoxFor(a => a.Duration, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        @Html.TextBoxFor(a => a.Duration, new Dictionary<string, object>() { { "class", "layui-input xiaoshu" } })
                     </div>
                 </div>
 
@@ -132,13 +132,30 @@
                 })
             }
 
+            $(".xiaoshu").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,1}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
+
             //提交
             form.on('submit(demo1)', function (data) {
                 $.post("/Personnelmatters/EmployeesInfo/OvertimeEdit", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layui.table.reload('myETR');
+                            parent.layui.table.reload('myNoapproval');
+                            parent.layui.table.reload('myApproved');
                             parent.layer.close(index);
                         });
                     } else {

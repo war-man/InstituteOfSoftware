@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 
-namespace SiliconValley.InformationSystem.Entity.Entity
+namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
     using System;
     using System.Collections.Generic;

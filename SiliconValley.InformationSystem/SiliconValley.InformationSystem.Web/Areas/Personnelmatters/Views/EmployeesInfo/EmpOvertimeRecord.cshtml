@@ -20,14 +20,15 @@
         <ul class="layui-tab-title">
             <li class="layui-this">未审批加班申请</li>
             <li>已审批加班申请</li>
+            <li>未审批调休申请</li>
+            <li>已审批调休申请</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-               
+
                 <table id="NoApproval" lay-filter="NoApproval"></table>
                 @*操作栏*@
                 <script type="text/html" id="barDemo">
-                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="ApprovalOvertime">审批</a>
                 </script>
                 @*是否不调休属性显示*@
@@ -57,44 +58,196 @@
             </div>
 
             <div class="layui-tab-item">
-              
+
                 <table id="Approved" lay-filter="Approved"></table>
 
                 @*头部工具栏*@
                 <script type="text/html" id="toolbarDemo">
                     @*模糊查询*@
-                        <form class="layui-form" action="" lay-filter="formtest">
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                                    <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否过了年限:</label>
-                                    <div class="layui-input-block">
-                                        <select name="IsPassYear" id="IsPassYear">
-                                            <option value="">--请选择--</option>
-                                            <option value="false">否</option>
-                                            <option value="true">是</option>
-                                        </select>
-
-                                    </div>
+                    <form class="layui-form" action="" lay-filter="formtest">
+                        <div class="layui-row layui-form-item">
+                            <div style="width:22%;float:left;">
+                                <label class="layui-form-label">姓名：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
                                 </div>
-                                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                                    <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否调休:</label>
-                                    <div class="layui-input-block">
-                                        <select name="IsNoDaysOff" id="IsNoDaysOff">
-                                            <option value="">--请选择--</option>
-                                            <option value="false">调休</option>
-                                            <option value="true">不调休</option>
-                                        </select>
-
-                                    </div>
-                                </div>
-
-                                <button class="layui-btn" style="margin-left:50px;" type="button" lay-event="Conditionselect">查询</button>
                             </div>
-                        </form>
-                       
-                        <div class="layui-btn-container">
-                            <button class="layui-btn layui-btn-sm" lay-event="editIsPassYear">编辑可用年限</button>
+
+                            <div style="width:25%;float:left;">
+                                <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否调休:</label>
+                                <div class="layui-input-block">
+                                    <select name="IsNoDaysOff" id="IsNoDaysOff">
+                                        <option value="">--请选择--</option>
+                                        <option value="false">调休</option>
+                                        <option value="true">不调休</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div style="width:20%;float:left;">
+                                <label class="layui-form-label">年份：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="YearSelect" name="YearSelect" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div style="width:20%;float:left;">
+                                <label class="layui-form-label">月份：</label>
+                                <div class="layui-input-block" style="width:100px;">
+                                    <input type="text" id="MonthSelect" name="MonthSelect" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <button class="layui-btn layui-btn-sm" style="margin-left:60px;" type="button" lay-event="Conditionselect">查询</button>
                         </div>
+                    </form>
+
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="editIsPassYear">编辑可用年限</button>
+                    </div>
+
+                </script>
+
+                @*操作栏*@
+                <script type="text/html" id="barDemo1">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                </script>
+
+                @*审批是否通过属性显示*@
+                <script type="text/html" id="myshenpi2">
+                    {{# if(d.IsPass==false){ }}
+                    {{ d.IsPass="未通过"}}
+                    {{# }else{ }}
+                    {{ d.IsPass="已通过" }}
+                    {{# } }}
+                </script>
+
+            </div>
+
+            <div class="layui-tab-item">
+
+                <table id="NoApprovedaysoff" lay-filter="NoApprovedaysoff"></table>
+
+                @*头部工具栏*@
+                <script type="text/html" id="toolbarDemo">
+                    @*模糊查询*@
+                    <form class="layui-form" action="" lay-filter="formtest">
+                        <div class="layui-row layui-form-item">
+                            <div style="width:22%;float:left;">
+                                <label class="layui-form-label">姓名：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div style="width:25%;float:left;">
+                                <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否调休:</label>
+                                <div class="layui-input-block">
+                                    <select name="IsNoDaysOff" id="IsNoDaysOff">
+                                        <option value="">--请选择--</option>
+                                        <option value="false">调休</option>
+                                        <option value="true">不调休</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div style="width:20%;float:left;">
+                                <label class="layui-form-label">年份：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="YearSelect" name="YearSelect" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div style="width:20%;float:left;">
+                                <label class="layui-form-label">月份：</label>
+                                <div class="layui-input-block" style="width:100px;">
+                                    <input type="text" id="MonthSelect" name="MonthSelect" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <button class="layui-btn layui-btn-sm" style="margin-left:60px;" type="button" lay-event="Conditionselect">查询</button>
+                        </div>
+                    </form>
+
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="editIsPassYear">编辑可用年限</button>
+                    </div>
+
+                </script>
+
+                @*操作栏*@
+                <script type="text/html" id="barDemo1">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                </script>
+
+                @*审批是否通过属性显示*@
+                <script type="text/html" id="myshenpi2">
+                    {{# if(d.IsPass==false){ }}
+                    {{ d.IsPass="未通过"}}
+                    {{# }else{ }}
+                    {{ d.IsPass="已通过" }}
+                    {{# } }}
+                </script>
+
+            </div>
+
+            <div class="layui-tab-item">
+
+                <table id="Approveddaysoff" lay-filter="Approveddaysoff"></table>
+
+                @*头部工具栏*@
+                <script type="text/html" id="toolbarDemo">
+                    @*模糊查询*@
+                    <form class="layui-form" action="" lay-filter="formtest">
+                        <div class="layui-row layui-form-item">
+                            <div style="width:22%;float:left;">
+                                <label class="layui-form-label">姓名：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div style="width:25%;float:left;">
+                                <label class="layui-form-label" style="width:120px;margin-left:-20px;">是否调休:</label>
+                                <div class="layui-input-block">
+                                    <select name="IsNoDaysOff" id="IsNoDaysOff">
+                                        <option value="">--请选择--</option>
+                                        <option value="false">调休</option>
+                                        <option value="true">不调休</option>
+                                    </select>
+
+                                </div>
+                            </div>
+
+                            <div style="width:20%;float:left;">
+                                <label class="layui-form-label">年份：</label>
+                                <div class="layui-input-block">
+                                    <input type="text" id="YearSelect" name="YearSelect" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <div style="width:20%;float:left;">
+                                <label class="layui-form-label">月份：</label>
+                                <div class="layui-input-block" style="width:100px;">
+                                    <input type="text" id="MonthSelect" name="MonthSelect" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+
+                            <button class="layui-btn layui-btn-sm" style="margin-left:60px;" type="button" lay-event="Conditionselect">查询</button>
+                        </div>
+                    </form>
+
+                    <div class="layui-btn-container">
+                        <button class="layui-btn layui-btn-sm" lay-event="editIsPassYear">编辑可用年限</button>
+                    </div>
+
+                </script>
+
+                @*操作栏*@
+                <script type="text/html" id="barDemo1">
+                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 </script>
 
                 @*审批是否通过属性显示*@
@@ -113,7 +266,7 @@
 
 
     <script>
-        //未审批
+        //未审批的加班申请
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -138,7 +291,7 @@
                     , { field: 'IsNoDaysOff', title: '是否调休', width: 120, templet: '#mytiaoxiu' }
                     , { field: 'IsPassYear', title: '是否过了年限', width: 135, templet: '#mynianxian' }
                     , { field: 'IsPass', title: '审批是否通过', width: 135, templet: '#myshenpi' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 140 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 120 }
                 ]]
                 , page: true
             });
@@ -146,7 +299,6 @@
             //监听行工具事件
             table.on('tool(NoApproval)', function (obj) {
                 var data = obj.data;
-                console.log(data.TransactionId);
                 if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
@@ -233,9 +385,19 @@
                     , { field: 'IsNoDaysOff', title: '是否调休', width: 105, templet: '#mytiaoxiu' }
                     , { field: 'IsPassYear', title: '是否过了年限', width: 140, templet: '#mynianxian' }
                     , { field: 'IsPass', title: '审批是否通过', width: 140, templet: '#myshenpi2' }
-
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 120 }
                 ]]
                 , page: true
+            });
+
+
+            laydate.render({
+                elem: '#YearSelect',
+                type: 'year'
+            });
+            laydate.render({
+                elem: '#MonthSelect',
+                type: 'month'
             });
 
             element.on('tab(mytab)', function (data) {
@@ -257,15 +419,28 @@
                         
                         break;
                     case 'Conditionselect'://模糊查询点击事件
-                        var IsPassYear = $("#IsPassYear").val();//是否过了年限
+                        var ename = $("#EmpName").val();//员工姓名
+                        var IsNoDaysOff = $("#IsNoDaysOff").val();//是否调休
+                        var YearSelect = $("#YearSelect").val(); 
+                        var MonthSelect = $("#MonthSelect").val();
+                        console.log(MonthSelect);
                         layui.use(['table'], function () {
                             var table = layui.table;
                             table.reload('myApproved', {
                                 page: {
                                     curr: 1 //重新从第 1 页开始
                                 }, where: {
-                                    AppCondition: IsPassYear
+                                    AppCondition: ename + "," + IsNoDaysOff + "," + YearSelect + "," + MonthSelect
                                 }
+                            });
+
+                            laydate.render({
+                                elem: '#YearSelect',
+                                type: 'year'
+                            });
+                            laydate.render({
+                                elem: '#MonthSelect',
+                                type: 'month'
                             });
                         });
 
@@ -273,9 +448,229 @@
                 };
             });
 
+            //监听行工具事件
+            table.on('tool(Approved)', function (obj) {
+                var data = obj.data;
+                console.log(data.Id);
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/OvertimeEdit/?id=' + data.Id
+                        , area: ["600px", "580px"]
+                        , title: '编辑加班记录'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } 
+
+            });
 
         });
-        //修改是否过了年限属性
+
+
+        //未审批的调休申请
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#NoApprovedaysoff'
+                , url: '/Personnelmatters/EmployeesInfo/GetDaysOffData'
+                , id: "myNoapprovalDaysOff"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'StartTime', title: '开始时间', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
+                    , { field: 'EndTime', title: '结束时间', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'Duration', title: '调休时长（小时）', width: 145 }
+                    , { field: 'LeaveReason', title: '调休原因', width: 110 }
+                    , { field: 'IsPassYear', title: '是否过了年限', width: 135, templet: '#mynianxian' }
+                    , { field: 'IsPass', title: '审批是否通过', width: 135, templet: '#myshenpi' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 120 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(NoApproval)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/OvertimeEdit/?id=' + data.Id
+                        , area: ["600px", "580px"]
+                        , title: '编辑加班记录'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else if (obj.event === 'ApprovalOvertime') {
+                    var s = true;
+                    layer.open({
+                        content: '是否通过审批？'
+                        , btn: ['已通过', '未通过']
+                        , yes: function (index, layero) {
+                            console.log("已通过的状态:" + s);
+                            $.post("/Personnelmatters/EmployeesInfo/overtimeIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                if (data.Success) {
+                                    layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                        layui.use(['table'], function () {
+                                            var table = layui.table;
+                                            table.reload("myNoapproval");
+                                            table.reload("myApproved");
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.alert("审批出错");
+                                }
+                            });
+                        }
+                        , btn2: function (index, layero) {
+                            s = false;
+                            console.log("未通过的状态:" + s);
+                            $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                if (data.Success) {
+                                    layer.alert("审批未通过", { icon: 1 }, function (index) {
+                                        layui.use(['table'], function () {
+                                            var table = layui.table;
+                                            table.reload("myNoapproval");
+                                            table.reload("myApproved");
+                                        });
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    layer.alert("审批出错");
+                                }
+                            });
+                        }
+
+                    });
+
+
+                };
+
+
+            });
+
+        });
+
+        //已审批的调休审批
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#Approveddaysoff'
+                , url: '/Personnelmatters/EmployeesInfo/GetDaysOffApprovedData'
+                , id: "myApprovedDaysOff"
+                , toolbar: '#toolbarDemo'
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    { type: 'checkbox' }
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'StartTime', title: '开始时间', width: 120, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
+                    , { field: 'EndTime', title: '结束时间', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'Duration', title: '调休时长（小时）', width: 145 }
+                    , { field: 'LeaveReason', title: '调休原因', width: 110 }
+                    , { field: 'IsPassYear', title: '是否过了年限', width: 135, templet: '#mynianxian' }
+                    , { field: 'IsPass', title: '审批是否通过', width: 140, templet: '#myshenpi2' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 120 }
+                ]]
+                , page: true
+            });
+
+
+            laydate.render({
+                elem: '#YearSelect',
+                type: 'year'
+            });
+            laydate.render({
+                elem: '#MonthSelect',
+                type: 'month'
+            });
+
+            element.on('tab(mytab)', function (data) {
+                table.resize();
+            });
+
+            //头工具栏事件
+            table.on('toolbar(Approved)', function (obj) {
+                var checkStatus = table.checkStatus("myApproved");
+                var datas = checkStatus.data;
+                switch (obj.event) {
+                    case 'editIsPassYear':
+                        if (datas.length == 0) {
+                            layer.alert('请先选择要修改的数据行');
+                            return;
+                        } else {
+                            EditIsPassYear(datas);
+                        }
+
+                        break;
+                    case 'Conditionselect'://模糊查询点击事件
+                        var ename = $("#EmpName").val();//员工姓名
+                        var IsNoDaysOff = $("#IsNoDaysOff").val();//是否调休
+                        var YearSelect = $("#YearSelect").val();
+                        var MonthSelect = $("#MonthSelect").val();
+                        console.log(MonthSelect);
+                        layui.use(['table'], function () {
+                            var table = layui.table;
+                            table.reload('myApproved', {
+                                page: {
+                                    curr: 1 //重新从第 1 页开始
+                                }, where: {
+                                    AppCondition: ename + "," + IsNoDaysOff + "," + YearSelect + "," + MonthSelect
+                                }
+                            });
+
+                            laydate.render({
+                                elem: '#YearSelect',
+                                type: 'year'
+                            });
+                            laydate.render({
+                                elem: '#MonthSelect',
+                                type: 'month'
+                            });
+                        });
+
+
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(Approved)', function (obj) {
+                var data = obj.data;
+                console.log(data.Id);
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/OvertimeEdit/?id=' + data.Id
+                        , area: ["600px", "580px"]
+                        , title: '编辑加班记录'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+
+            });
+
+        });
+
+
+        //修改加班的是否过了年限属性
         function EditIsPassYear(data) {
             var list = "";
             for (var i = 0; i < data.length; i++) {
