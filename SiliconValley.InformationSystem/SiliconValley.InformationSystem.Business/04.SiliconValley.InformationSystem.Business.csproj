@@ -127,6 +127,7 @@
     <Compile Include="RecruitPhoneTraceBusiness\RecruitPhoneTraceManage.cs" />
     <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\ApplyForFullMemberManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\DaysOffManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />

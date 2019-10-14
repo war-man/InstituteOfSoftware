@@ -1458,6 +1458,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
+
         //加班记录及管理
         public ActionResult EmpOvertimeRecord() {
             return View();
@@ -1518,12 +1519,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
-                string IsPassYear = str[0];
-               
-                if (!string.IsNullOrEmpty(IsPassYear))
+                string ename = str[0];
+                string IsNoDaysOff = str[1];
+                string YearSelect = str[2];
+                string MonthSelect = str[3];
+                list = list.Where(e => emanage.GetEntity(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(IsNoDaysOff))
                 {
-                    list = list.Where(e => e.IsPassYear==bool.Parse(IsPassYear)).ToList();
-                }                           
+                    list = list.Where(e => e.IsNoDaysOff == bool.Parse(IsNoDaysOff)).ToList();
+                }
+                if (!string.IsNullOrEmpty(YearSelect))
+                {
+                    list = list.Where(e =>DateTime.Parse(e.StartTime.ToString()).Year ==int.Parse(YearSelect)).ToList();
+                }
+                if (!string.IsNullOrEmpty(MonthSelect))
+                {
+                    var year = DateTime.Parse(MonthSelect).Year;
+                    var month= DateTime.Parse(MonthSelect).Month;
+                    list = list.Where(e => DateTime.Parse(e.StartTime.ToString()).Year==year && DateTime.Parse(e.StartTime.ToString()).Month==month).ToList();
+                }
             }
             var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
@@ -1652,5 +1666,85 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
          
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
+
+
+
+        /// <summary>
+        /// 获取未审批的调休记录
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDaysOffData(int page, int limit)
+        {
+            DaysOffManage dfmanage = new DaysOffManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = dfmanage.GetList();
+
+            var newlist = list.Where(s => s.IsApproval == false).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             e.EmployeeId,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             e.StartTime,
+                             e.EndTime,
+                             e.Duration,
+                             e.LeaveReason,
+                             e.IsPassYear,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 获取已审批且未过年限（及当下年份）的调休记录
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDaysOffApprovedData(int page, int limit)
+        {
+            DaysOffManage dfmanage = new DaysOffManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var list = dfmanage.GetList().Where(s => s.IsApproval == true && s.IsPassYear == false).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var etlist = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             e.EmployeeId,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             e.StartTime,
+                             e.EndTime,
+                             e.Duration,
+                             e.LeaveReason,
+                             e.IsPassYear,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = etlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

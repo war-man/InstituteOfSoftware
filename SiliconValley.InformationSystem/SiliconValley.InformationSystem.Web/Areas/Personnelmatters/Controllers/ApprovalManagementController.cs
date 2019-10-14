@@ -11,12 +11,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
+    using System.Text;
+    using System.IO;
+    using SiliconValley.InformationSystem.Business.Common;
 
     public class ApprovalManagementController : Controller
     {
         // GET: Personnelmatters/ApprovalManagement
         public ActionResult ApprovalIndex()//审批管理
         {
+            string eid = "201908220012";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
             return View();
         }
         //根据编号获取某员工信息
@@ -182,10 +187,90 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        ///  //是否可申请调休的验证（当上月有提前调休记录，且还未补班的情况下，不能再调休）
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult CheckIsAllowDaysoff(string id) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                //计算该员工的审批已通过的作为调休的加班总时间（可调休总时间）
+                var sumdaysofftime = otrmanage.GetList().Where(s => s.EmployeeId == id && s.IsPass == true && s.IsNoDaysOff == false).ToList().Sum(s => s.Duration);
+                //计算该员工已经调休了的总时间
+                var sumdaysoff = dfmanage.GetList().Where(s => s.EmployeeId == id && s.IsPass == true).ToList().Sum(s => s.Duration);
+               
+                if ((decimal)sumdaysofftime-(decimal)sumdaysoff<0 ) {//表示有提前调休的情况
+                    //找到上个月提前调休的记录
+                    var lastdaysoff = dfmanage.GetList().LastOrDefault();
+                    int lastmonth = DateTime.Parse(lastdaysoff.StartTime.ToString()).Month;
+                    int nowmonth = DateTime.Now.Month;
+                    if (nowmonth-lastmonth==1) {//表示是上个月
+                        AjaxResultxx = dfmanage.Success();
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = dfmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+
+        }
+        //调休申请
+        public ActionResult DaysOffApply() {
+            string eid = "201908220012";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
+            return View();
+        }
+        //调休申请提交
+        [HttpPost]
+        public ActionResult DaysOffApply(DaysOff leave) {
+            DaysOffManage dmanage = new DaysOffManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                #region 图片上传
+                StringBuilder ProName = new StringBuilder();
+                HttpPostedFileBase file = Request.Files["Image"];
+                string fname = Request.Files["Image"].FileName; //获取上传文件名称（包含扩展名）
+                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                string name = Path.GetExtension(fname);//获取扩展名
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/DaysOffImage/";//获取当前程序集下面的uploads文件夹中的文件夹目录
+
+                string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                file.SaveAs(ProName.ToString());//上传文件   
+                #endregion
+
+                leave.Image = file.FileName;           
+                   leave.IsApproval = false;
+                   leave.IsPass = false;
+                   leave.IsPassYear = false;
+                   dmanage.Insert(leave);
+                   AjaxResultxx = dmanage.Success(leave);
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = dmanage.Error(ex.Message);
+                BusHelper.WriteSysLog(ex.Message, SiliconValley.InformationSystem.Entity.Base_SysManage.EnumType.LogType.上传文件);
+               
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+         
+        }
+
 
         //请假申请
         public ActionResult LeaveApply(LeaveRequest askforleave) {
             return View();
         }
+
+       
     }
 }
