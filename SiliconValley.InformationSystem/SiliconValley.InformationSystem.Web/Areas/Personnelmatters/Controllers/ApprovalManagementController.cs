@@ -248,7 +248,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 file.SaveAs(ProName.ToString());//上传文件   
                 #endregion
 
-                leave.Image = file.FileName;           
+                   leave.Image = completefilePath;           
                    leave.IsApproval = false;
                    leave.IsPass = false;
                    leave.IsPassYear = false;

@@ -1641,7 +1641,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
-        //修改过了年限的数据，将 是否过了年限 属性进行修改
+        //修改加班的过了年限的数据，将 是否过了年限 属性进行修改
         [HttpPost]
         public ActionResult EditIsPassYear(string list) {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
@@ -1714,11 +1714,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetDaysOffApprovedData(int page, int limit)
+        public ActionResult GetDaysOffApprovedData(int page, int limit,string AppCondition)
         {
             DaysOffManage dfmanage = new DaysOffManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = dfmanage.GetList().Where(s => s.IsApproval == true && s.IsPassYear == false).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string ename = str[0];
+                string IsPass = str[1];
+                string YearSelect = str[2];
+                string MonthSelect = str[3];
+                list = list.Where(e => emanage.GetEntity(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(IsPass))
+                {
+                    list = list.Where(e => e.IsPass == bool.Parse(IsPass)).ToList();
+                }
+                if (!string.IsNullOrEmpty(YearSelect))
+                {
+                    list = list.Where(e => DateTime.Parse(e.StartTime.ToString()).Year == int.Parse(YearSelect)).ToList();
+                }
+                if (!string.IsNullOrEmpty(MonthSelect))
+                {
+                    var year = DateTime.Parse(MonthSelect).Year;
+                    var month = DateTime.Parse(MonthSelect).Month;
+                    list = list.Where(e => DateTime.Parse(e.StartTime.ToString()).Year == year && DateTime.Parse(e.StartTime.ToString()).Month == month).ToList();
+                }
+            }
             var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
@@ -1745,6 +1768,116 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+        //根据编号获取调休申请对象
+        public ActionResult GetDaysOffById(int id) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            var mydf = dfmanage.GetEntity(id);
+            var empobj = new
+            {
+                #region 获取属性值 
+               mydf.Id,
+               mydf.EmployeeId,
+               empName = emanage.GetInfoByEmpID(mydf.EmployeeId).EmpName,
+               mydf.StartTime,
+               mydf.EndTime,
+               mydf.Duration,
+               mydf.LeaveReason,
+               Image= mydf.Image,
+               mydf.IsPassYear,
+               mydf.IsApproval,
+               mydf.IsPass
+                #endregion
+            };
+            return Json(empobj,JsonRequestBehavior.AllowGet);
+        }
 
+        //审批调休申请
+        [HttpPost]
+        public ActionResult DaysoffIsPassed(int id, bool state)
+        {
+            DaysOffManage dfmanage = new DaysOffManage();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                var otr = dfmanage.GetEntity(id);
+                otr.IsApproval = true;
+                otr.IsPass = state;
+                dfmanage.Update(otr);
+                ajaxresult = dfmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = dfmanage.Error(ex.Message);
+            }
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
+        //调休申请的详情页
+        public ActionResult DaysOffDetail(int id) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            var mydf = dfmanage.GetEntity(id);
+            ViewBag.Id = id;
+            return View(mydf);
+        }
+        //已审批的调休申请的编辑
+        public ActionResult DaysOffEdit(int id) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            var mydf = dfmanage.GetEntity(id);
+            ViewBag.Id = id;
+            return View(mydf);
+        }
+        [HttpPost]
+        public ActionResult DaysOffEdit(DaysOff df) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            var ajaxresult = new AjaxResult();
+            try
+            {
+                var myotr = dfmanage.GetEntity(df.Id);
+                myotr.Duration = df.Duration;
+                dfmanage.Update(myotr);
+                ajaxresult = dfmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = dfmanage.Error(ex.Message);
+            }
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
+        //修改调休的过了年限的数据，将 是否过了年限 属性进行修改
+        public ActionResult EditDaysOffIsPassYear(string list) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            var ajaxresult = new AjaxResult();
+            string[] arr = list.Split(',');
+            for (int i = 0; i < arr.Length - 1; i++)
+            {
+                try
+                {
+                    int id = int.Parse(arr[i]);
+                    var otr = dfmanage.GetEntity(id);
+                    otr.IsPassYear = true;
+                    dfmanage.Update(otr);
+                    ajaxresult = dfmanage.Success();
+                }
+                catch (Exception ex)
+                {
+                    ajaxresult = dfmanage.Error(ex.Message);
+                }
+            }
+
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
+        }
+
+
+      /// <summary>
+      ///获取加班及调休的统计数据 (首先按年份分别找到每个人的加班总时长和调休总时长)
+      /// </summary>
+      /// <returns></returns>
+        public ActionResult GetStatisticsTimeData() {
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            DaysOffManage dfmanage = new DaysOffManage();
+           var mylist= otrmanage.GetList().GroupBy(s => s.EmployeeId).ToList();
+            var ajaxresult = new AjaxResult();
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
     }
 }

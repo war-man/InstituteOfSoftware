@@ -617,6 +617,8 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\OvertimeEdit.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DaysOffApply.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DaysOffDetail.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DaysOffEdit.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2271,6 +2273,11 @@
     <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095330Admin.jpg" />
     <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100014Admin.jpg" />
     <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100125Admin.jpg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014030555.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014030701.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014031141.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014032831.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014033608.jpeg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -2329,6 +2336,23 @@
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\测试.xls" />
     <Content Include="uploadXLSXfile\Sheet1.xlsx" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191008094926Admin" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191009085432Admin" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008091940Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008092640Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008094137Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008095100Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009084236Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009084715Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009085102Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009085442Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191008092643徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191008095155徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191008095230徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009084240徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009084731徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009085105徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009085444徐宝平ErrorExcel.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2356,7 +2380,6 @@
     <Folder Include="assets\img\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
-    <Folder Include="uploadXLSXfile\DaysOffImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
