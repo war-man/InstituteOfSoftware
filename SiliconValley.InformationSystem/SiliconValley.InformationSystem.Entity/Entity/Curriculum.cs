@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 专业
         /// </summary>
-        public int MajorID { get; set; }
+        public Nullable<int> MajorID { get; set; }
         /// <summary>
         /// 课程名称
         /// </summary>

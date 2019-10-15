@@ -104,7 +104,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     int wangchen = CM_Entity.GetWangcenCount(item.Id, id);//得到完成量
                     if (wangchen!=0 && count!=0)
                     {
-                       zhanghua.Number =Convert.ToDouble(wangchen) / Convert.ToDouble(count);
+                       zhanghua.Number = wangchen;
                     }else
                     {
                      zhanghua.Number = 0;

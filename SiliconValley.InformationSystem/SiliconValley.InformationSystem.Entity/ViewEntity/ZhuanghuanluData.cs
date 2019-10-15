@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 转化率
         /// </summary>
-        public double Number
+        public int Number
         {
             get;set;
         }

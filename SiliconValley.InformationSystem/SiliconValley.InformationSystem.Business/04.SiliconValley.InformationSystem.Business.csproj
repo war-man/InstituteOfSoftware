@@ -94,6 +94,7 @@
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
+    <Compile Include="EducationalBusiness\BaseDataEnumManeger.cs" />
     <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />

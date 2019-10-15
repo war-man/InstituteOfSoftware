@@ -211,7 +211,9 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\Educational\Controllers\BaseDataEnumController.cs" />
     <Compile Include="Areas\Educational\Controllers\BeOnDutyController.cs" />
+    <Compile Include="Areas\Educational\Controllers\BreakController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
@@ -615,6 +617,8 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\PositiveDetail.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpOvertimeRecord.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\OvertimeEdit.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\CourseTypeIndex.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\InfomationAndStatuView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2333,6 +2337,8 @@
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Educational\Models\" />
+    <Folder Include="Areas\Educational\Views\BaseDataEnum\" />
+    <Folder Include="Areas\Educational\Views\Break\" />
     <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
