@@ -482,6 +482,7 @@
                         }
                          
                     }
+                    console.log(seriesData);
                     var option2 = {
                         title: {
                             text: '转化量统计',
@@ -489,7 +490,7 @@
                         },
                         tooltip: {
                             trigger: 'item',
-                            formatter: "{a} <br/>{b} : {c} ({d}%)"
+                            formatter: "{{b} : ({c}个)}"
                         },
                         legend: {
                             type: 'scroll',
