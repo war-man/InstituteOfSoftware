@@ -36,6 +36,7 @@
     <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
     <button class="layui-btn layui-btn-radius layui-btn-primary" id="AddCooper">添加合作企业</button>
 </div>
+
 <table class="layui-hide" id="Enterprise" lay-filter="EnterpriseInfo"></table>
 
 <script type="text/html" id="barDemo">
@@ -99,6 +100,7 @@
                 }
             });
         }
+
         layui.use(['table', 'layer'], function () {
             var table = layui.table;
             var layer = layui.layer; //layui对象
@@ -139,6 +141,7 @@
                 ]]
 
             });
+
             MrDtableIns = tableIns;
             //监听工具条
             table.on('tool(EnterpriseInfo)', function (obj) {
@@ -216,6 +219,7 @@
                 var type = $(this).data('type');
                 active[type] ? active[type].call(this) : '';
             });
+
         });
         $("#grandlist li a").click(function () {
             var grand = $(this).text();

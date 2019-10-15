@@ -132,6 +132,7 @@
     <Compile Include="Entity\DormitoryCharging.cs" />
     <Compile Include="Entity\Dormitoryfloor.cs" />
     <Compile Include="Entity\Dormitoryhygiene.cs" />
+    <Compile Include="Entity\DormitoryLeader.cs" />
     <Compile Include="Entity\DormitoryMaintenance.cs" />
     <Compile Include="Entity\Electricitytarifftype.cs" />
     <Compile Include="Entity\EmpClass.cs" />
@@ -297,6 +298,7 @@
     <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\DivTwoData.cs" />
     <Compile Include="ViewEntity\DormInformationView.cs" />
+    <Compile Include="ViewEntity\DormInfoView.cs" />
     <Compile Include="ViewEntity\dtreestatus.cs" />
     <Compile Include="ViewEntity\dtreeview.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
@@ -304,6 +306,7 @@
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />
@@ -316,7 +319,9 @@
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProjectDetailView.cs" />
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
+    <Compile Include="ViewEntity\ProStudentView.cs" />
     <Compile Include="ViewEntity\resultdtree.cs" />
+    <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />

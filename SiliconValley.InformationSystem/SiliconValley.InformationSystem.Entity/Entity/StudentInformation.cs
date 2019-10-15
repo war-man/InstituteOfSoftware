@@ -25,26 +25,49 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string StudentNumber { get; set; }
         public string Name { get; set; }
         public Nullable<bool> Sex { get; set; }
+        /// <summary>
+        /// 身份证
+        /// </summary>
         public string identitydocument { get; set; }
         public string Telephone { get; set; }
         public string qq { get; set; }
         public string WeChat { get; set; }
+        /// <summary>
+        /// 图片
+        /// </summary>
         public string Picture { get; set; }
+        /// <summary>
+        /// 状态
+        /// </summary>
         public Nullable<int> State { get; set; }
+
         public string Hobby { get; set; }
         public string Familyaddress { get; set; }
         public Nullable<System.DateTime> BirthDate { get; set; }
+        /// <summary>
+        /// 种族
+        /// </summary>
         public string Nation { get; set; }
+        /// <summary>
+        /// 学历
+        /// </summary>
         public string Education { get; set; }
+        /// <summary>
+        /// 性格
+        /// </summary>
         public string Traine { get; set; }
         public string Password { get; set; }
         public Nullable<int> StudentPutOnRecord_Id { get; set; }
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 注册时间
+        /// </summary>
         public Nullable<System.DateTime> InsitDate { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Reack { get; set; }
         public string Guardian { get; set; }
-
-
 
     }
 }

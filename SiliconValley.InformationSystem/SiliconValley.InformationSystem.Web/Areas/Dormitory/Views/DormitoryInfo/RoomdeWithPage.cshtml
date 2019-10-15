@@ -109,6 +109,7 @@
             line-height: 44px;
             text-align: center;
         }
+
     </style>
 </head>
 
@@ -116,7 +117,7 @@
     <div id="content">
         <div id="leftdiv">
             <div id="top" style="text-align:center">
-                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal"><h1>D-1101 男寝</h1></button>
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal"><h1>@ViewBag.DormInformation</h1></button>
             </div>
             <div id="bottom">
                 <div id="leftbed">
@@ -189,9 +190,142 @@
             </div>
         </div>
         <div id="rightdiv">
+            <div style="margin-top:10%;">
+                <form class="layui-form" action="">
+                    <fieldset>
+                        <legend>
+                            学员基础信息
+                        </legend>
 
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                                <label class="layui-form-label">学生姓名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" style="border:none;" readonly="readonly" value="小老鼠" name="TungName" lay-verify="title" autocomplete="off"  class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                                <label class="layui-form-label">联系方式</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"style="border:none;" readonly="readonly" value="15073315702" name="TungName" lay-verify="title" autocomplete="off"  class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                                <label class="layui-form-label">所在班级</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"style="border:none;" readonly="readonly" value="10NA"  name="TungName" lay-verify="title" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                                <label class="layui-form-label">班主任</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"style="border:none;" readonly="readonly"  value="嘉文四世" name="TungName" lay-verify="title" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                                <label class="layui-form-label">联系方式</label>
+                                <div class="layui-input-inline">
+                                    <input type="text"style="border:none;" readonly="readonly"  value="150895678451" name="TungName" lay-verify="title" autocomplete="off"class="layui-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" id="Notre">晚归登记</button>
+                                <button class="layui-btn" id="Dormitoryer">任职寝室长</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
 
         </div>
     </div>
+    <script type="text/template" id="leftbed">
+        <div class="bedcss">
+            <div class="flaotright  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
+            <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
+            <div class="flaotright">
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-{{sex}}"></i>{{StudentName}}</button>
+            </div>
+        </div>
+
+    </script>
+    <script>
+        layui.use(['table', 'layer', 'form'], function () {
+            var layer = layui.layer;
+            var DorminfoID;
+            $(function () {
+              DorminfoID='@Html.Raw(ViewBag.DorminfoID)';
+              loadbedandaccdation();
+            });
+
+            //请求拿床位数据
+            function loadbedandaccdation() {
+                layer.msg("肉肉的提示");
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/LoadBedAndAccdation',
+                    type: 'GET',
+                    data: {DorminfoID:DorminfoID},
+                    success: function (SuccessData) {
+                        if (SuccessData.Success) {
+                         
+                            bindbentostudnet(SuccessData.Data);
+                        } else {
+                            layer.msg("error");
+                        }
+                    },
+                    error: function () {
+                         layer.msg("error");
+                    }
+                });
+            }
+
+            //床位绑定学生
+            function bindbentostudnet(data) {
+                console.log(data);
+                for (var i = 0; i < AccdationList.length; i++) {
+                    for (var j = 0; j < BedList.length; j++) {
+
+                    }
+                }
+            }
+
+            //请求学生基本数据
+            function loadformdata() {
+
+            }
+
+            //绑定数据
+            function bindformdata() {
+
+            }
+
+            //晚归登记
+            $("#Notre").click(function () {
+
+            });
+
+            //任命为寝室长
+            $("#Dormitoryer").click(function () {
+
+            });
+
+        });
+        
+    </script>
 </body>
 </html>

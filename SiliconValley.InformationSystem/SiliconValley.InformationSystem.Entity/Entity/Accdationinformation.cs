@@ -22,21 +22,27 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {      
         [Key]
         public int ID { get; set; }
+
         /// <summary>
         /// 入住时间
         /// </summary>
         public DateTime StayDate { get; set; }
+
         /// <summary>
         /// 结束时间
         /// </summary>
         public Nullable<System.DateTime> EndDate { get; set; }
+
         public string Studentnumber { get; set; }
+
         /// <summary>
         /// 床位id
         /// </summary>
         public int BedId { get; set; }
+
         public string Remark { get; set; }
         public bool IsDel { get; set; }
+
         /// <summary>
         ///房间id
         /// </summary>
@@ -46,5 +52,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 创建时间
         /// </summary>
         public DateTime CreationTime { get; set; }
+
     }
 }

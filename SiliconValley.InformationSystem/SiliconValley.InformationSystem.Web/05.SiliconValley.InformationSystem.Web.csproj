@@ -685,6 +685,8 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.ttf" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\RoomArrangePage.cshtml" />
+    <Content Include="xmlfile\RoomdeWithPage.xml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2384,6 +2386,7 @@
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Dormitory\Models\" />
+    <Folder Include="Areas\Dormitory\Views\DormitoryManage\" />
     <Folder Include="Areas\Dormitory\Views\Shared\" />
     <Folder Include="Areas\Finance\Controllers\" />
     <Folder Include="Areas\Finance\Models\" />

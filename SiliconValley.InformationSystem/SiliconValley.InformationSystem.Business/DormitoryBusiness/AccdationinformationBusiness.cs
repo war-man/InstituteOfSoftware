@@ -28,5 +28,24 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public List<Accdationinformation> GetAccdationinformationByDormId(int DormId) {
            return this.GetAccdationinformations().Where(a => a.DormId == DormId).ToList();
         }
+
+        /// <summary>
+        /// 添加入住信息
+        /// </summary>
+        /// <returns></returns>
+        public bool AddAcc(Accdationinformation accdationinformation) {
+            bool result = false;
+            try
+            {
+                this.Insert(accdationinformation);
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+            return result;
+        }
     }
 }

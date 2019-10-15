@@ -28,5 +28,6 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             return  this.GetRoomStayNumbers().Where(a => a.Id == RoomStayNumberId).FirstOrDefault();
            
         }
+
     }
 }

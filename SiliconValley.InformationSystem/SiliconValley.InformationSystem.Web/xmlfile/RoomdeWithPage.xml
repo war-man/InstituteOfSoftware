@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <RoomStayType id="1">
+    <RoomStayTypeName >学生寝室</RoomStayTypeName>
+  </RoomStayType>
+  <RoomStayType id="2">
+    <RoomStayTypeName >参观寝室</RoomStayTypeName>
+  </RoomStayType>
+  <RoomStayType id="3">
+    <RoomStayTypeName >仓库</RoomStayTypeName>
+  </RoomStayType>
+  <RoomStayType id="4">
+    <RoomStayTypeName >员工寝室</RoomStayTypeName>
+  </RoomStayType>
+  <RoomSex val="1">
+    <Type >男</Type>
+  </RoomSex>
+  <RoomSex val="2">
+    <Type >女</Type>
+  </RoomSex>
+  
+
+
+</root>

@@ -1,0 +1,349 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RoomArrangePage</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+    <style>
+        #content {
+        width:1080px;
+        height:650%;
+        border:1px solid red;
+        }
+        #tablediv {
+        width:65%;
+        height:100%;
+        border:1px solid red;
+        float:left;
+        }
+          #Choicediv {
+        width:34%;
+        height:100%;
+        border:1px solid red;
+        float:right;
+        }
+        .back {
+       background-color:pink;
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div id="tablediv">
+
+            <table class="layui-hide" id="Uninhabited" lay-filter="Uninhabited"></table>
+
+        </div>
+        <div id="Choicediv">
+            <form class="layui-form" action="">
+                <fieldset>
+                    <legend>
+                        选择下列寝室
+                    </legend>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <div id="radiodiv">
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        寝室信息
+                    </legend>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label">寝室号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="DorminfoName" style="border:none;" readonly="readonly" value="" name="DorminfoName" lay-verify="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label">寝室长</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="leadername" style="border:none;" readonly="readonly" value="" name="leadername" lay-verify="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label">班级占比</label>
+                            <div class="layui-input-inline">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        选择下列床位
+                    </legend>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <div id="bedradiodiv">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </fieldset>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit id="postbtn" lay-filter="postbtn">确定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @*房间单选选中按钮模板*@
+    <script type="text/template" id="radionuban">
+        <input type="radio" name="DormInformation" lay-filter="dormfilter" value="{{=DormInfoID}}" title="{{=DormInfoName}}" checked>
+    </script>
+    @*房间单选未选中按钮模板*@
+    <script type="text/template" id="radionuban1">
+        <input type="radio" name="DormInformation" lay-filter="dormfilter" value="{{=DormInfoID}}" title="{{=DormInfoName}}">
+    </script>
+
+    @*床位单选选中按钮模板*@
+<script type="text/template" id="bedradionuban">
+    <input type="radio" name="BedId"  lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}" checked>
+</script>
+    @*床位单选未选中按钮模板*@
+<script type="text/template" id="bedradionuban1">
+    <input type="radio" name="BedId" lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}" >
+</script>
+
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        var jsform;
+        var jslayer;
+        var jsstudentdata;
+        //时间转换方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = "0" + Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+        layui.use(['table', 'layer', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer; //layui对象
+            jsform = layui.form;
+            jslayer = layui.layer;
+            //展示已知数据
+            var tableIns = table.render({
+                elem: '#Uninhabited'
+                , url: '/Dormitory/DormitoryInfo/UninhabitedList' //数据接口
+
+                //, skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 15
+                , limits: [15, 30, 45, 60, 75]
+                , cols: [[ //标题栏
+
+                    { field: 'StudentNumber', title: '学生编号', width: 180, sort: true }
+                    , { field: 'Name', title: '学生姓名', width: 115 }
+                    , {
+                        field: 'Sex', title: 'Sex', width: 65, templet: function (v) {
+                            if (v.Sex) {
+                                return "男"
+                            } else {
+                                return "女"
+                            }
+                        }
+                    }
+                    , { field: 'Telephone', title: '联系电话', width: 145 }
+                    , {
+                        field: 'InsitDate', title: '时间', width: 145, templet: function (v) {
+                            return TimeChange(v.InsitDate);
+                        }
+                    }
+                ]]
+
+            });
+
+            //监听行双击事件
+            table.on('rowDouble(Uninhabited)', function (obj) {
+                console.log(obj.data); //得到当前行数据
+                var mytr = obj.tr[0];
+                $("tr").css("background","");
+              $(mytr).css("background","pink");
+                jsstudentdata = obj.data;
+                getUninhabiteddormdata(jsstudentdata);
+            });
+
+            //发请求获取未满的宿舍
+            function getUninhabiteddormdata(jsdata) {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/ChoiceInfo',
+                    type: 'GET',
+                    data: { sex: jsdata.Sex },
+                    success: function (successdata) {
+                        console.log(successdata);
+                        if (successdata.Success) {
+                            console.log(successdata);
+                            var data = successdata.Data;
+                            binddormradio(data);
+                        } else {
+                            layer.msg("请与管理员联系");
+                        }
+                    },
+                    error: function (errordata) {
+                        console.log(errordata);
+                        layer.msg("请与管理员联系");
+                    }
+                });
+            }
+            //生成房间单选按钮
+            function binddormradio(data) {
+                console.log(data);
+                $("#radiodiv").children().remove();
+                for (var i = 0; i < data.length; i++) {
+                    var radioobj = _.template($("#radionuban").html());
+                    var radioobj1 = _.template($("#radionuban1").html());
+                    var radiohtml;
+                    if (i == 0) {
+                        radiohtml = radioobj({ DormInfoID: data[i].ID, DormInfoName: data[i].DormInfoName });
+
+                        getUninhabitedBeddata(data[i].ID,data[i]);
+                    } else {
+                        radiohtml = radioobj1({ DormInfoID: data[i].ID, DormInfoName: data[i].DormInfoName });
+                    }
+                    //console.log(radiohtml);
+                    $("#radiodiv").append($(radiohtml));
+                }
+                jsform.render();
+            }
+
+            //发送请求获取未居住的床位
+            function getUninhabitedBeddata(data,dorminfo) {
+                console.log("发送请求获取未居住的床位"+data);
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/BedInfo',
+                    type: 'GET',
+                    data: { DorminfoID: data },
+                    success: function (SuccessData ) {
+                        if (SuccessData.Success) {
+                            console.log("发送请求获取未居住的床位ajax");
+                            console.log(SuccessData);
+                            bindbedradio(SuccessData.Data,dorminfo);
+                        } else {
+                            //layer.msg("error");
+                        }
+                    },
+                    error: function (ErrorData) {
+                       // layer.msg("error");
+                    }
+                });
+            }
+            //生成床位单选按钮
+            function bindbedradio(data,dorminfo) {
+                console.log(data);
+                $("#bedradiodiv").children().remove();
+                for (var i = 0; i < data.length; i++) {
+                    var radioobj = _.template($("#bedradionuban").html());
+                    var radioobj1 = _.template($("#bedradionuban1").html());
+                    var radiohtml;
+                    if (i == 0) {
+                        radiohtml = radioobj({ BedID: data[i].Id, BenNo: data[i].BenNo });
+                        bindbiaodan(data[i]);
+                    } else {
+                        radiohtml = radioobj1({ BedID: data[i].Id, BenNo: data[i].BenNo });
+                    }
+                    $("#bedradiodiv").append($(radiohtml));
+                }
+                jsform.render();
+                bindbiaodan(dorminfo);
+            }
+
+            function bindbiaodan(data) {
+                $("#DorminfoName").val(data.DormInfoName);
+                $("#leadername").val(data.StudentName);
+            }
+
+            //房间单选按钮点击事件
+            jsform.on('radio(dormfilter)', function (data) {
+                console.log(data.value); //被点击的radio的value值
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/Checkdorm',
+                    type: 'GET',
+                    data: { DorminfoID: data.value },
+                    success: function (Successdata) {
+                        console.log(Successdata);
+                        if (Successdata.Success) {
+                            
+                            layer.msg('只想弱弱提示');
+                            getUninhabitedBeddata(data.value,Successdata.Data);
+                            
+                        } else {
+                            jsform.msg("error");
+                        }
+                    },
+                    error: function () {
+                        layer.msg("error");
+                    }
+                });
+            });
+
+            jsform.on('submit(postbtn)', function (data) {
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                console.log(jsstudentdata);
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/ArrangeDorm',
+                    type: 'POST',
+                    data: { BedId: data.field.BedId, DormId: data.field.DormInformation,Studentnumber:jsstudentdata.StudentNumber },
+                    success: function (SuccessData) {
+                       console.log(Successdata);
+                        if (Successdata.Success) {
+                            layer.msg('安排到位。');
+                            
+                        } else {
+                            jsform.msg("error");
+                        }
+                    },
+                    error: function () {
+                        layer.msg("error");
+                    }
+                });
+                location.reload();
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+
+    </script>
+</body>
+</html>

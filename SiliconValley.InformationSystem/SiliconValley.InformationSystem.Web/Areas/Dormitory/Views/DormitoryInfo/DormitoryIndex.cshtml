@@ -127,7 +127,7 @@
     <form class="layui-form" action="">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="addtung">添加栋</button>
+
                 <label class="layui-form-label" id="querylable">搜索选择框</label>
                 <div class="layui-input-inline">
                     <select name="modules" lay-verify="required" lay-search="">
@@ -141,6 +141,9 @@
                 </div>
 
                 <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="demo1">搜索</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="addtung">添加栋</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="addtung">调寝</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="roomarrange">寝室安排</button>
             </div>
 
         </div>
@@ -503,7 +506,7 @@
             jslayer.msg(roomid);
             jslayer.open({
                 type: 2,
-                content: "/Dormitory/DormitoryInfo/RoomdeWithPage?Roomid="+roomid,
+                content: "/Dormitory/DormitoryInfo/RoomdeWithPage?DorminfoID="+roomid,
                 title: "房间详细",
                 area: ['1090px', '660px'],
                 end: function () {
@@ -518,7 +521,19 @@
 
         });
 
-        
+        $("#roomarrange").click(function () {
+            jslayer.msg("寝室安排环节");
+            jslayer.open({
+                type: 2,
+                content: "/Dormitory/DormitoryInfo/RoomArrangePage",
+                title: "寝室安排",
+                area: ['1090px', '660px'],
+                end: function () {
+                    //loadroom();
+                    jslayer.msg("回来了。");
+                }
+            });
+        });
 
         $(document).bind('click', function (e) {
             console.log("2");

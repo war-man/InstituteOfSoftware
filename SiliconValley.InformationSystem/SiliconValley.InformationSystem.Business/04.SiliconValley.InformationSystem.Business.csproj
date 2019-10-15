@@ -90,8 +90,15 @@
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="DormitoryBusiness\AccdationinformationBusiness.cs" />
+    <Compile Include="DormitoryBusiness\BenNumberBusiness.cs" />
+    <Compile Include="DormitoryBusiness\dbacc-dbben-dbroomnumber-dbdorm.cs" />
+    <Compile Include="DormitoryBusiness\dbacc-dbroomnumber.cs" />
+    <Compile Include="DormitoryBusiness\dbacc-dbstu.cs" />
     <Compile Include="DormitoryBusiness\DormInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryfloorBusiness.cs" />
+    <Compile Include="DormitoryBusiness\DormitoryLeaderBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
+    <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
     <Compile Include="DormitoryBusiness\RoomStayNumberBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomStayTypeBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungBusiness.cs" />
