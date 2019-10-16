@@ -54,10 +54,11 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 foreach (var item in queryacclist)
                 {
-                    if (querybenlist[i].Id==item.BedId)
+                    if (querybenlist[i].Id == item.BedId)
                     {
                         querybenlist.Remove(querybenlist[i]);
                     }
+                    
                 }
             }
 

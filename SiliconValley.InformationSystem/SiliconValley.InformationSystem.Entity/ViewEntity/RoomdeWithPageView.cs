@@ -21,6 +21,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 学生列表
         /// </summary>
-        public List<Accdationinformation> AccdationList { get; set; }
+        public List<AccdationView> AccdationList { get; set; }
     }
 }

@@ -281,6 +281,7 @@
     <Compile Include="Entity\Undergra.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewEntity\AccdationView.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
@@ -319,9 +320,11 @@
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProjectDetailView.cs" />
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
+    <Compile Include="ViewEntity\ProStudentPageView.cs" />
     <Compile Include="ViewEntity\ProStudentView.cs" />
     <Compile Include="ViewEntity\resultdtree.cs" />
     <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
+    <Compile Include="ViewEntity\RoomTypeEnum.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />

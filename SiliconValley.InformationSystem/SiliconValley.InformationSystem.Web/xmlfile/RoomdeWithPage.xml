@@ -1,24 +1,55 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <RoomStayType id="1">
+  <StudentRoom id="1">
     <RoomStayTypeName >学生寝室</RoomStayTypeName>
-  </RoomStayType>
-  <RoomStayType id="2">
+  </StudentRoom>
+  <VisitRoom id="2">
     <RoomStayTypeName >参观寝室</RoomStayTypeName>
-  </RoomStayType>
-  <RoomStayType id="3">
+  </VisitRoom>
+  <Warehouse id="5">
     <RoomStayTypeName >仓库</RoomStayTypeName>
-  </RoomStayType>
-  <RoomStayType id="4">
+  </Warehouse>
+  <StaffRoom id="6">
     <RoomStayTypeName >员工寝室</RoomStayTypeName>
-  </RoomStayType>
-  <RoomSex val="1">
-    <Type >男</Type>
-  </RoomSex>
-  <RoomSex val="2">
-    <Type >女</Type>
-  </RoomSex>
-  
-
-
+  </StaffRoom>
+  <Male val="1">
+    <icon>layui-icon-male</icon>
+    <Type>男</Type>
+  </Male>
+  <Female val="2">
+    <Type>女</Type>
+    <icon>layui-icon-female</icon>
+  </Female>
+  <iconfontstyle val="icon-shuzi-1">
+    <id>1</id>
+    <value>1号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-2">
+    <id>2</id>
+    <value>2号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-3">
+    <id>3</id>
+    <value>3号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-4">
+    <id>4</id>
+    <value>4号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-5">
+    <id>5</id>
+    <value>5号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-6">
+    <id>6</id>
+    <value>6号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-7">
+    <id>7</id>
+    <value>7号</value>
+  </iconfontstyle>
+  <iconfontstyle val="icon-shuzi-8">
+    <id>8</id>
+    <value>8号</value>
+  </iconfontstyle>
 </root>

@@ -97,6 +97,10 @@
     <Compile Include="DormitoryBusiness\DormInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryfloorBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryLeaderBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ProClassSchedule.cs" />
+    <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
+    <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
+    <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
     <Compile Include="DormitoryBusiness\RoomStayNumberBusiness.cs" />

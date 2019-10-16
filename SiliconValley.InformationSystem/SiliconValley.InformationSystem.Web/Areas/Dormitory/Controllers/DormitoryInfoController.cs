@@ -1,5 +1,6 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -78,6 +79,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// 用于查询剩余床位对象
         /// </summary>
         private dbacc_dbben_dbroomnumber_dbdorm dbacc_Dbben_Dbroomnumber_Dbdorm;
+
+        /// <summary>
+        /// 房间详细页面设计的xml文件处理类
+        /// </summary>
+        private RoomdeWithPageXmlHelp dbroomxml;
+
+        /// <summary>
+        /// 员工业务类
+        /// </summary>
+        private EmployeesInfoManage dbempinfo;
+
+        /// <summary>
+        /// 班主任业务类
+        /// </summary>
+        private ProHeadmaster dbpromaster;
+
+        /// <summary>
+        /// 班主任带班业务类
+        /// </summary>
+        private ProHeadClass dbproheadclass;
+
+        /// <summary>
+        /// 班级业务类
+        /// </summary>
+        private ProClassSchedule dbproclass;
+
+        /// <summary>
+        /// 学生班级业务类
+        /// </summary>
+        private ProScheduleForTrainees dbprotrainees;
 
         // GET: Dormitory/DormitoryInfo
 
@@ -192,6 +223,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             dbtungfloor = new TungFloorBusiness();
             dbacc = new AccdationinformationBusiness();
             dbroomnumber = new RoomStayNumberBusiness();
+            dbroomxml = new RoomdeWithPageXmlHelp();
             TungFloor resulttungfloorobj = new TungFloor();
             DistinguishView result = new DistinguishView();
             if (string.IsNullOrEmpty(TungID.ToString())&&string.IsNullOrEmpty(FloorID.ToString()))
@@ -232,21 +264,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 foreach (var item in dormlist)
                 {
                     DormInformationView  newobject= new DormInformationView();
+
                     //判断房间是否满人
                     List<Accdationinformation> queryobject= dbacc.GetAccdationinformationByDormId(item.ID);
 
-                    RoomStayNumber queryobject1= dbroomnumber.GetRoomStayNumberByRoomStayNumberId(item.RoomStayNumberId);
+                    int studentroomtypeid = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom);
+                    int staffroomtypeid = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StaffRoom);
+                    int VisitRoom = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.VisitRoom);
+                    int Warehouse = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.Warehouse);
 
                     newobject.Id = item.ID;
-                    newobject.RoomStayNumber = queryobject1.StayNumber;
                     newobject.RoomStayTypeId = item.RoomStayTypeId;
                     newobject.SexType = item.SexType;
                     newobject.DormInfoName = item.DormInfoName;
-
-                    if (queryobject.Count==queryobject1.StayNumber)
+                    if (item.RoomStayTypeId== studentroomtypeid||item.RoomStayTypeId== staffroomtypeid)
+                    {
+                        RoomStayNumber queryobject1 = dbroomnumber.GetRoomStayNumberByRoomStayNumberId(item.RoomStayNumberId);
+                        newobject.RoomStayNumber = queryobject1.StayNumber;
+                        if (queryobject.Count == queryobject1.StayNumber)
+                            newobject.isfull = true;
+                        else
+                            newobject.isfull = false;
+                    }
+                    if (item.RoomStayTypeId == VisitRoom || item.RoomStayTypeId == Warehouse)
+                    {
                         newobject.isfull = true;
-                    else
-                        newobject.isfull = false;
+                    }
+
+                    
                     if (item.Direction)
                     {
                         rightroom.Add(newobject);
@@ -689,13 +734,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         public ActionResult RoomdeWithPage(int DorminfoID)
         {
             dbdorm = new DormInformationBusiness();
+            dbroomxml = new RoomdeWithPageXmlHelp(); 
             DormInformation dorm= dbdorm.GetDormByDorminfoID(DorminfoID);
-            //if (dorm.SexType)
-            //{
+            int female= dbroomxml.Getmale(RoomTypeEnum.SexType.Female);
+            int male = dbroomxml.Getmale(RoomTypeEnum.SexType.Male);
+            int studentroom = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom);
+            string title = string.Empty;
+            if (dorm.RoomStayTypeId==studentroom)
+            {
+                //女
+                if (dorm.SexType == female)
+                {
+                    title = "女寝";
+                }
+                //男
+                if (dorm.SexType == male)
+                {
+                    title = "男寝";
+                }
+            }
+            ViewBag.Title= dorm.DormInfoName+ title;
 
-            //}
-            ViewBag.DormInfoname= dorm.DormInfoName;
-            
+            ViewBag.RoomType = dorm.RoomStayTypeId;
+            ViewBag.SexType = dorm.SexType;
+
             ViewBag.DormInformation = DorminfoID;
             return View();
         }
@@ -707,6 +769,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// <returns></returns>
         public ActionResult LoadBedAndAccdation(int DorminfoID)
         {
+            dbprostudent = new ProStudentInformationBusiness();
             AjaxResult ajaxResult = new AjaxResult();
             RoomdeWithPageView view= new RoomdeWithPageView();
             dbacc_Dbben_Dbroomnumber_Dbdorm = new dbacc_dbben_dbroomnumber_dbdorm();
@@ -716,11 +779,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             try
             {
                 List<BenNumber> Beddata = dbacc_Dbben_Dbroomnumber_Dbdorm.GetBensByDorminfoID(DorminfoID);
-                
-               List<Accdationinformation> Accdata=  dbacc.GetAccdationinformationByDormId(DorminfoID);
+
+                List<AccdationView> accdationViews = new List<AccdationView>();
+
+                List<Accdationinformation> Accdata = dbacc.GetAccdationinformationByDormId(DorminfoID).OrderBy(a => a.BedId).ToList();
+                foreach (var item in Accdata)
+                {
+                    AccdationView accdation = new AccdationView();
+                    accdation.ID = item.ID;
+                    accdation.BedId = item.BedId;
+                    accdation.Studentnumber = item.Studentnumber;
+                    var querystudent= dbprostudent.GetStudent(item.Studentnumber);
+                    accdation.StudentName = querystudent.Name;
+                    accdationViews.Add(accdation);
+                }
+                var resultdata=  accdationViews.OrderBy(a => a.BedId).ToList();
                 ajaxResult.Success = true;
                 view.BedList = Beddata;
-                view.AccdationList = Accdata;
+                view.AccdationList = resultdata;
                 ajaxResult.Data = view;
             }
             catch (Exception ex)
@@ -728,6 +804,53 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 
                 ajaxResult.Success = false ;
                 ajaxResult.Data = "";
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 加载学生详细右侧数据信息
+        /// </summary>
+        /// <param name="Studentnumber"></param>
+        /// <returns></returns>
+        public ActionResult Loadformdata(string Studentnumber) {
+            AjaxResult ajaxResult = new AjaxResult();
+            dbprostudent = new ProStudentInformationBusiness();
+            dbpromaster = new ProHeadmaster();
+            dbproclass = new ProClassSchedule();
+            dbproheadclass = new ProHeadClass();
+            dbprotrainees = new ProScheduleForTrainees();
+            dbempinfo = new EmployeesInfoManage();
+            try
+            {
+                ProStudentPageView view = new ProStudentPageView();
+
+                StudentInformation querystudent= dbprostudent.GetStudent(Studentnumber);
+                view.StudentNumber = querystudent.StudentNumber;
+                view.StudentName = querystudent.Name;
+                view.StudentPhone = querystudent.Telephone;
+                ScheduleForTrainees querytrainees = dbprotrainees.GetTraineesByStudentNumber(Studentnumber);
+                view.ClassNO = querytrainees.ClassID;
+                HeadClass queryheadclass = dbproheadclass.GetClassByClassNO(querytrainees.ClassID);
+                Headmaster querymaster = dbpromaster.GetHeadById(queryheadclass.LeaderID);
+                if (querymaster==null)
+                {
+                    view.StaffName = "";
+                    view.StaffPhone = "";
+                }
+                else
+                {
+                    EmployeesInfo queryempinfo= dbempinfo.GetInfoByEmpID(querymaster.informatiees_Id);
+                    view.StaffName = queryempinfo.EmpName;
+                    view.StaffPhone = queryempinfo.Phone;
+                }
+                ajaxResult.Data = view;
+                ajaxResult.Success = true;
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Data = "";
+                ajaxResult.Success = false;
             }
             return Json(ajaxResult,JsonRequestBehavior.AllowGet);
         }
@@ -741,7 +864,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 //子节点使用Element
                 var aa =   ele.Element("author").Value;
                 //属性使用Attribute
-                var aa =   ele.Attribute("ISBN").Value;
+                //var aa =   ele.Attribute("ISBN").Value;
             }
             return View();
         }

@@ -19,6 +19,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 员工编号
+        /// </summary>
         public string informatiees_Id { get; set; }
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }

@@ -20,60 +20,60 @@
 
         #content {
             margin: 0 auto;
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 98%;
             height: 600px;
         }
 
         #leftdiv {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 59%;
             height: 580px;
             float: left;
         }
 
         #rightdiv {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 39%;
             height: 580px;
             float: right;
         }
 
         #top {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 98%;
             height: 8%;
         }
 
         #bottom {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 98%;
             height: 91%;
         }
 
         #leftbed {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 39%;
             height: 99%;
             float: left;
         }
 
         #guodao {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 19%;
             height: 99%;
             float: left;
         }
 
         #rightbed {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 39%;
             height: 99%;
             float: left;
         }
 
         .bedcss {
-            border: 1px solid red;
+            /*border: 1px solid red;*/
             width: 98%;
             height: 23%;
             margin-top: 1%;
@@ -89,7 +89,7 @@
         .fontju {
             height: 44px;
             width: 35px;
-            border: 1px solid pink;
+            /*border: 1px solid pink;*/
             line-height: 44px;
             text-align: center;
         }
@@ -97,7 +97,7 @@
         .iconshuzicss {
             height: 44px;
             width: 35px;
-            border: 1px solid pink;
+            /*border: 1px solid pink;*/
             line-height: 44px;
             text-align: center;
         }
@@ -105,7 +105,7 @@
         .iconbedcss {
             height: 44px;
             width: 45px;
-            border: 1px solid pink;
+            /*border: 1px solid pink;*/
             line-height: 44px;
             text-align: center;
         }
@@ -117,81 +117,26 @@
     <div id="content">
         <div id="leftdiv">
             <div id="top" style="text-align:center">
-                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal"><h1>@ViewBag.DormInformation</h1></button>
+                <button type="button" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal"><h1 id="protitle">@ViewBag.Title</h1></button>
             </div>
             <div id="bottom">
                 <div id="leftbed">
-                    <div class="bedcss">
-                        <div class="flaotright  iconshuzicss"><span class="iconfont icon-shuzi-1"></span></div>
-                        <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotright">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-female"></i>陈海石</button>
-                        </div>
-                    </div>
-                    <div class="bedcss">
-                        <div class="flaotright  iconshuzicss"><span class="iconfont icon-shuzi"></span></div>
-                        <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotright">
-                            <button type="button" class="layui-btn layui-btn-danger layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-female"></i>仲伦攀</button>
-                        </div>
-                    </div>
-                    <div class="bedcss">
-                        <div class="flaotright  iconshuzicss"><span class="iconfont icon-shuzi3"></span></div>
-                        <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotright">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-male"></i>达磊</button>
-                        </div>
 
-
-                    </div>
-                    <div class="bedcss">
-                        <div class="flaotright  iconshuzicss"><span class="iconfont icon-shuzi4"></span></div>
-                        <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotright">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-male"></i>唐敏</button>
-                        </div>
-                    </div>
+                    
                 </div>
                 <div id="guodao">
 
                 </div>
                 <div id="rightbed">
-                    <div class="bedcss">
-                        <div class="flaotleft  iconshuzicss"><span class="iconfont icon-shuzi5"></span></div>
-                        <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotleft">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-female"></i>丁洪源</button>
-                        </div>
-                    </div>
-                    <div class="bedcss">
-                        <div class="flaotleft  iconshuzicss"><span class="iconfont icon-shuzi6"></span></div>
-                        <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotleft">
-                            <button type="button" class="layui-btn layui-btn-danger layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-female"></i>小赵</button>
-                        </div>
-                    </div>
-                    <div class="bedcss">
-                        <div class="flaotleft  iconshuzicss"><span class="iconfont icon-shuzi7"></span></div>
-                        <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotleft">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-male"></i>小白</button>
-                        </div>
-
-
-                    </div>
-                    <div class="bedcss">
-                        <div class="flaotleft  iconshuzicss"><span class="iconfont icon-shuzi8"></span></div>
-                        <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
-                        <div class="flaotleft">
-                            <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-male"></i>小老鼠</button>
-                        </div>
-                    </div>
+                   
                 </div>
             </div>
         </div>
         <div id="rightdiv">
             <div style="margin-top:10%;">
                 <form class="layui-form" action="">
+                    <input type="hidden" value="@ViewBag.RoomType" id="roomtype" />
+                    <input type="hidden" value="@ViewBag.SexType" id="sextype" />
                     <fieldset>
                         <legend>
                             学员基础信息
@@ -202,16 +147,17 @@
                             <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                                 <label class="layui-form-label">学生姓名</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" style="border:none;" readonly="readonly" value="小老鼠" name="TungName" lay-verify="title" autocomplete="off"  class="layui-input">
+                                    <input  type="hidden" id="StudentNumber" name="StudentNumber"/>
+                                    <input type="text" style="border:none;" readonly="readonly" value="小老鼠" id="StudentName" name="StudentName" lay-verify="title" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
-                        </div>
+                        </div>         
                         <div class="layui-row layui-form-item">
 
                             <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                                 <label class="layui-form-label">联系方式</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"style="border:none;" readonly="readonly" value="15073315702" name="TungName" lay-verify="title" autocomplete="off"  class="layui-input">
+                                    <input type="text" style="border:none;" readonly="readonly" value="15073315702" id="StudentPhone" name="StudentPhone" lay-verify="title" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>
@@ -220,7 +166,7 @@
                             <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                                 <label class="layui-form-label">所在班级</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"style="border:none;" readonly="readonly" value="10NA"  name="TungName" lay-verify="title" autocomplete="off" class="layui-input">
+                                    <input type="text" style="border:none;" readonly="readonly" value="10NA" id="ClassNO" name="ClassNO" lay-verify="title" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>
@@ -229,7 +175,7 @@
                             <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                                 <label class="layui-form-label">班主任</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"style="border:none;" readonly="readonly"  value="嘉文四世" name="TungName" lay-verify="title" autocomplete="off" class="layui-input">
+                                    <input type="text" style="border:none;" readonly="readonly" value="嘉文四世" id="StaffName" name="StaffName" lay-verify="title" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>
@@ -238,7 +184,7 @@
                             <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                                 <label class="layui-form-label">联系方式</label>
                                 <div class="layui-input-inline">
-                                    <input type="text"style="border:none;" readonly="readonly"  value="150895678451" name="TungName" lay-verify="title" autocomplete="off"class="layui-input">
+                                    <input type="text" style="border:none;" readonly="readonly" value="150895678451" id="StaffPhone" name="StaffPhone" lay-verify="title" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                         </div>
@@ -254,24 +200,117 @@
 
         </div>
     </div>
-    <script type="text/template" id="leftbed">
-        <div class="bedcss">
+    @*左侧 学生*@
+    <script type="text/template" id="leftstudentbed">
+        <div class="bedcss" id="{{=BedId}}">
             <div class="flaotright  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
             <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
             <div class="flaotright">
-                <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius "><i class=" layui-icon layui-icon-{{sex}}"></i>{{StudentName}}</button>
+                <button type="button" studentnumber="" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i  class=" layui-icon {{=sex}}" ></i><i id="{{=BenNo}}">暂无</i></button>
             </div>
         </div>
-
     </script>
+
+    @*右侧 学生*@
+    <script type="text/template" id="rightstudentbed">
+        <div class="bedcss" id="{{=BedId}}">
+            <div class="flaotleft  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
+            <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
+            <div class="flaotleft">
+                <button type="button" studentnumber="" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon {{=sex}}"></i><i id="{{=BenNo}}">暂无</i></button>
+            </div>
+        </div>
+    </script>
+    @*左侧 员工*@
+    <script type="text/template" id="leftstaffbed">
+        <div class="bedcss" id="{{=BedId}}">
+            <div class="flaotright  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
+            <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
+            <div class="flaotright">
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon "></i>{{StaffName}}</button>
+            </div>
+        </div>
+    </script>
+    @*右侧 员工*@
+    <script type="text/template" id="rightstaffbed">
+        <div class="bedcss" id="{{=BedId}}">
+            <div class="flaotleft  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
+            <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
+            <div class="flaotleft">
+                <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon "></i>{{StaffName}}</button>
+            </div>
+        </div>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
     <script>
         layui.use(['table', 'layer', 'form'], function () {
             var layer = layui.layer;
+            var fontstylearr = new Array();
+            var male = new Object();
+            var female = new Object();
+            var studentroom = new Object();
+            var staffroom = new Object();
             var DorminfoID;
+            var roomtype;
+            var sextype;
+            var studentnumber;
             $(function () {
-              DorminfoID='@Html.Raw(ViewBag.DorminfoID)';
-              loadbedandaccdation();
+                DorminfoID = '@Html.Raw(ViewBag.DormInformation)';
+                sextype =$("#sextype").val();
+                roomtype = $("#roomtype").val();
+                loadxml();
+
             });
+
+            function loadxml() {
+                $.ajax({
+                    url: '../../../xmlfile/RoomdeWithPage.xml',
+                    type: 'GET',
+                    dataType: 'xml',
+                    success: function (xmlDoc, textStatus) {
+
+                        //console.log("xml获取");
+                        //console.log(xmlDoc);
+                        //console.log(textStatus);
+                        $(xmlDoc).find("iconfontstyle").each(function (i) {
+                            var obj = new Object();
+                            obj.val = $(this).attr("val");
+                            obj.value = $(this).children("value").text();
+                            obj.id=$(this).children("id").text();
+                           // console.log("字体样式");
+                           // console.log(obj);
+                            fontstylearr.push(obj);
+                        });
+
+                        $(xmlDoc).find("Male").each(function (i) {
+                            male.val = $(this).attr("val");
+                            male.icon = $(this).children("icon").text();
+                        });
+
+                        $(xmlDoc).find("Female").each(function (i) {
+                            female.val = $(this).attr("val");
+                            female.icon = $(this).children("icon").text();
+                        });
+
+                        $(xmlDoc).find("StudentRoom").each(function (i) {
+                            studentroom.id = $(this).attr("id");
+                        });
+                        $(xmlDoc).find("StaffRoom").each(function (i) {
+                            staffroom.id = $(this).attr("id");
+                        });
+                        //加载学生床位
+                        if (roomtype == studentroom.id) {
+                             loadbedandaccdation();
+                        }
+                        //加载员工床位
+                        if (roomtype==staffroom.id) {
+                            layer.msg("肉肉的提示");
+                        }
+                        
+                        //console.log(fontstylearr);
+                    }
+                });
+            }
 
             //请求拿床位数据
             function loadbedandaccdation() {
@@ -282,8 +321,21 @@
                     data: {DorminfoID:DorminfoID},
                     success: function (SuccessData) {
                         if (SuccessData.Success) {
-                         
-                            bindbentostudnet(SuccessData.Data);
+                            //学生
+                            if (roomtype == studentroom.id) {
+                                //男
+                                if (sextype == male.val) {
+                                    bindbentostudnet(SuccessData.Data,male.icon);
+                                }
+                                //女
+                                else {
+                                    bindbentostudnet(SuccessData.Data,female.icon);
+                                }
+
+                            } else {
+                                bindbentostaff(SuccessData.Data);
+                            }
+
                         } else {
                             layer.msg("error");
                         }
@@ -295,25 +347,107 @@
             }
 
             //床位绑定学生
-            function bindbentostudnet(data) {
-                console.log(data);
-                for (var i = 0; i < AccdationList.length; i++) {
-                    for (var j = 0; j < BedList.length; j++) {
+            function bindbentostudnet(data, inco) {
+                //console.log("绑定床位");
+                //console.log(data);
+                //console.log(inco);
+                $("#leftbed").children().remove();
+                $("#rightbed").children().remove();
+                var Halfandhalf = data.BedList.length / 2;
+                //console.log("对半"+Halfandhalf);
+                for (var i = 0; i < data.BedList.length; i++) {
+                   //左
+                    if (i >= Halfandhalf) {
+                        var jsleftstudentbed = _.template($("#leftstudentbed").html());
+                        var jsleftstudentbedhtml = jsleftstudentbed({ iconfontstyle: fontstylearr[i].val, sex: inco, BedId: data.BedList[i].Id, BenNo: data.BedList[i].Id+"bedbed" });
+                        $("#leftbed").append($(jsleftstudentbedhtml));
+                    }
+                    //右
+                    else {
+                        var jsleftstudentbed = _.template($("#rightstudentbed").html());
+                        var jsleftstudentbedhtml = jsleftstudentbed({ iconfontstyle: fontstylearr[i].val,sex:inco, BedId: data.BedList[i].Id ,BenNo: data.BedList[i].Id+"bedbed"});
+                        $("#rightbed").append($(jsleftstudentbedhtml));
+                    }
 
+                }
+
+                //console.log("------------------------------------------------------");
+                $(".bedcss").each(function (index, domEle) {
+                    //console.log("div的id---------");
+                    //console.log($(this).attr("id"));
+                    for (var i = 0; i < data.AccdationList.length; i++) {
+                        //console.log("数组里面的bedid");
+                        //console.log(data.AccdationList[i].BedId);
+                        if ($(this).attr("id") == data.AccdationList[i].BedId) {
+                           
+                            if ($(this).attr("id") == fontstylearr[0].id) {
+                                studentnumber = data.AccdationList[i].Studentnumber;
+                            }
+                            //console.log("true");
+                            var id = $(this).attr("id") + "bedbed";
+                            $("#" + id + "").text(data.AccdationList[i].StudentName);
+                            $("#" + id + "").parents("button").attr("studentnumber", data.AccdationList[i].Studentnumber);
+                            //console.log($("#" + id + ""));
+                            //console.log($("#" + id + "").parents("button"));
+                        }
+                    }
+                });
+                loadformdata(studentnumber);
+            }
+
+             //床位绑定员工
+            function bindbentostaff(data) {
+
+                var Halfandhalf = data.BedList.length / 2;
+                for (var i = 0; i < data.BedList.length; i++) {
+                    for (var j = 0; j < data.AccdationList.length; j++) {
+                        //左
+                        if (i >= Halfandhalf) {
+
+
+                        }
+                        //右
+                        else {
+
+                        }
                     }
                 }
             }
 
+         
             //请求学生基本数据
-            function loadformdata() {
-
+            function loadformdata(studentnumber) {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/Loadformdata',
+                    type: 'GET',
+                    data: {Studentnumber:studentnumber},
+                    success: function (SuccessData) {
+                        if (SuccessData.Success) {
+                            bindformdata(SuccessData.Data);
+                        } else {
+                            layer.msg("GG");
+                        }
+                    }, error: function () {
+                        layer.msg("GG");
+                    }
+                });
             }
 
             //绑定数据
-            function bindformdata() {
-
+            function bindformdata(data) {
+                $("#StudentNumber").val(data.StudentNumber);
+                $("#StudentName").val(data.StudentName);
+                $("#StudentPhone").val(data.StudentPhone);
+                $("#StaffName").val(data.StaffName);
+                $("#StaffPhone").val(data.StaffPhone);
+                $("#ClassNO").val(data.ClassNO);
             }
+            //点击学生触发事件
+            $(document).off("click", '.probtn').on('click', '.probtn', function () {
+                console.log($(this).attr("studentnumber"));
+                loadformdata($(this).attr("studentnumber"));
 
+            });
             //晚归登记
             $("#Notre").click(function () {
 
@@ -321,11 +455,28 @@
 
             //任命为寝室长
             $("#Dormitoryer").click(function () {
+                var prostudentname = $("#StudentName").val();
+                var protitle = $("#protitle").text();
+                console.log("11");
+                layer.confirm('is not?', { icon: 3, title: '是否将'+prostudentname+'任命为'+protitle+'寝室长？' }, function (index) {
+                    $.ajax({
+                        url: '',
+                        type: '',
+                        data: {},
+                        success: function () {
 
+                        },
+                        error: function () {
+
+                        }
+                    });
+                    layer.close(index);
+                });
+                return false;
             });
 
         });
-        
+
     </script>
 </body>
 </html>

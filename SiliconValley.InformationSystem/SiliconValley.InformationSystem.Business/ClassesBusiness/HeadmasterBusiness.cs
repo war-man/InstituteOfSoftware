@@ -169,6 +169,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             return str;
 
         }
+
         /// <summary>
         /// 根据学员学号获取当前班主任
         /// </summary>

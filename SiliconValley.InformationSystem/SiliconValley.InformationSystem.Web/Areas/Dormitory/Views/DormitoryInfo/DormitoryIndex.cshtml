@@ -220,7 +220,7 @@
 
 @*房间模板*@
 <script type="text/template" id="roommuban">
-    <div class="room"><button aa="ss" type="button" roomid="{{=roomid}}" class="layui-btn layui-btn-{{=isfull}} layui-btn-radius layui-btn-sm rommbtn"><i class=" layui-icon layui-icon-{{=type}}"></i>{{=roomname}}</button></div>
+    <div class="room"><button aa="ss" type="button" roomid="{{=roomid}}" roomtype="{{=roomtype}}" class="layui-btn layui-btn-{{=isfull}} layui-btn-radius layui-btn-sm rommbtn"><i class=" layui-icon layui-icon-{{=type}}"></i>{{=roomname}}</button></div>
 </script>
 <script src="~/Scripts/underscore.js"></script>
 @section script{
@@ -235,13 +235,31 @@
         var dtreedata;
         var myDTree;
         var jslayer;
+        var studentroom = new Object();
+        var staffroom = new Object();
         $(function () {
-            
             loadroom(jstungid, jsfloorid);
             $("#caozuodiv").addClass("myhide");
+            loadxml();
         });
 
-
+        function loadxml() {
+            $.ajax({
+                url: '../../../xmlfile/RoomdeWithPage.xml',
+                type: 'GET',
+                dataType: 'xml',
+                success: function (xmlDoc, textStatus) {
+                    $(xmlDoc).find("StudentRoom").each(function (i) {
+                        studentroom.id = $(this).attr("id");
+                        studentroom.RoomStayTypeName = $(this).children("RoomStayTypeName").text();
+                    });
+                    $(xmlDoc).find("StaffRoom").each(function (i) {
+                        staffroom.id = $(this).attr("id");
+                        staffroom.RoomStayTypeName = $(this).children("RoomStayTypeName").text();
+                    });
+                }
+            });
+        }
         layui.extend({
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dleiool/dtree'
         }).use(['element', 'layer', 'table', 'code', 'util', 'dtree', 'form'], function () {
@@ -389,18 +407,18 @@
                 //男 满人
                 if (dtreeobject.SexType == "1") {
                     if (dtreeobject.isfull) {
-                           leftroomobjhtml = leftroomobj({ isfull: "danger", type: "male", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                           leftroomobjhtml = leftroomobj({ isfull: "danger", type: "male",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
                     } else {
-                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "male", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "male",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
                           console.log("/男 未满人");
                     }
                 }
 
                 if (dtreeobject.SexType == "2") {
                     if (dtreeobject.isfull) {
-                        leftroomobjhtml = leftroomobj({ isfull: "danger", type: "female", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                        leftroomobjhtml = leftroomobj({ isfull: "danger", type: "female", roomtype:dtreeobject.RoomStayTypeId,roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
                     } else {
-                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "female", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "female",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
                         console.log("/女 未满人");
                     }
                 }
@@ -410,24 +428,24 @@
                  console.log("参观寝室");
                 //参观寝室 满人
                 if (dtreeobject.isfull) {
-                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "group", roomname: dtreeobject.DormInfoName ,roomid:dtreeobject.Id});
+                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "group",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName ,roomid:dtreeobject.Id});
                 } else {
                      // 未满人
-                      leftroomobjhtml = leftroomobj({ isfull: "primary", type: "group", roomname: dtreeobject.DormInfoName ,roomid:dtreeobject.Id});
+                      leftroomobjhtml = leftroomobj({ isfull: "primary", type: "group",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName ,roomid:dtreeobject.Id});
                 }
 
             } else if (dtreeobject.RoomStayTypeId == "5") {
                   console.log("仓库");
                 //仓库
-                leftroomobjhtml = leftroomobj({ isfull: "danger", type: "util", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                leftroomobjhtml = leftroomobj({ isfull: "danger", type: "util",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
             } else {
                   console.log("员工寝室");
                 //员工寝室
                 //满人
                 if (dtreeobject.isfull) {
-                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "user", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "user",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
                 } else {
-                     leftroomobjhtml = leftroomobj({ isfull: "primary", type: "user", roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
+                     leftroomobjhtml = leftroomobj({ isfull: "primary", type: "user",roomtype:dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName,roomid:dtreeobject.Id });
                 }
 
             }
@@ -495,25 +513,37 @@
             $("#caozuodiv").show();
           
             var roomid = $(this).attr("roomid");
+            var roomtype = $(this).attr("roomtype");
          
             $("#caozuodiv div").attr("roomid", roomid);
+            $("#caozuodiv div").attr("roomtype", roomtype);
           
         });
 
         //房间详细
         $("#roomdewith").click(function () {
-            var roomid = $(this).attr("roomid");
-            jslayer.msg(roomid);
-            jslayer.open({
-                type: 2,
-                content: "/Dormitory/DormitoryInfo/RoomdeWithPage?DorminfoID="+roomid,
-                title: "房间详细",
-                area: ['1090px', '660px'],
-                end: function () {
-                    //loadroom();
-                    jslayer.msg("回来了。");
-                }
-            });
+             var roomtype = $(this).attr("roomtype");
+            console.log(studentroom);
+            console.log(staffroom);
+            console.log(roomtype);
+            if (roomtype == studentroom.id || roomtype == staffroom.id) {
+                var roomid = $(this).attr("roomid");
+                jslayer.msg(roomid);
+
+                jslayer.open({
+                    type: 2,
+                    content: "/Dormitory/DormitoryInfo/RoomdeWithPage?DorminfoID=" + roomid,
+                    title: "房间详细",
+                    area: ['1090px', '660px'],
+                    end: function () {
+                        //loadroom();
+                        jslayer.msg("回来了。");
+                    }
+                });
+            } else {
+                layer.msg("暂未开通（非学生寝室以及员工寝室）。");
+            }
+            
         });
         //编辑房间
         $("#queryroom").click(function () {
@@ -536,7 +566,7 @@
         });
 
         $(document).bind('click', function (e) {
-            console.log("2");
+            //console.log("2");
             var e = e || window.event; //浏览器兼容性 
             var elem = e.target || e.srcElement;
             console.log(elem);
