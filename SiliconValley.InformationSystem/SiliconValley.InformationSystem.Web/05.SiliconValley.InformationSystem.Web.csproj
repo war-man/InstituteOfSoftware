@@ -233,6 +233,7 @@
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmpSalaryManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
@@ -619,6 +620,8 @@
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DaysOffDetail.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DaysOffEdit.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\LeaveApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\SalaryManageIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

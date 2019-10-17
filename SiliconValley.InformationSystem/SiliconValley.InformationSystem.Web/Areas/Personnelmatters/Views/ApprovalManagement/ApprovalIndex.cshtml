@@ -160,7 +160,7 @@
        });
        //调休申请
        $("#DaysOff").click(function () {
-           //当上月有提前调休记录，且还未补班的情况下，不能再调休
+           //当上月有提前调休记录，且还未补班的情况下，不能再申请调休
            var id=@ViewBag.eid;
            $.ajax({
                type: "post",
@@ -172,7 +172,7 @@
                contentType: false,
                success: function (data) {
                    if (data.Success) {
-                       layer.alert("您上个月已经有提前调休记录，且为补班，因此不可再提前调休!", { icon: 1 }, function () {
+                       layer.alert("您上个月已经有提前调休记录，且未补班，因此不可再提前调休!", { icon: 1 }, function () {
                           
                        });
                    } else {

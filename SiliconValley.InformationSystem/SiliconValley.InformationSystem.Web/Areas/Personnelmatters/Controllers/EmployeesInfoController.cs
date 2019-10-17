@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.FinanceBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
-
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -63,15 +63,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     list = list.Where(e => e.PositionId == int.Parse(pname)).ToList();
                 }
                 if (!string.IsNullOrEmpty(Education)) {
-                    list = list.Where(e => e.Education==Education).ToList();
+                    list = list.Where(e => e.Education == Education).ToList();
                 }
                 if (!string.IsNullOrEmpty(sex))
                 {
-                    list = list.Where(e => e.Sex==sex).ToList();
+                    list = list.Where(e => e.Sex == sex).ToList();
                 }
                 if (!string.IsNullOrEmpty(PoliticsStatus))
                 {
-                    list = list.Where(e => e.PoliticsStatus==PoliticsStatus).ToList();
+                    list = list.Where(e => e.PoliticsStatus == PoliticsStatus).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(start_time))
@@ -93,8 +93,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                               e.EmployeeId,
                               e.DDAppId,
                               e.EmpName,
-                              Position =empinfo.GetPosition((int)e.PositionId).PositionName,
-                              Depart =empinfo.GetDept((int)e.PositionId).DeptName,
+                              Position = empinfo.GetPosition((int)e.PositionId).PositionName,
+                              Depart = empinfo.GetDept((int)e.PositionId).DeptName,
                               e.Sex,
                               e.Age,
                               e.Nation,
@@ -151,7 +151,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e1.DDAppId,
                 e1.EmpName,
                 Position = empinfo.GetPosition((int)e1.PositionId).PositionName,
-                Depart =empinfo.GetDept((int)e1.PositionId).DeptName,
+                Depart = empinfo.GetDept((int)e1.PositionId).DeptName,
                 e1.Sex,
                 e1.Age,
                 e1.Nation,
@@ -196,7 +196,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-  
+
         //添加员工页面显示
         [HttpGet]
         public ActionResult AddEmp() {
@@ -257,9 +257,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp.EmployeeId = EmpId();
                 if (emp.IdCardNum != null) {
                     emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
-                   
+
                 }
-                if (emp.Birthdate!=null) {
+                if (emp.Birthdate != null) {
                     emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 }
                 emp.IsDel = false;
@@ -286,11 +286,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "教学部" )
+                if (empinfo.GetDept(emp.PositionId).DeptName == "教学部")
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
-                     bool s = teamanage.AddTeacher(tea);
+                    bool s = teamanage.AddTeacher(tea);
                     AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
@@ -485,8 +485,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetDeptAndPosition() {
             DepartmentManage deptmanage = new DepartmentManage();
             PositionManage pmanage = new PositionManage();
-            int mygrade=1;
-            List<TreeClass> list_Tree = deptmanage.GetList().Where(s=>s.IsDel==false).Select(d => new TreeClass() { id = d.DeptId.ToString(), title = d.DeptName, children = new List<TreeClass>(), disable = false, @checked = false, spread = false,grade=mygrade }).ToList();
+            int mygrade = 1;
+            List<TreeClass> list_Tree = deptmanage.GetList().Where(s => s.IsDel == false).Select(d => new TreeClass() { id = d.DeptId.ToString(), title = d.DeptName, children = new List<TreeClass>(), disable = false, @checked = false, spread = false, grade = mygrade }).ToList();
             List<Position> list_Position = pmanage.GetList().Where(s => s.IsDel == false).ToList();//获取所有岗位有用的数据
             foreach (TreeClass item1 in list_Tree)
             {
@@ -495,11 +495,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     if (item1.id == item2.DeptId.ToString())
                     {
-                                TreeClass tcc2 = new TreeClass();
-                                tcc2.id = item2.Pid.ToString();
-                                tcc2.title = item2.PositionName;
-                                tcc2.grade = 2;
-                                bigTree.Add(tcc2);
+                        TreeClass tcc2 = new TreeClass();
+                        tcc2.id = item2.Pid.ToString();
+                        tcc2.title = item2.PositionName;
+                        tcc2.grade = 2;
+                        bigTree.Add(tcc2);
                         item1.children = bigTree;
                     }
                 }
@@ -520,7 +520,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 foreach (var d in deptmanage.GetList())
                 {
-                    if (dname == d.DeptName && d.IsDel==false) {
+                    if (dname == d.DeptName && d.IsDel == false) {
                         AjaxResultxx = deptmanage.Success();
                     }
                 }
@@ -573,7 +573,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             PositionManage pmanage = new PositionManage();
             var AjaxResultxx = new AjaxResult();
             try
-            {            
+            {
                 var dept = deptmanage.GetEntity(id);
                 dept.IsDel = true;
                 deptmanage.Update(dept);
@@ -670,9 +670,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                    var dept = deptmanage.GetEntity(id);
-                    dept.IsDel = true;
-                    deptmanage.Update(dept);
+                var dept = deptmanage.GetEntity(id);
+                dept.IsDel = true;
+                deptmanage.Update(dept);
                 AjaxResultxx = deptmanage.Success();
             }
             catch (Exception ex)
@@ -774,10 +774,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
 
-                        var emp2 = empinfo.GetInfoByEmpID(id);
-                        emp2.SSStartMonth = endvalue;
-                        empinfo.Update(emp2);
-                        AjaxResultxx = empinfo.Success();
+                var emp2 = empinfo.GetInfoByEmpID(id);
+                emp2.SSStartMonth = endvalue;
+                empinfo.Update(emp2);
+                AjaxResultxx = empinfo.Success();
             }
             catch (Exception ex)
             {
@@ -794,7 +794,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult EmpDetail(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-             var emp= empmanage.GetInfoByEmpID(id);
+            var emp = empmanage.GetInfoByEmpID(id);
             return View(emp);
         }
 
@@ -842,7 +842,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.IsDel
                 #endregion
             };
-            return Json(empobj,JsonRequestBehavior.AllowGet);
+            return Json(empobj, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 编辑员工信息
@@ -851,8 +851,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult EditEmp(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-             var emp= empmanage.GetInfoByEmpID(id);
-            ViewBag.dname = empmanage.GetDept(emp.PositionId).DeptName; 
+            var emp = empmanage.GetInfoByEmpID(id);
+            ViewBag.dname = empmanage.GetDept(emp.PositionId).DeptName;
             ViewBag.deptid = empmanage.GetDept(emp.PositionId).DeptId;
             ViewBag.pname = empmanage.GetPosition(emp.PositionId).PositionName;
             ViewBag.pid = empmanage.GetPosition(emp.PositionId).Pid;
@@ -861,7 +861,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         [HttpPost]
         public ActionResult EditEmp(EmployeesInfo emp) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var ajaxresult= new AjaxResult();
+            var ajaxresult = new AjaxResult();
             try
             {
                 var emp2 = empmanage.GetInfoByEmpID(emp.EmployeeId);
@@ -875,7 +875,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 ajaxresult = empmanage.Error(ex.Message);
             }
-            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -886,7 +886,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
         //获取员工异动表数据
-        public ActionResult GetEtrData(int page,int limit) {
+        public ActionResult GetEtrData(int page, int limit) {
             EmpTransactionManage etmanage = new EmpTransactionManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = etmanage.GetList().ToList();
@@ -898,8 +898,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
                              type = emanage.GetETById(e.TransactionType).MoveTypeName,
                              e.TransactionTime,
-                             predname= e.PreviousDept==null?null:emanage.GetDeptById((int)e.PreviousDept).DeptName,
-                             prepname=e.PreviousPosition==null?null:emanage.GetPobjById((int)e.PreviousPosition).PositionName,
+                             predname = e.PreviousDept == null ? null : emanage.GetDeptById((int)e.PreviousDept).DeptName,
+                             prepname = e.PreviousPosition == null ? null : emanage.GetPobjById((int)e.PreviousPosition).PositionName,
                              nowdname = e.PresentDept == null ? null : emanage.GetDeptById((int)e.PresentDept).DeptName,
                              nowpname = e.PresentPosition == null ? null : emanage.GetPobjById((int)e.PresentPosition).PositionName,
                              e.Remark,
@@ -937,9 +937,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 #region 获取属性值 
                 e.TransactionId,
                 empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
-                esex=emanage.GetInfoByEmpID(e.EmployeeId).Sex,
-                dname=emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
-                pname= emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
                 EntryTime = emanage.GetInfoByEmpID(e.EmployeeId).EntryTime,
                 education = emanage.GetInfoByEmpID(e.EmployeeId).Education,
                 positiveDate = emanage.GetInfoByEmpID(e.EmployeeId).PositiveDate,
@@ -956,7 +956,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.IsDel
                 #endregion
             };
-           
+
             return Json(empobj, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
@@ -966,7 +966,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var e = etmanage.GetEntity(et.TransactionId);
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             MoveTypeManage mt = new MoveTypeManage();
-        
+
             try
             {
                 e.TransactionTime = et.TransactionTime;
@@ -992,7 +992,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         ajaxresult = empmanage.Success();
                         if (ajaxresult.Success) {
                             switch (empmanage.GetDept(emp.PositionId).DeptName) {
-                            case "财务部":
+                                case "财务部":
                                     FinanceModelBusiness fmmanage = new FinanceModelBusiness();
                                     bool fm = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
                                     ajaxresult = empmanage.Success();
@@ -1018,7 +1018,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                     break;
                                 case "教质部":
                                     HeadmasterBusiness hmmanage = new HeadmasterBusiness();
-                                    bool hm= hmmanage.QuitEntity(emp.EmployeeId);
+                                    bool hm = hmmanage.QuitEntity(emp.EmployeeId);
                                     ajaxresult = empmanage.Success();
                                     ajaxresult.Success = hm;
                                     break;
@@ -1029,7 +1029,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                     ajaxresult.Success = t;
                                     break;
                             }
-                           
+
                         }
                     } else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的在职状态改为离职状态
                     {
@@ -1046,29 +1046,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             ajaxresult = empmanage.Success();
                         }
                     }
-                   
+
                 }
                 catch (Exception ex)
                 {
                     ajaxresult = empmanage.Error(ex.Message);
                 }
-        
+
             }
             catch (Exception ex)
             {
                 ajaxresult = etmanage.Error(ex.Message);
             }
-          
-            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
         //员工异动详情信息
         public ActionResult EmpETRDetail(int id) {
             EmpTransactionManage etmanage = new EmpTransactionManage();
-             var et=etmanage.GetEntity(id);
+            var et = etmanage.GetEntity(id);
             ViewBag.id = id;
             return View(et);
         }
-       
+
         //员工审批状态管理
         public ActionResult EmpApproval() {
             return View();
@@ -1079,28 +1079,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetPositiveData(int page,int limit) {
+        public ActionResult GetPositiveData(int page, int limit) {
             ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = affmmanage.GetList();
             var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            var empobj = from e in  newlist
-                          select new
-            {
-                #region 获取属性值 
-                e.Id,
-                empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
-                esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
-                dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
-                pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
-                e.IsBuySS,
-                e.ProbationEndDate,
-                e.ProbationPersonalSummary,
-                e.ApplicationDate,
-                e.IsApproval,
-                e.IsPass
-                #endregion
-            };
+            var empobj = from e in newlist
+                         select new
+                         {
+                             #region 获取属性值 
+                             e.Id,
+                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
+                             esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
+                             dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
+                             pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
+                             e.IsBuySS,
+                             e.ProbationEndDate,
+                             e.ProbationPersonalSummary,
+                             e.ApplicationDate,
+                             e.IsApproval,
+                             e.IsPass
+                             #endregion
+                         };
             var newobj = new
             {
                 code = 0,
@@ -1116,7 +1116,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult PositiveIsPassed(int id,bool state) {
+        public ActionResult PositiveIsPassed(int id, bool state) {
             ApplyForFullMemberManage affmmanage = new ApplyForFullMemberManage();
             EmpTransactionManage etmanage = new EmpTransactionManage();
             MoveTypeManage m = new MoveTypeManage();
@@ -1159,8 +1159,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 ajaxresult = affmmanage.Error(ex.Message);
             }
-       
-            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -1206,8 +1206,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="id"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        [HttpPost] 
-        public ActionResult DimissionIsPassed(int id,bool state)
+        [HttpPost]
+        public ActionResult DimissionIsPassed(int id, bool state)
         {
             DimissionApplyManage dammanage = new DimissionApplyManage();
             EmpTransactionManage etmanage = new EmpTransactionManage();
@@ -1247,13 +1247,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     dammanage.Update(positive);
                     ajaxresult = dammanage.Success();
                 }
-               
+
             }
             catch (Exception ex)
             {
                 ajaxresult = dammanage.Error(ex.Message);
             }
-           
+
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
@@ -1263,7 +1263,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetTransferPositionData(int page,int limit) {
+        public ActionResult GetTransferPositionData(int page, int limit) {
             JobTransferApplyManage jtfamanage = new JobTransferApplyManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = jtfamanage.GetList();
@@ -1277,9 +1277,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
                              dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                              pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
-                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary: emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
+                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
                              nowdname = emanage.GetDeptById((int)e.PlanTurnDeptId).DeptName,
-                             nowpname=emanage.GetPobjById((int)e.PlanTurnPositionId).PositionName,
+                             nowpname = emanage.GetPobjById((int)e.PlanTurnPositionId).PositionName,
                              e.TurnAfterSalary,
                              e.Reason,
                              e.IsApproval,
@@ -1293,7 +1293,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 count = list.Count(),
                 data = etlist
             };
-            return Json(newobj,JsonRequestBehavior.AllowGet);
+            return Json(newobj, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 修改员工调岗申请的审批状态
@@ -1355,7 +1355,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 ajaxresult = jammanage.Error(ex.Message);
             }
-            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+            return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -1469,13 +1469,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetOverTimeData(int page,int limit) {
+        public ActionResult GetOverTimeData(int page, int limit) {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             BeOnDutyManeger bodmanage = new BeOnDutyManeger();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = otrmanage.GetList();
-        
-            var newlist = list.Where(s=>s.IsApproval==false).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+
+            var newlist = list.Where(s => s.IsApproval == false).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
@@ -1483,14 +1483,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.Id,
                              e.EmployeeId,
                              empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
-                              e.StartTime,
-                              e.EndTime,
-                              e.Duration,
-                              e.OvertimeReason,
-                             typename=  bodmanage.GetSingleBeOnButy(e.OvertimeTypeId.ToString(),true).TypeName ,
-                              e.Remark,
-                              e.IsNoDaysOff,
-                              e.IsPassYear,
+                             e.StartTime,
+                             e.EndTime,
+                             e.Duration,
+                             e.OvertimeReason,
+                             typename = bodmanage.GetSingleBeOnButy(e.OvertimeTypeId.ToString(), true).TypeName,
+                             e.Remark,
+                             e.IsNoDaysOff,
+                             e.IsPassYear,
                              e.IsApproval,
                              e.IsPass
                              #endregion
@@ -1510,12 +1510,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetOverTimeApprovedData(int page, int limit,string AppCondition)
+        public ActionResult GetOverTimeApprovedData(int page, int limit, string AppCondition)
         {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             BeOnDutyManeger bodmanage = new BeOnDutyManeger();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var list = otrmanage.GetList().Where(s => s.IsApproval == true && s.IsPassYear==false).ToList();
+            var list = otrmanage.GetList().Where(s => s.IsApproval == true && s.IsPassYear == false).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -1530,13 +1530,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 if (!string.IsNullOrEmpty(YearSelect))
                 {
-                    list = list.Where(e =>DateTime.Parse(e.StartTime.ToString()).Year ==int.Parse(YearSelect)).ToList();
+                    list = list.Where(e => DateTime.Parse(e.StartTime.ToString()).Year == int.Parse(YearSelect)).ToList();
                 }
                 if (!string.IsNullOrEmpty(MonthSelect))
                 {
                     var year = DateTime.Parse(MonthSelect).Year;
-                    var month= DateTime.Parse(MonthSelect).Month;
-                    list = list.Where(e => DateTime.Parse(e.StartTime.ToString()).Year==year && DateTime.Parse(e.StartTime.ToString()).Month==month).ToList();
+                    var month = DateTime.Parse(MonthSelect).Month;
+                    list = list.Where(e => DateTime.Parse(e.StartTime.ToString()).Year == year && DateTime.Parse(e.StartTime.ToString()).Month == month).ToList();
                 }
             }
             var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
@@ -1570,7 +1570,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         //审批加班申请
         [HttpPost]
-        public ActionResult overtimeIsPassed(int id,bool state) {
+        public ActionResult overtimeIsPassed(int id, bool state) {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             var ajaxresult = new AjaxResult();
             try
@@ -1596,22 +1596,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var empobj = new
             {
                 #region 获取属性值 
-               otobj.Id,
-               otobj.EmployeeId,
-               empName = emanage.GetInfoByEmpID(otobj.EmployeeId).EmpName,
-               otobj.StartTime,
-               otobj.EndTime,
-               otobj.Duration,
-               otobj.OvertimeReason,
-              otobj.OvertimeTypeId,
-               otobj.Remark,
-               otobj.IsNoDaysOff,
-               otobj.IsPassYear,
-               otobj.IsApproval,
-               otobj.IsPass
+                otobj.Id,
+                otobj.EmployeeId,
+                empName = emanage.GetInfoByEmpID(otobj.EmployeeId).EmpName,
+                otobj.StartTime,
+                otobj.EndTime,
+                otobj.Duration,
+                otobj.OvertimeReason,
+                otobj.OvertimeTypeId,
+                otobj.Remark,
+                otobj.IsNoDaysOff,
+                otobj.IsPassYear,
+                otobj.IsApproval,
+                otobj.IsPass
                 #endregion
             };
-            return Json(empobj,JsonRequestBehavior.AllowGet);
+            return Json(empobj, JsonRequestBehavior.AllowGet);
         }
         //加班编辑页面
         public ActionResult OvertimeEdit(int id) {
@@ -1627,7 +1627,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var ajaxresult = new AjaxResult();
             try
             {
-                 var myotr = otrmanage.GetEntity(otr.Id);
+                var myotr = otrmanage.GetEntity(otr.Id);
                 otr.IsPass = myotr.IsPass;
                 otr.IsApproval = myotr.IsApproval;
                 otr.IsPassYear = myotr.IsPassYear;
@@ -1663,7 +1663,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     ajaxresult = otrmanage.Error(ex.Message);
                 }
             }
-         
+
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
@@ -1714,7 +1714,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult GetDaysOffApprovedData(int page, int limit,string AppCondition)
+        public ActionResult GetDaysOffApprovedData(int page, int limit, string AppCondition)
         {
             DaysOffManage dfmanage = new DaysOffManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
@@ -1776,20 +1776,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var empobj = new
             {
                 #region 获取属性值 
-               mydf.Id,
-               mydf.EmployeeId,
-               empName = emanage.GetInfoByEmpID(mydf.EmployeeId).EmpName,
-               mydf.StartTime,
-               mydf.EndTime,
-               mydf.Duration,
-               mydf.LeaveReason,
-               Image= mydf.Image,
-               mydf.IsPassYear,
-               mydf.IsApproval,
-               mydf.IsPass
+                mydf.Id,
+                mydf.EmployeeId,
+                empName = emanage.GetInfoByEmpID(mydf.EmployeeId).EmpName,
+                mydf.StartTime,
+                mydf.EndTime,
+                mydf.Duration,
+                mydf.LeaveReason,
+                Image = mydf.Image,
+                mydf.IsPassYear,
+                mydf.IsApproval,
+                mydf.IsPass
                 #endregion
             };
-            return Json(empobj,JsonRequestBehavior.AllowGet);
+            return Json(empobj, JsonRequestBehavior.AllowGet);
         }
 
         //审批调休申请
@@ -1868,16 +1868,62 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-      /// <summary>
-      ///获取加班及调休的统计数据 (首先按年份分别找到每个人的加班总时长和调休总时长)
-      /// </summary>
-      /// <returns></returns>
+        /// <summary>
+        ///获取加班及调休的统计数据 (首先按年份分别找到每个人的加班总时长和调休总时长)
+        /// </summary>
+        /// <returns></returns>
         public ActionResult GetStatisticsTimeData() {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             DaysOffManage dfmanage = new DaysOffManage();
-           var mylist= otrmanage.GetList().GroupBy(s => s.EmployeeId).ToList();
-            var ajaxresult = new AjaxResult();
-            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+            List<MyStaticsData> Statisticslist = new List<MyStaticsData>();
+           
+                foreach (var mysum in Statisticslist)
+                {
+                
+                foreach (var item in otrmanage.GetList())
+                {
+                    if (item.EmployeeId == mysum.EmployeeId && DateTime.Parse(item.EndTime.ToString()).Year ==mysum.YearTime)
+                    {
+                        mysum.OvertimeTotaltime += item.Duration;
+                    }
+                    else {
+                        MyStaticsData msd = new MyStaticsData();
+                        msd.EmployeeId = item.EmployeeId;
+                        msd.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
+                        msd.OvertimeTotaltime = item.Duration;
+                        Statisticslist.Add(msd);
+                    }
+                }
+            }
+
+
+            foreach (var mysum in Statisticslist)
+            {
+                foreach (var item in dfmanage.GetList())
+                {
+                    if (item.EmployeeId == mysum.EmployeeId && DateTime.Parse(item.EndTime.ToString()).Year == mysum.YearTime)
+                    {
+                        mysum.DaysoffTotaltime += item.Duration;
+                    }
+                    else
+                    {
+                        MyStaticsData msd = new MyStaticsData();
+                        msd.EmployeeId = item.EmployeeId;
+                        msd.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
+                        msd.DaysoffTotaltime = item.Duration;
+                        Statisticslist.Add(msd);
+                    }
+                }
+            }
+
+            var obj = new {
+                code = 0,
+                msg = "",
+                count = Statisticslist.Count(),
+                data = Statisticslist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
         }
     }
 }
