@@ -159,7 +159,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //加班申请
         public ActionResult OvertimeApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908220012";//为测试，暂时设置的死数据
+            string eid = "201908150003";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             BeOnDutyManeger bodmanage = new BeOnDutyManeger();
             var typelist = bodmanage.GetList();
@@ -224,7 +224,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         //调休申请
         public ActionResult DaysOffApply() {
-            string eid = "201908220012";//为测试，暂时设置的死数据
+            string eid = "201908150003";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -235,24 +235,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                #region 图片上传
-                StringBuilder ProName = new StringBuilder();
-                HttpPostedFileBase file = Request.Files["Image"];
-                string fname = Request.Files["Image"].FileName; //获取上传文件名称（包含扩展名）
-                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
-                string name = Path.GetExtension(fname);//获取扩展名
-                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/DaysOffImage/";//获取当前程序集下面的uploads文件夹中的文件夹目录
+                if (leave.Image != "undefined")
+                {
+                    #region 图片上传
+                    StringBuilder ProName = new StringBuilder();
+                    HttpPostedFileBase file = Request.Files["Image"];
+                    string fname = file.FileName; //获取上传文件名称（包含扩展名）
+                    string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                    string name = Path.GetExtension(fname);//获取扩展名
+                    string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/DaysOffImage/";//获取当前程序集下面的uploads文件夹中的文件夹目录
 
-                string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
-                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
-                file.SaveAs(ProName.ToString());//上传文件   
-                #endregion
-
-                   leave.Image = completefilePath;           
-                   leave.IsApproval = false;
-                   leave.IsPass = false;
-                   leave.IsPassYear = false;
-                   dmanage.Insert(leave);
+                    string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                    ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                    file.SaveAs(ProName.ToString());//上传文件   
+                    #endregion
+                    leave.Image = completefilePath;
+                    leave.IsApproval = false;
+                    leave.IsPass = false;
+                    leave.IsPassYear = false;
+                    dmanage.Insert(leave);
+                }
+                else {
+                    leave.Image = null;
+                    leave.IsApproval = false;
+                    leave.IsPass = false;
+                    leave.IsPassYear = false;
+                    dmanage.Insert(leave);
+                }
                    AjaxResultxx = dmanage.Success(leave);
             }
             catch (Exception ex)
@@ -267,7 +276,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
 
         //请假申请
-        public ActionResult LeaveApply(LeaveRequest askforleave) {
+        public ActionResult LeaveApply() {
             return View();
         }
 

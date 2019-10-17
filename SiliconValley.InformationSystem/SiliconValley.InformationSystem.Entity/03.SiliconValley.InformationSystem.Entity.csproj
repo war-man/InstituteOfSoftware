@@ -306,6 +306,7 @@
     <Compile Include="ViewEntity\MrDEmployStaffView.cs" />
     <Compile Include="ViewEntity\MrdRightView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
+    <Compile Include="ViewEntity\MyStaticsData.cs" />
     <Compile Include="ViewEntity\My_StudentDataOne.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
