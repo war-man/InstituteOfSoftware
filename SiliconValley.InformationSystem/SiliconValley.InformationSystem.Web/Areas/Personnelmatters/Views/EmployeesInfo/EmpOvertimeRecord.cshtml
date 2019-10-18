@@ -617,8 +617,8 @@
                     { type: 'checkbox' }
                     , { field: 'empName', title: '姓名', width: 80, sort: true }
                     , { field: 'YearTime', title: '年份', width: 80, sort: true, templet: function (d) { return changeDateTimeFormat(d.StartTime) } }
-                    , { field: 'OvertimeTotaltime', title: '加班总时长', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
-                    , { field: 'DaysoffTotaltime', title: '调休总时长（小时）', width: 150 }
+                    , { field: 'OvertimeTotaltime', title: '可调休总时长', sort: true, width: 120, templet: function (d) { return changeDateTimeFormat(d.EndTime) } }
+                    , { field: 'DaysoffTotaltime', title: '已调休总时长（小时）', width: 150 }
                     , { field: 'ResidueDaysoffTime', title: '剩余调休时间', width: 110 }
 
                 ]]
