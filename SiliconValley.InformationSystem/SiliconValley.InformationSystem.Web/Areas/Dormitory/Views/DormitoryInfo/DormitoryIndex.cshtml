@@ -143,7 +143,7 @@
                 <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="demo1">搜索</button>
                 <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="addtung">添加栋</button>
                 <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="addtung">调寝</button>
-                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="roomarrange">寝室安排</button>
+                <button type="button" class="layui-btn layui-btn-radius layui-btn-normal" id="roomarrange">安排寝室</button>
             </div>
 
         </div>
@@ -260,6 +260,7 @@
                 }
             });
         }
+
         layui.extend({
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dleiool/dtree'
         }).use(['element', 'layer', 'table', 'code', 'util', 'dtree', 'form'], function () {
@@ -545,12 +546,28 @@
             }
             
         });
+
         //编辑房间
         $("#queryroom").click(function () {
          jslayer.msg($(this).attr("roomid"));
 
         });
 
+        //卫生登记
+        $("#GetHomeWorkSubmission").click(function () {
+            var dorminfoid = $(this).attr("roomid");
+            jslayer.open({
+                type: 2,
+                content: "/Dormitory/DormitoryInfo/Healthregistration?DorminfoID="+dorminfoid,
+                title: "卫生登记",
+                area: ['690px', '560px'],
+                end: function () {
+                    jslayer.msg("回来了。");
+                }
+            });
+        });
+
+        //安排寝室（学生跟员工）
         $("#roomarrange").click(function () {
             jslayer.msg("寝室安排环节");
             jslayer.open({

@@ -19,21 +19,58 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> Clothing { get; set; }
-        public Nullable<int> Washsupplies { get; set; }
-        public Nullable<int> Cleantoilet { get; set; }
-        public Nullable<int> Shoeplacement { get; set; }
-        public Nullable<int> Beddebris { get; set; }
-        public Nullable<int> Trunk { get; set; }
-        public Nullable<int> Emptyplacement { get; set; }
-        public Nullable<int> Sheet { get; set; }
-        public Nullable<int> BeddingOverlay { get; set; }
-        public Nullable<int> Inspector { get; set; }
-        public Nullable<int> Dormitoryaddress { get; set; }
-        public Nullable<int> Ground { get; set; }
-        public Nullable<bool> Dateofregistration { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 乱挂衣物
+        /// </summary>
+        public bool Clothing { get; set; }
+        /// <summary>
+        /// 洗漱用品
+        /// </summary>
+        public bool Washsupplies { get; set; }
+        /// <summary>
+        /// 厕所整洁
+        /// </summary>
+        public bool Cleantoilet { get; set; }
+        /// <summary>
+        /// 鞋子摆放
+        /// </summary>
+        public bool Shoeplacement { get; set; }
+        /// <summary>
+        /// 床上堆放杂物
+        /// </summary>
+        public bool Beddebris { get; set; }
+        /// <summary>
+        /// 行李箱
+        /// </summary>
+        public bool Trunk { get; set; }
+        /// <summary>
+        /// 空床摆放
+        /// </summary>
+        public bool Emptyplacement { get; set; }
+        /// <summary>
+        /// 床单成面
+        /// </summary>
+        public bool Sheet { get; set; }
+        /// <summary>
+        /// 被子叠放
+        /// </summary>
+        public bool BeddingOverlay { get; set; }
+        /// <summary>
+        /// 检查人
+        /// </summary>
+        public int Inspector { get; set; }
+        /// <summary>
+        /// 房间编号
+        /// </summary>
+        public int DorminfoID { get; set; }
+        /// <summary>
+        /// 地面
+        /// </summary>
+        public bool Ground { get; set; }
+        public bool IsDel { get; set; }
+        public DateTime Addtime { get; set; }
         public string Remarks { get; set; }
-    
+
+        public DateTime RegisterTime { get; set; }
     }
 }

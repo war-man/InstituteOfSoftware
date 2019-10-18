@@ -259,6 +259,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
+    <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
@@ -687,6 +688,8 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\RoomArrangePage.cshtml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\Healthregistration.cshtml" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\LateReturn.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

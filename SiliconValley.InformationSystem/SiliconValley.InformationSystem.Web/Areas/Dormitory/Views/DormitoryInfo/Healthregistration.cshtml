@@ -1,0 +1,179 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Healthregistration</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="">
+            <fieldset>
+                <legend>
+                    基础信息
+                </legend>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">房间号</label>
+                        <div class="layui-input-inline">
+
+                            <input type="text" style="border:none;" readonly="readonly" value="@ViewBag.DorminfoName" id="DorminfoName" name="DorminfoName" lay-verify="title" autocomplete="off" class="layui-input">
+                            <input type="hidden" name="DorminfoID" value="@ViewBag.DorminfoID" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">选择日期</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="RegisterTime" class="layui-input" id="test-limit2" placeholder="yyyy-MM-dd">
+                        </div>
+                 
+                </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>卫生登记项</legend>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">乱挂衣物</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Clothing" value="false" title="不存在" checked>
+                            <input type="radio" name="Clothing" value="true" title="存在">
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width: 84px;">床上堆放杂物</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Beddebris" value="false" title="不存在" checked>
+                            <input type="radio" name="Beddebris" value="true" title="存在">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">行李箱</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Trunk" value="false" title="整洁" checked>
+                            <input type="radio" name="Trunk" value="true" title="凌乱">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">空床摆放</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Emptyplacement" value="false" title="整洁" checked>
+                            <input type="radio" name="Emptyplacement" value="true" title="凌乱">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">床单成面</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Sheet" value="false" title="整洁" checked>
+                            <input type="radio" name="Sheet" value="true" title="凌乱">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">被子叠放</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="BeddingOverlay" value="false" title="整洁" checked>
+                            <input type="radio" name="BeddingOverlay" value="true" title="凌乱">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">地面</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Ground" value="false" title="整洁" checked>
+                            <input type="radio" name="Ground" value="true" title="脏乱">
+                        </div>
+                    </div>
+                </div>
+
+
+            </fieldset>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                    <label class="layui-form-label">备注</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入备注" name="Remarks" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id="Notre" lay-submit lay-filter="Notre">登记</button>
+                    <button class="layui-btn" id="close">返回</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script>
+        layui.use(['table', 'layer', 'form','laydate'], function () {
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            var day2 = new Date();
+            day2.setTime(day2.getTime());
+            var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+            //前后若干天可选，这里以7天为例
+            laydate.render({
+                elem: '#test-limit2'
+                , min: -3
+                , max: 0
+                , value: s2
+                , isInitValue: true
+            });
+            form.on('submit(Notre)', function (data) {
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/Healthregistration',
+                    type: 'POST',
+                    data: { dormitoryhygiene:data.field },
+                    success: function (SuccessData) {
+                       console.log(SuccessData);
+                        if (SuccessData.Success) {
+                            layer.msg('卫生登记完成。');
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭  
+                            
+                        } else {
+                            layer.msg("请联系开发者");
+                        }
+                    },
+                    error: function () {
+                        layer.msg("请联系开发者");
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+            $("#close").click(function () {
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭  
+            });
+        });
+    </script>
+</body>
+</html>

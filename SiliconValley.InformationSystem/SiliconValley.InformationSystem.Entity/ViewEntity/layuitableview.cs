@@ -15,5 +15,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
      public string msg { get; set; }
      public int count { get; set; }
      public List<T> data { get; set; }
+    
     }
 }

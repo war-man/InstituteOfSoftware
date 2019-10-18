@@ -94,9 +94,15 @@
     <Compile Include="DormitoryBusiness\dbacc-dbben-dbroomnumber-dbdorm.cs" />
     <Compile Include="DormitoryBusiness\dbacc-dbroomnumber.cs" />
     <Compile Include="DormitoryBusiness\dbacc-dbstu.cs" />
+    <Compile Include="DormitoryBusiness\dbprosutdent-dbproheadmaster.cs" />
+    <Compile Include="DormitoryBusiness\dbstaffacc-dbempinfo.cs" />
     <Compile Include="DormitoryBusiness\DormInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryfloorBusiness.cs" />
+    <Compile Include="DormitoryBusiness\DormitoryhygieneBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryLeaderBusiness.cs" />
+    <Compile Include="DormitoryBusiness\HygienicDeductionBusiness.cs" />
+    <Compile Include="DormitoryBusiness\InstructorListBusiness.cs" />
+    <Compile Include="DormitoryBusiness\NotreturningLateBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProClassSchedule.cs" />
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
@@ -105,6 +111,7 @@
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
     <Compile Include="DormitoryBusiness\RoomStayNumberBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomStayTypeBusiness.cs" />
+    <Compile Include="DormitoryBusiness\StaffAccdationBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungFloorBusiness.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />

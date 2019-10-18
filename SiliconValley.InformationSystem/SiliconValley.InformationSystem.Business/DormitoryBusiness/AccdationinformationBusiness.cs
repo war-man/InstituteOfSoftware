@@ -47,5 +47,14 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             return result;
         }
+
+        /// <summary>
+        /// 根据学生编号返回居住信息
+        /// </summary>
+        /// <param name="StudentNumber"></param>
+        /// <returns></returns>
+        public Accdationinformation GetAccdationByStudentNumber(string StudentNumber) {
+           return this.GetAccdationinformations().Where(a => a.Studentnumber == StudentNumber).FirstOrDefault();
+        }
     }
 }

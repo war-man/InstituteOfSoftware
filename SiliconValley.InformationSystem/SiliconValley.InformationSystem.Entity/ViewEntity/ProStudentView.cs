@@ -17,12 +17,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 注册时间
         /// </summary>
-        public Nullable<System.DateTime> InsitDate { get; set; }
+        public string ClassNO { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         public string Reack { get; set; }
 
+        
         public string Telephone { get; set; }
     }
 }

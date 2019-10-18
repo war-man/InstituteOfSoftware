@@ -22,5 +22,15 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 学生列表
         /// </summary>
         public List<AccdationView> AccdationList { get; set; }
+
+        /// <summary>
+        /// 寝室长床位id
+        /// </summary>
+        public int LeaderBedID { get; set; }
+
+        /// <summary>
+        /// 寝室长编号
+        /// </summary>
+        public string StudentNumber { get; set; }
     }
 }

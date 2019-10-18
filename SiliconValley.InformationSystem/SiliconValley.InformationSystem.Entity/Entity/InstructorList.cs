@@ -19,11 +19,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public string EmployeeNumber { get; set; }
-        public string Position { get; set; }
-        public Nullable<bool> Dateofregistration { get; set; }
+        public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }
         public string Remarks { get; set; }
-        public Nullable<System.DateTime> Departmentname { get; set; }
 
 
     }

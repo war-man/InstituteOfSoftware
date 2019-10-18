@@ -13,18 +13,43 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 晚归登记表
+    /// </summary>
     [Table(name: "NotreturningLate")]
     public partial class NotreturningLate
     {
         [Key]
         public int Id { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> AddTime { get; set; }
-        public string Remarks { get; set; }
-        public string Dorm { get; set; }
+        public bool IsDelete { get; set; }
+        /// <summary>
+        /// 数据生成时间
+        /// </summary>
+        public DateTime AddTime { get; set; }
+        /// <summary>
+        /// 登记时间
+        /// </summary>
+        public DateTime RegisterTime { get; set; }
+     /// <summary>
+     /// 原因
+     /// </summary>
         public string Reason { get; set; }
-        public Nullable<int> Accdation_ID { get; set; }
+        /// <summary>
+        /// 学生编号
+        /// </summary>
+        public string StudentNumber { get; set; }
     
-       
+        /// <summary>
+        /// 监察员
+        /// </summary>
+        public int Inspector { get; set; }
+
+        /// <summary>
+        /// 当前学生的班主任
+        /// </summary>
+         public int HeadMasterID { get; set; }
+
+
     }
 }

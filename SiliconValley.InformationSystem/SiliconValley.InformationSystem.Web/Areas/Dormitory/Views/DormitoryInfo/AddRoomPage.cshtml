@@ -112,9 +112,7 @@
         </form>
     </div>
 
-
-
-
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
     <script>
         var jslayer;
         $(function () {
@@ -137,7 +135,7 @@
             form.on('submit(demo1)', function (data) {
                 var jsonStr = data.field;
                 console.log(jsonStr);
-               
+
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/AddRoomPage',
                     type: 'POST',
@@ -158,20 +156,21 @@
             });
 
             form.on('select(myroomtype)', function (data) {
-                console.log(data.elem); //得到select原始DOM对象
-                console.log(data.value); //得到被选中的值
-                console.log(data.othis); //得到美化后的DOM对象
-                if (data.value == "5") {
+                //console.log(data.elem); //得到select原始DOM对象
+                //console.log(data.value); //得到被选中的值
+                //console.log(data.othis); //得到美化后的DOM对象
+                if (data.value == $roomstaytype("Warehouse").id) {
                     $("#roomnumber").hide();
 
                 } else {
                     $("#roomnumber").show();
                 }
-
-                if (data.value != "1") {
-                    $("#sextype").hide();
-                } else {
+                //console.log($roomstaytype("StaffRoom").id);
+                if (data.value ==$roomstaytype("StudentRoom").id||data.value ==$roomstaytype("StaffRoom").id) {
                     $("#sextype").show();
+                } else {
+                    
+                    $("#sextype").hide();
                 }
             });
         });

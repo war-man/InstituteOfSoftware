@@ -39,6 +39,7 @@
     <div id="content">
         <div id="tablediv">
 
+            @*未居住人的列表*@
             <table class="layui-hide" id="Uninhabited" lay-filter="Uninhabited"></table>
 
         </div>
@@ -125,15 +126,16 @@
     </script>
 
     @*床位单选选中按钮模板*@
-<script type="text/template" id="bedradionuban">
-    <input type="radio" name="BedId"  lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}" checked>
-</script>
+    <script type="text/template" id="bedradionuban">
+        <input type="radio" name="BedId" lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}" checked>
+    </script>
     @*床位单选未选中按钮模板*@
-<script type="text/template" id="bedradionuban1">
-    <input type="radio" name="BedId" lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}" >
-</script>
+    <script type="text/template" id="bedradionuban1">
+        <input type="radio" name="BedId" lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}">
+    </script>
 
     <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
     <script>
 
         var jsform;
@@ -161,7 +163,14 @@
             var layer = layui.layer; //layui对象
             jsform = layui.form;
             jslayer = layui.layer;
-            //展示已知数据
+
+            $(function () {
+                var datatype='@Html.Raw(ViewBag.datatype)';
+                var sex = $getsex("Male");
+                console.log(sex);
+                console.log(datatype);
+            });
+            //未居住的学生请求
             var tableIns = table.render({
                 elem: '#Uninhabited'
                 , url: '/Dormitory/DormitoryInfo/UninhabitedList' //数据接口
@@ -184,21 +193,18 @@
                         }
                     }
                     , { field: 'Telephone', title: '联系电话', width: 145 }
-                    , {
-                        field: 'InsitDate', title: '时间', width: 145, templet: function (v) {
-                            return TimeChange(v.InsitDate);
-                        }
-                    }
+                    , {field: 'ClassNO', title: '班级', width: 145,}
                 ]]
 
             });
 
+            
             //监听行双击事件
             table.on('rowDouble(Uninhabited)', function (obj) {
                 console.log(obj.data); //得到当前行数据
                 var mytr = obj.tr[0];
-                $("tr").css("background","");
-              $(mytr).css("background","pink");
+                $("tr").css("background", "");
+                $(mytr).css("background", "pink");
                 jsstudentdata = obj.data;
                 getUninhabiteddormdata(jsstudentdata);
             });
@@ -236,7 +242,7 @@
                     if (i == 0) {
                         radiohtml = radioobj({ DormInfoID: data[i].ID, DormInfoName: data[i].DormInfoName });
 
-                        getUninhabitedBeddata(data[i].ID,data[i]);
+                        getUninhabitedBeddata(data[i].ID, data[i]);
                     } else {
                         radiohtml = radioobj1({ DormInfoID: data[i].ID, DormInfoName: data[i].DormInfoName });
                     }
@@ -247,28 +253,28 @@
             }
 
             //发送请求获取未居住的床位
-            function getUninhabitedBeddata(data,dorminfo) {
-                console.log("发送请求获取未居住的床位"+data);
+            function getUninhabitedBeddata(data, dorminfo) {
+                console.log("发送请求获取未居住的床位" + data);
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/BedInfo',
                     type: 'GET',
                     data: { DorminfoID: data },
-                    success: function (SuccessData ) {
+                    success: function (SuccessData) {
                         if (SuccessData.Success) {
                             console.log("发送请求获取未居住的床位ajax");
                             console.log(SuccessData);
-                            bindbedradio(SuccessData.Data,dorminfo);
+                            bindbedradio(SuccessData.Data, dorminfo);
                         } else {
                             //layer.msg("error");
                         }
                     },
                     error: function (ErrorData) {
-                       // layer.msg("error");
+                        // layer.msg("error");
                     }
                 });
             }
             //生成床位单选按钮
-            function bindbedradio(data,dorminfo) {
+            function bindbedradio(data, dorminfo) {
                 console.log(data);
                 $("#bedradiodiv").children().remove();
                 for (var i = 0; i < data.length; i++) {
@@ -302,10 +308,10 @@
                     success: function (Successdata) {
                         console.log(Successdata);
                         if (Successdata.Success) {
-                            
+
                             layer.msg('只想弱弱提示');
-                            getUninhabitedBeddata(data.value,Successdata.Data);
-                            
+                            getUninhabitedBeddata(data.value, Successdata.Data);
+
                         } else {
                             jsform.msg("error");
                         }
@@ -324,12 +330,12 @@
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/ArrangeDorm',
                     type: 'POST',
-                    data: { BedId: data.field.BedId, DormId: data.field.DormInformation,Studentnumber:jsstudentdata.StudentNumber },
+                    data: { BedId: data.field.BedId, DormId: data.field.DormInformation, Studentnumber: jsstudentdata.StudentNumber },
                     success: function (SuccessData) {
-                       console.log(Successdata);
-                        if (Successdata.Success) {
+                        console.log(SuccessData);
+                        if (SuccessData.Success) {
                             layer.msg('安排到位。');
-                            
+
                         } else {
                             jsform.msg("error");
                         }

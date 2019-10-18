@@ -110,6 +110,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         private ProScheduleForTrainees dbprotrainees;
 
+        /// <summary>
+        /// 卫生记录
+        /// </summary>
+        private DormitoryhygieneBusiness dbdormhygiene;
+
+        /// <summary>
+        /// 班主任卫生扣分业务类
+        /// </summary>
+        private HygienicDeductionBusiness dbhygieneduction; 
+        /// <summary>
+        /// 学生跟老师之间的互动
+        /// </summary>
+        private dbprosutdent_dbproheadmaster dbprosutdent_Dbproheadmaster;
+
+        /// <summary>
+        /// 晚归登记
+        /// </summary>
+        private NotreturningLateBusiness dbnotreturn;
+
+        /// <summary>
+        /// 员工业务类以及员工居住信息业务类
+        /// </summary>
+
+        private dbstaffacc_dbempinfo dbstaffacc_dbempinfo;
+
         // GET: Dormitory/DormitoryInfo
 
         /// <summary>
@@ -118,6 +143,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// <returns></returns>
         public ActionResult DormitoryIndex()
         {
+            //201910170031 教官
+            SessionHelper.Session["UserId"] = 201910180033;
+
+            //201910180033 后勤主任主任
+            SessionHelper.Session["UserId"] = 201910180033;
+
+            //201910180034 教职主任
+            SessionHelper.Session["UserId"] = 201910180034;
+
+            //201908290017 校办（杨校）
+            SessionHelper.Session["UserId"] = 201908290017;
+
+
+
             return View();
         }
 
@@ -513,38 +552,74 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult RoomArrangePage() {
+
+            //这里是要判断这个员工的登陆状态，如果是教职部主任的登陆是只能给学生安排寝室，如果是后勤主任，或者是校办级别的，可以给员工安排寝室
+
+            //201910180033 后勤主任主任
+            SessionHelper.Session["UserId"] = 201910180033;
+
+            //教职主任
+            SessionHelper.Session["UserId"] = 201910180033;
+
+            //校办
+            SessionHelper.Session["UserId"] = 201908290017;
+
+            ViewBag.datatype = "student";
+
             return View();
         }
 
 
         /// <summary>
-        /// 用于加载未居住的学生数据
+        /// 用于加载未居住的学生/员工数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult UninhabitedList() {
+        public ActionResult UninhabitedList(string datatype) {
 
-            dbaccstu = new dbacc_dbstu();
-            var data= dbaccstu.GetUninhabitedData();
 
-            layuitableview<ProStudentView> returnObj = new layuitableview<ProStudentView>();
-
-            if (data!=null)
+            if (datatype == "student")
             {
-               var dud= data.Select(a => new ProStudentView()
+                dbaccstu = new dbacc_dbstu();
+                var data = dbaccstu.GetUninhabitedData();
+                layuitableview<ProStudentView> returnObj = new layuitableview<ProStudentView>();
+                dbprotrainees = new ProScheduleForTrainees();
+                if (data != null)
                 {
-                    InsitDate=a.InsitDate,
-                    Name=a.Name,
-                    Reack=a.Reack,
-                    Sex=a.Sex,
-                    StudentNumber=a.StudentNumber,
-                    Telephone=a.Telephone
-               }).ToList();
-                returnObj.count = dud.Count();
-                returnObj.data = dud;
+                    var dud = data.Select(a => new ProStudentView()
+                    {
+                        ClassNO = dbprotrainees.GetTraineesByStudentNumber(a.StudentNumber).ClassID,
+                        Name = a.Name,
+                        Sex = a.Sex,
+                        StudentNumber = a.StudentNumber,
+                        Telephone = a.Telephone
+                    }).ToList();
 
+                    returnObj.count = dud.Count();
+                    returnObj.data = dud;
+                    return Json(returnObj, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    returnObj.count = 0;
+                    returnObj.data = new List<ProStudentView>();
+                    return Json(returnObj, JsonRequestBehavior.AllowGet);
+                }
             }
-           
-            return Json(returnObj, JsonRequestBehavior.AllowGet);
+            else if (datatype=="staff")
+            {
+                layuitableview<ProStudentView> returnObj = new layuitableview<ProStudentView>();
+                List<EmployeesInfo> data= dbstaffacc_dbempinfo.GetUninhabitedData();
+                return Json(returnObj, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                layuitableview<Object> returnObj = new layuitableview<Object>();
+                returnObj.count = 0;
+                returnObj.data = new List<Object>();
+                return Json(returnObj, JsonRequestBehavior.AllowGet);
+            }
+
+
         }
 
          
@@ -725,6 +800,51 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 
         }
 
+        public ActionResult AddLeader(string StudentNumber, int DormInfoID) {
+            dbleader = new DormitoryLeaderBusiness();
+             AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                DormitoryLeader queryleader= dbleader.GetLeader(DormInfoID);
+                if (queryleader!=null)
+                {
+                    if (dbleader.Cancellation(queryleader))
+                    {
+                        ajaxResult.Data = "";
+                        ajaxResult.Success = true;
+                    }
+                    else
+                    {
+                        ajaxResult.Data = "";
+                        ajaxResult.Success = false;
+                    }
+                }
+                DormitoryLeader dormitoryLeader = new DormitoryLeader();
+                dormitoryLeader.CreationTime = DateTime.Now;
+                dormitoryLeader.DormInfoID = DormInfoID;
+                dormitoryLeader.IsDelete = false;
+                dormitoryLeader.StudentNumber = StudentNumber;
+                if (dbleader.AddLeader(dormitoryLeader))
+                {
+                    ajaxResult.Data = "";
+                    ajaxResult.Success = true;
+                }
+                else
+                {
+                    ajaxResult.Data = "";
+                    ajaxResult.Success = false;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Data = "";
+                ajaxResult.Success = false;
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
         #region 房间详细页面
         [HttpGet]
         /// <summary>
@@ -774,11 +894,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             RoomdeWithPageView view= new RoomdeWithPageView();
             dbacc_Dbben_Dbroomnumber_Dbdorm = new dbacc_dbben_dbroomnumber_dbdorm();
             dbacc = new AccdationinformationBusiness();
-           
+            dbleader = new DormitoryLeaderBusiness();
 
             try
             {
                 List<BenNumber> Beddata = dbacc_Dbben_Dbroomnumber_Dbdorm.GetBensByDorminfoID(DorminfoID);
+
+                DormitoryLeader queryleader = dbleader.GetLeader(DorminfoID);
+                if (queryleader==null)
+                {
+                    view.LeaderBedID = -1;
+                }
+                else
+                {
+                  Accdationinformation queryaccdation= dbacc.GetAccdationByStudentNumber(queryleader.StudentNumber);
+                  view.LeaderBedID = queryaccdation.BedId;
+                  view.StudentNumber = queryaccdation.Studentnumber;
+                }
+
+
 
                 List<AccdationView> accdationViews = new List<AccdationView>();
 
@@ -848,6 +982,139 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 ajaxResult.Success = true;
             }
             catch (Exception ex)
+            {
+                ajaxResult.Data = "";
+                ajaxResult.Success = false;
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region 卫生登记
+
+        [HttpGet]
+        /// <summary>
+        /// 卫生登记 get页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Healthregistration(int DorminfoID)
+        {
+            dbdorm = new DormInformationBusiness();
+           DormInformation querydorm=  dbdorm.GetDormByDorminfoID(DorminfoID);
+            ViewBag.DorminfoName = querydorm.DormInfoName;
+            ViewBag.DorminfoID = DorminfoID;
+            return View();
+        }
+
+        public ActionResult Healthregistration(Dormitoryhygiene dormitoryhygiene) {
+            AjaxResult ajaxResult = new AjaxResult();
+            dbacc = new AccdationinformationBusiness();
+            dbdorm = new DormInformationBusiness();
+            dbprosutdent_Dbproheadmaster = new dbprosutdent_dbproheadmaster();
+                dbdormhygiene = new DormitoryhygieneBusiness();
+            dbhygieneduction = new HygienicDeductionBusiness();
+            int DorminfoID = dormitoryhygiene.DorminfoID;
+            List<Accdationinformation> queryacclist= dbacc.GetAccdationinformationByDormId(DorminfoID);
+            List<Headmaster> backlist = new List<Headmaster>();
+            try
+            {
+                //现在就使用1 号 教官 王涛
+                dormitoryhygiene.IsDel = false;
+                dormitoryhygiene.Addtime = DateTime.Now;
+                dormitoryhygiene.Inspector = 1;
+                string now = dormitoryhygiene.Addtime.ToString();
+                
+                if (dbdormhygiene.AddDormitoryhygiene(dormitoryhygiene))
+                {
+                    Dormitoryhygiene Theprevious = dbdormhygiene.GetDormitoryhygienes().Where(a => a.Addtime.ToString() == now).FirstOrDefault();
+
+                    if (Theprevious.Beddebris|| Theprevious.BeddingOverlay|| Theprevious.Cleantoilet|| Theprevious.Clothing|| Theprevious.Emptyplacement|| Theprevious.Ground|| Theprevious.Sheet|| Theprevious.Shoeplacement|| Theprevious.Trunk|| Theprevious.Washsupplies)
+                    {
+                        foreach (var item in queryacclist)
+                        {
+                            backlist.Add(dbprosutdent_Dbproheadmaster.GetHeadmasterByStudentNumber(item.Studentnumber));
+                        }
+
+                        for (int i = 0; i < backlist.Count; i++)  //外循环是循环的次数
+                        {
+                            for (int j = backlist.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                            {
+
+                                if (backlist[i].ID == backlist[j].ID)
+                                {
+                                    backlist.RemoveAt(j);
+                                }
+
+                            }
+                        }
+
+                        foreach (var item in backlist)
+                        {
+                            HygienicDeduction baby = new HygienicDeduction();
+                            baby.IsDel = false;
+                            baby.CreationTime = DateTime.Now;
+                            baby.DormitoryhygieneID = Theprevious.ID;
+                            baby.Headmaster = item.ID;
+                            baby.Remark = string.Empty;
+
+                            if (dbhygieneduction.AddHygienicDeduction(baby))
+                            {
+                                ajaxResult.Success = true;
+                                ajaxResult.Data = "";
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    ajaxResult.Success = true;
+                    ajaxResult.Data = "";
+                }
+                
+
+            }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Success = false;
+                ajaxResult.Data = "";
+            }
+
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region 晚归登记
+
+        [HttpGet]
+        public ActionResult LateReturn(string StudentNumber) {
+            dbprostudent = new ProStudentInformationBusiness();
+            StudentInformation querysutdent= dbprostudent.GetStudent(StudentNumber);
+            ViewBag.StudentName = querysutdent.Name;
+            ViewBag.StudentNumber = StudentNumber;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult LateReturn(NotreturningLate notreturningLate) {
+            AjaxResult ajaxResult = new AjaxResult();
+            dbprosutdent_Dbproheadmaster = new dbprosutdent_dbproheadmaster();
+            dbnotreturn = new NotreturningLateBusiness();
+            Headmaster queryheadmaster= dbprosutdent_Dbproheadmaster.GetHeadmasterByStudentNumber(notreturningLate.StudentNumber);
+            notreturningLate.AddTime = DateTime.Now;
+            notreturningLate.HeadMasterID = queryheadmaster.ID;
+            notreturningLate.Inspector = 1;
+            notreturningLate.IsDelete = false;
+
+            if (dbnotreturn.AddNotreturningLate(notreturningLate))
+            {
+                ajaxResult.Data = "";
+                ajaxResult.Success = true;
+            }
+            else
             {
                 ajaxResult.Data = "";
                 ajaxResult.Success = false;

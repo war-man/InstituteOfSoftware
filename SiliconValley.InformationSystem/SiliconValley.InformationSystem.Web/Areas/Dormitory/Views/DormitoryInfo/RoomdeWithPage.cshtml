@@ -206,7 +206,7 @@
             <div class="flaotright  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
             <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
             <div class="flaotright">
-                <button type="button" studentnumber="" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i  class=" layui-icon {{=sex}}" ></i><i id="{{=BenNo}}">暂无</i></button>
+                <button type="button" studentnumber="" class="layui-btn {{=isleader}} layui-btn-lg layui-btn-radius probtn"><i  class=" layui-icon {{=sex}}" ></i><i id="{{=BenNo}}">暂无</i></button>
             </div>
         </div>
     </script>
@@ -217,7 +217,7 @@
             <div class="flaotleft  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
             <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
             <div class="flaotleft">
-                <button type="button" studentnumber="" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon {{=sex}}"></i><i id="{{=BenNo}}">暂无</i></button>
+                <button type="button" studentnumber="" class="layui-btn {{=isleader}} layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon {{=sex}}"></i><i id="{{=BenNo}}">暂无</i></button>
             </div>
         </div>
     </script>
@@ -254,6 +254,7 @@
             var roomtype;
             var sextype;
             var studentnumber;
+            var querydata;
             $(function () {
                 DorminfoID = '@Html.Raw(ViewBag.DormInformation)';
                 sextype =$("#sextype").val();
@@ -320,6 +321,8 @@
                     type: 'GET',
                     data: {DorminfoID:DorminfoID},
                     success: function (SuccessData) {
+                        querydata = SuccessData.Data;
+                        console.log(querydata);
                         if (SuccessData.Success) {
                             //学生
                             if (roomtype == studentroom.id) {
@@ -359,13 +362,24 @@
                    //左
                     if (i >= Halfandhalf) {
                         var jsleftstudentbed = _.template($("#leftstudentbed").html());
-                        var jsleftstudentbedhtml = jsleftstudentbed({ iconfontstyle: fontstylearr[i].val, sex: inco, BedId: data.BedList[i].Id, BenNo: data.BedList[i].Id+"bedbed" });
+                        var jsleftstudentbedhtml;
+                        if (data.BedList[i].Id!=data.LeaderBedID) {
+                            jsleftstudentbedhtml = jsleftstudentbed({isleader:"layui-btn-primary",iconfontstyle: fontstylearr[i].val, sex: inco, BedId: data.BedList[i].Id, BenNo: data.BedList[i].Id + "bedbed" });
+                        } else {
+                            jsleftstudentbedhtml = jsleftstudentbed({isleader:"layui-btn-warm",iconfontstyle: fontstylearr[i].val, sex: inco, BedId: data.BedList[i].Id, BenNo: data.BedList[i].Id + "bedbed" });
+                        }
                         $("#leftbed").append($(jsleftstudentbedhtml));
                     }
                     //右
                     else {
                         var jsleftstudentbed = _.template($("#rightstudentbed").html());
-                        var jsleftstudentbedhtml = jsleftstudentbed({ iconfontstyle: fontstylearr[i].val,sex:inco, BedId: data.BedList[i].Id ,BenNo: data.BedList[i].Id+"bedbed"});
+                        var jsleftstudentbedhtml;
+                        if (data.BedList[i].Id!=data.LeaderBedID) {
+                            jsleftstudentbedhtml=jsleftstudentbed({isleader:"layui-btn-primary", iconfontstyle: fontstylearr[i].val,sex:inco, BedId: data.BedList[i].Id ,BenNo: data.BedList[i].Id+"bedbed"});
+                        } else {
+                            jsleftstudentbedhtml=jsleftstudentbed({isleader:"layui-btn-warm", iconfontstyle: fontstylearr[i].val,sex:inco, BedId: data.BedList[i].Id ,BenNo: data.BedList[i].Id+"bedbed"});
+                        }
+                         
                         $("#rightbed").append($(jsleftstudentbedhtml));
                     }
 
@@ -392,7 +406,18 @@
                         }
                     }
                 });
-                loadformdata(studentnumber);
+               
+                if (data.StudentNumber > 0) {
+                    console.log(data.StudentNumber);
+                    loadformdata(data.StudentNumber);
+                } else {
+                    if (studentnumber == undefined) {
+                        loadformdata(data.AccdationList[0].Studentnumber);
+                    } else {
+                        loadformdata(studentnumber);
+                    }
+                    
+                }
             }
 
              //床位绑定员工
@@ -420,7 +445,7 @@
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/Loadformdata',
                     type: 'GET',
-                    data: {Studentnumber:studentnumber},
+                    data: { Studentnumber: studentnumber },
                     success: function (SuccessData) {
                         if (SuccessData.Success) {
                             bindformdata(SuccessData.Data);
@@ -442,32 +467,66 @@
                 $("#StaffPhone").val(data.StaffPhone);
                 $("#ClassNO").val(data.ClassNO);
             }
+
             //点击学生触发事件
             $(document).off("click", '.probtn').on('click', '.probtn', function () {
-                console.log($(this).attr("studentnumber"));
-                loadformdata($(this).attr("studentnumber"));
+                var clickstudentnumber = $(this).attr("studentnumber");
+                console.log(clickstudentnumber);
+                if (clickstudentnumber == "") {
+                    layer.msg("暂无该床位信息。");
+                    if (querydata.StudentNumber>0) {
+                        loadformdata(querydata.StudentNumber);
+                    } else {
+                        if (studentnumber == undefined) {
+                            loadformdata(data.AccdationList[0].Studentnumber);
+                        } else {
+                            loadformdata(studentnumber);
+                        }
+                    }
+                } else {
+                    loadformdata(clickstudentnumber);
+                }
+                
 
             });
             //晚归登记
             $("#Notre").click(function () {
-
+                var prostudentnumber = $("#StudentNumber").val();
+                layer.open({
+                    type: 2,
+                    content: "/Dormitory/DormitoryInfo/LateReturn?StudentNumber="+prostudentnumber,
+                    title: "晚归登记",
+                    area: ['750px', '400px'],
+                    end: function () {
+                        //loadroom();
+                        jslayer.msg("回来了。");
+                    }
+                });
+                return false;
+                
             });
 
             //任命为寝室长
             $("#Dormitoryer").click(function () {
                 var prostudentname = $("#StudentName").val();
+                var prostudentnumber = $("#StudentNumber").val();
                 var protitle = $("#protitle").text();
                 console.log("11");
-                layer.confirm('is not?', { icon: 3, title: '是否将'+prostudentname+'任命为'+protitle+'寝室长？' }, function (index) {
+                layer.confirm('是否将'+prostudentname+'任命为'+protitle+'寝室长？', { icon: 3, title: '提示' }, function (index) {
                     $.ajax({
-                        url: '',
-                        type: '',
-                        data: {},
-                        success: function () {
-
+                        url: '/Dormitory/DormitoryInfo/AddLeader',
+                        type: 'GET',
+                        data: {StudentNumber:prostudentnumber,DormInfoID:DorminfoID},
+                        success: function (SuccessData) {
+                            if (SuccessData.Success) {
+                                layer.msg("任命成功。");
+                                location.reload();
+                            } else {
+                                layer.msg("联系开发者。");
+                            }
                         },
                         error: function () {
-
+                            layer.msg("联系开发者。");
                         }
                     });
                     layer.close(index);

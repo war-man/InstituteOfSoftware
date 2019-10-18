@@ -21,6 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 房间id
         /// </summary>
         public int DormInfoID { get; set; }
+        
 
         /// <summary>
         /// 学生编号

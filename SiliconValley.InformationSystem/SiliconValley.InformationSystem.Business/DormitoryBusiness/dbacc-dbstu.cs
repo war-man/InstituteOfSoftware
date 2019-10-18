@@ -27,10 +27,15 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 {
                     foreach (var item in accdata)
                     {
-                        if (resultdata[i].StudentNumber==item.Studentnumber)
+                        if (resultdata.Count>0)
                         {
-                            resultdata.Remove(resultdata[i]);
+                            if (resultdata[i].StudentNumber == item.Studentnumber)
+                            {
+                                resultdata.Remove(resultdata[i]);
+                                break;
+                            }
                         }
+                        
                     }
                 }
                 return resultdata;

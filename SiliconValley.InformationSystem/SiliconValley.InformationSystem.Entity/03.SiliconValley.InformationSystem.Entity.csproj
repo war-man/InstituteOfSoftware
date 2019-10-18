@@ -169,6 +169,7 @@
     <Compile Include="Entity\HeadClass.cs" />
     <Compile Include="Entity\Headmaster.cs" />
     <Compile Include="Entity\HomeWorkFinishRate.cs" />
+    <Compile Include="Entity\HygienicDeduction.cs" />
     <Compile Include="Entity\InStock.cs" />
     <Compile Include="Entity\InStockGoods.cs" />
     <Compile Include="Entity\InstructorList.cs" />
@@ -241,6 +242,7 @@
     <Compile Include="Entity\SocialSecProportion.cs" />
     <Compile Include="Entity\SocialSecurityDetail.cs" />
     <Compile Include="Entity\Specialty.cs" />
+    <Compile Include="Entity\StaffAccdation.cs" />
     <Compile Include="Entity\StageGrade.cs" />
     <Compile Include="Entity\StockInfo.cs" />
     <Compile Include="Entity\StrengthenClass.cs" />
@@ -323,6 +325,7 @@
     <Compile Include="ViewEntity\ProStudentPageView.cs" />
     <Compile Include="ViewEntity\ProStudentView.cs" />
     <Compile Include="ViewEntity\resultdtree.cs" />
+    <Compile Include="ViewEntity\RoomArrangeEmpinfoView.cs" />
     <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
     <Compile Include="ViewEntity\RoomTypeEnum.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
