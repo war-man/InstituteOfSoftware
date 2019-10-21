@@ -1,0 +1,177 @@
+﻿
+@{
+    ViewBag.Title = "BaseDataEnumIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+<style>
+    /*给添加的弹出框设置样式*/
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+</style>
+}
+<div class="layui-form">
+    <div class="layui-form">
+        <div style=" width:800px; display:inline-block;">
+            <label>名称:</label>
+            <div class="btn-group layui-container" style="width:120px;">
+                <input type="text" class="form-control" id="basedataName" placeholder="名称">
+            </div>
+            <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="serchBaseData()">查询</button>
+        </div>
+        <hr />
+    </div>
+</div>
+<script type="text/html" id="basetoolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe608;</i>添加</button>
+    </div>
+</script>
+<table id="baseDataEnum_table" lay-filter="baseDataEnum_table"></table>
+
+<script type="text/html" id="baseDataEnumbarDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
+@section script{
+    <script>
+        //刷新table数据
+        function Flush() {
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.reload('baseDataEnum_table');
+            });
+        }
+        //提示
+        function Heper(msg, my_icon, myfunction) {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                layer.msg(msg, { icon: my_icon }, myfunction);
+            });
+        }
+        //查询
+        function serchBaseData() {
+            var myname = $("#basedataName").val();
+
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.reload('baseDataEnum_table', {
+                    url: '/Educational/BaseDataEnum/GetBaseDataEnumData'
+                    , where: { "Name": myname } //设定异步数据接口的额外参数
+                });
+            });
+
+
+        }
+        layui.use(['table', 'form'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            table.render({
+                elem: '#baseDataEnum_table'
+                , url: '/Educational/BaseDataEnum/GetBaseDataEnumData'
+                , toolbar: '#basetoolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'Name', title: '名称', fixed: 'left' }
+                    , { field: 'FarName', title: '所属' }
+                    , { field: 'Rmark', title: '说明' }
+                    , {
+                        field: 'IsDelete', title: '状态', templet: function (res) {
+                            if (res.IsDelete == false) {
+                                return '<input id=' + res.Id + ' type="checkbox" name="myIsDelete" lay-skin="switch" lay-text="激活|禁用" lay-filter="basedataDemo" checked>'
+                            } else {
+                                return '<input id=' + res.Id + ' type="checkbox" name="myIsDelete" lay-skin="switch" lay-text="激活|禁用" lay-filter="basedataDemo" >'
+                            }
+                        }
+                    }
+                    , { fixed: 'right', title: '操作', toolbar: '#baseDataEnumbarDemo', width: 150 }
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(baseDataEnum_table)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/BaseDataEnum/AddorEditView'
+                            , area: ['800px', '400px'],
+                            title: '添加信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+
+                };
+            });
+
+            //监听性别操作
+            form.on('switch(basedataDemo)', function (obj) {
+                var my_values = obj.elem.checked;
+                var mydata = { "value": my_values };
+                if (my_values == false) {
+                    layer.confirm('真的删除行么?', function (index) {
+                        $.ajax({
+                            url: '/Educational/BaseDataEnum/DeleteView/' + obj.elem.id,
+                            type: 'POST',
+                            data: mydata,
+                            success: function (sucData) {
+                                if (sucData == "ok") {
+                                    //刷新table
+                                    Heper('删除成功！！！', 1, function () { Flush(); });
+                                } else {
+                                    Heper(sucData, 2, function () { Flush(); });
+                                }
+                            }
+                        })
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Educational/BaseDataEnum/DeleteView/' + obj.elem.id,
+                        type: 'POST',
+                        data: mydata,
+                        success: function (sucData) {
+                            if (sucData == "ok") {
+                                //刷新table
+                                Heper('激活成功！！！', 1, function () { Flush(); });
+                            } else {
+                                Heper(sucData, 2, function () { Flush(); });
+                            }
+                        }
+                    })
+                }
+                 
+            });
+
+            //监听行工具事件
+            table.on('tool(baseDataEnum_table)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/BaseDataEnum/AddorEditView/' + data.Id
+                        , area: ['800px', '400px'],
+                        title: '编辑信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+        });
+    </script>
+
+}
+

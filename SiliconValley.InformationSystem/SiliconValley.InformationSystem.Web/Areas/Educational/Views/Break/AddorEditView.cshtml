@@ -1,0 +1,241 @@
+﻿@model SiliconValley.InformationSystem.Entity.MyEntity.Break
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddorEditView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+        #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class2 .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class3 .layui-layer-title
+        {
+            background-color: #c02828;
+            color: #fff;
+        }
+
+        .layui-unselect
+        {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" style="margin-top:30px;">
+            <div class="layui-container">   
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">班级</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(b=>b.ClassSchedule_Id, ViewBag.classSchedules as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">教室</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(b => b.ClassRoomID, ViewBag.classRooms as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                           @Html.HiddenFor(b=>b.Id)
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">看小说个数:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(b=>b.ReadNovels, new Dictionary<string, object>() {{ "placeholder", "看小说个数" }, { "class", "layui-input linu" } })
+                        </div>
+
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">玩手机个数:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(b=>b.PlayPhone, new Dictionary<string, object>() { { "placeholder", "玩手机个数" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">睡觉个数:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(b => b.SeelpCount, new Dictionary<string, object>() { { "placeholder", "玩手机个数" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">玩游戏个数:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(b => b.PlayGame, new Dictionary<string, object>() { { "placeholder", "玩游戏个数" }, { "class", "layui-input linu" } })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">发现时间段:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(b => b.BaseDataEnum_Id, ViewBag.dataenum as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>                    
+                </div>                 
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                        <label class="layui-form-label">说明</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(b => b.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-form-item" style="margin-top:80px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                    <button class="layui-btn butCss1" onclick="MyClose()">取消</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        //关闭
+        function MyClose() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            });
+        }
+
+        $(function () {
+
+            layui.use(['form'], function () {
+                var form = layui.form;
+                form.on('submit(tijiao)', function (data) {
+                    //console.log(data.field);
+                    $.ajax({
+                        url: '/Educational/Break/AddorEditFunction',
+                        type: 'POST',
+                        data: data.field,
+                        success: function (SucData) {
+                            if (SucData == "ok") {
+                                window.parent.Heper('操作成功', 1, window.parent.Flush());
+                                MyClose();
+                            } else {
+                                window.parent.Heper('操作失败，请重试！！！', 2, window.parent.Flush());
+                            }
+                        }
+                    });
+                    return false;
+                });
+            });
+        });
+    </script>
+</body>
+</html>
