@@ -1928,109 +1928,83 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
+        public bool dd(List<MyStaticsData> source, OvertimeRecord data)
+        {
+            foreach (var item in source)
+            {
+                if (item.EmployeeId == data.EmployeeId)
+                {
+                    return true;
+                }
+
+            }
+
+            return false;
+        }
+
         /// <summary>
         ///获取加班及调休的统计数据 (首先按年份分别找到每个人的加班总时长和调休总时长)
         /// </summary>
         /// <returns></returns>
-        public ActionResult GetStatisticsTimeData()
+        public ActionResult GetStatisticsTimeData(int page, int limit)
         {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             DaysOffManage dfmanage = new DaysOffManage();
+            EmployeesInfoManage emange = new EmployeesInfoManage();
             List<MyStaticsData> Statisticslist = new List<MyStaticsData>();
-
-            foreach (var item in otrmanage.GetList().Where(s=>s.IsNoDaysOff==false))
+            var otrlist = otrmanage.GetList().Where(s => s.IsNoDaysOff == false && s.IsPassYear == false).ToList();
+            var daylist = dfmanage.GetList().Where(s => s.IsPassYear == false).ToList();
+            foreach (var item in otrlist)
             {
-                if (Statisticslist.Count == 0)
-                {
-                    MyStaticsData msd = new MyStaticsData();
-                    msd.EmployeeId = item.EmployeeId;
-                    msd.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
-                    msd.OvertimeTotaltime = item.Duration;
-                    if (msd.DaysoffTotaltime == null)
-                    {
-                        msd.ResidueDaysoffTime = msd.OvertimeTotaltime;
-                    }
-                    else {
-                        msd.ResidueDaysoffTime = msd.OvertimeTotaltime - msd.DaysoffTotaltime;
-                    }
-                    Statisticslist.Add(msd);
-                }
-                else {
-                    for (int mysum = 0; mysum < Statisticslist.Count(); mysum++)
-                    {
 
-                        if (item.EmployeeId == Statisticslist[mysum].EmployeeId && DateTime.Parse(item.EndTime.ToString()).Year ==Statisticslist[mysum].YearTime)
-                        {
-                            Statisticslist[mysum].OvertimeTotaltime += item.Duration;
-                            if (Statisticslist[mysum].DaysoffTotaltime == null)
-                            {
-                                Statisticslist[mysum].ResidueDaysoffTime = Statisticslist[mysum].OvertimeTotaltime;
-                            }
-                            else
-                            {
-                                Statisticslist[mysum].ResidueDaysoffTime = Statisticslist[mysum].OvertimeTotaltime - Statisticslist[mysum].DaysoffTotaltime;
-                            }
-                        }
-                        else
-                        {
-                            MyStaticsData msd = new MyStaticsData();
-                            msd.EmployeeId = item.EmployeeId;
-                            msd.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
-                            msd.OvertimeTotaltime = item.Duration;
-                            if (msd.DaysoffTotaltime == null)
-                            {
-                                msd.ResidueDaysoffTime = msd.OvertimeTotaltime;
-                            }
-                            else {
-                                msd.ResidueDaysoffTime = msd.OvertimeTotaltime - msd.DaysoffTotaltime;
-                            }
-                            Statisticslist.Add(msd);
-                        }
-                    }
+                if (!dd(Statisticslist, item))
+                {
+                    MyStaticsData data = new MyStaticsData();
+
+                    data.EmployeeId = item.EmployeeId;
+                    data.OvertimeTotaltime = 0;
+                    data.DaysoffTotaltime = 0;
+                    data.ResidueDaysoffTime = 0;
+                    data.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
+
+                    Statisticslist.Add(data);
                 }
-              
+
+            }
+            foreach (var item in otrlist)
+            {
+                var myobj = Statisticslist.Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+                myobj.OvertimeTotaltime += item.Duration;//总可调休时间
+               
+                myobj.ResidueDaysoffTime = myobj.OvertimeTotaltime - myobj.DaysoffTotaltime;//剩余调休时间
+
+
+            }
+            foreach (var item1 in daylist)
+            {
+                var myobj = Statisticslist.Where(d => d.EmployeeId == item1.EmployeeId).FirstOrDefault();
+                myobj.DaysoffTotaltime += item1.Duration;//总已调休时间
+
+                myobj.ResidueDaysoffTime = myobj.OvertimeTotaltime - myobj.DaysoffTotaltime;//剩余调休时间
+
             }
 
-
-          
-                foreach (var item in dfmanage.GetList())
-                {
-                if (Statisticslist.Count == 0)
-                {
-                    MyStaticsData msd = new MyStaticsData();
-                    msd.EmployeeId = item.EmployeeId;
-                    msd.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
-                    msd.DaysoffTotaltime = item.Duration;
-                    msd.ResidueDaysoffTime = msd.OvertimeTotaltime - msd.DaysoffTotaltime;
-                    Statisticslist.Add(msd);
-                }
-                else {
-                    for (int mysum = 0; mysum < Statisticslist.Count(); mysum++)
-                    {
-                        if (item.EmployeeId == Statisticslist[mysum].EmployeeId && DateTime.Parse(item.EndTime.ToString()).Year == Statisticslist[mysum].YearTime)
-                        {
-                            Statisticslist[mysum].DaysoffTotaltime += item.Duration;
-                        }
-                        else
-                        {
-                            MyStaticsData msd = new MyStaticsData();
-                            msd.EmployeeId = item.EmployeeId;
-                            msd.YearTime = DateTime.Parse(item.EndTime.ToString()).Year;
-                            msd.DaysoffTotaltime = item.Duration;
-                            msd.ResidueDaysoffTime = msd.OvertimeTotaltime - msd.DaysoffTotaltime;
-                            Statisticslist.Add(msd);
-                        }
-                    }
-                }
-                
-            }
-
+            var newlist = Statisticslist.OrderByDescending(s => s.YearTime).Skip((page - 1) * limit).Take(limit).ToList();
+            var newobj=from s in newlist
+                       select new{
+                           s.EmployeeId,
+                           empName= emange.GetEntity(s.EmployeeId).EmpName,
+                           s.YearTime,
+                           s.OvertimeTotaltime,
+                           s.DaysoffTotaltime,
+                           s.ResidueDaysoffTime
+            };
             var obj = new
             {
                 code = 0,
                 msg = "",
                 count = Statisticslist.Count(),
-                data = Statisticslist
+                data = newobj
             };
 
             return Json(obj, JsonRequestBehavior.AllowGet);
