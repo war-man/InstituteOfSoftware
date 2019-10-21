@@ -214,6 +214,7 @@
     <Compile Include="Areas\Educational\Controllers\BaseDataEnumController.cs" />
     <Compile Include="Areas\Educational\Controllers\BeOnDutyController.cs" />
     <Compile Include="Areas\Educational\Controllers\BreakController.cs" />
+    <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
@@ -2341,6 +2342,7 @@
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Educational\Models\" />
+    <Folder Include="Areas\Educational\Views\PurchaseApply\" />
     <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
