@@ -29,5 +29,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return b_new;
         }
+
+        /// <summary>
+        /// 根据父Id找子数据
+        /// </summary>
+        /// <param name="farther_Id">父Id</param>
+        /// <returns></returns>
+        public List<BaseDataEnum> GetChildData(int farther_Id)
+        {
+           return this.GetList().Where(b => b.fatherId == farther_Id).ToList();
+        }
+        /// <summary>
+        /// 获取所有有效的父级数据
+        /// </summary>
+        /// <returns></returns>
+        public List<BaseDataEnum> GetFartherData()
+        {
+           return  this.GetList().Where(b => b.IsDelete == false && b.fatherId == 0).ToList();
+        }
     }
 }

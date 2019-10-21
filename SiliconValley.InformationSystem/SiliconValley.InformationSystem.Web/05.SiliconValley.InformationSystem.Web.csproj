@@ -619,6 +619,10 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\OvertimeEdit.cshtml" />
     <Content Include="Areas\CourseSyllabus\Views\Course\CourseTypeIndex.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\InfomationAndStatuView.cshtml" />
+    <Content Include="Areas\Educational\Views\BaseDataEnum\BaseDataEnumIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\Break\BreakIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\Break\AddorEditView.cshtml" />
+    <Content Include="Areas\Educational\Views\BaseDataEnum\AddorEditView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2337,8 +2341,6 @@
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Educational\Models\" />
-    <Folder Include="Areas\Educational\Views\BaseDataEnum\" />
-    <Folder Include="Areas\Educational\Views\Break\" />
     <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
