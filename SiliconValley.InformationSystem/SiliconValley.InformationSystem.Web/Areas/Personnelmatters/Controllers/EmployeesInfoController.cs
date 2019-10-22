@@ -1933,11 +1933,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 if (item.EmployeeId == otr.EmployeeId)
                 {
-
                     item.OvertimeTotaltime += otr.Duration;//可调休总时间
-
                     item.ResidueDaysoffTime = item.OvertimeTotaltime - item.DaysoffTotaltime;
-
                       return true;   
                 }
                
@@ -1951,23 +1948,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 if (item.EmployeeId == dff.EmployeeId)
                 {
-
                     item.DaysoffTotaltime += dff.Duration;//已调休总时间
-
                     item.ResidueDaysoffTime = item.OvertimeTotaltime - item.DaysoffTotaltime;
-
                     return true;
                 }
 
             }
-            return false;
 
+            return false;
         }
+
+         
+
         /// <summary>
         ///获取加班及调休的统计数据 (首先按年份分别找到每个人的加班总时长和调休总时长)
         /// </summary>
         /// <returns></returns>
-        public ActionResult GetStatisticsTimeData()
+        public ActionResult GetStatisticsTimeData(int page, int limit)
         {
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             DaysOffManage dfmanage = new DaysOffManage();
@@ -1986,10 +1983,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     msd.ResidueDaysoffTime = msd.OvertimeTotaltime - msd.DaysoffTotaltime;
                     Statisticslist.Add(msd);
                 }
-              
-            }
 
-           
+            }
+         
             foreach (var item in dflist)
             {
                 if (!Check2(Statisticslist,item)) {
@@ -2002,8 +1998,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     Statisticslist.Add(msd);
                 }
             }
+            var newlist = Statisticslist.OrderByDescending(s => s.YearTime).Skip((page - 1) * limit).Take(limit).ToList();
 
-            var newobj = from ss in Statisticslist
+            var newobj = from ss in newlist
                          select new
                          {
                              empName = emanage.GetEntity(ss.EmployeeId).EmpName,
