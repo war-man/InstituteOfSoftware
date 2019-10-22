@@ -690,6 +690,7 @@
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\Healthregistration.cshtml" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\LateReturn.cshtml" />
+    <Content Include="Areas\Dormitory\Views\DormitoryInfo\loadlistwith.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

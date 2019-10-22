@@ -1,6 +1,8 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.PositionBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -135,6 +137,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 
         private dbstaffacc_dbempinfo dbstaffacc_dbempinfo;
 
+        /// <summary>
+        /// 员工居住信息，跟房间居住数量
+        /// </summary>
+        private dbstaffacc_dbroomnumber dbstaffacc_dbroomnumber;
+
+        /// <summary>
+        /// 员工居住信息
+        /// </summary>
+        private StaffAccdationBusiness dbstaffacc;
+
+        /// <summary>
+        /// 转化业务类
+        /// </summary>
+        private ConversionToViewBusiness dbconversion;
+
         // GET: Dormitory/DormitoryInfo
 
         /// <summary>
@@ -155,8 +172,106 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             //201908290017 校办（杨校）
             SessionHelper.Session["UserId"] = 201908290017;
 
+            //主管
+            //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.高管;
+
+            //ViewBag.datatype = "seniorexecutive";
+
+            //SessionHelper.Session["showdata"] = "all";
 
 
+
+            ////教职主任
+            //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.教职主任;
+            //ViewBag.datatype = "teachingdirector";
+            //SessionHelper.Session["showdata"] = "student";
+            //后勤
+            SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.后勤主任;
+            ViewBag.datatype = "quartermaster";
+            SessionHelper.Session["showdata"] = "staff";
+            //教官
+            //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.教官;
+            //ViewBag.datatype = "instructor";
+
+            return View();
+        }
+
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        /// <param name="modules"></param>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public ActionResult Seachoption(string modules, string username) {
+            dbconversion = new ConversionToViewBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                switch (modules)
+                {
+                    case "studentname":
+                        dbprostudent = new ProStudentInformationBusiness();
+                        List<StudentInformation> data= dbprostudent.GetStudentInSchoolData().Where(a => a.Name == username).ToList();
+                        List<ProStudentView> resultstudentdata= dbconversion.StudentInformationToProStudentView(data,true);
+                        ajaxResult.Data = resultstudentdata;
+                        if (resultstudentdata.Count != 0)
+                        {
+                            ajaxResult.Success = true;
+                        }
+                        else
+                        {
+                            ajaxResult.Success = false;
+                            ajaxResult.Msg = "没有该学生的居住信息。";
+                        }
+                        break;
+                    case "staffname":
+                        dbempinfo = new EmployeesInfoManage();
+                        List<EmployeesInfo> empinfodata= dbempinfo.GetAll().Where(a => a.EmpName == username).ToList();
+                        List<RoomArrangeEmpinfoView> resultdata = dbconversion.EmpinfoToRoomArrangeEmpinfoView(empinfodata, true);
+                        ajaxResult.Data = resultdata;
+                        if (resultdata.Count != 0)
+                        {
+                            ajaxResult.Success = true;
+                        }
+                        else
+                        {
+                            ajaxResult.Success = false;
+                            ajaxResult.Msg = "没有该员工的居住信息。";
+                        }
+                        break;
+                    case "dormname":
+                        dbdorm = new DormInformationBusiness();
+                        ajaxResult.Data = dbdorm.GetDorms().Where(a => a.DormInfoName == username).FirstOrDefault();
+                        
+                        if (ajaxResult.Data!=null)
+                        {
+                            ajaxResult.Success = true;
+                        }
+                        else
+                        {
+                            ajaxResult.Success = false;
+                            ajaxResult.Msg = "没有该寝室。";
+                        }
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Data = "";
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！为你及时处理。";
+                throw;
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 搜索名字出现重复的数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult loadlistwith(string showtype) {
+            ViewBag.showtype = showtype;
             return View();
         }
 
@@ -482,6 +597,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             return Json(result,JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 添加房间
+        /// </summary>
+        /// <param name="Direction"></param>
+        /// <param name="Floorid"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult AddRoomPage(string Direction,int Floorid) {
             dbroomtype = new RoomStayTypeBusiness();
@@ -515,30 +636,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         public ActionResult AddRoomPage(DormInformation jsonStr) {
             AjaxResult result = new AjaxResult();
             dbdorm = new DormInformationBusiness();
-            //仓库
-            if (jsonStr.RoomStayTypeId==5)
-            {
-                jsonStr.RoomStayNumberId = 0;
-            }
-            if (jsonStr.RoomStayTypeId!=1)
-            {
-                jsonStr.SexType = 0;
-            }
-            jsonStr.CreationTime = DateTime.Now;
-            try
-            {
-                dbdorm.Insert(jsonStr);
-                BusHelper.WriteSysLog("添加数据位置于Dormitory/DormitoryInfo/AddTungPage", Entity.Base_SysManage.EnumType.LogType.添加数据);
-                result.Msg = "添加成功";
-                result.Success = true;
-            }
-            catch (Exception ex)
-            {
+            dbroomxml = new RoomdeWithPageXmlHelp();
+            var querydorm= dbdorm.GetDorms().Where(a => a.DormInfoName == jsonStr.DormInfoName).FirstOrDefault();
+            if (querydorm==null) {
+                //仓库
+                if (jsonStr.RoomStayTypeId == dbroomxml.GetRoomType(RoomTypeEnum.RoomType.Warehouse))
+                {
+                    jsonStr.RoomStayNumberId = 0;
+                }
+                if (jsonStr.RoomStayTypeId == dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom) || jsonStr.RoomStayTypeId == dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StaffRoom))
+                {
 
-                BusHelper.WriteSysLog(ex.Message + "Dormitory/DormitoryInfo/AddTungPage", Entity.Base_SysManage.EnumType.LogType.添加数据error);
-                result.Msg = "添加失败";
+                }
+                else
+                {
+                    jsonStr.SexType = 0;
+                }
+                jsonStr.CreationTime = DateTime.Now;
+                try
+                {
+                    dbdorm.Insert(jsonStr);
+                    BusHelper.WriteSysLog("添加数据位置于Dormitory/DormitoryInfo/AddTungPage", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                    result.Msg = "添加成功";
+                    result.Success = true;
+                }
+                catch (Exception ex)
+                {
+
+                    BusHelper.WriteSysLog(ex.Message + "Dormitory/DormitoryInfo/AddTungPage", Entity.Base_SysManage.EnumType.LogType.添加数据error);
+                    result.Msg = "联系管理员";
+                    result.Success = false;
+                }
+            }
+            else
+            {
+                result.Msg = "不可添加重复房间号";
                 result.Success = false;
             }
+            
             
 
             return Json(result,JsonRequestBehavior.AllowGet);
@@ -552,20 +687,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult RoomArrangePage() {
-
-            //这里是要判断这个员工的登陆状态，如果是教职部主任的登陆是只能给学生安排寝室，如果是后勤主任，或者是校办级别的，可以给员工安排寝室
-
-            //201910180033 后勤主任主任
-            SessionHelper.Session["UserId"] = 201910180033;
-
-            //教职主任
-            SessionHelper.Session["UserId"] = 201910180033;
-
-            //校办
-            SessionHelper.Session["UserId"] = 201908290017;
-
-            ViewBag.datatype = "student";
-
+            ViewBag.datatype = SessionHelper.Session["showdata"].ToString() ;
             return View();
         }
 
@@ -574,99 +696,98 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// 用于加载未居住的学生/员工数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult UninhabitedList(string datatype) {
-
-
-            if (datatype == "student")
+        public ActionResult UninhabitedList(string datatype)
+        {
+            dbconversion = new ConversionToViewBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+            UninhabitedList uu = new UninhabitedList();
+            try
             {
-                dbaccstu = new dbacc_dbstu();
-                var data = dbaccstu.GetUninhabitedData();
-                layuitableview<ProStudentView> returnObj = new layuitableview<ProStudentView>();
-                dbprotrainees = new ProScheduleForTrainees();
-                if (data != null)
+                switch (datatype)
                 {
-                    var dud = data.Select(a => new ProStudentView()
-                    {
-                        ClassNO = dbprotrainees.GetTraineesByStudentNumber(a.StudentNumber).ClassID,
-                        Name = a.Name,
-                        Sex = a.Sex,
-                        StudentNumber = a.StudentNumber,
-                        Telephone = a.Telephone
-                    }).ToList();
-
-                    returnObj.count = dud.Count();
-                    returnObj.data = dud;
-                    return Json(returnObj, JsonRequestBehavior.AllowGet);
+                    case "all":
+                        uu.proStudentViews = this.GetUninhabitedListforstudent();
+                        uu.employeesInfos = this.GetUninhabitedListforstaff();
+                        break;
+                    case "student":
+                        uu.proStudentViews = this.GetUninhabitedListforstudent();
+                        break;
+                    case "staff":
+                        uu.employeesInfos = this.GetUninhabitedListforstaff();
+                        break;
                 }
-                else
-                {
-                    returnObj.count = 0;
-                    returnObj.data = new List<ProStudentView>();
-                    return Json(returnObj, JsonRequestBehavior.AllowGet);
-                }
+                ajaxResult.Data = uu;
+                ajaxResult.Success = true;
             }
-            else if (datatype=="staff")
+            catch (Exception ex)
             {
-                layuitableview<ProStudentView> returnObj = new layuitableview<ProStudentView>();
-                List<EmployeesInfo> data= dbstaffacc_dbempinfo.GetUninhabitedData();
-                return Json(returnObj, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                layuitableview<Object> returnObj = new layuitableview<Object>();
-                returnObj.count = 0;
-                returnObj.data = new List<Object>();
-                return Json(returnObj, JsonRequestBehavior.AllowGet);
+                ajaxResult.Data = uu;
+                ajaxResult.Success = false;
             }
 
-
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
         }
 
-         
+        /// <summary>
+        /// 获取学生未居住信息
+        /// </summary>
+        /// <returns></returns>
+        public List<ProStudentView> GetUninhabitedListforstudent() {
+            dbaccstu = new dbacc_dbstu();
+            List<StudentInformation> data = dbaccstu.GetUninhabitedData();
+            layuitableview<ProStudentView> returnObj = new layuitableview<ProStudentView>();
+            return  dbconversion.StudentInformationToProStudentView(data, false);
+        }
+
+        /// <summary>
+        /// 获取未居住员工
+        /// </summary>
+        /// <returns></returns>
+        public List<RoomArrangeEmpinfoView> GetUninhabitedListforstaff() {
+            dbstaffacc_dbempinfo = new dbstaffacc_dbempinfo();
+            dbconversion = new ConversionToViewBusiness();
+            layuitableview<RoomArrangeEmpinfoView> returnObj = new layuitableview<RoomArrangeEmpinfoView>();
+             List<EmployeesInfo> employeesInfos= dbstaffacc_dbempinfo.GetUninhabitedData();
+            return dbconversion.EmpinfoToRoomArrangeEmpinfoView(employeesInfos, false);
+        }
         /// <summary>
         /// 查询寝室
         /// </summary>
         /// <param name="sex"></param>
         /// <returns></returns>
-        public ActionResult ChoiceInfo(bool sex) {
+        public ActionResult ChoiceInfo(bool sex,string datatype) {
 
             dbdorm = new DormInformationBusiness();
             dbaccroomnumber = new dbacc_dbroomnumber();
-           
+            dbroomxml = new RoomdeWithPageXmlHelp();
             AjaxResult ajaxResult = new AjaxResult();
             List<DormInformation> dormlist = new List<DormInformation>();
+            var data = dbdorm.GetDorms();
+            //默认男寝
+            int maleid = 1;
+            //男寝
             if (sex)
             {
-                try
-                {
-                   var data= dbdorm.GetMaleDorm();
-                    foreach (var item in data)
-                    {
-                        if (!dbaccroomnumber.IsFull(item.ID, item.RoomStayNumberId))
-                        {
-                            dormlist.Add(item);
-                        }
-                    }
-                    var dormInfoViews= this.dormInfoViews(dormlist);
-                    ajaxResult.Data = dormInfoViews;
-                    ajaxResult.Success = true;
-                    BusHelper.WriteSysLog("查询男寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据success);
-                }
-                catch (Exception ex)
-                {
+                //男寝数据
+                data = data.Where(a => a.SexType == maleid).ToList();
 
-                    ajaxResult.Data = "";
-                    ajaxResult.Success = false;
-                    BusHelper.WriteSysLog(ex.Message+"查询男寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据error);
-                }
-              
             }
             else
             {
-              
+                maleid = dbroomxml.Getmale(RoomTypeEnum.SexType.Female);
+
+                //女寝寝数据
+                data = data.Where(a => a.SexType == maleid).ToList();
+            }
+
+            if (datatype == "student")
+            {
+                var xmlroomtype = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom);
+                //学生宿舍
+                data = data.Where(a => a.RoomStayTypeId == xmlroomtype).ToList();
+
                 try
                 {
-                   var data= dbdorm.GetFemaleDorm();
                     foreach (var item in data)
                     {
                         if (!dbaccroomnumber.IsFull(item.ID, item.RoomStayNumberId))
@@ -674,17 +795,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                             dormlist.Add(item);
                         }
                     }
-                    var dormInfoViews = this.dormInfoViews(dormlist);
+                    var dormInfoViews = this.dormInfoViews(dormlist, datatype);
                     ajaxResult.Data = dormInfoViews;
                     ajaxResult.Success = true;
-                    BusHelper.WriteSysLog("查询女寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据success);
+                    BusHelper.WriteSysLog("查询学生寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据success);
                 }
                 catch (Exception ex)
                 {
 
                     ajaxResult.Data = "";
                     ajaxResult.Success = false;
-                    BusHelper.WriteSysLog(ex.Message + "查询女寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据error);
+                    BusHelper.WriteSysLog(ex.Message + "查询学生寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据error);
+                }
+            }
+            if (datatype =="staff")
+            {
+                dbstaffacc_dbroomnumber = new dbstaffacc_dbroomnumber();
+                var xmlroomtype = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StaffRoom);
+               
+                data = data.Where(a => a.RoomStayTypeId == xmlroomtype).ToList();
+
+                try
+                {
+                    foreach (var item in data)
+                    {
+                        if (!dbstaffacc_dbroomnumber.IsFull(item.ID, item.RoomStayNumberId))
+                        {
+                            dormlist.Add(item);
+                        }
+                    }
+                    var dormInfoViews = this.dormInfoViews(dormlist, datatype);
+                    ajaxResult.Data = dormInfoViews;
+                    ajaxResult.Success = true;
+                    BusHelper.WriteSysLog("查询员工寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据success);
+                }
+                catch (Exception ex)
+                {
+
+                    ajaxResult.Data = "";
+                    ajaxResult.Success = false;
+                    BusHelper.WriteSysLog(ex.Message + "查询员工寝室数据Dormitory/DormitoryInfo/ChoiceInfo", Entity.Base_SysManage.EnumType.LogType.查询数据error);
                 }
             }
             
@@ -696,7 +846,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private List<DormInfoView> dormInfoViews(List<DormInformation> data) {
+        private List<DormInfoView> dormInfoViews(List<DormInformation> data,string datatype) {
             dbleader = new DormitoryLeaderBusiness();
             dbprostudent = new ProStudentInformationBusiness();
             List<DormInfoView> dormInfoViews = new List<DormInfoView>();
@@ -705,16 +855,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 DormInfoView myview = new DormInfoView();
                 myview.ID = item.ID;
                 myview.DormInfoName = item.DormInfoName;
-                var queryleader = dbleader.GetLeader(item.ID);
-
-                if (queryleader == null)
+                if (datatype == "student")
                 {
-                    myview.StudentName = "暂定";
-                }
-                else
-                {
-                    var querystudent = dbprostudent.GetStudent(queryleader.StudentNumber);
-                    myview.StudentName = querystudent.Name;
+                    var queryleader = dbleader.GetLeader(item.ID);
+                    if (queryleader == null)
+                    {
+                        myview.StudentName = "暂定";
+                    }
+                    else
+                    {
+                        var querystudent = dbprostudent.GetStudent(queryleader.StudentNumber);
+                        myview.StudentName = querystudent.Name;
+                    }
                 }
                 dormInfoViews.Add(myview);
             }
@@ -757,22 +909,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         /// <param name="DorminfoID"></param>
         /// <returns></returns>
-        public ActionResult BedInfo(int DorminfoID) {
+        public ActionResult BedInfo(int DorminfoID,string datatype) {
             AjaxResult ajaxResult = new AjaxResult();
+
             dbacc_Dbben_Dbroomnumber_Dbdorm = new dbacc_dbben_dbroomnumber_dbdorm();
             try
             {
-                var querydata=dbacc_Dbben_Dbroomnumber_Dbdorm.GetSurplusbyDorminfoID(DorminfoID);
+                var querydata = dbacc_Dbben_Dbroomnumber_Dbdorm.GetSurplusbyDorminfoID(DorminfoID, datatype);
                 BusHelper.WriteSysLog("位于Dormitory/DormitoryInfo/BedInfo", Entity.Base_SysManage.EnumType.LogType.查询数据success);
                 ajaxResult.Data = querydata;
                 ajaxResult.Success = true;
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(ex.Message+ "位于Dormitory/DormitoryInfo/BedInfo", Entity.Base_SysManage.EnumType.LogType.查询数据error);
+                BusHelper.WriteSysLog(ex.Message + "位于Dormitory/DormitoryInfo/BedInfo", Entity.Base_SysManage.EnumType.LogType.查询数据error);
                 ajaxResult.Data = "";
                 ajaxResult.Success = false;
             }
+          
+           
             return Json(ajaxResult,JsonRequestBehavior.AllowGet);
         }
 
@@ -783,20 +938,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// <param name="DormId"></param>
         /// <param name="Studentnumber"></param>
         /// <returns></returns>
-        public ActionResult ArrangeDorm(int BedId, int DormId, string Studentnumber)
+        public ActionResult ArrangeDorm(int BedId, int DormId, string resultdata,string datatype)
         {
-            dbacc = new AccdationinformationBusiness();
             AjaxResult ajaxResult = new AjaxResult();
-            Accdationinformation accdationinformation = new Accdationinformation();
-            accdationinformation.CreationTime = DateTime.Now;
-            accdationinformation.IsDel = false;
-            accdationinformation.Remark = string.Empty;
-            accdationinformation.StayDate = DateTime.Now;
-            accdationinformation.BedId = BedId;
-            accdationinformation.DormId = DormId;
-            accdationinformation.Studentnumber = Studentnumber;
-            ajaxResult.Success= dbacc.AddAcc(accdationinformation);
-            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+            RoomTypeEnum.RoomType roomtype = (RoomTypeEnum.RoomType)SessionHelper.Session["roomtype"];
+            if (datatype =="student" )
+            {
+                dbacc = new AccdationinformationBusiness();
+                
+                Accdationinformation accdationinformation = new Accdationinformation();
+                accdationinformation.CreationTime = DateTime.Now;
+                accdationinformation.IsDel = false;
+                accdationinformation.Remark = string.Empty;
+                accdationinformation.StayDate = DateTime.Now;
+                accdationinformation.BedId = BedId;
+                accdationinformation.DormId = DormId;
+                accdationinformation.Studentnumber = resultdata;
+                ajaxResult.Success = dbacc.AddAcc(accdationinformation);
+               
+            }
+            if (datatype == "staff")
+            {
+                dbstaffacc = new StaffAccdationBusiness();
+                StaffAccdation staffAccdation = new StaffAccdation();
+                staffAccdation.BedId = BedId;
+                staffAccdation.CreationTime = DateTime.Now;
+                staffAccdation.DormId = DormId;
+                staffAccdation.EmployeeId = resultdata;
+                staffAccdation.IsDel = false;
+                staffAccdation.Remark = string.Empty;
+                staffAccdation.StayDate = DateTime.Now;
+                ajaxResult.Success = dbstaffacc.AddStaffacc(staffAccdation);
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -1098,6 +1272,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             return View();
         }
 
+
+        /// <summary>
+        /// 晚归登记
+        /// </summary>
+        /// <param name="notreturningLate"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult LateReturn(NotreturningLate notreturningLate) {
             AjaxResult ajaxResult = new AjaxResult();

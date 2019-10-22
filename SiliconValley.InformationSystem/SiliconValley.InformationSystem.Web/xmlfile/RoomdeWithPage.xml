@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
   <StudentRoom id="1">
-    <RoomStayTypeName >学生寝室</RoomStayTypeName>
+    <RoomStayTypeName>学生寝室</RoomStayTypeName>
   </StudentRoom>
   <VisitRoom id="2">
     <RoomStayTypeName >参观寝室</RoomStayTypeName>

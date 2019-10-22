@@ -57,9 +57,9 @@
                     <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                         <label class="layui-form-label">房间号码</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="DormInfoName" lay-verify="title" autocomplete="off" placeholder="请输入房间号" class="layui-input">
-                            <input type="text" name="Direction" id="Direction" value="@ViewBag.Direction" />
-                            <input type="text" name="TungFloorId" id="TungFloorId" value="@ViewBag.Floorid" />
+                            <input type="text" name="DormInfoName" lay-verify="required" autocomplete="off" placeholder="请输入房间号" class="layui-input">
+                            <input type="text" hidden="hidden" name="Direction" id="Direction" value="@ViewBag.Direction" />
+                            <input type="text"hidden="hidden" name="TungFloorId" id="TungFloorId" value="@ViewBag.Floorid" />
                         </div>
                     </div>
                 </div>
@@ -126,10 +126,7 @@
 
         });
         layui.use(['form', 'layedit', 'laydate'], function () {
-            var form = layui.form
-
-                , layedit = layui.layedit
-                , laydate = layui.laydate;
+            var form = layui.form;
             jslayer = layui.layer
            //监听提交
             form.on('submit(demo1)', function (data) {
@@ -142,14 +139,20 @@
                     data: { jsonStr:jsonStr },
                     success: function (successdata) {
                         if (successdata.Success) {
-                            jslayer.msg('添加成功', { icon: 6, time: 2000 }, function () {
+                            jslayer.msg('添加成功!', { icon: 6, time: 2000 }, function () {
                                  close();
                             });
 
+                        } else {
+                            jslayer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                                 close();
+                            });
                         }
                     },
-                    error: function () {
-                        close();
+                    error: function (errordata) {
+                        jslayer.msg("网络延迟!", { icon: 6, time: 2000 }, function () {
+                            close();
+                        });
                     }
                 });
                 return false;

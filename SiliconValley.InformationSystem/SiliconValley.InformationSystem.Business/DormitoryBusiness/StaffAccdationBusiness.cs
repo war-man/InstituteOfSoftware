@@ -37,5 +37,25 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public List<StaffAccdation> GetStaffAccdationsByDorminfoID(int DorminfoID) {
             return this.GetStaffAccdationings().Where(a => a.DormId== DorminfoID).ToList ();
         }
+
+        /// <summary>
+        /// 添加员工居住信息
+        /// </summary>
+        /// <param name="staffAccdation"></param>
+        /// <returns></returns>
+        public bool AddStaffacc(StaffAccdation staffAccdation) {
+            bool result = false;
+            try
+            {
+                this.Insert(staffAccdation);
+                result = true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return result;
+        }
     }
 }

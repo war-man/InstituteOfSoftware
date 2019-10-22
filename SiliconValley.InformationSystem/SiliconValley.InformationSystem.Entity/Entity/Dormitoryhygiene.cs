@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 卫生登记表
+    /// </summary>
     [Table(name: "Dormitoryhygiene")]
     public partial class Dormitoryhygiene
     {

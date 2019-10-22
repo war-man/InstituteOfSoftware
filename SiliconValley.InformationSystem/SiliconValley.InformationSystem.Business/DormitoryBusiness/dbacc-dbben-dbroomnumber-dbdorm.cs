@@ -1,5 +1,6 @@
 ﻿using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private BenNumberBusiness dbben;
         private RoomStayNumberBusiness dbroomnumber;
         private DormInformationBusiness dbdorm;
+        private StaffAccdationBusiness dbstaffacc;
 
         /// <summary>
         /// 根据房间号返回对应的房间
@@ -43,25 +45,47 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="DorminfoID"></param>
         /// <returns></returns>
-        public List<BenNumber> GetSurplusbyDorminfoID(int DorminfoID) {
+        public List<BenNumber> GetSurplusbyDorminfoID(int DorminfoID, string roomtype) {
             dbacc = new AccdationinformationBusiness();
+            dbstaffacc = new StaffAccdationBusiness();
 
             List<BenNumber> querybenlist = this.GetBensByDorminfoID(DorminfoID);
-            //居住信息
-            List<Accdationinformation> queryacclist= dbacc.GetAccdationinformationByDormId(DorminfoID);
 
-            for (int i = querybenlist.Count-1; i >= 0; i--)
+            if (roomtype=="staff")
             {
-                foreach (var item in queryacclist)
+                //员工居住信息
+                List<StaffAccdation> queryacclist = dbstaffacc.GetStaffAccdationsByDorminfoID(DorminfoID);
+
+                for (int i = querybenlist.Count - 1; i >= 0; i--)
                 {
-                    if (querybenlist[i].Id == item.BedId)
+                    foreach (var item in queryacclist)
                     {
-                        querybenlist.Remove(querybenlist[i]);
+                        if (querybenlist[i].Id == item.BedId)
+                        {
+                            querybenlist.Remove(querybenlist[i]);
+                        }
                     }
-                    
                 }
+
             }
 
+            if (roomtype=="student")
+            {
+                //学生居住信息
+                List<Accdationinformation> queryacclist = dbacc.GetAccdationinformationByDormId(DorminfoID);
+
+                for (int i = querybenlist.Count - 1; i >= 0; i--)
+                {
+                    foreach (var item in queryacclist)
+                    {
+                        if (querybenlist[i].Id == item.BedId)
+                        {
+                            querybenlist.Remove(querybenlist[i]);
+                        }
+
+                    }
+                }
+            }
             return querybenlist;
 
         }

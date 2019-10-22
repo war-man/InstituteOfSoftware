@@ -23,7 +23,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public string Reack { get; set; }
 
-        
+
         public string Telephone { get; set; }
+
+        public int DormID { get; set; }
+
+        public string DormName{ get; set; }
+
+        public string datatype { get; set; }
     }
 }

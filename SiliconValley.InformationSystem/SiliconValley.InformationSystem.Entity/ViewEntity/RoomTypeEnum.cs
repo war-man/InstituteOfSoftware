@@ -29,5 +29,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
             Male,
             Female
         }
+
+        public enum ShowType {
+            高管,
+            教职主任,
+            后勤主任,
+            教官
+        }
     }
 }

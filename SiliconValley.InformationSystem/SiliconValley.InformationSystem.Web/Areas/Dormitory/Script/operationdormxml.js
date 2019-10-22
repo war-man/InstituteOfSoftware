@@ -6,6 +6,7 @@ function loadxml() {
     $.ajax({
         url: '../../../xmlfile/RoomdeWithPage.xml',
         type: 'GET',
+        async: false,//因为这个请求有点慢，所以就同步，后面有数据要操作这个返回的值对象
         dataType: 'xml',
         success: function (xmlDoc, textStatus) {
             $xmlDoc=xmlDoc;
@@ -42,7 +43,7 @@ function $roomstaytype(type) {
     var roomstaytype = new Object();
     $($xmlDoc).find(type).each(function (i) {
         roomstaytype.id = $(this).attr("id");
-        roomstaytype.RoomStayTypeName = $(this).attr("RoomStayTypeName");
+        roomstaytype.RoomStayTypeName = $(this).children("RoomStayTypeName").text();
     });
     return roomstaytype;
 }

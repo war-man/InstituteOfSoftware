@@ -15,6 +15,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string EmpName { get; set; }
         public string Phone { get; set; }
         public string Sex { get; set; }
+        public string DeptName { get; set; }
+        public int DormID { get; set; }
+        public string DormName { get; set; }
 
+        public string datatype { get; set; }
     }
 }

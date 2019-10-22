@@ -14,20 +14,20 @@
     <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
     <style>
         #content {
-        width:1080px;
-        height:650%;
-        border:1px solid red;
+        width:1070px;
+        height:600px;
+        /*border:1px solid red;*/
         }
         #tablediv {
-        width:65%;
+        width:64%;
         height:100%;
-        border:1px solid red;
+        /*border:1px solid red;*/
         float:left;
         }
           #Choicediv {
-        width:34%;
+        width:35%;
         height:100%;
-        border:1px solid red;
+        /*border:1px solid red;*/
         float:right;
         }
         .back {
@@ -38,9 +38,16 @@
 <body>
     <div id="content">
         <div id="tablediv">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li id="studenttitle">未居住学生列表</li>
+                    <li id="stafftitle">未居住员工列表</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;" id="showcontentdiv">
 
-            @*未居住人的列表*@
-            <table class="layui-hide" id="Uninhabited" lay-filter="Uninhabited"></table>
+
+                </div>
+            </div>
 
         </div>
         <div id="Choicediv">
@@ -134,6 +141,15 @@
         <input type="radio" name="BedId" lay-filter="bedfilter" value="{{=BedID}}" title="{{=BenNo}}">
     </script>
 
+    @*未居住学生列表模板*@
+    <script type="text/template" id="UninhabitedStudentnumban">
+        <div id="UninhabitedStudentdiv" class="layui-tab-item"><table class="layui-hide" id="UninhabitedStudent" lay-filter="UninhabitedStudent"></table></div>
+    </script>
+
+    @*未居住员工 列表模板*@
+    <script type="text/template" id="UninhabitedStaffmuban">
+        <div id="UninhabitedStaffdiv" class="layui-tab-item"><table class="layui-hide" id="UninhabitedStaff" lay-filter="UninhabitedStaff"></table></div>
+    </script>
     <script src="~/Scripts/underscore.js"></script>
     <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
     <script>
@@ -141,6 +157,7 @@
         var jsform;
         var jslayer;
         var jsstudentdata;
+        var datatype;
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -158,63 +175,172 @@
             var result = year + '-' + month + '-' + day;
             return result;
         }
-        layui.use(['table', 'layer', 'form'], function () {
+        layui.use(['table', 'layer', 'form','element'], function () {
+            var element = layui.element;
             var table = layui.table;
             var layer = layui.layer; //layui对象
+            var uninhabitedlist;
             jsform = layui.form;
             jslayer = layui.layer;
-
+            var studenttable;
+            var stafftable;
+            var jsdatatype;
             $(function () {
-                var datatype='@Html.Raw(ViewBag.datatype)';
-                var sex = $getsex("Male");
-                console.log(sex);
+                datatype = '@Html.Raw(ViewBag.datatype)';
                 console.log(datatype);
+                loaduninhabitedlist();
+                switch (datatype) {
+                    case "all":
+                        addUninhabitedStudentnumban();
+                        addUninhabitedStaffmuban();
+                        $("#UninhabitedStudentdiv").addClass('layui-show');
+                        loadstudent();
+                        studenttable.reload({
+                            data: uninhabitedlist.proStudentViews
+                        });
+                        loadstaff();
+                        stafftable.reload({
+                            data: uninhabitedlist.employeesInfos
+                        });
+                        
+                        break;
+                    case "student":
+                        $("#stafftitle").remove();
+                        addUninhabitedStudentnumban();
+                        $("#UninhabitedStudentdiv").addClass('layui-show');
+                        loadstudent();
+                        studenttable.reload({
+                            data: uninhabitedlist.proStudentViews
+                        });
+                        break;
+                    case "staff":
+                        $("#studenttitle").remove();
+                        addUninhabitedStaffmuban();
+                        $("#UninhabitedStaffdiv").addClass('layui-show');
+                        loadstaff();
+                        stafftable.reload({
+                            data: uninhabitedlist.employeesInfos
+                        });
+                        break;
+                }
+
             });
-            //未居住的学生请求
-            var tableIns = table.render({
-                elem: '#Uninhabited'
-                , url: '/Dormitory/DormitoryInfo/UninhabitedList' //数据接口
+            //加载数据
+            function loaduninhabitedlist() {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/UninhabitedList?datatype='+datatype //数据接口
+                    , type: "GET"
+                    , async: false
+                    , success: function (successdata) {
+                        console.log(successdata);
+                        if (successdata.Success) {
+                            uninhabitedlist = successdata.Data;
+                        } else {
+                            jslayer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
 
-                //, skin: 'line' //行边框风格
-                , even: true //开启隔行背景
-                , limit: 15
-                , limits: [15, 30, 45, 60, 75]
-                , cols: [[ //标题栏
-
-                    { field: 'StudentNumber', title: '学生编号', width: 180, sort: true }
-                    , { field: 'Name', title: '学生姓名', width: 115 }
-                    , {
-                        field: 'Sex', title: 'Sex', width: 65, templet: function (v) {
-                            if (v.Sex) {
-                                return "男"
-                            } else {
-                                return "女"
-                            }
+                            });
                         }
+                    }  ,
+                    error: function () {
+                        jslayer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
+
+                        });
                     }
-                    , { field: 'Telephone', title: '联系电话', width: 145 }
-                    , {field: 'ClassNO', title: '班级', width: 145,}
-                ]]
+                });
+            }
 
-            });
+            function addUninhabitedStudentnumban() {
+                var obj = _.template($("#UninhabitedStudentnumban").html());
+                var html = obj({});
+                $("#showcontentdiv").append($(html));
+            }
+            function addUninhabitedStaffmuban() {
+                var obj = _.template($("#UninhabitedStaffmuban").html());
+                var html = obj({});
+                $("#showcontentdiv").append($(html));
+            }
+            function loadstudent() {
+                 //未居住的学生请求
+                    studenttable= table.render({
+                        elem: '#UninhabitedStudent'
+                        //, skin: 'line' //行边框风格
+                        , even: true //开启隔行背景
+                        , limit: 10
+                        , limits: [10, 30, 45, 60, 75]
+                        ,page: true
+                        , cols: [[ //标题栏
+                            { field: 'StudentNumber', title: '学生编号', width: 180, sort: true }
+                            , { field: 'Name', title: '学生姓名', width: 95 }
+                            , {
+                                field: 'Sex', title: '性别', width: 65, templet: function (v) {
+                                    if (v.Sex) {
+                                        return "男"
+                                    } else {
+                                        return "女"
+                                    }
+                                }
+                            }
+                            , { field: 'Telephone', title: '联系电话', width: 145 }
+                            , { field: 'ClassNO', title: '班级', width: 145, }
+                        ]]
 
-            
+                    });
+            }
+
+            function loadstaff() {
+                  //未居住的员工请求
+                   stafftable= table.render({
+                        elem: '#UninhabitedStaff'
+                        //, skin: 'line' //行边框风格
+                        , even: true //开启隔行背景
+                        , limit: 10
+                       , limits: [10, 30, 45, 60, 75]
+                        ,page: true
+                        , cols: [[ //标题栏
+
+                            { field: 'EmployeeId', title: '员工编号', width: 180, sort: true }
+                            , { field: 'EmpName', title: '员工姓名', width: 95 }
+                            , {
+                                field: 'Sex', title: '性别', width: 65
+                            }
+                            , { field: 'Phone', title: '联系电话', width: 145 }
+                            , { field: 'DeptName', title: '部门', width: 145, }
+                        ]]
+
+                    });
+            }
             //监听行双击事件
-            table.on('rowDouble(Uninhabited)', function (obj) {
+            table.on('rowDouble(UninhabitedStudent)', function (obj) {
                 console.log(obj.data); //得到当前行数据
                 var mytr = obj.tr[0];
                 $("tr").css("background", "");
                 $(mytr).css("background", "pink");
                 jsstudentdata = obj.data;
+                jsdatatype = jsstudentdata.datatype;
                 getUninhabiteddormdata(jsstudentdata);
             });
-
+            table.on('rowDouble(UninhabitedStaff)', function (obj) {
+                console.log(obj.data); //得到当前行数据
+                var mytr = obj.tr[0];
+                $("tr").css("background", "");
+                $(mytr).css("background", "pink");
+                jsstudentdata = obj.data;
+                jsdatatype = jsstudentdata.datatype;
+                getUninhabiteddormdata(jsstudentdata);
+            });
             //发请求获取未满的宿舍
             function getUninhabiteddormdata(jsdata) {
+                var jsprosex = jsdata.Sex;
+                if (jsdata.Sex == "男") {
+                    jsprosex = true;
+                }
+                if (jsdata.Sex == "女") {
+                    jsprosex = false;
+                }
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/ChoiceInfo',
                     type: 'GET',
-                    data: { sex: jsdata.Sex },
+                    data: { sex: jsprosex, datatype: jsdata.datatype },
                     success: function (successdata) {
                         console.log(successdata);
                         if (successdata.Success) {
@@ -231,8 +357,10 @@
                     }
                 });
             }
+
             //生成房间单选按钮
             function binddormradio(data) {
+                console.log("生成房间单选按钮");
                 console.log(data);
                 $("#radiodiv").children().remove();
                 for (var i = 0; i < data.length; i++) {
@@ -258,7 +386,7 @@
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/BedInfo',
                     type: 'GET',
-                    data: { DorminfoID: data },
+                    data: { DorminfoID: data, datatype: jsdatatype },
                     success: function (SuccessData) {
                         if (SuccessData.Success) {
                             console.log("发送请求获取未居住的床位ajax");
@@ -295,7 +423,7 @@
 
             function bindbiaodan(data) {
                 $("#DorminfoName").val(data.DormInfoName);
-                $("#leadername").val(data.StudentName);
+               // $("#leadername").val(data.StudentName);
             }
 
             //房间单选按钮点击事件
@@ -327,10 +455,20 @@
                 console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
                 console.log(jsstudentdata);
+                var resultdata;
+                if (jsdatatype=="student") {
+                    resultdata = jsstudentdata.StudentNumber;
+                    console.log("st");
+                   
+                }
+                if (jsdatatype=="staff") {
+                    resultdata = jsstudentdata.EmployeeId;
+                     console.log("sta");
+                }
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/ArrangeDorm',
                     type: 'POST',
-                    data: { BedId: data.field.BedId, DormId: data.field.DormInformation, Studentnumber: jsstudentdata.StudentNumber },
+                    data: { BedId: data.field.BedId, DormId: data.field.DormInformation, resultdata: resultdata,datatype:jsdatatype },
                     success: function (SuccessData) {
                         console.log(SuccessData);
                         if (SuccessData.Success) {

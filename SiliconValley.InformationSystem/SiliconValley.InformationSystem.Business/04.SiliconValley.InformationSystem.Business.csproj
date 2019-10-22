@@ -91,11 +91,13 @@
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="DormitoryBusiness\AccdationinformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\BenNumberBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ConversionToViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\dbacc-dbben-dbroomnumber-dbdorm.cs" />
     <Compile Include="DormitoryBusiness\dbacc-dbroomnumber.cs" />
     <Compile Include="DormitoryBusiness\dbacc-dbstu.cs" />
     <Compile Include="DormitoryBusiness\dbprosutdent-dbproheadmaster.cs" />
     <Compile Include="DormitoryBusiness\dbstaffacc-dbempinfo.cs" />
+    <Compile Include="DormitoryBusiness\dbstaffacc-dbroomnumber.cs" />
     <Compile Include="DormitoryBusiness\DormInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryfloorBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryhygieneBusiness.cs" />

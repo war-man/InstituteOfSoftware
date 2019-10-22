@@ -30,23 +30,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             return this.GetDorms().Where(a => a.RoomStayTypeId == 1).ToList();
         }
 
-        /// <summary>
-        /// 获取男寝室
-        /// </summary>
-        /// <returns></returns>
-        public List<DormInformation> GetMaleDorm()
-        {
-            return this.GetStudentDorms().Where(a => a.SexType == 1).ToList();
-        }
-
-        /// <summary>
-        /// 获取女寝室
-        /// </summary>
-        /// <returns></returns>
-        public List<DormInformation> GetFemaleDorm()
-        {
-            return this.GetStudentDorms().Where(a => a.SexType == 2).ToList();
-        }
+      
         /// <summary>
         /// 根据栋楼层id返回对应房间集合
         /// </summary>
