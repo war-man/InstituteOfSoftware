@@ -82,8 +82,9 @@
         .flaotleft {
             float: left;
         }
+
         .flaotright {
-        float:right;
+            float: right;
         }
 
         .fontju {
@@ -109,7 +110,6 @@
             line-height: 44px;
             text-align: center;
         }
-
     </style>
 </head>
 
@@ -122,13 +122,13 @@
             <div id="bottom">
                 <div id="leftbed">
 
-                    
+
                 </div>
                 <div id="guodao">
 
                 </div>
                 <div id="rightbed">
-                   
+
                 </div>
             </div>
         </div>
@@ -139,61 +139,12 @@
                     <input type="hidden" value="@ViewBag.SexType" id="sextype" />
                     <fieldset>
                         <legend>
-                            学员基础信息
+                            <span id="acctype"></span>基础信息
                         </legend>
+                        <div id="rongqi">
 
-                        <div class="layui-row layui-form-item">
-
-                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                                <label class="layui-form-label">学生姓名</label>
-                                <div class="layui-input-inline">
-                                    <input  type="hidden" id="StudentNumber" name="StudentNumber"/>
-                                    <input type="text" style="border:none;" readonly="readonly" value="小老鼠" id="StudentName" name="StudentName" lay-verify="title" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                        </div>         
-                        <div class="layui-row layui-form-item">
-
-                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                                <label class="layui-form-label">联系方式</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" style="border:none;" readonly="readonly" value="15073315702" id="StudentPhone" name="StudentPhone" lay-verify="title" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
                         </div>
-                        <div class="layui-row layui-form-item">
 
-                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                                <label class="layui-form-label">所在班级</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" style="border:none;" readonly="readonly" value="10NA" id="ClassNO" name="ClassNO" lay-verify="title" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-row layui-form-item">
-
-                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                                <label class="layui-form-label">班主任</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" style="border:none;" readonly="readonly" value="嘉文四世" id="StaffName" name="StaffName" lay-verify="title" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-row layui-form-item">
-
-                            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                                <label class="layui-form-label">联系方式</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" style="border:none;" readonly="readonly" value="150895678451" id="StaffPhone" name="StaffPhone" lay-verify="title" autocomplete="off" class="layui-input">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-form-item">
-                            <div class="layui-input-block">
-                                <button class="layui-btn" id="Notre">晚归登记</button>
-                                <button class="layui-btn" id="Dormitoryer">任职寝室长</button>
-                            </div>
-                        </div>
                     </fieldset>
                 </form>
             </div>
@@ -206,7 +157,7 @@
             <div class="flaotright  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
             <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
             <div class="flaotright">
-                <button type="button" studentnumber="" class="layui-btn {{=isleader}} layui-btn-lg layui-btn-radius probtn"><i  class=" layui-icon {{=sex}}" ></i><i id="{{=BenNo}}">暂无</i></button>
+                <button type="button" studentnumber="" class="layui-btn {{=isleader}} layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon {{=sex}}"></i><i id="{{=BenNo}}">暂无</i></button>
             </div>
         </div>
     </script>
@@ -221,98 +172,271 @@
             </div>
         </div>
     </script>
+
     @*左侧 员工*@
     <script type="text/template" id="leftstaffbed">
         <div class="bedcss" id="{{=BedId}}">
             <div class="flaotright  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
             <div class="flaotright  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
             <div class="flaotright">
-                <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon "></i>{{StaffName}}</button>
+                <button type="button" empinfoid="" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class="layui-icon {{=sex}}"></i><i id="{{=BenNo}}">暂无</i></button>
             </div>
         </div>
     </script>
+
     @*右侧 员工*@
     <script type="text/template" id="rightstaffbed">
         <div class="bedcss" id="{{=BedId}}">
             <div class="flaotleft  iconshuzicss"><span class="iconfont {{=iconfontstyle}}"></span></div>
             <div class="flaotleft  iconbedcss"> <span class="iconfont icon-chuang"></span></div>
             <div class="flaotleft">
-                <button type="button" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon "></i>{{StaffName}}</button>
+                <button type="button" empinfoid="" class="layui-btn layui-btn-primary layui-btn-lg layui-btn-radius probtn"><i class=" layui-icon {{=sex}}"></i><i id="{{=BenNo}}">暂无</i></button>
             </div>
         </div>
     </script>
+
+    @*学生表格*@
+    <script type="text/template" id="studentformmuban">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">学生姓名</label>
+                <div class="layui-input-inline">
+                    <input type="hidden" id="StudentNumber" name="StudentNumber" />
+                    <input type="text" style="border:none;" readonly="readonly" value="小老鼠" id="StudentName" name="StudentName" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">联系方式</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" value="15073315702" id="StudentPhone" name="StudentPhone" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">所在班级</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" value="10NA" id="ClassNO" name="ClassNO" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">班主任</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" value="嘉文四世" id="StaffName" name="StaffName" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">联系方式</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" value="150895678451" id="StaffPhone" name="StaffPhone" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block" id="btnrongqi">
+
+            </div>
+        </div>
+    </script>
+
+    @*员工表单*@
+    <script id="staffformmuban" type="text/template">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">员工姓名</label>
+                <div class="layui-input-inline">
+                    <input type="hidden" id="EmployeeId" name="EmployeeId" />
+                    <input type="text" style="border:none;" readonly="readonly" value="小老鼠" id="EmpName" name="EmpName" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">岗位</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" id="PositionName" name="PositionName" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">部门</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" id="DeptName" name="DeptName" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" style="border:none;" readonly="readonly" id="Phone" name="Phone" lay-verify="title" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                <label class="layui-form-label">入住时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" class="layui-input" id="StayDate" readonly="readonly" style="border:none"  name="StayDate" placeholder="yyyy-MM-dd">
+                </div>
+            </div>
+        </div>
+    </script>
+    @*晚归登记*@
+    <script type="text/template" id="Notrebtnmuban">
+        <button class="layui-btn" id="Notre">晚归登记</button>
+    </script>
+    @*任职寝室长*@
+    <script type="text/template" id="Dormitoryerbtnmuban">
+        <button class="layui-btn" id="Dormitoryer">任职寝室长</button>
+    </script>
+
     <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
     <script>
-        layui.use(['table', 'layer', 'form'], function () {
+        layui.use(['table', 'layer', 'form','laydate'], function () {
             var layer = layui.layer;
-            var fontstylearr = new Array();
-            var male = new Object();
-            var female = new Object();
-            var studentroom = new Object();
-            var staffroom = new Object();
+            var laydate = layui.laydate;
+
+            var fontstylearr;
+            var male;
+            var female;
+            var studentroom;
+            var staffroom;
+           
             var DorminfoID;
-            var roomtype;
+            var roomtype;//房间类型
             var sextype;
-            var studentnumber;
+            var studentnumber;//床位为1的学生编号
+            var empinfoidtop1;//床位为1的员工编号
             var querydata;
+            var role;
+
+            var jsstaydate;
+
+            
+
             $(function () {
                 DorminfoID = '@Html.Raw(ViewBag.DormInformation)';
+
+                role = '@Html.Raw(ViewBag.Role)';
                 sextype =$("#sextype").val();
                 roomtype = $("#roomtype").val();
-                loadxml();
+                male = $getsex("Male");
+                female = $getsex("Female");
+                fontstylearr = $getfonticon();
+                studentroom = $roomstaytype("StudentRoom");
+                staffroom = $roomstaytype("StaffRoom");
+                console.log(staffroom);
+                  //加载学生床位
+                if (roomtype == studentroom.id) {
 
-            });
-
-            function loadxml() {
-                $.ajax({
-                    url: '../../../xmlfile/RoomdeWithPage.xml',
-                    type: 'GET',
-                    dataType: 'xml',
-                    success: function (xmlDoc, textStatus) {
-
-                        //console.log("xml获取");
-                        //console.log(xmlDoc);
-                        //console.log(textStatus);
-                        $(xmlDoc).find("iconfontstyle").each(function (i) {
-                            var obj = new Object();
-                            obj.val = $(this).attr("val");
-                            obj.value = $(this).children("value").text();
-                            obj.id=$(this).children("id").text();
-                           // console.log("字体样式");
-                           // console.log(obj);
-                            fontstylearr.push(obj);
-                        });
-
-                        $(xmlDoc).find("Male").each(function (i) {
-                            male.val = $(this).attr("val");
-                            male.icon = $(this).children("icon").text();
-                        });
-
-                        $(xmlDoc).find("Female").each(function (i) {
-                            female.val = $(this).attr("val");
-                            female.icon = $(this).children("icon").text();
-                        });
-
-                        $(xmlDoc).find("StudentRoom").each(function (i) {
-                            studentroom.id = $(this).attr("id");
-                        });
-                        $(xmlDoc).find("StaffRoom").each(function (i) {
-                            staffroom.id = $(this).attr("id");
-                        });
+                    loadbedandaccdation();
+                }
+                //加载员工床位
+                if (roomtype == staffroom.id) {
+                   loadbedandaccdation();
+                }
+                switch (role) {
+                    //高管
+                    case "seniorexecutive":
                         //加载学生床位
                         if (roomtype == studentroom.id) {
-                             loadbedandaccdation();
+                            loadstudentform();
+                            loaddormitoryerbtn();
+                            loadnotrebtn();
                         }
                         //加载员工床位
-                        if (roomtype==staffroom.id) {
-                            layer.msg("肉肉的提示");
+                        if (roomtype == staffroom.id) {
+                            loadstaffform();
                         }
-                        
-                        //console.log(fontstylearr);
-                    }
-                });
+                
+                    break;
+                //教职主任
+                    case "teachingdirector":
+                        loadstudentform();
+                        loaddormitoryerbtn();
+                    break;
+                //后勤主任
+                    case "quartermaster":
+                        loadstaffform();
+                    break;
+                //教官
+                    case "instructor":
+                        loadstudentform();
+                        loadnotrebtn();
+                    break;
+                }
+
+
+            });
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month =Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day =day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+       
+
+            //加载学生表单
+            function loadstudentform() {
+                var obj = _.template($("#studentformmuban").html());
+                var html = obj({});
+                $("#rongqi").append($(html));
             }
 
+            function loadstaffform() {
+                var obj = _.template($("#staffformmuban").html());
+                var html = obj({});
+                $("#rongqi").append($(html));
+            }
+
+            function loadnotrebtn() {
+                 var obj = _.template($("#Notrebtnmuban").html());
+                var html = obj({});
+                $("#btnrongqi").append($(html));
+                
+            }
+            function loaddormitoryerbtn() {
+                
+                var obj = _.template($("#Dormitoryerbtnmuban").html());
+                var html = obj({});
+                $("#btnrongqi").append($(html));
+            }
             //请求拿床位数据
             function loadbedandaccdation() {
                 layer.msg("肉肉的提示");
@@ -336,7 +460,15 @@
                                 }
 
                             } else {
-                                bindbentostaff(SuccessData.Data);
+                                //男
+                                if (sextype == male.val) {
+                                     bindbentostaff(SuccessData.Data, male.icon);
+                                }
+                                //女
+                                else {
+                                  bindbentostaff(SuccessData.Data, female.icon);
+                                }
+
                             }
 
                         } else {
@@ -379,7 +511,7 @@
                         } else {
                             jsleftstudentbedhtml=jsleftstudentbed({isleader:"layui-btn-warm", iconfontstyle: fontstylearr[i].val,sex:inco, BedId: data.BedList[i].Id ,BenNo: data.BedList[i].Id+"bedbed"});
                         }
-                         
+
                         $("#rightbed").append($(jsleftstudentbedhtml));
                     }
 
@@ -393,7 +525,7 @@
                         //console.log("数组里面的bedid");
                         //console.log(data.AccdationList[i].BedId);
                         if ($(this).attr("id") == data.AccdationList[i].BedId) {
-                           
+
                             if ($(this).attr("id") == fontstylearr[0].id) {
                                 studentnumber = data.AccdationList[i].Studentnumber;
                             }
@@ -406,40 +538,77 @@
                         }
                     }
                 });
-               
+
                 if (data.StudentNumber > 0) {
                     console.log(data.StudentNumber);
                     loadformdata(data.StudentNumber);
+                    changecolor(data.StudentNumber);
                 } else {
                     if (studentnumber == undefined) {
                         loadformdata(data.AccdationList[0].Studentnumber);
+                        changecolor(data.AccdationList[0].Studentnumber);
                     } else {
                         loadformdata(studentnumber);
+                        changecolor(studentnumber);
                     }
-                    
+
                 }
             }
 
              //床位绑定员工
-            function bindbentostaff(data) {
-
+            function bindbentostaff(data, inco) {
+                $("#leftbed").children().remove();
+                $("#rightbed").children().remove();
                 var Halfandhalf = data.BedList.length / 2;
                 for (var i = 0; i < data.BedList.length; i++) {
-                    for (var j = 0; j < data.AccdationList.length; j++) {
-                        //左
-                        if (i >= Halfandhalf) {
+                   //左
+                    if (i >= Halfandhalf) {
+                        var jsleftstaffbed = _.template($("#leftstaffbed").html());
+                        var jsleftstaffbedhtml = jsleftstaffbed({iconfontstyle: fontstylearr[i].val, sex: inco, BedId: data.BedList[i].Id, BenNo: data.BedList[i].Id + "bedbed" });
+                        $("#leftbed").append($(jsleftstaffbedhtml));
+                    }
+                    //右
+                    else {
+                        var jsrightstaffbed = _.template($("#rightstaffbed").html());
+                        var jsrightstaffbedhtml=jsrightstaffbed({iconfontstyle: fontstylearr[i].val,sex:inco, BedId: data.BedList[i].Id ,BenNo: data.BedList[i].Id+"bedbed"});
+                        $("#rightbed").append($(jsrightstaffbedhtml));
+                    }
 
+                }
 
-                        }
-                        //右
-                        else {
+                //console.log("------------------------------------------------------");
+                $(".bedcss").each(function (index, domEle) {
+                    //console.log("div的id---------");
+                    //console.log($(this).attr("id"));
+                    for (var i = 0; i < data.StaffaccdationList.length; i++) {
+                        //console.log("数组里面的bedid");
+                        //console.log(data.AccdationList[i].BedId);
+                        if ($(this).attr("id") == data.StaffaccdationList[i].BedId) {
 
+                            if ($(this).attr("id") == fontstylearr[0].id) {
+                                empinfoidtop1 = data.StaffaccdationList[i].EmployeeId;
+                            }
+                            //console.log("true");
+                            var id = $(this).attr("id") + "bedbed";
+                            $("#" + id + "").text(data.StaffaccdationList[i].EmpName);
+                            $("#" + id + "").parents("button").attr("empinfoid", data.StaffaccdationList[i].EmployeeId);
+                            //console.log($("#" + id + ""));
+                            //console.log($("#" + id + "").parents("button"));
                         }
                     }
+                });
+
+
+                if (empinfoidtop1 == undefined) {
+                    changecolor(data.StaffaccdationList[0].EmployeeId);
+                    loadstaffdata(data.StaffaccdationList[0].EmployeeId);
+                } else {
+                    changecolor(empinfoidtop1);
+                    loadstaffdata(empinfoidtop1);
                 }
             }
 
-         
+
             //请求学生基本数据
             function loadformdata(studentnumber) {
                 $.ajax({
@@ -458,6 +627,24 @@
                 });
             }
 
+            function loadstaffdata(empinfoid) {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/loadstaffdata',
+                    type: 'GET',
+                    data: { EmpinfoID: empinfoid },
+                    success: function (SuccessData) {
+                        if (SuccessData.Success) {
+                            console.log(SuccessData.Data);
+                          bindstaffformdata(SuccessData.Data);
+                        } else {
+                            layer.msg("GG");
+                        }
+                    }, error: function () {
+                        layer.msg("GG");
+                    }
+                });
+            }
+
             //绑定数据
             function bindformdata(data) {
                 $("#StudentNumber").val(data.StudentNumber);
@@ -467,30 +654,81 @@
                 $("#StaffPhone").val(data.StaffPhone);
                 $("#ClassNO").val(data.ClassNO);
             }
-
+            function bindstaffformdata(data) {
+                $("#EmpName").val(data.EmpName);
+                $("#EmployeeId").val(data.EmployeeId);
+                $("#DeptName").val(data.DeptName);
+                $("#PositionName").val(data.PositionName);
+                $("#Phone").val(data.Phone);
+                var staydate = TimeChange(data.StayDate);
+                $("#StayDate").val(staydate);
+            }
             //点击学生触发事件
             $(document).off("click", '.probtn').on('click', '.probtn', function () {
-                var clickstudentnumber = $(this).attr("studentnumber");
-                console.log(clickstudentnumber);
-                if (clickstudentnumber == "") {
-                    layer.msg("暂无该床位信息。");
-                    if (querydata.StudentNumber>0) {
-                        loadformdata(querydata.StudentNumber);
-                    } else {
-                        if (studentnumber == undefined) {
-                            loadformdata(data.AccdationList[0].Studentnumber);
+                //学生
+                if (roomtype == studentroom.id) {
+                    var clickstudentnumber = $(this).attr("studentnumber");
+                    console.log(clickstudentnumber);
+                    if (clickstudentnumber == "") {
+                        layer.msg("暂无该床位信息。");
+                        if (querydata.StudentNumber > 0) {
+                            loadformdata(querydata.StudentNumber);
                         } else {
-                            loadformdata(studentnumber);
+                            //1 号床
+                            if (studentnumber == undefined) {
+                                //居住信息第一个
+                                loadformdata(data.AccdationList[0].Studentnumber);
+
+                                changecolor(data.AccdationList[0].Studentnumber);
+                            }
+                            else {
+                                loadformdata(studentnumber);
+                                changecolor(studentnumber);
+                            }
                         }
+                    } else {
+                        loadformdata(clickstudentnumber);
+                        changecolor(clickstudentnumber);
                     }
                 } else {
-                    loadformdata(clickstudentnumber);
+                    var clickempinfoid = $(this).attr("empinfoid");
+                    console.log("-------------------------");
+                    console.log(clickempinfoid);
+                    if (clickempinfoid == "") {
+                        layer.msg("暂无该床位信息");
+                        if (empinfoidtop1 == undefined) {
+                            changecolor(data.StaffaccdationList[0].EmployeeId);
+                            loadstaffdata(data.StaffaccdationList[0].EmployeeId);
+                        } else {
+                            changecolor(empinfoidtop1);
+                             loadstaffdata(empinfoidtop1);
+                        }
+                    } else {
+                        changecolor(clickempinfoid);
+                        loadstaffdata(clickempinfoid);
+                    }
+
                 }
-                
 
             });
+
+            function changecolor(clickstudentnumber) {
+                $(".probtn").each(function () {
+                    $(this).removeClass("layui-btn-danger");
+                    if (roomtype == studentroom.id) {
+                        if ($(this).attr("studentnumber") == clickstudentnumber) {
+                            $(this).addClass("layui-btn-danger");
+                        }
+                    } else {
+                        if ($(this).attr("empinfoid") == clickstudentnumber) {
+                            $(this).addClass("layui-btn-danger");
+                        }
+                    }
+
+                });
+            }
             //晚归登记
-            $("#Notre").click(function () {
+            $(document).off("click", '#Notre').on('click', '#Notre', function () {
                 var prostudentnumber = $("#StudentNumber").val();
                 layer.open({
                     type: 2,
@@ -503,11 +741,12 @@
                     }
                 });
                 return false;
-                
+
             });
 
             //任命为寝室长
-            $("#Dormitoryer").click(function () {
+             $(document).off("click", '#Dormitoryer').on('click', '#Dormitoryer', function () {
+                console.log(DorminfoID);
                 var prostudentname = $("#StudentName").val();
                 var prostudentnumber = $("#StudentNumber").val();
                 var protitle = $("#protitle").text();

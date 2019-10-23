@@ -269,7 +269,7 @@
         var staffroom;
         var showtype; //(高管,教职主任,后勤主任,教官)
         var showrepeattype;
-        $(function () {
+        $(function (){
             showtype = '@Html.Raw(ViewBag.datatype)';
             studentroom = $roomstaytype("StudentRoom");
             staffroom = $roomstaytype("StaffRoom");
@@ -520,8 +520,8 @@
                                     if (dududata.length > 1) {
                                         loadlistwith(dududata);
                                     } else {
-                                       
-                                        roomdewith("1", dududata[0].DormID,true);
+
+                                        roomdewith(dududata[0].RoomStayTypeId, dududata[0].DormID, true);
                                     }
                                     break;
                                 case "staffname":
@@ -529,11 +529,11 @@
                                     if (dududata.length > 1) {
                                         loadlistwith(dududata);
                                     } else {
-                                        roomdewith("1", dududata[0].DormID,true);
+                                        roomdewith(dududata[0].RoomStayTypeId, dududata[0].DormID,true);
                                     }
                                     break;
                                 case "dormname":
-                                    roomdewith("1", dududata.ID,true);
+                                    roomdewith(dududata.RoomStayTypeId, dududata.ID,true);
                                     break;
                             }
 
@@ -740,9 +740,9 @@
             });
         }
 
-        //房间详细请求
-        function roomdewith(roomtype,roomid,verification) {
-            
+        //房间详细请求 201908220012
+        function roomdewith(roomtype, roomid, verification) {
+            //verification 用来检测是搜索的还是点按钮的
             console.log(studentroom);
             console.log(staffroom);
             console.log(roomtype);
@@ -768,9 +768,7 @@
                             jslayer.msg(roomid);
                             openroomdewith(roomid);
                         } else {
-
                             openroomdewith(roomid);
-
                         }
                     } else {
                         layer.msg("你无权访问该房间。");
@@ -793,15 +791,10 @@
                     break;
                 //教官
                 case "instructor":
+                    console.log(studentroom);
+                    console.log(roomtype);
                     if (roomtype == studentroom.id) {
-                        if (verification) {
-                            jslayer.msg(roomid);
-                            openroomdewith(roomid);
-                        } else {
-
-                            openroomdewith(roomid);
-
-                        }
+                        openroomdewith(roomid);
                     } else {
                         layer.msg("你无权访问该房间。");
                     }

@@ -243,6 +243,7 @@
     <Compile Include="Entity\SocialSecurityDetail.cs" />
     <Compile Include="Entity\Specialty.cs" />
     <Compile Include="Entity\StaffAccdation.cs" />
+    <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="Entity\StageGrade.cs" />
     <Compile Include="Entity\StockInfo.cs" />
     <Compile Include="Entity\StrengthenClass.cs" />
@@ -335,6 +336,7 @@
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\ShowEchartsView.cs" />
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
+    <Compile Include="ViewEntity\StaffOfRoomwithFormdataView.cs" />
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentData.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />

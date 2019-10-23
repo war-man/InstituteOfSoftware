@@ -152,6 +152,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         private ConversionToViewBusiness dbconversion;
 
+        /// <summary>
+        ///岗位表
+        /// </summary>
+        private PositionManage dbposit;
+        /// <summary>
+        /// 部门业务类
+        /// </summary>
+        private DepartmentManage dbdepa;
+
         // GET: Dormitory/DormitoryInfo
 
         /// <summary>
@@ -179,20 +188,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 
             //SessionHelper.Session["showdata"] = "all";
 
-
+            //SessionHelper.Session["juese"] = "seniorexecutive";
 
             ////教职主任
             //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.教职主任;
             //ViewBag.datatype = "teachingdirector";
             //SessionHelper.Session["showdata"] = "student";
+            //SessionHelper.Session["juese"] = "teachingdirector";
+
             //后勤
             SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.后勤主任;
             ViewBag.datatype = "quartermaster";
             SessionHelper.Session["showdata"] = "staff";
+            SessionHelper.Session["juese"] = "quartermaster";
             //教官
             //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.教官;
             //ViewBag.datatype = "instructor";
-
+            //SessionHelper.Session["juese"] = "instructor";
             return View();
         }
 
@@ -1039,23 +1051,75 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 //女
                 if (dorm.SexType == female)
                 {
-                    title = "女寝";
+                    title = "-女寝";
                 }
                 //男
                 if (dorm.SexType == male)
                 {
-                    title = "男寝";
+                    title = "-男寝";
+                }
+            }
+            else
+            {
+                //女
+                if (dorm.SexType == female)
+                {
+                    title = "-女员工寝";
+                }
+                //男
+                if (dorm.SexType == male)
+                {
+                    title = "-男员工寝";
                 }
             }
             ViewBag.Title= dorm.DormInfoName+ title;
 
             ViewBag.RoomType = dorm.RoomStayTypeId;
             ViewBag.SexType = dorm.SexType;
-
+            ViewBag.Role = SessionHelper.Session["juese"];
             ViewBag.DormInformation = DorminfoID;
             return View();
         }
 
+        /// <summary>
+        /// 员工信息
+        /// </summary>
+        /// <param name="EmpinfoID"></param>
+        /// <returns></returns>
+        public ActionResult loadstaffdata(string EmpinfoID) {
+
+
+            dbstaffacc = new StaffAccdationBusiness();
+            dbempinfo = new EmployeesInfoManage();
+            dbdepa = new DepartmentManage();
+            dbposit = new PositionManage();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                StaffOfRoomwithFormdataView staffOfRoomwithFormdataView = new StaffOfRoomwithFormdataView();
+                StaffAccdation querystaffaccdation = dbstaffacc.GetStaffAccdationsByEmpinfoID(EmpinfoID);
+                EmployeesInfo queryempinfo = dbempinfo.GetEntity(EmpinfoID);
+                Position queryposit = dbposit.GetEntity(queryempinfo.PositionId);
+                Department querydepa = dbdepa.GetEntity(queryposit.DeptId);
+                staffOfRoomwithFormdataView.DeptName = querydepa.DeptName;
+                staffOfRoomwithFormdataView.EmployeeId = queryempinfo.EmployeeId;
+                staffOfRoomwithFormdataView.EmpName = queryempinfo.EmpName;
+                staffOfRoomwithFormdataView.Phone = queryempinfo.Phone;
+                staffOfRoomwithFormdataView.PositionName = queryposit.PositionName;
+                staffOfRoomwithFormdataView.StayDate = querystaffaccdation.StayDate;
+                ajaxResult.Success = true;
+                ajaxResult.Data = staffOfRoomwithFormdataView;
+            }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系我！";
+                ajaxResult.Data = "";
+            }
+            
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
         /// <summary>
         /// 加载房间的床位以及居住信息
         /// </summary>
@@ -1069,7 +1133,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             dbacc_Dbben_Dbroomnumber_Dbdorm = new dbacc_dbben_dbroomnumber_dbdorm();
             dbacc = new AccdationinformationBusiness();
             dbleader = new DormitoryLeaderBusiness();
-
+            dbdorm = new DormInformationBusiness();
+            dbroomxml = new RoomdeWithPageXmlHelp();
+            DormInformation querydorm = dbdorm.GetDormByDorminfoID(DorminfoID);
             try
             {
                 List<BenNumber> Beddata = dbacc_Dbben_Dbroomnumber_Dbdorm.GetBensByDorminfoID(DorminfoID);
@@ -1086,25 +1152,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                   view.StudentNumber = queryaccdation.Studentnumber;
                 }
 
-
-
-                List<AccdationView> accdationViews = new List<AccdationView>();
-
-                List<Accdationinformation> Accdata = dbacc.GetAccdationinformationByDormId(DorminfoID).OrderBy(a => a.BedId).ToList();
-                foreach (var item in Accdata)
+                if (querydorm.RoomStayTypeId==dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom))
                 {
-                    AccdationView accdation = new AccdationView();
-                    accdation.ID = item.ID;
-                    accdation.BedId = item.BedId;
-                    accdation.Studentnumber = item.Studentnumber;
-                    var querystudent= dbprostudent.GetStudent(item.Studentnumber);
-                    accdation.StudentName = querystudent.Name;
-                    accdationViews.Add(accdation);
+                    List<AccdationView> accdationViews = new List<AccdationView>();
+                    List<Accdationinformation> Accdata = dbacc.GetAccdationinformationByDormId(DorminfoID).OrderBy(a => a.BedId).ToList();
+                    foreach (var item in Accdata)
+                    {
+                        AccdationView accdation = new AccdationView();
+                        accdation.ID = item.ID;
+                        accdation.BedId = item.BedId;
+                        accdation.Studentnumber = item.Studentnumber;
+                        var querystudent = dbprostudent.GetStudent(item.Studentnumber);
+                        accdation.StudentName = querystudent.Name;
+                        accdationViews.Add(accdation);
+                    }
+                    var resultdata = accdationViews.OrderBy(a => a.BedId).ToList();
+                    view.AccdationList = resultdata;
                 }
-                var resultdata=  accdationViews.OrderBy(a => a.BedId).ToList();
+                else
+                {
+                    dbstaffacc = new StaffAccdationBusiness();
+                    dbempinfo = new EmployeesInfoManage();
+                    List<StaffaccdationView> staffaccdationViews = new List<StaffaccdationView>();
+                    List<StaffAccdation> Staffaccdata = dbstaffacc.GetStaffAccdationsByDorminfoID(DorminfoID).OrderBy(a => a.BedId).ToList();
+                    foreach (var item in Staffaccdata)
+                    {
+                        StaffaccdationView staffaccdationView = new StaffaccdationView();
+                        staffaccdationView.ID = item.ID;
+                        staffaccdationView.BedId = item.BedId;
+                        staffaccdationView.EmployeeId = item.EmployeeId;
+                        var querystudent = dbempinfo.GetEntity(item.EmployeeId);
+                        staffaccdationView.EmpName = querystudent.EmpName;
+                        staffaccdationViews.Add(staffaccdationView);
+                    }
+                    var resultdata = staffaccdationViews.OrderBy(a => a.BedId).ToList();
+                    view.StaffaccdationList = resultdata;
+                }
+
                 ajaxResult.Success = true;
                 view.BedList = Beddata;
-                view.AccdationList = resultdata;
+                
                 ajaxResult.Data = view;
             }
             catch (Exception ex)
@@ -1113,6 +1200,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 ajaxResult.Success = false ;
                 ajaxResult.Data = "";
             }
+
             return Json(ajaxResult,JsonRequestBehavior.AllowGet);
         }
 

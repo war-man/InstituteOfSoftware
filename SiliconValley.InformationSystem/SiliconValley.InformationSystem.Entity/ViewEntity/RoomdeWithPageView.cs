@@ -32,5 +32,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 寝室长编号
         /// </summary>
         public string StudentNumber { get; set; }
+
+        public List<StaffaccdationView> StaffaccdationList { get; set; }
     }
 }
