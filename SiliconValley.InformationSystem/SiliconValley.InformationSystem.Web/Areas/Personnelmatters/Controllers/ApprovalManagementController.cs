@@ -277,6 +277,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //请假申请
         public ActionResult LeaveApply() {
+            LeaveTypeManage ltype = new LeaveTypeManage();
+            var leavetypelist = ltype.GetList();
+            ViewBag.leaveType = leavetypelist;
             return View();
         }
 

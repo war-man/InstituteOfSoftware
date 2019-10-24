@@ -253,6 +253,7 @@
                                             var table = layui.table;
                                             table.reload("myNoapproval");
                                             table.reload("myApproved");
+                                            table.reload("myStatisticsTime");
                                         });
                                         layer.close(index);
                                     });
@@ -271,6 +272,7 @@
                                             var table = layui.table;
                                             table.reload("myNoapproval");
                                             table.reload("myApproved");
+                                            table.reload("myStatisticsTime");
                                         });
                                         layer.close(index);
                                     });
@@ -446,6 +448,7 @@
                                             var table = layui.table;
                                             table.reload("myNoapprovalDaysOff");
                                             table.reload("myApprovedDaysOff");
+                                            table.reload("myStatisticsTime");
                                         });
                                         layer.close(index);
                                     });
@@ -464,6 +467,7 @@
                                             var table = layui.table;
                                             table.reload("myNoapprovalDaysOff");
                                             table.reload("myApprovedDaysOff");
+                                            table.reload("myStatisticsTime");
                                         });
                                         layer.close(index);
                                     });
@@ -542,7 +546,7 @@
                         type: 2,
                         content: '/Personnelmatters/EmployeesInfo/DaysOffEdit/?id=' + data.Id
                         , area: ["600px", "580px"]
-                        , title: '编辑加班记录'
+                        , title: '编辑调休记录'
                         , shade: 0.8
                         , anim: 4
                         , skin: 'demo-class'
@@ -614,12 +618,12 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    { type: 'checkbox' }
-                    , { field: 'empName', title: '姓名', width: 80, sort: true }
-                    , { field: 'YearTime', title: '年份', width: 80, sort: true }
+                      { field: 'EmployeeId', title: '编号', width: 150, sort: true }
+                    , { field: 'empName', title: '姓名', width: 120, sort: true }
+                    , { field: 'YearTime', title: '年份', width: 120, sort: true }
                     , { field: 'OvertimeTotaltime', title: '可调休总时长(小时)', sort: true, width: 180  }
                     , { field: 'DaysoffTotaltime', title: '已调休总时长(小时)', width: 180 }
-                    , { field: 'ResidueDaysoffTime', title: '剩余调休时长(小时)', width: 180 }
+                    , { field: 'ResidueDaysoffTime', title: '剩余调休时长(小时)', width: 210 }
 
                 ]]
                 , page: true
@@ -652,6 +656,7 @@
                             layui.use(['table'], function () {
                                 var table = layui.table;
                                 table.reload('myApproved');
+                                table.reload("myStatisticsTime");
                             });
                             layer.close(index);
                         });
@@ -680,6 +685,7 @@
                             layui.use(['table'], function () {
                                 var table = layui.table;
                                 table.reload('myApprovedDaysOff');
+                                table.reload("myStatisticsTime");
                             });
                             layer.close(index);
                         });

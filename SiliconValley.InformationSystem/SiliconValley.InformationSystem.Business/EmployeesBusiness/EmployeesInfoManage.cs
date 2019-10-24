@@ -26,6 +26,30 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             var str = pmanage.GetEntity(pid);
             return str;
         }
+        /// <summary>
+        /// 根据员工编号获取所属岗位对象
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public Position GetPositionByEmpid(string empid) {
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            PositionManage pmanage = new PositionManage();
+            var pstr = pmanage.GetEntity(emanage.GetEntity(empid).PositionId);
+            return pstr;
+        }
+
+        /// <summary>
+        /// 根据员工编号获取所属部门对象
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public Department GetDeptByEmpid(string empid)
+        {
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
+            DepartmentManage dmanage = new DepartmentManage();
+            var dstr = dmanage.GetEntity(GetPositionByEmpid(empid).DeptId);
+            return dstr;
+        }
 
         /// <summary>
         /// 获取所属岗位的所属部门对象

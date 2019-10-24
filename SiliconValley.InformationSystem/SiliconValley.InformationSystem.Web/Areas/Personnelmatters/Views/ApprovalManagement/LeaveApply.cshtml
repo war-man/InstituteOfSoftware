@@ -2,17 +2,31 @@
 @{
     Layout = null;
 }
-
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+@model SiliconValley.InformationSystem.Entity.MyEntity.LeaveType
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>LeaveApply</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 </head>
 <body>
-    <div> 
-        <h2>请选择请假类型</h2> 
+    <div>
+        <form class="layui-form">
+               
+            @{
+                    foreach (LeaveType item in ViewBag.leaveType)
+                    {
+                        <lable>@item.TypeName</lable>
+                        <input type="text" name="mybtn" class="">
+                    }
+                }
+   
+        </form>
     </div>
 </body>
 </html>

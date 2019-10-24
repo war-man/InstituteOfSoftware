@@ -104,6 +104,9 @@
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
@@ -133,6 +136,8 @@
     <Compile Include="SchoolAttendanceManagementBusiness\DaysOffManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveRequestManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\OvertimeRecordManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\SalaryRaiseApplyManage.cs" />
@@ -179,5 +184,6 @@
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

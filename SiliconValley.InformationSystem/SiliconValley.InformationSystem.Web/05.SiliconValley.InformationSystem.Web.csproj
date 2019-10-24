@@ -236,6 +236,7 @@
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmpSalaryManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\ClassScheduleController.cs" />
@@ -624,6 +625,15 @@
     <Content Include="Areas\Educational\Views\Break\BreakIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Break\AddorEditView.cshtml" />
     <Content Include="Areas\Educational\Views\BaseDataEnum\AddorEditView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DaysOffDetail.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DaysOffEdit.cshtml" />
+    <Content Include="Config\UserMapRole.config" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\SalaryManageIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\PerformanceAssessShow.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DaysOffApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\LeaveApply.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\NewChannelYearPlanIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2278,6 +2288,12 @@
     <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095330Admin.jpg" />
     <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100014Admin.jpg" />
     <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100125Admin.jpg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014030555.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014030701.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014031141.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014032831.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014033608.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191015030855.jpeg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

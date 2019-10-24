@@ -30,5 +30,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<decimal> PayCardSalarySum { get; set; }//工资卡总应发工资
+        public Nullable<decimal> PersonalIncomeTax { get; set; }//个税
     }
 }

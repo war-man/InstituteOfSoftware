@@ -25,6 +25,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
+    using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -261,6 +262,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
             TeacherBusiness teamanage = new TeacherBusiness();
             FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -275,28 +278,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 emp.IsDel = false;
                 empinfo.Insert(emp);
+                AjaxResultxx = empinfo.Success();
+                if (AjaxResultxx.Success) {
                 if (empinfo.GetDept(emp.PositionId).DeptName == "就业部")
                 {
                     bool s = esmanage.AddEmploystaff(emp.EmployeeId);
-                    AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "市场部")
                 {
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
-                    AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "教质部")
                 {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
-                    AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任")
                 {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
-                    AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "教学部")
@@ -304,16 +305,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
                     bool s = teamanage.AddTeacher(tea);
-                    AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "财务部")
                 {
                     bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
-                    AjaxResultxx = empinfo.Success();
                     AjaxResultxx.Success = s;
                 }
-                AjaxResultxx = empinfo.Success();
+                    bool ss = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
+                    AjaxResultxx.Success = ss;
+                    if (AjaxResultxx.Success) {
+                        bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
+                        AjaxResultxx.Success = monthss;
+                    }
+                   
+                }  
             }
             catch (Exception ex)
             {
@@ -1012,8 +1018,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 try
                 {
                     var mtype1 = mt.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault().ID;
-                    var mtype2 = mt.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
+                   // var mtype2 = mt.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
                     var mtype3 = mt.GetList().Where(s => s.MoveTypeName == "调岗").FirstOrDefault().ID;
+                    var myype4 = mt.GetList().Where(s => s.MoveTypeName == "加薪").FirstOrDefault().ID;
                     var emp = empmanage.GetEntity(e.EmployeeId);
                     if (ajaxresult.Success && e.TransactionType == mtype1)//当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
                     {
@@ -1021,56 +1028,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         empmanage.Update(emp);
                         ajaxresult = empmanage.Success();
                     }
-                    else if (ajaxresult.Success && e.TransactionType == mtype2)//当异动时间修改好之后且是离职异动的情况下将该员工的在职状态改为离职状态
-                    {
-                        emp.IsDel = true;
-                        empmanage.Update(emp);
-                        ajaxresult = empmanage.Success();
-                        if (ajaxresult.Success)
-                        {
-                            switch (empmanage.GetDept(emp.PositionId).DeptName)
-                            {
-                                case "财务部":
-                                    FinanceModelBusiness fmmanage = new FinanceModelBusiness();
-                                    bool fm = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
-                                    ajaxresult = empmanage.Success();
-                                    ajaxresult.Success = fm;
-                                    break;
-                                case "市场部":
-                                    ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
-                                    bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
-                                    ajaxresult = empmanage.Success();
-                                    ajaxresult.Success = cs;
-                                    break;
-                                case "就业部":
-                                    EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
-                                    bool es = esmanage.DelEmploystaff(emp.EmployeeId);
-                                    ajaxresult = empmanage.Success();
-                                    ajaxresult.Success = es;
-                                    break;
-                                case "咨询部":
-                                    ConsultTeacherManeger ctmanage = new ConsultTeacherManeger();
-                                    bool ct = ctmanage.DeltConsultTeacher(emp.EmployeeId);
-                                    ajaxresult = empmanage.Success();
-                                    ajaxresult.Success = ct;
-                                    break;
-                                case "教质部":
-                                    HeadmasterBusiness hmmanage = new HeadmasterBusiness();
-                                    bool hm = hmmanage.QuitEntity(emp.EmployeeId);
-                                    ajaxresult = empmanage.Success();
-                                    ajaxresult.Success = hm;
-                                    break;
-                                case "教学部":
-                                    TeacherBusiness tmanage = new TeacherBusiness();
-                                    bool t = tmanage.dimission(emp.EmployeeId);
-                                    ajaxresult = empmanage.Success();
-                                    ajaxresult.Success = t;
-                                    break;
-                            }
+                    //else if (ajaxresult.Success && e.TransactionType == mtype2)//当异动时间修改好之后且是离职异动的情况下将该员工的在职状态改为离职状态
+                    //{
+                    //    emp.IsDel = true;
+                    //    empmanage.Update(emp);
+                    //    ajaxresult = empmanage.Success();
 
-                        }
-                    }
-                    else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的在职状态改为离职状态
+                    //}
+                    else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的工资及岗位进行修改
                     {
                         emp.PositionId = (int)e.PresentPosition;
                         if (emp.Salary == null)
@@ -1082,6 +1047,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         else
                         {
                             emp.Salary = e.PresentSalary;
+                            empmanage.Update(emp);
+                            ajaxresult = empmanage.Success();
+                        }
+                    } else if (ajaxresult.Success && e.TransactionType==myype4) {
+                        if (ajaxresult.Success)
+                        {//异动添加成功后将员工表中的员工工资也改变    
+                            if (emp.Salary == null)
+                            {
+                                emp.ProbationSalary = et.PresentSalary;
+                            }
+                            else
+                            {
+                                emp.Salary = et.PresentSalary;
+                            }
                             empmanage.Update(emp);
                             ajaxresult = empmanage.Success();
                         }
@@ -1182,8 +1161,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             et.EmployeeId = positive.EmployeeId;
                             et.IsDel = false;
                             et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "转正").FirstOrDefault().ID;
+                            et.TransactionTime = positive.ProbationEndDate;
                             etmanage.Insert(et);
                             ajaxresult = etmanage.Success();
+                            if (ajaxresult.Success) {
+                                //将员工表中转正时间修改好
+                                EmployeesInfoManage empmanage = new EmployeesInfoManage();
+                                var emp = empmanage.GetEntity(et.EmployeeId);
+                                 emp.PositiveDate = et.TransactionTime;
+                                 empmanage.Update(emp);
+                                ajaxresult = empmanage.Success();
+                            }
                         }
 
                     }
@@ -1255,6 +1243,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult DimissionIsPassed(int id, bool state)
         {
             DimissionApplyManage dammanage = new DimissionApplyManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
             EmpTransactionManage etmanage = new EmpTransactionManage();
             MoveTypeManage m = new MoveTypeManage();
             var positive = dammanage.GetEntity(id);
@@ -1268,24 +1257,85 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     positive.IsPass = true;//表示离职申请通过
                     dammanage.Update(positive);
                     ajaxresult = dammanage.Success();
-                    try
+                    if (ajaxresult.Success)//离职申请通过修改成功之后，将该条员工异动情况添加到员工异动表中,且将员工表（及相关表）的状态改为已离职
                     {
-                        if (ajaxresult.Success)//离职申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
-                        {
+                        try
+                         {
+                            #region 异动表添加
                             et.EmployeeId = positive.EmployeeId;
                             et.IsDel = false;
                             et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
                             et.Reason = positive.DimissionReason;
                             etmanage.Insert(et);
                             ajaxresult = etmanage.Success();
+                            #endregion
+
+                            #region 员工表（及相关子表）修改
+                            var emp = empmanage.GetEntity(et.EmployeeId);
+                            emp.IsDel = true;
+                            empmanage.Update(emp);
+                            ajaxresult = empmanage.Success();
+                            if (ajaxresult.Success)
+                            {
+                                switch (empmanage.GetDept(emp.PositionId).DeptName)
+                                {
+                                    case "财务部":
+                                        FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+                                        bool fm = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
+                                        ajaxresult = empmanage.Success();
+                                        ajaxresult.Success = fm;
+                                        break;
+                                    case "市场部":
+                                        ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+                                        bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
+                                        ajaxresult = empmanage.Success();
+                                        ajaxresult.Success = cs;
+                                        break;
+                                    case "就业部":
+                                        EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+                                        bool es = esmanage.DelEmploystaff(emp.EmployeeId);
+                                        ajaxresult = empmanage.Success();
+                                        ajaxresult.Success = es;
+                                        break;
+                                    case "咨询部":
+                                        ConsultTeacherManeger ctmanage = new ConsultTeacherManeger();
+                                        bool ct = ctmanage.DeltConsultTeacher(emp.EmployeeId);
+                                        ajaxresult = empmanage.Success();
+                                        ajaxresult.Success = ct;
+                                        break;
+                                    case "教质部":
+                                        HeadmasterBusiness hmmanage = new HeadmasterBusiness();
+                                        bool hm = hmmanage.QuitEntity(emp.EmployeeId);
+                                        ajaxresult = empmanage.Success();
+                                        ajaxresult.Success = hm;
+                                        break;
+                                    case "教学部":
+                                        TeacherBusiness tmanage = new TeacherBusiness();
+                                        bool t = tmanage.dimission(emp.EmployeeId);
+                                        ajaxresult = empmanage.Success();
+                                        ajaxresult.Success = t;
+                                        break;
+                                }
+
+                                EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();//员工工资体系中员工离职改变
+                                bool s;
+                                s=esemanage.EditEmpSalaryState(emp.EmployeeId);
+                                MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资表中员工离职改变
+                                s = msrmanage.EditEmpMS(emp.EmployeeId);
+                                ajaxresult.Success = s;
+
+                            }
+                            #endregion
+
                         }
 
-                    }
+                    
                     catch (Exception ex)
                     {
                         ajaxresult = etmanage.Error(ex.Message);
                     }
                 }
+            }
                 else
                 {
                     positive.IsApproval = true;//表示该员工申请已审批
@@ -1383,6 +1433,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             et.Reason = positive.Reason;
                             etmanage.Insert(et);
                             ajaxresult = etmanage.Success();
+                            if (ajaxresult.Success) {
+                                var emp = emanage.GetEntity(et.EmployeeId);
+                                if (emp.Salary == null)
+                                {
+                                    emp.ProbationSalary = et.PresentSalary;
+                                    emanage.Update(emp);
+                                }
+                                else
+                                {
+                                    emp.Salary = et.PresentSalary;
+                                    emanage.Update(emp);
+                                }
+                                ajaxresult = emanage.Success();
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -1482,6 +1546,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             et.Reason = positive.RaisesReason;
                             etmanage.Insert(et);
                             ajaxresult = etmanage.Success();
+                            if (ajaxresult.Success) {//异动添加成功后将员工表中的员工工资也改变
+                                var emp = emanage.GetEntity(et.EmployeeId);
+                                if (emp.Salary == null)
+                                {
+                                    emp.ProbationSalary = et.PresentSalary;
+                                }
+                                else
+                                {
+                                    emp.Salary = et.PresentSalary;
+                                }
+                                emanage.Update(emp);
+                                ajaxresult = emanage.Success();
+                            }
                         }
                     }
                     catch (Exception ex)

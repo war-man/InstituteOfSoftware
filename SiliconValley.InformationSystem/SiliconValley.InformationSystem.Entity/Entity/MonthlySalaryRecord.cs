@@ -20,18 +20,18 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<System.DateTime> YearAndMonth { get; set; }
-        public Nullable<decimal> AttendanceDay { get; set; }
-        public Nullable<decimal> BaseSalary { get; set; }
-        public Nullable<decimal> PositionSalary { get; set; }
-        public Nullable<int> PerformanceScore { get; set; }
+        //public Nullable<decimal> AttendanceDay { get; set; }
+        //public Nullable<decimal> BaseSalary { get; set; }
+        //public Nullable<decimal> PositionSalary { get; set; }
+        //public Nullable<int> PerformanceScore { get; set; }
         public Nullable<decimal> PerformanceSalary { get; set; }
-        public string NetbookSubsidy { get; set; }
+        //public string NetbookSubsidy { get; set; }
         public Nullable<decimal> OvertimeCharges { get; set; }
-        public Nullable<decimal> LeaveDays { get; set; }
+        //public Nullable<decimal> LeaveDays { get; set; }
         public Nullable<decimal> OtherDeductions { get; set; }
         public string PersonalSocialSecurity { get; set; }
-        public string SocialSecuritySubsidy { get; set; }
-        public Nullable<decimal> PersonalIncomeTax { get; set; }
+        //public string SocialSecuritySubsidy { get; set; }
+        //public Nullable<decimal> PersonalIncomeTax { get; set; }
         public Nullable<decimal> Total { get; set; }
         public Nullable<decimal> PayCardSalary { get; set; }
         public Nullable<decimal> CasehSalary { get; set; }
