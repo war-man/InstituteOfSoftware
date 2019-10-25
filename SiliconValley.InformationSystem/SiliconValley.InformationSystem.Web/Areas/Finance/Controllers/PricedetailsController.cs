@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Business;
 using Newtonsoft.Json;
 using System.Web.Script.Serialization;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 {
@@ -35,6 +36,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 
         //学员费用明目
     CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
+        //本科管理
+        EnrollmentBusinesse enrollmentBusinesse = new EnrollmentBusinesse();
         //学员费用明目页面
         public ActionResult Studentfees()
         {
@@ -121,38 +124,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             //明目类型id
             ViewBag.Typeid = Typeid;
             //名目名称
-            ViewBag.Costitemsid= costitemsBusiness.costitemslist().Where(a => a.Rategory == Typeid).Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() }).ToList();
+            ViewBag.Costitemsid= enrollmentBusinesse.Costlist(id,Typeid).Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() }).ToList();
             return View();
+        }
+        //验证本科费用是否交齐
+        public ActionResult BoolEnroll(string id)
+        {
+            int Typeid = int.Parse(Request.QueryString["Typeid"]);
+            return Json(enrollmentBusinesse.Costlist(id, Typeid).Count(), JsonRequestBehavior.AllowGet);
         }
         //获取没有阶段的明目费用
         public ActionResult Otherexpenses(string Costitemsid)
         {
             return Json( dbtext.Otherexpenses(Costitemsid),JsonRequestBehavior.AllowGet);
         }
-        //自考本科表单
-        [HttpGet]
-        public ActionResult Tuitionandfees(string id)
-        {
-           int Typeid = int.Parse(Request.QueryString["Typeid"]);
-            int price = 0;
-            var list = dbtext.boolTuitionandfees(id, Typeid);
-            foreach (var item in list)
-            {
-            price=price+Convert.ToInt32( item.Amountofmoney);
-            }
-            ViewBag.price = price;
-            //学号
-            ViewBag.Stuid = id;
-            // ViewBag.Costitemsid
-            
-            //明目类型id  
-            ViewBag.Typeid = Typeid;
-            ViewBag.Rategory = dbtext.boolTuitionandfees(id, Typeid);
-
-
-            return View();
-        }
-
+       
         //接收自考本科表单数据
         [HttpPost]
         public ActionResult Tuitionandfees(StudentFeeRecord studentFeeRecord)
@@ -172,7 +158,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         }
         [HttpPost]
         //学员缴费数据操作
-        public ActionResult StudentPrices(string person, string Remarks,int Stage)
+        public ActionResult StudentPrices(string person, string Remarks,int? Stage)
         {
             SessionHelper.Session["Stage"] = Stage;
             //引入序列化
@@ -231,5 +217,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.vier = dbtext.FienPrice(student);
             return View();
         }
+      
     }
 }

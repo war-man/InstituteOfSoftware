@@ -113,6 +113,8 @@
     <Compile Include="Entity\Costitems.cs" />
     <Compile Include="Entity\CostitemsX.cs" />
     <Compile Include="Entity\Costlist.cs" />
+    <Compile Include="Entity\CoursecategoryX.cs" />
+    <Compile Include="Entity\CoursecategoryY.cs" />
     <Compile Include="Entity\CourseTime.cs" />
     <Compile Include="Entity\CourseType.cs" />
     <Compile Include="Entity\Curriculum.cs" />
@@ -276,8 +278,13 @@
     <Compile Include="Entity\Trialapplication.cs" />
     <Compile Include="Entity\Tuitionallocation.cs" />
     <Compile Include="Entity\Undergra.cs" />
+    <Compile Include="Entity\Undergraduateachievement.cs" />
+    <Compile Include="Entity\Undergraduatecourse.cs" />
+    <Compile Include="Entity\Undergraduatemajor.cs" />
+    <Compile Include="Entity\Undergraduateschool.cs" />
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Registerforexamination.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
@@ -297,6 +304,7 @@
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
+    <Compile Include="ViewEntity\EnrollmentView.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />

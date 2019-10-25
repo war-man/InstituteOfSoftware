@@ -95,7 +95,7 @@ namespace SiliconValley.InformationSystem.Depository
             {
                 dbContext = new BaseDbContext(null, dbType, entityNamespace);
             }
-            else
+            else 
             {
                 //若参数为字符串
                 if (obj is String)

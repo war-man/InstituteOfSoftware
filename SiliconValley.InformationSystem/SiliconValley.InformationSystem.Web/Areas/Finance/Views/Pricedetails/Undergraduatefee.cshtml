@@ -17,7 +17,7 @@
             margin-top: 13px;
         }
 
-        .textar {
+        .textar { 
             width: 80%;
             height: 80px;
         }
@@ -50,7 +50,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">费用</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" },{ "readonly", "readonly" }, { "class", "layui-input " } })
 
                         </div>
                     </div>
@@ -110,8 +110,12 @@
         //监听提交
         form.on('submit(demo1)', function (data) {
             var db = data.field;
-            ajaxUniom("/Finance/Pricedetails/Tuitionandfees", db)
-            console.log(db);
+            ajaxprice("/Finance/Pricedetails/Tuitionandfees", db, function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);//关闭当前页  
+                window.parent.StudentShow("/Finance/Pricedetails/Receipt", "收费收据", 1, 830, 600);
+            });
+
         });
     });
 </script>

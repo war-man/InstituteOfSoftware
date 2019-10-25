@@ -14,6 +14,11 @@ using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
+using Newtonsoft.Json;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
@@ -479,21 +484,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
             return Json(x, JsonRequestBehavior.AllowGet);
         }
-
-        //添加缴费记录
-        [HttpGet]
-        public ActionResult Cost()
-        {
-            ViewBag.Stuid = Request.QueryString["Stuid"];
-            //阶段
-            ViewBag.Stage = MyGrand.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Value = a.Id.ToString(), Text = a.GrandName }).ToList();
-                return View();
-        }
-       //添加缴费记录数据操作
-       public ActionResult Cost(StudentFeeRecord studentFeeRecord)
-        {
-            return Json(dbtext.Cost(studentFeeRecord), JsonRequestBehavior.AllowGet);
-        }
         //根据阶段查找专业
         public ActionResult Stage(int id)
         {
@@ -519,6 +509,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.Studenttuitionfeestandard(id),JsonRequestBehavior.AllowGet);
         }
+        //添加学员照片规格宽144高192
+        [HttpGet]
+        public ActionResult AddStudentimg()
+        {
+            string studentid= Request.QueryString["studentid"]; ;
+            ViewBag.studentid = studentid;
+            ViewBag.student = JsonConvert.SerializeObject( dbtext.StuClass(studentid));
+            ViewBag.Picture = dbtext.GetEntity(studentid).Picture == null ? "" : dbtext.GetEntity(studentid).Picture;
+            return View();
+        }
+        //添加学员照片规格宽144高192
+        [HttpPost]
+        public ActionResult AddStudentimg(string id)
+        {
+        //    string studentid = Request.QueryString["studentid"];
+            // Bitmap bitmap = new Bitmap(144,192);
+            AjaxResult result = new AjaxResult();
+            try
+            {
+                var fien =  Request.Files[0];
+             string filename = fien.FileName;
+            string Extension = Path.GetExtension(filename);
+            string newfilename =id + Extension;
+               
+                 
+                if (dbtext.StudentAddImg(id, newfilename)==true)
+                {
 
+                    result = new SuccessResult();
+                    result.ErrorCode = 200;
+                    string path = Server.MapPath("~/Areas/Teachingquality/studentImg/" + newfilename);
+                   
+                      fien.SaveAs(path);
+                 
+                    //  bitmap.Save(path);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result = new SuccessResult();
+                result.ErrorCode = 300;
+            }
+
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
+       //验证图片是否已经有了
+        public int boolImg(string studentid)
+        {
+          return  dbtext.boolImg(studentid);
+        }
+      
     }
 }

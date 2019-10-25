@@ -102,6 +102,7 @@
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
+    <Compile Include="EnrollmentBusiness\EnrollmentBusinesse.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
@@ -174,6 +175,10 @@
       <Project>{59b37762-4cc3-45cf-b910-ae11eb6ee79b}</Project>
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="bin\Debug\zh-Hans\" />
+    <Folder Include="bin\Release\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

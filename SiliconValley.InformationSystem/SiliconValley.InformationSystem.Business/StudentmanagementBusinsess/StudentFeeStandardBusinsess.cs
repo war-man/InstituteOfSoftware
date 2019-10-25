@@ -13,7 +13,7 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
-
+using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
 {
 
@@ -40,6 +40,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
         //费用明目
         CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
+        //自考本科
+        EnrollmentBusinesse enrollmentBusiness = new EnrollmentBusinesse();
         /// <summary>
         /// 获取所有学员数据
         /// </summary>
@@ -169,16 +171,20 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             //当前登陆人
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             var fine = finacemo.GetList().Where(a => a.Financialstaff == user.EmpNumber).FirstOrDefault();
+
          
-           
+                 AjaxResult retus = null;
+            try
+            {
                 studentFee.FinanceModelid = fine.id;
                 studentFee.IsDelete = false;
                 studentFee.AddDate = DateTime.Now;
                 listFeeRecord.Add(studentFee);
-          
-            AjaxResult retus = null;
-            try
-            {
+                SessionHelper.Session["person"] = listFeeRecord;
+                Enrollment enrollment = new Enrollment();
+                enrollment.StudentNumber = studentFee.StudenID;
+                enrollment.IsDelete = false;
+                enrollmentBusiness.AddEnro(enrollment, studentFee.Costitemsid);
                 studentfee.Insert(listFeeRecord);
                 retus = new SuccessResult();
                 retus.Success = true;

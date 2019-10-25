@@ -134,29 +134,30 @@
     var Amountofmoneys = 0;
     var pricent = 0;
     for (var i = 0; i < Receiptdata.length; i++) {
+        console.log(Receiptdata[i]);
         pricent = pricent + parseInt(Receiptdata[i].Amountofmoney);
         console.log(Receiptdata[i]);
-        if (i==1) {
+        if (i==0) {
             //AddDate
             $("#Remarks").text(Receiptdata[i].Remarks);
-            var date = new Date(Receiptdata[1].AddDate);
+            var date = new Date(Receiptdata[i].AddDate);
             $("#AddDate").text(getNowFormatDate(date));
         }
-        if (Receiptdata[i].ostitemsName == "学费") {
+        if (Receiptdata[i].Rategory == "阶段费用缴纳") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
-        } else if (Receiptdata[i].ostitemsName == "食宿费") {
+        } else if ( Receiptdata[i].Rategory == "自考本科费用") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         }
         if (Receiptdata[i].Rategory == "学杂费") {
             count++;
             ostitemsName += Receiptdata[i].ostitemsName + ",";
             Amountofmoneys = Amountofmoneys + parseInt(Receiptdata[i].Amountofmoney);
-            if (count>2) {
+            if (count > 2) {
                 count = 0;
                 //  console.log(Amountofmoney)
-                $("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length-1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+                $("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
                 ostitemsName = "";
                 Amountofmoneys = 0;
             }

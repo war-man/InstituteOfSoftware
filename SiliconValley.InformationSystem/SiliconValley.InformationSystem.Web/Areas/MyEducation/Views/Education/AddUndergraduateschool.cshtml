@@ -1,0 +1,132 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.Entity.Undergraduateschool
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddUndergraduateschool</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <form class="layui-form" action="" lay-filter="example">
+        <div class="layui-container" style=";margin-left:60px;">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;margin-top:40px" id="nba">
+                <label class="layui-form-label">学校名称</label>
+                <div class="layui-input-inline">
+                    @Html.TextBoxFor(a => a.SchoolName, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入学校名称" }, { "class", "layui-input " } })
+                    <input type="text" style="display:none;" id="bool" />
+                </div>
+                <label style="color:red;margin-left:70%;margin-top:-30px;display:none;" id="label">请换一个名称</label>
+            </div>
+        
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-input-block" style="margin-left:114px;margin-top:10px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">确认</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</body>
+</html>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+
+        var form = layui.form;
+        var layer = layui.layer;
+        //正在执行中
+        function showLoad() {
+            return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+        }
+        //关闭执行中的窗体
+        function closeLoad(index) {
+            layer.close(index);
+
+        }
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var db = data.field;
+            if ($("#bool").val() == "") {
+                $.ajax({
+                    url: '/MyEducation/Education/AddUndergraduateschool',
+                    type: 'POST',
+                    async: true,
+                    cache: false,
+                    timeout: 2000,
+                    data: db,
+                    beforeSend: function () {
+                        i = showLoad();
+                    },
+                    success: function (data) {
+
+                        if (data.Success == true) {
+                            closeLoad(i);
+                            layer.open({
+                                type: 1
+                                , title: false //不显示标题栏
+                                , closeBtn: false
+                                , area: '300px;'
+                                , shade: 0.8
+                                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                , btn: ['继续添加学校', '返回到主页']
+                                , btnAlign: 'c'
+                                , moveType: 1 //拖拽模式，0或者1
+                                , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;添加成功</div>'
+                                , success: function (layero) {
+                                    var btn = layero.find('.layui-layer-btn');
+                                    btn.find('.layui-layer-btn0').click(function () {
+                                        $("#SchoolName").val("");
+                                      
+                                    });
+                                    btn.find('.layui-layer-btn1').click(function () {
+                                        var index = parent.layer.getFrameIndex(window.name);
+                                        parent.layer.close(index);
+                                    });
+                                }
+                            });
+                        } else {
+                            closeLoad(i);
+                            layer.msg(data.Msg, {
+                                time: 5000, //20s后自动关闭
+
+                                btn: ['确定']
+                            });
+                        }
+                    }
+                    , error: function (xmlhttprequest, textstatus, message) {
+                        closeLoad(i);
+                        layer.msg("您的网络出现问题，请稍后再试！！！", {
+                            time: 5000, //20s后自动关闭
+                            btn: ['确定']
+                        });
+                    }
+                })
+            }
+
+        });
+        //验证专业名称
+        $("#SchoolName").keyup(function () {      // 按键弹起时触发的事件；
+            console.log($(this).val());
+            $.post("/MyEducation/Education/BoolUndergraduateschool/" + $(this).val(), function (data) {
+                if (data > 0) {
+                    $("#label").css("display", "block");
+                    $("#bool").val("22222");
+                } else {
+                    $("#label").css("display", "none");
+                    $("#bool").val("");
+                }
+            });
+        });
+
+
+    });
+
+</script>

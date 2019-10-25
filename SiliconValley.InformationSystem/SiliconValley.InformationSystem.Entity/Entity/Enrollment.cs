@@ -20,13 +20,38 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
        
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 考藉号
+        /// </summary>
         public string PassNumber { get; set; }
+        /// <summary>
+        /// 注册日期
+        /// </summary>
         public Nullable<System.DateTime> Datestration { get; set; }
-        public Nullable<int> Cost { get; set; }
+        /// <summary>
+        /// 报考学校
+        /// </summary>
+        public int? School { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudentNumber { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 伪删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 报考专业
+        /// </summary>
+        public int? MajorID { get; set; }
+        /// <summary>
+        /// 注册批次如(1910)
+        /// </summary>
+        public string Registeredbatch { get; set; }
     
     }
 }
