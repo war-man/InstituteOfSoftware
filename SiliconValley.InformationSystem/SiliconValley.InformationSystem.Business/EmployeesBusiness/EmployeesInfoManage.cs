@@ -189,6 +189,27 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             return isfuzhuren;
         }
 
+        #region tangmin--Write
+        /// <summary>
+        /// 根据员工Id或者员工名称查询名称
+        /// </summary>
+        /// <param name="name">员工编号或员工名称</param>
+        /// <param name="key">true---按编号查，false---按名称查</param>
+        /// <returns></returns>
+        public EmployeesInfo FindEmpData(string name, bool key)
+        {
+            EmployeesInfo employees = new EmployeesInfo();
+            if (key)
+            {
+                employees = this.GetEntity(name);
+            }
+            else
+            {
+                employees = this.GetList().Where(e => e.EmpName == name).FirstOrDefault();
+            }
+            return employees;
+        }
 
+        #endregion
     }
 }
