@@ -29,6 +29,7 @@
             <li>离职申请</li>
             <li>转岗申请</li>
             <li>加薪申请</li>
+            <li>请假申请</li>
         </ul>
         <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
@@ -65,12 +66,22 @@
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState3">审批</a>
                 </script>
             </div>
+
             <div class="layui-tab-item">
 
                 <table id="addSalaryApply" lay-filter="addSalaryApply"></table>
                 @*操作栏*@
                 <script type="text/html" id="barDemo4">
                     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState4">审批</a>
+                </script>
+            </div>
+
+            <div class="layui-tab-item">
+
+                <table id="leaveApply" lay-filter="leaveApply"></table>
+                @*操作栏*@
+                <script type="text/html" id="barDemo5">
+                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState5">审批</a>
                 </script>
             </div>
         </div>
@@ -369,6 +380,86 @@
             table.on('tool(addSalaryApply)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'editApprovalState4') {
+                    if (data.IsApproval == true) {
+                        layer.msg('该申请已完成审批', { icon: 1 });
+                    } else {
+                        var s = true;
+                        layer.open({
+                            content: '是否通过审批？'
+                            , btn: ['已通过', '未通过']
+                            , yes: function (index, layero) {
+                                console.log("已通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply3");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+                            , btn2: function (index, layero) {
+                                s = false;
+                                console.log("未通过的状态:" + s);
+                                $.post("/Personnelmatters/EmployeesInfo/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply3");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+
+                        });
+                    }
+
+                }
+            });
+
+        });
+
+        //请假申请数据加载
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#leaveApply'
+                , url: '/Personnelmatters/EmployeesInfo/GetEmpLeaveRequestData'
+                , id: "myapply5"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'esex', title: '性别', width: 80, sort: true }
+                    , { field: 'presalary', title: '加薪前工资', width: 130 }
+                    , { field: 'RaisesLimit', title: '加薪额度', width: 110, sort: true }
+                    , { field: 'RaisesReason', title: '加薪理由', width: 110, sort: true }
+                    , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo5', width: 110 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(leaveApply)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'editApprovalState5') {
                     if (data.IsApproval == true) {
                         layer.msg('该申请已完成审批', { icon: 1 });
                     } else {
