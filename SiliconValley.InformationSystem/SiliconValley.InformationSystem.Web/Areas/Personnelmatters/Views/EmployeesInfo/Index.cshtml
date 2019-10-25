@@ -112,7 +112,7 @@
                     <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>
                     <button class="layui-btn layui-btn-sm" lay-event="TransactionRecord">员工异动记录</button>
                     <button class="layui-btn layui-btn-sm" lay-event="EmpApprovalManage">员工审批管理</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="OverTimeRecord">加班记录及管理</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="OverTimeRecord">加班及调休管理</button>
                 </div>
             </script>
             @*操作栏*@
@@ -332,7 +332,6 @@
 
             });
 
-
             //日期
             var startTime = laydate.render({
                 elem: '#start_time',
@@ -365,6 +364,7 @@
 
         });
 
+        //离职人员加载
         layui.use(['table', 'layer', 'form', 'laydate','element'], function () {
             var table = layui.table;
             var layer = layui.layer;

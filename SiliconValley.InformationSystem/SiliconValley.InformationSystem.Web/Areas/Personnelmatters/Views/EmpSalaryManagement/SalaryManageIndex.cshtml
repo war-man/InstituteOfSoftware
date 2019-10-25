@@ -1,0 +1,246 @@
+﻿
+@{
+    ViewBag.Title = "SalaryManageIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+        <div class="layui-tab-item layui-show">
+           
+            @*头部工具栏*@
+            <script type="text/html" id="toolbarDemo">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-sm" lay-event="PerformanceAssess">绩效考核</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="AttendanceStatistics">考勤统计</button>
+                </div>
+            </script>
+            @*操作栏*@
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">员工详情</a>
+            </script>
+            <table id="salarytab" lay-filter="salarytab"></table>
+        </div>
+
+
+@section script{
+    <script>
+     
+        layui.use(['table', 'layer', 'form', 'laydate','element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#salarytab'
+                , url: '/Personnelmatters/EmpSalaryManagement/EmpSalaryData'
+                , id: "mySalaryStatistics"
+                , toolbar: '#toolbarDemo'
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    , { field: 'empName', title: '姓名', width: 110, sort: true }
+                    , { field: 'Depart', title: '所属部门', width: 110, sort: true }
+                    , { field: 'Position', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'Position', title: '出勤天数', width: 110, sort: true }
+                    , { field: 'BaseSalary', title: '基本工资', sort: true, width: 110}
+                    , { field: 'PositionSalary', title: '岗位工资', sort: true, width: 90 }
+                    , { field: 'IdCardNum', title: '绩效分', sort: true, width: 120}
+                    , { field: 'EntryTime', title: '绩效工资', sort: true, width: 110 }
+                    , { field: 'EntryTime', title: '社保补贴', sort: true, width: 110}
+                    , { field: 'PositiveDate', title: '笔记本工资', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '应发工资1', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '加班次数', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '奖金/元', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '请假天数', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '扣款/元', sort: true, width: 110 }
+                    , { field: 'SSStartMonth', title: '其他扣款', sort: true, width: 135 }
+                    , { field: 'SSStartMonth', title: '应发工资2', sort: true, width: 135 }
+                    , { field: 'SSStartMonth', title: '个人社保', sort: true, width: 135 }
+                    , { field: 'SSStartMonth', title: '个税', sort: true, width: 135 }
+                    , { field: 'SSStartMonth', title: '合计', sort: true, width: 135 }
+                    , { field: 'SSStartMonth', title: '实发工资(工资卡)', sort: true, width: 135 }
+                    , { field: 'SSStartMonth', title: '实发工资(现金)', sort: true, width: 135 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(salarytab)', function (obj) {
+                //var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'PerformanceAssess':
+                        PerformanceAssess();
+                        break;
+                    case 'AttendanceStatistics':
+                        AttendanceStatistics();
+                        break;
+                   
+                };
+            });
+            //监听行工具事件
+            table.on('tool(salarytab)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/EditEmp/?id=' + data.EmployeeId
+                        , area: ["1200px", "730px"]
+                        , title: '编辑员工信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else if (obj.event === 'detail') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/EmpDetail/?id=' + data.EmployeeId
+                        , area: ['1000px', '750px'],
+                        title: '员工详细信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+                else if (obj.event === 'date') {  //监听单元格日期编辑事件
+                    var field = $(this).data('field');
+                    laydate.render({
+                        elem: this.firstChild,
+                        show: true //直接显示
+                        , type: 'month'
+                        , btns: ['now', 'confirm']
+                        , format: 'yyyy-MM-dd'
+                        , done: function (value, date) {
+                            $.ajax({
+                                type: "get",
+                                dataType: "json",
+                                url: "/Personnelmatters/EmployeesInfo/EditDateCell",
+                                data: { id: data.EmployeeId, endvalue: value },
+                                success: function (data) {
+                                    console.log(data.Msg);
+                                    if (data.Success) {
+                                        layui.table.reload('myEmpInfo');
+                                    }
+                                    else {
+                                        layer.msg("修改失败!");
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+        
+        });
+
+        //绩效考核
+        function PerformanceAssess() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["1200px", "600px"]
+                    , title: "绩效考核"
+                    , content: '/Personnelmatters/EmpSalaryManagement/PerformanceAssessShow'
+                    , anim: 2
+                    , cancel: function (index, layero) {
+                        layui.table.reload('mySalaryStatistics');
+                    }
+                });
+
+            })
+
+        }
+
+        //考勤统计
+        function AttendanceStatistics() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["1200px", "600px"]
+                    , title: "考勤统计表"
+                    , content: '/Personnelmatters/EmpSalaryManagement/PerformanceAssessShow'
+                    , anim: 2
+                    , cancel: function (index, layero) {
+                        layui.table.reload('mySalaryStatistics');
+                    }
+                });
+
+            })
+        }
+
+        //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+        function changeDateTimeFormat(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+   
+
+}

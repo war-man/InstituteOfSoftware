@@ -306,6 +306,7 @@
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnrollmentView.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />
@@ -314,6 +315,7 @@
     <Compile Include="ViewEntity\MrDEmployStaffView.cs" />
     <Compile Include="ViewEntity\MrdRightView.cs" />
     <Compile Include="ViewEntity\MrDSpecialtyView.cs" />
+    <Compile Include="ViewEntity\MyStaticsData.cs" />
     <Compile Include="ViewEntity\My_StudentDataOne.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\PieServiceHelper.cs" />

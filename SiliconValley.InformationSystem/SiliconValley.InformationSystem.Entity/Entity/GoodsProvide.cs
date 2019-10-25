@@ -25,7 +25,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> ReturnDate { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
-   
+        public Nullable<System.DateTime> ShenheDate { get; set; }
     }
 }

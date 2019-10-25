@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Name { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
+        public Nullable<int> fatherId { get; set; }
 
     }
 }
