@@ -224,6 +224,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         //调休申请
         public ActionResult DaysOffApply() {
+            // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
             string eid = "201908150003";//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
@@ -277,12 +278,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //请假申请
         public ActionResult LeaveApply() {
+            // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
+            string eid = "201908150003";//为测试，暂时设置的死数据
+            ViewBag.eid = eid;
             LeaveTypeManage ltype = new LeaveTypeManage();
             var leavetypelist = ltype.GetList();
-            ViewBag.leaveType = leavetypelist;
+            ViewBag.leaveType = new SelectList(leavetypelist,"TypeId","TypeName");
+           
             return View();
         }
 
-       
     }
 }
