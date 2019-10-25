@@ -298,6 +298,7 @@
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />

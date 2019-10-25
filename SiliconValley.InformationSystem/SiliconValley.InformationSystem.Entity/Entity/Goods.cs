@@ -16,12 +16,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Table(name: "Goods")]
     public partial class Goods
     {
-
         [Key]
         public int Id { get; set; }
         public string GoodsName { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-
+        public Nullable<bool> IsReturn { get; set; }
     }
 }
