@@ -6,11 +6,11 @@
  *@LASTTIME 2019/06/14
  *@VERSION v2.5.4
  */
+
 layui.define(['jquery','layer','form'], function(exports) {
 	var $ = layui.$,
 		layer = layui.layer,
 		form = layui.form;
-
 	// 树的公共定义样式汇总
 	var LI_NAV_CHILD = "dtree-nav-ul-sid", LI_NAV_ITEM = "dtree-nav-item",
 		LI_DIV_ITEM = "dtree-nav-div",  DTREEFONTSPECIAL="dtreefont-special", NONETITLE="dtree-none-text",
@@ -3098,7 +3098,7 @@ layui.define(['jquery','layer','form'], function(exports) {
 			}
 		}
 	};
-	
+    
 	// 设置工具栏按钮
 	DTree.prototype.setToolbarDom = function(){
 		var _this = this;
@@ -3247,46 +3247,23 @@ layui.define(['jquery','layer','form'], function(exports) {
 				break;
 			case defaultTool.addTool:
                 var content = _this.loadToolBar(title, defaultTool.addTool);
-                console.log("3250");
-                console.log(content);
-                layer.confirm('确定要添加该' + _this.toolbarStyle.title + '？', { icon: 3, title: '添加' + _this.toolbarStyle.title }, function (index) {
-                    
-                    var data = new Object();
-                    console.log("来了");
-                    data.addNodeName="111"
-                    var parentId = $div.attr("data-id"),
-                        id = $div.attr("data-id") + "_node_" + $ul[0].childNodes.length,
-                        leaf = true,
-                        checked = "0",
-                        level = parseInt($p_li.attr("data-index")) + 1;
-                    console.log(parentId);
-                    // 创建子节点的DOM，添加子节点
-                    var checkArr = [];
-                    if (_this.checkArrLen > 0) {
-                        for (var i = 0; i < _this.checkArrLen; i++) {
-                            checkArr.push({ "type": i, "checked": "0" });
-                        }
+                var jsparent = $div.attr("data-id");
+                layer.open({
+                    title: "为" + title+"添加层",
+                    type: 2,
+                    area: ['530px', '290px'],
+                    content: "/Dormitory/DormitoryInfo/AddFloorPage",
+                                                
+                    success: function (layero, index) {
+                        form.render();
+                        let body = layui.layer.getChildFrame('body', index);
+                        body.find("#nodeTitle").val(title);
+                        body.find("#parentId").val(jsparent);
+                    },
+                    end : function (index, layero) {
+                        reloaddtree();
                     }
-
-                    $ul.append(_this.getLiItemDom(id, parentId, parentId, parentId, true, "", "", checkArr, level, false, false, false, "", "", "item"));
-                    // 先将li节点隐藏
-                    $ul.find("li[data-id='" + id + "']").hide();
-                    // 重新赋值
-                    var $addDiv = $ul.find("div[data-id='" + id + "']");
-                    node = _this.getNodeParam($addDiv);
-
-                    //获取组装后的requestNode,组合参数
-                    var requestNode = _this.getRequestParam(node);
-                    requestNode = $.extend(requestNode, data);
-
-                    _this.temp = [id, $ul, $div, level];
-                    // 用户自定义想做的事情
-                    _this.toolbarFun.addTreeNode(requestNode, $div);
-
-                    layer.close(index);
-                    return false;
                 });
-
 				//layer.open({
 				//	title: "新增"+_this.toolbarStyle.title,
 				//	type: 1,
@@ -3294,7 +3271,8 @@ layui.define(['jquery','layer','form'], function(exports) {
 				//	content: content,
 				//	success: function(layero, index){
 				//		form.render();
-				//		form.on("submit(dtree_addNode_form)",function(data){
+    //                    form.on("submit(dtree_addNode_form)", function (data) {
+    //                        console.log(data);
 				//			var data = data.field;
 				//			var parentId = $div.attr("data-id"),
 				//				id = $div.attr("data-id")+"_node_"+$ul[0].childNodes.length,
@@ -3322,15 +3300,15 @@ layui.define(['jquery','layer','form'], function(exports) {
 				//			requestNode = $.extend(requestNode, data);
 	
 				//			_this.temp = [id, $ul, $div, level];
-				//			// 用户自定义想做的事情
+				//			 //用户自定义想做的事情
 				//			_this.toolbarFun.addTreeNode(requestNode, $div);
 	
 				//			layer.close(index);
 				//			return false;
 				//		});
 				//	}
-    //            });
-
+    //           });
+               
 				break;
 			case defaultTool.editTool:
 				var content = _this.loadToolBar(title, defaultTool.editTool);
@@ -4572,3 +4550,4 @@ layui.define(['jquery','layer','form'], function(exports) {
 
 	exports('dtree', dtree);
 });
+

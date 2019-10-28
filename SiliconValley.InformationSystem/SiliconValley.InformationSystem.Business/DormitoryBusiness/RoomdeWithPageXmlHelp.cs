@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 {
     public class RoomdeWithPageXmlHelp
     {
-        
+
 
         /// <summary>
         /// 根据类型获取房间
@@ -26,11 +26,11 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                                              select ele;
             foreach (var ele in elements)
             {
-                value= int.Parse(ele.Attribute("id").Value);
+                value = int.Parse(ele.Attribute("id").Value);
             }
             return value;
         }
-        
+
         /// <summary>
         /// 根据性别获取性别数据
         /// </summary>

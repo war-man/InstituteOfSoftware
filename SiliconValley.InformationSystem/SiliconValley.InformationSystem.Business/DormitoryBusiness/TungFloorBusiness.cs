@@ -35,7 +35,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <param name="TungID"></param>
         /// <returns></returns>
         public List<TungFloor> GetTungFloorByTungID(int TungID) {
-            return this.GetTungFloors().Where(a => a.TungId == TungID).ToList();
+            return this.GetTungFloors().Where(a => a.TungId == TungID).OrderBy(a=>a.FloorId).ToList();
         }
 
         /// <summary>

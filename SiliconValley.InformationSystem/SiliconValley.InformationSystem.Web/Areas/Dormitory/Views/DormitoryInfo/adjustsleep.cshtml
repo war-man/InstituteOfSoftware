@@ -1,0 +1,204 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>adjustsleep</title>
+    <style>
+        #content {
+        width:1470px;
+        height:640px;
+         border:1px solid pink;
+        }
+        #elementtable {
+         border:1px solid pink;
+         width:75%;
+         float:left;
+          height:630px;
+        }
+        #Choicediv {
+         border:1px solid pink;
+         width:24%;
+         float:left;
+        }
+        .whyshow {
+           border:1px solid pink;
+         width:60%;
+         float:left;
+          height:560px;
+        }
+        .person {
+           border:1px solid pink;
+         width:39%;
+         float:right;
+          height:560px;
+        }
+    </style>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+</head>
+<body>
+    <div id="content">
+        <div id="elementtable">
+
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                <ul class="layui-tab-title">
+                    <li>学生调寝</li>
+                    <li>员工调寝</li>
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    <div class="layui-tab-item layui-show">
+                        <div class="whyshow">
+                            <div id="mystudentwhytop">
+                                <form class="layui-form" action="">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline" id="mubandiv">
+                                            <label class="layui-form-label" id="querylable">搜索选择框</label>
+                                            <div class="layui-input-inline">
+                                                <select name="modules" id="modules" lay-verify="required" lay-search="">
+                                                    <option value="">班级号</option>
+                                                    <option value="dormname">寝室号</option>
+                                                    <option value="dormname">学生姓名</option>
+                                                </select>
+                                            </div>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+
+                                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="searchbywhere">搜索</button>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="mystudenttable">
+
+                            </div>
+                        </div>
+                        <div class="person">
+                            <div id="uninhabitedstudentwhytop">
+                                <form class="layui-form" action="">
+                                    <div class="layui-form-item">
+                                        <div class="layui-inline" id="mubandiv">
+                                            <label class="layui-form-label" id="querylable">搜索选择框</label>
+                                            <div class="layui-input-inline">
+                                                <select name="modules" id="modules" lay-verify="required" lay-search="">
+                                                    <option value="dormname">全部</option>
+                                                    <option value="dormname">班级号</option>
+                                                    <option value="dormname">寝室号</option>
+                                                    <option value="dormname">学生姓名</option>
+                                                </select>
+                                            </div>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                            </div>
+
+                                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="searchbystudent">搜索</button>
+
+                                        </div>
+
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="uninhabitedstudenttable">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="whyshow">nihoa</div>
+                        <div class="person">1024</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="Choicediv">
+            <form class="layui-form" action="">
+                <fieldset>
+                    <legend>
+                        选择下列寝室
+                    </legend>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <div id="radiodiv">
+                            </div>
+
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>
+                        寝室信息
+                    </legend>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label">寝室号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="DorminfoName" style="border:none;" readonly="readonly" value="" name="DorminfoName" lay-verify="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label">寝室长</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="leadername" style="border:none;" readonly="readonly" value="" name="leadername" lay-verify="title" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label">班级占比</label>
+                            <div class="layui-input-inline">
+
+                            </div>
+                        </div>
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <legend>
+                        选择下列床位
+                    </legend>
+                    <div class="layui-row layui-form-item">
+
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <div id="bedradiodiv">
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </fieldset>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit id="postbtn" lay-filter="postbtn">确定</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+   
+    <script>
+        
+        layui.use(['table', 'layer', 'form','laydate','element'], function () {
+            var layer = layui.layer;
+            console.log(window.parent.jstungid);
+            console.log(window.parent.jsfloorid);
+        });
+    </script>
+</body>
+</html>

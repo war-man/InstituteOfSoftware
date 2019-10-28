@@ -10,6 +10,7 @@ using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
@@ -182,13 +183,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             SessionHelper.Session["UserId"] = 201908290017;
 
             //主管
-            //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.高管;
+            SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.高管;
 
-            //ViewBag.datatype = "seniorexecutive";
+            ViewBag.datatype = "seniorexecutive";
 
-            //SessionHelper.Session["showdata"] = "all";
+            SessionHelper.Session["showdata"] = "all";
 
-            //SessionHelper.Session["juese"] = "seniorexecutive";
+            SessionHelper.Session["juese"] = "seniorexecutive";
 
             ////教职主任
             //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.教职主任;
@@ -197,10 +198,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             //SessionHelper.Session["juese"] = "teachingdirector";
 
             //后勤
-            SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.后勤主任;
-            ViewBag.datatype = "quartermaster";
-            SessionHelper.Session["showdata"] = "staff";
-            SessionHelper.Session["juese"] = "quartermaster";
+            //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.后勤主任;
+            //ViewBag.datatype = "quartermaster";
+            //SessionHelper.Session["showdata"] = "staff";
+            //SessionHelper.Session["juese"] = "quartermaster";
             //教官
             //SessionHelper.Session["roomtype"] = RoomTypeEnum.ShowType.教官;
             //ViewBag.datatype = "instructor";
@@ -320,8 +321,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                     seconddtree.context = fortung.TungName;
                     seconddtree.last = false;
                     seconddtree.parentId = "0";
-                    seconddtree.level = 1;
-                    seconddtree.spread = true;
+                    seconddtree.level = 0;
+                    //seconddtree.spread = true;
                     try
                     {
                         List<TungFloor> floorlist = dbtungfloor.GetTungFloorByTungID(item.Id);
@@ -339,7 +340,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                                 floortree.context = floorobj.FloorName;
                                 floortree.last = true;
                                 floortree.parentId = item.Id.ToString();
-                                seconddtree.level = 2;
+                                floortree.level = 1;
                                 floortreelist.Add(floortree);
                                 dtreestatus.code = "200";
                                 dtreestatus.message = "操作成功";
@@ -351,7 +352,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                                 throw;
                             }
                         }
-                        seconddtree.children = floortreelist;
+                        if (floortreelist.Count!=0)
+                        {
+                            seconddtree.children = floortreelist;
+                        }
+                        else
+                        {
+                            seconddtree.last = true;
+                        }
+                        
+
                     }
                     catch (Exception ex)
                     {
@@ -407,15 +417,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             }
             else
             {
-                try
+                if (FloorID.ToString()=="-1")
                 {
-                    resulttungfloorobj = dbtungfloor.GetTungFloorByTungIDAndFloorID(TungID, FloorID);
-                    BusHelper.WriteSysLog("在/Dormitory/DormitoryInfo/EstablishRoom中调用TungFloorBusiness业务类中GetTungFloorByTungIDAndFloorID方法", Entity.Base_SysManage.EnumType.LogType.查询数据success);
-
+                    resulttungfloorobj = dbtungfloor.GetTungFloorByTungID(int.Parse(TungID.ToString())).OrderBy(a=>a.FloorId).FirstOrDefault();
                 }
-                catch (Exception ex)
+                else
                 {
-                    BusHelper.WriteSysLog("在/Dormitory/DormitoryInfo/EstablishRoom中调用TungFloorBusiness业务类中GetTungFloorByTungIDAndFloorID方法", Entity.Base_SysManage.EnumType.LogType.查询数据error);
+                    try
+                    {
+                        resulttungfloorobj = dbtungfloor.GetTungFloorByTungIDAndFloorID(TungID, FloorID);
+                        BusHelper.WriteSysLog("在/Dormitory/DormitoryInfo/EstablishRoom中调用TungFloorBusiness业务类中GetTungFloorByTungIDAndFloorID方法", Entity.Base_SysManage.EnumType.LogType.查询数据success);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        BusHelper.WriteSysLog("在/Dormitory/DormitoryInfo/EstablishRoom中调用TungFloorBusiness业务类中GetTungFloorByTungIDAndFloorID方法", Entity.Base_SysManage.EnumType.LogType.查询数据error);
+                    }
+
                 }
                
             }
@@ -609,6 +627,144 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             return Json(result,JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpGet]
+        public ActionResult AddFloorPage() {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult AddFloorPage(string floorids,bool isagain,int tungid) {
+
+            dbtungfloor = new TungFloorBusiness();
+            dbfloor = new DormitoryfloorBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+            if (isagain)
+            {
+                try
+                {
+                    Dormitoryfloor floor = new Dormitoryfloor();
+                    var now = DateTime.Now;
+                    floor.CreationTime = now;
+                    floor.FloorName = floorids;
+                    floor.IsDelete = false;
+                    floor.Remark="被创建于"+ now.Year + "年"+now.Month+"月"+now.Day+"日";
+                    dbfloor.Insert(floor);
+                    dbfloor = new DormitoryfloorBusiness();
+                    Dormitoryfloor qyeryfloor= dbfloor.GetDormitoryfloors().Where(a => a.CreationTime.ToString() == now.ToString()).FirstOrDefault();
+
+                    TungFloor tungFloor = new TungFloor();
+                    tungFloor.CreationTime = DateTime.Now;
+                    tungFloor.FloorId = qyeryfloor.ID;
+                    tungFloor.IsDel = false;
+                    tungFloor.Remark = "ID为" + tungid + "的栋,于" + tungFloor.CreationTime.ToString() + "时创建";
+                    tungFloor.TungId = tungid;
+                    dbtungfloor.Insert(tungFloor);
+
+                    ajaxResult.Success = true;
+
+                }
+                catch (Exception ex)
+                {
+
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "请联系信息部没用的达磊！";
+                }
+            }
+            else
+            {
+                string[] sArray = Regex.Split(floorids, ",", RegexOptions.IgnoreCase);
+               List<TungFloor> querylist=  dbtungfloor.GetTungFloorByTungID(tungid);
+                List<string> newlist = sArray.ToList();
+                try
+                {
+                    for (int i = newlist.Count - 1; i >= 0; i--)
+                    {
+                        foreach (var item in querylist)
+                        {
+                            if (int.Parse(newlist[i]) == item.FloorId)
+                            {
+                                newlist.Remove(newlist[i]);
+                                break;
+                            }
+                        }
+                    }
+                    if (newlist.Count != 0)
+                    {
+                        foreach (var item in newlist)
+                        {
+                            TungFloor tungFloor = new TungFloor();
+                            tungFloor.CreationTime = DateTime.Now;
+                            tungFloor.FloorId = int.Parse(item);
+                            tungFloor.IsDel = false;
+                            tungFloor.Remark = "ID为" + tungid + "的栋,于" + tungFloor.CreationTime.ToString() + "时创建";
+                            tungFloor.TungId = tungid;
+                            dbtungfloor.Insert(tungFloor);
+                        }
+                        ajaxResult.Success = true;
+                    }
+                    else
+                    {
+                        ajaxResult.Success = false;
+                        ajaxResult.Msg = "请勿重复点击！";
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "请联系信息部没用的达磊！";
+                }
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
+
+        
+        public ActionResult GetFloorByTungID(int TungID) {
+            AjaxResult ajaxResult = new AjaxResult();
+            dbtung = new TungBusiness();
+            dbfloor = new DormitoryfloorBusiness();
+            dbtungfloor = new TungFloorBusiness();
+            try
+            {
+                flooralloryes flooralloryes = new flooralloryes();
+                List<Dormitoryfloor> queryfloorlist = dbfloor.GetDormitoryfloors();
+                List<floorview> allfloorviews = new List<floorview>();
+                foreach (var item in queryfloorlist)
+                {
+                    floorview floorview = new floorview();
+                    floorview.id = item.ID;
+                    floorview.title = item.FloorName;
+                    allfloorviews.Add(floorview);
+                }
+
+                List<TungFloor> tungFloors= dbtungfloor.GetTungFloorByTungID(TungID);
+                List<floorview> yesfloorviews = new List<floorview>();
+                foreach (var item in tungFloors)
+                {
+                    floorview floorview = new floorview();
+                       Dormitoryfloor dormitoryfloor= dbfloor.GetDormitoryfloorByFloorID(item.FloorId);
+                    floorview.id = dormitoryfloor.ID;
+                    floorview.title = dormitoryfloor.FloorName;
+                    yesfloorviews.Add(floorview);
+                }
+                flooralloryes.all = allfloorviews;
+                flooralloryes.yes = yesfloorviews;
+
+                ajaxResult.Data = flooralloryes;
+                ajaxResult.Success = true;
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "联系信息部成员！为你即时解决问题。";
+                throw;
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
         /// <summary>
         /// 添加房间
         /// </summary>
@@ -616,11 +772,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// <param name="Floorid"></param>
         /// <returns></returns>
         [HttpGet]
-        public ActionResult AddRoomPage(string Direction,int Floorid) {
+        public ActionResult AddRoomPage() {
             dbroomtype = new RoomStayTypeBusiness();
             dbroomnumber = new RoomStayNumberBusiness();
-            ViewBag.Direction = Direction;
-            ViewBag.Floorid = Floorid;
             var data = dbroomtype.GetRoomStayTypes();
            var SelectListItemlist= data.Select(a => new SelectListItem()
             {
@@ -638,6 +792,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             return View();
         }
 
+        public ActionResult GetFirst() {
+            dbtung = new TungBusiness();
+            dbtungfloor = new TungFloorBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+               Tung tung= dbtung.GetTungs().OrderBy(a => a.Id).FirstOrDefault();
+               TungFloor tungFloor= dbtungfloor.GetTungFloorByTungID(tung.Id).OrderBy(a => a.FloorId).FirstOrDefault();
+                ajaxResult.Data = tungFloor;
+                ajaxResult.Success = true;
+
+            }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部最没用的达磊！";
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
 
         [HttpPost]
         /// <summary>
@@ -645,7 +819,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// </summary>
         /// <param name="jsonStr"></param>
         /// <returns></returns>
-        public ActionResult AddRoomPage(DormInformation jsonStr) {
+        public ActionResult AddRoomPage(DormInformation jsonStr,int FloorId,int TungId) {
             AjaxResult result = new AjaxResult();
             dbdorm = new DormInformationBusiness();
             dbroomxml = new RoomdeWithPageXmlHelp();
@@ -1347,6 +1521,171 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             return Json(ajaxResult,JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="TungName"></param>
+        /// <param name="tungid"></param>
+        /// <returns></returns>
+        public ActionResult updatetung(string TungName,int tungid) {
+            dbtung = new TungBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                Tung querytung= dbtung.GetTungByTungID(tungid);
+                querytung.TungName=TungName;
+                dbtung.Update(querytung);
+                ajaxResult.Success = true;
+               
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部没有用的达磊！";
+            }
+            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult del(int tungid,int floorid,bool istung) {
+            dbtung = new TungBusiness();
+            dbtungfloor = new TungFloorBusiness();
+            dbacc = new AccdationinformationBusiness();
+            dbstaffacc = new StaffAccdationBusiness();
+            dbdorm = new DormInformationBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+
+            //删除的前提是这个楼层或者是这个栋没有人居住才可以进行的一个删除
+
+            try
+            {
+                //是栋
+                if (istung)
+                {
+                    //栋楼层类
+                    List<TungFloor> tungFloors = dbtungfloor.GetTungFloorByTungID(tungid);
+
+                    foreach (var item in tungFloors)
+                    {
+                        ajaxResult= Zhixing(item.Id,tungid,istung);
+                    }
+                }
+                else
+                {
+                  TungFloor tungFloor=dbtungfloor.GetTungFloorByTungIDAndFloorID(tungid, floorid);
+                    ajaxResult = Zhixing(tungFloor.Id, tungid, istung);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部最没用的达磊！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 处理房间是否存在居住信息，如果不存在进行一个删除处理
+        /// </summary>
+        /// <param name="tungfloorid"></param>
+        /// <param name="tungid"></param>
+        /// <returns></returns>
+        public AjaxResult Zhixing(int tungfloorid,int tungid,bool istung) {
+            dbdorm = new DormInformationBusiness();
+            dbstaffacc = new StaffAccdationBusiness();
+            dbacc = new AccdationinformationBusiness();
+            dbtung = new TungBusiness();
+            dbtungfloor = new TungFloorBusiness();
+            dbroomxml = new RoomdeWithPageXmlHelp();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                int staffroomid = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StaffRoom);
+                int studentroomid = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom);
+                List<DormInformation> querydorm = dbdorm.GetDormsByTungFloorID(tungfloorid);
+
+                for (int i = querydorm.Count - 1; i >= 0; i--)
+                {
+                    List<StaffAccdation> querystaffacc = dbstaffacc.GetStaffAccdationsByDorminfoID(querydorm[i].ID);
+                    List<Accdationinformation> queryacc = dbacc.GetAccdationinformationByDormId(querydorm[i].ID);
+                    if (querystaffacc.Count == 0 && queryacc.Count == 0)
+                    {
+                        querydorm.Remove(querydorm[i]);
+                    }
+                }
+
+                if (querydorm.Count == 0)
+                {
+                    if (istung)
+                    {
+                        Tung protung = dbtung.GetTungByTungID(tungid);
+                        protung.IsDel = true;
+                        dbtung.Update(protung);
+                        ajaxResult.Success = true;
+                    }
+                    else
+                    {
+                        TungFloor tungFloor = dbtungfloor.GetTungFloorByID(tungfloorid);
+                        tungFloor.IsDel = true;
+                        dbtungfloor.Update(tungFloor);
+                        ajaxResult.Success = true;
+                    }
+                }
+                else
+                {
+
+                    List<DormInformation> staffroomlist = querydorm.Where(a => a.RoomStayTypeId == staffroomid).ToList();
+
+                    List<DormInformation> studentroomlist = querydorm.Where(a => a.RoomStayTypeId == studentroomid).ToList();
+
+                    if (staffroomlist.Count != 0)
+                    {
+                        string resultroomname = "";
+                        foreach (var item2 in staffroomlist)
+                        {
+                            DormInformation dormInformation = dbdorm.GetDormByDorminfoID(item2.ID);
+                            resultroomname = resultroomname + dormInformation.DormInfoName + "-";
+                        }
+                        resultroomname.Substring(0, resultroomname.Length - 1);
+
+                        ajaxResult.Success = false;
+                        ajaxResult.Msg = "请将房间名为" + resultroomname + "里面的员工移出";
+                    }
+
+                    if (studentroomlist.Count != 0)
+                    {
+                        string resultroomname = "";
+                        foreach (var item in studentroomlist)
+                        {
+                            DormInformation dormInformation = dbdorm.GetDormByDorminfoID(item.ID);
+                            resultroomname = resultroomname + dormInformation.DormInfoName + "-";
+                        }
+                        resultroomname.Substring(0, resultroomname.Length - 1);
+
+                        ajaxResult.Success = false;
+                        if (string.IsNullOrEmpty(ajaxResult.Msg))
+                        {
+                            ajaxResult.Msg = "请联系教职主任将" + resultroomname + "里面的学生移出";
+                        }
+                        else
+                        {
+                            ajaxResult.Msg= ajaxResult.Msg+ "</br>请联系教职主任将" + resultroomname + "里面的学生移出";
+                        }
+                       
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部最没用的达磊！";
+            }
+
+           
+            return ajaxResult;
+        }
         #endregion
 
         #region 晚归登记
@@ -1388,6 +1727,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 ajaxResult.Success = false;
             }
             return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+        #region 调寝
+        public ActionResult adjustsleep() {
+            return View();
         }
         #endregion
         public ActionResult test() {

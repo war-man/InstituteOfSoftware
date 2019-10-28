@@ -15,7 +15,7 @@
     <div>
         @*重复人列表*@
         <table class="layui-hide" id="Uninhabited" lay-filter="Uninhabited"></table>
-        <textarea name="desc" placeholder="请输入内容" hidden="hidden" class="layui-textarea filename"></textarea>
+        <textarea name="desc" placeholder="请输入内容"style="display:none" hidden="hidden" class="layui-textarea filename"></textarea>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
@@ -102,6 +102,7 @@
                 $("tr").css("background", "");
                 $(mytr).css("background", "pink");
                 jsstudentdata = obj.data;
+                window.parent.openroomdewith(jsstudentdata.DormID);
             });
 
         });

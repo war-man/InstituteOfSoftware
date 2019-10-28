@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public List<DormInformation> GetDorms()
         {
-            return this.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+            return this.GetIQueryable().ToList();
         }
 
         /// <summary>

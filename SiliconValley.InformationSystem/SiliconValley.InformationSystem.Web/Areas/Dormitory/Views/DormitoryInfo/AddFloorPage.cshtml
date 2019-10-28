@@ -1,0 +1,264 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddFloorPage</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+</head>
+<body>
+    <div class="dtree-toolbar-tool">
+        <form class="layui-form layui-form-pane" lay-filter="dtree_addNode_form">
+            <div class="layui-form-item">
+                <label class="layui-form-label" title="当前选中">当前选中：</label>
+                <div class="layui-input-block f-input-par">
+                    <input type="text" class="layui-input f-input" value="" placeholder="" id="nodeTitle" lay-verify="" name="nodeTitle" readonly />
+                    <input id="parentId" hidden="hidden" value="" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择</label>
+                <div class="layui-input-block">
+                    <input type="radio" lay-filter="myradio" name="isexistence" value="true" title="存在" checked>
+                    <input type="radio" lay-filter="myradio" name="isexistence" value="false" title="不存在">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div id="content">
+
+
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block" style="margin-left:0px;text-align:center;">
+                    <button type="button" class="layui-btn layui-btn-normal btn-w100" lay-submit lay-filter="bububu" name="name7">添加</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @*多选框项目*@
+    <script type="text/template" id="floordivmuban">
+        <label class="layui-form-label">选择楼层</label>
+        <div class="layui-input-block" id="checkboxdiv">
+
+        </div>
+    </script>
+
+    @*生成多选框未选中的按钮*@
+    <script type="text/template" id="floorbtnmuban">
+        <input type="checkbox" lay-filter="mycheckbox" name="floorbtn{{=value}}" class="floorbtn" value="{{=value}}" lay-skin="primary" title="{{=title}}" />
+    </script>
+
+
+
+    @*没有楼层满足需求自己添加楼层*@
+    <script type="text/template" id="floortextmuban">
+        <label class="layui-form-label">楼层名</label>
+        <div class="layui-input-block">
+            <input type="text" name="title" lay-verify="title"  autocomplete="off" placeholder="请输入楼层(0-5字之间)" class="layui-input">
+        </div>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
+    <script>
+
+        var tungid;
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            $(function () {
+                tungid = $("#parentId").val();
+                console.log("栋");
+                console.log(tungid);
+                floordivmuban();
+            });
+
+            var layer = layui.layer;
+            var form = layui.form;
+            var jssuccessdata;
+          
+            //自定义验证规则
+            form.verify({
+                title: function (value) {
+                    if (value.length > 0 && value.length < 5) {
+                        var num = parseInt(value);
+                        if (!isNaN(num)) {
+                            var laststr = value.substr(-1, 1);
+                            if (laststr == "楼") {
+                                for (var i = 0; i < jssuccessdata.all.length; i++) {
+                                    if (jssuccessdata.all[i].title == value) {
+                                        return '该楼层已重名。';
+                                    }
+                                }
+                            } else {
+                                return '楼层名称命名结尾请用‘楼’';
+                            }
+                        } else {
+                            return '楼层名称命名开头请用数字';
+                        }
+
+                    } else {
+                        return '楼层名称命名不规范';
+                    }
+                }
+            });
+            form.on('radio(myradio)', function (data) {
+                console.log(data);
+                if (data.value == "true") {
+                    floordivmuban();
+                } else {
+                    floortextmuban();
+                }
+            });
+
+            form.on('checkbox(mycheckbox)', function (data) {
+                if (data.elem.checked) {
+                    $(this).attr('checked', 'checked');
+                } else {
+                    $(this).removeAttr('checked');
+                }
+            });
+        
+            form.on("submit(bububu)", function (data) {
+                console.log(data.field);
+                var flooridsarry = new Array();
+                var floorids = "";
+                if (data.field.isexistence == "true") {
+                    $('.floorbtn').each(function (index) {
+                        if ($(this).attr('checked') != undefined) {
+                            if ($(this).attr('disabled') == undefined) {
+                                flooridsarry.push($(this).val());
+                            }
+                        }
+                    });
+
+                    if (flooridsarry.length != 0) {
+                        for (var i = 0; i < flooridsarry.length; i++) {
+                            floorids = floorids + flooridsarry[i] + ",";
+                        }
+                        console.log(floorids);
+                        $.ajax({
+                            url: '/Dormitory/DormitoryInfo/AddFloorPage',
+                            type: 'POST',
+                            data: { floorids: floorids.substring(0, floorids.length - 1), isagain: false, tungid: tungid },
+                            success: function (successdata) {
+                                $(data.elem).attr("disabled","disabled");
+                                if (successdata.Success) {
+                                    layer.msg('操作成功！2秒后进入主页面', { icon: 6, time: 2000 }, function () {
+
+                                        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                        parent.layer.close(index); //再执行关闭  
+                                    });
+                                } else {
+                                    layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            },
+                            error: function () {
+                                layer.msg('网络异常！', { icon: 6, time: 2000 }, function () {
+                                });
+                            }
+                        });
+                    } else {
+                        layer.msg("你没有选择任何楼层，2秒后进入主页面", { icon: 6, time: 2000 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭  
+                        })
+                    }
+
+                } else {
+                    $.ajax({
+                        url: '/Dormitory/DormitoryInfo/AddFloorPage',
+                        type: 'POST',
+                        data: { floorids: data.field.title, isagain: true, tungid: tungid },
+                        success: function (successdata) {
+                            if (successdata.Success) {
+                                layer.msg('操作成功！</br>进入主页面', { icon: 6, time: 2000 }, function () {
+
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index); //再执行关闭  
+                                });
+                            } else {
+                                layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                                });
+                            }
+                        },
+                        error: function () {
+                            layer.msg('网络异常！', { icon: 6, time: 2000 }, function () {
+                            });
+                        }
+                    });
+                }
+
+            });
+            
+            
+            //多选框项目
+            function floordivmuban() {
+                $("#content").children().remove();
+                var obj = _.template($("#floordivmuban").html());
+                var html = obj({});
+                $("#content").append($(html));
+                loaddata();
+            }
+
+            function loaddata() {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/GetFloorByTungID',
+                    type: 'GET',
+                    data: { TungID: tungid },
+                    success: function (successdata) {
+                        jssuccessdata = successdata.Data;
+                        console.log(successdata);
+                        if (successdata.Success) {
+                            console.log($("#checkboxdiv"));
+                            $("#checkboxdiv").children().remove();
+                            console.log(successdata.Data.all);
+                            for (var i = 0; i < successdata.Data.all.length; i++) {
+                                var obj = _.template($("#floorbtnmuban").html());
+                                var html = obj({ title: successdata.Data.all[i].title, value: successdata.Data.all[i].id });
+                                $("#checkboxdiv").append($(html));
+                            }
+                            $(".floorbtn").each(function (i) {
+                                for (var i = 0; i < successdata.Data.yes.length; i++) {
+                                    if ($(this).val() == successdata.Data.yes[i].id) {
+                                        $(this).attr({ checked: 'checked', disabled: 'disabled' });
+                                    }
+                                }
+                            });
+                            form.render();
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg('网络异常！', { icon: 6, time: 2000 }, function () {
+                        });
+                    }
+                });
+            }
+
+            function floortextmuban() {
+                $("#content").children().remove();
+                var obj = _.template($("#floortextmuban").html());
+                var html = obj({});
+                $("#content").append($(html));
+            }
+
+
+        });
+
+
+
+    </script>
+</body>
+</html>

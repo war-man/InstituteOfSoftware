@@ -58,8 +58,11 @@
                         <label class="layui-form-label">房间号码</label>
                         <div class="layui-input-inline">
                             <input type="text" name="DormInfoName" lay-verify="required" autocomplete="off" placeholder="请输入房间号" class="layui-input">
-                            <input type="text" hidden="hidden" name="Direction" id="Direction" value="@ViewBag.Direction" />
-                            <input type="text"hidden="hidden" name="TungFloorId" id="TungFloorId" value="@ViewBag.Floorid" />
+
+                            <input type="text" hidden="hidden" name="Direction" id="Direction" value="" />
+                            <input type="text" hidden="hidden" name="FloorId" id="FloorId" value="" />
+                            <input type="text" hidden="hidden" name="TungId" id="TungId" value="" />
+
                         </div>
                     </div>
                 </div>
@@ -136,7 +139,7 @@
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/AddRoomPage',
                     type: 'POST',
-                    data: { jsonStr:jsonStr },
+                    data: { jsonStr:jsonStr, },
                     success: function (successdata) {
                         if (successdata.Success) {
                             jslayer.msg('添加成功!', { icon: 6, time: 2000 }, function () {

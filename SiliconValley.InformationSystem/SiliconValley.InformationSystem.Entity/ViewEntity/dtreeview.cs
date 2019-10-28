@@ -17,7 +17,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public int level { get; set; }//层级
         public string parentId { get; set; }//父节点ID
         public List<dtreeview> children { get; set; }
-
         public bool spread { get; set; }//节点展开状态
 
     }
