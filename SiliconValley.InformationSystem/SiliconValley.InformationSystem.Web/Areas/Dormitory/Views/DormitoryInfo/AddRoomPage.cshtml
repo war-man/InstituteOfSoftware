@@ -133,13 +133,21 @@
             jslayer = layui.layer
            //监听提交
             form.on('submit(demo1)', function (data) {
+                var jsDirection = $("#Direction").val();
+                 
+                if (jsDirection == 'left') {
+                    data.field.Direction = false;
+                } else {
+                    data.field.Direction = true;
+                }
                 var jsonStr = data.field;
                 console.log(jsonStr);
-
+                var jsFloorId = $("#FloorId").val();
+                var jsTungId = $("#TungId").val();
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/AddRoomPage',
                     type: 'POST',
-                    data: { jsonStr:jsonStr, },
+                    data: { jsonStr:jsonStr,FloorId:jsFloorId,TungId:jsTungId },
                     success: function (successdata) {
                         if (successdata.Success) {
                             jslayer.msg('添加成功!', { icon: 6, time: 2000 }, function () {

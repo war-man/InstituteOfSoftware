@@ -1,5 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Business.DepartmentBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.PositionBusiness;
+using SiliconValley.InformationSystem.Business.Psychro;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
@@ -17,6 +19,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private ProScheduleForTrainees dbprotrainees;
         private AccdationinformationBusiness dbacc;
         private DormInformationBusiness dbdorm;
+        private ProStudentAndTeacherBussiness dbstudentandteach;
         /// <summary>
         /// 员工实体对象转化为视图对象带房间编号的 
         /// </summary>
@@ -69,11 +72,13 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbprotrainees = new ProScheduleForTrainees();
             dbacc = new AccdationinformationBusiness();
             dbdorm = new DormInformationBusiness();
+            dbstudentandteach = new ProStudentAndTeacherBussiness();
             List<ProStudentView> result = new List<ProStudentView>();
             foreach (var item in data)
             {
                 ProStudentView proStudentView = new ProStudentView();
                 proStudentView.ClassNO = dbprotrainees.GetTraineesByStudentNumber(item.StudentNumber).ClassID;
+                proStudentView.EmpinfoName = dbstudentandteach.GetEmpinfoByStudentNumber(item.StudentNumber).EmpName;
                 proStudentView.Name = item.Name;
                 proStudentView.Sex = item.Sex;
                 proStudentView.StudentNumber = item.StudentNumber;

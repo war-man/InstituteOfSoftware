@@ -16,18 +16,18 @@
         #content {
         width:1070px;
         height:600px;
-        /*border:1px solid red;*/
+        border:1px solid red;
         }
         #tablediv {
         width:64%;
         height:100%;
-        /*border:1px solid red;*/
+        border:1px solid red;
         float:left;
         }
           #Choicediv {
         width:35%;
         height:100%;
-        /*border:1px solid red;*/
+        border:1px solid red;
         float:right;
         }
         .back {
@@ -49,7 +49,7 @@
             </div>
 
         </div>
-        <div id="Choicediv">
+        <div id="Choicediv" style="display:none">
             <form class="layui-form" action="">
                 <fieldset>
                     <legend>
@@ -75,6 +75,8 @@
                             <label class="layui-form-label">寝室号</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="DorminfoName" style="border:none;" readonly="readonly" value="" name="DorminfoName" lay-verify="title" autocomplete="off" class="layui-input">
+                                <input type="text" hidden="hidden" name="FloorId" id="FloorId" value="" />
+                                <input type="text" hidden="hidden" name="TungId" id="TungId" value="" />
                             </div>
                         </div>
                     </div>
@@ -157,6 +159,8 @@
         var jslayer;
         var jsstudentdata;
         var datatype;
+         var jsTungID;
+        var jsFloorID;
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -184,8 +188,11 @@
             var studenttable;
             var stafftable;
             var jsdatatype;
+           
             $(function () {
                 datatype = '@Html.Raw(ViewBag.datatype)';
+                jsTungID = $("#TungId").val();
+                jsFloorID = $("#FloorId").val();
                 console.log(datatype);
                 loaduninhabitedlist();
                 switch (datatype) {
@@ -224,7 +231,8 @@
                 }
 
             });
-            //加载数据
+
+            //加载数据 
             function loaduninhabitedlist() {
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/UninhabitedList?datatype='+datatype //数据接口
@@ -329,6 +337,8 @@
             });
             //发请求获取未满的宿舍
             function getUninhabiteddormdata(jsdata) {
+                console.log(jsTungID);
+                console.log(jsFloorID);
                 var jsprosex = jsdata.Sex;
                 if (jsdata.Sex == "男") {
                     jsprosex = true;
@@ -339,13 +349,34 @@
                 $.ajax({
                     url: '/Dormitory/DormitoryInfo/ChoiceInfo',
                     type: 'GET',
-                    data: { sex: jsprosex, datatype: jsdata.datatype },
+                    data: { sex: jsprosex, datatype: jsdata.datatype,TungID:jsTungID, FloorID:jsFloorID},
                     success: function (successdata) {
                         console.log(successdata);
                         if (successdata.Success) {
                             console.log(successdata);
                             var data = successdata.Data;
-                            binddormradio(data);
+                            if (data.length > 0) {
+                                $("#Choicediv").show();
+                                binddormradio(data);
+                            } else {
+                                $("#Choicediv").hide();
+                                switch (datatype) {
+                                    case "all":
+                                        layer.msg('暂无可用房间，请添加房间。', { icon: 6, time: 2000 }, function () {
+                                        });
+                                        break;
+                                    case "student":
+                                        layer.msg('暂无可用房间，请联系后勤主任添加房间。', { icon: 6, time: 2000 }, function () {
+                                        });
+                                        break;
+                                    case "staff":
+                                        layer.msg('暂无可用房间，请添加房间。', { icon: 6, time: 2000 }, function () {
+                                        });
+                                        break;
+                                }
+                               
+                            }
+                            
                         } else {
                             layer.msg("请与管理员联系");
                         }

@@ -55,17 +55,21 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 //员工居住信息
                 List<StaffAccdation> queryacclist = dbstaffacc.GetStaffAccdationsByDorminfoID(DorminfoID);
-
-                for (int i = querybenlist.Count - 1; i >= 0; i--)
+                if (querybenlist.Count!= queryacclist.Count)
                 {
-                    foreach (var item in queryacclist)
+                    for (int i = querybenlist.Count - 1; i >= 0; i--)
                     {
-                        if (querybenlist[i].Id == item.BedId)
+                        foreach (var item in queryacclist)
                         {
-                            querybenlist.Remove(querybenlist[i]);
+                            if (querybenlist[i].Id == item.BedId)
+                            {
+                                querybenlist.Remove(querybenlist[i]);
+                                break;
+                            }
                         }
                     }
                 }
+                
 
             }
 
@@ -73,18 +77,22 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 //学生居住信息
                 List<Accdationinformation> queryacclist = dbacc.GetAccdationinformationByDormId(DorminfoID);
-
-                for (int i = querybenlist.Count - 1; i >= 0; i--)
+                if (querybenlist.Count!= queryacclist.Count)
                 {
-                    foreach (var item in queryacclist)
+                    for (int i = querybenlist.Count - 1; i >= 0; i--)
                     {
-                        if (querybenlist[i].Id == item.BedId)
+                        foreach (var item in queryacclist)
                         {
-                            querybenlist.Remove(querybenlist[i]);
-                        }
+                            if (querybenlist[i].Id == item.BedId)
+                            {
+                                querybenlist.Remove(querybenlist[i]);
+                                break;
+                            }
 
+                        }
                     }
                 }
+                
             }
             return querybenlist;
 

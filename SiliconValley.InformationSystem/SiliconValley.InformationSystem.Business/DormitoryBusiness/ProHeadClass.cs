@@ -25,8 +25,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="ClassNO"></param>
         /// <returns></returns>
-        public HeadClass GetClassByClassNO(string ClassNO) {
-          return  this.GetHeadClasses().Where(a => a.ClassID == ClassNO).FirstOrDefault();
+        public HeadClass GetClassByClassNO(string ClassID) {
+          return  this.GetHeadClasses().Where(a => a.ClassID == ClassID).FirstOrDefault();
         }
 
         /// <summary>

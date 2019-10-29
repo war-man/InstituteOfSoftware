@@ -11,32 +11,36 @@
     <title>adjustsleep</title>
     <style>
         #content {
-        width:1470px;
-        height:640px;
-         border:1px solid pink;
+            width: 1600px;
+            height: 640px;
+            border: 1px solid pink;
         }
+
         #elementtable {
-         border:1px solid pink;
-         width:75%;
-         float:left;
-          height:630px;
+            border: 1px solid pink;
+            width: 75%;
+            float: left;
+            height: 630px;
         }
+
         #Choicediv {
-         border:1px solid pink;
-         width:24%;
-         float:left;
+            border: 1px solid pink;
+            width: 23%;
+            float: right;
+            margin-top: 55px;
         }
+
         .whyshow {
-           border:1px solid pink;
-         width:60%;
-         float:left;
-          height:560px;
+            border: 1px solid pink;
+            width: 50%;
+            float: left;
+            height: 560px;
         }
+
         .person {
-           border:1px solid pink;
-         width:39%;
-         float:right;
-          height:560px;
+            border: 1px solid pink;
+            float: right;
+            height: 560px;
         }
     </style>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -79,7 +83,9 @@
                                 </form>
                             </div>
                             <div id="mystudenttable">
-
+                                <div id="UninhabitedStudentdiv" class="layui-tab-item">
+                                    <table class="layui-hide" id="UninhabitedStudent" lay-filter="UninhabitedStudent"></table>
+                                </div>
                             </div>
                         </div>
                         <div class="person">
@@ -191,13 +197,14 @@
             </form>
         </div>
     </div>
-   
+
     <script>
-        
-        layui.use(['table', 'layer', 'form','laydate','element'], function () {
+
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var layer = layui.layer;
             console.log(window.parent.jstungid);
             console.log(window.parent.jsfloorid);
+
         });
     </script>
 </body>

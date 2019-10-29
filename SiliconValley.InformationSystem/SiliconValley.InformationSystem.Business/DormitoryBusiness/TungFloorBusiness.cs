@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <param name="TungID"></param>
         /// <param name="FloorID"></param>
         /// <returns></returns>
-        public TungFloor GetTungFloorByTungIDAndFloorID(int? TungID,int? FloorID) {
+        public TungFloor GetTungFloorByTungIDAndFloorID(int TungID,int FloorID) {
             return this.GetTungFloors().Where(a => a.TungId == TungID && a.FloorId == FloorID).FirstOrDefault();
         }
 

@@ -31,5 +31,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string DormName{ get; set; }
 
         public string datatype { get; set; }
+
+        public string EmpinfoName { get; set; }
     }
 }

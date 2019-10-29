@@ -15,9 +15,9 @@
     <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
     <!-- Google Fonts-->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui/layui.js"></script>
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
     @RenderSection("style", false)
 
 </head>
@@ -256,7 +256,8 @@
         </nav>
         <!-- /. NAV SIDE  -->
         <div id="page-wrapper">
-            <div id="page-inner"> @RenderBody()
+            <div id="page-inner">
+                @RenderBody()
             </div>
             <!-- /. PAGE INNER  -->
         </div>
