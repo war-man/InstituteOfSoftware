@@ -1,0 +1,517 @@
+﻿
+@{
+    ViewBag.Title = "AppointmentExamination";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+
+        #mytop {
+            width: 80%;
+            margin: 0 auto;
+            border: 1px solid white;
+            height: 60px;
+            line-height: 60px;
+        }
+
+        #mybottom {
+            width: 100%;
+        }
+
+        #studentlist {
+            float: left;
+            width: 50%;
+            height: 500px;
+            background-color: white;
+        }
+
+        #examintaionlist {
+            float: right;
+            width: 49%;
+            height: 500px;
+            background-color: white;
+        }
+
+        .examintaionitem {
+            margin-top: 30px;
+            margin-left: 20px;
+        }
+
+        #myfloat {
+            position: fixed;
+            right: 0px;
+            width: 300px;
+            height: 90%;
+            background-color: white;
+            z-index: 2;
+            border: 1px solid #e0d0d0;
+            opacity: 0.8;
+            display: none;
+        }
+
+        .btndiv1 {
+            position: absolute;
+            bottom: 20px;
+            text-align: center;
+        }
+
+            .btndiv1 button {
+                margin-left: 50px;
+            }
+    </style>
+
+}
+
+
+<div id="myfloat">
+    <hr />
+    <h3 style="text-align:center;">请确认！</h3>
+    <hr />
+    <div id="selectExamType">
+        <form class="layui-form">
+
+
+
+
+            <div class="btndiv1">
+                <div class="layui-btn layui-btn-danger" lay-submit="" lay-filter="commit1">确定</div>
+
+                <div class="layui-btn layui-btn-danger" id="closefloat">关闭</div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<h2>预约考试</h2>
+
+<div id="mywarp">
+
+    <div id="mytop">
+        <button class="layui-btn layui-btn-danger" id="subscribeExam"><i class="layui-icon layui-icon-rate-solid"></i>预约考试</button>
+        <button class="layui-btn layui-btn-danger" id="cancelsubscribeExam"><i class="layui-icon layui-icon-rate"></i>取消预约</button>
+    </div>
+
+
+    <hr />
+    <div id="mybottom">
+
+        <div id="studentlist">
+
+            <div id="searchDiv">
+
+                <form class="layui-form">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">班级：</label>
+                            <div class="layui-input-inline">
+                                <select name="className">
+                                    <option value="0">全部</option>
+                                    @{
+                                        foreach (var item in ViewBag.myClass as List<HeadClass>)
+                                        {
+                                    <option value="@item.ClassID">@item.ClassID</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名：</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="Name" value="" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
+
+                            <div class="layui-input-inline">
+                                <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="searchform" id="search">查询</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                </form>
+
+            </div>
+
+            <!--学生区域-->
+            <hr />
+            <table lay-filter="mystudentlist" id="mystudentlist"></table>
+        </div>
+
+        <div id="examintaionlist">
+            <!--考试信息区域-->
+            <form class="layui-form">
+                <div class="examintaionitem">
+                    <input type="radio" lay-filter="exam" title="测试考试" name="examinroom" checked="">
+
+                    <label>考试:</label><label>1710NA神学考试</label>、时间：2017年02月20日
+                </div>
+                <div class="examintaionitem">
+                    <input lay-filter="exam" type="radio" title="测试考试" name="examinroom" checked="">
+                    <label>考试:</label><label>1710NA神学考试</label>、时间：2017年02月20日
+                </div>
+                <div class="examintaionitem">
+                    <input lay-filter="exam" type="radio" title="测试考试" name="examinroom" checked="">
+                    <label>考试:</label><label>1710NA神学考试</label>、时间：2017年02月20日
+                </div>
+                <div class="examintaionitem">
+                    <input lay-filter="exam" type="radio" title="测试考试" name="examinroom" checked="">
+                    <label>考试:</label><label>1710NA神学考试</label>、时间：2017年02月20日
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+<script id="exammoban" type="text/template">
+    <div examid="{{=examid}}" class="examintaionitem">
+        <input lay-filter="exam" type="radio" title="{{=title}}" name="examinroom" checked="">
+
+        <label>时间:</label><label>{{=date}}</label>
+    </div>
+</script>
+
+
+<script id="IsReEcamMoban" type="text/template">
+    <div class="layui-form-item myfloatItem">
+        <label class="layui-form-label">{{=studentName}}</label>
+        <div class="layui-input-block">
+            <input type="radio" name="{{=studentnumber}}" value="false" title="正常" checked="">
+            <input type="radio" name="{{=studentnumber}}" value="true" title="重考">
+
+        </div>
+    </div>
+</script>
+
+
+@section script{
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        layui.use(['table', 'layer', 'form'], function () {
+            var form = layui.form;
+            var table = layui.table;
+            var layer = layui.layer;
+
+            //渲染学生
+            table.render({
+                elem: '#mystudentlist'
+                , url: '/ExaminationSystem/ExamArrangement/StudentData'
+
+                , cols: [[
+                    { type: 'checkbox' }
+                    , { field: 'StudentNumber', width: 200, title: '学员编号', sort: true }
+                    , { field: 'Name', width: 200, title: '姓名' }
+
+                    , { field: 'ClassName', width: 200, title: ' 班级' }
+                    , {
+                        field: 'Status', width: 200, title: ' 状态', templet: function (res) {
+                            // layui - form - radioed
+
+                            var status = "";
+                            $(".examintaionitem .layui-form-radio").each(function () {
+
+                                var Ischeck = $(this).hasClass("layui-form-radioed");
+
+                                if (Ischeck) {
+
+                                    //获取选中的考试ID
+                                    var checkExamin = $(this).parent().attr("examid");
+
+                                    var studentNumber = res.StudentNumber;
+                                    //发送请求获取
+
+                                    $.ajax({
+                                        url: '/ExaminationSystem/ExamArrangement/StudentIsInExam',
+                                        data: { studentnumber: studentNumber, examid: checkExamin },
+                                        dataType: 'JSON',
+                                        async: false,
+                                        type: "POST",
+                                        success: function (data) {
+                                            if (data.ErrorCode == 200) {
+                                                if (data.Data == "0") {
+
+                                                    status = "<label style='color:red;'>未加入</label>";
+
+
+                                                } else {
+                                                    status = "<label style='color:green;'>已加入</label>";
+                                                }
+
+                                            }
+                                            else {
+                                                layer.msg("数据加载异常！");
+                                            }
+
+                                        }
+                                    });
+
+
+
+
+                                }
+
+
+                            });
+
+                            return status;
+                        }
+                    }
+
+                ]]
+                ,
+                page: true
+            });
+
+            $.post('/ExaminationSystem/ExamArrangement/GetNoEndExamination', {}, function (data) {
+
+                console.log(data);
+
+                if (data.ErrorCode == 200) {
+
+                    for (var i = 0; i < data.Data.length; i++) {
+
+                        var dateutcstr = data.Data[i].BeginDate;
+                        var dateutc = dateutcstr.substr(dateutcstr.indexOf('(') + 1, 13);
+
+                        var date = new Date(parseInt(dateutc));
+                        var datestr = date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日' + date.toLocaleTimeString()
+
+
+                        var html = _.template($("#exammoban").html());
+                        var htmldate = html({ title: data.Data[i].Title, date: datestr, examid: data.Data[i].ID });
+                        $("#examintaionlist form").append(htmldate);
+
+                        form.render();
+                    }
+
+                }
+            });
+
+            //点击预约
+            $("#subscribeExam").click(function () {
+
+
+
+                //预约考试
+                var checkStatus = table.checkStatus('mystudentlist');
+
+
+                if (checkStatus.data.length == 0) {
+                    layer.msg("请选择学员！");
+                    return;
+                }
+
+                $("#selectExamType form .myfloatItem").remove();
+                var checkExamin = "";
+                $(".examintaionitem .layui-form-radio").each(function () {
+
+                    var Ischeck = $(this).hasClass("layui-form-radioed");
+
+                    if (Ischeck) {
+
+                        //获取选中的考试ID
+                        checkExamin = $(this).parent().attr("examid");
+                    }
+                });
+
+
+                //首先确认 为正常还是重考
+                for (var i = 0; i < checkStatus.data.length; i++) {
+
+
+
+                    $.ajax({
+                        url: '/ExaminationSystem/ExamArrangement/StudentIsInExam',
+                        data: { studentnumber: checkStatus.data[i].StudentNumber, examid: checkExamin },
+                        dataType: 'JSON',
+                        async: false,
+                        type: "POST",
+                        success: function (data) {
+                            if (data.ErrorCode == 200) {
+                                if (data.Data == "0") {
+
+                                    var html = _.template($("#IsReEcamMoban").html());
+                                    var htmldate = html({ studentName: checkStatus.data[i].Name, studentnumber: checkStatus.data[i].StudentNumber });
+                                    $("#selectExamType form").append(htmldate);
+
+
+                                }
+
+                            }
+                            else {
+                                layer.msg("数据加载异常！");
+                            }
+
+                        }
+                    });
+
+
+
+                }
+                form.render();
+
+
+                $("#myfloat").slideDown();
+
+
+
+
+
+                //发送请求
+
+                // $.post('/ExaminationSystem/ExamArrangement/subscribeExam');
+
+                table.reload("mystudentlist");
+            });
+
+            //点击确定预约
+            form.on('submit(commit1)', function (data) {
+
+
+                var examid = "";
+
+                $(".examintaionitem .layui-form-radio").each(function () {
+
+                    var Ischeck = $(this).hasClass("layui-form-radioed");
+
+                    if (Ischeck) {
+
+                        //获取选中的考试ID
+                        examid = $(this).parent().attr("examid");
+                    }
+                });
+
+                $.post('/ExaminationSystem/ExamArrangement/subscribeExam', { jsonStr: JSON.stringify(data.field), examid: examid }, function (data) {
+
+                    if (data.ErrorCode == 400) {
+                        layer.msg("考试已经结束！");
+
+                        return;
+                    }
+
+                    if (data.ErrorCode == 200) {
+                        layer.msg("报名成功！");
+                        $("#myfloat").slideUp();
+                        table.reload("mystudentlist");
+                    } else {
+                        layer.msg("考试结束");
+                    }
+
+                });
+
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            //关闭按钮
+
+            $("#closefloat").click(function () {
+
+                $("#myfloat").slideUp();
+
+            });
+
+
+            ///取消预约
+            $("#cancelsubscribeExam").click(function () {
+
+                var checkStatus = table.checkStatus('mystudentlist');
+
+
+                if (checkStatus.data.length == 0) {
+                    layer.msg("请选择学员！");
+                    return;
+                }
+                var ids = "";
+
+                for (var i = 0; i < checkStatus.data.length; i++) {
+
+                    ids += checkStatus.data[i].StudentNumber + ',';
+
+                }
+
+                var checkExamin = "";
+                $(".examintaionitem .layui-form-radio").each(function () {
+
+                    var Ischeck = $(this).hasClass("layui-form-radioed");
+
+                    if (Ischeck) {
+
+                        //获取选中的考试ID
+                        checkExamin = $(this).parent().attr("examid");
+                    }
+                });
+
+                $.post('/ExaminationSystem/ExamArrangement/cancelsubscribeExam', { studentIDs: ids, examid: checkExamin }, function (data) {
+
+                    if (data.ErrorCode == 400) {
+                        layer.msg("考试已经结束！");
+
+                        return;
+                    }
+
+                    if (data.ErrorCode == 200) {
+
+                        layer.msg("操作成功！");
+
+                        table.reload("mystudentlist");
+
+                    }
+                    else {
+
+                        layer.msg("服务错误！");
+                    }
+                });
+
+
+
+            });
+
+            //监听切换考试
+            //刷新表格
+            form.on('radio(exam)', function (data) {
+                console.log(data.elem); //得到radio原始DOM对象
+                console.log(data.value); //被点击的radio的value值
+                table.reload("mystudentlist");
+
+            });
+
+
+            form.on('submit(searchform)', function (data) {
+
+                console.log(data.field);
+
+                table.reload("mystudentlist", {
+                    url: '/ExaminationSystem/ExamArrangement/SearchStudentData',
+                    where: {
+                        classnumber: data.field.className,
+                        studentName: data.field.Name
+                    }
+                });
+
+            });
+
+        });
+
+
+
+
+    </script>
+
+
+}
+

@@ -1,0 +1,183 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView.ChoiceQuestionTableView
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditChoiceQuestion</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        html {
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form">
+            <hr />
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程:</label>
+                    <div class="layui-input-inline">
+                        <select lay-verify="required" name="course" id="course">
+                            <option value="@Model.Course.CurriculumID">@Model.Course.CourseName</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">题目:</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly name="Title" value="@Model.Title" lay-verify="required" placeholder="题目" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">命题人:</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary">@Model.Proposition.EmpName</button>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">命题时间:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" readonly value="@Model.CreateTime" id="creatdate" placeholder="yyyy-MM-dd">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择类型</label>
+                <div class="layui-input-block">
+
+                    @{
+
+                        if ((bool)Model.IsRadio)
+                        {
+                            <input lay-filter="type" disabled type="radio" id="radioSelect" name="type" value="1" title="单选题" checked="checked">
+                            <input lay-filter="type" disabled type="radio" name="type" value="0" title="多选题">
+                        }
+                        else
+                        {
+                            <input lay-filter="type" disabled type="radio" id="radioSelect" name="type" value="1" title="单选题">
+                            <input lay-filter="type" disabled type="radio" checked="checked" name="type" value="0" title="多选题">
+                        }
+                    }
+
+
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选项A:</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly value="@Model.OptionA" name="OptionA" lay-verify="required" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选项B:</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly value="@Model.OptionB" name="OptionB" lay-verify="title" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选项C:</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly value="@Model.OptionC" name="OptionC" placeholder="" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选项D:</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly value="@Model.OptionD" name="OptionD" lay-verify="required" placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">参考答案:</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn layui-btn-primary">@Model.Answer</button>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">难度级别:</label>
+                <div class="layui-input-block">
+
+
+
+                    <button type="button" class="layui-btn layui-btn-primary">@Model.Level.LevelName</button>
+
+                </div>
+            </div>
+
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">备注:</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="备注" readonly name="Remark" class="layui-textarea">
+
+                        @Model.Remark
+                    </textarea>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+
+                <button type="button" id="close" style="width:30%; margin-top:50px;" class="layui-btn layui-btn-primary">关闭</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
+    <script>
+        layui.use(["form"], function () {
+
+            var form = layui.form;
+
+          
+           var dateval = $("#creatdate").val();
+
+            var date = new Date(dateval);
+
+            var year = date.getFullYear();
+            var moutn = date.getMonth()+1;
+            var day = date.getDate();
+
+            
+           
+            $("#creatdate").val(year + "年" + moutn + "月" + day+"日");
+        });
+
+
+
+       
+
+        $("#close").click(function () {
+
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);
+
+        });
+    </script>
+</body>
+</html>

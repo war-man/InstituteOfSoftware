@@ -285,9 +285,9 @@ layui.use(["table", "layer","element"], function () {
 
     
 
-        $("#div").show();
+        $("#div").show(); 
 
-      var studentnumber = $(this).attr("studentnumber");
+        var studentnumber = $(this).attr("studentnumber");
 
 
         $("#div div").attr("studentnumber", studentnumber);

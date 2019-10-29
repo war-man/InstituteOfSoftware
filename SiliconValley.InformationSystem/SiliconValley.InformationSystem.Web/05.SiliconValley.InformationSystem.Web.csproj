@@ -60,6 +60,10 @@
     <Reference Include="EntityFramework6.Npgsql">
       <HintPath>..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Bin\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
@@ -90,12 +94,17 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\MSBuild\Microsoft\Microsoft.NET.Build.Extensions\net461\lib\System.IO.Compression.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -211,6 +220,9 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
+    <Compile Include="Areas\ExaminationSystem\Controllers\QuestionsBankController.cs" />
+    <Compile Include="Areas\ExaminationSystem\ExaminationSystemAreaRegistration.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\BiddingRecordController.cs" />
@@ -260,6 +272,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
+    <Content Include="Areas\ExaminationSystem\Images\img1.png" />
+    <Content Include="Areas\ExaminationSystem\Images\考场.jpg" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Teaching\Scripts\Ajax.js" />
     <Content Include="Areas\Teaching\Scripts\MajorAndGrand.js" />
@@ -559,6 +573,25 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\HeadMasterSatisfactionQuestionnaire.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateTeacherSurveyConfig.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\web.config" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\QuestionsBankIndex.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionIndex.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\Proposition.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\DetailChoiceQuestion.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ClearlyQuestionIndex.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\PropositionAnswerQuestion.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\DetailAnswerQuestion.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ComputerTestQuestionsIndex.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\PropositionComputerTestQuestion.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ComputerTestQuestionDetailList.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ExamArrangement.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ReleaseExamination.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ExaminationStoryView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ReleaseExaminationView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ArrangeExamRoom.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ChoiceClassroom.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\AppointmentExamination.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ExamDetailView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2257,6 +2290,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\ExaminationSystem\Models\" />
+    <Folder Include="Areas\ExaminationSystem\Views\Shared\" />
     <Folder Include="Areas\Finance\Controllers\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
@@ -2277,6 +2312,7 @@
     <Folder Include="assets\img\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
+    <Folder Include="uploadXLSXfile\ComputerTestQuestionsWord\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
   </ItemGroup>
   <ItemGroup>

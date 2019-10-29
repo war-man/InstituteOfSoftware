@@ -226,4 +226,9 @@ function goChart(dataArr, canvasID) {
     }
 
 
-}
+}function getIntervalHour(startDate, endDate) {
+    var ms = endDate.getTime() - startDate.getTime();
+    if (ms < 0) return 0;
+    return Math.floor(ms / 1000 / 60 / 60);
+}
+

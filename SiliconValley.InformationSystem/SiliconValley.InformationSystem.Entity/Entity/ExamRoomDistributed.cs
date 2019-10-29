@@ -21,6 +21,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int ID { get; set; }
         public string CandidateNumber { get; set; }
         public Nullable<int> ExaminationRoom { get; set; }
-    
+        public int ExamID { get; set; }
+
+
     }
 }

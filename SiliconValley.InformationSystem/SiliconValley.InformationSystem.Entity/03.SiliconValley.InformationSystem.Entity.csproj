@@ -167,6 +167,7 @@
     <Compile Include="Entity\Groupmembers.cs" />
     <Compile Include="Entity\HeadClass.cs" />
     <Compile Include="Entity\Headmaster.cs" />
+    <Compile Include="Entity\HeadMasterGrand.cs" />
     <Compile Include="Entity\HomeWorkFinishRate.cs" />
     <Compile Include="Entity\InStock.cs" />
     <Compile Include="Entity\InStockGoods.cs" />
@@ -297,6 +298,13 @@
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\ExaminationRoomView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerQuestionView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ChoiceQuestionTableView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ComputerTestQuestionsView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\HeadMasterSortView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\StudentIsReExamHelper.cs" />
+    <Compile Include="ViewEntity\ExaminationView.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />

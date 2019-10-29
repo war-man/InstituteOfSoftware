@@ -1,0 +1,546 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ArrangeExamRoom</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+
+        #element {
+            width: 100%;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .classroomitem {
+            display: inline-block;
+            margin-left: 50px;
+            height: 50px;
+            line-height: 50px;
+        }
+
+        #TimetableDIV {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #00ff90;
+        }
+
+        #TimetableTable tr th {
+            width: 300px;
+            height: 40px;
+            border: 1px solid gray;
+        }
+
+        #TimetableTable {
+            width: 100%;
+        }
+
+        #opertaion {
+            text-align: center;
+        }
+
+            #opertaion button {
+                margin-left: 30px;
+            }
+
+        #myfloat {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            top: 0px;
+            left: 0px;
+            /*opacity: 0.8;*/
+            display: none;
+        }
+
+        #teacherdiv {
+            position: absolute;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        #floatbtn {
+            position: absolute;
+            width: 100%;
+            bottom: 0px;
+            margin-left: 40%;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="myfloat">
+        <hr />
+
+        @{
+
+            foreach (var item in ViewBag.Grands as List<Grand>)
+            {
+                <button style="width:100px;" grandid="@item.Id" class="layui-btn  layui-btn-primary grandbtn">@item.GrandName</button>
+            }
+        }
+
+        <hr />
+        <div id="teacherdiv">
+
+
+            <form class="layui-form">
+                
+            </form>
+
+
+        </div>
+
+        <div id="selectedTeacher" style="width:390px; height:40px; border:1px solid white;position:absolute;left:0px;bottom:0px;">
+
+            <form class="layui-form" lay-filter="selectedTeacherfilter">
+
+                <label>监考员：</label>
+
+            </form>
+
+        </div>
+
+        <div id="floatbtn">
+
+
+            <button id="floatcommit" class="layui-btn layui-btn-primary">确定</button>
+            <button id="closefloat" class="layui-btn layui-btn-primary">关闭</button>
+
+        </div>
+
+    </div>
+
+    <input type="hidden" value="@ViewBag.ExamintionID" id="ExamintionID" />
+    <div>
+        <div id="right">
+            `
+            <div id="element">
+                <button id="addExaminationRoom" style="width:40%;" class="layui-btn layui-btn-danger">增加安排教室</button>
+
+            </div>
+            <hr />
+            <!--选择考场-->
+            <form class="layui-form">
+                <div id="selectClassroom">
+
+                    
+
+
+
+
+                </div>
+            </form>
+            <hr />
+            <div id="opertaion">
+
+                <button id="arrangeproctor" class="layui-btn layui-btn-normal">监考员设置</button>
+                <button class="layui-btn layui-btn-normal" id="removeroom">移除</button>
+            </div>
+            <hr />
+
+            <hr />
+
+        </div>
+    </div>
+
+    <script type="text/template" id=" teachertemp">
+        <input type="checkbox" name="{{=empID}}" title="{{=Name}}">
+        <button class="layui-btn layui-btn-primary" empid="{{=empid}}"><i class="layui-icon layui-icon-rate"></i></button>
+    </script>
+
+    <script type="text/template" id="examinroomTemp">
+        <div class="classroomitem">
+            <i style="font-size:30px;" class="layui-icon layui-icon-face-surprised"></i>
+            <input type="radio" name="examinroom" value="{{=roomid}}" title="{{=roomname}}" checked="">
+        </div>
+    </script>
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+
+
+
+    <script>
+
+        //加载监考员
+        function loadproctor() {
+            var examintionID = $("#ExamintionID").val();
+            var examroom = "";
+            $("#selectClassroom .classroomitem .layui-form-radio").each(function (index, elem) {
+
+                var ischecked = $(elem).hasClass("layui-form-radioed");
+
+                console.log(elem);
+
+                if (ischecked) {
+
+                    examroom = $(elem).parent().find("input").val();
+                }
+
+            });
+            
+            $.post("/ExaminationSystem/ExamArrangement/GetProtorData", { examid: examintionID, examroom: examroom }, function (result) {
+
+                if (result.ErrorCode == 200) {
+                    
+                    $("#selectedTeacher form button").remove();
+
+                    if (result.Data.length == 0) {
+
+                        
+
+                        return;
+
+                    }
+                    for (var i = 0; i < result.Data.length; i++) {
+
+                        //selectedTeacher
+                        var button = $('<button type="button" class="layui-btn layui-btn-primary" ><i class="layui-icon layui-icon-rate-solid"></i>' + result.Data[i].EmpName + '</button>');
+                        button.attr("empid", result.Data[i].EmployeeId);
+
+                        $("#selectedTeacher form").append(button);
+                    }
+
+                }
+
+
+            });
+        }
+        var form ;
+
+        layui.use(['form', 'layer'], function () {
+
+             form = layui.form;
+           var layer = layui.layer;
+
+
+            $("#addExaminationRoom").click(function () {
+
+                layer.open({
+                    type: 2,
+                    area: ['800px', '500px'],
+                    title: '选择考场',
+                    content: '/ExaminationSystem/ExamArrangement/ChoiceClassroom'
+
+                });
+
+            });
+
+            function loadExaminRoom() {
+
+                ///获取考试ID
+                var examintionID = $("#ExamintionID").val();
+                $.post('/ExaminationSystem/ExamArrangement/ExamRoomData', { examintionid: examintionID }, function (data) {
+
+
+                    if (data.ErrorCode == 200) {
+
+
+
+                        for (var i = 0; i < data.Data.length; i++) {
+                            var html = _.template($("#examinroomTemp").html());
+                            var htmldate = html({ roomid: data.Data[i].Classroom.Id, roomname: data.Data[i].Classroom.ClassroomName });
+                            $("#selectClassroom").append(htmldate);
+                        }
+                    }
+                    form.render();
+
+                });
+
+            }
+            loadExaminRoom();
+
+
+            //加载教员函数
+            function LoadTeacher(grandid) {
+
+                $.post('/ExaminationSystem/ExamArrangement/GetTeacherByGrand', { grandid: grandid }, function (data) {
+
+                    if (data.ErrorCode == 200) {
+                       
+                      
+                        $("#teacherdiv form button").remove();
+                        for (var i = 0; i < data.Data.length; i++) {
+
+                            var button = $('<button type="button" class="layui-btn layui-btn-primary teacherbtn"><i class="layui-icon layui-icon-rate"></i>' + data.Data[i].emp.EmpName+'</button>');
+                            button.attr("empid", data.Data[i].emp.EmployeeId);
+                           
+                            $("#teacherdiv form").append(button);
+                            console.log(data.Data[i]);
+
+                        }
+
+                        
+                        $("#teacherdiv form button").each(function (index,elem) {
+
+                            var elem1 = $(elem);
+
+                            $("#selectedTeacher form button").each(function (index, elem) {
+
+                                var elem2 = $(elem);
+
+                                if (elem2.attr("empid") == elem1.attr("empid")) {
+
+                                    elem1.find("i").addClass("layui-icon-rate-solid");
+                                    elem1.find("i").removeClass("layui-icon-rate");
+
+                                }
+
+
+                            });
+
+                        });
+                       
+
+
+
+                    }
+                    else {
+                        layer.msg("服务器错误！");
+                    }
+
+                });
+
+            }
+
+            LoadTeacher(1);
+           
+            var examintionID = $("#ExamintionID").val();
+            //移除考场
+            $("#removeroom").click(function () {
+
+                //获取需要移除的考场 （教室ID）
+
+                var classroomid = $(".classroomitem input[type=radio]:checked")[0].value;
+
+                $.post("/ExaminationSystem/ExamArrangement/RemoveExamRoom", { examintionid: examintionID, classroom: classroomid }, function (result) {
+
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.msg("移除成功");
+                        $("#selectClassroom .classroomitem").remove();
+                        loadExaminRoom();
+
+                    }
+                    else {
+                        layer.msg("服务器异常！");
+                    }
+
+                });
+            });
+
+
+            $("#closefloat").click(function () {
+
+                $("#myfloat").hide();
+            });
+
+            //点击安排监考员
+            $("#arrangeproctor").click(function () {
+
+
+                // $("#myfloat").slideUp();
+                $("#myfloat").show();
+                $("#teacherdiv form button").remove();
+                loadproctor();
+
+
+            });
+
+            $(".grandbtn").click(function () {
+                //layui-btn-danger layui-btn-primary
+
+                $(this).removeClass("layui-btn-primary");
+                $(this).addClass("layui-btn-danger");
+
+                $(this).siblings("button").removeClass("layui-btn-danger");
+                $(this).siblings("button").addClass("layui-btn-primary");
+
+                var grandid = $(this).attr("grandid");
+                LoadTeacher(grandid);
+
+               
+
+
+
+            });
+
+            
+
+            $(document).off("click", ".teacherbtn").on("click", '.teacherbtn', function () {
+
+
+                $(".tipmy").remove();
+
+                if (!$(this).find("i").hasClass("layui-icon-rate-solid")) {
+                    //如果没有被选中
+
+                    //再判断总选是否选了2个了
+
+                    var length = $("#selectedTeacher form button").length;
+
+                    if (length < 2) {
+                        //如果length小于二 就选中
+                        $(this).find("i").addClass("layui-icon-rate-solid");
+                        $(this).find("i").removeClass("layui-icon-rate");
+
+
+                        //添加到被选中项
+
+                        var button = $('<button type="button" class="layui-btn layui-btn-primary" ><i class="layui-icon layui-icon-rate-solid"></i>' + $(this).text() + '</button>');
+                        button.attr("empid", $(this).attr("empid"));
+
+
+
+                        $("#selectedTeacher form").append(button);
+                    }
+
+                }
+
+                else {
+
+                    //获取empid
+
+                    var empid = $(this).attr("empid");
+                    //将自己变成空心
+                    $(this).find("i").addClass("layui-icon-rate");
+                    $(this).find("i").removeClass("layui-icon-rate-solid");
+                    //删除以选项
+                    $("#selectedTeacher form button").each(function (inedx, elem) {
+
+                        if ($(elem).attr("empid") == empid) {
+                            $(elem).remove();
+                        }
+
+                    });
+                }
+
+
+            });
+            $(document).off("click", "#selectedTeacher form button").on("click", '#selectedTeacher form button', function () {
+
+                //首先获取empid
+                var empid = $(this).attr("empid");
+
+                $("#teacherdiv form button").each(function () {
+
+                    if ($(this).attr("empid") == empid) {
+                        $(this).find("i").addClass("layui-icon-rate");
+                        $(this).find("i").removeClass("layui-icon-rate-solid");
+                    }
+
+                });
+
+                $(this).remove();
+
+            });
+
+
+            //确定安排监考员
+            $("#floatcommit").click(function () {
+                var length = $("#selectedTeacher form button").length;
+
+               
+
+                //发送请求添加监考员 需要参数：考试:examid,考场:examroom, 监考人员：
+
+                var examid = $("#ExamintionID").val();
+                var examroom = "";
+                $("#selectClassroom .classroomitem .layui-form-radio").each(function (index, elem) {
+
+                    var ischecked = $(elem).hasClass("layui-form-radioed");
+
+                    if (ischecked) {
+
+                        examroom = $(elem).parent().find("input").val();
+                    }
+
+                });
+
+                var proctor = "";
+
+                $("#selectedTeacher form button").each(function (index, elem) {
+
+                    var empid = $(elem).attr("empid");
+
+                    proctor += empid + ',';
+
+
+                });
+
+                //console.log(examid);
+                //console.log(examroom);
+                //console.log(proctor);
+
+                $.post('/ExaminationSystem/ExamArrangement/ArrangeTheInvigilator', { examid: examid, examroomid: examroom, Invigilatorids: proctor }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+                        layer.msg("设置成功");
+                    }
+
+                });
+
+            });
+            //loadproctor();
+        });
+
+        //选择考场
+        function choiceclassroom(array) {
+            var examintionID = $("#ExamintionID").val();
+
+            var classroomids = "";
+            for (var item in array) {
+
+
+                classroomids += array[item] + ',';
+
+            }
+
+            //添加考场
+            $.post('/ExaminationSystem/ExamArrangement/AddExamRoom', { examintionid: examintionID, classroom: classroomids }, function (result) {
+
+                if (result.ErrorCode == 200) {
+
+                    layer.msg("成功");
+
+                    for (var item in array) {
+
+
+
+                        console.log(array[item]);
+
+                        var html = _.template($("#examinroomTemp").html());
+                        var htmldate = html({ roomid: array[item], roomname: item });
+                        $("#selectClassroom").append(htmldate);
+
+                        form.render();
+                    }
+                }
+
+
+            });
+           
+
+
+
+
+        }
+
+        ///加载监考员
+       
+       
+    </script>
+</body>
+</html>

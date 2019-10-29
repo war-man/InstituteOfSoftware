@@ -1,0 +1,215 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PropositionComputerTestQuestion</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <form class="layui-form" method="post" enctype="multipart/form-data">
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">专业</label>
+                    <div class="layui-input-inline">
+                        <select name="major" lay-filter="major">
+                            <option value="0">请选择</option>
+                            @{
+                                foreach (var item in ViewBag.Major as List<Specialty>)
+                                {
+                                    <option value="@item.Id">@item.SpecialtyName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程</label>
+                    <div class="layui-input-inline">
+                        <select lay-verify="required" name="course" id="course"></select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">标题:</label>
+                <div class="layui-input-block">
+                    <input type="text" required name="Title" lay-verify="required" placeholder="请认真填写，方便与查找、辨认" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">上传文档:</label>
+                <div class="layui-input-block">
+                   
+                    <input type="file" name="word" /><label id="errorlabel" style="color:red;display:none;">文件格式不正确--文件应该以 ".rar" 结尾</label>
+
+                </div>
+               
+            </div>
+           
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">难度级别</label>
+                <div class="layui-input-block">
+
+                    @{
+                        foreach (var item in ViewBag.QuestionLevel as List<QuestionLevel>)
+                        {
+                            <input type="radio" name="Level" value="@item.LevelID" title="@item.LevelName" checked="">
+                        }
+                    }
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注:</label>
+                <div class="layui-input-block">
+                    <textarea placeholder="备注" name="Remark" class="layui-textarea"></textarea>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+                <button type="reset" style="width:30%; margin-top:100px;" class="layui-btn">清空</button>
+                <button style="width:30%; margin-top:100px;" id="submit" lay-submit="" lay-filter="submit" class="layui-btn">提交</button>
+                <button type="button" id="close" style="width:30%; margin-top:100px;" class="layui-btn">关闭</button>
+            </div>
+
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+
+    <script>
+
+        layui.use(['form', 'layer','upload'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+            var upload = layui.upload;
+
+          
+            //下拉框联动
+            form.on('select(major)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/ExaminationSystem/QuestionsBank/CourseData",
+                    data: { majorid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.length > 0) {
+                            //清空赋值
+                            $("#course").empty();
+                            console.log(resultData);
+                            $("#course").append(new Option("请选择项目", ""));
+                            $.each(resultData, function (index, item) {
+                                //赋值
+                                $('#course')
+                                    .append(new Option(item.CourseName, item.CurriculumID));
+                            });
+                        } else {
+                            $("#course").empty();
+                            $("#course").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            });
+            layui.form.render("select");
+
+            form.on('submit(submit)', function (data) {
+
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                //获取文件
+
+               
+                var word = document.getElementsByName("word")[0].files[0];
+
+                var filename = word.name;
+                var index = filename.lastIndexOf(".");
+                var suffix = filename.substr(index + 1);
+
+                if (suffix != "rar") {
+
+                    $("#errorlabel").show();
+                }
+                else {
+
+                    var fd = new FormData();
+                    console.log(fd);
+                    fd.append('word', word);
+
+                    for (var key in data.field) {
+
+                        fd.append(key, data.field[key]);
+                    }
+
+
+                    $("#errorlabel").hide();
+
+                    $.ajax({
+                        url: '/ExaminationSystem/QuestionsBank/PropositionComputerTestQuestion',
+                        type:"post",
+                        contentType: false,
+                        processData: false,
+                        dataType: "json",//返回的数据格式
+                        data: fd,
+                        success: function (result) {
+
+                            if (result.ErrorCode == 200) {
+
+                                layer.msg("录入成功！");
+
+                                layui.form.render();
+                            }
+                            if (result.ErrorCode == 444)
+                            {
+                                layer.msg("抱歉标题重复");
+                            }
+                            else {
+                                layer.msg("服务器错误！");
+                            }
+                        },
+                        error: function () {
+                            layer.msg("异常！");
+
+                        }
+
+
+                    });
+
+
+                }
+
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            //关闭按钮
+
+            $("#close").click(function () {
+
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+
+            });
+
+
+        });
+
+
+
+    </script>
+</body>
+</html>

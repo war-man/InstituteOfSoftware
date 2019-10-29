@@ -1,0 +1,125 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationView
+
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExamDetailView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="mywarp">
+        <input type="hidden"  id="examid" value="@Model.ID"/>
+        <hr />
+        <form class="layui-form">
+            <h2 style="text-align:center;">@Model.Title</h2>
+
+            <fieldset>
+                <legend>基本信息</legend>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">考试类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="number" lay-verify="required|number" value="@Model.ExamType.TypeName" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">考试时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="date" id="date" lay-verify="date" value="@Model.BeginDate" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="url" lay-verify="url" value="@ViewBag.IsEnd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>考场信息</legend>
+
+                @{
+                    foreach (var item in ViewBag.examroomlist as List<ExaminationRoomView>)
+                    {
+                        <button   type="button" classid="@item.Classroom.Id" class="layui-btn layui-btn-warm classroom">@item.Classroom.ClassroomName</button>
+                    }
+                }
+
+                <label>总人数:</label><label>@ViewBag.total 人</label>  ----------------------其中重考人数为 @ViewBag.ReExam 人
+
+                <div style="margin-top:50px;">
+
+                    <div> <label>考场人数:</label><label class="roomtatl"></label>  </div>
+                    <br />
+                    <div>
+                        <div style="display:inline-block;">监考员一:<label>杨园</label></div>
+
+                        <div style="display:inline-block;margin-left:100px;">监考员二:<label>曾长玉</label></div>
+                    </div>
+
+                </div>
+
+
+            </fieldset>
+
+
+        </form>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+
+
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+
+            function loadExamroomInfo(examid, classroomid) {
+
+                $.post('/ExaminationSystem/ExamArrangement/ExamDateData', { examid: examid, classroomid: classroomid }, function (result) {
+
+                    console.log(result);
+
+                    $(".roomtatl").text(result.tatal);
+
+                });
+
+
+            }
+
+            var examid = $("#examid").val();
+            var classroomid = $($(".classroom")[0]).attr("classid");
+
+            console.log(examid);
+            console.log(classroomid);
+            loadExamroomInfo(examid, classroomid);
+
+
+
+
+
+
+        });
+    </script>
+
+</body>
+</html>
