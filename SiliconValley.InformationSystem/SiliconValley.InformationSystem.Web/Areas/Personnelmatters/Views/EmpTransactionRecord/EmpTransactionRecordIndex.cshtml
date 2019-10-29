@@ -1,31 +1,22 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "EmpTransactionRecordIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>EmpTransactionRecord</title>
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+@*操作栏*@
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">异动详情查看</a>
+</script>
 
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui/layui.js"></script>
-</head>
-<body>
-
-    @*操作栏*@
-    <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">异动详情查看</a>
-    </script>
-
-        <table id="etrTab" lay-filter="etrTab"></table>
+<table id="etrTab" lay-filter="etrTab"></table>
 
 
 
+
+@section script{
     <script>
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
@@ -36,12 +27,12 @@
 
             table.render({
                 elem: '#etrTab'
-                , url: '/Personnelmatters/EmployeesInfo/GetEtrData'
+                , url: '/Personnelmatters/EmpTransactionRecord/GetEtrData'
                 , id: "myETR"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    , { field: 'TransactionId',  width:38}
+                    , { field: 'TransactionId', width: 38 }
                     , { field: 'empName', title: '姓名', width: 160, sort: true }
                     , { field: 'type', title: '异动类型', width: 120, sort: true }
                     , { field: 'TransactionTime', title: '异动确认时间', sort: true, width: 140, templet: function (d) { return GetYMD(d.TransactionTime) } }
@@ -58,7 +49,7 @@
                 if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EditETR/?id=' + data.TransactionId
+                        content: '/Personnelmatters/EmpTransactionRecord/EditETR/?id=' + data.TransactionId
                         , area: ["800px", "500px"]
                         , title: '编辑员工异动信息'
                         , shade: 0.8
@@ -68,7 +59,7 @@
                 } else if (obj.event === 'detail') {
                     layer.open({
                         type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EmpETRDetail/?id=' + data.TransactionId
+                        content: '/Personnelmatters/EmpTransactionRecord/EmpETRDetail/?id=' + data.TransactionId
                         , area: ['700px', '500px'],
                         title: '员工异动详细信息'
                         , shade: 0.8
@@ -76,37 +67,10 @@
                         , skin: 'demo-class'
                     });
                 }
-                else if (obj.event === 'date') {  //监听单元格日期编辑事件
-                    var field = $(this).data('field');
-                    laydate.render({
-                        elem: this.firstChild,
-                        show: true //直接显示
-                        , type: 'month'
-                        , btns: ['now', 'confirm']
-                        , format: 'yyyy-MM-dd'
-                        , done: function (value, date) {
-                            $.ajax({
-                                type: "get",
-                                dataType: "json",
-                                url: "/Personnelmatters/EmployeesInfo/EditDateCell",
-                                data: { id: data.EmployeeId, endvalue: value },
-                                success: function (data) {
-                                    console.log(data.Msg);
-                                    if (data.Success) {
-                                        layui.table.reload('myEmpInfo');
-                                    }
-                                    else {
-                                        layer.msg("修改失败!");
-                                    }
-                                }
-                            });
-                        }
-                    });
-
-                }
+               
             });
 
-          
+
         });
 
 
@@ -134,5 +98,6 @@
         }
 
     </script>
-</body>
-</html>
+}
+
+

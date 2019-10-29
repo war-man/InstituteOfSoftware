@@ -92,7 +92,7 @@
                 </div>
 
                 <div class="layui-form-item">
-                     <label class="layui-form-label">备注:</label>
+                    <label class="layui-form-label">备注:</label>
                     <div class="layui-input-block">
                         @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input linu" } })
                     </div>
@@ -120,7 +120,7 @@
             });
             function loademp() {
                 var id = $("#Id").val();
-                $.get("/Personnelmatters/EmployeesInfo/GetOvertimeById/" + id, function (data) {
+                $.get("/Personnelmatters/EmpOverTimeRecord/GetOvertimeById/" + id, function (data) {
                     layui.use(['layer', 'form', 'table'], function () {
                         var form = layui.form;
                         data.IsNoDaysOff = data.IsNoDaysOff.toString();
@@ -150,7 +150,7 @@
 
             //提交
             form.on('submit(demo1)', function (data) {
-                $.post("/Personnelmatters/EmployeesInfo/OvertimeEdit", data.field, function (data) {
+                $.post("/Personnelmatters/EmpOverTimeRecord/OvertimeEdit", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引

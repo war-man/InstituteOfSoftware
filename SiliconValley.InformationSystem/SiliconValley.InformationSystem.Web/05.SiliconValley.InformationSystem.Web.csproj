@@ -234,7 +234,11 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmpApprovalController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmpOverTimeRecordController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmpSalaryManagementController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmpTransactionRecordController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Studenteducation\Controllers\EducationController.cs" />
@@ -623,6 +627,25 @@
     <Content Include="Areas\MyEducation\Views\Education\Registerforexamination.cshtml" />
     <Content Include="Areas\MyEducation\Views\Education\Applicationfeereceipt.cshtml" />
     <Content Include="Areas\MyEducation\Views\Education\AddUndergraduateachievement.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\ApprovalIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DaysOffApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\DimissionApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\LeaveApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\OvertimeApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\PositiveApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\RaisesApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\TransferPositionApply.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpDetail.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\PerformanceAssessShow.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\SalaryManageIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\EmpTransactionRecordIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpApproval\EmpApprovalIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpOverTimeRecord\EmpOverTimeRecordIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpOverTimeRecord\OvertimeEdit.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpOverTimeRecord\DaysOffDetail.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpOverTimeRecord\DaysOffEdit.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\EditETR.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\EmpETRDetail.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2263,6 +2286,26 @@
     <Content Include="Scripts\vendor\util\upload-time.js" />
     <Content Include="Scripts\vendor\util\util.js" />
     <Content Include="Scripts\vendor\vue\vue.js" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\1.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190904052834Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092555Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092957Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093344Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093931Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094235Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094606Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094823Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095037Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095258Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095330Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100014Admin.jpg" />
+    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100125Admin.jpg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014030555.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014030701.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014031141.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014032831.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191014033608.jpeg" />
+    <Content Include="uploadXLSXfile\DaysOffImage\20191015030855.jpeg" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -2316,6 +2359,10 @@
     <Content Include="Scripts\layui-v2.5.4\文档与示例\在线示例.url" />
     <Content Include="Scripts\layui-v2.5.4\文档与示例\快速上手.url" />
     <Content Include="Scripts\layui-v2.5.4\更新日志.url" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls~HEAD" />
+    <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
+    <Content Include="uploadXLSXfile\Sheet1.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

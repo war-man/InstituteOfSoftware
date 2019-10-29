@@ -80,7 +80,7 @@
                         <label class="layui-form-label">图片:</label>
                         <div class="layui-input-block">
                             <div style="border:0px solid #808080;width:420px;height:220px;">
-                                <img id="Image"  style="width:420px;height:220px;" />
+                                <img id="Image" style="width:420px;height:220px;" />
                             </div>
                         </div>
                     </div>
@@ -88,7 +88,7 @@
                 </div>
 
                 <div class="layui-form-item" style="margin-top:20px;">
-                    <div class="layui-input-block">                     
+                    <div class="layui-input-block">
                         <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
             function loademp() {
                 var id = $("#EmployeeId").val();
 
-                $.get("/Personnelmatters/EmployeesInfo/GetDaysOffById/" + id, function (data) {
+                $.get("/Personnelmatters/EmpOverTimeRecord/GetDaysOffById/" + id, function (data) {
                     layui.use(['layer', 'form', 'table'], function () {
                         var form = layui.form;
                         $("#empName").val(data.empName);

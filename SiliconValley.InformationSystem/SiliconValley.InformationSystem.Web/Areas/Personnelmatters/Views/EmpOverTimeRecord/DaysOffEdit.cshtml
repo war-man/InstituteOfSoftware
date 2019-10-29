@@ -111,7 +111,7 @@
             function loademp() {
                 var id = $("#EmployeeId").val();
 
-                $.get("/Personnelmatters/EmployeesInfo/GetDaysOffById/" + id, function (data) {
+                $.get("/Personnelmatters/EmpOverTimeRecord/GetDaysOffById/" + id, function (data) {
                     layui.use(['layer', 'form', 'table'], function () {
                         var form = layui.form;
                         $("#empName").val(data.empName);
@@ -131,7 +131,7 @@
 
             //提交
             form.on('submit(demo1)', function (data) {
-                $.post("/Personnelmatters/EmployeesInfo/DaysOffEdit", data.field, function (data) {
+                $.post("/Personnelmatters/EmpOverTimeRecord/DaysOffEdit", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
@@ -180,4 +180,4 @@
     </script>
 
 </body>
-</html >
+</html>

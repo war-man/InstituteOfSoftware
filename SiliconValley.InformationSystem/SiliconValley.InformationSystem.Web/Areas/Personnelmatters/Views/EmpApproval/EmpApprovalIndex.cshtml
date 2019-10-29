@@ -1,93 +1,82 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "EmpApprovalIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+@*审批状态显示*@
+<script type="text/html" id="myState">
+    {{# if(d.IsPass==true){ }}
+    {{ d.IsPass="已通过"}}
+    {{# }else{ }}
+    {{ d.IsPass="未通过" }}
+    {{# } }}
+</script>
+<div class="layui-tab layui-tab-card " lay-filter="mytab">
+    <ul class="layui-tab-title">
+        <li class="layui-this">转正申请</li>
+        <li>离职申请</li>
+        <li>转岗申请</li>
+        <li>加薪申请</li>
+        <li>请假申请</li>
+    </ul>
+    <div class="layui-tab-content">
+        <div class="layui-tab-item layui-show">
+            <table id="positiveApply" lay-filter="positiveApply"></table>
+            @*操作栏*@
+            <script type="text/html" id="barDemo1">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState1">审批</a>
+            </script>
+            @*是否购买社保显示*@
+            <script type="text/html" id="mySS">
+                {{# if(d.IsBuySS==false){ }}
+                {{ d.IsBuySS="否"}}
+                {{# }else{ }}
+                {{ d.IsBuySS="是" }}
+                {{# } }}
+            </script>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>EmpApproval</title>
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+        </div>
 
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui/layui.js"></script>
-</head>
-<body>
-    @*审批状态显示*@
-    <script type="text/html" id="myState">
-        {{# if(d.IsPass==true){ }}
-        {{ d.IsPass="已通过"}}
-        {{# }else{ }}
-        {{ d.IsPass="未通过" }}
-        {{# } }}
-    </script>
-    <div class="layui-tab layui-tab-card "  lay-filter="mytab">
-        <ul class="layui-tab-title">
-            <li class="layui-this">转正申请</li>
-            <li>离职申请</li>
-            <li>转岗申请</li>
-            <li>加薪申请</li>
-            <li>请假申请</li>
-        </ul>
-        <div class="layui-tab-content">
-            <div class="layui-tab-item layui-show">
-                <table id="positiveApply" lay-filter="positiveApply"></table>
-                @*操作栏*@
-                <script type="text/html" id="barDemo1">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState1">审批</a>
-                </script>
-                @*是否购买社保显示*@
-                <script type="text/html" id="mySS">
-                    {{# if(d.IsBuySS==false){ }}
-                    {{ d.IsBuySS="否"}}
-                    {{# }else{ }}
-                    {{ d.IsBuySS="是" }}
-                    {{# } }}
-                </script>
+        <div class="layui-tab-item">
 
-            </div>
+            <table id="dimissionApply" lay-filter="dimissionApply"></table>
+            @*操作栏*@
+            <script type="text/html" id="barDemo2">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState2">审批</a>
+            </script>
+        </div>
 
-            <div class="layui-tab-item">
+        <div class="layui-tab-item">
 
-                <table id="dimissionApply" lay-filter="dimissionApply"></table>
-                @*操作栏*@
-                <script type="text/html" id="barDemo2">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState2">审批</a>
-                </script>
-            </div>
+            <table id="transferPositionApply" lay-filter="transferPositionApply"></table>
+            @*操作栏*@
+            <script type="text/html" id="barDemo3">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState3">审批</a>
+            </script>
+        </div>
 
-            <div class="layui-tab-item">
+        <div class="layui-tab-item">
 
-                <table id="transferPositionApply" lay-filter="transferPositionApply"></table>
-                @*操作栏*@
-                <script type="text/html" id="barDemo3">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState3">审批</a>
-                </script>
-            </div>
+            <table id="addSalaryApply" lay-filter="addSalaryApply"></table>
+            @*操作栏*@
+            <script type="text/html" id="barDemo4">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState4">审批</a>
+            </script>
+        </div>
 
-            <div class="layui-tab-item">
+        <div class="layui-tab-item">
 
-                <table id="addSalaryApply" lay-filter="addSalaryApply"></table>
-                @*操作栏*@
-                <script type="text/html" id="barDemo4">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState4">审批</a>
-                </script>
-            </div>
-
-            <div class="layui-tab-item">
-
-                <table id="leaveApply" lay-filter="leaveApply"></table>
-                @*操作栏*@
-                <script type="text/html" id="barDemo5">
-                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState5">审批</a>
-                </script>
-            </div>
+            <table id="leaveApply" lay-filter="leaveApply"></table>
+            @*操作栏*@
+            <script type="text/html" id="barDemo5">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState5">审批</a>
+            </script>
         </div>
     </div>
- 
+</div>
 
+@section script{
     <script>
         //转正申请数据加载
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
@@ -99,22 +88,22 @@
 
             table.render({
                 elem: '#positiveApply'
-                , url: '/Personnelmatters/EmployeesInfo/GetPositiveData'
+                , url: '/Personnelmatters/EmpApproval/GetPositiveData'
                 , id: "myapply1"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    { field: 'Id', width: 38 }
-                    , { field: 'empName', title: '姓名', width: 90, sort: true }
-                    , { field: 'esex', title: '性别', width: 90, sort: true }
-                    , { field: 'dname', title: '所属部门', width: 110, sort: true }
+                    { field: 'Id', title: '序号',width: 50 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
+                    , { field: 'esex', title: '性别', width: 100, sort: true }
+                    , { field: 'dname', title: '所属部门', width: 130, sort: true }
                     , { field: 'pname', title: '所属岗位', width: 130, sort: true }
-                    , { field: 'IsBuySS', title: '是否购买社保', width: 135, sort: true, templet: '#mySS' }
-                    , { field: 'ProbationEndDate', title: '试用期结束时间', width: 140, templet: function (d) { return GetYMD(d.ProbationEndDate) } }
+                    , { field: 'IsBuySS', title: '是否购买社保', width: 140, sort: true, templet: '#mySS' }
+                    , { field: 'ProbationEndDate', title: '试用期结束时间', width: 150, templet: function (d) { return GetYMD(d.ProbationEndDate) } }
                     , { field: 'ApplicationDate', title: '申请时间', width: 140, templet: function (d) { return GetYMD(d.ApplicationDate) } }
-                    , { field: 'ProbationPersonalSummary', title: '试用期个人总结', width: 200 }
+                    , { field: 'ProbationPersonalSummary', title: '试用期个人总结', width: 230 }
                     , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
-                    , { title: '操作', toolbar: '#barDemo1', width: 110, fixed: 'right' }
+                    , { title: '操作', toolbar: '#barDemo1', fixed: 'right' }
                 ]]
                 , page: true
             });
@@ -132,7 +121,7 @@
                             , btn: ['已通过', '未通过']
                             , yes: function (index, layero) {
                                 console.log("已通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -149,7 +138,7 @@
                             , btn2: function (index, layero) {
                                 s = false;
                                 console.log("未通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/PositiveIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -170,7 +159,7 @@
                 }
             });
 
-           
+
         });
 
         //离职申请数据加载
@@ -183,21 +172,21 @@
 
             table.render({
                 elem: '#dimissionApply'
-                , url: '/Personnelmatters/EmployeesInfo/GetDimissionData'
+                , url: '/Personnelmatters/EmpApproval/GetDimissionData'
                 , id: "myapply2"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    { field: 'Id', width: 38 }
-                    , { field: 'empName', title: '姓名', width: 80, sort: true }
-                    , { field: 'esex', title: '性别', width: 80, sort: true }
-                    , { field: 'dname', title: '所属部门', width: 110, sort: true }
+                    { field: 'Id',title:'序号', width: 50 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
+                    , { field: 'esex', title: '性别', width: 100, sort: true }
+                    , { field: 'dname', title: '所属部门', width: 130, sort: true }
                     , { field: 'pname', title: '所属岗位', width: 130, sort: true }
-                    , { field: 'DimissionDate', title: '申请时间', width: 130, templet: function (d) { return GetYMD(d.DimissionDate) } }
-                    , { field: 'DimissionReason', title: '离职原因', width: 110 }
-                    , { field: 'OpinionOrAdvice', title: '对学校或部门的意见或建议', width: 220 }
+                    , { field: 'DimissionDate', title: '申请时间', width: 140, templet: function (d) { return GetYMD(d.DimissionDate) } }
+                    , { field: 'DimissionReason', title: '离职原因', width: 140 }
+                    , { field: 'OpinionOrAdvice', title: '对学校或部门的意见或建议', width: 260 }
                     , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
-                    , { title: '操作', toolbar: '#barDemo2', width: 110, fixed: 'right' }
+                    , { title: '操作', toolbar: '#barDemo2', fixed: 'right' }
                 ]]
                 , page: true
             });
@@ -215,7 +204,7 @@
                             , btn: ['已通过', '未通过']
                             , yes: function (index, layero) {
                                 console.log("已通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/DimissionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/DimissionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -232,7 +221,7 @@
                             , btn2: function (index, layero) {
                                 s = false;
                                 console.log("未通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/DimissionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/DimissionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -269,23 +258,23 @@
 
             table.render({
                 elem: '#transferPositionApply'
-                , url: '/Personnelmatters/EmployeesInfo/GetTransferPositionData'
+                , url: '/Personnelmatters/EmpApproval/GetTransferPositionData'
                 , id: "myapply3"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                      { field: 'Id', width: 38 }
-                    , { field: 'empName', title: '姓名', width: 80, sort: true }
-                    , { field: 'esex', title: '性别', width: 80, sort: true }
-                    , { field: 'dname', title: '转岗前部门', width: 130, sort: true }
-                    , { field: 'pname', title: '转岗前岗位', width: 110, sort: true }
-                    , { field: 'presalary', title: '转岗前工资', width: 130 }
-                    , { field: 'nowdname', title: '拟转部门', width: 110, sort: true }
+                    { field: 'Id', title: '序号', width: 50 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
+                    , { field: 'esex', title: '性别', width: 100, sort: true }
+                    , { field: 'dname', title: '转岗前部门', width: 150, sort: true }
+                    , { field: 'pname', title: '转岗前岗位', width: 150, sort: true }
+                    , { field: 'presalary', title: '转岗前工资', width: 140 }
+                    , { field: 'nowdname', title: '拟转部门', width: 130, sort: true }
                     , { field: 'nowpname', title: '拟转岗位', width: 130, sort: true }
-                    , { field: 'TurnAfterSalary', title: '转岗后工资', width: 110 }
+                    , { field: 'TurnAfterSalary', title: '转岗后工资', width: 120 }
                     , { field: 'Reason', title: '转岗原因', width: 110 }
                     , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo3', width: 110 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo3'}
                 ]]
                 , page: true
             });
@@ -303,7 +292,7 @@
                             , btn: ['已通过', '未通过']
                             , yes: function (index, layero) {
                                 console.log("已通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/TransferPositionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/TransferPositionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -320,7 +309,7 @@
                             , btn2: function (index, layero) {
                                 s = false;
                                 console.log("未通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/TransferPositionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/TransferPositionIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -341,7 +330,7 @@
                 }
             });
 
-          
+
         });
 
         //加薪申请数据加载
@@ -354,24 +343,24 @@
 
             table.render({
                 elem: '#addSalaryApply'
-                , url: '/Personnelmatters/EmployeesInfo/GetIncreaseSalaryData'
+                , url: '/Personnelmatters/EmpApproval/GetIncreaseSalaryData'
                 , id: "myapply4"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    , { field: 'Id', width: 38 }
+                      { field: 'Id', title: '序号', width: 50 }
                     , { field: 'empName', title: '姓名', width: 80, sort: true }
                     , { field: 'esex', title: '性别', width: 80, sort: true }
-                    , { field: 'dname', title: '部门', width: 130, sort: true }
+                    , { field: 'dname', title: '部门', width: 110, sort: true }
                     , { field: 'pname', title: '岗位', width: 110, sort: true }
-                    , { field: 'EntryTime', title: '入职时间', width: 110, templet: function (d) { return GetYMD(d.EntryTime) } }
-                    , { field: 'PositiveDate', title: '转正日期', width: 110, templet: function (d) { return GetYMD(d.PositiveDate) } }
-                    , { field: 'Education', title: '学历', width: 130, sort: true }
+                    , { field: 'EntryTime', title: '入职时间', width: 140, templet: function (d) { return GetYMD(d.EntryTime) } }
+                    , { field: 'PositiveDate', title: '转正日期', width: 140, templet: function (d) { return GetYMD(d.PositiveDate) } }
+                    , { field: 'Education', title: '学历', width: 110, sort: true }
                     , { field: 'presalary', title: '加薪前工资', width: 130 }
-                    , { field: 'RaisesLimit', title: '加薪额度', width: 110, sort: true }
-                    , { field: 'RaisesReason', title: '加薪理由', width: 110, sort: true }
+                    , { field: 'RaisesLimit', title: '加薪额度', width: 130, sort: true }
+                    , { field: 'RaisesReason', title: '加薪理由', width: 200, sort: true }
                     , { field: 'IsPass', title: '审批状态', width: 110, sort: true, templet: '#myState' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo4', width: 110 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo4'}
                 ]]
                 , page: true
             });
@@ -389,7 +378,7 @@
                             , btn: ['已通过', '未通过']
                             , yes: function (index, layero) {
                                 console.log("已通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -406,7 +395,7 @@
                             , btn2: function (index, layero) {
                                 s = false;
                                 console.log("未通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -439,7 +428,7 @@
 
             table.render({
                 elem: '#leaveApply'
-                , url: '/Personnelmatters/EmployeesInfo/GetEmpLeaveRequestData'
+                , url: '/Personnelmatters/EmpApproval/GetEmpLeaveRequestData'
                 , id: "myapply5"
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
@@ -469,7 +458,7 @@
                             , btn: ['已通过', '未通过']
                             , yes: function (index, layero) {
                                 console.log("已通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -486,7 +475,7 @@
                             , btn2: function (index, layero) {
                                 s = false;
                                 console.log("未通过的状态:" + s);
-                                $.post("/Personnelmatters/EmployeesInfo/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                $.post("/Personnelmatters/EmpApproval/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
                                     if (data.Success) {
                                         layer.alert("审批已通过", { icon: 1 }, function (index) {
                                             layui.use(['table'], function () {
@@ -534,5 +523,5 @@
         }
 
     </script>
-</body>
-</html>
+}
+

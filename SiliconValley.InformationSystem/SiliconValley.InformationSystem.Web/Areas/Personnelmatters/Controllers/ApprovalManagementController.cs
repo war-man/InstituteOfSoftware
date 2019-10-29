@@ -287,6 +287,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
            
             return View();
         }
+        [HttpPost]
+        public ActionResult LeaveApply(LeaveRequest lr) {
+            LeaveRequestManage dmanage = new LeaveRequestManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                if (lr.Image != "undefined")
+                {
+                    #region 图片上传
+                    StringBuilder ProName = new StringBuilder();
+                    HttpPostedFileBase file = Request.Files["Image"];
+                    string fname = file.FileName; //获取上传文件名称（包含扩展名）
+                    string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                    string name = Path.GetExtension(fname);//获取扩展名
+                    string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/DaysOffImage/";//获取当前程序集下面的uploads文件夹中的文件夹目录
+                    string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+                    ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                    file.SaveAs(ProName.ToString());//上传文件   
+                    #endregion
+                    lr.Image = completefilePath;
+                }
+                else
+                {
+                    lr.Image = null;
+                }
+                lr.IsApproval = false;
+                lr.IsPass = false;
+                lr.IsPassYear = false;
+                dmanage.Insert(lr);
+                AjaxResultxx = dmanage.Success(lr);
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = dmanage.Error(ex.Message);
+                BusHelper.WriteSysLog(ex.Message, SiliconValley.InformationSystem.Entity.Base_SysManage.EnumType.LogType.上传文件);
+
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+
+        }
 
     }
 }

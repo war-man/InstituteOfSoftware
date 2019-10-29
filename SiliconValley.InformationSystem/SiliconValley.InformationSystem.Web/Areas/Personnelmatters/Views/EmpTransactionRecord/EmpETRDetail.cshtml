@@ -31,7 +31,6 @@
         #Nation {
             width: 100px;
         }
-
     </style>
 </head>
 <body>
@@ -437,7 +436,7 @@
         function loademp() {
             var id = $("#TransactionId").val();
             console.log(id);
-            $.get("/Personnelmatters/EmployeesInfo/GetertById/" + id, function (data) {
+            $.get("/Personnelmatters/EmpTransactionRecord/GetertById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
                     if (data.type == "转正") {
@@ -467,7 +466,7 @@
                         console.log(data);
                         form.val("IncreaseSalary", data);
 
-                    } 
+                    }
                 });
             })
         }
@@ -478,7 +477,7 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
-           
+
             //关闭页面
             $(".btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
