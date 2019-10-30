@@ -20,9 +20,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var eselist = empsemanage.GetList();
-            var newlist = eselist.Where(s => s.IsDel == false).OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            var newobj = from e in newlist select new {
+            var eselist = empsemanage.GetList().Where(s => s.IsDel == false);
+            var newlist = eselist.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var mylist = from e in newlist select new {
                 e.Id,
                 e.EmployeeId,
                 empName = empmanage.GetEntity(e.EmployeeId).EmpName,
@@ -30,10 +30,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 Position=empmanage.GetPositionByEmpid(e.EmployeeId).PositionName,
                 e.BaseSalary,
                 e.PositionSalary,
-                e.PerformancePay
+                e.PerformancePay,
+                e.PersonalSocialSecurity,
+                e.SocialSecuritySubsidy,
+                e.ContributionBase,
+                e.PayCardSalarySum,
+                e.PersonalIncomeTax,
+                e.Remark,
+                e.IsDel
 
             };
-            return View();
+
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = eselist.Count(),
+                data = mylist
+            };
+            return Json(newobj,JsonRequestBehavior.AllowGet);
         }
 
         //绩效考核统计显示
