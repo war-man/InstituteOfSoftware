@@ -690,6 +690,7 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\RoomArrangePage.cshtml" />
+    <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\Healthregistration.cshtml" />
     <Content Include="Areas\Dormitory\Views\DormitoryInfo\LateReturn.cshtml" />

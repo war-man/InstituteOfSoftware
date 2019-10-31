@@ -30,6 +30,15 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         }
 
         /// <summary>
+        /// 根据寝室号返回对应的登记记录列表
+        /// </summary>
+        /// <param name="DormID"></param>
+        /// <returns></returns>
+        public List<Dormitoryhygiene> GetDormitoryhygienesByDormID(int DormID) {
+            return this.GetDormitoryhygienes().Where(a => a.DorminfoID == DormID).ToList();
+        }
+
+        /// <summary>
         /// 添加寝室卫生登记
         /// </summary>
         /// <param name="dormitoryhygiene"></param>

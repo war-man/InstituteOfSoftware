@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Pointsdeductionproject>
+  <project>
+    <value>Clothing</value>
+    <title>乱挂衣物</title>
+  </project>
+   <project>
+    <value>Washsupplies</value>
+    <title>洗漱用品</title>
+  </project>
+  <project>
+    <value>Shoeplacement</value>
+    <title>鞋子摆放</title>
+  </project>
+  <project>
+    <value>Beddebris</value>
+    <title>床上堆放杂物</title>
+  </project>
+  <project>
+    <value>Cleantoilet</value>
+    <title>厕所整洁</title>
+  </project>
+  <project>
+    <value>Trunk</value>
+    <title>行李箱</title>
+  </project>
+  <project>
+    <value>Emptyplacement</value>
+    <title>空床摆放</title>
+  </project>
+  <project>
+    <value>Sheet</value>
+    <title>床单成面</title>
+  </project>
+  <project>
+    <value>BeddingOverlay</value>
+    <title>被子叠放</title>
+  </project>
+  <project>
+    <value>Ground</value>
+    <title>地面</title>
+  </project>
+
+
+ 
+
+
+
+</Pointsdeductionproject>

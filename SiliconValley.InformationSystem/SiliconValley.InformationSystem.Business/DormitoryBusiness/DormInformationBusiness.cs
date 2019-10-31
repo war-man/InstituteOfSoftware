@@ -32,13 +32,23 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 
       
         /// <summary>
-        /// 根据栋楼层id返回对应房间集合
+        /// 根据栋楼层id返回对应房间集合 用于信息详细 显示禁用的房间都行
         /// </summary>
         /// <param name="TungFloorID"></param>
         /// <returns></returns>
         public List<DormInformation> GetDormsByTungFloorID(int TungFloorID)
         {
             return this.GetDorms().Where(a => a.TungFloorId == TungFloorID).ToList();
+        }
+
+        /// <summary>
+        /// 用于对房间的针对 对可用的房间进行的一个操作
+        /// </summary>
+        /// <param name="TungFloorID"></param>
+        /// <returns></returns>
+        public List<DormInformation> GetDormsByTungFloorIDing(int TungFloorID)
+        {
+            return this.GetDorms().Where(a => a.TungFloorId == TungFloorID&&a.IsDelete==false).ToList();
         }
 
         /// <summary>

@@ -71,9 +71,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public bool Ground { get; set; }
         public bool IsDel { get; set; }
+        /// <summary>
+        /// 数据产生时间
+        /// </summary>
         public DateTime Addtime { get; set; }
         public string Remarks { get; set; }
 
+        /// <summary>
+        /// 登记时间
+        /// </summary>
         public DateTime RegisterTime { get; set; }
     }
 }

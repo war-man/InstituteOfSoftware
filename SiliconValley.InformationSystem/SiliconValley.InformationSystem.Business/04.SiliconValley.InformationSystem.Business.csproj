@@ -102,6 +102,7 @@
     <Compile Include="DormitoryBusiness\DormitoryfloorBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryhygieneBusiness.cs" />
     <Compile Include="DormitoryBusiness\DormitoryLeaderBusiness.cs" />
+    <Compile Include="DormitoryBusiness\HealthRegistrationtableviewBusiness.cs" />
     <Compile Include="DormitoryBusiness\HygienicDeductionBusiness.cs" />
     <Compile Include="DormitoryBusiness\InstructorListBusiness.cs" />
     <Compile Include="DormitoryBusiness\NotreturningLateBusiness.cs" />

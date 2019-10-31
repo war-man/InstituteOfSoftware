@@ -310,65 +310,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             //最外层的儿子数据
             List<dtreeview> childrendtreedata = new List<dtreeview>();
 
-            foreach (var item in tunglist)
+            for (int i = 0; i < tunglist.Count; i++)
             {
                 dtreeview seconddtree = new dtreeview();
                 try
                 {
-                    Tung fortung = dbtung.GetTungByTungID(item.Id);
-                    
+                    Tung fortung = dbtung.GetTungByTungID(tunglist[i].Id);
+                    if (i==0)
+                    {
+                       seconddtree.spread = true;
+                    }
                     seconddtree.nodeId = fortung.Id.ToString();
                     seconddtree.context = fortung.TungName;
                     seconddtree.last = false;
                     seconddtree.parentId = "0";
                     seconddtree.level = 0;
-                    //seconddtree.spread = true;
-                    try
+                    
+
+                    List<TungFloor> floorlist = dbtungfloor.GetTungFloorByTungID(tunglist[i].Id);
+
+                    List<dtreeview> floortreelist = new List<dtreeview>();
+
+                    foreach (var floor in floorlist)
                     {
-                        List<TungFloor> floorlist = dbtungfloor.GetTungFloorByTungID(item.Id);
 
-                        List<dtreeview> floortreelist = new List<dtreeview>();
+                        var floorobj = dbfloor.GetDormitoryfloorByFloorID(floor.FloorId);
+                        dtreeview floortree = new dtreeview();
 
-                        foreach (var floor in floorlist)
-                        {
-                            try
-                            {
-                                var floorobj = dbfloor.GetDormitoryfloorByFloorID(floor.FloorId);
-                                dtreeview floortree = new dtreeview();
-
-                                floortree.nodeId = floorobj.ID.ToString();
-                                floortree.context = floorobj.FloorName;
-                                floortree.last = true;
-                                floortree.parentId = item.Id.ToString();
-                                floortree.level = 1;
-                                floortreelist.Add(floortree);
-                                dtreestatus.code = "200";
-                                dtreestatus.message = "操作成功";
-                            }
-                            catch (Exception ex)
-                            {
-                                dtreestatus.code = "1";
-                                dtreestatus.code = "操作失败";
-                                throw;
-                            }
-                        }
-                        if (floortreelist.Count!=0)
-                        {
-                            seconddtree.children = floortreelist;
-                        }
-                        else
-                        {
-                            seconddtree.last = true;
-                        }
-                        
+                        floortree.nodeId = floorobj.ID.ToString();
+                        floortree.context = floorobj.FloorName;
+                        floortree.last = true;
+                        floortree.parentId = tunglist[i].Id.ToString();
+                        floortree.level = 1;
+                        floortreelist.Add(floortree);
+                        dtreestatus.code = "200";
+                        dtreestatus.message = "操作成功";
 
                     }
-                    catch (Exception ex)
+                    if (floortreelist.Count != 0)
                     {
-                        dtreestatus.code = "1";
-                        dtreestatus.code = "操作失败";
-                        throw;
+                        seconddtree.children = floortreelist;
                     }
+                    else
+                    {
+                        seconddtree.last = true;
+                    }
+
                 }
                 catch (Exception ex)
                 {

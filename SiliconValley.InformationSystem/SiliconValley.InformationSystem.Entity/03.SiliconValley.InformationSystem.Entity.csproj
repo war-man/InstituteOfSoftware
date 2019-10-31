@@ -245,6 +245,7 @@
     <Compile Include="Entity\StaffAccdation.cs" />
     <Compile Include="ViewEntity\flooralloryes.cs" />
     <Compile Include="ViewEntity\floorview.cs" />
+    <Compile Include="ViewEntity\HealthRegistrationtableview.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="Entity\StageGrade.cs" />
     <Compile Include="Entity\StockInfo.cs" />

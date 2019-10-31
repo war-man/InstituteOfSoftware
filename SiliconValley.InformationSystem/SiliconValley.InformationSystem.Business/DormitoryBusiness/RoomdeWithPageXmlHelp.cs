@@ -49,5 +49,24 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             return value;
         }
+
+        /// <summary>
+        /// 根据传的东西获取项目名称
+        /// </summary>
+        /// <param name="projectname"></param>
+        /// <returns></returns>
+        public string GetPointsdeductionproject(string projectname) {
+            XElement xe = XElement.Load(@"F:\Projects\硅谷信息平台版本更新\1.0.9\SiliconValley.InformationSystem\SiliconValley.InformationSystem.Web\xmlfile\Pointsdeductionproject.xml");
+            IEnumerable<XElement> elements = from ele in xe.Elements("project")
+                                             select ele;
+            foreach (var ele in elements)
+            {
+                if (ele.Element("value").Value==projectname)
+                {
+                    return ele.Element("title").Value;
+                }
+            }
+            return string.Empty;
+        }
     }
 }

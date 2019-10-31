@@ -115,7 +115,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             {
                 TungFloor querytungfloor = dbtungfloor.GetTungFloorByTungIDAndFloorID(TungID, FloorID);
                 List<DormInformation> dormlist = new List<DormInformation>();
-                var data = dbdorm.GetDormsByTungFloorID(querytungfloor.Id);
+                var data = dbdorm.GetDormsByTungFloorIDing(querytungfloor.Id);
                 //默认男寝
                 int maleid = 1;
                 //男寝

@@ -36,5 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
             后勤主任,
             教官
         }
+
+       
     }
 }

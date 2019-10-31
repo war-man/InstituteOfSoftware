@@ -31,5 +31,23 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 return false;
             }
         }
+
+        /// <summary>
+        /// 是否有学生居住
+        /// </summary>
+        /// <param name="dormId"></param>
+        /// <returns></returns>
+        public bool Somepeoplelivein(int dormId) {
+            dbacc = new AccdationinformationBusiness();
+            var accdata = dbacc.GetAccdationinformationByDormId(dormId);
+            if (accdata.Count>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

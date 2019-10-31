@@ -452,6 +452,15 @@
                 myDTree = dtree.render({
                     elem: "#toolbarTree5",
                     url: '/Dormitory/DormitoryInfo/EstablishTree',
+                    formatter: {
+                        title: function (data) {  // 示例给有子集的节点返回节点统计
+                            var s = data.context;
+                            if (data.children) {
+                                s += ' <span style=\'color:blue\'>(' + data.children.length + ')</span>';
+                            }
+                            return s;
+                        }
+                    },
                     initLevel: 1,
                     nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
                     leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
