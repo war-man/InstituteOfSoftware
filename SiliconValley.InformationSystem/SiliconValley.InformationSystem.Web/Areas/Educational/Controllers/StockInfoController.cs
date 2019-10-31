@@ -13,8 +13,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     public class StockInfoController : Controller
     {
             public static readonly StockInfoManeger StockInfo_Entity = new StockInfoManeger();
-        
-        // GET: /Educational/StockInfo/AddorEdit
+            public static readonly WarehouseManeger Warehouse_Entity = new WarehouseManeger();
+        // GET: /Educational/StockInfo/StockInfoIndexView
         public ActionResult StockInfoIndexView()
         {
             return View();
@@ -73,7 +73,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 goods_Id = s.goods_Id,
                 GoodsType_Id = s.GoodsType_Id,
                 stockcount = s.stockcount,
-                Address = s.Address,
+                Address = Warehouse_Entity.GetSingleData( s.Warehouse_Id.ToString(),true).WarehouseName,
                 Rmark = s.Rmark,
                 IsDel = s.IsDel,
                 GoodsTypeName = StockInfoManeger.GoodsType_Entity.GetSingleGoodsType(s.GoodsType_Id.ToString(), true)==null?"无": StockInfoManeger.GoodsType_Entity.GetSingleGoodsType(s.GoodsType_Id.ToString(), true).GoodsTypeName,

@@ -101,7 +101,11 @@
     <Compile Include="EducationalBusiness\GoodsManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
+    <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />

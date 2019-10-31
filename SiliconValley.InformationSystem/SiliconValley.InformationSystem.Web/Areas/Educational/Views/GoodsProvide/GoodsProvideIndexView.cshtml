@@ -23,14 +23,13 @@
         <label>物品姓名：</label>
         <div class="btn-group layui-container" style="width:120px;">
             <div style="display:inline-block">
-                @*<input type="text" class="form-control" id="mygoodsname" name="mygoodname" placeholder="物品名称">*@
+             
                 @Html.DropDownList("mygoodsname", ViewBag.goods as IEnumerable<SelectListItem>)
             </div>
         </div>
         <label>申请人：</label>
         <div class="btn-group layui-container" style="width:120px;">
-            <div style="display:inline-block">
-                @*<input type="text" class="form-control" id="shenqingMan" name="shenqingMan" placeholder="申请人">*@
+            <div style="display:inline-block">             
                 @Html.DropDownList("shenqingMan", ViewBag.emplod as IEnumerable<SelectListItem>)
             </div>
         </div>

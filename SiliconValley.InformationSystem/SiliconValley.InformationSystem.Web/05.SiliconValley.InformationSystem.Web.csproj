@@ -224,7 +224,6 @@
     <Compile Include="Areas\Educational\Controllers\InStockGoodsController.cs" />
     <Compile Include="Areas\Educational\Controllers\IsGoodOrBadController.cs" />
     <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
-    <Compile Include="Areas\Educational\Controllers\PurchaseTypeController.cs" />
     <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
@@ -344,6 +343,7 @@
     <Content Include="Images\onepgscr-6.jpg" />
     <Content Include="Images\onepgscr-7.jpg" />
     <Content Include="Images\redLove.jpg.gif" />
+    <Content Include="Images\xiazai.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -640,6 +640,8 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\GoodsProvideIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\GoodsProvide\AddorEditView.cshtml" />
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
+    <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
+    <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2365,7 +2367,6 @@
     <Folder Include="Areas\Educational\Views\InStockGoods\" />
     <Folder Include="Areas\Educational\Views\InStock\" />
     <Folder Include="Areas\Educational\Views\IsGoodOrBad\" />
-    <Folder Include="Areas\Educational\Views\PurchaseApply\" />
     <Folder Include="Areas\Educational\Views\PurchaseType\" />
     <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Educational\Views\ShppingDetail\" />

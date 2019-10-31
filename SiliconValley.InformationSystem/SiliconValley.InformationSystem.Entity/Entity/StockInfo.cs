@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> goods_Id { get; set; }
         public Nullable<int> GoodsType_Id { get; set; }
         public Nullable<int> stockcount { get; set; }
-        public string Address { get; set; }
+        public Nullable<int> Warehouse_Id { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDel { get; set; }
     
