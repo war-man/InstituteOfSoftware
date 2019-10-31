@@ -234,12 +234,14 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\AttendanceStatisticsController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpApprovalController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpLeaveRequestController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpOverTimeRecordController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpSalaryManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpTransactionRecordController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\PerformanceAssessController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Studenteducation\Controllers\EducationController.cs" />
@@ -637,7 +639,6 @@
     <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\RaisesApply.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\ApprovalManagement\TransferPositionApply.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EmpDetail.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\PerformanceAssessShow.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\SalaryManageIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\EmpTransactionRecordIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpApproval\EmpApprovalIndex.cshtml" />
@@ -647,6 +648,8 @@
     <Content Include="Areas\Personnelmatters\Views\EmpOverTimeRecord\DaysOffEdit.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\EditETR.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\EmpETRDetail.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\PerformanceAssessIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\AttendanceStatisticsIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpLeaveRequest\LeaveIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />

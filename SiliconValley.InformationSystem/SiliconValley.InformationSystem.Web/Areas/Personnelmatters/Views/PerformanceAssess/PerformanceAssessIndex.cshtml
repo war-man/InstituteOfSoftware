@@ -1,23 +1,16 @@
 ﻿
 @{
-    Layout = null;
+    ViewBag.Title = "PerformanceAssessIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<!DOCTYPE html>
+<div>
+    <table id="PerAsstab" lay-filter="PerAsstab"></table>
+</div>
 
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>PerformanceAssessShow</title>
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-    <script src="~/Scripts/layui/layui.js"></script>
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-</head>
-<body>
-    <div>
-        <table id="PerAsstab" lay-filter="PerAsstab"></table>
-    </div>
 
+
+@section script{
     <script>
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
@@ -28,15 +21,15 @@
 
             table.render({
                 elem: '#PerAsstab'
-                , url: '/Personnelmatters/EmpSalaryManagement/GetPerformanceAssessData'
+                , url: '/Personnelmatters/PerformanceAssess/GetPerformanceAssessData'
                 , id: "myPerAss"
                 //, toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
-                , cols: [[                   
-                    {  title: '湖南硅谷高科软件学院' +  '绩效考核表', align:'center', colspan: 15 }],
-                    [
-                      { field: 'empName', title: '姓名', width: 110, sort: true }
+                , cols: [[
+                    { title: '湖南硅谷高科软件学院' + '绩效考核表', align: 'center', colspan: 15 }],
+                [
+                    { field: 'empName', title: '姓名', width: 110, sort: true }
                     , { field: 'empDept', title: '所属部门', width: 110, sort: true }
                     , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
                     , { field: 'RoutineWork', title: '日常工作内容', sort: true, width: 90 }
@@ -50,13 +43,13 @@
                     , { field: 'FinalGrade', title: '最终绩效分', sort: true, width: 110 }
                     , { field: 'Remark', title: '备注', sort: true, width: 110 }
                     , { field: 'IsDel', title: '是否离职', sort: true, width: 110 }
-                    , {  title: '操作', toolbar: '#barDemo',width: 110,fixed:'right' }
+                    , { title: '操作', toolbar: '#barDemo', width: 110, fixed: 'right' }
                 ]]
                 , page: true
-              
+
             });
 
-           
+
         });
 
 
@@ -85,5 +78,6 @@
     </script>
 
 
-</body>
-</html>
+
+}
+

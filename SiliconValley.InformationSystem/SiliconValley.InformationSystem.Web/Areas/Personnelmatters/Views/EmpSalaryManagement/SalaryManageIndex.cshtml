@@ -6,13 +6,6 @@
 
         <div class="layui-tab-item layui-show">
            
-            @*头部工具栏*@
-            <script type="text/html" id="toolbarDemo">
-                <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="PerformanceAssess">绩效考核</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="AttendanceStatistics">考勤统计</button>
-                </div>
-            </script>
             @*操作栏*@
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -20,7 +13,6 @@
             </script>
             <table id="salarytab" lay-filter="salarytab"></table>
         </div>
-
 
 @section script{
     <script>
@@ -48,10 +40,10 @@
                     , { field: 'PositionSalary', title: '岗位工资', sort: true, width: 90 }
                     , { field: 'IdCardNum', title: '绩效分', sort: true, width: 120}
                     , { field: 'EntryTime', title: '绩效工资', sort: true, width: 110 }
-                    , { field: 'EntryTime', title: '社保补贴', sort: true, width: 110}
-                    , { field: 'PositiveDate', title: '笔记本工资', sort: true, width: 110 }
+                    //, { field: 'EntryTime', title: '社保补贴', sort: true, width: 110}
+                    , { field: 'PositiveDate', title: '笔记本补助', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '应发工资1', sort: true, width: 110 }
-                    , { field: 'PositiveDate', title: '加班次数', sort: true, width: 110 }
+                    , { field: 'PositiveDate', title: '加班费用', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '奖金/元', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '请假天数', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '扣款/元', sort: true, width: 110 }
@@ -71,9 +63,7 @@
             table.on('toolbar(salarytab)', function (obj) {
                 //var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
-                    case 'PerformanceAssess':
-                        PerformanceAssess();
-                        break;
+
                     case 'AttendanceStatistics':
                         AttendanceStatistics();
                         break;
@@ -137,43 +127,8 @@
         
         });
 
-        //绩效考核
-        function PerformanceAssess() {
-            layui.use(['layer'], function (args) {
-                var layer = layui.layer;      //layui对象
-                layer.open({
-                    type: 2
-                    , area: ["1200px", "600px"]
-                    , title: "绩效考核"
-                    , content: '/Personnelmatters/EmpSalaryManagement/PerformanceAssessShow'
-                    , anim: 2
-                    , cancel: function (index, layero) {
-                        layui.table.reload('mySalaryStatistics');
-                    }
-                });
-
-            })
-
-        }
-
-        //考勤统计
-        function AttendanceStatistics() {
-            layui.use(['layer'], function (args) {
-                var layer = layui.layer;      //layui对象
-                layer.open({
-                    type: 2
-                    , area: ["1200px", "600px"]
-                    , title: "考勤统计表"
-                    , content: '/Personnelmatters/EmpSalaryManagement/PerformanceAssessShow'
-                    , anim: 2
-                    , cancel: function (index, layero) {
-                        layui.table.reload('mySalaryStatistics');
-                    }
-                });
-
-            })
-        }
-
+     
+     
         //格式化时间
         function GetYearAndMonth(cellval) {
             if (cellval != null) {
@@ -195,7 +150,7 @@
             } else {
                 return "";
             }
-        }
+        }       p
         //显示年月日
         function GetYMD(cellval) {
             if (cellval != null) {

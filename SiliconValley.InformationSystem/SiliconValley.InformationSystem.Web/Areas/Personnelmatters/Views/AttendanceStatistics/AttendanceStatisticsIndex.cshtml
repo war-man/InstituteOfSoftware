@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "AttendanceStatisticsIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <table id="CheckingIntab" lay-filter="CheckingIntab"></table>
+</div>
+
+
+
+@section script{
+    <script>
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#CheckingIntab'
+                , url: '/Personnelmatters/AttendanceStatistics/GetCheckingInData'
+                , id: "myPerAss"
+                //, toolbar: '#toolbarDemo'
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    { field: 'empName', title: '姓名', width: 110, sort: true }
+                    , { field: 'empDept', title: '所属部门', width: 110, sort: true }
+                    , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'RoutineWork', title: '到勤天数', sort: true, width: 90 }
+                    , { field: 'RoutineWorkPropotion', title: '请假天数', sort: true, width: 120 }
+                    , { field: 'RoutineWorkFillRate', title: '上班缺卡次数', sort: true, width: 110 }
+                    , { field: 'OtherWork', title: '上班缺卡记录', sort: true, width: 110 }
+                    , { field: 'OtherWorkPropotion', title: '下班缺卡次数', sort: true, width: 110 }
+                    , { field: 'OtherWorkFillRate', title: '下班缺卡记录', sort: true, width: 110 }
+                    , { field: 'SelfReportedScore', title: '迟到次数', sort: true, width: 110 }
+                    , { field: 'SuperiorGrade', title: '迟到记录', sort: true, width: 110 }
+                    , { field: 'FinalGrade', title: '早退次数', sort: true, width: 110 }
+                    , { field: 'Remark', title: '早退记录', sort: true, width: 110 }
+                    , { field: 'IsDel', title: '备注', sort: true, width: 110 }
+                    , { title: '操作', toolbar: '#barDemo', width: 110, fixed: 'right' }
+                ]]
+                , page: true
+
+            });
+
+
+        });
+
+
+        //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+
+
+}
