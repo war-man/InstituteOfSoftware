@@ -106,11 +106,13 @@
     <Compile Include="DormitoryBusiness\HygienicDeductionBusiness.cs" />
     <Compile Include="DormitoryBusiness\InstructorListBusiness.cs" />
     <Compile Include="DormitoryBusiness\NotreturningLateBusiness.cs" />
+    <Compile Include="DormitoryBusiness\NotreturningLateViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProClassSchedule.cs" />
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ProStudentInformationViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
     <Compile Include="DormitoryBusiness\RoomStayNumberBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomStayTypeBusiness.cs" />

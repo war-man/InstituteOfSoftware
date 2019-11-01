@@ -1,0 +1,501 @@
+﻿
+@{
+    ViewBag.Title = "RegistrationforlatearrivalIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #procontent {
+        width: 100%;
+        height: 800px;
+        /*border: 1px solid pink;*/
+    }
+
+
+    #prouninhabited {
+        width: 53%;
+        height: 100%;
+        /*border: 1px solid pink;*/
+        float: left;
+        margin-left: 11%;
+    }
+
+    #protable {
+        width: 25%;
+        height: 100%;
+        float: right;
+        /*border: 1px solid pink;*/
+        margin-right: 5%;
+    }
+    .noborder {
+    border:none;
+    background-color:transparent;
+    }
+    .span0{
+    float: left;
+    display: block;
+    padding: 9px 15px;
+    width: 80px;
+    font-weight: 400;
+    line-height: 20px;
+    text-align: right;
+    color:red;
+    }
+</style>
+
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/dtree.css" rel="stylesheet" />
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
+<div id="procontent">
+
+    <div id="prouninhabited">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li class="layui-this">晚归记录</li>
+                <li>晚归登记</li>
+            </ul>
+            <div class="layui-tab-content" style="height: 100px;">
+                <div class="layui-tab-item layui-show">
+                    <div id="top">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <div class="layui-inline" id="mubandiv">
+                                    <label class="layui-form-label" id="querylable" style="width:90px;">选择时间</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" class="layui-input"  name="time" id="test16" placeholder="开始 到 结束">
+                                    </div>
+                                    <label class="layui-form-label" id="querylable" style="width:90px;">学生姓名</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name0"  placeholder="请输入" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="demo1">搜索</button>
+
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div id="table">
+                        <table class="layui-hide" id="demo" lay-filter="demo"></table>
+                    </div>
+                </div>
+                <div class="layui-tab-item">
+                    <div id="2top">
+                        <form class="layui-form" action="">
+                            <div class="layui-form-item">
+                                <div class="layui-inline" id="mubandiv">
+                                    <label class="layui-form-label" id="querylable" style="width:90px;">学生姓名</label>
+
+
+                                    <div class="layui-input-inline">
+                                        <input type="text" name="name1" lay-verify="required" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                                    </div>
+
+                                    <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="demo2">搜索</button>
+
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                    <div id="2table">
+                        <table class="layui-hide" id="2demo" lay-filter="2demo"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div id="protable" style="display:none;">
+
+        <form class="layui-form" action="">
+            <fieldset>
+                <legend>晚归登记</legend>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:90px">学生姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="SutdentName" name="SutdentName" lay-verify="required" value="欧阳粉粉" autocomplete="off" class="layui-input noborder">
+                           <input  name="StudentNumber" id="StudentNumber" type="hidden"/>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:90px;">联系方式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="StuPhone" id="StuPhone" lay-verify="required" value="15073315702" autocomplete="off" class="layui-input noborder">
+                        </div>
+                    </div>
+                </div>
+
+              
+               
+                
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:90px">班主任</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="MasterName" id="MasterName" lay-verify="required" value="欧阳粉粉" autocomplete="off" class="layui-input noborder">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:90px">联系方式</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="MasterPhone" id="MasterPhone" lay-verify="required" value="15073315702" autocomplete="off" class="layui-input noborder">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:90px">班级</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="ClassNO" id="ClassNO" lay-verify="required" value="190701A" autocomplete="off" class="layui-input noborder">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:90px">寝室号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="DormNO" id="DormNO" lay-verify="required" value="B-2001" autocomplete="off" class="layui-input noborder">
+                        </div>
+                    </div>
+                </div>
+    
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                        <label class="layui-form-label" style="width:90px">晚归次数</label>
+                        <div class="layui-input-block">
+                           <span  class="span0" id="Count">10</span>
+                        </div>
+                    </div>
+                </div>
+
+            </fieldset>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                    <label class="layui-form-label" style="width:90px">选择日期</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="RegisterTime" class="layui-input" id="test-limit2" placeholder="yyyy-MM-dd">
+                    </div>
+
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                    <label class="layui-form-label" style="width:90px">晚归原因</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入晚归原因" name="Reason" lay-verify="required" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id="Notre" lay-submit lay-filter="Notre">登记</button>
+                    <button class="layui-btn" type="reset" id="Reset">重置</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+@section script{
+    @*房间单选选中按钮模板*@
+    <script type="text/template" id="radionuban">
+        <input type="radio" name="DormInformation" lay-filter="dormfilter" value="{{=DormInfoID}}" title="{{=DormInfoName}}" checked>
+    </script>
+    @*房间单选未选中按钮模板*@
+    <script type="text/template" id="radionuban1">
+        <input type="radio" name="DormInformation" lay-filter="dormfilter" value="{{=DormInfoID}}" title="{{=DormInfoName}}">
+    </script>
+
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
+    <script>
+        layui.extend({
+            dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree', 'layer', 'jquery', 'form', 'table', 'laydate', 'element'], function () {
+            var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table, laydate = layui.laydate, element = layui.element;
+
+            var  name0,name1, startime, endtime;
+            //时间转化
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+
+            //表单
+            var table0 = table.render({
+                elem: '#demo'
+                , skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 20
+                , limits: [10, 20, 30, 45, 60, 75]
+                , page: true
+                , cols: [[ //标题栏
+                    { field: 'StudentNumber', title: '学生编号', width: 165 }
+                    ,{ field: 'StudentName', title: '学生姓名', width: 90 }
+                    , { field: 'Reason', title: '晚归原因', width: 348 }
+                    , { field: 'InspectorName', title: '登记人', width: 80 }
+                    , { field: 'HeadMasterName', title: '班主任', width: 80, templet: function (d) {
+                            return "<span style=color:red;>" + d.HeadMasterName + "</span>"
+                        } }
+                    , {
+                        field: 'RegisterTime', title: '记录时间', width: 105, templet: function (d) {
+                            return TimeChange(d.RegisterTime);
+                        }
+                    }
+                ]]
+                
+            });
+        
+            var table01 = table.render({
+                elem: '#2demo'
+                , skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 20
+                , limits: [10, 20, 30, 45, 60, 75]
+                , page: true
+                , cols: [[ //标题栏
+                    { field: 'StudentNmber', title: '学生编号', width: 165 }
+                    , { field: 'SutdentName', title: '学生姓名', width: 90 }
+                    , { field: 'StuPhone', title: '联系方式', width: 135 }
+                    , {
+                        field: 'Count', title: '晚归次数', width: 80, templet: function (d) { 
+                            return "<span style=color:red;>" + d.Count + "</span>"
+                        }
+                    }
+                    , { field: 'MasterName', title: '班主任', width: 90 }
+                    , { field: 'MasterPhone', title: '联系方式', width: 135 }
+                    , { field: 'ClassNO', title: '班级', width: 90, }
+                    , { field: 'DormNO', title: '寝室号', width: 90 }
+                ]]
+            });
+            $(function () {
+                loadtable();
+            });
+
+
+            //加载表格0
+            function loadtable() {
+                //这里以搜索为例
+                table0.reload({
+                    url: '/Dormitory/Registrationforlatearrival/loadtable0'
+                    , where: {
+                        startime: startime,
+                        endtime: endtime,
+                        name0:name0
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+
+            //加载表格1
+            function loadtable1() {
+                //这里以搜索为例
+                table01.reload({
+                    url: '/Dormitory/Registrationforlatearrival/loadtable1'
+                    , where: {
+                        name1:name1
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+
+            //前三
+            var day1 = new Date();
+            day1.setTime(day1.getTime() - 72 * 60 * 60 * 1000);
+            var s1 = day1.getFullYear() + "-" + (day1.getMonth() + 1) + "-" + day1.getDate();
+
+            //今天
+            var day2 = new Date();
+            day2.setTime(day2.getTime());
+            var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+
+            //前一个月
+            function getLastMonthYestdy() {
+
+                var date = new Date();
+
+                var daysInMonth = new Array([0], [31], [28], [31], [30], [31], [30], [31], [31], [30], [31], [30], [31]);
+
+                var strYear = date.getFullYear();
+
+                var strDay = date.getDate();
+
+                var strMonth = date.getMonth() + 1;
+
+                if (strYear % 4 == 0 && strYear % 100 != 0) {
+
+                    daysInMonth[2] = 29;
+
+                }
+
+                if (strMonth - 1 == 0) {
+
+                    strYear -= 1;
+
+                    strMonth = 12;
+
+                }
+
+                else {
+
+                    strMonth -= 1;
+
+                }
+
+                strDay = daysInMonth[strMonth] >= strDay ? strDay : daysInMonth[strMonth];
+
+                if (strMonth < 10) {
+
+                    strMonth = "0" + strMonth;
+
+                }
+
+                if (strDay < 10) {
+
+                    strDay = "0" + strDay;
+
+                }
+
+                datastr = strYear + "-" + strMonth + "-" + strDay;
+
+                return datastr;
+
+            }
+
+            startime = getLastMonthYestdy();
+
+            endtime = s2;
+
+            //前后若干天可选，这里以7天为例
+            var ins22 = laydate.render({
+                elem: '#test-limit2'
+                , min: s1
+                , max: s2
+                , value: s2
+                , isInitValue: true
+                ,btns: ['confirm']
+                , ready: function () {
+                    ins22.hint('日期可选值设定在 <br> ' + s1 + ' 到  今天');
+                }
+            });
+
+            //console.log(startime);
+            //console.log(endtime);
+            laydate.render({
+                elem: '#test16'
+                , type: 'datetime'
+                , range: '到'
+                , format: 'yyyy-M-d'
+                ,btns: ['confirm']
+                , done: function (value, date, endDate) {
+                    //console.log(value); //得到日期生成的值，如：2017-08-18
+                    //console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+                    //console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+                    startime = date.year + '-' + date.month + '-' + date.date;
+                    endtime = endDate.year + '-' + endDate.month + '-' + endDate.date;
+
+                    //console.log(startime);
+                    //console.log(endtime);
+                }
+            });
+
+
+            //提交
+            form.on('submit(Notre)', function (data) {
+                //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                //console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                //console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                $.ajax({
+                    url: '/Dormitory/Registrationforlatearrival/LateReturn',
+                    type: 'POST',
+                    data: { notreturningLate: data.field },
+                    success: function (SuccessData) {
+                        console.log(SuccessData);
+                        if (SuccessData.Success) {
+                            layer.msg('晚归登记登记完成。');
+
+                        } else {
+                            layer.msg("请联系开发者");
+                        }
+                    },
+                    error: function () {
+                        layer.msg("请联系开发者");
+                    }
+                });
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            //搜索提交
+            form.on('submit(demo1)', function (data) {
+                name0 = data.field.name0;
+                loadtable();
+                return false;
+            });
+
+                        //搜索提交
+            form.on('submit(demo2)', function (data) {
+                name1 = data.field.name1;
+                loadtable1();
+                return false;
+            });
+            //选项卡触发事件
+            element.on('tab(docDemoTabBrief)', function (data) {
+                //console.log(this); //当前Tab标题所在的原始DOM元素
+                //console.log(data.index); //得到当前Tab的所在下标
+                //console.log(data.elem); //得到当前的Tab大容器
+                if (data.index=="0") {
+                    $("#protable").hide();
+                    loadtable();
+                }
+                if (data.index=="1") {
+                  
+                }
+            });
+                        //监听行单击事件
+            table.on('row(2demo)', function (obj) {
+                var mytr = obj.tr[0];
+                $("tr").css("background", "");
+                $(mytr).css("background", "pink");
+                $("#protable").show();
+                loadform(obj.data);
+
+            });
+            function loadform(data) {
+                $("#StudentNumber").val(data.StudentNmber);
+                $("#SutdentName").val(data.SutdentName);
+                $("#ClassNO").val(data.ClassNO);
+                $("#DormNO").val(data.DormNO);
+                $("#StuPhone").val(data.StuPhone);
+                $("#MasterName").val(data.MasterName);
+                $("#MasterPhone").val(data.MasterPhone);
+                $("#Count").text(data.Count);
+            }
+
+        });
+
+    </script>
+}
+
+
