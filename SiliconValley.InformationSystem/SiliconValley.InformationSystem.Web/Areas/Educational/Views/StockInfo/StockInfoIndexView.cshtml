@@ -16,6 +16,12 @@
             width: 83%;
             float: right;
         }
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
     </style>
 }
     <div id="master_div">
@@ -42,6 +48,7 @@
             <script type="text/html" id="StockinfobarDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">查看详情</a>
             </script>
+           
         </div>
     </div>
 
@@ -187,18 +194,21 @@
                         , { field: 'Address', title: '存放地点',  }
                         , { field: 'Rmark', title: '说明'}
                         , {
-                            field: 'IsDel', title: '系统提示',width:150, templet: function (res) {
-                                if (res.IsDel == false) {
+                            field: 'IsDel', title: '系统提示', width: 150, templet: function (res) {
+                                if (res.stockcount >= 10) {
                                     return '<span>数量充足</span>';
                                 } else {
                                     return '<span style="color:red">该物品快用完了</span>';
                                 }
-                                
-                            }}
+
+                            }
+                        }
                         , { fixed: 'right', title: '操作', toolbar: '#StockinfobarDemo', width: 100 }
                     ]]
                     , page: true
                 });
+
+                
             });
         });
     </script>

@@ -82,7 +82,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 foreach (StockInfo item2 in s1)
                 {
-                    if (item2.goods_Id == item1.Id)
+                    if (item2.goods_Id == item1.Id && item1.IsDel==false && item2.IsDel==false)
                     {
                         ListStockGoods list = new ListStockGoods();
                         list.Id = item2.Id;
