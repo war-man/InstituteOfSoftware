@@ -14,8 +14,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
-       //获取考勤数据
-        public ActionResult GetCheckingInData(int page,int limit) {
+        //获取考勤数据
+        public ActionResult GetCheckingInData(int page, int limit)
+        {
             return View();
         }
     }

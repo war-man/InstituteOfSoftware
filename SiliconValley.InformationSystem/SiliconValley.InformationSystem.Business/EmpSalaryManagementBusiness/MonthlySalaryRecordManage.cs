@@ -52,5 +52,42 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             }
             return result;
         }
+
+        /// <summary>
+        /// 根据员工编号获取员工体系表中该员工对象
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public EmplSalaryEmbody GetEmpsalaryByEmpid(string empid)
+        {
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            var ese = esemanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            return ese;
+        }
+
+        /// <summary>
+        /// 根据员工编号获取考勤统计表中的该员工对象
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public AttendanceInfo GetAttendanceInfoByEmpid(string empid)
+        {
+            AttendanceInfoManage attmanage = new AttendanceInfoManage();
+            var att = attmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            return att;
+        }
+
+
+        /// <summary>
+        /// 根据员工编号获取绩效考核表中的该员工对象
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public MeritsCheck GetMCByEmpid(string empid)
+        {
+            MeritsCheckManage mcmanage = new MeritsCheckManage();
+            var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            return mcobj;
+        }
     }
 }

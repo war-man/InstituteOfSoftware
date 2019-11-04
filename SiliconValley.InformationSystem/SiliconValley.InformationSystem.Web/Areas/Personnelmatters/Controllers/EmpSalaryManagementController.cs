@@ -20,75 +20,87 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var eselist = empsemanage.GetList();
-            var newlist = eselist.Where(s => s.IsDel == false).OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
-            var newobj = from e in newlist
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();//员工信息表
+            var eselist = msrmanage.GetList().Where(s => s.IsDel == false);
+            var newlist = eselist.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var mylist = from e in newlist
                          select new
                          {
+                             #region 获取值
                              e.Id,
                              e.EmployeeId,
-                             empName = empmanage.GetEntity(e.EmployeeId).EmpName,
-                             Depart = empmanage.GetDeptByEmpid(e.EmployeeId).DeptName,
-                             Position = empmanage.GetPositionByEmpid(e.EmployeeId).PositionName,
-                             e.BaseSalary,
-                             e.PositionSalary,
-                             e.PerformancePay
+                             empName = empmanage.GetEntity(e.EmployeeId).EmpName,//姓名
+                             Depart = empmanage.GetDeptByEmpid(e.EmployeeId).DeptName,//部门
+                             Position = empmanage.GetPositionByEmpid(e.EmployeeId).PositionName,//岗位
+                             toRegularDays = msrmanage.GetAttendanceInfoByEmpid(e.EmployeeId).ToRegularDays,//到勤天数
+                             baseSalary = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).BaseSalary,//基本工资
+                             positionSalary = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PositionSalary,//岗位工资
+                             finalGrade = msrmanage.GetMCByEmpid(e.EmployeeId).FinalGrade,//绩效分
+                             e.PerformanceSalary,//绩效工资
+                             netbookSubsidy = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).NetbookSubsidy,//笔记本补助
+                             socialSecuritySubsidy = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).SocialSecuritySubsidy,//社保补贴
+                                                                                                                       //应发工资1(基本工资+岗位工资+绩效工资+笔记本补助+社保补贴)
+                             SalaryOne = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).BaseSalary + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PositionSalary + e.PerformanceSalary + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).NetbookSubsidy + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).SocialSecuritySubsidy,
 
-                         };
-            return View();
-        }
+                             personalSocialSecurity = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PersonalSocialSecurity,
+                             contributionBase = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).ContributionBase,
+                             payCardSalarySum = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PayCardSalarySum,
+                             personalIncomeTax = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PersonalIncomeTax,
 
-        //绩效考核统计显示
-        public ActionResult PerformanceAssessShow()
-        {
-            return View();
-        }
-        /// <summary>
-        /// 获取绩效考核的数据
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
-        /// <returns></returns>
-        public ActionResult GetPerformanceAssessData(int page, int limit)
-        {
-            MeritsCheckManage mcmanage = new MeritsCheckManage();
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var mclist = mcmanage.GetList();
-            var newlist = mclist.Skip((page - 1) * limit).Take(limit).ToList();
-            var etlist = from e in newlist
-                         select new
-                         {
-                             #region 获取属性值 
-                             e.Id,
-                             e.EmployeeId,
-                             empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
-                             empDept = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
-                             empPosition = emanage.GetPositionByEmpid(e.EmployeeId).PositionName,
-                             e.YearAndMonth,
-                             e.RoutineWork,
-                             e.RoutineWorkPropotion,
-                             e.RoutineWorkFillRate,
-                             e.OtherWork,
-                             e.OtherWorkPropotion,
-                             e.OtherWorkFillRate,
-                             e.SelfReportedScore,
-                             e.SuperiorGrade,
-                             e.FinalGrade,
-                             e.Remark,
-                             e.IsDel
                              #endregion
+
+
                          };
 
             var newobj = new
             {
                 code = 0,
                 msg = "",
-                count = mclist.Count(),
-                data = etlist
+                count = eselist.Count(),
+                data = mylist
             };
-
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+        //获取员工体系表所有数据
+        public ActionResult GetSalarySystemData(int page, int limit)
+        {
+            EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var eselist = empsemanage.GetList();
+            var newlist = eselist.OrderBy(e => e.Id).Skip((page - 1) * limit).Take(limit);
+            var mylist = from e in newlist
+                         select new
+                         {
+                             #region 获取值
+                             e.Id,
+                             e.EmployeeId,
+                             empName = empmanage.GetEntity(e.EmployeeId).EmpName,//姓名
+                             Depart = empmanage.GetDeptByEmpid(e.EmployeeId).DeptName,//部门
+                             Position = empmanage.GetPositionByEmpid(e.EmployeeId).PositionName,//岗位
+                             e.BaseSalary,
+                             e.PositionSalary,
+                             e.PerformancePay,
+                             e.PersonalSocialSecurity,
+                             e.SocialSecuritySubsidy,
+                             e.NetbookSubsidy,
+                             e.ContributionBase,
+                             e.PersonalIncomeTax,
+                             e.PayCardSalarySum,
+                             e.Remark
+                             #endregion
+
+
+                         };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = eselist.Count(),
+                data = mylist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

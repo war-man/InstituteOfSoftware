@@ -4,8 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<div class="layui-tab layui-tab-card">
+    <ul class="layui-tab-title">
+        <li class="layui-this">员工月度工资</li>
+        <li>员工工资体系</li>
+    </ul>
+    <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
-           
+
             @*操作栏*@
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
@@ -14,10 +20,17 @@
             <table id="salarytab" lay-filter="salarytab"></table>
         </div>
 
+        <div class="layui-tab-item">
+            <table id="salarysystemtab" lay-filter="salarysystemtab"></table>
+        </div>
+    </div>
+</div>
+
+
 @section script{
     <script>
-     
-        layui.use(['table', 'layer', 'form', 'laydate','element'], function () {
+
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
@@ -35,14 +48,14 @@
                     , { field: 'empName', title: '姓名', width: 110, sort: true }
                     , { field: 'Depart', title: '所属部门', width: 110, sort: true }
                     , { field: 'Position', title: '所属岗位', width: 110, sort: true }
-                    , { field: 'Position', title: '出勤天数', width: 110, sort: true }
-                    , { field: 'BaseSalary', title: '基本工资', sort: true, width: 110}
-                    , { field: 'PositionSalary', title: '岗位工资', sort: true, width: 90 }
-                    , { field: 'IdCardNum', title: '绩效分', sort: true, width: 120}
-                    , { field: 'EntryTime', title: '绩效工资', sort: true, width: 110 }
-                    //, { field: 'EntryTime', title: '社保补贴', sort: true, width: 110}
-                    , { field: 'PositiveDate', title: '笔记本补助', sort: true, width: 110 }
-                    , { field: 'PositiveDate', title: '应发工资1', sort: true, width: 110 }
+                    , { field: 'toRegularDays', title: '出勤天数', width: 110, sort: true }
+                    , { field: 'baseSalary', title: '基本工资', sort: true, width: 110 }
+                    , { field: 'positionSalary', title: '岗位工资', sort: true, width: 90 }
+                    , { field: 'finalGrade', title: '绩效分', sort: true, width: 120 }
+                    , { field: 'PerformanceSalary', title: '绩效工资', sort: true, width: 110 }
+                    , { field: 'netbookSubsidy', title: '笔记本补助', sort: true, width: 110 }
+                    , { field: 'socialSecuritySubsidy', title: '社保补贴', sort: true, width: 110 }
+                    , { field: 'SalaryOne', title: '应发工资1', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '加班费用', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '奖金/元', sort: true, width: 110 }
                     , { field: 'PositiveDate', title: '请假天数', sort: true, width: 110 }
@@ -67,7 +80,7 @@
                     case 'AttendanceStatistics':
                         AttendanceStatistics();
                         break;
-                   
+
                 };
             });
             //监听行工具事件
@@ -124,11 +137,112 @@
                 }
             });
 
-        
+
         });
 
-     
-     
+
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#salarysystemtab'
+                , url: '/Personnelmatters/EmpSalaryManagement/GetSalarySystemData'
+                , id: "mySalarySystem"
+                , toolbar: '#toolbarDemo'
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    { field: 'empName', title: '姓名', width: 110, sort: true }
+                    , { field: 'Depart', title: '所属部门', width: 110, sort: true }
+                    , { field: 'Position', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'BaseSalary', title: '基本工资', sort: true, width: 110 }
+                    , { field: 'PositionSalary', title: '岗位工资', sort: true, width: 90 }
+                    , { field: 'PerformancePay', title: '绩效额度', sort: true, width: 120 }
+                    , { field: 'NetbookSubsidy', title: '笔记本补助', sort: true, width: 110 }
+                    , { field: 'PersonalSocialSecurity', title: '个人社保', sort: true, width: 110 }
+                    , { field: 'SocialSecuritySubsidy', title: '社保补贴', sort: true, width: 110 }
+                    , { field: 'ContributionBase', title: '社保缴费基数', sort: true, width: 110 }
+                    , { field: 'PersonalIncomeTax', title: '个税', sort: true, width: 110 }
+                    , { field: 'PayCardSalarySum', title: '工资卡应发工资', sort: true, width: 110 }
+                    , { field: 'Remark', title: '备注', sort: true, width: 110 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(salarytab)', function (obj) {
+                //var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+
+                    case 'AttendanceStatistics':
+                        AttendanceStatistics();
+                        break;
+
+                };
+            });
+            //监听行工具事件
+            table.on('tool(salarytab)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/EditEmp/?id=' + data.EmployeeId
+                        , area: ["1200px", "730px"]
+                        , title: '编辑员工信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } else if (obj.event === 'detail') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/EmpDetail/?id=' + data.EmployeeId
+                        , area: ['1000px', '750px'],
+                        title: '员工详细信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+                else if (obj.event === 'date') {  //监听单元格日期编辑事件
+                    var field = $(this).data('field');
+                    laydate.render({
+                        elem: this.firstChild,
+                        show: true //直接显示
+                        , type: 'month'
+                        , btns: ['now', 'confirm']
+                        , format: 'yyyy-MM-dd'
+                        , done: function (value, date) {
+                            $.ajax({
+                                type: "get",
+                                dataType: "json",
+                                url: "/Personnelmatters/EmployeesInfo/EditDateCell",
+                                data: { id: data.EmployeeId, endvalue: value },
+                                success: function (data) {
+                                    console.log(data.Msg);
+                                    if (data.Success) {
+                                        layui.table.reload('myEmpInfo');
+                                    }
+                                    else {
+                                        layer.msg("修改失败!");
+                                    }
+                                }
+                            });
+                        }
+                    });
+
+                }
+            });
+
+
+        });
+
+
         //格式化时间
         function GetYearAndMonth(cellval) {
             if (cellval != null) {
@@ -150,7 +264,7 @@
             } else {
                 return "";
             }
-        }       p
+        }
         //显示年月日
         function GetYMD(cellval) {
             if (cellval != null) {
@@ -196,6 +310,6 @@
         }
     </script>
 
-   
+
 
 }

@@ -101,6 +101,7 @@
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\AttendanceInfoManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
