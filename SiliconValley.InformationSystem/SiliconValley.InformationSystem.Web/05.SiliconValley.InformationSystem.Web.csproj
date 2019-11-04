@@ -226,6 +226,7 @@
     <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
+    <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
@@ -642,6 +643,10 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
+    <Content Include="Areas\Educational\Views\Goods\GoodsIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\Goods\GoodsAddorEditView.cshtml" />
+    <Content Include="Areas\Educational\Views\Warehouse\WarehouseIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2363,7 +2368,6 @@
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />
     <Folder Include="Areas\Educational\Views\GoodsType\" />
-    <Folder Include="Areas\Educational\Views\Goods\" />
     <Folder Include="Areas\Educational\Views\InStockGoods\" />
     <Folder Include="Areas\Educational\Views\InStock\" />
     <Folder Include="Areas\Educational\Views\IsGoodOrBad\" />

@@ -1,0 +1,127 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" lay-filter="Warehouse_form">
+            <div class="layui-container">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">姓名:</label> 
+                        <div class="layui-input-block">
+                            <span name="WarehouseName" id="WarehouseName" class="LableCss1"></span>
+                        </div>
+                    </div>
+                </div>                                       
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">说明:</label>
+                        <div class="layui-input-block">
+                            <input name="Reamk" id="Reamk" placeholder="说明" class="layui-input TextAreCss1" />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" lay-filter="warehouse_add">添加</button>
+                    <button class="layui-btn butCss1" onclick="MyClose()">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        function MyClose() {            
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭   
+        }
+        layui.use(['form'], function () {
+            var form = layui.form;
+            //添加
+            form.on('submit(warehouse_add)', function (data) {
+                
+                console.log(data.field);
+                $.ajax({
+                    url: '/Educational/Warehouse/AddFunction',
+                    type: 'POST',
+                    data: data.field,
+                    success: function (sucdata) {
+                        if (sucdata == "ok") {
+                            layer.msg('添加成功', { icon: 1, shade: 0.8 }, function () {
+                                window.parent.Flush_table();
+                                MyClose();
+                            });
+                        } else {
+                            layer.msg(sucdata, { icon: 2}, function () {
+                                window.parent.Flush_table();
+                                MyClose();
+                            });
+                        }
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+    </script>
+</body>
+</html>

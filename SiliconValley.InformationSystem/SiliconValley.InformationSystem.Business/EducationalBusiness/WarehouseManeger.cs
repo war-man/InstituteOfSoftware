@@ -9,6 +9,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
     public class WarehouseManeger:BaseBusiness<Warehouse>
     {
+        //仓库业务类
         /// <summary>
         /// 根据主键或名称查找单条数据
         /// </summary>
@@ -31,5 +32,26 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return new_w;
         }
+
+        /// <summary>
+        /// 添加方法
+        /// </summary>
+        /// <param name="w"></param>
+        /// <returns></returns>
+        public bool My_Add(Warehouse w)
+        {
+            bool s = false;
+            try
+            {
+                this.Insert(w);
+                s = true;
+            }
+            catch (Exception)
+            {
+                s = false;
+            }
+            return s;
+        }
+        
     }
 }

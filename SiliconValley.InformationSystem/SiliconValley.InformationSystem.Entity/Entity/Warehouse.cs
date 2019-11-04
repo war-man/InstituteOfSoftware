@@ -14,6 +14,8 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
         public int Id { get; set; }
         public string WarehouseName { get; set; }
+        public string Reamk { get; set; }
+        public System.DateTime Adddate { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         
     }

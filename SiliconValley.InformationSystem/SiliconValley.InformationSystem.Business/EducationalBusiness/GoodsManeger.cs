@@ -31,5 +31,33 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return new_g;
         }
+        /// <summary>
+        /// 编辑方法
+        /// </summary>
+        /// <param name="g"></param>
+        /// <returns></returns>
+        public bool NewMethod(Goods g)
+        {
+            bool s = false;
+            try
+            {
+                //编辑
+                Goods find_s = this.GetEntity(g.Id);
+                if (!string.IsNullOrEmpty(g.GoodsName))
+                {
+                    find_s.GoodsName = g.GoodsName;
+                }                
+                find_s.Rmark = g.Rmark;
+                find_s.IsReturn = g.IsReturn;
+                this.Update(find_s);
+                s = true;
+            }
+            catch (Exception)
+            {
+
+                s = false;
+            }
+            return s;
+        }
     }
 }

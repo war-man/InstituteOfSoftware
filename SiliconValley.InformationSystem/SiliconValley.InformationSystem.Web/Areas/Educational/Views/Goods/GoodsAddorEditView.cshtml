@@ -1,0 +1,223 @@
+﻿
+@{
+    Layout = null;
+}
+
+@model SiliconValley.InformationSystem.Entity.MyEntity.Goods
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GoodsAddorEditView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" enctype="multipart/form-data" lay-filter="goods_form" style="margin-top:20px">
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                <label class="LableCss1">物品名称:</label>
+                <div class="layui-input-block">
+                    @{
+                        if (Model != null)
+                        {
+                            <input type="hidden" value="@Model.Id" name="Id" id="Id" /> 
+                            <input type="hidden" value="@Model.IsReturn" id="mm"/>
+                            if (!string.IsNullOrEmpty(ViewBag.you))
+                            {
+                                 
+                                <lable class="LableCss1" id="GoodsName" name="GoodsName">@Model.GoodsName</lable>
+                            }
+                            else
+                            {             
+                                <input type="text" name="GoodsName" id="GoodsName" class="layui-input" lay-verify="required" value="@Model.GoodsName"/>
+                            }
+                        }
+                        else
+                        {
+                            <input type="text" name="GoodsName" id="GoodsName" class="layui-input" lay-verify="required" placeholder="物品名称"/>
+                        }
+
+                    }
+
+
+                </div>
+
+            </div>
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <label class="LableCss1">是否需要归还:</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="IsReturn" value="false" title="否" checked>
+                    <input type="radio" name="IsReturn" value="true" title="是">
+                </div>
+            </div>
+        </div>
+        <br /><br />
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">说明:</label>
+                <div class="layui-input-block">
+                    @Html.TextAreaFor(g => g.Rmark, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item" style="margin-top:45px;">
+            <div class="layui-input-block">
+                <div style="float:left;width:46%;text-align:right">
+                    @{
+                        if (Model != null)
+                        {
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="goods_submit" style="margin-right:20px">编辑</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="goods_submit" style="margin-right:20px">添加</button>
+                        }
+                    }
+
+                </div>
+                <div style="float:left;width:40%;">
+                    <button type="button" class="layui-btn" onclick="Quxiao()">取消</button>
+                </div>
+               
+               
+            </div>
+        </div>
+    </form>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        function Quxiao() {
+            //当你在iframe页面关闭自身时
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭   
+        }
+        layui.use(['form'], function () {
+            var form = layui.form;
+            //监听提交
+            form.on('submit(goods_submit)', function (data) {
+                console.log(data.field);
+                $.ajax({
+                    url: '/Educational/Goods/GoodsAddorEditFunction',
+                    data: data.field
+                    ,type:"POST",
+                    success: function (sucdata) {
+                        if (sucdata == "ok") {
+                            layer.msg('操作成功！', { icon: 1,shade:0.8 }, function () {
+                                window.parent.tableFlush();
+                                Quxiao();
+                            });
+                        } else {
+                            layer.msg(sucdata, { icon: 2 }, function () {
+                                window.parent.tableFlush();
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+
+            form.render();
+        });
+        $(function () {
+            var id = $("#Id").val();          
+            if (id.length > 0) {
+                var istrtun = $("#mm").val();
+                layui.use('form', function () {
+                    var form = layui.form;
+                    form.val("goods_form", {
+                        "IsReturn": istrtun.length<=0?"false":"true"
+                    });
+                });
+            }
+             
+        });
+    </script>
+</body>
+</html>
