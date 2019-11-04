@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
-    public  class AttendanceInfoManage:BaseBusiness<AttendanceInfo>
+    public class AttendanceInfoManage : BaseBusiness<AttendanceInfo>
     {
     }
 }

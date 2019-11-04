@@ -7,7 +7,7 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
-   public class MonthlySalaryRecordManage:BaseBusiness<MonthlySalaryRecord>
+    public class MonthlySalaryRecordManage : BaseBusiness<MonthlySalaryRecord>
     {
         /// <summary>
         /// 往员工月度工资表加入员工编号
@@ -35,7 +35,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
         }
 
-        public bool EditEmpMS(string empid) {
+        public bool EditEmpMS(string empid)
+        {
             var ems = this.GetEntity(empid);
             bool result = false;
             try
@@ -57,7 +58,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public EmplSalaryEmbody GetEmpsalaryByEmpid(string empid) {
+        public EmplSalaryEmbody GetEmpsalaryByEmpid(string empid)
+        {
             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
             var ese = esemanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
             return ese;
@@ -68,7 +70,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public AttendanceInfo GetAttendanceInfoByEmpid(string empid) {
+        public AttendanceInfo GetAttendanceInfoByEmpid(string empid)
+        {
             AttendanceInfoManage attmanage = new AttendanceInfoManage();
             var att = attmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
             return att;
@@ -80,7 +83,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public MeritsCheck GetMCByEmpid(string empid) {
+        public MeritsCheck GetMCByEmpid(string empid)
+        {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
             return mcobj;
