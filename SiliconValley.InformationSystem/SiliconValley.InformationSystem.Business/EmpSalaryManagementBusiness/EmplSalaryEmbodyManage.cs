@@ -35,6 +35,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
            
         }
 
+
+
         public bool EditEmpSalaryState(string empid) {
             var ese=this.GetEntity(empid);
             bool result = false;

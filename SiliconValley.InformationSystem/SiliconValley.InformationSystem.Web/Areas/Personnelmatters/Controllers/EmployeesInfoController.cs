@@ -290,23 +290,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "教质部")
+                if (empinfo.GetDept(emp.PositionId).DeptName == "s1、s2教质部")
                 {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
                     AjaxResultxx.Success = s;
-                }
+                    }
+                if (empinfo.GetDept(emp.PositionId).DeptName == "s3教质部") {
+                        bool s = hm.AddHeadmaster(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
+                    }
                 if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任")
                 {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "教学部")
+                if (empinfo.GetDept(emp.PositionId).DeptName == "s1、s2教学部")
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
                     bool s = teamanage.AddTeacher(tea);
                     AjaxResultxx.Success = s;
                 }
+                if (empinfo.GetDept(emp.PositionId).DeptName == "s3教学部")
+                    {
+                        Teacher tea = new Teacher();
+                        tea.EmployeeId = emp.EmployeeId;
+                        bool s = teamanage.AddTeacher(tea);
+                        AjaxResultxx.Success = s;
+                    }
                 if (empinfo.GetDept(emp.PositionId).DeptName == "财务部")
                 {
                     bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
