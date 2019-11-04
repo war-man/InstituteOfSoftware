@@ -7,7 +7,7 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
-   public class MonthlySalaryRecordManage:BaseBusiness<MonthlySalaryRecord>
+    public class MonthlySalaryRecordManage : BaseBusiness<MonthlySalaryRecord>
     {
         /// <summary>
         /// 往员工月度工资表加入员工编号
@@ -35,7 +35,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
         }
 
-        public bool EditEmpMS(string empid) {
+        public bool EditEmpMS(string empid)
+        {
             var ems = this.GetEntity(empid);
             bool result = false;
             try

@@ -35,7 +35,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> Total { get; set; }//合计
         public Nullable<decimal> PayCardSalary { get; set; }//工资卡工资
         public Nullable<decimal> CasehSalary { get; set; }//现金工资
-    
-       
+       public Nullable<bool> IsDel { get; set; }
+
+
     }
 }
