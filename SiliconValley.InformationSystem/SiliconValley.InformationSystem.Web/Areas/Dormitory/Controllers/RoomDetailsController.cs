@@ -13,5 +13,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         {
             return View();
         }
+
+        public ActionResult aa() {
+            return null;
+        }
     }
 }
