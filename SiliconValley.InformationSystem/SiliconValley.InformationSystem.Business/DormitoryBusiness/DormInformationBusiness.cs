@@ -12,6 +12,9 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     /// </summary>
     public class DormInformationBusiness : BaseBusiness<DormInformation>
     {
+
+        private RoomdeWithPageXmlHelp dbxml;
+        private StaffAccdationBusiness dbstaffacc;
         /// <summary>
         /// 获取正在使用的房间
         /// </summary>
@@ -59,7 +62,27 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public DormInformation GetDormByDorminfoID(int DorminfoID) {
           return  this.GetDorms().Where(a => a.ID == DorminfoID).FirstOrDefault();
         }
-       
 
+        /// <summary>
+        /// 获取员工已经居住的寝室
+        /// </summary>
+        /// <param name="tungfloorid"></param>
+        /// <returns></returns>
+        public List<DormInformation> GetStaffJuzhuing() {
+            dbxml = new RoomdeWithPageXmlHelp();
+            dbstaffacc = new StaffAccdationBusiness();
+            int roomtype = dbxml.GetRoomType(Entity.ViewEntity.RoomTypeEnum.RoomType.StaffRoom);
+            var list0 = this.GetIQueryable().Where(a=>a.IsDelete==false&& a.RoomStayTypeId == roomtype).ToList();
+
+            for (int i = list0.Count-1; i >=0; i--)
+            {
+               var list1= dbstaffacc.GetStaffAccdationsByDorminfoID(list0[i].ID);
+                if (list1.Count==0)
+                {
+                    list0.Remove(list0[i]);
+                }
+            }
+            return list0;
+        }
     }
 }

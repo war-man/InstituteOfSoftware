@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private StaffAccdationBusiness dbstaffacc;
 
         /// <summary>
-        /// 根据房间号返回对应的房间
+        /// 根据房间号返回对应的床位
         /// </summary>
         /// <param name="DorminfoID"></param>
         /// <returns></returns>
@@ -98,6 +98,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 
         }
 
+ 
 
     }
 }

@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     /// </summary>
     public class AccdationinformationBusiness:BaseBusiness<Accdationinformation>
     {
+        private DormInformationBusiness dbdorm;
         /// <summary>
         /// 返回正在居住的入住信息
         /// </summary>
@@ -55,6 +56,22 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public Accdationinformation GetAccdationByStudentNumber(string StudentNumber) {
            return this.GetAccdationinformations().Where(a => a.Studentnumber == StudentNumber).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据栋楼层id获取这一层的学生居住信息
+        /// </summary>
+        /// <param name="tungfloorid"></param>
+        /// <returns></returns>
+        public List<Accdationinformation> GetAccdationinformationsByTungFloorID(int tungfloorid) {
+            dbdorm = new DormInformationBusiness();
+           var list0=  dbdorm.GetDormsByTungFloorID(tungfloorid);
+            List<Accdationinformation> result0 = new List<Accdationinformation>();
+            foreach (var item in list0)
+            {
+                result0.AddRange(this.GetAccdationinformationByDormId(item.ID));
+            }
+            return result0;
         }
     }
 }

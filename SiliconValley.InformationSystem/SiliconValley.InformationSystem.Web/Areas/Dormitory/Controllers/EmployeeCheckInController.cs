@@ -40,7 +40,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         }
 
         /// <summary>
-        /// 用于加载未居住的学生/员工数据
+        /// 用于加载未居住的员工数据
         /// </summary>
         /// <returns></returns>
         public ActionResult UninhabitedList(int page, int limit)
@@ -69,7 +69,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         {
             dbstaffacc_dbempinfo = new dbstaffacc_dbempinfo();
             dbconversion = new ConversionToViewBusiness();
-            layuitableview<RoomArrangeEmpinfoView> returnObj = new layuitableview<RoomArrangeEmpinfoView>();
             List<EmployeesInfo> employeesInfos = dbstaffacc_dbempinfo.GetUninhabitedData();
             return dbconversion.EmpinfoToRoomArrangeEmpinfoView(employeesInfos, false);
         }
@@ -83,18 +82,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         public ActionResult ArrangeDorm(int BedId, int DormId, string resultdata)
         {
             AjaxResult ajaxResult = new AjaxResult();
-            
-                dbstaffacc = new StaffAccdationBusiness();
-                StaffAccdation staffAccdation = new StaffAccdation();
-                staffAccdation.BedId = BedId;
-                staffAccdation.CreationTime = DateTime.Now;
-                staffAccdation.DormId = DormId;
-                staffAccdation.EmployeeId = resultdata;
-                staffAccdation.IsDel = false;
-                staffAccdation.Remark = string.Empty;
-                staffAccdation.StayDate = DateTime.Now;
-                ajaxResult.Success = dbstaffacc.AddStaffacc(staffAccdation);
-            
+
+            dbstaffacc = new StaffAccdationBusiness();
+            StaffAccdation staffAccdation = new StaffAccdation();
+            staffAccdation.BedId = BedId;
+            staffAccdation.CreationTime = DateTime.Now;
+            staffAccdation.DormId = DormId;
+            staffAccdation.EmployeeId = resultdata;
+            staffAccdation.IsDel = false;
+            staffAccdation.Remark = string.Empty;
+            staffAccdation.StayDate = DateTime.Now;
+            ajaxResult.Success = dbstaffacc.AddStaffacc(staffAccdation);
+
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
 
         }

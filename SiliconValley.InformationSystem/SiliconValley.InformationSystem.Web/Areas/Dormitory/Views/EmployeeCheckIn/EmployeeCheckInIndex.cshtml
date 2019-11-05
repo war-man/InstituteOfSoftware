@@ -191,7 +191,14 @@
                     { field: 'EmployeeId', title: '员工编号', width: 180 }
                     , { field: 'EmpName', title: '员工姓名', width: 95 }
                     , {
-                        field: 'Sex', title: '性别', width: 65
+                        field: 'Sex', title: '性别', width: 65, templet: function (d) {
+
+                            if (d.Sex == "男") {
+                                return "<span style=color:blue;>男</span>"
+                            } else {
+                                return "<span style=color:red;>女</span>"
+                            }
+                        }
                     }
                     , { field: 'Phone', title: '联系电话', width: 145 }
                     , { field: 'DeptName', title: '部门', width: 145, }

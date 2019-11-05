@@ -71,5 +71,14 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             return result;
         }
+
+        /// <summary>
+        /// 根据学生编号返回寝室长对象
+        /// </summary>
+        /// <param name="StudentNumber"></param>
+        /// <returns></returns>
+        public DormitoryLeader GetLeaderByStudentNumber(string StudentNumber) {
+          return  this.GetLeaders().Where(a => a.StudentNumber == StudentNumber).FirstOrDefault();
+        }
     }
 }

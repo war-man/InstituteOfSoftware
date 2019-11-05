@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
        [Key]
         public string StudentNumber { get; set; }
         public string Name { get; set; }
-        public Nullable<bool> Sex { get; set; }
+        public bool Sex { get; set; }
         /// <summary>
         /// 身份证
         /// </summary>

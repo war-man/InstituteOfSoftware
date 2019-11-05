@@ -216,6 +216,9 @@
     <Compile Include="Areas\Dormitory\Controllers\HealthRegistrationController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\NewbornRController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\RegistrationforlatearrivalController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\RoomDetailsController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\StaffAdjustmentController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\StudentBedtimeController.cs" />
     <Compile Include="Areas\Dormitory\DormitoryAreaRegistration.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
@@ -702,6 +705,9 @@
     <Content Include="Areas\Dormitory\Views\EmployeeCheckIn\EmployeeCheckInIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\HealthRegistration\HealthRegistrationIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\Registrationforlatearrival\RegistrationforlatearrivalIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\StudentBedtime\StudentBedtimeIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\StaffAdjustment\StaffAdjustmentIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomDetails\RoomDetailsIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

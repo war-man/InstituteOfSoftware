@@ -43,5 +43,22 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             return employeesInfos;
         }
+
+        /// <summary>
+        /// 获取居住信息
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetinhabitedData() {
+            dbstaffacc = new StaffAccdationBusiness();
+            dbempinfo = new EmployeesInfoManage();
+            List<EmployeesInfo> employeesInfos = new List<EmployeesInfo>();
+            List<StaffAccdation> staffAccdations = dbstaffacc.GetStaffAccdationings();
+            foreach (var item in staffAccdations)
+            {
+                employeesInfos.Add(dbempinfo.GetEntity(item.EmployeeId));
+
+            }
+            return employeesInfos;
+        }
     }
 }

@@ -11,13 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// </summary>
   public  class ProStudentInformationView
     {
-        public string StudentNmber;
-        public string SutdentName;
-        public string ClassNO;
-        public string DormNO;
-        public string StuPhone;
-        public string MasterName;
-        public string MasterPhone;
-        public int Count;
+        public string StudentNmber { get; set; }
+        public string SutdentName { get; set; }
+        public string ClassNO { get; set; }
+        public string DormNO { get; set; }
+        public string StuPhone { get; set; }
+        public string MasterName { get; set; }
+        public string MasterPhone { get; set; }
+        public int Count { get; set; }
     }
 }

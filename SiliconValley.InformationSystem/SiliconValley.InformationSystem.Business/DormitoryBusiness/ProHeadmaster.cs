@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+﻿using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     /// </summary>
     public class ProHeadmaster : BaseBusiness<Headmaster>
     {
+        private EmployeesInfoManage dbemp;
         /// <summary>
         /// 获取在职的班主任
         /// </summary>
@@ -36,6 +38,17 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public Headmaster GetHeadByeEmpinfoid(string Empinfoid) {
             return this.GetHeadmasters().Where(a => a.informatiees_Id == Empinfoid).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据老师id获取员工对象
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public EmployeesInfo GetEmployeesInfoByHeadID(int id) {
+            dbemp = new EmployeesInfoManage();
+            var obj0=this.GetHeadById(id);
+          return  dbemp.GetEntity(obj0.informatiees_Id);
         }
     }
 }
