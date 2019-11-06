@@ -99,7 +99,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
              List<ClassSchedule> c_list= ClassSchedule_Entity.GetList().Where(c => c.ClassStatus == false && c.IsDelete == false && c.grade_Id== grand_id).ToList();
             return c_list;
         }
-         
-        
+        /// <summary>
+        /// 获取某个阶段某个专业的课程
+        /// </summary>
+        /// <param name="grand_id"></param>
+        /// <param name="marjon_id"></param>
+        /// <returns></returns>
+        //public List<Curriculum> GetRelevantCurricul(int grand_id,int marjon_id)
+        //{
+
+        //}
     }
 }
