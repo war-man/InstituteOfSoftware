@@ -624,7 +624,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 //判断是否重名
                var isExit = db_computerTestQuestion.AllComputerTestQuestion().Where(d => d.Title == machTestQuesBank.Title).FirstOrDefault();
 
-                if (isExit == null)
+                if (isExit != null)
                 {
                     result.ErrorCode = 444;
 

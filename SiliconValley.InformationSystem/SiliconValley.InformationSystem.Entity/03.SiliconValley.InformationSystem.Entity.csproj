@@ -96,6 +96,7 @@
     <Compile Include="Entity\CheckGoods.cs" />
     <Compile Include="Entity\ChoiceQuestionPaper.cs" />
     <Compile Include="Entity\ChooseAnswerSheet.cs" />
+    <Compile Include="Entity\Class1.cs" />
     <Compile Include="Entity\Classactivities.cs" />
     <Compile Include="Entity\ClassDynamics.cs" />
     <Compile Include="Entity\ClassMeeting.cs" />
@@ -163,6 +164,7 @@
     <Compile Include="Entity\GoodsProvide.cs" />
     <Compile Include="Entity\GoodsType.cs" />
     <Compile Include="Entity\Grand.cs" />
+    <Compile Include="Entity\GrandCourse.cs" />
     <Compile Include="Entity\GroupManagement.cs" />
     <Compile Include="Entity\Groupmembers.cs" />
     <Compile Include="Entity\HeadClass.cs" />

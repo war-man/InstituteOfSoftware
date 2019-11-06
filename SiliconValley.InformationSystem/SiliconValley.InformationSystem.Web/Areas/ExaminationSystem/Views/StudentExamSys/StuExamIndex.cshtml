@@ -1,0 +1,273 @@
+﻿
+@{
+    ViewBag.Title = "StuExamIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@section style{
+
+    <link href="~/Areas/ExaminationSystem/css/reset.min.css" rel="stylesheet" />
+    <link href="~/Areas/ExaminationSystem/css/style.css" rel="stylesheet" />
+
+    <link href="~/Areas/ExaminationSystem/css/normalize.css" rel="stylesheet" />
+    <link href="~/Areas/ExaminationSystem/css/style1.css" rel="stylesheet" />
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+
+        #topDiv {
+            width: 100%;
+            height: 200px;
+            background-color: #80d15d;
+        }
+
+            #topDiv img {
+                width: 100%;
+                height: 150px;
+            }
+
+
+        #mycontent {
+            width: 100%;
+        }
+
+        #icon {
+            margin: 150px auto;
+        }
+
+        #indicator {
+            text-align: center;
+            line-height: 100px;
+            color: white;
+            font-size: 25px;
+            cursor: pointer;
+        }
+
+        #iconlenft {
+            position: absolute;
+            width: 100px;
+            background-color: #4e96b3;
+            height: 70px;
+            left: 15%;
+            color: white;
+            line-height: 70px;
+            font-size: 30px;
+        }
+
+        #iconright {
+            position: absolute;
+            width: 100px;
+            background-color: #4e96b3;
+            height: 70px;
+            left: 43%;
+            color: white;
+            line-height: 70px;
+            font-size: 30px;
+        }
+
+        #daojishi {
+            position: relative;
+            width: 500px;
+            margin: 0 auto;
+            margin-top: -100px;
+        }
+    </style>
+}
+
+
+<div id="mywarp">
+
+    <div id="topDiv">
+        @*<img src="~/Areas/ExaminationSystem/Images/商务科技.png" />*@
+    </div>
+
+    <div id="nav">
+        <hr />
+        <ul class="hList">
+            <li>
+                <a href="#click" class="menu">
+                    <h2 class="menu-title"><i class="layui-icon layui-icon-home"></i>首页</h2>
+
+                </a>
+            </li>
+            <li>
+                <a href="#click" class="menu">
+                    <h2 class="menu-title menu-title_2nd">成绩查询</h2>
+
+                </a>
+            </li>
+            <li>
+                <a href="#click" class="menu">
+                    <h2 class="menu-title menu-title_3rd">题目练习</h2>
+
+                </a>
+            </li>
+            <li>
+                <a href="#click" class="menu">
+                    <h2 class="menu-title menu-title_4th">返回</h2>
+
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div id="mycontent">
+
+        <div id="icon" class="icon">
+            <svg class="outline"
+                 viewBox="0 0 216 216"
+                 preserveAspectRatio="xMidYMid meet"
+                 xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient x1="16.291%" y1="13.917%" x2="88.893%" y2="80.425%" id="a">
+                        <stop stop-color="#B0DBDD" offset="0%" />
+                        <stop stop-color="#0AA3C9" offset="100%" />
+                    </linearGradient>
+                </defs>
+                <g fill="none" fill-rule="evenodd">
+                    <path d="M10 108c0-54.124 43.876-98 98-98s98 43.876 98 98-43.876 98-98 98-98-43.876-98-98z" stroke="rgba(0,0,0,.4)" stroke-width="6" />
+                    <path id="path" class="path" d="M10 108c0-54.124 43.876-98 98-98s98 43.876 98 98-43.876 98-98 98-98-43.876-98-98z" stroke="url(#a)" stroke-width="4" />
+                </g>
+            </svg>
+            <div class="wheel">
+                <div id="indicator" examid="0"  class="indicator">
+
+                    考试
+                </div>
+            </div>
+
+
+
+        </div>
+        <div id="daojishi">
+            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
+                <legend style="font-size:30px; color:red;text-align:center;">距离---<span class="sooexamName"></span> ---考试倒计时</legend>
+            </fieldset>
+
+            
+            <blockquote class="layui-elem-quote" style="margin-top: 10px;">
+                <div style="font-size:25px; text-align:center;" id="test2"></div>
+            </blockquote>
+
+            
+            @*<div id="iconlenft">
+                    <i class="layui-icon layui-icon-left"></i>
+                </div>
+
+                <div id="iconright">
+
+                    <i style="margin-left:84%;" class="layui-icon layui-icon-right"></i>
+                </div>*@
+        </div>
+
+
+
+    </div>
+
+</div>
+@section script{
+
+
+    <script src="~/Areas/ExaminationSystem/js/index.js"></script>
+
+    <script>
+
+        var Countdown;
+
+
+        layui.use(['form', 'util', 'layer', 'laydate'], function () {
+            var util = layui.util
+                , laydate = layui.laydate
+                , layer = layui.layer;
+
+            function timeinit(endtime,servertime) {
+
+                util.countdown(endtime, servertime, function (date, serverTime, timer) {
+                    var str = date[0] + '天' + date[1] + '时' + date[2] + '分' + date[3] + '秒';
+                    layui.$('#test2').html(str);
+                    Countdown = date;
+                    
+                });
+            }
+
+
+            //初始化
+            $.post('/ExaminationSystem/StudentExamSys/GetStuSooExam', {}, function (result) {
+                
+                if (result.ErrorCode == 200) {
+
+                    $(".sooexamName").text(result.Data.Title);
+                    //BeginDate
+                    var utcstr = result.Data.BeginDate.substr(result.Data.BeginDate.indexOf('(') + 1, 13);
+
+                    var date = new Date(parseInt(utcstr));
+
+                    //setCountdown(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
+
+                    $("#indicator").attr("examid", result.Data.ID);
+                    var serverTime = new Date().getTime()
+                    timeinit(date, serverTime);
+                    
+                }
+                else {
+
+                    $(".sooexamName").parent().text("您暂无考试！");
+                    $("#indicator").attr("examid","0");
+
+                    var date = new Date();
+                    timeinit(date, date);
+                    //setCountdown(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), date.getSeconds());
+
+                }
+
+            });
+
+            $("#indicator").mouseover(function () {
+
+                $(this).css("color", 'green');
+            });
+            $("#indicator").mouseout(function () {
+
+                $(this).css("color", 'white');
+            });
+            $("#indicator").click(function () {
+
+                //测试代码
+                var examid = $(this).attr("examid");
+                window.location.href = '/ExaminationSystem/StudentExamSys/AnswerSheet?examid=' + examid;
+                
+
+                if (examid == "0") {
+
+                   
+                    return;
+                }
+
+
+                var day = Countdown[0];
+                var hours = Countdown[1];
+                var minuts = Countdown[2];
+                var secnds = Countdown[3];
+
+                //判断是否已到考试时间
+
+                if (day != 0 || hours != 0 || minuts != 0 || secnds != 0) {
+                    layer.msg("未到考试时间");
+
+                    return;
+
+                }
+                layer.msg("开始考试");
+
+                alert("本次考试ID为" + examid);
+                
+            });
+
+
+        });
+    </script>
+
+}
+

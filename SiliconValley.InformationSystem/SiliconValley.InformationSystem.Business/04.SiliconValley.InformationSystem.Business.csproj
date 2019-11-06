@@ -104,7 +104,9 @@
     <Compile Include="ExaminationSystemBusiness\ExaminationBusiness.cs" />
     <Compile Include="ExaminationSystemBusiness\ExaminationPaperBusiness.cs" />
     <Compile Include="ExaminationSystemBusiness\ExaminationRoomBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ExamScoresBusiness.cs" />
     <Compile Include="ExaminationSystemBusiness\QuestionLevelBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\StudentExamBusiness.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />

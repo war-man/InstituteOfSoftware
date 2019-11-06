@@ -231,4 +231,7 @@ function goChart(dataArr, canvasID) {
     if (ms < 0) return 0;
     return Math.floor(ms / 1000 / 60 / 60);
 }
+
+
+
 

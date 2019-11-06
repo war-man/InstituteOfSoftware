@@ -31,6 +31,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         private readonly ExaminationRoomBusiness db_examroom;
 
         private readonly EmployeesInfoManage db_emp;
+
+        private readonly ComputerTestQuestionsBusiness db_computerQuestion;
         /// <summary>
         /// 排课业务实例
         /// </summary>
@@ -50,6 +52,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             db_emp = new EmployeesInfoManage();
 
             db_reconicle = new BaseBusiness<Reconcile>();
+            db_computerQuestion = new ComputerTestQuestionsBusiness();
         }
 
         public List<Examination> AllExamination()
@@ -181,6 +184,23 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         {
             BaseBusiness<ExaminationRoom> exroom = new BaseBusiness<ExaminationRoom>();
             return exroom.GetList();
+        }
+
+        public List<Examination> AllNoEndExamination()
+        {
+            List<Examination> result = new List<Examination>();
+            List<Examination> examinations = this.AllExamination();
+
+            foreach (var item in examinations)
+            {
+                if (!this.IsEnd(item))
+                {
+                    result.Add(item);
+                }
+            }
+
+            return result;
+
         }
 
 
@@ -328,6 +348,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
            
 
 
+        }
+
+        public void UpdateCandidateInfo(CandidateInfo candidateInfo )
+        {
+            db_candidateinfo.Update(candidateInfo);
         }
 
 
@@ -525,6 +550,23 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
            List<ExamRoomDistributed> list = db_examroomDistributed.GetList().Where(d=>d.ExamID == examid).ToList();
 
             return list;
+        }
+
+        public List<ComputerTestQuestionsView> AllComputerTestQuestion()
+        {
+            List<ComputerTestQuestionsView> resutlist = new List<ComputerTestQuestionsView>();
+           var list = db_computerQuestion.AllComputerTestQuestion();
+            foreach (var item in list)
+            {
+               var obj = db_computerQuestion.ConvertToComputerTestQuestionsView(item);
+
+                if (obj != null)
+                {
+                    resutlist.Add(obj);
+                }
+            }
+
+            return resutlist;
         }
 
 

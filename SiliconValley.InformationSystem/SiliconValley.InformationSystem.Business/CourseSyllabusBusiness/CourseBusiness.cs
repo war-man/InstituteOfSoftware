@@ -119,5 +119,16 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
 
             return false;
         }
+        /// <summary>
+        /// 获取某个阶段某个专业的课程
+        /// </summary>
+        /// <param name="grand_id">阶段Id</param>
+        /// <param name="marjon_id">专业Id</param>
+        /// <returns></returns>
+        public List<Curriculum> GetRelevantCurricul(int grand_id, int marjon_id)
+        {
+           return this.GetCurriculas().Where(d => d.Grand_Id == grand_id && d.MajorID == marjon_id).ToList();
+
+        }
     }
 }

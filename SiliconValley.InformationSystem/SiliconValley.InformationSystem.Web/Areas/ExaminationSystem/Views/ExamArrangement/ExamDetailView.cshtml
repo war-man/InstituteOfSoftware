@@ -67,9 +67,9 @@
                     <div> <label>考场人数:</label><label class="roomtatl"></label>  </div>
                     <br />
                     <div>
-                        <div style="display:inline-block;">监考员一:<label>杨园</label></div>
+                        <div class="emp" style="display:inline-block;">监考员一:<label>......</label></div>
 
-                        <div style="display:inline-block;margin-left:100px;">监考员二:<label>曾长玉</label></div>
+                        <div class="emp" style="display:inline-block;margin-left:100px;">监考员二:<label>......</label></div>
                     </div>
 
                 </div>
@@ -101,6 +101,16 @@
 
                     $(".roomtatl").text(result.tatal);
 
+                    if (result.emplist.length > 0) {
+                        $($(".emp")[0]).find("label").text(result.emplist[0].EmpName);
+                        $($(".emp")[1]).find("label").text(result.emplist[1].EmpName);
+                    } else {
+                        $($(".emp")[0]).find("label").text("......");
+                        $($(".emp")[1]).find("label").text("......");
+                    }
+
+                   
+
                 });
 
 
@@ -113,7 +123,13 @@
             console.log(classroomid);
             loadExamroomInfo(examid, classroomid);
 
+            $(".classroom").click(function () {
+                var examid1 = $("#examid").val();
+                var classroomid = $(this).attr("classid");
 
+                loadExamroomInfo(examid1, classroomid);
+
+            });
 
 
 
