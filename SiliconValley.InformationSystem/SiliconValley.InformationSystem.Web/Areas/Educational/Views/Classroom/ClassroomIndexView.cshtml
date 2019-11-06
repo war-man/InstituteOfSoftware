@@ -1,0 +1,141 @@
+﻿
+@{
+    ViewBag.Title = "ClassroomIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+}
+<table id="Classroom_table" lay-filter="Classroom_table"></table>
+<script type="text/html" id="Classroom_toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加</button>      
+    </div>
+</script>
+
+@section script{
+    <script>
+        //刷新table
+        function tableFulis() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('Classroom_table');
+            });
+        }
+        layui.use('table', function () {
+            var table = layui.table;
+            table.render({
+                elem: '#Classroom_table'
+                , url: '/Educational/Classroom/GetClassRoom'
+                , toolbar: '#Classroom_toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'ClassroomName', title: '教室名称', fixed: 'left' }
+                    , { field: 'Count', title: '座位个数' }
+                    , { field: 'Rmark', title: '说明' }
+                    , {
+                        field: 'IsDelete', title: '状态', templet: function (res) {
+                            if (res.IsDelete == false) {
+                                return '<span style="color:red">在用</span>';
+                            } else {
+                                return '未激活';
+                            }
+                            
+                        }
+                    }
+                    , {
+                        fixed: 'right', title: '操作', width: 150, templet: function (res) {
+                            if (res.IsDelete == false) {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" >禁用</a >';
+                            } else {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" >激活</a >'
+                            }
+                        }
+                    }
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(Classroom_table)', function (obj) {             
+                switch (obj.event) {
+                    case 'getCheckData':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Classroom/AddorEditView'  
+                            , area: ['700px', '400px'],
+                            title: '添加教室信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;                     
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(Classroom_table)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    if (data.IsDelete == false) {
+                        layer.confirm('真的禁用吗？', function (index) {
+                            $.ajax({
+                                url: '/Educational/Classroom/Delete/' + data.Id,
+                                success: function (sudata) {
+                                    if (sudata == "ok") {
+                                        layer.msg('操作成功', { icon: 1, shade: 0.8 }, function () {
+                                            table.reload('Classroom_table');
+                                        });
+                                    } else {
+                                        layer.msg(sudata, { icon: 2 }, function () {
+                                            table.reload('Classroom_table');
+                                        });
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        });
+                    } else {
+                        layer.confirm('确定激活吗？', function (index) {
+                            $.ajax({
+                                url: '/Educational/Classroom/Delete/' + data.Id,
+                                success: function (sudata) {
+                                    if (sudata == "ok") {
+                                        layer.msg('激活成功', { icon: 1, shade: 0.8 }, function () {
+                                            table.reload('Classroom_table');
+                                        });
+                                    } else {
+                                        layer.msg(sudata, { icon: 2 }, function () {
+                                            table.reload('Classroom_table');
+                                        });
+                                    }
+                                }
+                            });
+                            layer.close(index);
+                        });
+                    }
+                     
+                } else if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Classroom/AddorEditView/' + data.Id
+                        , area: ['700px', '400px'],
+                        title: '编辑教室信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+        });
+    </script>
+}
+

@@ -37,6 +37,11 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Nest, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\NEST.6.6.0\lib\net461\Nest.dll</HintPath>
     </Reference>
@@ -47,12 +52,10 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
-    <Reference Include="System.Drawing" />
     <Reference Include="System.Linq.Dynamic">
       <HintPath>..\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -91,22 +94,31 @@
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
+    <Compile Include="EducationalBusiness\BaseDataEnumManeger.cs" />
+    <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
+    <Compile Include="EducationalBusiness\BreakManeger.cs" />
+    <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
+    <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
+    <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
+    <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
+    <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
-    <Compile Include="ExaminationSystemBusiness\AnswerQuestionBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\ChoiceQuestionBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\ComputerTestQuestionsBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\ExaminationBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\ExaminationPaperBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\ExaminationRoomBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\ExamScoresBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\QuestionLevelBusiness.cs" />
-    <Compile Include="ExaminationSystemBusiness\StudentExamBusiness.cs" />
+    <Compile Include="EnrollmentBusiness\EnrollmentBusinesse.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />
@@ -115,6 +127,7 @@
     <Compile Include="Logger\RDBMSLogger.cs" />
     <Compile Include="MarketChair_Business\MarketChairManeger.cs" />
     <Compile Include="NetClientRecordBusiness\NetClientRecordManage.cs" />
+    <Compile Include="NewExcel\ExcelHelper.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
@@ -131,9 +144,14 @@
     <Compile Include="RecruitPhoneTraceBusiness\RecruitPhoneTraceManage.cs" />
     <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\ApplyForFullMemberManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\DaysOffManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveRequestManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\OvertimeRecordManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\SalaryRaiseApplyManage.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
@@ -177,5 +195,6 @@
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
