@@ -105,9 +105,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="grand_id"></param>
         /// <param name="marjon_id"></param>
         /// <returns></returns>
-        //public List<Curriculum> GetRelevantCurricul(int grand_id,int marjon_id)
-        //{
-
-        //}
+        public List<Curriculum> GetRelevantCurricul(int grand_id, int marjon_id)
+        {
+            return new List<Curriculum>();
+        }
     }
 }
