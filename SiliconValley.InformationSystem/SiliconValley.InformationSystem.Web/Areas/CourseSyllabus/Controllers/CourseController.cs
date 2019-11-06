@@ -14,6 +14,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
     using SiliconValley.InformationSystem.Business.Common;
 
+    using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
+
     [CheckLogin]
     public class CourseController : Controller
     {
@@ -27,11 +29,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             this.db_major = new SpecialtyBusiness();
             this.db_grand = new GrandBusiness();
             this.db_coursetype = new CourseTypeBusiness();
+
         }
 
 
 
-        // GET: CourseSyllabus/Course
+        // GET: /CourseSyllabus/Course/AddorEditfunction
         public ActionResult CourseIndex()
         {
             return View();
@@ -79,21 +82,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         [HttpGet]
         public ActionResult OperationView(int? id)
         {
-            CourseView curriculum = new CourseView();
-
-            if (id != null)
-            {
-                curriculum = db_course.ToCourseView(db_course.GetCurriculas().Where(d => d.CurriculumID == id).FirstOrDefault());
-            }
+            Curriculum curriculum = new Curriculum();            
 
             //获取专业集合
             ViewBag.majors = db_major.GetSpecialties().Select(d => new SelectListItem() { Text = d.SpecialtyName, Value = d.Id.ToString() });
-
+            
             //获取阶段集合
             ViewBag.grands = db_grand.GetList().Where(d => d.IsDelete == false).ToList().Select(d => new SelectListItem() { Text = d.GrandName, Value = d.Id.ToString() });
 
             //获取课程类型集合
             ViewBag.courseTypes = db_coursetype.GetCourseTypes().Select(d => new SelectListItem() { Text = d.TypeName, Value = d.Id.ToString() });
+
+            if (id != null)
+            {
+                curriculum = db_course.GetCurriculas().Where(d => d.CurriculumID == id).FirstOrDefault();                                                 
+            }
 
             return View(curriculum);
 
@@ -109,22 +112,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <param name="CourseType"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult DoOperation(CourseView courseView, int Grand, int Major, int CourseType)
+        public ActionResult DoOperation(Curriculum courseView, int Grand_Id, int MajorID, int CourseType_Id)
         {
 
             AjaxResult result = new AjaxResult();
 
-            courseView.Major = db_major.GetSpecialtyByID(Major);
-            courseView.Grand = db_grand.GetList().Where(d => d.Id == Grand && d.IsDelete == false).FirstOrDefault();
-            courseView.CourseType = db_coursetype.GetList().Where(d => d.IsDelete == false && d.Id == CourseType).FirstOrDefault();
+            if (MajorID == 0)
+            {
+                courseView.MajorID = null;
+            }
+            else
+            {
+                courseView.MajorID = db_major.GetSpecialtyByID(MajorID).Id;
+            }
 
-            var course = db_course.ToCurriculum(courseView);
+            
+            courseView.Grand_Id = db_grand.GetList().Where(d => d.Id == Grand_Id && d.IsDelete == false).FirstOrDefault().Id;
+            courseView.CourseType_Id = db_coursetype.GetList().Where(d => d.IsDelete == false && d.Id == CourseType_Id).FirstOrDefault().Id;
+
+            
             if (courseView.CurriculumID == 0)
             {
-               
+
                 try
                 {
-                    this.DoAdd(course);
+                    this.DoAdd(courseView);
                     result.ErrorCode = 200;
                     result.Msg = "成功";
 
@@ -145,7 +157,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             {
                 try
                 {
-                    this.DoEdit(course);
+                    this.DoEdit(courseView);
                     result.ErrorCode = 200;
                     result.Msg = "成功";
                     BusHelper.WriteSysLog("修改课程", Entity.Base_SysManage.EnumType.LogType.编辑数据);
@@ -193,13 +205,94 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             ViewBag.courseTypes = db_coursetype.GetCourseTypes().Select(d => new SelectListItem() { Text = d.TypeName, Value = d.Id.ToString() });
 
 
-            var course =  db_course.GetCurriculas().Where(d=>d.CurriculumID==id).FirstOrDefault();
+            var course = db_course.GetCurriculas().Where(d => d.CurriculumID == id).FirstOrDefault();
 
             var courseView = db_course.ToCourseView(course);
 
-          return View(courseView);
+            return View(courseView);
         }
 
+        /// <summary>
+        /// 课程类型视图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CourseTypeIndex()
+        {
+            return View();
+        }
 
+        public ActionResult GetCourseTypedata(int limit, int page)
+        {
+            List<CourseType> CourseType_list = db_coursetype.GetList();//获取所有类型数据
+            var datajson = CourseType_list.OrderByDescending(c => c.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new {
+                msg = "",
+                code = 0,
+                count = CourseType_list.Count,
+                data = datajson
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 添加或编辑
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddorEditfunction()
+        {
+            string key = Request.Form["myfield"];
+            string value = Request.Form["value"];
+            string id = Request.Form["ID"];           
+            string isdel = Request.Form["Delete"];
+            int count_my = db_coursetype.GetList().Where(c => string.IsNullOrEmpty(c.TypeName) == true).ToList().Count;
+            try
+            {
+                if (count_my <= 0)
+                {
+                    if (string.IsNullOrEmpty(id))
+                    {
+                        //添加
+                        CourseType new_c = new CourseType();
+                        new_c.TypeName = "";
+                        new_c.IsDelete = false;
+                        db_coursetype.Insert(new_c);
+
+                     }
+                    else
+                    {
+                        //编辑
+                        CourseType find_c = db_coursetype.FindSingeData(id, true);
+                        if (find_c != null)
+                        {
+                            switch (key)
+                            {
+                                case "TypeName":
+                                    find_c.TypeName = value;
+                                    break;
+                                case "Rmark":
+                                    find_c.Rmark = value;
+                                    break;
+                            }
+                            if (!string.IsNullOrEmpty(isdel))
+                            {
+                                find_c.IsDelete = Convert.ToBoolean(isdel)==false?true:false;
+                            }                             
+                            db_coursetype.Update(find_c);
+                        }
+                       
+                    }
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    return Json("类型名称未填写,不能下一步操作！！！", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return Json(ex.Message, JsonRequestBehavior.AllowGet);
+            }            
+        }
     }
 }

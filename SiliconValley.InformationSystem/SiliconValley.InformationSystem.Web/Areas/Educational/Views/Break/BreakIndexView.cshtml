@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "BreakIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+    <style>
+        /*给添加的弹出框设置样式*/
+        body .demo-class .layui-layer-title 
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+}
+    <script type="text/html" id="breaktoolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe608;</i>添加</button>
+        </div>
+    </script>
+    <script type="text/html" id="breakbarDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+<div class="layui-form">
+    <div class="layui-form">
+        <div style=" width:800px; display:inline-block;">
+            <label>班级:</label>
+            <div class="btn-group layui-container" style="width:120px;">
+                <button type="button" class="btn btn-default dropdown-toggle" id="selectGrand" grandid="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    选择班级 <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" id="grandlist">
+                    <li>无</li>
+                    @{ 
+                        List<ClassSchedule> list= ViewBag.classshche as List<ClassSchedule>;
+                        foreach (ClassSchedule item in list)
+                        {
+                            <li >@item.ClassNumber</li>
+                        }
+                    }
+                </ul>
+            </div>
+            <label>开始时间:</label>
+            <div class="btn-group layui-container" style="width:120px;">
+                <input   class="layui-input" id="stateTime" placeholder="开始时间">
+            </div>
+            <label>结束时间:</label>
+            <div class="btn-group layui-container" style="width:120px;">
+                <input   class="layui-input" id="endTime" placeholder="结束时间">
+            </div>
+            <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="serchBaseData()">查询</button>
+        </div>
+        <hr />
+    </div>
+</div>
+<table id="break_table" lay-filter="break_table"></table>
+ 
+@section script{
+    <script>
+        //转换时间的方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if ((month + 1) < 10) {
+                month = "0" + Number(month + 1);
+            } else {
+                month = Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+        //刷新table数据
+        function Flush() {
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.reload('break_table');
+            });
+        }
+        //提示
+        function Heper(msg, my_icon, myfunction) {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                layer.msg(msg, { icon: my_icon }, myfunction);
+            });
+        }
+        //查询
+        function serchBaseData() {
+            var classname = $("#selectGrand")[0].innerText;//获取班级名称
+            var starDate = new Date($("#stateTime").val());
+            var endDate = new Date($("#endTime").val());
+            if (endDate - starDate >= 0) {
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('break_table', {
+                        url: '/Educational/Break/GetBrakData'
+                        , where: { "classname": classname, "starDate": $("#stateTime").val(), "endDate": $("#endTime").val() } //设定异步数据接口的额外参数
+                    });
+                });
+            } else {
+                Heper('结束时间不能小于开始时间',2)
+            }
+        }
+        layui.use(['table', 'form', 'layer','laydate'], function () {
+            var table = layui.table;
+            var form = layui.form;
+            var layer = layui.layer;
+            table.render({
+                elem: '#break_table'
+                , url: '/Educational/Break/GetBrakData'
+                , toolbar: '#breaktoolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'ClassSchedule_Id', title: '班级名称', fixed: 'left' }
+                    , { field: 'ClassName', title: '教室名称'}
+                    , { field: 'ReadNovels', title: '看小说人数' }
+                    , { field: 'PlayPhone', title: '玩手机人数' }
+                    , { field: 'PlayGame', title: '玩游戏人数' }
+                    , { field: 'SeelpCount', title: '睡觉人数' }
+                    , { field: 'E_Name', title: '记录人' }
+                    , { field: 'DataEnumName', title: '时间段' }
+                    , {
+                        field: 'RecodeDate', title: '日期', templet: function (res) {
+                            return TimeChange(res.RecodeDate);
+                        }
+                    }
+                    , { field: 'Rmark', title: '备注' }
+                    , { fixed: 'right', title: '操作', toolbar: '#breakbarDemo', width: 150 }
+                ]]
+                , page: true
+            });
+            var laydate = layui.laydate;
+            var date_my = new Date().toString();
+            //日期
+            laydate.render({
+                elem: '#stateTime'
+                , max: date_my
+            });
+            laydate.render({
+                elem: '#endTime'
+                , max: date_my
+            });
+            //头工具栏事件
+            table.on('toolbar(break_table)', function (obj) {
+                alert(8)
+                switch (obj.event) {
+                    case 'getCheckData':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Break/AddorEditView'  
+                            , area: ['900px', '600px'],
+                            title: '添加信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(break_table)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么?', function (index) {
+                        $.ajax({
+                            url: '/Educational/Break/Deletefunction/' + data.Id,
+                            type:"POST",
+                            success: function (Sudata) {
+                                if (Sudata == "ok") {
+                                    Heper("删除成功！！！", 1, Flush());
+                                } else {
+                                    Heper("删除失败,请重试！！！", 2, Flush())
+                                }
+                            }
+                        })
+                    });
+                } else if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Break/AddorEditView/' + data.Id
+                        , area: ['900px', '600px'],
+                        title: '编辑信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+           
+        });
+
+        $(function () {
+            $("li").click(function () {
+                $("#selectGrand")[0].innerText = this.innerHTML;
+            });
+        });
+    </script>
+
+}
+

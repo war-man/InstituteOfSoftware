@@ -45,6 +45,11 @@ namespace SiliconValley.InformationSystem.Business.Common
             });
         }
 
+        internal static void WriteSysLog(string v, object 添加数据)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 处理系统异常
         /// </summary>

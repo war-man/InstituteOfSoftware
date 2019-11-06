@@ -190,7 +190,7 @@
         //监听单选框
         form.on('radio(erweima)', function (data) {
 
-            if (data.elem.title == "学费" || data.elem.title == "食宿费") {
+            if (data.elem.title == "学费" || data.elem.title == "学杂费" || data.elem.title == "食宿费") {
                 Tuition();
             } else {
                 $($("#domes").children()).remove();

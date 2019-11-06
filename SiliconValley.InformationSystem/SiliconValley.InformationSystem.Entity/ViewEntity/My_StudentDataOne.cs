@@ -10,9 +10,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
    public class My_StudentDataOne
     {
         /// <summary>
-        /// 学生备案Id
+        /// 性别
         /// </summary>
-        public int Studentputoneread_Id { get; set; }
+        public string Sex { get; set; }
+        /// <summary>
+        /// 学生姓名
+        /// </summary>
+        public string StudentputonereadName{ get; set; }
         /// <summary>
         /// 是否报名
         /// </summary>

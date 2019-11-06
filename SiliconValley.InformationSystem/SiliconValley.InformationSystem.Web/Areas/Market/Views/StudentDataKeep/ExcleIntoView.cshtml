@@ -25,23 +25,51 @@
             display:inline-block;
             margin-top:20px;
         }
+        
+        .MytdCss1
+        {
+            height:30px;
+            border: 1px solid #009688;
+            width:10%;
+        }
+        .BtnCssthree
+        {
+            margin-top: 40px;
+            text-align: center;
+        }
+        body .mydemo-class{
+
+        }
+        body .mydemo-class .layui-layer-title
+        {
+            background: #c00;
+            color: #fff;
+            border: none;
+        }
+            body .mydemo-class .layui-layer-btn a
+            {
+                background: red;
+                border: 1px solid red;
+                color: #fff;
+            }
+        
     </style>
 </head>
 <body>
     <div>
         <form action="/Market/StudentDataKeep/IntoFunction" method="post" enctype="multipart/form-data">
-            <fieldset class="fieldsetCssTwo1">
+            <fieldset id="fieldDiv2" class="fieldsetCssTwo1">
                 <legend class="legendCssTwo1">文件选择区</legend>
                 <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>选择Excel文件</button>
                 <a href="/Market/StudentDataKeep/DownFile" class="layui-btn"><i class="layui-icon">&#xe601;</i>文件下载</a>
             </fieldset>
-            <fieldset class="fieldsetCssTwo1" style="height:420px;">
-                <legend class="legendCssTwo1">文件内容显示区</legend>
+            <fieldset id="fielsone" class="fieldsetCssTwo1" style="height:480px;">
+                <legend id="contentone" class="legendCssTwo1">文件内容显示区</legend>
                 <table id="tabletest2" lay-filter="tabletest2"></table>
             </fieldset>
-            <div class="divCssTwo1">
-                <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入"> 
-                <button class="layui-btn" id="No" name="No">取消</button>
+            <div id="InputDiv" class="divCssTwo1">
+                <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入" > 
+                <button class="layui-btn" id="No" name="No" onclick="myclose()">取消</button>
             </div>
         </form>
     </div>
@@ -80,43 +108,81 @@
             $.ajax({
                 url: '/Market/StudentDataKeep/IntoServer',
                 dataType: 'json',
-                success: function (successData) {
-                    console.log(successData.length);
-                    if (successData.length<=2) {                      
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.msg("成功导入!", {
-                                    icon: 1,
-                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                }, function () {
-                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                    parent.layer.close(index); //再执行关闭   
-                                    window.parent.LoadTable();
-                                });
-                        });
-                    } else if (successData.length > 2) {
-                        layer.open({
-                            type: 1
-                            , title: false //不显示标题栏
-                            , closeBtn: false
-                            , area: '300px;'
-                            , shade: 0.8
-                            , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                            , btn: ['OK']
-                            , btnAlign: 'c'
-                            , moveType: 1 //拖拽模式，0或者1
-                            , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">亲爱的操作人员！<br>没有重复的数据已经成功导入到平台<br><br>以下是我们检测出有冲突的数据，请前往平台查看<br><br>' + successData + ' ^_^</div>'
-                            , yes: function (index, layero) {
+                success: function (successData) {                   
+                    if (successData.resut == "okk") {                         
+                        layui.use(['layer', 'table'], function () {
+                            var table = layui.table;
+                            var layer = layui.layer;
+                            layer.confirm('<h3>'+successData.msg+'</h3>', { title: '系统提示', skin: "mydemo-class", btn: ['确定'], closeBtn:0 }, function (index) {
+                                //do something
                                 layer.close(index);
-                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layer.close(index); //再执行关闭   
-                                window.parent.LoadTable();
-                            }
-                        });
-                    }                   
-                    else {
-                        TiShi('导入失败!请重试');
-                    }
+                                $("#fieldDiv2")[0].innerHTML = "";
+                                $("#fieldDiv2").remove();
+                                $("#InputDiv")[0].innerHTML = "";
+                                $("#InputDiv").removeClass("divCssTwo1");
+                                $("#InputDiv").addClass("BtnCssthree");
+                                $('<button class="layui-btn" id="No" name="No" onclick="myclose()">关闭</button>').appendTo($("#InputDiv"));
+                                $("#fielsone")[0].innerHTML = "";
+                                $('<legend id="contentone" class="legendCssTwo1">疑似数据对比区</legend>').appendTo($("#fielsone"));
+                                $('<h3>系统已有数据</h3>').appendTo($("#fielsone"));
+                                var table1 = $('<table id="mytableone"></table>');
+                                table1.appendTo($("#fielsone"));
+                                $('<h3>疑似数据</h3>').appendTo($("#fielsone"));
+                                var table2 = $('<table id="mytabletwo"></table>');
+                                table2.appendTo($("#fielsone"));
+                                //展示已知数据
+                                table.render({
+                                    elem: '#mytableone'
+                                    , cols: [[ //标题栏
+                                        { field: 'StuName', title: '姓名' }
+                                        , { field: 'StuSex', title: '性别' }
+                                        , { field: 'StuPhone', title: '电话' }
+                                        , { field: 'StuSchoolName', title: '学校' }
+                                        , { field: 'StuInfomationType_Id', title: '信息来源' }
+                                        , { field: 'StuEducational', title: '学历' }
+                                        , { field: 'Region_id', title: '区域' }
+                                        , { field: 'StuAddress', title: '家庭住址' }
+                                        , { field: 'EmployeesInfo_Id', title: '备案人' }
+                                        , { field: 'Reak', title: '说明' }
+                                    ]],
+                                    data: successData.old
+                                    , page: true
+                                    , limits: [3]
+                                    , limit: 3
+
+                                });
+                                table.render({
+                                    elem: '#mytabletwo'
+                                    , cols: [[ //标题栏
+                                        { field: 'StuName', title: '姓名' }
+                                        , { field: 'StuSex', title: '性别' }
+                                        , { field: 'StuPhone', title: '电话' }
+                                        , { field: 'StuSchoolName', title: '学校' }
+                                        , { field: 'StuInfomationType_Id', title: '信息来源' }
+                                        , { field: 'StuEducational', title: '学历' }
+                                        , { field: 'Region_id', title: '区域' }
+                                        , { field: 'StuAddress', title: '家庭住址' }
+                                        , { field: 'EmployeesInfo_Id', title: '备案人' }
+                                        , { field: 'Reak', title: '说明' }
+                                    ]],
+                                    data: successData.news
+                                    , page: true
+                                    , limits: [3]
+                                    , limit: 3
+                                });
+                            });
+                        });                  
+                    } else if (successData == "ok") {                         
+                            layer.msg('没有重复数据，备案成功！！！', {
+                                icon: 1,
+                                time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                            }, function () {
+                                //关闭
+                                myclose();
+                            });                        
+                    } else {
+                        TiShi(successData.msg);
+                    }                  
                 }
                 , error: function () {
                     TiShi('导入失败!请重试');
@@ -124,14 +190,11 @@
             });
         });
         //取消
-        $("#No").click(function () {
+        function myclose() {             
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            parent.layer.close(index); //再执行关闭   
-            //将上传文件删除
-            $.ajax({
-                url: '/Market/StudentDataKeep/DeleteFile'
-            });
-        });         
+            parent.layer.close(index); //再执行关闭            
+        };
+       
         layui.use(['upload','table'], function () {
             var $ = layui.jquery
                 , upload = layui.upload;
@@ -150,22 +213,13 @@
                             , data:res.data
                             , cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                             , cols: [[
-                                { type: 'checkbox', fixed: 'left' }
-                                , { field: 'StuName', title: '姓名' }
-                                , {
-                                    field: 'StuSex', title: '性别', templet: function (res) {
-                                        if (res.StuSex == false) {
-                                            return "女";
-                                        } else {
-                                            return "男";
-                                        }
-                                    }
-                                }
+                                  { field: 'StuName', title: '姓名' }
+                                , {field: 'StuSex', title: '性别'}
                                 , { field: 'StuPhone', title: '联系电话' }
                                 , { field: 'StuEducational', title: '学历' }
-                                , { field: 'StuQQ', title: 'QQ' }
+                                , { field: 'StuAddress', title: '家庭住址' }
                                 , { field: 'StuSchoolName', title: '学校' }
-                                , { field: 'StuWeiXin', title: '微信' }
+                                , { field: 'Region_id', title: '区域' }
                                 , { field: 'StuInfomationType_Id', title: '信息来源' }
                                 , { field: 'EmployeesInfo_Id', title: '备案人' }
                                 , { field: 'Reak', title: '说明' }

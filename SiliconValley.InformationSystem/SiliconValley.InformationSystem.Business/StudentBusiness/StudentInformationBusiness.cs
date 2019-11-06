@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
@@ -23,6 +24,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         BaseBusiness<StudentFeeRecord> StudeRecord = new BaseBusiness<StudentFeeRecord>();
         //学费明细
         BaseBusiness<Studenttuitionfeestandard> feestandard = new BaseBusiness<Studenttuitionfeestandard>();
+        //学员班级表
+        ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
         /// <summary>
         /// 根据选择的阶段弹出专业选项
         /// </summary>
@@ -58,29 +61,7 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
           return  tuitionalloca.GetList().Where(a => a.IsDelete == false && a.Stage == Stage).FirstOrDefault();
         }
 
-        public AjaxResult Cost(StudentFeeRecord studentFeeRecord)
-        {
-            AjaxResult retus = null;
-            try
-            {
-                //studentFeeRecord.Addtime = DateTime.Now;
-                studentFeeRecord.IsDelete = false;
-                StudeRecord.Insert(studentFeeRecord);
-                retus = new SuccessResult();
-                retus.Success = true;
-                retus.Msg = "添加数据";
-                BusHelper.WriteSysLog("添加数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            catch (Exception ex)
-            {
-                retus = new ErrorResult();
-                retus.Msg = "服务器错误";
-                retus.Success = false;
-                retus.ErrorCode = 500;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            return retus;
-        }
+  
 
         public object Studenttuitionfeestandard(int id)
         {
@@ -89,6 +70,72 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
                 name = a.Unitpricename
             }).ToList();
             return x;
+        }
+        /// <summary>
+        /// 学员照片添加，返回true为成功
+        /// </summary>
+        /// <param name="studenid">学号</param>
+        /// <param name="imgurl">照片名称</param>
+        /// <returns></returns>
+        public bool StudentAddImg(string studenid, string imgurl)
+         {
+            bool bo = true;
+            try
+            {
+                var x = this.GetEntity(studenid);
+                x.Picture = imgurl;
+                this.Update(x);
+                BusHelper.WriteSysLog("修改学员信息图片", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            catch (Exception ex)
+            {
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                bo = false;
+
+            }
+            return bo;
+        }
+
+        /// <summary>
+        /// 根据学号获取学员姓名，班级
+        /// </summary>
+        /// <param name="studentid">学号</param>
+        /// <returns></returns>
+        public object StuClass(string studentid)
+        {
+
+            var x = this.GetEntity(studentid);
+            var Enti = new
+            {
+                x.Name,
+                x.StudentNumber,
+                ClassName = scheduleForTraineesBusiness.SutdentCLassName(studentid).ClassID
+            };
+            return Enti;
+        }
+        /// <summary>
+        /// 验证是否有照片了
+        /// </summary>
+        /// <param name="studentid">学号</param>
+        /// <returns></returns>
+        public int boolImg(string studentid)
+        {
+          if(this.GetEntity(studentid).Picture!=null)
+            {
+                return 2;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+        /// <summary>
+        /// 获取学在校学员
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentInformation> StudentList()
+        {
+            return this.GetList().Where(a => a.IsDelete != true && a.State == null).ToList();
         }
     }
 }

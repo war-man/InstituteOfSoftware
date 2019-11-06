@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
    public class StudentData
-    {             
+    {
+             public int Id { get; set; }     
              public string stuSex { get; set; }
              public string StuName  { get;set; }
              public string StuPhone { get; set; }

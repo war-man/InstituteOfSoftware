@@ -1,0 +1,169 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CourseTypeIndex</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .demo-class2 .layui-layer-btn a
+        {
+            background: #ffd800;
+            color: #fff;
+            border: none;
+        }
+        body .demo-class2 .layui-layer-title
+        {
+            background: #ffd800;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <table id="coursetype_table" lay-filter="coursetype_table"></table>
+    <script type="text/html" id="coursetype_toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckDataAddType"> <i class="layui-icon">&#xe615;</i>添加数据</button>
+        </div>
+    </script>
+    <script type="text/html" id="switchTpl">
+        
+    </script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        function Hepler(msg, myicon) {
+            layui.use(['layer'], function () {
+                var layer = layui.layer;
+                layer.msg(msg, { icon: myicon });
+            })
+        }
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            table.render({
+                elem: '#coursetype_table'
+                , url: '/CourseSyllabus/Course/GetCourseTypedata'
+                , toolbar: '#coursetype_toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , page: true
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'TypeName', title: '类型名称', fixed: 'left', edit: 'text' }
+                    , { field: 'Rmark', title: '说明', edit: 'text' }
+                    , {
+                        field: 'IsDelete', title: '状态', width: 150, templet: function (res) {
+                            if (res.IsDelete == false) {
+                                return '<input id=' + res.Id + ' type="checkbox" name="sex" lay-skin="switch" lay-text="激活|未激活" lay-filter="tablesexDemo" checked>';
+                            } else {
+                                return '<input id=' + res.Id + ' type="checkbox" name="sex" lay-skin="switch" lay-text="激活|未激活" lay-filter="tablesexDemo">';
+                            }
+
+                        }
+                    }
+                ]]
+                , limit: 5
+                , limits: [5]
+            });
+            //头工具栏事件
+            table.on('toolbar(coursetype_table)', function (obj) {
+                switch (obj.event) {
+                    case 'getCheckDataAddType':
+                        $.ajax({
+                            url: '/CourseSyllabus/Course/AddorEditfunction',
+                            type: "POST",
+                            success: function (Success) {
+                                if (Success != "ok") {
+                                    Hepler(Success, 2);
+                                } else {
+                                    table.reload('coursetype_table');
+                                }
+                            }
+                        });
+                        break;
+                };
+            });
+
+            //监听单元格编辑
+            table.on('edit(coursetype_table)', function (obj) {
+                var value = obj.value //得到修改后的值
+                    , data = obj.data //得到所在行所有键值
+                    , myfield = obj.field; //得到字段          
+                if (data.IsDelete == false) {
+                    if (myfield == "TypeName" && value.length <= 0) {
+                        layer.msg('类型名称不能为空!!!', { icon: 2 }, function () {
+                            table.reload('coursetype_table');
+                        });
+                    } else {
+                        var mm = { 'ID': data.Id, "myfield": myfield, 'value': value };
+                        $.ajax({
+                            data: mm ,
+                            url: '/CourseSyllabus/Course/AddorEditfunction',
+                            type: 'POST',
+                            success: function (succdata) {
+                                if (succdata == "ok") {
+                                    //刷新页面
+                                    layer.msg('编辑成功!!!', { icon: 1 }, function () {
+                                        table.reload('coursetype_table');
+                                    });
+                                } else {
+                                    //提示
+                                    layer.msg(succdata,{ icon: 2 }, function () {
+                                        table.reload('coursetype_table');
+                                    });
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    layer.msg('数据未激活，不能修改!!!', {icon:2}, function () {
+                        table.reload('coursetype_table');
+                    });
+                }
+
+
+            });
+
+            //监听性别操作
+            form.on('switch(tablesexDemo)', function (obj) {
+                //console.log(obj.elem.id);
+                if (obj.elem.checked == false) {
+                    layer.confirm('是否要禁用？', {
+                        icon: 3, title: '系统温馨提示', skin: 'demo-class2', shade: 0.8, end: function () {
+                            table.reload('coursetype_table');
+                        } }, function (index) {
+                        //do something
+                        $.ajax({
+                            url: '/CourseSyllabus/Course/AddorEditfunction',
+                            type: 'POST',
+                            data: { 'ID': obj.elem.id, "Delete": obj.elem.checked },
+                            success: function (succdata) {
+                                if (succdata == "ok") {
+                                    //刷新页面
+                                    layer.msg('编辑成功!!!', {
+                                        icon: 1 
+                                    }, function () {
+                                        table.reload('coursetype_table');
+                                        layer.close(index);
+                                    });
+                                } else {
+                                    //提示
+                                    Hepler('编辑错误，重试！！！', 2);
+                                    layer.close(index);
+                                }
+                            },
+                        });
+                         
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,323 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.ShppingDetail
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddPurchaseApplyDetailsData</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+        <style >
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+        #but1:hover
+        {
+            background-color: aqua;
+        }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class2 .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class3 .layui-layer-title
+        {
+            background-color: #c02828;
+            color: #fff;
+        }
+
+        .layui-unselect
+        {
+            width: 150px;
+        }
+
+        .uploadImgBtn
+        {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            position: relative;
+            -webkit-background-size: cover;
+            background-size: cover;
+            background-image: url('../../../../Images/xiazai.png');
+        }
+
+            .uploadImgBtn .uploadImg
+            {
+                position: absolute;
+                right: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+        .pic
+        {
+            width: 90px;
+            height: 90px;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+            .pic img
+            {
+                width: 100px;
+                height: 100px;
+                float: left;
+            }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" style="margin-top:20px" lay-filter="ShppingDetail_form">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                    <label class="LableCss1">物品名称:</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownListFor(s => s.Goods_Id, ViewBag.goods as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-verify", "myselect" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="LableCss1">单位:</label>
+                    <div class="layui-input-block">
+                        <select id="Company" name="Company">
+                            <option value="个">个</option>
+                            <option value="份">份</option>
+                            <option value="支">支</option>
+                            <option value="本">本</option>
+                            <option value="卷">卷</option>
+                            <option value="把">把</option>
+                            <option value="包">包</option>
+                            <option value="台">台</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                    <label class="LableCss1">采购数量:</label>
+                    <div class="layui-input-block">
+                        @Html.TextBoxFor(s => s.GoodsCount, new Dictionary<string, object>() { { "placeholder", "采购数量" }, { "class", "layui-input linu" }, { "lay-verify", "required|number|mynumber" } })
+                    </div>
+                </div>
+            </div>
+            <br /><br />
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">说明:</label>
+                    <div class="layui-input-block">
+                        @Html.TextArea("Reak", new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row layui-form-item" style="margin-top:45px;">
+                <div class="layui-input-block">
+                    <div style="width:35%;float:left;text-align:right;">
+                        @{
+                            if (Model != null)
+                            {
+                                 <button id="mybtnedit" type="submit" class="layui-btn" lay-submit="" lay-filter="my_AddPurshaseApply_btn">编辑</button>
+                            }
+                            else
+                            {
+                                 <button id="mybtnedit" type="submit" class="layui-btn" lay-submit="" lay-filter="my_AddPurshaseApply_btn">添加</button>
+                            }
+                        }
+
+                    </div>
+                    <div style="width:45%;float:right;text-align:left">
+                        <button type="button" class="layui-btn" onclick="MyClose()">取消</button>
+                        @{
+                            if (Model != null)
+                            {
+                                <input id="select" type="hidden" value="@Model.Company" />
+                                <input id="Id" name="Id" type="hidden" value="@Model.Id" />
+                            }
+                        }
+
+                    </div>
+                    
+                   
+                </div>
+            </div>
+        </form>
+    </div>
+  
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        function MyClose() {          
+                var layer = layui.layer;
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭     
+        }
+        
+        function MyMsg(msg, myicon, Istableflush) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                if (Istableflush == true) {
+                    layer.msg(msg, { icon: myicon }, function () {
+                        //table刷新(调用父级的)
+                        window.parent.MyTableFlush();                         
+                    });
+                } else {
+                    layer.msg(msg, { icon: myicon })
+                }
+                
+            });
+        }
+        layui.use(['form'], function () {
+            var form = layui.form;
+            //自定义验证规则
+            form.verify({
+                mynumber: function (value) {
+                    if (value <= 0) {
+                        return '物品采购个数不能为0或负数！！！';
+                    }
+                },
+                myselect: function (value) {
+                    if (value == 0) {
+                        return '请选择物品！！！';
+                    }
+                }    
+            });
+
+            //监听提交
+            form.on('submit(my_AddPurshaseApply_btn)', function (data) {
+                $.ajax({
+                    url: '/Educational/PurchaseApply/AddorEditfunction',
+                    data: data.field,
+                    success: function (SucData) {
+                        if (SucData == "ok") {
+                            MyMsg("添加成功", 1, true);
+                            //询问是否要继续添加
+                            layer.confirm('是否继续添加?', {
+                                end: function () {
+                                    //如果取消的话，就关闭弹出框
+                                    MyClose();
+                                },
+                                yes: function () {
+                                    layer.close(layer.index);
+                                    window.parent.Addview();
+                                }
+                            }, function (myindex) {
+                                //layer.close(myindex);
+                                });
+                        } else if (SucData == "oo") {
+                            layer.msg('编辑成功', { icon: 1 },function () {
+                                //刷新表单
+                                window.parent.MyTableFlush();    
+                                //关闭弹出层
+                                MyClose();
+                            })
+                        }
+                        else {
+                            MyMsg(SucData, 2, true);
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+        $(function () {
+            var select = $("#select").val();
+            //给select赋值          
+            layui.use(['form'], function () {
+                var form = layui.form;
+                form.val("ShppingDetail_form", {  
+                     "Company": select
+                });
+                form.render();
+            });
+        });
+    </script>
+</body>
+</html>

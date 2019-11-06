@@ -24,7 +24,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> GoodsCount { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
-       
+        public string Company { get; set; }
+        /// <summary>
+        /// 是否是临时数据
+        /// </summary>
+        public Nullable<bool> Temporary { get; set; }
+        /// <summary>
+        /// 员工编号
+        /// </summary>
+        public string EmpId { get; set; }
     }
 }

@@ -1,0 +1,124 @@
+﻿
+@{
+    ViewBag.Title = "LeaveIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <table id="leaveApply" lay-filter="leaveApply"></table>
+    @*操作栏*@
+    <script type="text/html" id="barDemo5">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editApprovalState5">审批</a>
+    </script>
+</div>
+@section script{
+    <script>
+         //请假申请数据加载
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#leaveApply'
+                , url: '/Personnelmatters/EmpLeaveRequest/GetEmpLeaveRequestData'
+                , id: "myapply5"
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    , { field: 'Id', width: 38 }
+                    , { field: 'empName', title: '姓名', width: 80, sort: true }
+                    , { field: 'esex', title: '请假类型', width: 80, sort: true }
+                    , { field: 'presalary', title: '开始时间', width: 130 }
+                    , { field: 'RaisesLimit', title: '结束时间', width: 110, sort: true }
+                    , { field: 'RaisesReason', title: '请假原因', width: 110, sort: true }
+                    , { field: 'IsPass', title: '图片', width: 110, sort: true, templet: '#myState' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo5', width: 110 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(leaveApply)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'editApprovalState5') {
+                    if (data.IsApproval == true) {
+                        layer.msg('该申请已完成审批', { icon: 1 });
+                    } else {
+                        var s = true;
+                        layer.open({
+                            content: '是否通过审批？'
+                            , btn: ['已通过', '未通过']
+                            , yes: function (index, layero) {
+                                console.log("已通过的状态:" + s);
+                                $.post("/Personnelmatters/EmpApproval/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply3");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+                            , btn2: function (index, layero) {
+                                s = false;
+                                console.log("未通过的状态:" + s);
+                                $.post("/Personnelmatters/EmpApproval/IncreaseSalaryIsPassed", { 'id': data.Id, 'state': s }, function (data) {
+                                    if (data.Success) {
+                                        layer.alert("审批已通过", { icon: 1 }, function (index) {
+                                            layui.use(['table'], function () {
+                                                var table = layui.table;
+                                                table.reload("myapply3");
+                                            });
+                                            layer.close(index);
+                                        });
+                                    } else {
+                                        layer.alert("审批未通过");
+                                    }
+                                });
+                            }
+
+                        });
+                    }
+
+                }
+            });
+
+        });
+
+
+
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+
+
+    </script>
+
+    }
