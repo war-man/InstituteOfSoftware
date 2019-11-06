@@ -205,6 +205,6 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             var leid = Hoadclass.GetList().Where(c => c.IsDelete == false && c.EndingTime == null && c.ClassID == ClassID).FirstOrDefault().LeaderID;//查询带班班长id
           var Empid = this.GetEntity(leid).informatiees_Id;//员工编号
             return employeesInfoManage.GetEntity(Empid);
-        }
+        }       
     }
 }

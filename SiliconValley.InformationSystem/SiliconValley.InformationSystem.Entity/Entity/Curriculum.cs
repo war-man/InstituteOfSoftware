@@ -42,6 +42,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 课时
         /// </summary>
         public Nullable<int> CourseCount { get; set; }
+        /// <summary>
+        /// 下一门课程
+        /// </summary>
         public Nullable<int> Sort { get; set; }
         /// <summary>
         /// 课时费

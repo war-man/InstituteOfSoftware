@@ -98,11 +98,13 @@
     <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
     <Compile Include="EducationalBusiness\BreakManeger.cs" />
     <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
+    <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
@@ -116,6 +118,7 @@
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
+    <Compile Include="EnrollmentBusiness\EnrollmentBusinesse.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />

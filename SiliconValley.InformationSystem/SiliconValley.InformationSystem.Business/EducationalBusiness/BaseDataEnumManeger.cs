@@ -47,5 +47,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return  this.GetList().Where(b => b.IsDelete == false && b.fatherId == 0).ToList();
         }
+        /// <summary>
+        /// 根据父级名称找子集
+        /// </summary>
+        /// <param name="FartherName">父级名称</param>
+        /// <returns></returns>
+        public List<BaseDataEnum> GetsameFartherData(string FartherName)
+        {
+           BaseDataEnum find_fater= this.GetList().Where(b => b.Name == FartherName && b.fatherId == 0).FirstOrDefault();
+            if (find_fater==null)
+            {
+               return new List<BaseDataEnum>();
+            }
+            else
+            {
+                //根据父级Id找到子集
+               return this.GetList().Where(g => g.fatherId == find_fater.Id).ToList();
+            }
+        }
     }
 }

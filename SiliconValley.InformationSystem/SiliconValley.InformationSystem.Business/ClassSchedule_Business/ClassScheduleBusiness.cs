@@ -11,11 +11,14 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
+        //时间段
+        BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业
@@ -449,7 +452,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// 根据班级名称获取阶段跟专业
         /// </summary>
         /// <param name="ClassNumber">班级名称</param>
-        /// // <param name="type">1是专业名称，否则是阶段</param>
+        /// // <param name="type">1是专业名称，2是阶段,否则是班级上课时间</param>
         /// <returns></returns>
         public string GetClassGrand(string ClassNumber, int type)
         {
@@ -458,9 +461,13 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             {
                 return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
             }
-            else
+            else if(type==2)
             {
                 return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
+            }
+            else
+            {
+                return BaseDataEnum_Entity.GetSingData(CLaaNuma.BaseDataEnum_Id.ToString(), true).Name;
             }
         }
     }

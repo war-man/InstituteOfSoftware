@@ -40,6 +40,83 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return this.GetList().Where(c => c.IsDelete == false).ToList();
         }
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="new_c"></param>
+        /// <returns></returns>
+        public bool My_add(Classroom new_c)
+        {
+            try
+            {
+                this.Insert(new_c);
+                return true;
+            }
+            catch (Exception)
+            {
 
+                return false;
+            }
+            
+        }
+        /// <summary>
+        /// 编辑
+        /// </summary>
+        /// <param name="new_c"></param>
+        /// <returns></returns>
+        public bool My_update(Classroom new_c)
+        {
+            try
+            {
+                Classroom find_c = this.GetEntity(new_c.Id);
+                find_c.ClassroomName = new_c.ClassroomName;
+                find_c.Count = new_c.Count;
+                find_c.Rmark = new_c.Rmark;
+                this.Update(find_c);
+                return true;
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
+           
+        }
+        /// <summary>
+        /// 禁用
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool My_Delete(int id)
+        {         
+            try
+            {
+                Classroom find_c= this.GetEntity(id);
+                find_c.IsDelete = find_c.IsDelete==true?false:true;
+                this.Update(find_c);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// 查找名字相同的数据
+        /// </summary>
+        /// <param name="Name"></param>
+        /// <returns></returns>
+        public bool FindSameName(string Name)
+        {
+           Classroom find_c= GetSingData(Name, false);
+            if (find_c==null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }
