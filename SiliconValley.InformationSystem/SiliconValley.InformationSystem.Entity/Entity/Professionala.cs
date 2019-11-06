@@ -22,6 +22,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Trainingcontent { get; set; }
         public Nullable<System.DateTime> TrainingDate { get; set; }
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> Dateofregistration { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }
     }

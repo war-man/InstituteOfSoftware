@@ -233,8 +233,6 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
-    <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
-    <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\RecruitingDataSummaryController.cs" />
     <Compile Include="Areas\Personnelmatters\PersonnelmattersAreaRegistration.cs" />
     <Compile Include="Areas\Studenteducation\Controllers\EducationController.cs" />
@@ -283,6 +281,7 @@
     <Content Include="Areas\Teachingquality\StuImages\3.jpg" />
     <Content Include="Areas\Teachingquality\StuImages\7f2fef2fgy1g4uq0pkfgij20qj0ex1kx.jpg" />
     <Content Include="Areas\Teachingquality\StuImages\QQ图片20180901193212 %282%29.jpg" />
+    <Content Include="Areas\Teachingquality\Styles\demo.css" />
     <Content Include="Areas\Teachingquality\Styles\MenuBar.css" />
     <Content Include="Areas\Teaching\css\htmleaf-demo.css" />
     <Content Include="Areas\Teaching\css\jquery-menu.css" />
@@ -591,7 +590,6 @@
     <Content Include="Areas\Teachingquality\StuImages\+name" />
     <Content Include="Areas\Finance\Views\Pricedetails\Costitems.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Studentpayment.cshtml" />
-    <Content Include="Areas\Finance\Views\Pricedetails\Studenttuitionfeestandard.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Typeeyesight.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Headteacher\HeadmasterEntity.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Headteacher\Index.cshtml" />
@@ -623,6 +621,16 @@
     <Content Include="Areas\MyEducation\Views\Education\Registerforexamination.cshtml" />
     <Content Include="Areas\MyEducation\Views\Education\Applicationfeereceipt.cshtml" />
     <Content Include="Areas\MyEducation\Views\Education\AddUndergraduateachievement.cshtml" />
+    <Content Include="Areas\MyEducation\Views\Education\Achievementduate.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\AssmeetingsEntity.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Dismantleclasses.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Groupnumber.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Transferoftraunees.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\text.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\AddProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\GetProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\FindTuition.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

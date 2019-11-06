@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "FindTuition";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style>
+
+    </style>
+    }
+<h2>FindTuition</h2>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+@section script{
+    <script>
+        layui.use(['table', 'layer', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/Teachingquality/ClassSchedule/GetDate'
+                , toolbar: '#toolbarDemo'
+                , id: 'idTest'
+                , page: true
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' }
+                    , { field: 'ClassNumber', title: '班级编号', sort: true }
+                    , { field: 'grade_Id', title: '阶段' }
+                    , { field: 'Major_Id', title: '专业 ' }
+                    , { field: 'BaseDataEnum_Id', title: '专业课时段 ' }
+                    //, {
+                    //    field: 'ClassStatus', title: '班级状态', templet: function (c) {
+                    //        if (c.ClassStatus == false) {
+                    //            return "正常";
+                    //        } else { return "禁用"; }
+                    //    }
+                    //}
+                    , { field: 'stuclasss', title: '班级人数 ' }
+                    , { field: 'IsBool', title: '状态 ' }
+
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+                ]]
+                , page: true
+                , limit: 8
+                , limits: [8, 10, 15]
+            });
+       
+        });
+
+    </script>
+    }

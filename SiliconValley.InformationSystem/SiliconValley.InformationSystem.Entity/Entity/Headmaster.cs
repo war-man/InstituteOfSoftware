@@ -19,9 +19,21 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 员工编号
+        /// </summary>
         public string informatiees_Id { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> AddTime { get; set; }
 
 

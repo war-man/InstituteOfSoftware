@@ -3,197 +3,62 @@
 <head>
     <META http-equiv=Content-Type content="text/html; charset=utf-8">
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link rel='stylesheet' type='text/css' href='http://tools.oschina.net/js/syntaxhighlighter_3.0.83/styles/shCoreDefault.css' />
+    <link href="~/Areas/Teachingquality/Styles/demo.css" rel="stylesheet" />
+    <script src="~/Areas/Teachingquality/js/Tdrag.js"></script>
     <title></title>
 
-    <style media="print">
-        .Noprint {
-            display: none;
-        }
-        <!--
 
-        用本样式在打印时隐藏非打印项目 -->
-        .PageNext {
-            page-break-after: always;
-        }
-        <!--
-        控制分页 -->
-    </style>
-    <style type="text/css">
-        <!--
-        #print_border {
-            width: 1300px;
-            height: 700px;
-            border: 0px solid #ccc;
-            margin: 20px 50px;
-            overflow: auto
-        }
-
-        #print-context {
-            width: 100%;
-        }
-
-        #print-button {
-            width: 100%;
-            height: 40px;
-            margin-bottom: 0px;
-            text-align: center;
-            padding-top: 10px;
-        }
-
-            #print-button input[type='button'] {
-                width: 100px;
-                height: 30px;
-                font-size: 16px;
-            }
-
-        #print-context .tit {
-            width: 100%;
-            height: 30px;
-            line-height: 30px;
-            background: #ccc;
-            font-size: 16px;
-            text-align: center;
-            letter-spacing: 8px;
-            font-weight: 900;
-        }
-
-        .orderinfo {
-            width: 100%;
-        }
-
-            .orderinfo tr {
-                height: 40px;
-            }
-
-                .orderinfo tr td.ord-tit {
-                    width: 15%;
-                    text-align: right;
-                    border-bottom: 1px solid #ccc;
-                    letter-spacing: 4px;
-                }
-
-                .orderinfo tr td.ord-text {
-                    width: 34.5%;
-                    border-bottom: 1px solid #ccc;
-                    padding-left: 0.5%;
-                }
-
-        .gs {
-            margin-top: 40px;
-        }
-
-        .goodsinfo {
-            width: 100%;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-            .goodsinfo tr {
-                height: 30px;
-            }
-        -->
-    </style>
-    <script type="text/javascript">
-
-        //调用打印机接口，打印当前指定网页
-        function prints() {
-            var newstr = document.getElementById('print-context').innerHTML;
-            var oldstr = document.body.innerHTML;
-            document.body.innerHTML = "<div id='print-context'>" + newstr + "</div>";
-            window.print();
-            document.body.innerHTML = oldstr;
-            return false;
-        }
-        $(function () {
-            //隔行变色
-            $("#proinfo tr:even").css("background-color", "#F6FAFD");
-        })
-
-    </script>
 </head>
 
 <body>
-    <!--startprint-->
-    <div id="print_border">
-        <div id="print-context">
-            <div class="tit" style="background-color: rgb(247, 250, 252);">订单信息</div>
-            <table class="orderinfo" cellspacing=0 cellpadding=0>
-                <tr>
-                    <td class="ord-tit">订单号:</td>
-                    <td class="ord-text"><{$d_order.orderid}></td>
-                    <td class="ord-tit"> </td>
-                    <td class="ord-text"></td>
-                </tr>
-                <tr>
-                    <td class="ord-tit">收货人:</td>
-                    <td class="ord-text"><{$d_order.rejname}></td>
-                    <td class="ord-tit">电子邮件:</td>
-                    <td class="ord-text"><{$d_order.email}></td>
-                </tr>
-                <tr>
-                    <td class="ord-tit">地址:</td>
-                    <td class="ord-text"><{$d_order.shen}>|<{$d_order.shi}>|<{$d_order.qu}>|<{$d_order.more}></td>
-                    <td class="ord-tit">邮编:</td>
-                    <td class="ord-text"><{$d_order.youbian}></td>
-                </tr>
-                <tr>
-                    <td class="ord-tit">电话:</td>
-                    <td class="ord-text"><{$d_order.tel}></td>
-                    <td class="ord-tit">手机:</td>
-                    <td class="ord-text"><{$d_order.mob}></td>
-                </tr>
-            </table>
-
-            <!-- 商品信息  -->
-            <div class="tit gs" style="background-color: rgb(247, 250, 252);">商品信息</div>
-            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-                <tbody>
-                    <tr height="12">
-                        <td></td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="all_table" width="100%" border="0" align="center" cellpadding="0" cellspacing="1" bgcolor="#E3EFFB" id="proinfo">
-                <tr class="table_tr_bor" style="background-color: rgb(247, 250, 252);">
-                    <td width="21%" height="32" align="center">商品名称</td>
-                    <td width="8%" align="center">供应商商品编号</td>
-                    <td width="5%" align="center">价格</td>
-                    <td width="5%" align="center">数量</td>
-                    <td width="10%" align="center">属性</td>
-                    <td width="5%" background="__TMPL__images/adminbghen.jpg"><div align="center">小计</div></td>
-                </tr>
-
-                <volist name="pros" id="vo">
-
-                    <tr bgcolor="#FFFFFF">
-                        <!--    <td width="5%" bgcolor="#FFFFFF">
-                            </td>  -->
-
-                        <td width="21%" align="center">
-                            <img src="http://mall.3d414.com/Tpl/default/upload/<{$vo.img}>">
-                            <p>订单编号：<{$vo.c_ordernum}></p>
-                            <p><a href="http://www.3d414.com/home/detail/index/id/<{$vo.proid}>" target="_blank"><{$vo.title}></a></p>
-                            <br />
-
-                        </td>
-                        <td width="8%" align="center"><{$vo.jmnumb}></td>
-                        <td width="5%" align="center"><{$vo.price}></td>
-                        <td width="5%" align="center"><{$vo.num}></td>
-                        <td width="10%" align="center">颜色:<{$vo.ys}> 尺码:<{$vo.cm}></td>
-
-                        <td width="5%" align="center"><{$vo.spprice}></td>
-                    </tr>
-                </volist>
-            </table>
-
-
-        </div>
-        <!--print-btn-start-->
-        <div id="print-button" class="Noprint">
-            <input class="input_btn_ btn_normal" type="button" value="打  印" onclick="prints();" />
-        </div>
-        <!--print-btn-end-->
-    </div>
-    <!--endprint-->
+    <div>11111</div>
 </body>
 </html>
+<script>
+    window.onload = function () {
+        var oDiv = document.getElementsByTagName("div")[0];
+
+        /*鼠标点击的位置距离DIV左边的距离 */
+        var disX = 0;
+        /*鼠标点击的位置距离DIV顶部的距离*/
+        var disY = 0;
+        oDiv.onmousedown = function () {
+            var e = e || window.event;
+            disX = e.clientX - oDiv.offsetLeft;
+            disY = e.clientY - oDiv.offsetTop;
+
+            document.onmousemove = function (e) {
+                var e = e || window.event;
+                // 横轴坐标
+                var leftX = e.clientX - disX;
+                // 纵轴坐标
+                var topY = e.clientY - disY;
+
+                if (leftX < 0) {
+                    leftX = 0;
+                }
+                /* 获取浏览器视口大小 document.document.documentElement.clientWidth*/
+                else if (leftX > document.documentElement.clientWidth - oDiv.offsetWidth) {
+                    leftX = document.document.documentElement.clientWidth - oDiv.offsetWidth;
+                }
+
+                if (topY < 0) {
+                    topY = 0;
+                }
+                else if (topY > document.documentElement.clientHeight - oDiv.offsetHeight) {
+                    topY = document.documentElement.clientHeight - oDiv.offsetHeight;
+                }
+                oDiv.style.left = leftX + "px";
+                oDiv.style.top = topY + "px";
+            }
+            document.onmouseup = function () {
+                document.onmousemove = null;
+                document.onmouseup = null;
+            }
+        }
+    }
+
+
+   
+</script>

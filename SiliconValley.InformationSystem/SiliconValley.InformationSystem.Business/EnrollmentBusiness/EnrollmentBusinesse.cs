@@ -96,7 +96,6 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             }
             return retus;
         }
-
         /// <summary>
         /// 获取还没有缴费的年期本科
         /// </summary>
@@ -139,7 +138,6 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             return listtitme; ;
 
         }
-
         /// <summary>
         /// 获取已报名本科学员
         /// </summary>
@@ -149,7 +147,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         /// <param name="StudentNumber">学号</param>
         /// <param name="identitydocument">身份证号</param>
         /// <returns></returns>
-        public object GetDate(int page, int limit, string Name,  string StudentNumber, string identitydocument)
+        public object GetDate(int page, int limit, string Name,  string StudentNumber, string identitydocument,string ClassName,string Alreadypassed)
         {
             //班主任带班
             BaseBusiness<HeadClass> Hoadclass = new BaseBusiness<HeadClass>();
@@ -159,12 +157,27 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             {
                 list.Add(studentInformationBusiness.GetEntity(item.StudentNumber)); ;
             }
-         
 
+            if (!string.IsNullOrEmpty(ClassName))
+            {
+                var studentlist = scheduleForTraineesBusiness.ClassStudent(ClassName);
+                List<StudentInformation> Mylist = new List<StudentInformation>();
+                foreach (var item in studentlist)
+                {
+                    var x = list.Where(a => a.StudentNumber == item.StudentNumber).FirstOrDefault();
+                    if (x!=null)
+                    {
+                        Mylist.Add(x);
+                    }
+                  
+                }
+                list = Mylist;
+            }
             if (!string.IsNullOrEmpty(Name))
             {
                 list = list.Where(a => a.Name.Contains(Name)).ToList();
             }
+         
             if (!string.IsNullOrEmpty(StudentNumber))
             {
                 list = list.Where(a => a.StudentNumber.Contains(StudentNumber)).ToList();
@@ -173,21 +186,25 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             {
                 list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
             }
-            var xz = list.Select(a => new
+            var xz = list.Select(a => new EnrollmentStudentView
             {
-                a.StudentNumber,
-                a.Name,
-                a.Sex,
-                a.BirthDate,
-                a.identitydocument,
+             StudentNumber=  a.StudentNumber,
+              Name=  a.Name,
+              identitydocument=    a.identitydocument,
                 ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
                 Headmasters = headmasters.Listheadmasters(a.StudentNumber).EmpName,
-            
                 School =this.GetList().Where(x=>x.IsDelete==false&&x.StudentNumber==a.StudentNumber).FirstOrDefault().School==null?"请补充完整信息": UndergraduateschoolBusiness.GetEntity( this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().School).SchoolName,
                 Registeredbatch = this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().Registeredbatch==null?"请补充完整信息": this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().Registeredbatch,
                 PassNumber= this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().PassNumber==null?"请补充完整信息" : this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().PassNumber,
                 MajorID= this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().MajorID==null?"请补充完整信息": UbderfgerBunsiness.GetEntity(this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().MajorID).ProfessionalName,
+                Alreadypassed=UndergraduateachievementBusines.GetList().Where(c=>c.EnrollID== this.GetList().Where(w=>w.IsDelete==false&&w.StudentNumber==a.StudentNumber).FirstOrDefault().ID).ToList().Count,
+                
             }).ToList();
+            if (!string.IsNullOrEmpty(Alreadypassed))
+            {
+                int Alread = int.Parse(Alreadypassed);
+                xz = xz.Where(a => a.Alreadypassed == Alread).ToList();
+            }
             var dataList = xz.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new
@@ -200,6 +217,21 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             return data;
 
         }
+        /// <summary>
+          /// 获取本科查询成绩基本信息
+          /// </summary>
+          /// <param name="StudentNumber">学号</param>
+          /// <returns></returns>
+        public EssentialinformationEnucView FindEssntiali(string StudentNumber)
+        {
+          var find=  studentInformationBusiness.GetEntity(StudentNumber);
+            EssentialinformationEnucView enucView = new EssentialinformationEnucView();
+            enucView.MajorID = UbderfgerBunsiness.GetEntity(this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == find.StudentNumber).FirstOrDefault().MajorID).ProfessionalName;
+            enucView.Name = find.Name;
+            enucView.identitydocument = find.identitydocument;
+            enucView.PassNumber = this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == find.StudentNumber).FirstOrDefault().PassNumber;
+            return enucView;
+           }
         /// <summary>
         /// 添加本科专业数据
         /// </summary>
@@ -235,8 +267,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         {
            return UbderfgerBunsiness.GetList().Where(a => a.IsDelete == false && a.ProfessionalName == name).ToList().Count();
         }
-
-       /// <summary>
+        /// <summary>
        /// 验证课程类别是否有重复
        /// </summary>
        /// <param name="name">类别名称</param>
@@ -273,7 +304,6 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             return result;
         
         }
-   
         /// <summary>
         /// 下拉框课程类别加载父级数据
         /// </summary>
@@ -282,6 +312,15 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         public object SelectCoursecaregoryX(int MajorID)
         {
             return CoursecategoryYBunsiness.GetList().Where(a => a.MajorID == MajorID).Select(a => new { name = a.Coursetitle, a.id });
+        }
+        /// <summary>
+        /// 获取本科课程数据
+        /// </summary>
+        /// <param name="MajorID">专业id</param>
+        /// <returns></returns>
+        public List<CoursecategoryY> SelectCoursecaregoryXView(int MajorID)
+        {
+            return CoursecategoryYBunsiness.GetList().Where(a => a.MajorID == MajorID).ToList();
         }
         /// <summary>
         /// 添加子级名称
@@ -400,7 +439,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         {
             return CoursecategoryXBunsiness.GetList().Where(a => a.CoursecategoryYID == CoursecategoryYID).Select(a => new { name = a.Coursetitle, a.id });
         }
-         /// <summary>
+        /// <summary>
          /// 验证一个时间距离当前时间大于多少
          /// </summary>
          /// <param name="date">时间</param>
@@ -429,7 +468,6 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             }
             return true;
         }
-
         /// <summary>
         /// 下拉框课程类别加载多选框数据课程名称
         /// </summary>
@@ -509,6 +547,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             AjaxResult result = null;
             try
             {
+                undergraduatecourse.IsDelete = false;
                 UndergraduatecourseBusiness.Insert(undergraduatecourse);
                 result = new SuccessResult();
                 result.Success = true;
@@ -662,6 +701,66 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             return result;
+        }
+        /// <summary>
+        /// 查询已经报考的课程
+        /// </summary>
+        /// <param name="Studentid">学号</param>
+        /// <returns></returns>
+        public object GetDateRegisterforexamination(string Studentid, int page, int limit)
+        {
+           var EnroID= this.GetList().Where(a => a.IsDelete == false && a.StudentNumber == Studentid).FirstOrDefault().ID;
+            List<AchievementView> achievementViews = new List<AchievementView>();
+            var list = RegisterforexaminationBusiness.GetList().Where(a => a.EnrollID == EnroID).ToList();
+            foreach (var item in list)
+            {
+                AchievementView view = new AchievementView();
+                var Undergrdua = UndergraduatecourseBusiness.GetEntity(item.UndergraduatecourseID);
+                view.Coursecode = Undergrdua.Coursecode;
+                view.Coursetitle = Undergrdua.Coursetitle;
+                view.Examinationperiod = item.Examinationperiod;
+                achievementViews.Add(view);
+            }
+            var dataList = achievementViews.OrderBy(a => a.Examinationperiod).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = achievementViews.Count,
+                data = dataList
+            };
+            return data;
+        }
+        /// <summary>
+        /// 查询已经过了的课程
+        /// </summary>
+        /// <param name="Studentid">学号</param>
+        /// <returns></returns>
+        public object GetDatechievement(string Studentid,int page,int limit)
+        {
+            var EnroID = this.GetList().Where(a => a.IsDelete == false && a.StudentNumber == Studentid).FirstOrDefault().ID;
+            List<AchievementView> achievementViews = new List<AchievementView>();
+            var list = UndergraduateachievementBusines.GetList().Where(a => a.EnrollID == EnroID).ToList();
+            foreach (var item in list)
+            {
+                AchievementView view = new AchievementView();
+                var Undergrdua = UndergraduatecourseBusiness.GetEntity(item.Subjectid);
+                view.Coursecode = Undergrdua.Coursecode;
+                view.Coursetitle = Undergrdua.Coursetitle;
+                view.Examinationperiod = item.Examinationperiod;
+                view.Fraction = item.Fraction;
+                achievementViews.Add(view);
+            }
+            var dataList = achievementViews.OrderBy(a => a.Examinationperiod).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = achievementViews.Count,
+                data = dataList
+            };
+            return data;
+         
         }
     }
 }

@@ -39,7 +39,7 @@
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                     <label class="layui-form-label lables">下级级课程类别名称</label>
                     <div class="layui-input-inline">
-                        <select lay-verify="required"  id="CoursecategoryXid" name="CoursecategoryXid" lay-filter="Lei"></select>
+                        <select lay-verify="required" id="CoursecategoryXid" name="CoursecategoryXid" lay-filter="Lei"></select>
                     </div>
                 </div>
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
@@ -48,6 +48,12 @@
                         @Html.TextBoxFor(a => a.Coursetitle, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入课程名称" }, { "class", "layui-input " } })
                     </div>
                     <label style="color:red;margin-left:70%;margin-top:-30px;display:none;" id="label">请换一个名称</label>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                    <label class="layui-form-label lables">课程代码</label>
+                    <div class="layui-input-inline">
+                        @Html.TextBoxFor(a => a.Coursecode, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入课程代码" }, { "class", "layui-input " } })
+                    </div>
                 </div>
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                     <label class="layui-form-label lables">学分</label>

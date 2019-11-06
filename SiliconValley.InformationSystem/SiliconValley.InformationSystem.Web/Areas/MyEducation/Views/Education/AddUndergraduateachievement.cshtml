@@ -24,7 +24,7 @@
 </head>
 <body>
     <form class="layui-form" id="addGoodsForm" action="" lay-filter="example">
-        <div class="layui-container" style="margin-top:40px;margin-left:60px;">
+        <div class="layui-container" style="margin-top:40px;margin-left:40px;">
             @{
                 EnrollmentView student = ViewBag.student as EnrollmentView;
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
@@ -62,14 +62,14 @@
 
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label lables">选择及格课程</label>
-                <div class="layui-input-block" id="UndergraduatecourseID">
+                <div class="layui-input-block" style="margin-left:130px;width:360px;"  id="UndergraduatecourseID">
 
                 </div>
             </div>
 
 
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                <div class="layui-input-block" style="margin-left:154px;margin-top:30px;">
+                <div class="layui-input-block" style="margin-left:134px;margin-top:30px;">
                     <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">确认</button>
                     <button type="reset" class="layui-btn layui-btn-primary" style="margin-left:30px;" id="remove">重置</button>
                 </div>
@@ -115,6 +115,7 @@
         });
         //加载复选框
         function checkboxatecourse(url, datae) {
+   
             $.ajax({
                 url: url,
                 dataType: 'json',
@@ -144,6 +145,7 @@
                 }
             })
         }
+
         //监听下级下拉框
         form.on('select(userClass)', function (data) {
             $('#UndergraduatecourseID').empty();
@@ -154,7 +156,7 @@
                     EnrollID: $("#EnrollID").val(),
 
                 };
-                checkboxatecourse("/MyEducation/Education/ChedeckdUndergraduateachievement", db);
+               checkboxatecourse("/MyEducation/Education/ChedeckdUndergraduateachievement", db);
             }
         });
 
@@ -198,7 +200,8 @@
                     var obj = {
                         Subjectid: data.value,
                         Fraction: value,
-                        EnrollID: $("#EnrollID").val()
+                        EnrollID: $("#EnrollID").val(),
+                        Examinationperiod: $("#Examinationperiod").val()
                     };
                     list.push(obj);
                     layer.close(index);

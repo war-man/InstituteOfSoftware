@@ -15,6 +15,8 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
+using System.Web.Script.Serialization;
+using SiliconValley.InformationSystem.Business.EnroExamination_Business;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -39,6 +41,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         BaseBusiness<HeadClass> HeadClassEnti = new BaseBusiness<HeadClass>();
         //班主任
         HeadmasterBusiness Hadmst = new HeadmasterBusiness();
+        //成考管理
+        EnroExaminationBusiness enroExaminationBusiness = new EnroExaminationBusiness();
         // GET: Teachingquality/ClassSchedule
         //主页面
         public ActionResult Index()
@@ -65,7 +69,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             try
             {
                 List<ClassSchedule> list = new List<ClassSchedule>();
-                if (user.UserId=="Admin")
+                if (user.UserName=="Admin")
                 {
                     list = dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
                 }
@@ -350,5 +354,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            return Json(dbtext. Dismantleclasses(Addtime, FormerClass, List, Reasong, Remarks, StudentID),JsonRequestBehavior.AllowGet);
 
         }
-      }
+ 
+        /// <summary>
+        /// 验证成考学员是否重复
+        /// </summary>
+        /// <param name="student"></param>
+        /// <returns></returns>
+        public ActionResult BoollistEnroExamination(string student)
+        {
+            //引入序列化
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //序列化
+            var list = serializer.Deserialize<List<StudentInformation>>(student);
+
+            return Json(enroExaminationBusiness.BoollistEnroExamination(list), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 验证班级名称是否重复
+        /// </summary>
+        /// <param name="id">班级名称</param>
+        /// <returns></returns>
+        public ActionResult ClassNameCount(string id)
+        {
+            return Json(dbtext.ClassNameCount(id), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 升学缴费情况
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult FindTuition()
+        {
+            return View();
+        }
+        public ActionResult listTuiton()
+        {
+           var x= dbtext.listTuiton(1, 5, "1710NA");
+            return null;
+        }
+
+    }
 }

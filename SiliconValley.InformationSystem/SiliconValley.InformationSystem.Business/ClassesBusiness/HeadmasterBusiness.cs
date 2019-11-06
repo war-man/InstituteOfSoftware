@@ -69,6 +69,9 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
         //学员班级
         ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+        //班主任职业素养培训
+        BaseBusiness<Professionala> ProfessionalaBusiness = new BaseBusiness<Professionala>();
+
         //班主任离职时间
         public bool QuitEntity(string informatiees_Id)
         {
@@ -146,7 +149,16 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             return str;
         
         }
-
+        /// <summary>
+        /// 通过班级号获取班主任
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public Headmaster ClassHeadmaster(string ClassName)
+        {
+            var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.ClassID == ClassName).FirstOrDefault();
+           return this.GetEntity(mysex.LeaderID);
+        }
         /// <summary>
         /// 带班业务按钮操作
         /// </summary>
@@ -205,6 +217,66 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             var leid = Hoadclass.GetList().Where(c => c.IsDelete == false && c.EndingTime == null && c.ClassID == ClassID).FirstOrDefault().LeaderID;//查询带班班长id
           var Empid = this.GetEntity(leid).informatiees_Id;//员工编号
             return employeesInfoManage.GetEntity(Empid);
+        }
+        /// <summary>
+        /// 班主任职业素养培训数据
+        /// </summary>
+        /// <param name="page">第几页</param>
+        /// <param name="limit">多少条数据</param>
+        /// <returns></returns>
+        public List<Professionala> GetDateProfessionala(int page, int limit)
+        {
+            SessionHelper.Session["Professionalapage"] = page;
+            SessionHelper.Session["Professionalalimit"] = limit;
+           var list= ProfessionalaBusiness.GetList().Where(a => a.Dateofregistration == false).ToList();
+           return list.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+        }
+        /// <summary>
+        /// 记录班主任职业素养培训课件
+        /// </summary>
+        /// <param name="professionala">数据对象</param>
+        /// <returns></returns>
+        public object AddProfessionala(Professionala professionala)
+        {
+            var result=new object();
+
+            try
+            {
+                professionala.Dateofregistration = false;
+                professionala.AddTime = DateTime.Now;
+                ProfessionalaBusiness.Insert(professionala);
+                result = new {
+                    Success = true,
+                    Msg = "录入成功",
+                    page = SessionHelper.Session["Professionalapage"],
+                    limit = SessionHelper.Session["Professionalalimit"]
+                };
+
+                BusHelper.WriteSysLog("班主任职业素养课件添加", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                result = new
+                {
+                    Success = false,
+                    Msg = "服务器错误！",
+                    page = SessionHelper.Session["Professionalapage"],
+                    limit = SessionHelper.Session["Professionalalimit"]
+                };
+
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+               
+            }
+            return result;
+        }
+        /// <summary>
+        /// 查询单条班主任职业素养课件培训
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public Professionala FineProfessionala(int id)
+        {
+            return ProfessionalaBusiness.GetEntity(id);
         }
     }
 }

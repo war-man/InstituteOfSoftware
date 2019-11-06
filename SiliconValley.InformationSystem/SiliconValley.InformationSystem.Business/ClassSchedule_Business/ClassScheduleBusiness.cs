@@ -11,6 +11,9 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
+using SiliconValley.InformationSystem.Entity.Entity;
+using SiliconValley.InformationSystem.Business.FinaceBusines;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -30,13 +33,18 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         ScheduleForTraineesBusiness ss = new ScheduleForTraineesBusiness();
         //班级群管理
         BaseBusiness<GroupManagement> GetBase = new BaseBusiness<GroupManagement>();
-
         //班会
         BaseBusiness<Assmeetings> myassmeetings = new BaseBusiness<Assmeetings>();
         //拆班记录
         BaseBusiness<RemovalRecords> Dismantle = new BaseBusiness<RemovalRecords>();
         //班级异动表
         BaseBusiness<ClassDynamics> CLassdynamic = new BaseBusiness<ClassDynamics>();
+        //升学阶段
+        BaseBusiness<GotoschoolStage> GotoschoolStageBusiness = new BaseBusiness<GotoschoolStage>();
+        //费用明目
+        CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
+        //学员费用
+        BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -64,6 +72,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 }
 
                 classStudentView.Name = item.Name;
+                classStudentView.Sex =(bool)item.Sex;
 
                 classStudentView.StuNameID = item.StudentNumber;
                 if (classStudentView != null)
@@ -76,7 +85,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
         }
-
         public List<ClassStudentView> ClassStudentneViewList(string classid)
         {
             //学员班级
@@ -103,7 +111,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
         }
-
         /// <summary>
         /// 根据班级查询返回出班级人数,微信号,QQ号,班级名称
         /// </summary>
@@ -132,7 +139,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             list.Add(classdetailsView);
             return list;
         }
-
         /// <summary>
         /// 根据班级号查询出班级的联系方式
         /// </summary>
@@ -264,7 +270,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return retus;
         }
-
         /// <summary>
         /// 班会数据操作
         /// </summary>
@@ -331,7 +336,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return myassmeetings.GetList().Where(a => a.IsDelete == false && a.ClassNumber == ClassName).ToList();
         }
-
         /// <summary>
         /// 查询这个委员是否有重复的
         /// </summary>
@@ -444,7 +448,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return retus;
         }
-
         /// <summary>
         /// 根据班级名称获取阶段跟专业
         /// </summary>
@@ -462,6 +465,69 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             {
                 return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
             }
+        }
+        /// <summary>
+        /// 获取班级学员缴费记录
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public List<DetailedcostView> listTuiton(int page, int limit,string ClassName)
+        {
+            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassName).FirstOrDefault();
+            var Mylist = this.ClassStudentneList(ClassName);
+            List<DetailedcostView> lisrDetaild = new List<DetailedcostView>();
+            foreach (var item in Mylist)
+            {
+
+                DetailedcostView detailedcostView = this.GotoschoolTuition(CLaaNuma.grade_Id, item.StuNameID);
+                detailedcostView.ClassName = ClassName;
+                detailedcostView.Name = item.Name;
+                detailedcostView.Stidentid = item.StuNameID;
+                detailedcostView.Sex = item.Sex == false ? "女" : "男";
+                lisrDetaild.Add(detailedcostView);
+            }
+
+            return lisrDetaild;
+        }
+        /// <summary>
+        /// 获取升学费用
+        /// </summary>
+        /// 
+        /// <param name="Grand"></param>
+        /// <param name="StudentID"></param>
+        /// <returns></returns>
+        public  DetailedcostView GotoschoolTuition(int Grand, string StudentID)
+        {
+            decimal price = 0;
+            decimal myprice = 0;
+            //拿到下一个阶段
+            var x = GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == Grand).FirstOrDefault();
+
+            var mylist = costitemsBusiness.GetList().Where(a => a.IsDelete == false && a.Grand_id == x.NextStageID).ToList();
+            foreach (var item in mylist)
+            {
+                myprice = myprice + item.Amountofmoney;
+                var x1 = studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == StudentID && a.Costitemsid == item.id).FirstOrDefault();
+                var x2= x1 == null ? 0 : x1.Amountofmoney;
+                price = price + (decimal)x2;
+            }
+            DetailedcostView detailedcostView = new DetailedcostView();
+            detailedcostView.Amountofmoney = price;
+            detailedcostView.Isitinturn = price >= myprice ? "交齐" : "未交齐";
+            detailedcostView.NextStageID = Grandcontext.GetEntity(x.NextStageID).GrandName;
+            detailedcostView.CurrentStageID = Grandcontext.GetEntity(Grand).GrandName;
+            return detailedcostView;
+        }
+        /// <summary>
+        /// 通过班级名称查询是否有重复名称
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public int ClassNameCount(string ClassName)
+        {
+          return  this.GetList().Where(a => a.ClassNumber == ClassName).Count();
         }
     }
 }

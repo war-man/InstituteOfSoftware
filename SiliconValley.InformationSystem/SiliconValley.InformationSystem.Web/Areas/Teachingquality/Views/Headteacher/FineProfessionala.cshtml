@@ -1,0 +1,72 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Professionala
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>FineProfessionala</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .layui-col-xs12 {
+            border: 1px;
+            border-bottom-style: solid;
+        }
+        .bordel {
+            line-height: 40px;
+            color: dodgerblue;
+            border: 0px;
+        }
+        .textl {
+            width: 350px;
+            height: 200px;
+            color: dodgerblue;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align:center;margin-top:30px;height:30px;">
+        <h3>详情内容</h3>
+    </div>
+    <div class="layui-container" style="text-align:center;">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">培训标题</label>
+                <div class="layui-input-inline">
+                    @Html.TextBoxFor(a => a.TrainingTitle, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input bordel" } })
+                   
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label" style="line-height:200px;">内容</label>
+                <div class="layui-input-inline">
+                    @Html.TextAreaFor(a => a.Trainingcontent, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input textl" } })
+
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">日期</label>
+                <div class="layui-input-inline">
+                    @Html.TextBoxFor(a => a.TrainingDate, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input bordel" } })
+
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    @Html.TextBoxFor(a => a.Remarks, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input bordel" } })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center;margin-top:30px;height:30px;">
+        <button class="layui-btn" type="button" id="but1">确认</button>
+    </div>
+</body>
+</html>

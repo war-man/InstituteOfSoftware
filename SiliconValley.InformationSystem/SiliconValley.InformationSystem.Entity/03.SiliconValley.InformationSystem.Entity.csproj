@@ -149,6 +149,7 @@
     <Compile Include="Entity\EmpStaffAndStu.cs" />
     <Compile Include="Entity\EmpTransaction.cs" />
     <Compile Include="Entity\EnroExamination.cs" />
+    <Compile Include="Entity\EnroExaminationAchievement.cs" />
     <Compile Include="Entity\Enrollment.cs" />
     <Compile Include="Entity\EnterpriseInfo.cs" />
     <Compile Include="Entity\EntSpee.cs" />
@@ -165,6 +166,7 @@
     <Compile Include="Entity\GoodSkill.cs" />
     <Compile Include="Entity\GoodsProvide.cs" />
     <Compile Include="Entity\GoodsType.cs" />
+    <Compile Include="Entity\GotoschoolStage.cs" />
     <Compile Include="Entity\Grand.cs" />
     <Compile Include="Entity\GroupManagement.cs" />
     <Compile Include="Entity\Groupmembers.cs" />
@@ -285,6 +287,7 @@
     <Compile Include="Entity\UnemployedStudent.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registerforexamination.cs" />
+    <Compile Include="ViewEntity\AchievementView.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
@@ -298,14 +301,17 @@
     <Compile Include="ViewEntity\ConsultZhuzImageData.cs" />
     <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
+    <Compile Include="ViewEntity\DetailedcostView.cs" />
     <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\DivTwoData.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
+    <Compile Include="ViewEntity\EnrollmentStudentView.cs" />
     <Compile Include="ViewEntity\EnrollmentView.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\EssentialinformationEnucView.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />

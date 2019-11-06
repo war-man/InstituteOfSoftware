@@ -37,6 +37,9 @@
                             <div class="layui-input-inline">
                                 @Html.TextBoxFor(a => a.ClassNumber, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请填写班级名称" }, { "class", "layui-input " } })
                             </div>
+                            <div style="height:37px;">
+                            <input type="text" style="display:none" id="BoolClassName" />
+                            <label style="color:red;line-height:37px;display:none;"id="labClassName">班级名称重复</label></div>
                         </div>
                         <div class="layui-col-xs2 layui-col-sm2 layui-col-md2 widths">
                         </div>
@@ -105,9 +108,9 @@
             //return false;
           
             var datas = data.field;
-            console.log(datas);
-            ajaxpost("/Teachingquality/ClassSchedule/AddClassSchedule", datas);
-          
+            if ($("#BoolClassName").val()=="") {
+                ajaxpost("/Teachingquality/ClassSchedule/AddClassSchedule", datas);
+            }
         });
         //正在执行中
         function showLoad() {
@@ -179,5 +182,25 @@
                 }
             });
         }
+
+        function ClassNameCount(id) {
+            $.post("/Teachingquality/ClassSchedule/ClassNameCount/" + id, function (da) {
+                if (da > 0) {
+                    $("#BoolClassName").val("1233");
+                    $("#labClassName").css("display", "block");
+                } else {
+                    $("#BoolClassName").val("");
+                    $("#labClassName").css("display", "none");
+                }
+            })
+        }
+        //验证专业名称
+        $("#ClassNumber").keyup(function () {      // 按键弹起时触发的事件；
+            if ($(this).val() != "") {
+                ClassNameCount($(this).val());
+          
+            }
+
+        });
     });
 </script>
