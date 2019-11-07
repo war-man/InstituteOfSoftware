@@ -1,0 +1,489 @@
+﻿
+@{
+    ViewBag.Title = "DormitoryIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<style>
+    #top {
+        width: 99%;
+        height: 50px;
+        border: 1px solid pink;
+    }
+
+    .myshow {
+        display: block;
+    }
+
+    #bottom {
+        border: 1px solid pink;
+        width: 99%;
+        /*height: 600px;*/
+        margin-top: 10px;
+    }
+
+    #left {
+        width: 18%;
+        border: 1px solid pink;
+        float: left;
+        /*height: 800px;*/
+    }
+
+    #cencont {
+        width: 81%;
+        border: 1px solid pink;
+        height: 800px;
+        margin-left: 1%;
+        float: left;
+        overflow: hidden
+    }
+
+    #querylable {
+        width: 110px;
+    }
+
+    #cencontleft, #cencontright {
+        width: 99%;
+        height: 150px;
+        margin: 0 auto;
+        margin-top: auto;
+        line-height: 200px;
+    }
+
+    #aisle {
+        width: 99%;
+        height: 75px;
+        text-align: center;
+        position: relative;
+    }
+
+    #spanaisle {
+        position: absolute;
+        bottom: 0px;
+        font-size: 22px;
+    }
+
+    .room {
+        width: 10.00%;
+        height: 45px;
+        margin-left: 5px;
+        float: left;
+        display: inline-block; /*一定要将div设置为inline-block*/
+        vertical-align: middle; /*设置该元素在父元素中的位置*/
+        line-height: 45px;
+        text-align: center;
+        margin-top: 9px;
+    }
+
+    .roomdiv {
+        width: 91%;
+        height: 99%;
+        float: left;
+        line-height: 99%;
+    }
+
+    .btnadddiv {
+        width: 8%;
+        height: 88%;
+        float: left;
+    }
+
+    .accommodate {
+        width: 99%;
+        height: 110px;
+        display: inline-block; /*一定要将div设置为inline-block*/
+        vertical-align: middle; /*设置该元素在父元素中的位置*/
+        line-height: 60px;
+        text-align: center;
+    }
+
+    .mydtree {
+        width: 99%;
+    }
+</style>
+
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/dtree.css" rel="stylesheet" />
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
+
+<div id="top">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline" id="mubandiv">
+                <label class="layui-form-label" id="querylable">搜索选择框</label>
+                <div class="layui-input-inline">
+                    <select name="modules" id="modules" lay-verify="required" lay-search="">
+                        <option value="name0">员工姓名</option>
+                        <option value="name1">部门名称</option>
+                        <option value="name2">寝室号</option>
+
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                </div>
+
+                <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="demo1">搜索</button>
+
+            </div>
+
+        </div>
+    </form>
+
+</div>
+<div id="bottom">
+    <div id="left">
+        <ul id="demoTree" style="width:210px" class="dtree" data-id="0"></ul>
+    </div>
+
+    <div id="cencont">
+        <div id="cencontleft">
+            <div class="accommodate">
+                <div class="roomdiv" id="leftroomlist">
+                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
+
+                </div>
+
+
+                <div class="btnadddiv" id="leftaddroomdiv">
+
+                </div>
+
+
+            </div>
+        </div>
+        <div id="aisle">
+            <div class="roomdiv">
+                <span id="spanaisle">过道</span>
+            </div>
+            <div class="btnadddiv">
+
+            </div>
+
+        </div>
+        <div id="cencontright">
+            <div class="accommodate">
+                <div class="roomdiv" id="rightroomlist">
+                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-female"></i>D2001</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-primary layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
+                    <div class="room"><button type="button" class="layui-btn layui-btn-danger layui-btn-radius layui-btn-sm"><i class=" layui-icon layui-icon-male"></i>D2015</button></div>
+                </div>
+                <div class="btnadddiv" id="rightaddroomdiv">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*房间模板*@
+<script type="text/template" id="roommuban">
+    <div class="room"><button aa="ss" type="button" roomid="{{=roomid}}" roomtype="{{=roomtype}}" class="layui-btn layui-btn-{{=isfull}} layui-btn-radius layui-btn-sm rommbtn"><i class=" layui-icon layui-icon-{{=type}}"></i>{{=roomname}}</button></div>
+</script>
+
+<script src="~/Scripts/underscore.js"></script>
+<script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
+
+@section script{
+    <script>
+        var jslayer;
+        var clickroomid;
+        //房间详细弹出层
+        function openroomdewith() {
+            jslayer.open({
+                type: 2,
+                content: "/Dormitory/StaffRoomDetails/StaffRoomdeWithPage?DorminfoID=" + clickroomid,
+                title: "房间详细",
+                area: ['1090px', '660px'],
+                end: function () {
+                    layer.msg("回来了。");
+                }
+            });
+        }
+        layui.extend({
+            dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
+            var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
+            jslayer = layui.layer;
+
+            var jstungid, jsfloorid, jsselect0, name0 = "",staffroom,studentroom ;
+
+            //初始化树
+            var myDTree = dtree.render({
+                elem: "#demoTree",
+                initLevel: 1,
+                url: '/Dormitory/DormitoryInfo/EstablishTree',
+                formatter: {
+                    title: function (data) {  // 示例给有子集的节点返回节点统计
+                        var s = data.context;
+                        if (data.children) {
+                            s += ' <span style=\'color:blue\'>(' + data.children.length + ')</span>';
+                        }
+                        return s;
+                    }
+                },
+                nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
+                leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
+                icon: ["3", "11"], // 使用
+                response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
+            });
+            $(function () {
+                staffroom = $roomstaytype("StaffRoom");
+                 studentroom = $roomstaytype("StudentRoom");
+                loadtree();
+            });
+            //加载树
+            function loadtree() {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/EstablishTree',
+                    type: 'GET',
+                    success: function (successdata) {
+                        //console.log(successdata);
+                        jstungid = successdata.data[0].nodeId;
+                        jsfloorid = successdata.data[0].children[0].nodeId;
+                        loadroom();
+                        //可以重载所有基础参数
+                        myDTree.reload(
+                            'demoTree',
+                            {
+                                data: successdata
+
+                            });
+                    },
+                    error: function (errordata) {
+                        layer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+            }
+            // 绑定节点点击
+            dtree.on("node('demoTree')", function (obj) {
+                //console.log(obj);
+                var dtreeobj = obj.param;
+                //console.log(dtreeobj);
+
+                //点击的是楼
+                if (dtreeobj.level == "2") {
+                    jstungid = dtreeobj.parentId;
+                    jsfloorid = dtreeobj.nodeId;
+
+                }
+                //点击的是栋
+                if (dtreeobj.level == "1") {
+
+                    var arry = obj.childParams;
+                    if (arry.length > 0) {
+                        jstungid = dtreeobj.nodeId;
+                        for (var i = arry.length - 1; i >= 0; i--) {
+                            if (arry[i].parentId != dtreeobj.nodeId) {
+                                arry.splice(i, 1);
+                            }
+                        }
+                        arry.sort(sortBy('nodeId'));
+                        jsfloorid = arry[0].nodeId;
+
+                    } else {
+
+                        layer.msg("暂无楼层，无法进行操作！", { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                }
+                loadroom();
+
+            });
+            function sortBy(props) {
+                return function (a, b) {
+                    return a[props] - b[props];
+                }
+            }
+            //加载房间
+            function loadroom() {
+                $.ajax({
+                    url: '/Dormitory/DormitoryInfo/EstablishRoom',
+                    type: 'GET',
+                    async: false,//设置按钮是否禁用
+                    data: { TungID: jstungid, FloorID: jsfloorid },
+                    datatype: 'json',
+                    success: function (successdata) {
+                        //console.log(successdata);
+                    @*男寝：male 女寝：female  满人：danger 没满：primary 仓库：util 参观寝：group 员工寝室：user  禁用disabled *@
+                        $("#leftroomlist").children().remove();
+
+                        $("#rightroomlist").children().remove();
+                        for (var i = 0; i < successdata.leftroom.length; i++) {
+                            var leftroomobjhtml = loadmuban(successdata.leftroom[i]);
+                            //console.log("410" + leftroomobjhtml);
+                            $("#leftroomlist").append($(leftroomobjhtml));
+                        }
+
+                        for (var i = 0; i < successdata.rightroom.length; i++) {
+                            var rightroomobjhtml = loadmuban(successdata.rightroom[i]);
+                            $("#rightroomlist").append($(rightroomobjhtml));
+                        }
+                     
+                        disabledforstudent();
+                    },
+                    error: function (errordata) {
+
+                    }
+                });
+            }
+            //创建按钮
+            function loadmuban(dtreeobject) {
+                //console.log(dtreeobject);
+                var leftroomobj = _.template($("#roommuban").html());
+
+                var leftroomobjhtml;
+                //console.log(dtreeobject.RoomStayTypeId);
+
+                if (dtreeobject.RoomStayTypeId == "1") {
+                    //console.log("学生寝室");
+                    //console.log(dtreeobject.isfull);
+                    //男 满人
+                    if (dtreeobject.SexType == "1") {
+                        if (dtreeobject.isfull) {
+                            leftroomobjhtml = leftroomobj({ isfull: "danger", type: "male", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                        } else {
+                            leftroomobjhtml = leftroomobj({ isfull: "primary", type: "male", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                            //console.log("/男 未满人");
+                        }
+                    }
+
+                    if (dtreeobject.SexType == "2") {
+                        if (dtreeobject.isfull) {
+                            leftroomobjhtml = leftroomobj({ isfull: "danger", type: "female", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                        } else {
+                            leftroomobjhtml = leftroomobj({ isfull: "primary", type: "female", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                            //console.log("/女 未满人");
+                        }
+                    }
+
+
+                } else if (dtreeobject.RoomStayTypeId == "2") {
+                    //console.log("参观寝室");
+                    //参观寝室 满人
+                    if (dtreeobject.isfull) {
+                        leftroomobjhtml = leftroomobj({ isfull: "danger", type: "group", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                    } else {
+                        // 未满人
+                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "group", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                    }
+
+                } else if (dtreeobject.RoomStayTypeId == "5") {
+                    //console.log("仓库");
+                    //仓库
+                    leftroomobjhtml = leftroomobj({ isfull: "danger", type: "util", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                } else {
+                    //console.log("员工寝室");
+                    //员工寝室
+                    //满人
+                    if (dtreeobject.isfull) {
+                        leftroomobjhtml = leftroomobj({ isfull: "danger", type: "user", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                    } else {
+                        leftroomobjhtml = leftroomobj({ isfull: "primary", type: "user", roomtype: dtreeobject.RoomStayTypeId, roomname: dtreeobject.DormInfoName, roomid: dtreeobject.Id });
+                    }
+
+                }
+
+                //console.log(leftroomobjhtml);
+                return leftroomobjhtml;
+            }
+
+         //禁止操作学生房间
+            function disabledforstudent() {
+                $(".rommbtn").each(function (index, domEle) {
+                    var proroomtype = $(this).attr('roomtype');
+                    console.log(proroomtype);
+                    if (proroomtype == studentroom.id) {
+                        $(this).addClass('layui-btn-disabled');
+                        $(this).attr('disabled', 'disabled');
+                    }
+                });
+            }
+
+
+            //按钮点击事件
+            $(document).off("click", '.rommbtn').on('click', '.rommbtn', function () {
+                clickroomid = $(this).attr("roomid");
+                openroomdewith();
+            });
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field;
+                console.log(jsonStr);
+                $.ajax({
+                    url: '/Dormitory/StudentRoomDetails/Seachoption',
+                    type: 'GET',
+                    data: { param0: jsonStr.modules, param1: jsonStr.username },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            var dududata = successdata.Data;
+                            console.log(dududata);
+                            switch (jsonStr.modules) {
+                                case "name0":
+                                    if (dududata.length > 1) {
+                                        loadlistwith(dududata);
+                                    } else {
+                                        clickroomid = dududata[0].DormID;
+                                        openroomdewith();
+                                    }
+                                    break;
+                                case "name1":
+                                    loadlistwith(dududata);
+                                    break;
+                                case "name2":
+                                    if (dududata.RoomStayTypeId == studentroom.id) {
+
+                                        clickroomid = dududata.ID;
+                                        openroomdewith();
+                                    } else {
+                                        layer.msg("你无权访问查看非学生宿舍房间信息。", { icon: 6, time: 2000 }, function () {
+
+                                        });
+                                    }
+                                    break;
+                            }
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function () {
+                        layer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+                $("#nameid").val("");
+                return false;
+            });
+        //多条数据
+        function loadlistwith(data) {
+            layer.open({
+                type: 2,
+                content: "/Dormitory/StudentRoomDetails/loadlistwith",
+                title: "重复数据列表",
+                area: ['1090px', '660px'],
+                success: function (layero, index) {    //成功获得加载changefile.html时，预先加载，将值从父窗口传到 子窗口
+                    let body = layui.layer.getChildFrame('body', index);
+                    body.find(".filename").val(JSON.stringify(data));
+                },
+                end: function () {
+                    layer.msg("回来了。");
+                }
+            });
+        }
+        });
+
+
+    </script>
+}
+
+

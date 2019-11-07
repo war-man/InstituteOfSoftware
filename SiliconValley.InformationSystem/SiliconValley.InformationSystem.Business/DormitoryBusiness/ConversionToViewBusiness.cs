@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private AccdationinformationBusiness dbacc;
         private DormInformationBusiness dbdorm;
         private ProStudentAndTeacherBussiness dbstudentandteach;
+        private ProStudentInformationBusiness dbproStudentInformationBusiness;
         /// <summary>
         /// 员工实体对象转化为视图对象带房间编号的 
         /// </summary>
@@ -67,6 +68,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// 用于居住学生信息
         /// </summary>
         /// <param name="data"></param>
+        /// <param name="live">转化的时候判断是否是居住信息，true是居住人员信息，false 普通信息</param>
         /// <returns></returns>
         public List<ProStudentView> StudentInformationToProStudentView(List<StudentInformation> data, bool live) {
             dbprotrainees = new ProScheduleForTrainees();
@@ -103,6 +105,24 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 
             }
             return result;
+        }
+
+        /// <summary>
+        /// 将学生班级集合对象转化为学生的页面model集合对象
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="live">同上</param>
+        /// <returns></returns>
+        public List<ProStudentView> ScheduleForTraineesToProStudentView(List<ScheduleForTrainees> data, bool live)
+        {
+            dbproStudentInformationBusiness = new ProStudentInformationBusiness();
+            List<StudentInformation> list0 = new List<StudentInformation>();
+            foreach (var item in data)
+            {
+                list0.Add(dbproStudentInformationBusiness.GetEntity(item.StudentID));
+
+            }
+            return this.StudentInformationToProStudentView(list0, live);
         }
     }
 }
