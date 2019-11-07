@@ -564,16 +564,16 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// </summary>
         /// <param name="Datailedcost">序列化集合对象</param>
         /// <returns></returns>
-        public int SMScharging(List<DetailedcostView> Datailedcost)
+        public string SMScharging(List<DetailedcostView> Datailedcost)
         {
-            int count = 0;
+            string count = "";
             foreach (var item in Datailedcost)
             {
                 //电话Familyphone
                 var student = studentInformationBusiness.GetEntity(item.Stidentid);
-                var msmTexts = item.Name + student.Guardian.Split(',')[1] + "您好：您的孩子有" + item.NextStageID + "升学费用未交齐，还差" + item.Surplus + "元,未交，应交" + item.ShouldJiao +
-                    "元，以交" + item.Amountofmoney + "元。请您尽快交齐，否则学校将给您的孩子做停课处理！有问题请联系：" + item.HeadmasterName + "班主任";
-                count = count + int.Parse(PhoneSMS(student.Familyphone, msmTexts));
+                var msmTexts = item.Name + student.Guardian.Split(',')[1] + "您好：您的孩子有" + item.NextStageID + "升学费用未交齐，应交" + item.ShouldJiao + "元，未交" + item.Surplus +
+                    "元，已交" + item.Amountofmoney + "元。请您尽快交齐，否则学校将给您的孩子做停课处理！有问题请联系：" + item.HeadmasterName + "班主任";
+                count = PhoneSMS(student.Familyphone, msmTexts);
             }
             return count;
         }

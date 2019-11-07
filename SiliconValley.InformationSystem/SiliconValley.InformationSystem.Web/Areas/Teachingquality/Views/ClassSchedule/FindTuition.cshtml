@@ -63,11 +63,9 @@
 
             function SMScharging(dbset) {
                 $.post("/Teachingquality/ClassSchedule/SMScharging", dbset, function (db) {
-                    if (db > 0) {
-                        layer.msg("短信发送成功");
-                    } else {
-                        layer.alert('服务器错误!', { icon: 0 });
-                    }
+                   
+                        layer.msg(db);
+                  
                 })
             }
             //监听头部工具栏

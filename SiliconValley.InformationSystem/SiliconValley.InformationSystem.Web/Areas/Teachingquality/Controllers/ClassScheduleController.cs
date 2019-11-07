@@ -410,7 +410,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// </summary>
         /// <param name="Datailedcost">序列化集合对象</param>
         /// <returns></returns>
-        public int SMScharging(string Datailedcost)
+        public string SMScharging(string Datailedcost)
         {
            // 引入序列化
            JavaScriptSerializer serializer = new JavaScriptSerializer();
