@@ -42,7 +42,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public decimal ShouldJiao { get; set; }
         /// <summary>
-        /// 未交费用
+        /// 欠费
         /// </summary>
         public decimal Surplus { get; set; }
         /// <summary>
