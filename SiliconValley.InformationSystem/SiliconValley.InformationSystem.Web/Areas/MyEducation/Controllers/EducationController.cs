@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
@@ -22,22 +23,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.MyEducation.Controllers
         BaseBusiness<Undergraduatemajor> UndergraduatemajorYBusiness = new BaseBusiness<Undergraduatemajor>();
         //报考学校
         BaseBusiness<Undergraduateschool> UndergraduateschoolBunsiness = new BaseBusiness<Undergraduateschool>();
-       
+        //班级表
+        ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
         private readonly EnrollmentBusinesse dbtext;
         public EducationController()
         {
             dbtext = new EnrollmentBusinesse();
         }
         // GET: MyEducation/Education
+        //主页面
         public ActionResult Undergraduate()
         {
+            ViewBag.ClassName = classScheduleBusiness.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber }).ToList();
             return View();
         }
 
         //获取已报名本科学员
-        public ActionResult GetDate(int page, int limit, string Name, string StudentNumber, string identitydocument)
+        public ActionResult GetDate(int page, int limit, string Name, string StudentNumber, string identitydocument,string ClassName,string Alreadypassed)
         {
-            return Json(dbtext.GetDate(page, limit, Name, StudentNumber, identitydocument), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.GetDate(page, limit, Name, StudentNumber, identitydocument, ClassName, Alreadypassed), JsonRequestBehavior.AllowGet);
         }
         //本科专业添加表单
         [HttpGet]
@@ -157,7 +161,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.MyEducation.Controllers
         public ActionResult Registerforexamination(string id)
         {
             ViewBag.student = dbtext.FineRegisterforexamination(id);
-            ViewBag.Major = UndergraduatemajorYBusiness.GetList().Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ProfessionalName }).ToList();
+          var enrid=  dbtext.GetList().Where(a => a.IsDelete == false && a.StudentNumber == id).FirstOrDefault();
+            ViewBag.CoursecategoryY = dbtext.SelectCoursecaregoryXView((int)enrid.MajorID).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.Coursetitle }).ToList();
             return View();
         }
         //加载复选框课程名称
@@ -207,6 +212,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.MyEducation.Controllers
             //序列化
             var list = serializer.Deserialize<List<Undergraduateachievement>>(Examinationperiod);
             return Json(dbtext.AddUndergraduateachievemenS(list), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 成绩查询
+        /// </summary>
+        /// <param name="id">学号</param>
+        /// <returns></returns>
+        public ActionResult Achievementduate(string id)
+        {
+            ViewBag.studentid = id;
+            return View(dbtext.FindEssntiali(id));
+        }
+        /// <summary>
+        /// 加载已经报考的课程
+        /// </summary>
+        /// <param name="id">学号</param>
+        /// <returns></returns>
+        public ActionResult GetDateRegisterforexamination(string id, int page, int limit)
+        {
+            return Json(dbtext.GetDateRegisterforexamination(id,  page, limit), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 加载已经合格的课程
+        /// </summary>
+        /// <param name="id">学号</param>
+        /// <returns></returns>
+        public ActionResult GetDatechievement(string id, int page, int limit)
+        {
+            return Json(dbtext.GetDatechievement(id,  page,  limit), JsonRequestBehavior.AllowGet);
         }
     }
 }

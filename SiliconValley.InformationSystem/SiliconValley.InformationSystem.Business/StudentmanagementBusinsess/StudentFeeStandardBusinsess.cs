@@ -42,6 +42,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
         //自考本科
         EnrollmentBusinesse enrollmentBusiness = new EnrollmentBusinesse();
+        //升学阶段
+        BaseBusiness<GotoschoolStage> GotoschoolStageBusiness = new BaseBusiness<GotoschoolStage>();
         /// <summary>
         /// 获取所有学员数据
         /// </summary>
@@ -117,13 +119,10 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
            return  list.FirstOrDefault();
         }
-
-
         //学员费用
         BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
         //财务人员
         BaseBusiness<FinanceModel> finacemo = new BaseBusiness<FinanceModel>();
-
         /// <summary>
         /// 添加学员费用
         /// </summary>
@@ -374,7 +373,11 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }).ToList();
         }
 
-
+        /// <summary>
+        /// 根据学号查询出所有缴费记录
+        /// </summary>
+        /// <param name="student">学号</param>
+        /// <returns></returns>
         public List<vierprice> FienPrice(string student)
         {
             List<object> students = new List<object>();
@@ -414,6 +417,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             return listvier;
             
         }
+       
+
     }
     
 }

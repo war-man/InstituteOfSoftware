@@ -263,6 +263,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
                 x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+                var studentlist = dbtext.StudentList();
+                for (int i = x.Count-1; i >=0; i--)
+                {
+                    if (x.Count>0)
+                    {
+                        foreach (var item in studentlist)
+                        {
+                            if (x[i].Id==item.StudentPutOnRecord_Id)
+                            {
+                                x.Remove(x[i]);
+                            }
+                        }
+                    }
+                }
+               
             }
             catch (Exception ex)
             {
@@ -288,6 +303,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             try
             {
                 var x = dbctext.GetList().Where(a => a.Id == id).FirstOrDefault();
+
                 return Json(x, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -327,7 +343,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     {
                         
                         studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
-                        studentInformation.InsitDate = DateTime.Now; ;
+                        studentInformation.InsitDate = DateTime.Now; 
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         studentInformation.IsDelete = false;
@@ -410,6 +426,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var ClassID = Stuclass.Mylist("ScheduleForTrainees").Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ClassID;
             var x = new
             {
+                a.Familyphone,
                 StudentNumber = a.StudentNumber,//学号
                 Name = a.Name,//姓名
                 InsitDate = a.InsitDate,//入校时间
@@ -428,7 +445,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Guardian=a.Guardian,//亲属
                 AddDate = Stuclass.Mylist("ScheduleForTrainees").Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().AddDate,//入班时间
                classa = classschedu.GetList().Where(q=> q.IsDelete == false && q.ClassStatus == false&&q.ClassNumber== ClassID).FirstOrDefault().ClassNumber//班级号
-                                     //a => a.IsDelete == false && a.ClassStatus == false
+                                  //a => a.IsDelete == false && a.ClassStatus == false
             };
             
                 //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称

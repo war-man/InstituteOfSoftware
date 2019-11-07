@@ -23,8 +23,9 @@ namespace SiliconValley.InformationSystem.Business.FinaceBusines
         /// <param name="Stage">阶段id</param>
         /// <param name="Name">名目名称</param>
         /// <returns></returns>
-        public int BoolName(int Stage,string Name)
+        public int BoolName(int ?Stage,string Name)
         {
+            Stage = Stage == 0 ? null : Stage;
            return this.GetList().Where(a => a.IsDelete == false && a.Grand_id == Stage && a.Name == Name).Count();
         }
         /// <summary>

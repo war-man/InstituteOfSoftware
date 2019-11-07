@@ -110,7 +110,14 @@
                             </div>
                         </div>
                     </div>
-
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">电话号</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                    </div>
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label" style="margin-top:18px;">亲属关系</label>
@@ -131,9 +138,9 @@
                     </div>
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">电话号</label>
+                            <label class="layui-form-label">亲属电话号</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(a => a.Familyphone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -142,7 +149,9 @@
                                 @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" } })
                             </div>
                         </div>
+
                     </div>
+
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">出生日期</label>
@@ -171,13 +180,11 @@
                         </div>
                     </div>
                     <div class="layui-row layui-form-item" id="clssa" style="margin-top:-15px;display:none">
+
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths">
                             <label class="layui-form-label">班级</label>
                             <div class="layui-input-inline">
-
-
                                 @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "list" } })
-
                             </div>
                         </div>
 
@@ -227,7 +234,7 @@
 
                     </div>
                 </fieldset>
-                <div class="layui-row layui-form-item" style="margin-top:20px;">
+                <div class="layui-row layui-form-item" style="margin-top:10px;">
                     <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
                         <div class="layui-input-block">
                             <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
@@ -293,6 +300,7 @@
                     $("#Traine").val(data.Traine)//学员性格
                     $("#Hobby").val(data.Hobby)//兴趣爱好
                     $("#Nation").val(data.Nation)//民族
+                    $("#Familyphone").val(data.Familyphone)//亲属电话
                     //
                     form.render();
                 });

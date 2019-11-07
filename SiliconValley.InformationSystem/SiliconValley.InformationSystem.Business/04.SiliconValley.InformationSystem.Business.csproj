@@ -98,16 +98,6 @@
     <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
     <Compile Include="EducationalBusiness\BreakManeger.cs" />
     <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
-    <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
-    <Compile Include="EducationalBusiness\GoodsManeger.cs" />
-    <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
-    <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
-    <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
-    <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
-    <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
-    <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
-    <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
-    <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
@@ -118,6 +108,7 @@
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
+    <Compile Include="EnroExamination_Business\EnroExaminationBusiness.cs" />
     <Compile Include="EnrollmentBusiness\EnrollmentBusinesse.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
@@ -144,11 +135,8 @@
     <Compile Include="RecruitPhoneTraceBusiness\RecruitPhoneTraceManage.cs" />
     <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\ApplyForFullMemberManage.cs" />
-    <Compile Include="SchoolAttendanceManagementBusiness\DaysOffManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
-    <Compile Include="SchoolAttendanceManagementBusiness\LeaveRequestManage.cs" />
-    <Compile Include="SchoolAttendanceManagementBusiness\LeaveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\OvertimeRecordManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\SalaryRaiseApplyManage.cs" />

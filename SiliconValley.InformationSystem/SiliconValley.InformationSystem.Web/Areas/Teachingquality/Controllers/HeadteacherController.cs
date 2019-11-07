@@ -72,8 +72,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            
             return View();
         }
+
+        //班主任职业素养培训
+        BaseBusiness<Professionala> ProfessionalaBusiness = new BaseBusiness<Professionala>();
         //班级数据
-        
+
         public string HeadmasreClass()
         {
            
@@ -111,6 +114,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
 
 
+        //登记班主任职业素养课件培训
+        [HttpGet]
+        public ActionResult AddProfessionala()
+        {
+            return View();
+        }
+        //班主任职业素养培训数据记录
+        [HttpPost]
+        public ActionResult AddProfessionala(Professionala professionala)
+        {
+            return Json(dbtext.AddProfessionala(professionala),JsonRequestBehavior.AllowGet);
+        }
+        //显示班主任职业素养课件培训
+        public ActionResult GetProfessionala()
+        {
+            ViewBag.professionala = ProfessionalaBusiness.GetList().Where(a => a.Dateofregistration == false).ToList().Count;
+            return View();
+        }
+        /// <summary>
+        /// 班主任职业素养培训数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDateProfessionala(int page, int limit)
+        {
+            return Json(dbtext.GetDateProfessionala(page, limit), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 查询单条班主任职业素养培训课件
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public ActionResult FineProfessionala(int id)
+        {
+            return View(dbtext.FineProfessionala(id));
+        }
         public string Text()
         {
           

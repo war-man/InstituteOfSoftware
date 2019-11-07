@@ -25,6 +25,7 @@
             background-color: #1cc09f;
             color: #fff;
         }
+
         .TiDIV {
             width: 120px;
             height: 120px;
@@ -39,9 +40,11 @@
         .Mydiv:hover {
             background-color: burlywood;
         }
-           .color{
-               background-color:red;
-           }
+
+        .color {
+            background-color: red;
+        }
+
         table {
             margin-left: 10px;
         }
@@ -72,7 +75,7 @@
             color: #fff;
         }
 
-    
+
 
         .backRed {
             background-color: red;
@@ -247,14 +250,26 @@
         </div>
     </div>
     <div class="layui-colla-item">
-        <h2 class="layui-colla-title"> 拆班/合并</h2>
+        <h2 class="layui-colla-title"> 升学管理</h2>
         <div class="layui-colla-content layui-anim">
             <div>
-                <button type="button" id="Dismantleclasses"  class="layui-btn layui-btn-fluid mybut">拆分班级</button>
+                <button type="button" id="Dismantleclasses" class="layui-btn layui-btn-fluid mybut">升学分配班级</button>
             </div>
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">合并班级</button>
+                <button type="button" id="Tuition" class="layui-btn layui-btn-fluid mybut">升学缴费情况</button>
             </div>
+            <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut">升学考试成绩</button>
+            </div>
+        </div>
+    </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title"> 成考管理</h2>
+        <div class="layui-colla-content layui-anim">
+            <div>
+                <button type="button" id="AddEnroExamination" class="layui-btn layui-btn-fluid mybut">成考报名</button>
+            </div>
+           
         </div>
     </div>
 
@@ -274,7 +289,7 @@
                             <div class="layui-col-xs6">
                                 <label class="layui-form-label" style="margin-left:0px;width:100px;">班会标题</label>
                                 <div class="layui-input-inline">
-                                    <input type="tel" name="Title"  id="Title" autocomplete="off" class="layui-input">
+                                    <input type="tel" name="Title" id="Title" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
 
@@ -316,40 +331,40 @@
     </div>
     @{
 
-    <div class="layui-row" id="MyShutdown">
-        @foreach (var item in Model as List<ClassStudentView>)
-        {
-            if (item.ClassNameView == null)
+        <div class="layui-row" id="MyShutdown">
+            @foreach (var item in Model as List<ClassStudentView>)
             {
-        <div class="Mydiv layui-col-xs4">
-            <div style="display:none;">@item.StuNameID</div>
-            <div style="text-align:center;margin-top:20px;line-height:23px;">
+                if (item.ClassNameView == null)
+                {
+                    <div class="Mydiv layui-col-xs4">
+                        <div style="display:none;">@item.StuNameID</div>
+                        <div style="text-align:center;margin-top:20px;line-height:23px;">
 
-                <div class="Name">@item.Name</div>
+                            <div class="Name">@item.Name</div>
 
 
-            </div>
-            
+                        </div>
 
-        </div>
+
+                    </div>
+                }
+                else
+                {
+                    <div class="TiDIV layui-col-xs4">
+                        <div style="display:none;">@item.StuNameID</div>
+                        <div style="text-align:center;margin-top:20px;line-height:23px;">
+
+                            <div class="Name">@item.Name</div>
+                        </div>
+                        <div>现班级:@item.ClassNameView</div>
+
+                    </div>
+                }
+
+
+
             }
-            else
-            {
-        <div class="TiDIV layui-col-xs4">
-            <div style="display:none;">@item.StuNameID</div>
-            <div style="text-align:center;margin-top:20px;line-height:23px;">
-
-                <div class="Name">@item.Name</div>
-            </div>
-            <div>现班级:@item.ClassNameView</div>
-
         </div>
-            }
-
-
-
-        }
-    </div>
     }
 
 
@@ -359,6 +374,7 @@
 
 </script>
 <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
 
     //给头部的班委赋值
@@ -408,54 +424,54 @@
         var result = year + '-' + month + '-' + day;
         return result;
     }
-    layui.use(['element','form', 'table', 'laydate', 'layer'], function () {
+    layui.use(['element', 'form', 'table', 'laydate', 'layer'], function () {
         var element = layui.element;
         var layer = layui.layer;
         var table = layui.table;
         var laydate = layui.laydate;
         var form = layui.form;
         var Stuid = "";
-      
-       
-            // 时间选择器初始化 开始时间
-            laydate.render({
-                elem: '#qBeginTime',
-                format: 'yyyy-MM-dd',
-                done: function (value, date, endDate) {
 
-                    var startDate = new Date(value).getTime();
-                    var endTime = new Date($('#qEndTime').val()).getTime();
 
-                    // console.log(ri);
-                    if (endTime < startDate) {
-                        layer.msg('结束时间不能小于开始时间');
-                        $('#qBeginTime').val($('#qEndTime').val());
-                    }
-                    if (startDate > curDate.getTime()) {
-                        layer.msg('开始时间不能大于当前时间');
-                        $('#qBeginTime').val(curYearMonthrDay);
-                    }
+        // 时间选择器初始化 开始时间
+        laydate.render({
+            elem: '#qBeginTime',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+
+                var startDate = new Date(value).getTime();
+                var endTime = new Date($('#qEndTime').val()).getTime();
+
+                // console.log(ri);
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#qBeginTime').val($('#qEndTime').val());
                 }
-            });
-            // 时间选择器初始化 结束时间
-            laydate.render({ //结束时间
-                elem: '#qEndTime',
-                format: 'yyyy-MM-dd',
-                done: function (value, date, endDate) {
-                    var startDate = new Date($('#qBeginTime').val()).getTime();
-                    var endTime = new Date(value).getTime();
-                    if (endTime < startDate) {
-                        layer.msg('结束时间不能小于开始时间');
-                        $('#qEndTime').val($('#qBeginTime').val());
-                    }
-                    if (endTime > curDate.getTime()) {
-                        layer.msg('结束时间不能大于当前时间');
-                        $('#qEndTime').val(curYearMonthrDay);
-                    }
+                if (startDate > curDate.getTime()) {
+                    layer.msg('开始时间不能大于当前时间');
+                    $('#qBeginTime').val(curYearMonthrDay);
                 }
-            });
+            }
+        });
+        // 时间选择器初始化 结束时间
+        laydate.render({ //结束时间
+            elem: '#qEndTime',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date($('#qBeginTime').val()).getTime();
+                var endTime = new Date(value).getTime();
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#qEndTime').val($('#qBeginTime').val());
+                }
+                if (endTime > curDate.getTime()) {
+                    layer.msg('结束时间不能大于当前时间');
+                    $('#qEndTime').val(curYearMonthrDay);
+                }
+            }
+        });
 
-        
+
         //表格渲染
         table.render({
             elem: '#test'
@@ -510,7 +526,7 @@
             }
 
         });
-      
+
         ////添加班会记录
         $("#banhui2").click(function () {
             // var stuid = $("#ClassName").text();
@@ -528,9 +544,9 @@
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
         }
-      
+
         //点击事件
-        
+
         $(".Mydiv").click(function () {
             if (!$(this).is(".color")) {
                 $(this).addClass("color");
@@ -539,7 +555,7 @@
                 $(this).removeClass("color");
             }
         });
-   
+
         //双击详细
         $(".Mydiv").dblclick(function () {
             var stuid = $($(this).children()[0]).text();
@@ -592,7 +608,7 @@
             } else {
                 layer.alert('请选择一个学员', { icon: 0 });
             }
-           
+
         });
         //业务 Transferoftraunees
         $("#Transferoftraunees").click(function () {
@@ -605,7 +621,7 @@
 
         });
 
-       //拆班业务
+        //升学分配班级业务
         $("#Dismantleclasses").click(function () {
             if ($(".color").length > 0) {
                 var x = "";
@@ -613,7 +629,7 @@
                 for (var i = 0; i < list.length; i++) {
                     x += $($(list[i]).children()[0]).text() + ",";
                 }
-             
+
                 layer.open({
                     title: "拆班",
                     type: 2,
@@ -627,21 +643,31 @@
                 layer.alert('请选择一个学员', { icon: 0 });
             }
         });
+       
+        //成考报名
+        $("#AddEnroExamination").click(function () {
+            if ($(".color").length>0) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                var arr1 = new Array(); 
+                for (var i = 0; i < $(".color").length; i++) {
+                    var obj = {
+                        student: $($($(".color")[i]).children()[0]).text()
+                    };                
+                    arr1.push(obj);
+                }
+                var dbase = {
+                    student: JSON.stringify(arr1)
+                };
+               
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+
+        });
     });
 
     //设置班委
-    var Success = "";
-    function postjson(stuid, MenName, Entity) {
-
-        $.post("/Teachingquality/ClassSchedule/AddMembers?Stuid=" + stuid + "&MenName=" + MenName + "&Entity=" + Entity, function (db) {
-            layer.msg(db.Msg);
-
-            Success = db.Success;
-
-
-        });
-
-    }
+ 
     //群管理操作返回数据
     function GetPartsItme(qq, wechat) {
 
@@ -660,8 +686,6 @@
 
     var menu = document.querySelector('.menu');
     function showMenu(x, y) {
-        console.log(x);
-        console.log(y);
         if (x > 1600) {
             x = x - 300;
         }
@@ -682,6 +706,7 @@
         showMenu(e.pageX, e.pageY);
         document.addEventListener('mousedown', onMouseDown, false);
     }
+    //班委数据操作
     function onMouseDown(e) {
         hideMenu();
         document.removeEventListener('mousedown', onMouseDown);
@@ -702,64 +727,42 @@
                             if (db.Msg != null) {
                                 if (db.Data != null) {
                                     layer.confirm(db.Msg, function (index) {
-
-                                        postjson(stuid, $(myxx[lo]).text());
-                                        My_Inter(lo);
+                                        ClasscommitteePost(stuid, $(myxx[lo]).text(), "undefined", function () {
+                                            $(myxx[lo]).next().text(Name)
+                                        })
+                                        
                                     });
                                 } else {
                                     layer.msg(db.Msg);
                                 }
                             } else {
-                                console.log("否则");
-                                postjson(stuid, $(myxx[lo]).text());
-                                My_Inter(lo);
+                              
+                                ClasscommitteePost(stuid, $(myxx[lo]).text(), "undefined", function () {
+                                    $(myxx[lo]).next().text(Name)
+                                })
                             }
 
                         });
 
                     })
-                    function My_Inter(lo) {
-                        var interval2 = window.setInterval(function () {
-
-                            if (Success == true) {
-
-                                $(myxx[lo]).next().text(Name)// $(myxx[i]).next().text("aaaa");
-                            }
-                        }, 100);
-
-                        setTimeout(function () { window.clearInterval(interval2); }, 200);
-
-                    }
-
-
-
-
+                  
                     break;
                 case "撤销班委":
-
-
                     if ($(myxx[i]).next().text() == Name) {
 
                         zz++;
                         mycars[zz] = i;
+                     
                         // mycars
-
-                        postjson(stuid, "1", "1");
-
-
-                        var interval2 = window.setInterval(function () {
-
-                            if (Success == true) {
-
+                        if (zz==1) {
+                            ClasscommitteePost(stuid, "1", "1", function () {
                                 for (var w = 1; w < mycars.length; w++) {
                                     $(myxx[mycars[w]]).next().text("未设置");
                                 }
+                            })
 
-                            }
-
-                        }, 100);
-
-                        setTimeout(function () { window.clearInterval(interval2); }, 200);
+                        }
+                      
                     }
                     break;
             }

@@ -56,17 +56,12 @@
                 </div>
             }
 
-            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
-                <label class="layui-form-label lables">专业名称</label>
-                <div class="layui-input-inline">
-                    @Html.DropDownList("MajorID", ViewBag.Major as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "userClass" } })
-
-                </div>
-            </div>
+          
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                 <label class="layui-form-label lables">上级课程类别名称</label>
                 <div class="layui-input-inline">
-                    <select lay-verify="required" id="CoursecategoryY" lay-filter="CoursecategoryY"></select>
+                    @Html.DropDownList("CoursecategoryY", ViewBag.CoursecategoryY as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "CoursecategoryY" } })
+                   
                 </div>
 
             </div>
@@ -79,7 +74,7 @@
 
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" >
                 <label class="layui-form-label lables">报考课程</label>
-                <div class="layui-input-block" id="UndergraduatecourseID">
+                <div class="layui-input-block" style="margin-left:160px;width:300px;" id="UndergraduatecourseID">
 
                 </div>
             </div>
@@ -148,23 +143,7 @@
             $('#CoursecategoryYID').empty();
             layui.form.render("select");
         });
-        //下拉框赋值上级
-        function select(url, datae) {
-            $.ajax({
-                url: url,
-                dataType: 'json',
-                type: 'post',
-                data: datae,
-                success: function (data) {
 
-                    $.each(data, function (index, item) {
-                        $('#CoursecategoryY').append(new Option(item.name, item.id));//往下拉菜单里添加元素
-                    })
-
-                    layui.form.render("select");//菜单渲染 把内容加载进去
-                }
-            })
-        }
         //下拉框赋值下级
         function CoursecategoryXselect(url, datae) {
             $.ajax({
@@ -207,23 +186,7 @@
             })
         }
 
-        //监听专业下拉框
-        form.on('select(userClass)', function (data) {
-            $("#label").css("display", "none");
-            $("#bool").val("");
-            $('#CoursecategoryY').empty();
-            $('#UndergraduatecourseID').empty();
-            $('#CoursecategoryY').append(new Option("请选择", ""));
-            dbase = {
-                MajorID: data.value
-            };
-
-            if (data.value != "") {
-                select("/MyEducation/Education/SelectCoursecaregoryX", dbase);
-            }
-            layui.form.render("select");
-
-        });
+       
         //监听课程类别上级下拉框
         form.on('select(CoursecategoryY)', function (data) {
             $("#label").css("display", "none");

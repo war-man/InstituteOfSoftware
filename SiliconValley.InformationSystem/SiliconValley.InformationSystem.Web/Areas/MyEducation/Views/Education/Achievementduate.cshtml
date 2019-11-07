@@ -1,0 +1,112 @@
+﻿
+@{
+    ViewBag.Title = "Achievementduate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model SiliconValley.InformationSystem.Entity.ViewEntity.EssentialinformationEnucView
+@section style{
+    <style>
+        table {
+            border: 1px solid #DBDBDB;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+            table tr td {
+                height: 30px;
+                border: 1px solid #DBDBDB;
+                padding: 0px 10px;
+                width:50%;
+            }
+    </style>
+}
+
+
+
+<input type="text" value="@ViewBag.studentid" id="studentid" style="display:none" />
+<div>
+    <table border="1">
+        <tr><td colspan="2" style="font-size:13pt;color:#0475C5;padding:0px 30px;">学员基本信息</td></tr>
+        <tr>
+            <td>考藉号：@Model.PassNumber</td>
+
+            <td>姓名：@Model.Name</td>
+
+        </tr>
+        <tr>
+            <td>身份证号：@Model.identitydocument</td>
+
+            <td>报考专业：@Model.MajorID</td>
+
+        </tr>
+    </table>
+</div>
+<div style="width:760px;float:left;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+<div style="width:760px;float:right;">
+    <table class="layui-hide" id="test2" lay-filter="test2"></table>
+</div>
+@section script{
+    <script type="text/html" id="leftbarDemo">
+        <div style="color:#0475C5;font-size:13pt;">
+            考生历次考试信息(200604起)
+        </div>
+    </script>
+    <script type="text/html" id="toolbarDemo">
+        <div style="color:#0475C5;font-size:13pt;">
+            考生合格成绩信息
+        </div>
+    </script>
+    <script>
+        layui.use(['table', 'layer', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var tree = layui.tree;
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/MyEducation/Education/GetDateRegisterforexamination/' + $("#studentid").val()
+                , toolbar: '#leftbarDemo'
+                , id: 'idTest'
+
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , style: 'color: #0475C5'
+                , cols: [[
+                    { width: 80, title: '序号', fixed: 'left', type: 'numbers', }
+                    , { field: 'Examinationperiod', title: '考期' }
+                    , { field: 'Coursecode', title: '课程代码'}
+                    , { field: 'Coursetitle', title: '课程名称' }
+                ]]
+                //, page: true
+                //, limit: 8
+                //, limits: [8, 10, 15]
+            });
+            //表格渲染
+            table.render({
+                elem: '#test2'
+                , url: '/MyEducation/Education/GetDatechievement/' + $("#studentid").val()
+                , toolbar: '#toolbarDemo'
+                , id: 'idTest'
+
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { field: 'tourPlayerId', width: 80, title: '序号', fixed: 'left', type: 'numbers' }
+                    , { field: 'Examinationperiod', title: '考期' }
+                    , { field: 'Coursecode', title: '课程代码' }
+                    , { field: 'Coursetitle', title: '课程名称' }
+                    , { field: 'Fraction', title: '成绩' }
+                ]],
+                done: function (res, curr, count) {
+
+
+                    $('th').css({ 'color': '#0475C5' })
+
+                }
+            });
+        });
+
+    </script>
+}

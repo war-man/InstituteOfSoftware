@@ -26,5 +26,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 本科学员信息
         /// </summary>
         public int EnrollID { get; set; }
+        /// <summary>
+        /// 考期
+        /// </summary>
+        public string Examinationperiod { get; set; }
     }
 }

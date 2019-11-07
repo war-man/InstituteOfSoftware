@@ -17,6 +17,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public string Name { get; set; }//
         /// <summary>
+        /// 学员性别
+        /// </summary>
+        public bool Sex { get; set; }//
+        /// <summary>
         /// 班委名称
         /// </summary>
         public object Nameofmembers { get; set; }//

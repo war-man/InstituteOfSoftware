@@ -61,10 +61,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(costitemsBusiness.AddCostitems(costitems), JsonRequestBehavior.AllowGet);
         }
             //查询名目名称是否重复
-        public int costiBoolName(int id)
+        public int costiBoolName(string id)
         {
+            int ids = Convert.ToInt32(id == "undefined" ? null : id);
             string Name = Request.QueryString["Name"];
-          return  costitemsBusiness.BoolName(id, Name);
+          return  costitemsBusiness.BoolName(ids, Name);
         }
         //查询所有名目数据
         public ActionResult DateCostitems(int page,int limit)
@@ -143,7 +144,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         [HttpPost]
         public ActionResult Tuitionandfees(StudentFeeRecord studentFeeRecord)
         {
-           
+            string aa = "aaa";
             return Json(dbtext.Tuitionandfees(studentFeeRecord),JsonRequestBehavior.AllowGet);
         }
         //学员缴费页面
@@ -168,18 +169,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(dbtext.StudentPrices(list, Remarks), JsonRequestBehavior.AllowGet);
         }
             //树形菜单明目类别
-            public ActionResult Tree()
+        public ActionResult Tree()
         {     
             var list = costitemssX.GetList().Where(a => a.IsDelete == false).ToList();
             List<TreeClass> listtree = new List<TreeClass>();
             foreach (var item in list)
             {
-                TreeClass seclass = new TreeClass();
-                seclass.title = item.Name;
-                seclass.id = item.id.ToString();
-                listtree.Add(seclass);
+                if (item.Name== "自考本科费用")
+                {
+                    TreeClass seclass = new TreeClass();
+                    seclass.title = item.Name;
+                    seclass.id = item.id.ToString();
+                    listtree.Add(seclass);
+                }
             }
-             
+            TreeClass saea = new TreeClass();
+            saea.title = "阶段费用缴纳";
+            saea.id = "";
+            listtree.Add(saea);
+          
+
+
             return Json(listtree, JsonRequestBehavior.AllowGet);
         }
 

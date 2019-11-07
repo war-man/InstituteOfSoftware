@@ -17,7 +17,7 @@
     <form class="layui-form" action="" lay-filter="example">
         <div class="layui-container" style=";margin-left:60px;">
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;margin-top:40px" id="nba">
-                <label class="layui-form-label">本科专业名称</label>
+                <label class="layui-form-label" style="width:90px;margin-left:-10px;">本科专业名称</label>
                 <div class="layui-input-inline">
                     @Html.TextBoxFor(a => a.ProfessionalName, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入本科专业名称" }, { "class", "layui-input " } })
 

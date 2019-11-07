@@ -19,9 +19,33 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudentNumber { get; set; }
-        public string Remarks { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 学籍认定
+        /// </summary>
+        public string StudentstatusBool { get; set; }
+        /// <summary>
+        /// 刷机点
+        /// </summary>
+        public string Brushpoint { get; set; }
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string Username { get; set; }
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
+        /// <summary>
+        /// 是否报名
+        /// </summary>
+        public bool Whether { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
     
     }
