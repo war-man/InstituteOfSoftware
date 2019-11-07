@@ -1,6 +1,9 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.DepartmentBusiness;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +16,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
     {
         private DormInformationBusiness dbdorm;
         private RoomdeWithPageXmlHelp dbroomxml;
+        private EmployeesInfoManage dbempinfo;
+        private ConversionToViewBusiness dbconversion;
+        private DepartmentManage dbdepartmentManages;
         // GET: Dormitory/StaffRoomDetails
         public ActionResult StaffRoomDetailsIndex()
         {
@@ -45,6 +51,67 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             ViewBag.SexType = dorm.SexType;
             ViewBag.DormInformation = DorminfoID;
             return View();
+        }
+
+
+        /// <summary>
+        /// 搜索
+        /// </summary>
+        /// <param name="param0">下拉框的选项</param>
+        /// <param name="param1">后面的文本框的值</param>
+        /// <returns></returns>
+        public ActionResult Seachoption(string param0, string param1)
+        {
+            dbconversion = new ConversionToViewBusiness();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                switch (param0)
+                {
+                    case "name0":
+                        dbempinfo = new EmployeesInfoManage();
+                        List<EmployeesInfo> empinfodata = dbempinfo.GetAll().Where(a => a.EmpName == param1).ToList();
+                        List<RoomArrangeEmpinfoView> resultdata = dbconversion.EmpinfoToRoomArrangeEmpinfoView(empinfodata, true);
+                        ajaxResult.Data = resultdata;
+                        if (resultdata.Count != 0)
+                        {
+                            ajaxResult.Success = true;
+                        }
+                        else
+                        {
+                            ajaxResult.Success = false;
+                            ajaxResult.Msg = "没有该员工的居住信息。";
+                        }
+                        break;
+                    case "name1":
+                        dbdorm = new DormInformationBusiness();
+                        ajaxResult.Data = dbdorm.GetDorms().Where(a => a.DormInfoName == param1).FirstOrDefault();
+
+                        if (ajaxResult.Data != null)
+                        {
+                            ajaxResult.Success = true;
+                        }
+                        else
+                        {
+                            ajaxResult.Success = false;
+                            ajaxResult.Msg = "没有该寝室。";
+                        }
+                        break;
+                    case "name2":
+                        dbdepartmentManages = new DepartmentManage();
+                        var obj = dbdepartmentManages.GetIQueryable().Where(a => a.DeptName == param1).FirstOrDefault();
+
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Data = "";
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！为你及时处理。";
+                throw;
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
     }
 }
