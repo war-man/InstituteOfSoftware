@@ -1,0 +1,316 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.EmplSalaryEmbody
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditESE</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 120px;
+        }
+    </style>
+
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div class="layui-container" style="margin-top:20px;">
+                <input  type="hidden" value="@ViewBag.eseid" id="myeseid" name="myeseid"/> 
+
+           <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            <input type="text" name="empName" id="EmpName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属部门:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="deptName" id="deptName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属岗位:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="pName" id="pName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+
+              <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">基本工资:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.BaseSalary, new Dictionary<string, object>() { { "lay-verify", "number" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">岗位工资:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.PositionSalary, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">绩效额度:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.PerformancePay, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">笔记本补助:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.NetbookSubsidy, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">个人社保:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.PersonalSocialSecurity, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">社保补贴:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.SocialSecuritySubsidy, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        </div>
+                    </div>
+
+                </div>
+
+              
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">工资卡应发工资:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.PayCardSalarySum, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(function () {
+            loadnetinfo();// 初始化编辑数据加载
+        });
+        function loadnetinfo() {
+            var id = $("#myeseid").val();
+            $.get("/Personnelmatters/EmplSalaryEmbody/GetESEById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table', 'laydate'], function () {
+                    var form = layui.form;
+
+                    $("#empName").val(data.empName);
+                    $("#deptName").val(data.deptName);
+                    $("#pName").val(data.pName);
+
+                    form.val("formtest", data);
+                   
+                });
+            })
+        }
+
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit;
+            var laydate = layui.laydate;
+
+            //自定义验证
+            form.verify({
+                myIdCardNum: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var ver = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                        if (!ver.test(value)) {
+                            return '身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X';
+                        }
+                    }
+                },//身份证号
+                myUrgentPhone: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^1[3456789]\d{9}$/;
+                        if (!v.test(value)) {
+                            return '号码格式输入错误';
+                        }
+                    }
+                },//联系电话
+                mymonth: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^0[1-9]$|^[1-9]$|^1[0-2]$/;
+                        if (!v.test(value)) {
+                            return '月份只能是1至12之间';
+                        }
+                    }
+                },//验证月份
+                myday: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^0[1-9]$|^[1-9]$|^1[0-9]$|^2[0-9]$|^3[0-1]$/;
+                        if (!v.test(value)) {
+                            return '月份只能是1至31之间';
+                        }
+                    }
+                }//验证哪天
+            });
+
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
+
+            //添加提交
+            form.on('submit(demo1)', function (data) {
+                console.log(data.field);
+                data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
+                $.post("/Personnelmatters/EmployeesInfo/EditEmp", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layui.table.reload('myEmpInfo');
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
+                return false;
+            });
+
+            //关闭添加页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                // parent.layui.table.reload('myEmpInfo');
+                parent.layer.close(index);
+            });
+
+        });
+
+
+        //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+        //显示年月日
+        function GetYMD(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month + "-" + currentDate;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+</body>
+</html>

@@ -238,6 +238,7 @@
     <Compile Include="Areas\Personnelmatters\Controllers\EmpApprovalController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpLeaveRequestController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmployeesInfoController.cs" />
+    <Compile Include="Areas\Personnelmatters\Controllers\EmplSalaryEmbodyController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpOverTimeRecordController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpSalaryManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpTransactionRecordController.cs" />
@@ -651,6 +652,8 @@
     <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\PerformanceAssessIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\AttendanceStatisticsIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpLeaveRequest\LeaveIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmplSalaryEmbody\EmpSalaryEmbodyIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmplSalaryEmbody\EditESE.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

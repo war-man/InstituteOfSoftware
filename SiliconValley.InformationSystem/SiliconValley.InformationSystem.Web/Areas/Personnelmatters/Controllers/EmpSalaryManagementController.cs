@@ -66,45 +66,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-        //获取员工体系表所有数据
-        public ActionResult GetSalarySystemData(int page, int limit)
-        {
-            EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var eselist = empsemanage.GetList();
-            var newlist = eselist.OrderBy(e => e.Id).Skip((page - 1) * limit).Take(limit);
-            var mylist = from e in newlist
-                         select new
-                         {
-                             #region 获取值
-                             e.Id,
-                             e.EmployeeId,
-                             empName = empmanage.GetEntity(e.EmployeeId).EmpName,//姓名
-                             Depart = empmanage.GetDeptByEmpid(e.EmployeeId).DeptName,//部门
-                             Position = empmanage.GetPositionByEmpid(e.EmployeeId).PositionName,//岗位
-                             e.BaseSalary,
-                             e.PositionSalary,
-                             e.PerformancePay,
-                             e.PersonalSocialSecurity,
-                             e.SocialSecuritySubsidy,
-                             e.NetbookSubsidy,
-                             e.ContributionBase,
-                             e.PersonalIncomeTax,
-                             e.PayCardSalarySum,
-                             e.Remark
-                             #endregion
-
-                          
-                         };
-            var newobj = new
-            {
-                code = 0,
-                msg = "",
-                count = eselist.Count(),
-                data = mylist
-            };
-            return Json(newobj, JsonRequestBehavior.AllowGet);
-        }
-
+     
     }
 }
