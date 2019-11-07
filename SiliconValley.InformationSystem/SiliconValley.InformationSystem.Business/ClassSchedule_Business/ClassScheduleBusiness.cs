@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.FinaceBusines;
+using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -45,6 +46,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
         //学员费用
         BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
+        //班主任
+        HeadmasterBusiness Hadmst = new HeadmasterBusiness();
+        //学员信息
+        StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -72,7 +77,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 }
 
                 classStudentView.Name = item.Name;
-                classStudentView.Sex =(bool)item.Sex;
+                classStudentView.Sex = (bool)item.Sex;
 
                 classStudentView.StuNameID = item.StudentNumber;
                 if (classStudentView != null)
@@ -473,7 +478,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="limit"></param>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public List<DetailedcostView> listTuiton(int page, int limit,string ClassName)
+        public List<DetailedcostView> listTuiton(int page, int limit, string ClassName)
         {
             var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassName).FirstOrDefault();
             var Mylist = this.ClassStudentneList(ClassName);
@@ -486,9 +491,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 detailedcostView.Name = item.Name;
                 detailedcostView.Stidentid = item.StuNameID;
                 detailedcostView.Sex = item.Sex == false ? "女" : "男";
+                detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName).EmpName;
                 lisrDetaild.Add(detailedcostView);
             }
-
+            lisrDetaild = lisrDetaild.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
             return lisrDetaild;
         }
         /// <summary>
@@ -498,9 +504,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="Grand"></param>
         /// <param name="StudentID"></param>
         /// <returns></returns>
-        public  DetailedcostView GotoschoolTuition(int Grand, string StudentID)
+        public DetailedcostView GotoschoolTuition(int Grand, string StudentID)
         {
+            //已交费用
             decimal price = 0;
+            //应交费用
             decimal myprice = 0;
             //拿到下一个阶段
             var x = GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == Grand).FirstOrDefault();
@@ -509,13 +517,22 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             foreach (var item in mylist)
             {
                 myprice = myprice + item.Amountofmoney;
-                var x1 = studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == StudentID && a.Costitemsid == item.id).FirstOrDefault();
-                var x2= x1 == null ? 0 : x1.Amountofmoney;
-                price = price + (decimal)x2;
+                var x1 = studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == StudentID && a.Costitemsid == item.id).ToList();
+                decimal? Amountofmoney = 0;
+                foreach (var item1 in x1)
+                {
+                    Amountofmoney = Amountofmoney + item1.Amountofmoney;
+                }
+
+                price = price + (decimal)Amountofmoney;
+
             }
             DetailedcostView detailedcostView = new DetailedcostView();
             detailedcostView.Amountofmoney = price;
             detailedcostView.Isitinturn = price >= myprice ? "交齐" : "未交齐";
+            detailedcostView.ShouldJiao = myprice;
+            detailedcostView.Surplus = myprice - price;
+
             detailedcostView.NextStageID = Grandcontext.GetEntity(x.NextStageID).GrandName;
             detailedcostView.CurrentStageID = Grandcontext.GetEntity(Grand).GrandName;
             return detailedcostView;
@@ -527,7 +544,38 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public int ClassNameCount(string ClassName)
         {
-          return  this.GetList().Where(a => a.ClassNumber == ClassName).Count();
+            return this.GetList().Where(a => a.ClassNumber == ClassName).Count();
+        }
+        /// <summary>
+        /// 手机短信实例
+        /// </summary>
+        /// <param name="numbers">电话</param>
+        /// <param name="smsTexts">内容</param>
+        /// <returns></returns>
+        public string PhoneSMS(string numbers, string smsTexts)
+        {
+            string number = numbers;
+            string smsText = smsTexts;
+            string t = PhoneMsgHelper.SendMsg(number, smsText);
+            return t;
+        }
+        /// <summary>
+        /// 短信催费
+        /// </summary>
+        /// <param name="Datailedcost">序列化集合对象</param>
+        /// <returns></returns>
+        public int SMScharging(List<DetailedcostView> Datailedcost)
+        {
+            int count = 0;
+            foreach (var item in Datailedcost)
+            {
+                //电话Familyphone
+                var student = studentInformationBusiness.GetEntity(item.Stidentid);
+                var msmTexts = item.Name + student.Guardian.Split(',')[1] + "您好：您的孩子有" + item.NextStageID + "升学费用未交齐，还差" + item.Surplus + "元,未交，应交" + item.ShouldJiao +
+                    "元，以交" + item.Amountofmoney + "元。请您尽快交齐，否则学校将给您的孩子做停课处理！有问题请联系：" + item.HeadmasterName + "班主任";
+                count = count + int.Parse(PhoneSMS(student.Familyphone, msmTexts));
+            }
+            return count;
         }
     }
 }

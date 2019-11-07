@@ -5,12 +5,19 @@
 }
 @section style{
     <style>
-
     </style>
-    }
-<h2>FindTuition</h2>
+}
+<input type="text" id="ClassNname" value="@ViewBag.ClassName" style="display:none" />
 <table class="layui-hide" id="test" lay-filter="test"></table>
 @section script{
+    <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+    @*头部工具栏*@
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="Levyfees"><i class="layui-icon">&#xe654;</i>短信催交</button>
+        
+        </div>
+    </script>
     <script>
         layui.use(['table', 'layer', 'tree', 'form'], function () {
             var table = layui.table;
@@ -20,30 +27,94 @@
             //表格渲染
             table.render({
                 elem: '#test'
-                , url: '/Teachingquality/ClassSchedule/GetDate'
+                , url: '/Teachingquality/ClassSchedule/listTuiton/' + $("#ClassNname").val()
                 , toolbar: '#toolbarDemo'
                 , id: 'idTest'
                 , page: true
+                , done: function (res) {
+                    //   res.data
+                }
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    { type: 'radio' }
-                    , { field: 'ClassNumber', title: '班级编号', sort: true }
-                    , { field: 'grade_Id', title: '阶段' }
-                    , { field: 'Major_Id', title: '专业 ' }w
-                    
-                    , { field: 'BaseDataEnum_Id', title: '专业课时段 ' }
-                    
-                    , { field: 'stuclasss', title: '班级人数 ' }
-                    , { field: 'IsBool', title: '状态 ' }
-
+                    { type: 'checkbox' }
+                    , { field: 'Stidentid', title: '学号', sort: true }
+                    , { field: 'Name', title: '姓名' }
+                    , { field: 'Sex', title: '性别 ' }
+                    , { field: 'ClassName', title: '当前班级 ' }
+                    , { field: 'HeadmasterName', title: '班主任 ' }
+                    , { field: 'CurrentStageID', title: '当前阶段 ' }
+                    , { field: 'NextStageID', title: '升学阶段 ' }
+                    , { field: 'ShouldJiao', title: '应交费用 ' }
+                    , { field: 'Amountofmoney', title: '已交费用 ' }
+                    , { field: 'Surplus', title: '未交费用 ' }
+                    , {
+                        field: 'Isitinturn', title: '是否交齐 ', templet: function (da) {
+                            if (da.Isitinturn == "交齐") { return "<span style='color:green;'>" + da.Isitinturn + "</span>" } else { return "<span style='color:red;'>" + da.Isitinturn + "</span>" }
+                        }
+                    }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true
                 , limit: 8
                 , limits: [8, 10, 15]
+
+
             });
-       
+
+            function SMScharging(dbset) {
+                $.post("/Teachingquality/ClassSchedule/SMScharging", dbset, function (db) {
+                    if (db > 0) {
+                        layer.msg("短信发送成功");
+                    } else {
+                        layer.alert('服务器错误!', { icon: 0 });
+                    }
+                })
+            }
+            //监听头部工具栏
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'Levyfees':
+                        if (checkStatus.data.length > 0) {
+                            var arrt = new Array();
+                            var enrr = 0;
+                            for (var i = 0; i < checkStatus.data.length; i++) {
+                                if (checkStatus.data[i].Isitinturn == "未交齐") {
+                                    var obj = {
+                                        Stidentid: checkStatus.data[i].Stidentid,
+                                        Name: checkStatus.data[i].Name,
+                                        Sex: checkStatus.data[i].Sex,
+                                        ClassName: checkStatus.data[i].ClassName,
+                                        CurrentStageID: checkStatus.data[i].CurrentStageID,
+                                        NextStageID: checkStatus.data[i].NextStageID,
+                                        Amountofmoney: checkStatus.data[i].Amountofmoney,
+                                        ShouldJiao: checkStatus.data[i].ShouldJiao,
+                                        Surplus: checkStatus.data[i].Surplus,
+                                        HeadmasterName: checkStatus.data[i].HeadmasterName
+                                    };
+                                    arrt.push(obj)
+                                } else {
+                                    enrr++;
+                               
+                                }
+                            };
+                            if (enrr < 1) {
+                                var database = {
+                                    Datailedcost: JSON.stringify(arrt)
+                                }
+                                SMScharging(database);
+                            } else {
+                                layer.alert('请勿包含已交完升学费用学员!', { icon: 0 });
+                            }
+                          
+                        
+                        } else {
+                            layer.alert('请选择一条数据', { icon: 0 });
+                        }
+                        break;
+                };
+            });
         });
 
     </script>
-    }
+}

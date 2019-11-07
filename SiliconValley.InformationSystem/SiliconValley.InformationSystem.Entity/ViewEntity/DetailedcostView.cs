@@ -38,8 +38,20 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public decimal Amountofmoney { get; set; }
         /// <summary>
+        /// 应交费用
+        /// </summary>
+        public decimal ShouldJiao { get; set; }
+        /// <summary>
+        /// 未交费用
+        /// </summary>
+        public decimal Surplus { get; set; }
+        /// <summary>
         /// 是否交齐
         /// </summary>
         public string Isitinturn { get; set; }
+        /// <summary>
+        /// 班主任
+        /// </summary>
+        public string HeadmasterName { get; set; }
     }
 }

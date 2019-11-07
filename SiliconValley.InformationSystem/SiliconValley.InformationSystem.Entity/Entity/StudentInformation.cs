@@ -46,8 +46,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<System.DateTime> InsitDate { get; set; }
         public string Reack { get; set; }
         public string Guardian { get; set; }
-
-
+        /// <summary>
+        /// 亲属电话
+        /// </summary>
+        public string Familyphone { get; set; }
 
     }
 }

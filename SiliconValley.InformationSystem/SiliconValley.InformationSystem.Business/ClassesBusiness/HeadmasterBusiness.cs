@@ -154,10 +154,11 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public Headmaster ClassHeadmaster(string ClassName)
+        public EmployeesInfo ClassHeadmaster(string ClassName)
         {
-            var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.ClassID == ClassName).FirstOrDefault();
-           return this.GetEntity(mysex.LeaderID);
+            var mysex = Hoadclass.GetList().Where(a =>  a.ClassID == ClassName).FirstOrDefault();
+            var leid =mysex==null?new Headmaster(): this.GetEntity(mysex.LeaderID);
+            return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
         }
         /// <summary>
         /// 带班业务按钮操作

@@ -17,6 +17,8 @@ using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using System.Web.Script.Serialization;
 using SiliconValley.InformationSystem.Business.EnroExamination_Business;
+using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -85,11 +87,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         }
                     }
                 }
-
-
-
-
-                if (!string.IsNullOrEmpty(ClassNumber))
+            if (!string.IsNullOrEmpty(ClassNumber))
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
             }
@@ -119,7 +117,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
                 Major_Id = Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
-                IsBool= Dismantle.GetList().Where(c=>c.IsDelete==false&&c.FormerClass==a.ClassNumber).FirstOrDefault()==null?"正常":"不可使用",
+                HeadmasterName= Hadmst.ClassHeadmaster(a.ClassNumber)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.ClassNumber).EmpName,
+                IsBool = Dismantle.GetList().Where(c=>c.IsDelete==false&&c.FormerClass==a.ClassNumber).FirstOrDefault()==null?"正常":"不可使用",
                  stuclasss = Stuclass.GetList().Where(c=>c.ClassID==a.ClassNumber&&c.CurrentClass==true).Count()//专业
             }).ToList();
             var dataList = listx.OrderBy(a => a.ClassNumber).Skip((page - 1) * limit).Take(limit).ToList();
@@ -382,14 +381,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// 升学缴费情况
         /// </summary>
         /// <returns></returns>
-        public ActionResult FindTuition()
+        public ActionResult FindTuition(string id)
         {
+            ViewBag.ClassName = id;
             return View();
         }
-        public ActionResult listTuiton()
+        /// <summary>
+        /// 根据班级查询班上学生升学缴费情况
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="id">班级号</param>
+        /// <returns></returns>
+        public ActionResult listTuiton(int page, int limit,string id)
         {
-           var x= dbtext.listTuiton(1, 5, "1710NA");
-            return null;
+           var x= dbtext.listTuiton(page, limit, id);
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = x
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 短信催费
+        /// </summary>
+        /// <param name="Datailedcost">序列化集合对象</param>
+        /// <returns></returns>
+        public int SMScharging(string Datailedcost)
+        {
+           // 引入序列化
+           JavaScriptSerializer serializer = new JavaScriptSerializer();
+          
+           // 序列化
+             var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
+            return dbtext.SMScharging(personlist);
+
         }
 
     }
