@@ -25,6 +25,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         SpecialtyBusiness db_major = new SpecialtyBusiness();
         GrandBusiness db_grand = new GrandBusiness();
 
+        TeacherBusiness db_teacher = new TeacherBusiness();
 
         /// <summary>
         /// 学员所在班级
@@ -255,6 +256,33 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
 
 
+        }
+
+        /// <summary>
+        /// 获取班级教学老师
+        /// </summary>
+        /// <returns></returns>
+        public EmployeesInfo ClassTeacher(string classNumber)
+        {
+            var tempobj = this.GetList().Where(d => d.ClassNumber == classNumber).FirstOrDefault();
+            if (tempobj!=null)
+            {
+                var tempobj1 = db_teacher.GetTeachers().Where(d => d.TeacherID == tempobj.TeacherID).FirstOrDefault();
+                if (tempobj1!=null)
+                {
+                    BaseBusiness<EmployeesInfo> empmanage = new BaseBusiness<EmployeesInfo>();
+
+                    return empmanage.GetList().Where(d => d.EmployeeId == tempobj1.EmployeeId).FirstOrDefault();
+                }else
+                {
+                    return new EmployeesInfo();
+                }
+            }
+            else
+            {
+                return new EmployeesInfo();
+            }
+                             
         }
 
     }

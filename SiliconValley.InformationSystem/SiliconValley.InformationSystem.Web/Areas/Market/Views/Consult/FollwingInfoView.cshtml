@@ -9,91 +9,244 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>FollwingInfoView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
 
-    <link href="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Css/normalize.css" rel="stylesheet" />
-    <link href="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Css/jquery.wiper.css" rel="stylesheet" />
-    <link href="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Css/default.css" rel="stylesheet" />
+            #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right;
+            font-size:20px;
+        }
+         
+        .TextAreCss1
+        {
+            height: 180px;
+            padding-top:20px;
+        }
+        .TextAreCss2
+        {
+            height: 100px;
+            padding-top: 20px;
+        }
+            .butCss1
+            {
+                float: right;
+                margin-right: 100px;
+            }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        .colorText
+        {
+            font-size: 20px;
+        }
+    </style>
 </head>
 <body>
-    <article id="test">
-        <section id="acordion_box">
-            <ul id="acordion_main">
-                @{
-                    List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
-                    if (f_list.Count <= 0)
+    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" lay-allowClose="true">
+        <ul class="layui-tab-title">
+            @{
+                List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
+                if (f_list.Count <= 0)
+                {
+                    <li class="layui-this">系统提示</li>
+                }
+                else
+                {
+                    int i = 0;
+                    foreach (var item in f_list)
                     {
-                        <li>
-                            <h2>系统温馨提示</h2>
-                            <section class="sample_text" style="width:600px;font-family:STSong;font-size:25px;">该学生目前没有跟踪信息！！!</section>
-
-                        </li>
-                                }
-                                else
-                                {
-                                    int i = 0;
-                                    foreach (var item in f_list)
-                                    {
-                            i++;
-                            <li style="background-color:rgba(238,240,240,1)" class="active">
-                                <h2>第<span>《</span><span>@i</span><span>》次跟踪</span></h2>
-                                <section class="sample_text">
-                                    <h3 style="width:600px;">跟踪日期:<span>@item.FollwingDate</span></h3>
-                                    <h3>等级:<span>@item.Rank</span></h3>
-                                    <h3>跟踪内容:</h3>
-                                    <div style="width:600px;font-family:STSong;font-size:25px;">  
-                                          @item.TailAfterSituation
-                                    </div>
-                                    @{ 
-                                        if (item.Rmark!=null)
-                                        {
-                                            <h3>说明:</h3>
-                                            <div style="width:600px;font-family:STSong;font-size:25px;">
-                                                @item.Rmark
-                                            </div>
-                                        }
-                                    }   
-                                  
-                                </section>
-                            </li>
-                        }
+                        i++;
+                        <li>第<span>《</span><span>@i</span><span>》次跟踪</span></li>
                     }
                 }
-            </ul>
-        </section>
-    </article>
-    <script src="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Js/jquery.min.js"></script>
-    <script src="~/Scripts/Tangmin_CssAndJs/FollwingInfo_Js/jquery.wiper.js"></script>
+            }
+        </ul>
+        <div class="layui-tab-content" style="height: 100px;">
+            @{
+                if (f_list.Count <= 0)
+                {
+                    <div class="layui-tab-item layui-show">
+                        <h2 style="color:red">该学生目前没有跟踪信息!！！</h2>
+                    </div>
+                }
+                else
+                {
+                    int j = 0;
+                    foreach (FollwingInfo item2 in f_list)
+                    {
+                        if (j == 0)
+                        {
+                    <div class="layui-tab-item layui-show">
+                        <form class="layui-form">
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                    <label class="layui-form-label LableCss1">跟踪日期:</label>
+                                    <div class="layui-input-block">
+                                        <span class="LableCss1" id="MyDate" name="MyDate">
+                                            @item2.FollwingDate
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                    <label class="layui-form-label LableCss1">跟踪等级:</label>
+                                    <div class="layui-input-block">
+                                        <span class="LableCss1" id="MyGrad" name="MyGrad">
+                                            @item2.Rank
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label LableCss1">跟踪内容:</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-input TextAreCss1 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly" style="color:red">
+                                                         @item2.TailAfterSituation 
+                                                </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label LableCss1">说明:</label>
+                                    <div class="layui-input-block">
+                                        <textarea class="layui-input TextAreCss2 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly">
+                                                         @item2.Rmark 
+                                            </textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                        }
+                        else
+                        {
+                            <div class="layui-tab-item">
+                                <form class="layui-form">
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                            <label class="layui-form-label LableCss1">跟踪日期:</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1" id="MyDate" name="MyDate">
+                                                    @item2.FollwingDate
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                            <label class="layui-form-label LableCss1">跟踪等级:</label>
+                                            <div class="layui-input-block">
+                                                <span class="LableCss1" id="MyGrad" name="MyGrad">
+                                                    @item2.Rank
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                            <label class="layui-form-label LableCss1">跟踪内容:</label>
+                                            <div class="layui-input-block">
+                                                <textarea class="layui-input TextAreCss1 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly" style="color:red">
+                                                         @item2.TailAfterSituation 
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                            <label class="layui-form-label LableCss1">说明:</label>
+                                            <div class="layui-input-block">
+                                                <textarea class="layui-input TextAreCss2 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly">
+                                                         @item2.Rmark 
+                                            </textarea>
+                                            </div>
+                                            </div>
+                                        </div>
+                                </form>
+                            </div>
+                        }
+                        j++;
+                    }
+                }
+            }            
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        //---------------wiper------------------
-        $(function () {
-            $("ul#acordion_main").Wiper();
-
-            //easing: 'linear',
-            //easing: 'ease',
-            //easing: 'ease-in',
-            //easing: 'ease-out',
-            //easing: 'ease-in-out',
-
-            //Demonstration1
-            $("ul#inner_wiper").Wiper({
-                easing: 'ease-out',
-                offset: -1,
-                duration: 2000,
-                binder: $("#inner_wiper_demo"),
-                menuColors: ['#000000', '#333333', '#666666', '#999999', '#cccccc']
-            });
-
-            //Demonstration2
-            $("ul#inner_wiper2").Wiper({
-                easing: 'ease-out',
-                offset: -1,
-                duration: 800,
-                binder: $("#inner_wiper_demo2"),
-                menuColors: [false, false, '#ffd700', '#adff2f', '#4169e1'],
-            });
-
+        layui.use('element', function () {
+            var element = layui.element;
         });
-
     </script>
 </body>
 </html>

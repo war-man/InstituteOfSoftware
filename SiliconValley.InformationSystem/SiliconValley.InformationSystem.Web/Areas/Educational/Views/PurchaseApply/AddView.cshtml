@@ -1,0 +1,332 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+        #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class2 .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        body .demo-class3 .layui-layer-title
+        {
+            background-color: #c02828;
+            color: #fff;
+        }
+
+        .layui-unselect
+        {
+            width: 150px;
+        }
+         
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" enctype="multipart/form-data" lay-filter="AddpurchaseApply_form">
+            <fieldset>
+                <legend>基本信息</legend>
+                <div class="layui-row layui-form-item">
+                    
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="LableCss1">采购人:</label>
+                        <div class="layui-input-block">
+                            <label class="LableCss1">@ViewBag.Shenqi</label>
+                            <input type="hidden" value="@ViewBag.UserId" name="EmployeesInfo_Id" id="EmployeesInfo_Id"/>
+                        </div>
+
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">采购类型:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("PurchaseType_Id", ViewBag.type as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "lay-verify", "myselectfarther" } })
+                        </div>
+                    </div>                  
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">说明:</label>
+                        <div class="layui-input-block">
+                            @Html.TextArea("Reak", new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>采购详情</legend>
+                <table id="ShppingDetail_table" lay-filter="ShppingDetail_table"></table>
+            </fieldset>
+            <div class="layui-row layui-form-item" style="margin-top:20px;">
+                <div class="layui-input-block" style="text-align:right">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="mysubmit">提交</button>
+                    <button type="reset" class="layui-btn">重置</button>
+                    <button type="button" class="layui-btn" onclick="Quxiao()">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script type="text/html" id="ShppingDetail_toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" type="button" lay-event="getCheckData">添加采购详情数据</button>
+        </div>
+    </script>
+    <script type="text/html" id="ShppingDetail_barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        //刷新table
+        function MyTableFlush() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('ShppingDetail_table', {
+                    url: '/Educational/PurchaseApply/GetdetailsData'
+                });
+            });           
+        }
+        //弹出一个添加层
+        function Addview() {
+            layer.open({
+                type: 2,
+                content: '/Educational/PurchaseApply/AddPurchaseApplyDetailsData'
+                , area: ['800px', '400px'],
+                title: '添加采购详情信息'
+                , shade: 0.8
+                , anim: 4
+                , skin: 'demo-class'
+            });
+        }
+        layui.use(['table', 'layer', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            //自定义验证规则
+            form.verify({               
+                myselectfarther: function (value) {
+                    if (value == 0) {
+                        return '请选择采购类型！！！';
+                    }
+                }
+            });
+            table.render({
+                elem: '#ShppingDetail_table'
+                , url: '/Educational/PurchaseApply/GetdetailsData'
+                , toolbar: '#ShppingDetail_toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                ,height:550
+                , cols: [[
+                    { field: 'Goods_Id', title: '名称', fixed: 'left' }
+                    , { field: 'GoodsCount', title: '数量' }
+                    , { field: 'Company', title: '单位' }
+                    , { field: 'Rmark', title: '说明' }             
+                    , { fixed: 'right', title: '操作', toolbar: '#ShppingDetail_barDemo',width:120}
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(ShppingDetail_table)', function (obj) {
+                switch (obj.event) {
+                    case 'getCheckData':
+                        //采购入库
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/PurchaseApply/AddPurchaseApplyDetailsData'
+                            , area: ['800px', '400px'],
+                            title: '添加采购详情信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                };
+               
+            });
+
+            //监听行工具事件
+            table.on('tool(ShppingDetail_table)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('确定删除么?', function (index) {
+                        $.ajax({
+                            url: '/Educational/PurchaseApply/DeleteFunction/' + data.Id,
+                            success: function (sudata) {
+                                if (sudata == "ok") {
+                                    layer.msg('删除成功', { icon: 1, shade: 0.8 }, function () {
+                                        MyTableFlush();
+                                    });
+                                } else {
+                                    layer.msg(sudata, { icon: 2, shade: 0.8 }, function () {
+                                        MyTableFlush();
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    //编辑页面
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/PurchaseApply/AddPurchaseApplyDetailsData/' + data.Id
+                        , area: ['800px', '400px'],
+                        title: '编辑采购详情信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+
+            //监听提交
+            form.on('submit(mysubmit)', function (data) {
+                layer.confirm('请仔细查看数据，一旦提交成功不可修改', {}, function () {
+                    $.ajax({
+                        url: '/Educational/PurchaseApply/AddPurchaseApplyFunction',
+                        data: data.field,
+                        success: function (SucData) {
+                            if (SucData == "ok") {
+                                layer.msg('提交成功', { icon: 1, shade: 0.8 }, function () {
+                                    MyTableFlush();//刷新数据
+                                    form.val("AddpurchaseApply_form", {
+                                        "PurchaseType_Id": "0",
+                                        "Reak": ""
+                                    });
+                                    form.render();
+                                });
+                            } else {
+                                layer.msg(SucData, { icon: 2 }, function () {
+                                    MyTableFlush();//刷新数据
+                                });
+                            }
+                        }
+                    });
+                });               
+                return false;
+            });                    
+        })
+        //取消
+        function Quxiao() {
+            layer.confirm('确定放弃这些数据吗?', {}, function () {
+                $.ajax({
+                    url: '/Educational/PurchaseApply/MyDeleteData',
+                    success: function (sucdata) {
+                        if (sucdata == "ok") {
+                            layer.msg('数据已成功遗弃！', { icon: 1, shade:0.8 }, function () {
+                                MyTableFlush();
+                            });
+                        } else {
+                            layer.msg(sucdata, { icon: 2 }, function () {
+                                MyTableFlush();
+                            });
+                        }
+                    }
+                });
+            });
+        }
+    </script>
+   
+
+</body>
+</html>

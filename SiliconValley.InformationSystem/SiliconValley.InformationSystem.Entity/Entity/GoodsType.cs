@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Reak { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }
-
+        public Nullable<int> FarTher_Id { get; set; }
 
     }
 }

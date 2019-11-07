@@ -81,7 +81,7 @@
 
         <h2 style="text-align:center; color:gray;">
 
-            满意度调查历史记录 
+            满意度调查历史记录
 
         </h2>
 
@@ -92,29 +92,35 @@
             {
                 <!--教学主任的操作页面-->
 
-        <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
+                <div id="tirp" style="display:inline-block; border-top:2px solid green;  border-bottom:2px solid green; background-color:#92d4a5;opacity:0.5;z-index:11; width:100%;height:100px;position:absolute;top:25%; left:0%; ">
 
 
-            <div>
+                    <div>
 
-                <button style="background-color:transparent;" class="layui-btn layui-btn-primary grandselectEmpBtn1">选择教员</button>
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary grandselectEmpBtn1">选择教员</button>
 
-            </div>
-            <div>
+                    </div>
+                    <div>
 
-                <input id="month" value="" type="month" />
+                        <input id="month" value="" type="month" />
 
-            </div>
+                    </div>
 
-            <div id="mybtn">
-                <i style="font-size:25px;" class="layui-icon">&#xe66f;</i>
-            </div>
-            <div>
-                <button style="background-color:transparent;" class="layui-btn layui-btn-primary selectClassBtn">选择班级</button>
-            </div>
+                    <div id="mybtn">
+                        <i style="font-size:25px;" class="layui-icon">&#xe66f;</i>
+                    </div>
+                    <div>
+                        <button style="background-color:transparent;" class="layui-btn layui-btn-primary selectClassBtn">选择班级</button>
+                    </div>
+
+                    <div id="cusordiv">
+                        
+                    </div>
 
 
-        </div>
+                </div>
+
+              
             }
 
         }
@@ -149,6 +155,9 @@
                     </div>
 
                 </div>
+
+
+
             }
         }
 
@@ -243,8 +252,8 @@
         </div>
 
 
-        <div id="ClassevaluateImageDiv" style="text-align:center;">
-            <h3 style="text-align:center;"> 班级评价</h3>
+        <div id="ClassevaluateImageDiv" style="text-align:center;display:none;">
+            <h3 style="text-align:center;"> <span class="classnumber"></span>班级评价</h3>
 
             <hr />
 
@@ -252,16 +261,8 @@
 
             <div id="ClassevaluateImage" style="width:100%;height:200px;">
 
-
-
-
             </div>
         </div>
-
-
-
-
-
 
     </div>
 
@@ -298,6 +299,8 @@
         var CurrentEmp;
 
         var currentClass;
+
+        var currentCourseID=0;
 
         function callbackdata() {
             var checkStatus = layui.table.checkStatus('idTest'); //idTest 即为基础参数 id 对应的值
@@ -341,19 +344,24 @@
                         //首先清空
                         $("#SurveyHistoryList").html("");
 
+
                         for (var i = 0; i < data.Data.length; i++) {
 
 
 
                             var html1 = _.template($("#moban1").html());
 
-                            var data1 = html1({SurveyResultID: data.Data[i].SurveyResultID, studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal });
+                            var data1 = html1({ SurveyResultID: data.Data[i].SurveyResultID, studentname: data.Data[i].FillInPerson.Name, Toatlscore: data.Data[i].TotalScore, proposal: data.Data[i].Proposal });
 
                             $("#SurveyHistoryList").append($(data1));
 
                         }
 
 
+                    } else {
+                        $("#SurveyHistoryList").html("");
+
+                        layer.msg("数据加载异常");
                     }
 
 
@@ -375,7 +383,8 @@
             //初始化自己的满意度调查
             //获取月份
             var month = $("#month").val();
-            load(null, month, null,3);
+
+            load(null, month, null, currentCourseID);
 
             $(document).off("click", ".empSelect").on("click", ".empSelect", function () {
                 $(".selectClassBtn").text("选择班级");
@@ -431,7 +440,9 @@
                             $(cur).text(res.data[0].EmpName);
 
                             //加载数据
-                            load(res.data[0].EmployeeId, month);
+                            load(res.data[0].EmployeeId, month,null,0);
+
+                            
 
                         } else {
                             layer.msg('请选择员工', { icon: 0 });
@@ -485,25 +496,93 @@
             //自己的满意度历史记录
             $(document).off("click", "#mybtn").on("click", '#mybtn', function () {
                 $(".selectClassBtn").text("选择班级");
+                $(".grandselectEmpBtn1").text("选择员工");
+
                 //获取月份
                 var month = $("#month").val();
 
-                load(null, month);
+                load(null, month, currentClass, currentCourseID);
 
 
             });
 
             document.getElementById("month").onchange = function () {
 
-             
-                load(CurrentEmp, this.value, currentClass);
+
+                load(CurrentEmp, this.value, currentClass, currentCourseID);
+
+            }
+
+
+
+            //加载课程方法
+            function getCursor(empid, classnumber) {
+
+                $("#cusordiv").html("");
+
+
+                Ajax("/Teaching/SatisfactionSurvey/GetCursor", { empid: empid, classnumber: classnumber }, 'post', function (data) {
+                    var mo = $("#month").val();
+
+                    //加载
+                    load(CurrentEmp, mo, currentClass, currentCourseID);
+                    if (data.ErrorCode = 200) {
+
+                        for (var i = 0; i < data.Data.length; i++) {
+
+                            if (i == 0) {
+
+                                currentCourseID = data.Data[i].CurriculumID;
+                            }
+
+                            var mo = $("#month").val();
+
+                            //加载
+                            load(CurrentEmp, mo, currentClass, currentCourseID);
+
+                            var btn = $("<button class= 'layui-btn layui-btn-primary'></button>");
+                            btn.attr("CurriculumID", data.Data[i].CurriculumID);
+
+                            btn.text(data.Data[i].CourseName);
+
+                            $("#cusordiv").append(btn);
+                        }
+
+
+                        $.post('/Teaching/SatisfactionSurvey/GetPieImageData', { EmpID: CurrentEmp, ClassNumber: currentClass, courseid: currentCourseID, date: null }, function (data) {
+
+                               
+                            //显示班级名称  教员名称  课程
+                            $("#ClassevaluateImageDiv").find(".EmpName").text(data.Data.Emp.EmpName);
+
+
+                            $("#ClassevaluateImageDiv").find(".corsour").text(data.Data.Curriculum.CourseName);
+
+                            $("#ClassevaluateImageDiv").find("h3").find(".classnumber").text(data.Data.investigationClass.ClassNumber);
+
+                            PieImage("ClassevaluateImage", data.typelist, data.tyepscorelist);
+
+                        });
+
+                    }
+                    else {
+
+                        layer.msg("数据加载异常");
+                    }
+
+
+                }, function (error) {
+
+                    layer.msg("数据加载异常");
+
+
+                    });
+
 
             }
 
 
             //选择班级
-
-
             $(".selectClassBtn").click(function () {
 
 
@@ -537,7 +616,8 @@
 
                             $(cur).text(res.data[0].ClassNumber);
 
-                            load(CurrentEmp, month, res.data[0].ClassNumber);
+                            //加载课程
+                            getCursor(CurrentEmp, currentClass);
 
 
                         } else {
@@ -568,6 +648,21 @@
                 });
 
             });
+
+
+            //点击课程
+
+            $(document).off("click", "#cusordiv button").on("click", "#cusordiv button", function () {
+
+                //获取课程ID
+                var courseid = $(this).attr("CurriculumID");
+
+                currentCourseID = courseid;
+
+                load(CurrentEmp, month, currentClass, courseid);
+
+            });
+
 
         });
 
@@ -646,12 +741,12 @@
         //饼状图
         function PieImage(elem, legendData, seriesData) {
 
-
-            alert("dd");
+            $("#ClassevaluateImageDiv").show();
+           
             var myChart = echarts.init(document.getElementById(elem));
             option = {
                 title: {
-                    text: '某站点用户访问来源',
+                    text: '',
                     
                     x: 'center'
                 },
@@ -689,11 +784,6 @@
        
         //显示当前满意度调查结果的各项分数
 
-        $.post('/Teaching/SatisfactionSurvey/GetPieImageData', { EmpID: "201908150002", ClassNumber: "1710NA", courseid: '3', date: null }, function (data) {
-
-            PieImage("ClassevaluateImage", data.typelist, data.tyepscorelist);
-
-        });
 
 
         $(document).off("click", ".SurveyItem").on("click", '.SurveyItem', function () {

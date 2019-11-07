@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "PerformanceAssessIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div>
+    <table id="PerAsstab" lay-filter="PerAsstab"></table>
+</div>
+
+
+
+@section script{
+    <script>
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var element = layui.element;
+
+            table.render({
+                elem: '#PerAsstab'
+                , url: '/Personnelmatters/PerformanceAssess/GetPerformanceAssessData'
+                , id: "myPerAss"
+                //, toolbar: '#toolbarDemo'
+                , limits: [5, 10, 15, 20, 25, 30]
+                , limit: 10
+                , cols: [[
+                    { title: '湖南硅谷高科软件学院' + '绩效考核表', align: 'center', colspan: 15 }],
+                [
+                    { field: 'empName', title: '姓名', width: 110, sort: true }
+                    , { field: 'empDept', title: '所属部门', width: 110, sort: true }
+                    , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
+                    , { field: 'RoutineWork', title: '日常工作内容', sort: true, width: 90 }
+                    , { field: 'RoutineWorkPropotion', title: '日常工作权重占比', sort: true, width: 120 }
+                    , { field: 'RoutineWorkFillRate', title: '日常工作完成率', sort: true, width: 110 }
+                    , { field: 'OtherWork', title: '其他领导临时指派任务', sort: true, width: 110 }
+                    , { field: 'OtherWorkPropotion', title: '其他工作权重占比', sort: true, width: 110 }
+                    , { field: 'OtherWorkFillRate', title: '其他工作完成率', sort: true, width: 110 }
+                    , { field: 'SelfReportedScore', title: '自评得分', sort: true, width: 110 }
+                    , { field: 'SuperiorGrade', title: '上级评分', sort: true, width: 110 }
+                    , { field: 'FinalGrade', title: '最终绩效分', sort: true, width: 110 }
+                    , { field: 'Remark', title: '备注', sort: true, width: 110 }
+                    , { field: 'IsDel', title: '是否离职', sort: true, width: 110 }
+                    , { title: '操作', toolbar: '#barDemo', width: 110, fixed: 'right' }
+                ]]
+                , page: true
+
+            });
+
+
+        });
+
+
+        //格式化时间
+        function GetYearAndMonth(cellval) {
+            if (cellval != null) {
+                var date;
+                if (cellval.indexOf("/Date(") >= 0) {
+                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+                }
+                else {
+                    date = new Date(cellval);
+                }
+
+                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return date.getFullYear() + "-" + month;
+            } else {
+                return "";
+            }
+        }
+    </script>
+
+
+
+}
+

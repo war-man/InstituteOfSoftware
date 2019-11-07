@@ -25,7 +25,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> Level { get; set; }
         public Nullable<bool> IsUsing { get; set; }
         public string Remark { get; set; }
-    
-     
+        public Nullable<DateTime> PropositionDate { get; set; }
+
+
+
     }
 }

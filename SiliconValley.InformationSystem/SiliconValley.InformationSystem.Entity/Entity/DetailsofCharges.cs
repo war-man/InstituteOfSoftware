@@ -18,13 +18,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     public partial class DetailsofCharges
     {
         [Key]
-    
         public int ID { get; set; }
-        public string Period { get; set; }
-        public Nullable<decimal> Price { get; set; }
-        public string Remarks { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> AddTime { get; set; }
+        public int Enrollmentid { get; set; }
+        public int Costitemsid { get; set; }
+      
     
     }
 }

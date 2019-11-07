@@ -33,9 +33,7 @@ namespace SiliconValley.InformationSystem.Business.FinaceBusines
         /// <param name="costitems">数据对象</param>
         /// <returns></returns>
         public AjaxResult AddCostitems(Costitems costitems)
-        {
-            costitems.Grand_id = null;
-            
+        {  
             AjaxResult retus = null;
             try
             {
@@ -141,5 +139,15 @@ namespace SiliconValley.InformationSystem.Business.FinaceBusines
         {
           return  cisitemesx.GetList().Where(a => a.IsDelete == false).ToList();
         }
+        /// <summary>
+        /// 获取名目的所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List< Costitems> costitemslist()
+        {
+            return this.GetList().Where(a => a.IsDelete == false).ToList();
+        }
+
+       
     }
 }

@@ -24,7 +24,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> AddDate { get; set; }
-
-
+        public string Image { get; set; }
+        /// <summary>
+        /// 是否正在操作该数据 false--否，true--是
+        /// </summary>
+        public Nullable<bool> IsWhether { get; set; }
     }
 }

@@ -1,0 +1,159 @@
+﻿<!--发布考试信息视图-->
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ReleaseExaminationView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #warp {
+            width:100%;
+
+        }
+
+      
+        #right {
+            float:left;
+            width: 68%;
+            height:400px;
+            
+        }
+
+    </style>
+</head>
+<body>
+    <div id="warp">
+        <div id="left">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">考试标题:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" id="title" lay-verify="required" placeholder="请输入标题" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">考试类型</label>
+                        <div class="layui-input-inline">
+                            <select lay-verify="required" id="examtype" name="examtype">
+                                <option value="0">--请选择--</option>
+                                @{
+                                    foreach (var item in ViewBag.ExamTypes as List<ExamType>)
+                                    {
+                                        <option value="@item.ID">@item.TypeName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">考试时间:</label>
+                        <div class="layui-input-inline">
+                            <input type="text"  lay-verify="required" name="begindate" id="date"  class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">时限:</label>
+                        <div class="layui-input-inline">
+                            <input type="number" lay-verify="required" id="timelimit" name="timelimit" min="1" max="5" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">考试难易度:</label>
+                    <div  class="layui-input-block">
+
+
+                        @{
+                            foreach (var item in ViewBag.QuestionLevels as List<QuestionLevel>)
+                            {
+                                <input type="radio" name="level" value="@item.LevelID" title="@item.LevelName" checked="">
+
+                            }
+
+                        }
+                    </div>
+                </div>
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">备注:</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" name="remark" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="text-align:center; margin-top:50px;">
+
+
+                    <button type="button" style="width:100px;" lay-submit lay-filter="sbumit" class="layui-btn layui-btn-danger">提交</button>
+                    <button type="button" style="width:100px;" id="close" class="layui-btn layui-btn-primary">关闭</button>
+
+                </div>
+
+            </form>
+        </div>
+      
+    </div>
+   
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'layer', 'laydate'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#date',
+                type: 'datetime'
+            });
+            form.on('submit(sbumit)', function (data) {
+
+                //组装数据
+                var obj = {
+                    Title: data.field.title,
+                    TimeLimit: data.field.timelimit,
+                    ExamType: data.field.examtype,
+                    Remark: data.field.remark,
+                    BeginDate: data.field.begindate,
+                    PaperLevel: data.field.level
+                };
+
+                console.log(obj);
+
+                //发送请求
+                $.post("/ExaminationSystem/ExamArrangement/ReleaseExamination", obj, function (result) {
+
+                    if (result.ErrorCode == 200) {
+                        layer.msg("发布成功", { time: 1500 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭  
+                        });
+                    }
+                });
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+            $("#close").click(function () {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+
+            });
+        });
+    </script>
+</body>
+</html>

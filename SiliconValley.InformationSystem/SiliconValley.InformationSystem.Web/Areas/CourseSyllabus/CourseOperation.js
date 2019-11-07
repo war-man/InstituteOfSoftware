@@ -32,8 +32,7 @@ layui.use(['table', 'layer','form'], function () {
         , url: '/CourseSyllabus/Course/GetCourseData/'
         , cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
         , cols: [[
-            { type: 'checkbox', fixed: 'left' }
-            , { field: 'CurriculumID', title: 'ID', sort: true }
+            { type: 'radio', fixed: 'left' }
             , { field: 'CourseName', title: '课程名称', sort: true }
             , { field: 'GrandName', title: '阶段', templet: '<div>{{d.Grand.GrandName}}</div>' }
             , { field: 'SpecialtyName', title: '专业', templet: '<div>{{d.Major.SpecialtyName}}</div>' }   
@@ -66,6 +65,16 @@ layui.use(['table', 'layer','form'], function () {
                 });
 
                 break;
+            case 'TypeBtton':
+                layer.open({
+                    type: 2,
+                    area: ["900px", "420px"],
+                    skin: "demo-class2",
+                    shade: [0.8],
+                    title: "查询课程类型",
+                    content: '/CourseSyllabus/Course/CourseTypeIndex'
+                });
+                break;
         };
     });
 
@@ -74,13 +83,17 @@ layui.use(['table', 'layer','form'], function () {
 
     //监听表单提交
     form.on('submit(operation)', function (data) {
-        console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
-        console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
-        console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+       // console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+       // console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+       // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
 
-
+        if (data.field.MajorID.length == 0) {
+            data.field.MajorID = 0;
+        }
         //调用添加方法
         DoAdd(data.field, function (data) {
+
+           
 
             if (data.ErrorCode == 200) {
 
@@ -119,7 +132,7 @@ layui.use(['table', 'layer','form'], function () {
         var data = obj.data;
         var id = obj.data.CurriculumID;
         var CourseName = obj.data.CourseName;
-        //console.log(obj)
+        
         if (obj.event === 'edit') {
             layer.open({
                 title: "编辑课程 (" + CourseName + ")",
@@ -161,4 +174,23 @@ layui.use(['table', 'layer','form'], function () {
         parent.layer.close(index); //再执行关闭   
     });
 
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<自定义验证<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    //自定义验证规则
+    form.verify({
+        valueMax: function (value) {
+            if (value < 0 ) {
+                return '值不能为负数！！！';
+            }
+        }        
+    });
+
+
 });
+
+function Close_My() {
+    layui.use('layer', function () {
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭 
+    });
+      
+}

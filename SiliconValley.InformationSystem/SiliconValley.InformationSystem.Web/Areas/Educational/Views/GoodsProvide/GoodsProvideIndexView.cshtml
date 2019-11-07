@@ -1,0 +1,332 @@
+﻿
+@{
+    ViewBag.Title = "GoodsProvideIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        .inputCss1{
+        border:0px solid #fff;
+        }
+    </style>
+}
+
+    <div>
+        <hr />
+        <label>物品姓名：</label>
+        <div class="btn-group layui-container" style="width:120px;">
+            <div style="display:inline-block">
+             
+                @Html.DropDownList("mygoodsname", ViewBag.goods as IEnumerable<SelectListItem>)
+            </div>
+        </div>
+        <label>申请人：</label>
+        <div class="btn-group layui-container" style="width:120px;">
+            <div style="display:inline-block">             
+                @Html.DropDownList("shenqingMan", ViewBag.emplod as IEnumerable<SelectListItem>)
+            </div>
+        </div>
+        <label>开始时间：</label>
+        <div class="btn-group layui-container" style="width:130px;">
+            <div style="display:inline-block">
+                <input type="text" class="form-control" id="stardate" name="stardate" placeholder="开始时间">
+            </div>
+        </div>
+        <label>结束时间：</label>
+        <div class="btn-group layui-container" style="width:130px;">
+            <div style="display:inline-block">
+                <input type="text" class="form-control" id="enddate" name="enddate" placeholder="结束时间">
+            </div>
+        </div>
+        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary" onclick="Serchen()">查询</button>
+        <hr />
+    </div>
+ 
+    <div class="layui-tab" lay-filter="goodsProvide_Tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">已审核数据</li>
+            <li>未审核数据</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <table id="GoodsProvide_table_1" lay-filter="GoodsProvide_table_1"></table>
+            </div>
+            <div class="layui-tab-item">
+                <table  id="GoodsProvide_table_2"  lay-filter="GoodsProvide_table_2"></table>
+            </div>
+        </div>
+    </div>
+<script type="text/html" id="GoodsProvidetoolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i></i>申请物品</button>
+    </div>
+</script>
+<script type="text/html" id="mydate">
+    {{# if (d.IsReturn == false) { }}
+          {{ d.ReturnDate = "不用归还"}}
+                {{# } else { }}
+    {{  d.ReturnDate = TimeChange(d.ReturnDate)}}
+    {{#  } }}
+
+</script>
+    @section script{
+        <script>
+            var my_indexs = 0;
+            //转换时间的方法
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if ((month + 1) < 10) {
+                    month = "0" + Number(month + 1);
+                } else {
+                    month = Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+            //刷新table的方法
+            function FlushTable_1() {
+                layui.use('table', function () {
+                    var table = layui.table;
+                    table.reload('GoodsProvide_table_1');
+                })
+            }
+            function FlushTable_2() {
+                layui.use('table', function () {
+                    var table = layui.table;
+                    table.reload('GoodsProvide_table_2');
+                })
+            }
+            layui.use(['table', 'laydate', 'form', 'element','layer'], function () {
+                var element = layui.element;
+                var table = layui.table;
+                var laydate = layui.laydate;
+                var form = layui.form;
+                var layer = layui.layer;
+                //table初始化方法
+                table.render({
+                    elem: '#GoodsProvide_table_1'
+                    , url: '/Educational/GoodsProvide/GetTableData?shenhe=0'
+                    , toolbar: '#GoodsProvidetoolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                    , cols: [[
+                        { type: 'radio', fixed: 'left' }
+                        , { field: 'GoodsName', title: '物品名称', fixed: 'left' }
+                        , { field: 'EmployeesInfoName', title: '申请人' }
+                        , { field: 'UseCount', title: '申请个数', width: 80 }
+                        , {
+                            field: 'UseDate', title: '申请日期', templet: function (res) {
+                                return TimeChange(res.UseDate)
+                            }
+                        }
+                        , {
+                            field: 'ReturnDate', title: '归还日期', templet: '#mydate'
+                        }
+                        , { field: 'Rmark', title: '说明', width: 80 }
+                        , {
+                            field: 'IsDel', title: '状态', templet: function (res) { 
+                                return '<span style="color:red">已审核</span>'
+                            }
+                        }
+                        , {
+                            field: 'ShenheDate', title: '审核日期', templet: function (res) {
+                                return TimeChange(res.ShenheDate);
+                            }
+                        }
+                        , {
+                            fixed: 'right', title: '操作', templet: function (res) {
+                                if (res.IsReturn == true) {
+                                    return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>'
+                                } else {
+                                    return '<span style="color:red">已通过审核数据不能修改！！！</span>'
+                                }
+                            }
+                        }
+                    ]]
+                    , page: true
+                });
+                              
+                form.render();
+                //头工具栏事件
+                table.on('toolbar(GoodsProvide_table_1)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'getCheckData':
+                            layer.open({
+                                type: 2,
+                                content: '/Educational/GoodsProvide/AddorEditView'
+                                , area: ['800px', '400px'],
+                                title: '物品申请'
+                                , shade: 0.8
+                                , anim: 4
+                                , skin: 'demo-class'
+                            });
+                            break;
+                    };
+                });
+
+                //监听行工具事件
+                table.on('tool(GoodsProvide_table_2)', function (obj) {
+                    var data = obj.data;
+                    //console.log(obj)
+                    if (obj.event === 'del') {
+                        layer.confirm('请确定好数据的准确性!!!', function (index) {
+                            $.ajax({
+                                url: '/Educational/GoodsProvide/ShenheFunction/',
+                                type: "POST",
+                                data: { "id": data.Id, "count": data.UseCount },
+                                success: function (successData) {
+                                    if (successData == "ok") {
+                                        layer.msg('操作成功', { icon: 1 }, function () {
+                                            FlushTable_2();
+                                        })
+                                    } else {
+                                        layer.msg('<span style="color:red">'+successData+'<span>', { icon: 2 }, function () {
+                                            FlushTable_2();
+                                        })
+                                    }
+                                }
+                            })
+                            layer.close(index);
+                        });
+                    } else if (obj.event === 'edit') {
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/GoodsProvide/AddorEditView/' + data.Id
+                            , area: ['800px', '450px'],
+                            title: '修改申请'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                    }
+                });
+
+                table.on('tool(GoodsProvide_table_1)', function (obj) {
+                    var data = obj.data;
+                if (obj.event === 'edit') {
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/GoodsProvide/UpdateReturnDate/' + data.Id
+                            , area: ['800px', '450px'],
+                            title: '修改申请'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                    }
+                });
+                //tab切换
+                //一些事件监听
+                element.on('tab(goodsProvide_Tab)', function (data) {
+                    var index_tab = data.index;
+                    my_indexs = data.index;
+                    if (index_tab == 1) {
+                        //加载table2的数据
+                        table.render({
+                            elem: '#GoodsProvide_table_2'
+                            , url: '/Educational/GoodsProvide/GetTableData?shenhe=1'
+                            , cols: [[
+                                { type: 'radio', fixed: 'left' }
+                                , { field: 'GoodsName', title: '物品名称', fixed: 'left' }
+                                , { field: 'EmployeesInfoName', title: '申请人' }
+                                , { field: 'UseCount', title: '申请个数', width: 80 }
+                                , {
+                                    field: 'UseDate', title: '申请日期', templet: function (res) {
+                                        return TimeChange(res.UseDate)
+                                    }
+                                }
+                                , {
+                                    field: 'ReturnDate', title: '归还日期', templet: '#mydate'
+                                }
+                                , { field: 'Rmark', title: '说明', width: 80 }
+                                , {
+                                    field: 'IsDel', title: '状态', templet: function (res) {
+                                        return '<span style="color:red">未审核</span>'
+                                    }
+                                }
+                                , {
+                                    field: 'ShenheDate', title: '审核日期', templet: function (res) {
+                                        return TimeChange(res.ShenheDate);
+                                    }
+                                }
+                                , {
+                                    fixed: 'right', title: '操作', templet: function (res) {
+                                        if (res.IsDel == false) {
+                                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"> 审核</a >'
+                                        } else {
+                                            return '<span style="color:red">已通过审核数据不能修改！！！</span>'
+                                        }
+                                    }
+                                }
+
+                            ]]
+                            , page: true
+                        });
+                    } else if (index_tab == 0) {
+                        FlushTable_1();
+                    }
+                });
+                var mymin = 0;
+                laydate.render({
+                    elem: '#stardate'    
+                    , max: new Date().toString()
+                    , done: function (value) {
+                        mymin = value;
+                    }
+                });
+
+                laydate.render({
+                    elem: '#enddate'
+                    , max: new Date().toString()
+                    , done: function (value) {
+                        if (mymin != 0) {
+                            var d1 = new Date(mymin);
+                            var d2 = new Date(value);
+                            if (d2 - d1 < 0) {
+                                layer.msg('结束时间不能小于开始时间!!!', { icon: 2 }, function () {
+                                    laydate.render({
+                                        elem: '#enddate',
+                                        value: mymin
+                                    });
+                                });
+                            }
+                        }
+                    }
+                });
+                 
+            });
+            //模糊查询
+            function Serchen() {
+                var mygoodsname = $("#mygoodsname").val();
+                var shenqingMan = $("#shenqingMan").val();
+                var stardate = $("#stardate").val();
+                var enddate = $("#enddate").val();
+                //var data = { "mygoodsname": mygoodsname, "shenqingMan": shenqingMan, "stardate": stardate, "enddate": enddate };
+                if (my_indexs == 0) {
+                    layui.use('table', function () {
+                        var table = layui.table;
+                        table.reload('GoodsProvide_table_1',
+                            {
+                                where: { "mygoodsname": mygoodsname, "shenqingMan": shenqingMan, "stardate": stardate, "enddate": enddate, "shenheVluae": my_indexs }
+                            });
+                    })
+                     
+                }
+            }
+        </script>
+    }
+

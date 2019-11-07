@@ -60,8 +60,10 @@
             var date = new Date(parseInt(newtime.slice(6)));
             var year = date.getFullYear();
             var month = date.getMonth();
-            if (month < 10) {
+            if ((month + 1) < 10) {
                 month = "0" + Number(month + 1);
+            } else {
+                month = Number(month + 1);
             }
             var day = date.getDate();
             if (day < 10) {
@@ -146,7 +148,7 @@
                 , totalRow: true
                 , cols: [[
                     { type: 'radio', fixed: 'left' }
-                    , { field: 'ChairName', title: '讲座人', fixed: 'left', edit: 'text' }
+                    , {field: 'ChairName', title: '讲座人', fixed: 'left', edit: 'text'}
                     , { field: 'ManCount', title: '人数', edit: 'text' }
                     , { field: 'TerCharName', title: '参与人', edit: 'text' }
                     , { field: 'ChairAddress', title: '讲座地点', edit: 'text' }
@@ -191,7 +193,17 @@
                 var value = obj.value //得到修改后的值
                     , data = obj.data //得到所在行所有键值
                     , field = obj.field; //得到字段
-                if (data.IsDelete == false) {
+                console.log(value);
+                console.log(field);
+                if (data.ChairAddress.length <= 0) {
+                    TiHelper("讲座地点不能为空!");
+                } else if (data.ChairName.length <= 0) {
+                    TiHelper("讲座人不能为空!");
+                } else if (data.TerCharName.length <= 0) {
+                    TiHelper("参与人不能为空!");
+                } else if (data.ManCount <= 0) {
+                    TiHelper("参与人数不能为0或者为负数!");
+                } if (data.IsDelete == false) {
                     var MyDatas = { "Id": data.Id, "Values": value, "KeyName": field };
                     $.ajax({
                         url: "/Market/MarketChair/EditMarketDataFunction",
@@ -208,8 +220,7 @@
                 } else {
                     FlushTableSix1();
                     TiHelper("异常数据不能更改！！！");
-                }
- 
+                }                 
             });
 
             table.on('tool(MyTableSix-1)', function (obj) {
@@ -250,7 +261,11 @@
                 var myvalue = this.value;
                 if (myvalue != "true") {
                     //温馨提示
-                    layer.confirm('< h2 style = "color:red" > 一旦改变，无法修改请三思！！！</h2 >', { icon: 3, title: '系统温馨提示' }, function (index) {
+                    layer.confirm('<h3 style = "color:red"> 一旦改变，无法修改请三思！！！</h3 >', {
+                        title: '系统温馨提示', end: function () { 
+                            FlushTableSix1();
+                        }},
+                        function (index) {
                         var MyDatas = { "Id": myid, "Values": myvalue, "KeyName": "IsDelete" };
                         $.ajax({
                             url: "/Market/MarketChair/EditMarketDataFunction",
@@ -265,8 +280,7 @@
                             }
                         });
                         layer.close(index);
-                    });
-                    
+                    });                   
                 } else {
                     FlushTableSix1();
                     TiHelper("异常数据不能更改！！！");

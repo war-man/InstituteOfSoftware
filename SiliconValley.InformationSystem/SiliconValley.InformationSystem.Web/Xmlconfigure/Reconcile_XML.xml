@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<GetYear>
+  <Year name="2019">
+    <startmonth>6</startmonth>
+    <endmonth>9</endmonth>
+  </Year>
+  <Year name="2020">
+    <startmonth>16</startmonth>
+    <endmonth>19</endmonth>
+  </Year>
+</GetYear>

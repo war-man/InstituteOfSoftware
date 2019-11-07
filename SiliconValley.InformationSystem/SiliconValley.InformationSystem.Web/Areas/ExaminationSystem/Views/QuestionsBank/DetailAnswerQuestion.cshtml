@@ -1,0 +1,117 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView.AnswerQuestionView
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DetailAnswerQuestion</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+        <hr />
+        <form class="layui-form">
+
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">命题人:</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary">@Model.Proposition.EmpName</button>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">命题时间:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" readonly value="@Model.PropositionDate" id="creatdate" placeholder="yyyy-MM-dd">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程</label>
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary">@Model.Course.CourseName</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">题目:</label>
+                <div class="layui-input-block">
+                    <input type="text" readonly name="Title" value="@Model.Title" placeholder="题目" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">参考答案:</label>
+                <div class="layui-input-block">
+                    <textarea readonly name="ReferenceAnswer" class="layui-textarea">@Model.ReferenceAnswer</textarea>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">难度级别</label>
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-primary">@Model.Level.LevelName</button>
+
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注:</label>
+                <div class="layui-input-block">
+                    <textarea readonly name="Remark" class="layui-textarea">@Model.Remark</textarea>
+                </div>
+            </div>
+
+            <div style="text-align:center;">
+
+                <button type="button" id="close" style="width:30%; margin-top:100px;" class="layui-btn layui-btn-primary">关闭</button>
+            </div>
+
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'layer'], function () {
+
+
+            var form = layui.form;
+
+            $("#close").click(function () {
+
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+
+            });
+
+            var dateval = $("#creatdate").val();
+
+            var date = new Date(dateval);
+
+            var year = date.getFullYear();
+            var moutn = date.getMonth() + 1;
+            var day = date.getDate();
+
+
+
+            $("#creatdate").val(year + "年" + moutn + "月" + day + "日");
+
+        });
+    </script>
+</body>
+</html>

@@ -27,5 +27,11 @@ namespace SiliconValley.InformationSystem.Entity.Base_SysManage
         /// </summary>
         public String RoleName { get; set; }
 
+
+        /// <summary>
+        /// ÒµÎñÃû³Æ
+        /// </summary>
+        public string BusinessName { get; set; }
+
     }
 }

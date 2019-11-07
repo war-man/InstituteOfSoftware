@@ -1,0 +1,105 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using SiliconValley.InformationSystem.Entity.MyEntity
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateHeadMasterSurveyConfig</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+        <form class="layui-form">
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选择班级</label>
+                <div class="layui-input-block">
+                    <select name="classnumber" id="classnumber">
+
+                        @{
+                            foreach (var item in ViewBag.classlist as List<HeadClass>)
+                            {
+                                <option value="@item.ClassID">@item.ClassID</option>
+                            }
+
+                        }
+
+
+
+
+                    </select>
+                </div>
+            </div>
+
+            <div style="width:100%; text-align:center;">
+
+                <button id="Commit" class="layui-btn layui-btn-danger">确定</button>
+
+            </div>
+
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(["form", 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+            $("Commit").click(function () {
+
+                layer.confirm("确认!", function (index) {
+
+                    //获取班级
+                    var classnumber = $("#classnumber").val();
+
+                    $.post('/Teaching/SatisfactionSurvey/CreateHeadMasterSurveyConfig', { classnumber: classnumber }, function (data) {
+
+                        console.log(data);
+
+                        if (data.ErrorCode == 300) {
+
+                            layer.msg("抱歉！您本月的满意度调查单已经生成过了");
+
+                        }
+
+                        if (data.ErrorCode == 500) {
+                            layer.msg("抱歉！服务器错误");
+                        }
+
+                        if (data.ErrorCode == 200) {
+
+                            layer.msg("生成成功！");
+
+                            layer.close(index);
+                        }
+
+
+                    });
+
+
+                });
+
+               
+            });
+
+
+
+
+
+
+
+        });
+    </script>
+
+</body>
+</html>

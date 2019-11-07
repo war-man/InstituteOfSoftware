@@ -1,0 +1,138 @@
+﻿
+@{
+    ViewBag.Title = "BeOnDutyIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+}
+    <div>
+        <hr />
+        <label>名称：</label>
+        <div class="btn-group layui-container" style="width:120px;">
+            <div style="display:inline-block">
+                <input type="text" class="form-control" id="JangzMan" name="JangzMan" placeholder="名称">
+            </div>
+        </div>
+        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+        <hr />
+    </div>
+    <div id="tableDiv">
+        <table id="BeOnButyTable" lay-filter="BeOnButyTable"></table>
+    </div>
+ 
+<script type="text/html" id="Be_toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加</button>
+    </div>
+</script>
+
+<script type="text/html" id="Be_barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+</script>
+
+ 
+@section script{
+    <script>
+        
+        //获取年月日，时分秒
+        function formatTen(num) {
+            return num > 9 ? (num + "") : ("0" + num);
+        }
+        function formatDate(date) {
+            var date = new Date(date)
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var minute = date.getMinutes();
+            var second = date.getSeconds();
+            return year + "-" + formatTen(month) + "-" + formatTen(day) + " " + formatTen(hour) + ":" + formatTen(minute) + ":" + formatTen(second);
+        }
+        //table的刷新
+        function LoadTable() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('BeOnButyTable');
+            })
+        }
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            table.render({
+                elem: '#BeOnButyTable'
+                , url: '/Educational/BeOnDuty/GetBeOnDutyAllData'
+                , toolbar: '#Be_toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'TypeName', title: '名称', width: 150, fixed: 'left'}
+                    , { field: 'Cost', title: '费用'  }                     
+                    , { field: 'Reak', title: '备注' }
+                    , {
+                        field: 'AddDate', title: '添加时间', templet: function (res) {
+                           var dd= new Date(parseInt(res.AddDate.slice(6)));
+                            return formatDate(dd);
+                        }
+                    }
+                    , {
+                        field: 'IsDelete', title: '状态', templet: function (res) {
+                            if (res.IsDelete == true) {
+                                return '未激活'
+                            } else {
+                                return '<span style="color:red">激活<span>'
+                            }
+                        }
+                    }
+                    , { fixed: 'right', title: '操作', toolbar: '#Be_barDemo', width: 150 }
+                ]]
+                , page: true
+            });
+            //头工具栏事件
+            table.on('toolbar(BeOnButyTable)', function (obj) {               
+                switch (obj.event) {
+                    case 'getCheckData':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/BeOnDuty/AddBeOnDutyView' 
+                            , area: ['600px', '300px'],
+                            title: '添加值班，加班费用信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                            , closeBtn:0
+                        });
+                        break;                     
+                };
+            });
+            //监听行工具事件 编辑
+            table.on('tool(BeOnButyTable)', function (obj) {
+                var data = obj.data;                
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/BeOnDuty/AddBeOnDutyView/'+data.Id
+                        , area: ['800px', '400px'],
+                        title: '编辑值班，加班费用信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                        , closeBtn: 0
+                    });
+                }                   
+            });           
+        });
+    </script>
+}

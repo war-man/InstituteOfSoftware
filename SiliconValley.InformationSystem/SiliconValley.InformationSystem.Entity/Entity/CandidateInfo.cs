@@ -20,6 +20,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string CandidateNumber { get; set; }
         public int Examination { get; set; }
         public string StudentID { get; set; }
+        /// <summary>
+        /// 是否为重考
+        /// </summary>
+        public bool IsReExam { get; set; }
+        public string Paper { get; set; }
+
+        public string ComputerPaper { get; set; }
     
     }
 }
