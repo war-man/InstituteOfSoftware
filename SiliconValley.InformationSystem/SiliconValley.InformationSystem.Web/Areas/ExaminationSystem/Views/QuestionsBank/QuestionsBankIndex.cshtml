@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "QuestionsBankIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    
+ <style>
+
+     #titleImage {
+        
+         width:100%;
+         height:200px;
+         background-color:#0094ff;
+     
+     }
+
+     #questionTypeDiv {
+        
+         width:80%;
+         height:500px;
+         background-color:white;
+         margin:0 auto;
+
+     }
+
+     .questionType {
+        display:inline-block;
+        margin-left:100px;
+     }
+     .temp {
+         width: 100%;
+         margin: 0 auto;
+         height: 40px;
+         border-top: 1px solid gray;
+         
+         text-align:center;
+         line-height:40px;
+         font-size:18px;
+     }
+
+ </style>   
+    
+ }
+<div id="questionWarp">
+
+    <div id="titleImage">
+
+    </div>
+    <div id="questionTypeDiv">
+        
+
+        <div>
+
+            <div class="temp">
+                <i class="layui-icon layui-icon-home">笔试题库</i>
+            </div>
+
+            <div class="questionType" id="ChoiceQuestion">
+                <i class="layui-icon layui-icon-template-1" style="font-size: 50px; color: #1E9FFF;"></i>
+                <br />
+                <span>选择题</span>
+            </div>
+
+            <div class="questionType" id="clearlyExamination">
+                <i class="layui-icon layui-icon-template-1" style="font-size: 50px; color: #1E9FFF;"></i>
+                <br />
+                <span>解答题</span>
+            </div>
+        </div>
+
+
+
+        <div>
+
+            <div class="temp">
+                <i class="layui-icon layui-icon-home">机试题库</i>
+            </div>
+
+            <div class="questionType" id="ComputerTestQuestions">
+                <i class="layui-icon layui-icon-template-1" style="font-size: 50px; color: #1E9FFF;"></i>
+                <br />
+                <span>机试题库</span>
+            </div>
+
+          
+        </div>
+
+
+
+      
+
+    </div>
+
+
+</div>
+
+@section script{
+    
+    <script>
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+
+            ////鼠标移入事件
+
+            $(".questionType").mouseover(function () {
+
+
+                $(this).attr("style","color:red;");
+
+            });
+
+
+             ////鼠标移出去事件
+            $(".questionType").mouseout(function () {
+
+
+                $(this).attr("style", "color:black;");
+
+            });
+
+
+            //进入笔试题库页面‘
+            $("#ChoiceQuestion").click(function () {
+
+                window.location.href = "/ExaminationSystem/QuestionsBank/ChoiceQuestionIndex";
+                
+
+            });
+
+            //进入解答题库页面】
+
+            $("#clearlyExamination").click(function () {
+
+
+                window.location.href = "/ExaminationSystem/QuestionsBank/ClearlyQuestionIndex";
+
+
+            });
+
+            //进入机试题题库主页
+
+            $("#ComputerTestQuestions").click(function () {
+
+                window.location.href = "/ExaminationSystem/QuestionsBank/ComputerTestQuestionsIndex";
+
+            });
+
+
+
+        });
+
+
+    </script>
+    
+    
+}

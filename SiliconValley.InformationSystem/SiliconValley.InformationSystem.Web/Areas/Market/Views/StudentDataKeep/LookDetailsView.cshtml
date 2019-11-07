@@ -386,17 +386,6 @@
             var ityy;
             //刷新界面 所有元素
             form.render();
-            //日期
-            laydate.render({
-                elem: '#StuDateTime'
-            });
-            laydate.render({
-                elem: '#StuVisit'
-            });
-            laydate.render({
-                elem: '#StuBirthy'
-            });
-
             $("#quxiao").click(function () {
                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                 parent.layer.close(index); //再执行关闭   

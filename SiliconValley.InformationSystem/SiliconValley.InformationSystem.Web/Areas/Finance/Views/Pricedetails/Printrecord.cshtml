@@ -1,0 +1,41 @@
+﻿
+@{
+    ViewBag.Title = "Printrecord";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model SiliconValley.InformationSystem.Entity.ViewEntity.vierprice
+ @using SiliconValley.InformationSystem.Entity.ViewEntity
+<ul class="layui-timeline">
+
+    @{
+        foreach (var item in ViewBag.vier as List<vierprice>)
+        {
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    <h3 class="layui-timeline-title">@item.Date</h3>
+
+                    @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
+                    {
+                        <p>@s</p>
+                        foreach (var item1 in item.Chicked)
+                        {
+                            if (item1.Rategory == s)
+                            {
+                                <ul>
+                                    <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney</li>
+                                </ul>
+                            }
+                        }
+
+                    }
+
+
+                </div>
+            </li>
+        }
+    }
+
+ 
+</ul>

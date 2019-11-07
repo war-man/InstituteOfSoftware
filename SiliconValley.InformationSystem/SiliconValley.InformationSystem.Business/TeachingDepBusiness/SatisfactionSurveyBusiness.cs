@@ -327,9 +327,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
             List<SatisficingConfig> templist = new List<SatisficingConfig>();
 
-            if (string.IsNullOrEmpty(classnumber))
+            if (string.IsNullOrEmpty(classnumber) ||Curriculum == 0)
             {
-                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CurriculumID == Curriculum).ToList();
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid ).ToList();
             }
             else
             {
@@ -412,11 +412,68 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        public List<SatisficingResult> SatisficingResults()
+        {
+
+            return db_satisresult.GetList();
+        }
+
         public SatisfactionSurveyDetailView GetSatisficingBy(SatisficingResult satisficingResult)
         {
 
             return this.ConvertToViewModel(satisficingResult);
 
         }
+
+        public List<SatisficingConfig> satisficingConfigs()
+        {
+            return db_satisconfig.GetList().Where(d => d.IsDel == false).ToList();
+        }
+
+        /// <summary>
+        /// 添加 满意度调查总单
+        /// </summary>
+        /// <returns></returns>
+        public bool AddSatisficingConfig(SatisficingConfig satisficingConfig)
+        {
+
+            bool result = true;
+
+            try
+            {
+                db_satisconfig.Insert(satisficingConfig);
+            }
+            catch (Exception)
+            {
+
+                result = false;
+            }
+
+            return result ;
+
+            
+
+        }
+
+        /// <summary>
+        /// 判断本月班主任满意度调查单是否已经生成
+        /// </summary>
+        /// <param name="Date"></param>
+        /// <param name="classnumber"></param>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+
+        public bool IsHaveHeadMasterSurveyConfig(string Date, string classnumber, string empid)
+        {
+
+            DateTime da = DateTime.Parse(Date);
+
+            var list = this.satisficingConfigs().Where(d => d.IsDel == false && d.ClassNumber == classnumber && d.EmployeeId == empid && DateTime.Parse(d.CreateTime.ToString()).Year == da.Year && DateTime.Parse(d.CreateTime.ToString()).Month == da.Month).ToList();
+
+            return list != null;
+
+        }
+
+
     }
 }

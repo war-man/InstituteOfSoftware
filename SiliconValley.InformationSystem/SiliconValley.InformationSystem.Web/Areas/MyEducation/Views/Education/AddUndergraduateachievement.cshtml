@@ -1,0 +1,221 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddUndergraduateachievement</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .lables{
+          width:100px;
+        }
+        .texts{
+            text-align:left;
+            color:blue;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" id="addGoodsForm" action="" lay-filter="example">
+        <div class="layui-container" style="margin-top:40px;margin-left:60px;">
+            @{
+                EnrollmentView student = ViewBag.student as EnrollmentView;
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                    <label class="layui-form-label lables">学号</label>
+                    <label class="layui-form-label texts">@student.StudentNumber</label>
+                    <input type="text" style="display:none" value="@student.StudentNumber" name="StudentNumber" />
+                    <input type="text" style="display:none" value="@student.id" name="id" id="EnrollID" />
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                    <label class="layui-form-label lables">姓名</label>
+                    <label class="layui-form-label texts">@student.Name</label>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                    <label class="layui-form-label lables">考藉号</label>
+                    <label class="layui-form-label texts">@student.PassNumber</label>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                    <label class="layui-form-label lables">身份证号</label>
+                    <label class="layui-form-label texts">@student.identitydocument</label>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                    <label class="layui-form-label lables">班级</label>
+                    <label class="layui-form-label texts">@student.ClassName</label>
+                </div>
+            }
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
+                <label class="layui-form-label lables">报考年期</label>
+                <div class="layui-input-inline">
+                    @Html.DropDownList("Examinationperiod", ViewBag.Examinationperiod as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "userClass" } })
+
+                </div>
+            </div>
+
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label lables">选择及格课程</label>
+                <div class="layui-input-block" id="UndergraduatecourseID">
+
+                </div>
+            </div>
+
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-input-block" style="margin-left:154px;margin-top:30px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">确认</button>
+                    <button type="reset" class="layui-btn layui-btn-primary" style="margin-left:30px;" id="remove">重置</button>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+
+        var layer = layui.layer;
+        var form = layui.form;
+        //后台查找名称是否重复
+        function CourseTitle() {
+            var dbase = {
+
+                CoursecategoryYID: $("#CoursecategoryYID").val(),
+                Coursetitle: $("#Coursetitle").val()
+            };
+            console.log(dbase);
+
+
+            $.post("/MyEducation/Education/BoolCoursecategoryX", dbase, function (data) {
+                if (data > 0) {
+                    $("#label").css("display", "block");
+                    $("#bool").val("22222");
+                } else {
+                    $("#label").css("display", "none");
+                    $("#bool").val("");
+                }
+            });
+        }
+
+
+        //重置
+        $("#remove").click(function () {
+            $('#CoursecategoryYID').empty();
+            layui.form.render("select");
+        });
+        //加载复选框
+        function checkboxatecourse(url, datae) {
+            $.ajax({
+                url: url,
+                dataType: 'json',
+                type: 'post',
+                data: datae,
+                success: function (data) {
+                  
+                    $.each(data, function (index, item) {
+                        //  <input type="checkbox" name="like1[game]" lay-skin="primary" title="游戏" disabled="">
+
+                        var iden = index % 2;
+                        var x = "";
+                        if (iden === 1) {
+                            x = " <input type='checkbox' lay-filter='UndergraduatecourseID'  name='Subjectid' value=" + item.id + "  title=" + item.name + " ><br/><br/>";
+                        } else {
+                            x = " <input type='checkbox' lay-filter='UndergraduatecourseID'  name='Subjectid' value=" + item.id + "  title=" + item.name + " >";
+                        }
+
+                        $("#UndergraduatecourseID").append(x);
+
+                    });
+                    if (data.length < 1) {
+                        $("#UndergraduatecourseID").append("<label class='layui-form-label'style='width:130px;color:blue;'>该考期成绩已录入完</label>");
+                    } 
+
+                    layui.form.render("checkbox");//菜单渲染 把内容加载进去
+                }
+            })
+        }
+        //监听下级下拉框
+        form.on('select(userClass)', function (data) {
+            $('#UndergraduatecourseID').empty();
+
+            if (data.value != "") {
+                var db = {
+                    Examinationperiod: data.value,
+                    EnrollID: $("#EnrollID").val(),
+
+                };
+                checkboxatecourse("/MyEducation/Education/ChedeckdUndergraduateachievement", db);
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var db = data.field;
+            if (list.length > 0) {
+                var dbase = {
+                    Examinationperiod: JSON.stringify(list),
+
+                };
+                ajaxprice("/MyEducation/Education/AddUndergraduateachievemenS", dbase, function () {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);//关闭当前页
+
+                });
+            }
+          
+
+
+        })
+        //监听复选框
+        var list = [];
+        form.on('checkbox(UndergraduatecourseID)', function (data) {
+            if (data.elem.checked == true) {
+                layer.prompt({
+                    formType: 0,
+                    value: '60',
+                    title: data.elem.title + '的分数',
+                    area: ['100px', '100px'], //自定义文本域宽高
+                    btn2: function () {
+                        data.elem.checked = false;
+                        form.render();
+                    }
+                }, function (value, index, elem) {
+                    if (value < 60 || value > 100) {
+                        value = 60;
+                    }
+                    data.elem.title = data.elem.title + "(" + value + "分)";
+                    form.render();
+                    var obj = {
+                        Subjectid: data.value,
+                        Fraction: value,
+                        EnrollID: $("#EnrollID").val()
+                    };
+                    list.push(obj);
+                    layer.close(index);
+                });
+
+            } else {
+                var title = data.elem.title.split('(');
+                data.elem.title = title[0];
+                form.render();
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].Subjectid == data.value) {
+                        list.splice(i, 1);
+                    }
+                }
+            }
+
+        });
+    });
+</script>
+

@@ -33,6 +33,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 
         public string WorkExperience { get; set; } //工作经验
 
+      
+
 
     }
 

@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 专业
         /// </summary>
-        public int MajorID { get; set; }
+        public Nullable<int> MajorID { get; set; }
         /// <summary>
         /// 课程名称
         /// </summary>
@@ -42,6 +42,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 课时
         /// </summary>
         public Nullable<int> CourseCount { get; set; }
+        /// <summary>
+        /// 下一门课程
+        /// </summary>
         public Nullable<int> Sort { get; set; }
         /// <summary>
         /// 课时费

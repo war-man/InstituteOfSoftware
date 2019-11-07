@@ -24,11 +24,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> Duration { get; set; }
         public string OvertimeReason { get; set; }
         public Nullable<bool> IsNoDaysOff { get; set; }
-        public Nullable<int> OvertimeTypeId { get; set; }
+        public int OvertimeTypeId { get; set; }
         public Nullable<bool> IsPassYear { get; set; }
         public string Remark { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-    
-       
+        public Nullable<bool> IsPass { get; set; }
+        public Nullable<bool> IsApproval { get; set; }
+
+
     }
 }

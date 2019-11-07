@@ -9,9 +9,11 @@ using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.UserManeger;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
+    //  /Login/PhoneSMS
     [IgnoreLogin]
     public class LoginController : Controller
     {
@@ -56,6 +58,15 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                 BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
             }
             return Json(err, JsonRequestBehavior.AllowGet);
+        }
+
+        //手机短信实例
+        public ActionResult PhoneSMS()
+        {
+            string number = "手机号吗";
+            string smsText = "内容";
+            string t = PhoneMsgHelper.SendMsg(number, smsText);
+            return View();
         }
     }
 }

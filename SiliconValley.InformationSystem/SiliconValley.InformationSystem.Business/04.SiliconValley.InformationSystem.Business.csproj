@@ -37,6 +37,11 @@
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+    </Reference>
     <Reference Include="Nest, Version=6.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\packages\NEST.6.6.0\lib\net461\Nest.dll</HintPath>
     </Reference>
@@ -113,6 +118,7 @@
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
+    <Compile Include="DormitoryBusiness\ProStudentAndTeacherBussiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
@@ -121,6 +127,20 @@
     <Compile Include="DormitoryBusiness\StaffAccdationBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungFloorBusiness.cs" />
+    <Compile Include="EducationalBusiness\BaseDataEnumManeger.cs" />
+    <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
+    <Compile Include="EducationalBusiness\BreakManeger.cs" />
+    <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
+    <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
+    <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
+    <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
+    <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
@@ -136,13 +156,13 @@
     <Compile Include="Logger\RDBMSLogger.cs" />
     <Compile Include="MarketChair_Business\MarketChairManeger.cs" />
     <Compile Include="NetClientRecordBusiness\NetClientRecordManage.cs" />
+    <Compile Include="NewExcel\ExcelHelper.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="PositionBusiness\PositionManage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Psychro\ChannelAreaBusiness.cs" />
-    <Compile Include="Psychro\ProStudentAndTeacherBussiness.cs" />
     <Compile Include="Psychro\DebitBusiness.cs" />
     <Compile Include="Psychro\MrdEmpTransactionBusiness.cs" />
     <Compile Include="Psychro\PerInfoBusiness.cs" />
@@ -153,16 +173,17 @@
     <Compile Include="RecruitPhoneTraceBusiness\RecruitPhoneTraceManage.cs" />
     <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\ApplyForFullMemberManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\DaysOffManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveRequestManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\OvertimeRecordManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\SalaryRaiseApplyManage.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
-    <Compile Include="StudentmanagementBusinsess\InterviewStudentsBusiness.cs" />
-    <Compile Include="StudentmanagementBusinsess\StudentAttendanceBusiness.cs" />
-    <Compile Include="StudentmanagementBusinsess\StudentFeeStandardBusinsess.cs" />
-    <Compile Include="StudentmanagementBusinsess\StudentUnionBusiness.cs" />
     <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
     <Compile Include="StudentManeger\StudentInformationManeger.cs" />
     <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />
@@ -199,5 +220,6 @@
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

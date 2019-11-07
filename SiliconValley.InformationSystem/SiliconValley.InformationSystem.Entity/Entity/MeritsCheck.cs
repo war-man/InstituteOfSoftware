@@ -20,16 +20,16 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int Id { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<System.DateTime> YearAndMonth { get; set; }
-        public string RoutineWork { get; set; }
-        public Nullable<decimal> RoutineWorkPropotion { get; set; }
-        public Nullable<decimal> RoutineWorkFillRate { get; set; }
-        public string OtherWork { get; set; }
-        public Nullable<decimal> OtherWorkPropotion { get; set; }
-        public Nullable<decimal> OtherWorkFillRate { get; set; }
-        public Nullable<decimal> SelfReportedScore { get; set; }
-        public Nullable<decimal> SuperiorGrade { get; set; }
-        public Nullable<decimal> FinalGrade { get; set; }
-        public string Remark { get; set; }
+        public string RoutineWork { get; set; }//日常工作内容
+        public Nullable<decimal> RoutineWorkPropotion { get; set; }//日常工作权重占比
+        public Nullable<decimal> RoutineWorkFillRate { get; set; }//日常工作完成率
+        public string OtherWork { get; set; }//其他或领导临时指派任务
+        public Nullable<decimal> OtherWorkPropotion { get; set; }//其他工作权重占比
+        public Nullable<decimal> OtherWorkFillRate { get; set; }//其他工作完成率
+        public Nullable<decimal> SelfReportedScore { get; set; }//自评得分
+        public Nullable<decimal> SuperiorGrade { get; set; }//上级评分
+        public Nullable<decimal> FinalGrade { get; set; }//最终绩效分
+        public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
     
        

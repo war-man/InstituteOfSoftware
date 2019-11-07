@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "ReleaseExamination";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>发布考试信息页面</h2>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="releaseExamination">
+            <i class="layui-icon layui-icon-release">发布考试信息</i>
+
+        </button>
+        <button class="layui-btn layui-btn-sm" lay-event="ArrangeExamRoom"><i class="layui-icon layui-icon-set"></i>考场、监考员</button>
+
+    </div>
+</script>
+@Html.Partial("ExaminationStoryView")
+
+@section script{
+
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <script>
+
+        layui.use(['table', 'layer'], function () {
+
+            var table = layui.table;
+
+            //头工具栏事件
+            table.on('toolbar(ExamTory)', function  (obj) {
+
+                var checkStatus = table.checkStatus(obj.config.id);
+
+                switch (obj.event) {
+                    case 'releaseExamination': //命题
+
+                        layer.open({
+                            type: 2,
+                            area: ["600px", "600px;"],
+                            title: "发布考试信息",
+                            content: '/ExaminationSystem/ExamArrangement/ReleaseExaminationView',
+                            end: function () {
+
+                                table.reload('ExamTory', {
+
+                                });
+                            }
+                        });
+
+                        break;
+
+                    case 'ArrangeExamRoom': //命题
+
+                        console.log(checkStatus);
+
+                        if (checkStatus.data.length == 0) {
+
+                            layer.msg("请选择需要分配的考场和监考员的考试");
+
+                            return;
+                        }
+
+                        //判断当前选中的考试是否已经结束或者正在考试中
+
+                        var id = checkStatus.data[0].ID;
+                        $.post("/ExaminationSystem/ExamArrangement/GetExamByid/" + id, {}, function (result) {
+
+                            if (result == null) {
+                                layer.msg("服务器错误");
+                                return;
+                            }
+
+                            var dateutcstr = result.BeginDate;
+                            var dateutc = dateutcstr.substring(dateutcstr.indexOf('(') + 1, dateutcstr.indexOf(')'))
+
+                            var exambegindate = new Date(parseInt(dateutc));
+
+                            var nowdate = new Date();
+
+                            
+                            var cha = getIntervalHour(exambegindate, nowdate);
+                           
+                            if (cha > result.TimeLimit) {
+
+                                layer.msg("抱歉 ！ 考试已经结束");
+
+                                return;
+                            }
+
+                            if (cha <= 2 && cha != 0) {
+                                layer.msg("抱歉！ 考试进行中");
+                            }
+                            else {
+                                layer.open({
+                                    type: 2,
+                                    area: ["1000px", "600px;"],
+                                    title: "安排考场和监考员",
+                                    content: '/ExaminationSystem/ExamArrangement/ArrangeExamRoom/' + id ,
+                                    end: function () {
+
+                                        table.reload('ExamTory', {
+
+                                        });
+                                    }
+                                });
+
+                            }
+
+                        });
+
+                       
+
+
+                        break;
+                };
+            });
+
+
+            //监听行双击事件
+            table.on('rowDouble(ExamTory)', function (obj) {
+
+                console.log(obj.data);
+
+                layer.open({
+                    type: 2,
+                    area: ['1000px', '500px'],
+                    title: '详细',
+                    content: '/ExaminationSystem/ExamArrangement/ExamDetailView?examid=' + obj.data.ID
+
+
+                });
+            });
+
+
+        });
+
+    </script>
+
+}

@@ -1,0 +1,92 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WarehouseIndexView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <table id="Warehouse_table" lay-filter="Warehouse_table"></table>
+    <script type="text/html" id="Warehouse_toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="Warehouse_barDemo">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        function Flush_table() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('Warehouse_table');
+            });
+        }
+        layui.use('table', function () {
+            var table = layui.table;
+
+            table.render({
+                elem: '#Warehouse_table'
+                , url: '/Educational/Warehouse/GetWarehouseData'
+                , toolbar: '#Warehouse_toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'WarehouseName', title: '仓库名称', fixed: 'left' }   
+                    , { field: 'Reamk', title: '说明'}   
+                    , { field: 'Adddate', title: '添加时间' }   
+                    , { field: 'IsDelete', title: '状态',teple }   
+                    , { fixed: 'right', title: '操作', toolbar: '#Warehouse_barDemo'}
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(Warehouse_table)', function (obj) {
+                switch (obj.event) {
+                    case 'getCheckData':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Warehouse/AddView'  
+                            , area: ['500px', '300px'],
+                            title: '添加仓库'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+            });
+
+            //监听行工具事件
+            table.on('tool(Warehouse_table)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        layer.close(index);
+                    });
+                }
+                
+            });
+        });
+    </script>
+</body>
+</html>

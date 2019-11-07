@@ -19,7 +19,7 @@
             <div class="layui-col-xs10">
                 <div class="layui-row layui-form-item">
 
-
+                  
                     <div class="layui-col-xs6">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline">
@@ -63,26 +63,28 @@
         </div>
     </div>
 </form>
+<div style="width:200px;height:440px; position:absolute; top:146px;border:1px solid #e6e6e6;">
+    <div  class="demo-tree-more">
+        <ul id="test13">
 
-<table class="layui-hide" id="test" lay-filter="test"></table>
+        </ul>
+    </div>
+</div>
+<div style="margin-left:210px;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+</div>
+
 
 
 @section script{
     @*头部工具栏*@
-    <script type="text/html" id="toolbarDemo">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>学员注册</button>
-            <button class="layui-btn layui-btn-sm" lay-event="getUpdate"> <i class="layui-icon">&#xe642;</i>编辑学员信息</button>
-            <button class="layui-btn layui-btn-sm" lay-event="getpaswwd"> <i class="layui-icon">&#xe642;</i>修改密码</button>
-            <button class="layui-btn layui-btn-sm" lay-event="AddCost"> <i class="layui-icon">&#xe642;</i>学费缴费登记</button>
 
-        </div>
-    </script>
     <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-xs" lay-event="select">详细</a>
+        <a class="layui-btn layui-btn-xs" lay-event="select">查看缴费记录</a>
 
     </script>
     <script>
+      
         //时间转换方法
         function TimeChange(newtime) {
             if (newtime == null)
@@ -143,6 +145,83 @@
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
+            var tree = layui.tree;
+            //模拟数据
+            var data1 = [{
+                    title: '学费'
+                    , id: 2000
+                }, {
+                    title: '食宿费'
+                    , id: 2001
+                }, {
+                    title: '自考本科费'
+                    , id: 2001
+                }, {
+                    title: '学杂费'
+                    , id: 2001
+                }, {
+                    title: "阶段费用缴纳",
+                    id:2003
+                }
+            ]
+            //加载树形菜单数据
+            $.post("/Finance/Pricedetails/Tree", function (data) {
+                // console.log(data);
+                Tree(data);
+            });
+            //Tree(data1);
+            //费用操作页面
+            function Cost(width, height,url, name,id) {
+                var checkStatus = table.checkStatus('idTest');
+               // console.log(checkStatus.data[0].StudentNumber);
+                var da = checkStatus.data;
+               
+                if (checkStatus.data.length > 0) {
+                    url = url + da[0].StudentNumber + "?Typeid=" + id;
+                    StudentShow(url, name, 1, width, height);
+             
+                } else {
+                    layer.alert('请选择一条数据', { icon: 0 });
+                }
+             
+            }
+
+            //无连接线风格
+            function Tree(da) {
+                tree.render({
+                    elem: '#test13'
+                   ,data: [{
+                        title: '学费缴费',
+                        id: "-1",
+                        spread: true,
+                        children: da
+                    }], 
+                     showLine: true  //是否开启连接线
+                    , click: function (obj) {
+                        //console.log(obj);
+                        switch (obj.data.title) {
+                            case "自考本科费用":
+                                var checkStatus = table.checkStatus('idTest');
+                                // console.log(checkStatus.data[0].StudentNumber);
+                                var da = checkStatus.data;
+                                $.post("/Finance/Pricedetails/BoolEnroll/" + da[0].StudentNumber+"?Typeid=" + obj.data.id, function (da) {
+                                    if (da > 0) {
+                                        Cost(600, 430, "/Finance/Pricedetails/Undergraduatefee/", "自考本科费用", obj.data.id);
+                                    } else {
+                                        layer.alert('费用已交齐!', { icon: 0 });
+                                    }
+                                });
+                               
+                                break;
+                            case "阶段费用缴纳":
+                                Cost(800, 750, "/Finance/Pricedetails/StudentPrice/", "阶段费用缴纳", obj.data.id);
+                                break;
+                        }
+
+                    }
+                });
+            }
+        
             //正则表达式
             form.verify({
                 Name: function (value, item) { //value：表单的值、item：表单的DOM对象
@@ -176,7 +255,8 @@
                             if (!identitydocument.test(value)) {
                                 return '请输入正确身份证号';
                             }
-                        }}
+                        }
+                    }
 
                 },
                 number: function (value) {
@@ -190,7 +270,8 @@
                             if (!identitydocument.test(value)) {
                                 return '学号由数字组成';
                             }
-                        } }
+                        }
+                    }
 
                 }
             });
@@ -204,7 +285,7 @@
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     { type: 'radio' }
-                    , { field: 'StudentNumber',  title: '学号', sort: true }
+                    , { field: 'StudentNumber', title: '学号', sort: true }
                     , { field: 'Name', title: '姓名' }
                     , {
                         field: 'Sex', title: '性别', templet: function (c) {
@@ -218,16 +299,28 @@
                             return Age(TimeChange(c.BirthDate));
                         }
                     }
-                    , { field: 'ClassName',  title: '班级名称 ' }
-                    , { field: 'identitydocument',  title:'身份证号码' }
-                    , { field: 'Headmasters', title: '班主任 ' }
+                    , { field: 'ClassName', title: '班级名称 ' }
+                    , { field: 'identitydocument', title: '身份证号码' }
+                    , { field: 'Headmasters', title: '班主任 ',width: 100 }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo',width: 100 }
                 ]]
                 , page: true
                 , limit: 8
                 , limits: [8, 10, 15]
             });
-           
-         
+
+            //监听工作条
+            table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+                if (layEvent === 'select') { //查看
+
+                    window.location = "/Finance/Pricedetails/Printrecord?student=" + data.StudentNumber
+                }
+
+            });
 
             //查询功能
             form.on('submit(demo2)', function (data) {
@@ -248,6 +341,28 @@
                 return false;
             });
         });
+        function StudentShow(url, mytitle, mycloseBtn,width,hegin) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2,
+                    content: url
+                    , area: [width + 'px', hegin+'px'],
+                    title: mytitle
+                    , shade:0.3
+                    , anim: 1
+                    , closeBtn: mycloseBtn
+                });
+            });
+        }
+        function closeSelf() {
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+            
+        });
+        }
+      
+
     </script>
 
 }

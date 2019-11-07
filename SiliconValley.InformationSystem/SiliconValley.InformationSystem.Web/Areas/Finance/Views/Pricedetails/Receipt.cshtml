@@ -1,0 +1,189 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Receipt</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+
+
+
+
+        table {
+            border: 1px solid #808080;
+            border-collapse: collapse
+        }
+
+            table tr td {
+                height: 30px;
+            }
+
+        .titletr td{
+            border: 1px solid #808080;
+            text-align: center;
+        }
+        .bordes td {
+            border: 1px solid #808080;
+        }
+        .motityle td {
+            border: 1px solid #ffffff;
+        }
+        .wid{
+            width:8%;
+        }
+        #guigu {
+            margin-top:-20px;
+            width:100px;
+            height:100px;
+         
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <table id="text" cellspacing="0" style="width:790px;margin-left:20px;margin-top:40px;">
+        <thead>
+            <tr style="border:1px solid #ffffff;">
+                <td colspan="9" style="font-size:19pt;">
+                    <div style="width:30%;height:100px;float:left;">
+                        <div id="guigu">
+                            <img src="~/Areas/Teachingquality/images/guigu.png" />
+                        </div>
+                    </div><div style="float:left;line-height:50px;font-size:24pt;">湖南硅谷高科软件学员收据单</div>
+                </td>
+                <td colspan="1" style="text-align:center;">
+                    <div>NO:<label style="color:red;font-size:13pt;">0000001</label></div> 
+                    <div>日期:<label id="AddDate">2019-08-09</label></div>
+                </td>
+            </tr>
+            <tr class="titletr">
+                <td class="wid">学号</td>
+                <td id="StudentNumber"></td>
+                <td class="wid">姓名</td>
+                <td class="wid" id="Name"></td>
+
+                <td class="wid">班级</td>
+                <td class="wid" id="classa"></td>
+                <td class="wid">阶段</td>
+                <td class="wid" id="GrandName"></td>
+                <td style="width:130px;">身份证号</td>
+                <td id="identitydocument"></td>
+            </tr>
+            <tr style="text-align:center;">
+                <td colspan="6">收费项目</td>
+                <td colspan="4">金额</td>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr style="text-align:center;border-top:1px solid #808080;">
+                <td colspan="6">合计金额:(大写):<label id="DaXie">壹万伍仟肆佰元整</label></td>
+
+                <td colspan="4" id="pricent"></td>
+            </tr>
+            <tr class="bordes" ;height:50px;">
+                <td colspan="1" style="text-align:center;">备注</td>
+                <td colspan="9" id="Remarks" style="margin-left:20px;"></td>
+            </tr>
+            <tr class="motityle" style="text-align:center;">
+                <td colspan="1">开票人:</td>
+                <td colspan="1"></td>
+                <td colspan="2">收款方式:</td>
+                <td colspan="1"></td>
+                <td colspan="2">单位(盖章):</td>
+                <td colspan="3">湖南硅谷高科软件学院</td>
+            </tr>
+        </tbody>
+
+    </table>
+    <div style="text-align:center;margin-top:30px;">
+        <button class="layui-btn" id="btn">打印</button>
+    </div>
+  
+
+</body>
+</html>
+
+<script src="~/Areas/Teachingquality/js/priceview.js"></script>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+
+       // window.parent.closeSelf();
+
+    var studen = JSON.parse('@Html.Raw(ViewBag.student)');
+    $("#GrandName").text(studen.GrandName);
+    $("#Name").text(studen.Name);
+    $("#StudentNumber").text(studen.StudentNumber);
+    $("#classa").text(studen.classa);
+    $("#identitydocument").text(studen.identitydocument);
+    var Receiptdata = JSON.parse('@Html.Raw(ViewBag.Receiptdata)');
+
+    var count = 0;
+    var ostitemsName = "";
+    var Amountofmoneys = 0;
+    var pricent = 0;
+    for (var i = 0; i < Receiptdata.length; i++) {
+        console.log(Receiptdata[i]);
+        pricent = pricent + parseInt(Receiptdata[i].Amountofmoney);
+        console.log(Receiptdata[i]);
+        if (i==0) {
+            //AddDate
+            $("#Remarks").text(Receiptdata[i].Remarks);
+            var date = new Date(Receiptdata[i].AddDate);
+            $("#AddDate").text(getNowFormatDate(date));
+        }
+        if (Receiptdata[i].Rategory == "阶段费用缴纳") {
+            var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
+            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+        } else if ( Receiptdata[i].Rategory == "自考本科费用") {
+            var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
+            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+        }
+        if (Receiptdata[i].Rategory == "学杂费") {
+            count++;
+            ostitemsName += Receiptdata[i].ostitemsName + ",";
+            Amountofmoneys = Amountofmoneys + parseInt(Receiptdata[i].Amountofmoney);
+            if (count > 2) {
+                count = 0;
+                //  console.log(Amountofmoney)
+                $("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+                ostitemsName = "";
+                Amountofmoneys = 0;
+            }
+        }
+    }
+    if (count < 3 && count!=0) {
+        $("#text tbody").before($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+    }
+    $("#pricent").text(toMoney(pricent));
+    $("#DaXie").text(convertCurrency(pricent));
+
+
+</script>
+
+<script src="~/Areas/Teachingquality/js/Print.js"></script>
+<script>
+    document.getElementById('btn').onclick = function () {
+
+        Print('#text', {
+            onStart: function () {
+                console.log('onStart', new Date())
+            },
+            onEnd: function () {
+                console.log('onEnd', new Date())
+            }
+        })
+
+    }
+</script>

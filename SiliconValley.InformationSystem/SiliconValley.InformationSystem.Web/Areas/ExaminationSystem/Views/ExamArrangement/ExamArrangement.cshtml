@@ -1,0 +1,861 @@
+﻿
+@{
+    ViewBag.Title = "ExamArrangement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+        #wywarp {
+            width: 100%;
+        }
+
+        #topimg {
+            width: 100%;
+            height: 200px;
+            background-color: #00ff21;
+        }
+
+        #opeardiv {
+            width: 95%;
+            margin: 0 auto;
+            
+            border: 1px solid gray;
+        }
+
+        #selectdiv {
+            width: 90%;
+            height: 90px;
+            margin: 0 auto;
+        }
+
+        .mylable {
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 120px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        #questionDIV {
+            float: left;
+            width: 55%;
+            
+            background-color: white;
+        }
+
+        #showPaperDIV {
+            float: left;
+            width: 45%;
+           
+        }
+
+        #mycontent2 {
+            
+            background-color: #ffd800;
+            display: none;
+        }
+    </style>
+}
+
+<div id="wywarp">
+
+    <div id="topimg">
+        <img src="~/Areas/ExaminationSystem/Images/img1.png" style="width:100%; height:100%;" />
+    </div>
+    <div id="opeardiv">
+        <div id="selectdiv">
+            <hr />
+            <form class="layui-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="mylable">试卷类型:</label>
+                        <div class="layui-input-inline">
+                            <select lay-filter="PaperType" name="PaperType">
+                                @{
+                                    foreach (var item in ViewBag.ExamTypes as List<ExamType>)
+                                    {
+                                        <option value="@item.ID">@item.TypeName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="selectquCountDiv" style="display:none;">
+                        <label class="mylable">选择题数量:</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="phone" id="selectquCount" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-inline" id="clearlyquCountDiv" style="display:none;">
+                        <label class="mylable">填空题数量:</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="phone" id="clearlyquCount" class="layui-input">
+                        </div>
+                    </div>
+
+
+
+                    <div class="layui-inline">
+
+                        <input type="checkbox" lay-filter="comselect" name="like[write]" title="电脑抽取">
+                    </div>
+
+                    <div class="layui-inline">
+                        <button type="button" id="oK" style="display:none;" class="layui-btn layui-btn-primary">抽取</button>
+                    </div>
+
+
+
+                </div>
+
+            </form>
+
+        </div>
+        <hr style="border:1px solid #82e2da;" />
+
+        <div id="mycontent1">
+            <!--人工抽取展示页面-->
+
+            <div id="questionDIV">
+                <div lay-filter="questionTab" class="layui-tab">
+                    <ul class="layui-tab-title">
+                        <li class="layui-this">选择题</li>
+                        <li>解答题</li>
+                        <li>机试题</li>
+
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <!--筛选框-->
+
+                            <div class="searchDiv">
+
+
+                            </div>
+                            <table class="layui-hide" lay-filter="QuestionsBank" id="QuestionsBank"></table>
+
+
+                            <!--行内工具按钮-->
+                            <script type="text/html" id="barDemo">
+                                <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="select">双击行选择/取消</a>
+                            </script>
+                        </div>
+                        <div class="layui-tab-item">
+
+
+                            <!--解答题-->
+                            <!--筛选框-->
+                            <div class="searchDiv">
+
+
+                            </div>
+
+                            <table class="layui-hide" lay-filter="ClearlyQuestionsBank" id="ClearlyQuestionsBank"></table>
+
+
+                            <!--行内工具按钮-->
+                            <script type="text/html" id="barDemo">
+                                <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="select">选择</a>
+                            </script>
+                        </div>
+                        <div class="layui-tab-item">
+                            <!--机试题-->
+                            <!--筛选框-->
+                            <div class="searchDiv">
+
+
+                            </div>
+
+                            <table class="layui-hide" lay-filter="ComputerTestQuestions" id="ComputerTestQuestions"></table>
+
+
+                            <!--行内工具按钮-->
+                            <script type="text/html" id="barDemo">
+                                <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="select">选择</a>
+                            </script>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div id="showPaperDIV">
+
+                <h3 class="PaperTypeShow" style="text-align:center;">试卷类型</h3>
+                <hr />
+                
+                <div id="MultipleQuestionPaper" >
+                    <h4 style="text-align:center;">选择题区域</h4>
+                    <!--题目区-->
+                </div>
+                
+                <div id="ClearlyQuestionPaper">
+                    <h4 style="text-align:center;">解答题区域</h4>
+                    
+                </div>
+                <div id="ComputerQuestionPaper">
+                    <h4 style="text-align:center;">解答题区域</h4>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div id="mycontent2">
+            <h1>试卷展示区</h1>
+            <div id="MultipleQuestionPaper">
+
+            </div>
+            <div id="ClearlyQuestionPaper">
+
+            </div>
+            <div id="ComputerQuestionPaper">
+
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script id="serachMoban" type="text/template">
+    <form class="layui-form">
+
+        <div style="" class="layui-form-item">
+
+            <div class="layui-inline">
+                <label class="layui-form-label">题目</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Title" value="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label">专业</label>
+                <div class="layui-input-inline">
+                    <select lay-filter="major">
+                        <option value="0">请选择</option>
+                        @{
+                            foreach (var item in ViewBag.Major as List<Specialty>)
+                            {
+                                <option value="@item.Id">@item.SpecialtyName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">课程</label>
+                <div class="layui-input-inline">
+                    <select lay-verify="required" name="course" id="course">
+                        <option selected value="0"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <button class="layui-btn layui-btn-primary" lay-submit="" lay-filter="{{=Searchfilter}}">查询</button>
+
+            </div>
+        </div>
+
+
+    </form>
+</script>
+
+<!--选择题摸吧-->
+
+<script id="MultipleMoban" type="text/template">
+    <div class="MultipleItem">
+        <!--题目区-->
+        <code><b style="font-size:20px;">{{=index}}--</b>{{=question}}</code>
+
+        <form class="layui-form">
+            <div class="layui-form-item">
+
+                <div class="layui-input-block">
+                    <input type="radio" name="sex" value="{{=OptionA}}" title="{{=OptionA}}">
+                    <input type="radio" name="sex" value="{{=OptionB}}" title="{{=OptionB}}">
+                    <input type="radio" name="sex" value="{{=OptionC}}" title="{{=OptionC}}">
+                    <input type="radio" name="sex" value="{{=OptionD}}" title="{{=OptionD}}">
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+
+</script>
+
+<!--解答题展示模板-->
+<script type="text/template" id="answerquestionMuban">
+
+    <div class="showanswerItem" questionid="{{=questionid}}">
+        <code><b style="font-size:20px;">{{=index}}--</b>{{=question}}</code>
+    </div>
+    <br />
+
+</script>
+
+<script type="text/template" id="computerquestionMuban">
+
+    <div class="showanswerItem" questionid="{{=questionid}}">
+        <code><b style="font-size:20px;">{{=index}}--</b>{{=question}}</code>
+    </div>
+    <br />
+
+</script>
+@section script{
+    <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+        var table;
+
+        ///集合
+        var MultipleChoiceList = new Array();
+        var ClearlyQuestionList = new Array();
+        var ComputerTerList = new Array();
+
+         
+        function setMultiplePaper(array) {
+
+            for (var i = 0; i < array.length; i++) {
+
+                var layerthtml = _.template($("#MultipleMoban").html());
+
+                var layerdata = layerthtml({ index: MultipleChoiceList.length, question: array[i].Title, OptionA: array[i].OptionA, OptionB: array[i].OptionB, OptionC: array[i].OptionC, OptionD: array[i].OptionD });
+
+                $("#MultipleQuestionPaper").append(layerdata);
+
+                form.render();
+            }
+
+        }
+
+        function setAnswerPaper(array) {
+             for (var i = 0; i < array.length; i++) {
+
+                var layerthtml = _.template($("#MultipleMoban").html());
+
+                 var layerdata = layerthtml({ index: array.length, question: array.Title, questionid: array.ID });
+
+                $("#MultipleQuestionPaper").append(layerdata);
+
+                form.render();
+            }
+
+        }
+       
+        var layerthtml1 = _.template($("#serachMoban").html());
+
+        var layerdata1 = layerthtml1({ Searchfilter: "Multiplefilter" });
+        $($(".searchDiv")[0]).append(layerdata1);
+        ///加载选择题
+        function LoadMultipleChoiceQuestion() {
+
+            //渲染表格
+            table.render({
+                elem: '#QuestionsBank'
+                , toolbar: '#toolbarDemo'
+                , id: "QuestionsBank"
+                , url: '/ExaminationSystem/ExamArrangement/ChoiceQuestionTableData'
+                , cellMinWidth: 80
+                , cols: [[
+                    { type: 'checkbox' },
+                    { field: 'Id', width: 80, title: 'ID', hide: true, sort: true }
+                    , { field: 'Title', width: 200, title: '题目' }
+                    , { field: 'OptionA', width: 150, title: '选项A', sort: true }
+                    , { field: 'OptionB', width: 150, title: '选项B' }
+                    , { field: 'OptionC', title: '选项C', width: 150, }
+                    , { field: 'OptionD', title: '选项D', sort: true, width: 150 }
+                    , {
+                        field: 'IsRadio', title: '单选/多选', sort: true, templet: function (data) {
+
+                            if (data.IsRadio == true) {
+
+                                return "单选";
+                            }
+                            else {
+                                return "多选";
+                            }
+
+                        }, width: 150
+                    },
+                    { field: 'LevelName', width: 100, title: '难度指数', templet: '<div>{{d.Level.LevelName}}</div>' },
+                    { field: 'Answer', width: 80, title: '答案' },
+                    { field: 'EmpName', width: 80, title: '命题人', templet: '<div>{{d.Proposition.EmpName}}</div>' },
+                    { field: 'CourseName', width: 120, title: '所属课程', templet: '<div>{{d.Course.CourseName}}</div>' },
+                    {
+                        field: 'Course', width: 120, title: '启用/禁用', templet: function (data) {
+
+
+
+                            if (data.IsUsing == true) {
+                                return "启用中";
+                            }
+                            else {
+                                return "禁用中";
+                            }
+
+                        }
+                    },
+                    { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+
+                ]],
+                page: true
+            });
+
+
+
+        }
+
+        function LoadClearlyQuestion() {
+            table.render({
+                elem: '#ClearlyQuestionsBank'
+                , toolbar: '#toolbarDemo'
+                , id: "ClearlyQuestionsBank"
+                , url: '/ExaminationSystem/ExamArrangement/AnswerQuestionData'
+                , cellMinWidth: 80
+                , cols: [[
+                    { type: 'checkbox' },
+                    { field: 'ID', width: 80, title: 'ID', hide: true, sort: true }
+                    , { field: 'Title', width: 300, title: '题目' }
+
+
+                    , { field: 'LevelName', width: 100, title: '难度指数', templet: '<div>{{d.Level.LevelName}}</div>' },
+                    { field: 'ReferenceAnswer', width: 300, title: '参考答案' },
+                    { field: 'EmpName', width: 80, title: '命题人', templet: '<div>{{d.Proposition.EmpName}}</div>' },
+                    { field: 'CourseName', width: 120, title: '所属课程', templet: '<div>{{d.Course.CourseName}}</div>' },
+                    {
+                        field: 'Course', width: 120, title: '启用/禁用', templet: function (data) {
+
+
+
+                            if (data.IsUsing == true) {
+                                return "启用中";
+                            }
+                            else {
+                                return "禁用中";
+                            }
+
+                        }
+                    },
+                    { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+
+                ]],
+                page: true
+            });
+
+        }
+
+        function LoadComputerQuestion() {
+            //渲染表格
+            table.render({
+                elem: '#ComputerTestQuestions'
+                , toolbar: '#toolbarDemo'
+                , id: "ComputerTestQuestions"
+                , url: '/ExaminationSystem/QuestionsBank/ComputerTestQuestionTableData'
+                , cellMinWidth: 80
+                , cols: [[
+                    { type: 'checkbox' },
+                    { field: 'ID', width: 80, title: 'ID', hide: true, sort: true }
+                    , { field: 'Title', width: 300, title: '标题' }
+
+                    , {
+                        field: 'UsageCount', width: 300, title: '使用次数', templet: function (data) {
+
+                            return data.UsageCount + "次";
+                        }
+                    }
+
+                    , { field: 'LevelName', width: 100, title: '难度指数', templet: '<div>{{d.Level.LevelName}}</div>' },
+                    { field: 'SaveURL', width: 300, title: '保存地址' },
+                    { field: 'EmpName', width: 80, title: '命题人', templet: '<div>{{d.Proposition.EmpName}}</div>' },
+                    { field: 'CourseName', width: 120, title: '所属课程', templet: '<div>{{d.Course.CourseName}}</div>' },
+                    {
+                        field: 'Course', width: 120, title: '启用/禁用', templet: function (data) {
+
+
+
+                            if (data.IsUsing == true) {
+                                return "启用中";
+                            }
+                            else {
+                                return "禁用中";
+                            }
+
+                        }
+                    },
+                    { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+
+                ]],
+                page: true
+            });
+        }
+
+
+        layui.use(['form', 'layer','element','table'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+             table = layui.table;
+            var element = layui.element;
+            //下拉框联动
+            form.on('select(major)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/ExaminationSystem/QuestionsBank/CourseData",
+                    data: { majorid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.length > 0) {
+                            //清空赋值
+                            $("#course").empty();
+                            console.log(resultData);
+                            $("#course").append(new Option("请选择项目", 0));
+                            $.each(resultData, function (index, item) {
+                                //赋值
+                                $('#course')
+                                    .append(new Option(item.CourseName, item.CurriculumID));
+                            });
+                        } else {
+                            $("#course").empty();
+                            $("#course").append(new Option("暂无数据", 0));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            });
+
+            //查询
+
+            form.on('submit(Multiplefilter)', function (data) {
+
+                console.log(data.field)
+
+
+                table.reload('QuestionsBank', {
+
+                    url: '/ExaminationSystem/QuestionsBank/Search'
+                    , where: data.field
+                });
+
+                return false;
+            });
+
+            form.on('submit(ClearlySearch)', function (data) {
+
+              
+                table.reload('ClearlyQuestionsBank', {
+
+                    url: '/ExaminationSystem/QuestionsBank/SearchAnswerQuestion'
+                    , where: data.field
+                });
+
+                return false;
+            });
+
+            form.on('submit(ComputerSearch)', function (data) {
+
+
+                table.reload('ComputerTestQuestions', {
+
+                    url: '/ExaminationSystem/QuestionsBank/SearchComputerTestQuestion'
+                    , where: data.field
+                });
+
+                return false;
+            });
+
+
+            ///监听试卷类型的改变
+            form.on('select(PaperType)', function (obj) {
+                //需要改变试卷展示区的试卷类型
+                $(obj.elem).children().each(function () {
+                    if ($(this).attr("value") == obj.value) {
+                        $('.PaperTypeShow').text($(this).text()+'试卷(预览区)');
+                    }
+                });
+
+
+
+            });
+            // 选择题表格 监听行工具事件
+            table.on('tool(QuestionsBank)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                    if (obj.event === 'detail') {
+
+                    layer.open({
+                        type: 2,
+                        area: ["1000px", "820px;"],
+                        title: "选择题-详细",
+                        content: '/ExaminationSystem/QuestionsBank/DetailChoiceQuestion/' + data.Id,
+
+                    });
+                }
+            });
+             
+            //选择题表格监听行双击事件
+            table.on('rowDouble(QuestionsBank)', function (obj) {
+                //发送请求获取试卷layui-form-checked
+
+                var selected = $(obj.tr).attr("select");
+
+                console.log(selected);
+                if (selected == undefined) {
+                    $(obj.tr).attr("select","select")
+                    $(obj.tr).css("background", "pink");
+
+                    Ajax('/ExaminationSystem/ExamArrangement/GetChoiceQuestionByID', { id: obj.data.Id }, 'post', function (data) {
+
+                        if (data.ErrorCode = 200) {
+                            console.log(data);
+
+                            MultipleChoiceList.push(data.Data);
+
+                            var layerthtml = _.template($("#MultipleMoban").html());
+
+                            var layerdata = layerthtml({ index: MultipleChoiceList.length, question: data.Data.Title, OptionA: data.Data.OptionA, OptionB: data.Data.OptionB, OptionC: data.Data.OptionC, OptionD: data.Data.OptionD });
+
+                            $("#MultipleQuestionPaper").append(layerdata);
+
+                            form.render();
+                        }
+                        else {
+                            layer.msg("");
+                        }
+
+                    }, function (error) {
+
+                        layer.msg("抱歉 网络异常");
+                    });
+                }
+                else {
+
+                    ///重新渲染试卷 选择题区域
+                    $("#MultipleQuestionPaper .MultipleItem").remove();
+                    $(obj.tr).removeAttr("select");
+                    $(obj.tr).css("background", "white");
+
+                    for (var i = 0; i < MultipleChoiceList.length; i++) {
+
+                        if (MultipleChoiceList[i].Id == obj.data.Id) {
+                            MultipleChoiceList.splice(i,1);
+                        }
+
+                    }
+
+                    setMultiplePaper(MultipleChoiceList);
+
+
+                }
+               
+            });
+
+            //解答题表格监听行双击事件
+            table.on('rowDouble(ClearlyQuestionsBank)', function (obj) {
+                //发送请求获取试卷
+                var selected = $(obj.tr).attr("select");
+                var isHave = false;
+                $("#ClearlyQuestionPaper .showanswerItem").each(function () {
+                    var questionid = $(this).attr("questionid");
+
+                    for (var i = 0; i < ClearlyQuestionList.length; i++) {
+
+                        if (ClearlyQuestionList[i].ID == questionid) {
+                            isHave = true;
+
+                        }
+
+                    }
+                });
+                
+                if (selected == undefined && isHave == false) {
+                    
+                    $(obj.tr).attr("select", "select")
+                    $(obj.tr).css("background", "pink");
+
+                    Ajax('/ExaminationSystem/ExamArrangement/GetAnsweruestionByID', { id: obj.data.ID }, 'post', function (data) {
+
+                        if (data.ErrorCode = 200) {
+                            console.log(data);
+
+                            ClearlyQuestionList.push(data.Data);
+
+                            var layerthtml3 = _.template($("#answerquestionMuban").html());
+
+                            var layerdata3 = layerthtml3({ index: ClearlyQuestionList.length, question: data.Data.Title, questionid: data.Data.ID  });
+
+                            $("#ClearlyQuestionPaper").append(layerdata3);
+
+                            form.render();
+                        }
+                        else {
+                            layer.msg("");
+                        }
+
+                    }, function (error) {
+
+                        layer.msg("抱歉 网络异常");
+                    });
+                } else {
+                    ///重新渲染试卷 选择题区域
+                    $("#ClearlyQuestionPaper .showanswerItem").remove();
+                    $("#ClearlyQuestionPaper br").remove();
+                    $(obj.tr).removeAttr("select");
+                    $(obj.tr).css("background", "white");
+
+                    for (var i = 0; i < ClearlyQuestionList.length; i++) {
+
+                        if (ClearlyQuestionList[i].Id == obj.data.Id) {
+                            ClearlyQuestionList.splice(i, 1);
+                        }
+
+                    }
+
+                    setAnswerPaper(MultipleChoiceList);
+                }
+               
+               
+                   
+                
+            });
+
+            table.on('rowDouble(ComputerTestQuestions)', function (obj) {
+                //发送请求获取试卷
+                var selected = $(obj.tr).attr("select");
+                
+
+                if (selected == undefined ) {
+
+                    $(obj.tr).attr("select", "select")
+                    $(obj.tr).css("background", "pink");
+
+                    Ajax('/ExaminationSystem/ExamArrangement/GetConputertionByID', { id: obj.data.ID }, 'post', function (data) {
+
+                        if (data.ErrorCode = 200) {
+                            console.log(data);
+
+                            //ClearlyQuestionList.push(data.Data);
+
+                            var layerthtml3 = _.template($("#computerquestionMuban").html());
+
+                            var layerdata3 = layerthtml3({ index: "1", question: data.Data.Title, questionid: data.Data.ID });
+
+                            $("#ComputerQuestionPaper").append(layerdata3);
+
+                            form.render();
+                        }
+                        else {
+                            layer.msg("");
+                        }
+
+                    }, function (error) {
+
+                        layer.msg("抱歉 网络异常");
+                    });
+                } else {
+                    ///重新渲染试卷 选择题区域
+                    $("#ClearlyQuestionPaper .showanswerItem").remove();
+                    $("#ClearlyQuestionPaper br").remove();
+                    $(obj.tr).removeAttr("select");
+                    $(obj.tr).css("background", "white");
+
+                    for (var i = 0; i < ClearlyQuestionList.length; i++) {
+
+                        if (ClearlyQuestionList[i].Id == obj.data.Id) {
+                            ClearlyQuestionList.splice(i, 1);
+                        }
+
+                    }
+
+                    setAnswerPaper(MultipleChoiceList);
+                }
+
+
+
+
+            });
+
+            ///监听是否选择了电脑选择
+            form.on('checkbox(comselect)', function (data) {
+
+
+                if (data.elem.checked) {
+
+                    layer.msg("电脑抽取");
+
+                    $("#selectquCountDiv").show();
+                    $("#clearlyquCountDiv").show();
+
+                    $("#mycontent2").show();
+                    $("#mycontent1").hide();
+
+                    $("#oK").show();
+
+                }
+                else {
+                    layer.msg("人工抽取");
+
+                    $("#selectquCountDiv").hide();
+                    $("#clearlyquCountDiv").hide();
+
+                    $("#mycontent2").hide();
+                    $("#mycontent1").show();
+
+                    $("#oK").hide();
+
+                    LoadMultipleChoiceQuestion();
+                }
+
+
+            });
+
+            ///监听选项卡
+            element.on('tab(questionTab)', function (data) {
+                console.log(this); //当前Tab标题所在的原始DOM元素
+                console.log(data.index); //得到当前Tab的所在下标
+                console.log(data.elem); //得到当前的Tab大容器
+
+                if (data.index == 1) {
+                    LoadClearlyQuestion();
+                    $($(".searchDiv")[data.index]).html("");
+
+                    var layerthtml2 = _.template($("#serachMoban").html());
+
+                    var layerdata2 = layerthtml2({ Searchfilter: "ClearlySearch" });
+
+                    $($(".searchDiv")[data.index]).append(layerdata2);
+                    form.render();
+                }
+
+                if (data.index == 2) {
+                    LoadComputerQuestion();
+                    $($(".searchDiv")[data.index]).html("");
+
+                    var layerthtml2 = _.template($("#serachMoban").html());
+
+                    var layerdata2 = layerthtml2({ Searchfilter: "ComputerSearch" });
+
+                    $($(".searchDiv")[data.index]).append(layerdata2);
+                    form.render();
+                }
+            });
+
+        });
+    </script>
+
+}

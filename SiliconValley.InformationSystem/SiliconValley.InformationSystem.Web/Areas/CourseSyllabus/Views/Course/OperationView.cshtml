@@ -4,7 +4,7 @@
 }
 
 @using SiliconValley.InformationSystem.Entity.MyEntity
-@model SiliconValley.InformationSystem.Entity.ViewEntity.CourseView
+@model SiliconValley.InformationSystem.Entity.MyEntity.Curriculum
 <!DOCTYPE html>
 
 <html>
@@ -27,20 +27,21 @@
         <div id="editarea">
           
                 <form class="layui-form">
-                    @Html.HiddenFor(d=>d.CurriculumID)
+                    @Html.HiddenFor(d => d.CurriculumID)
                     <div class="layui-form-item">
                         <div class="layui-inline">
                             <label class="layui-form-label">课程名称：</label>
                             <div class="layui-input-inline">
                               
-                                @Html.TextBoxFor(c=>c.CourseName,new Dictionary<string, object> { { "lay-verify", "required" },{ "class", "layui-input" } })
+                                @Html.TextBoxFor(c => c.CourseName, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" } })
                             </div>
                         </div>
                         <div class="layui-inline">
                             <label class="layui-form-label">所属专业：</label>
-                            <div class="layui-input-inline">
-                                
-                                    @Html.DropDownListFor(d => d.Major, ViewBag.majors as IEnumerable<SelectListItem>)
+                            <div class="layui-input-inline">                                
+                                    @Html.DropDownListFor(d => d.MajorID, ViewBag.majors as IEnumerable<SelectListItem>,"----无----")
+                                        
+                                   
                               
                             </div>
                         </div>
@@ -51,14 +52,14 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">所属阶段：</label>
                             <div class="layui-input-inline">
-                                @Html.DropDownListFor(d => d.Grand, ViewBag.grands as IEnumerable<SelectListItem>)
+                                @Html.DropDownListFor(d => d.Grand_Id, ViewBag.grands as IEnumerable<SelectListItem>)
                             </div>
                         </div>
 
                         <div class="layui-inline">
                             <label class="layui-form-label">课程类型：</label>
                             <div class="layui-input-inline">
-                                @Html.DropDownListFor(d=>d.CourseType, ViewBag.courseTypes as IEnumerable<SelectListItem>)
+                                @Html.DropDownListFor(d=>d.CourseType_Id, ViewBag.courseTypes as IEnumerable<SelectListItem>)
 
                             </div>
                         </div>
@@ -71,14 +72,14 @@
                             <label class="layui-form-label">课时：</label>
                             <div class="layui-input-inline">
                                
-                                @Html.TextBoxFor(c => c.CourseCount, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" },{ "type","number" } })
+                                @Html.TextBoxFor(c => c.CourseCount, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" },{ "type","number" }, { "Min", 0 } })
                             </div>
                         </div>
 
                         <div class="layui-inline">
                             <label class="layui-form-label">课时费：</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(c => c.PeriodMoney, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" }, { "type", "number" } })
+                                @Html.TextBoxFor(c => c.PeriodMoney, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" }, { "type", "number" } ,{ "Min",0 } })
                             </div>
                             <label style="color:gray;" class="layui-form-label">单位:RMB</label>
                         </div>
@@ -94,7 +95,7 @@
                     </div>
                     <div style="text-align:center;">
                         <button class="layui-btn" lay-submit="" lay-filter="operation">确定</button>
-                        <button class="layui-btn" style="text-align:center;">关闭</button>
+                        <button class="layui-btn" style="text-align:center;" onclick="Close_My()">关闭</button>
                     </div>
                 </form>
            

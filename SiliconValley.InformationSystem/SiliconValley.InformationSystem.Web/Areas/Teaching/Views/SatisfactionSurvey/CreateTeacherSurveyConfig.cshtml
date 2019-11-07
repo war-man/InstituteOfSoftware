@@ -1,0 +1,152 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateTeacherSurveyConfig</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <h3 style="text-align:center;">创建教员满意度调查单</h3>
+
+        <form class="layui-form">
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">选择班级</label>
+                    <div class="layui-input-inline">
+                        <select id="classnumber" lay-filter="classnumber" name="classnumber">
+
+                            <option value="0">请选择班级</option>
+
+                            @{
+                                foreach (var item in ViewBag.classlist as List<ClassSchedule>)
+                                {
+                                    <option value="@item.ClassNumber">@item.ClassNumber</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">选择课程</label>
+                    <div class="layui-input-inline">
+                        <select name="skill" id="skill" lay-verify="required" lay-search=""></select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="width:100%;">
+                <button  style="width:100%" id="commit" type="button" class="layui-btn layui-btn-danger">
+                    生成
+                </button>
+            </div>
+
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            //级联子项目
+            //select 监听
+            form.on('select(classnumber)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Teaching/SatisfactionSurvey/GetCorsueOnReconile",
+                    data: { classnumber: value },
+                    dataType: "json",
+                    success: function (resultData) {
+
+                        console.log(resultData);
+
+                        if (resultData.ErrorCode == 200) {
+                            //清空赋值
+                            $("#skill").empty();
+                          
+                            $("#skill").append(new Option("请选择课程", ""));
+                            $.each(resultData.Data, function (index, item) {
+                                //赋值
+                                $('#skill')
+                                    .append(new Option(item.CourseName, item.CurriculumID));
+                            });
+                        } else {
+                            $("#skill").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+
+
+
+            //生成
+            $("#commit").click(function () {
+
+                //获取班级
+                var classnumber = $("#classnumber").val();
+
+                //获取课程
+                var skill = $("#skill").val();
+
+                if (classnumber == 0 || skill == "") {
+                    layer.msg("请选择");
+
+                    return;
+                }
+
+                layer.confirm("确定", function (index) {
+
+                    //发送请求
+
+                    $.post('/Teaching/SatisfactionSurvey/CreateTeacherSurveyConfig', { classnumber: classnumber, Curriculum: skill }, function (data) {
+
+                        if (data.ErrorCode == 200) {
+
+                            layer.msg("生成成功");
+
+                            layer.close(index);
+
+                        }
+
+                        if (data.ErrorCode == 300) {
+
+                            layer.msg("抱歉 ！本月满意度单已存在，下个月再来吧");
+                        }
+
+                        if (data.ErrorCode == 500) {
+
+                            layer.msg("抱歉！服务器错误");
+                        }
+
+                    });
+
+                });
+
+
+
+
+            });
+
+        });
+
+
+    </script>
+</body>
+</html>

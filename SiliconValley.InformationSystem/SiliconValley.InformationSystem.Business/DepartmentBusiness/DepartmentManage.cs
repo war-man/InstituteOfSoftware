@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Business.DepartmentBusiness
 {
     using SiliconValley.InformationSystem.Entity.MyEntity;
-   public  class DepartmentManage:BaseBusiness<Department>
+
+    /// <summary>
+    /// 部门表
+    /// </summary>
+    public class DepartmentManage : BaseBusiness<Department>
     {
+
     }
 }

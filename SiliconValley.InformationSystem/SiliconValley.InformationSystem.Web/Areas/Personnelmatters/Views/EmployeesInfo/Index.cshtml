@@ -110,8 +110,6 @@
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="AddEmps">添加员工</button>
                     <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="TransactionRecord">员工异动记录</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="EmpApprovalManage">员工审批管理</button>
                 </div>
             </script>
             @*操作栏*@
@@ -195,12 +193,6 @@
                     case 'DeptAndPositionOperation':
                         DeptAndPositionOperation();
                         break;
-                    case 'TransactionRecord':
-                        TransactionRecord();
-                        break;
-                    case 'EmpApprovalManage':
-                        EmpApprovalManage();
-                        break;
                 };
             });
             //监听行工具事件
@@ -210,7 +202,7 @@
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/EmployeesInfo/EditEmp/?id=' + data.EmployeeId
-                        , area: ["1200px", "750px"]
+                        , area: ["1200px", "730px"]
                         , title: '编辑员工信息'
                         , shade: 0.8
                         , anim: 4
@@ -328,7 +320,6 @@
 
             });
 
-
             //日期
             var startTime = laydate.render({
                 elem: '#start_time',
@@ -361,6 +352,7 @@
 
         });
 
+        //离职人员加载
         layui.use(['table', 'layer', 'form', 'laydate','element'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -402,7 +394,7 @@
 
                 layer.open({
                     type: 2
-                    , area: ["1200px", "800px"]
+                    , area: ["1200px", "720px"]
                     , title: "添加员工"
                     , content: '/Personnelmatters/EmployeesInfo/AddEmp'
                     , anim: 2
@@ -419,7 +411,7 @@
 
                 layer.open({
                     type: 2
-                    , area: ["1100px", "750px"]
+                    , area: ["800px", "600px"]
                     , title: "部门及岗位管理"
                     , content: '/Personnelmatters/EmployeesInfo/DeptOperation'
                     , anim: 2
@@ -431,47 +423,8 @@
             })
 
         };
-
-
-        //员工异动管理
-        function TransactionRecord() {
-            layui.use(['layer'], function (args) {
-                var layer = layui.layer;      //layui对象
-
-                layer.open({
-                    type: 2
-                    , area: ["1000px", "650px"]
-                    , title: "员工异动管理"
-                    , content: '/Personnelmatters/EmployeesInfo/EmpTransactionRecord'
-                    , anim: 2
-                    , cancel: function (index, layero) {
-                        layui.table.reload('myEmpInfo');
-                    }
-                });
-
-            })
-        };
-
-
-        //员工审批管理
-        function EmpApprovalManage() {
-            layui.use(['layer'], function (args) {
-                var layer = layui.layer;      //layui对象
-
-                layer.open({
-                    type: 2
-                    , area: ["1000px", "650px"]
-                    , title: "员工审批状态管理"
-                    , content: '/Personnelmatters/EmployeesInfo/EmpApproval'
-                    , anim: 2
-                    , cancel: function (index, layero) {
-                        layui.table.reload('myEmpInfo');
-                    }
-                });
-
-            })
-        };
-
+  
+       
         //格式化时间
         function GetYearAndMonth(cellval) {
             if (cellval != null) {
