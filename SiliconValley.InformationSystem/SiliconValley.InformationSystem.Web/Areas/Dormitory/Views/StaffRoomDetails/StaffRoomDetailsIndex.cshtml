@@ -114,8 +114,8 @@
                 <div class="layui-input-inline">
                     <select name="modules" id="modules" lay-verify="required" lay-search="">
                         <option value="name0">员工姓名</option>
-                        <option value="name1">部门名称</option>
-                        <option value="name2">寝室号</option>
+                        <option value="name1">寝室号</option>
+                        <option value="name2">部门名称</option>
 
                     </select>
                 </div>
@@ -399,7 +399,7 @@
             function disabledforstudent() {
                 $(".rommbtn").each(function (index, domEle) {
                     var proroomtype = $(this).attr('roomtype');
-                    console.log(proroomtype);
+                    //console.log(proroomtype);
                     if (proroomtype == studentroom.id) {
                         $(this).addClass('layui-btn-disabled');
                         $(this).attr('disabled', 'disabled');
@@ -410,21 +410,30 @@
 
             //按钮点击事件
             $(document).off("click", '.rommbtn').on('click', '.rommbtn', function () {
-                clickroomid = $(this).attr("roomid");
-                openroomdewith();
+               // console.log($(this));
+               
+                if ($(this).attr("roomtype") == staffroom.id) {
+                    clickroomid = $(this).attr("roomid");
+                    openroomdewith();
+                } else {
+                    layer.msg("目前暂未开通非员工宿舍房间。", { icon: 6, time: 2000 }, function () {
+
+                    });
+                }
+                
             });
             //监听提交
             form.on('submit(demo1)', function (data) {
                 var jsonStr = data.field;
                 console.log(jsonStr);
                 $.ajax({
-                    url: '/Dormitory/StudentRoomDetails/Seachoption',
+                    url: '/Dormitory/StaffRoomDetails/StaffSeachoption',
                     type: 'GET',
                     data: { param0: jsonStr.modules, param1: jsonStr.username },
                     success: function (successdata) {
                         if (successdata.Success) {
                             var dududata = successdata.Data;
-                            console.log(dududata);
+                            //console.log(dududata);
                             switch (jsonStr.modules) {
                                 case "name0":
                                     if (dududata.length > 1) {
@@ -468,7 +477,7 @@
         function loadlistwith(data) {
             layer.open({
                 type: 2,
-                content: "/Dormitory/StudentRoomDetails/loadlistwith",
+                content: "/Dormitory/StaffRoomDetails/Staffloadlistwith",
                 title: "重复数据列表",
                 area: ['1090px', '660px'],
                 success: function (layero, index) {    //成功获得加载changefile.html时，预先加载，将值从父窗口传到 子窗口
