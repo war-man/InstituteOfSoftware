@@ -19,6 +19,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         private EmployeesInfoManage dbempinfo;
         private ConversionToViewBusiness dbconversion;
         private DepartmentManage dbdepartmentManages;
+        private DepartmentManage dbdpte;
+        private ProEmpinfoBusiness dbproempinfo;
         // GET: Dormitory/StaffRoomDetails
         public ActionResult StaffRoomDetailsIndex()
         {
@@ -60,9 +62,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         /// <param name="param0">下拉框的选项</param>
         /// <param name="param1">后面的文本框的值</param>
         /// <returns></returns>
-        public ActionResult Seachoption(string param0, string param1)
+        public ActionResult StaffSeachoption(string param0, string param1)
         {
             dbconversion = new ConversionToViewBusiness();
+           
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
@@ -98,9 +101,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                         }
                         break;
                     case "name2":
-                        dbdepartmentManages = new DepartmentManage();
-                        var obj = dbdepartmentManages.GetIQueryable().Where(a => a.DeptName == param1).FirstOrDefault();
-
+                        dbdpte = new DepartmentManage();
+                        dbproempinfo = new  ProEmpinfoBusiness();
+                        var obj0= dbdpte.GetDepartmentByName(param1);
+                        
+                        if (obj0!=null)
+                        {
+                            var list0 = dbproempinfo.GetEmployeesInfosByDepteID(obj0.DeptId);
+                            List<RoomArrangeEmpinfoView> result0 = dbconversion.EmpinfoToRoomArrangeEmpinfoView(list0, true);
+                            ajaxResult.Data = result0;
+                            ajaxResult.Success = true;
+                        }
+                        else
+                        {
+                            ajaxResult.Success = false;
+                            ajaxResult.Msg = "没有该部门名称。";
+                        }
                         break;
                 }
             }
@@ -113,5 +129,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
+        
+        /// <summary>
+        /// 搜索名字出现重复的数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Staffloadlistwith()
+        {
+            return View();
+        }
+
     }
 }

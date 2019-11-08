@@ -217,6 +217,7 @@
     <Compile Include="Areas\Dormitory\Controllers\HealthRegistrationController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\NewbornRController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\RegistrationforlatearrivalController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\RoomBasisController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StaffAdjustmentController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StaffRoomDetailsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StudentBedtimeController.cs" />
@@ -457,6 +458,8 @@
     <Content Include="Areas\Dormitory\Views\StudentRoomDetails\StudentRoomDetailsIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\StudentRoomDetails\StudentRoomdeWithPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\web.config" />
+    <Content Include="Areas\Dormitory\Views\StaffRoomDetails\Staffloadlistwith.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

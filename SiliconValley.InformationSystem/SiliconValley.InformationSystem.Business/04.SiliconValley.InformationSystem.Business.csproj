@@ -115,6 +115,7 @@
     <Compile Include="DormitoryBusiness\ProClassSchedule.cs" />
     <Compile Include="DormitoryBusiness\ProClassScheduleViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProDormInfoViewBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ProEmpinfoBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
