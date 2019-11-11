@@ -460,6 +460,8 @@
     <Content Include="Areas\Dormitory\Views\web.config" />
     <Content Include="Areas\Dormitory\Views\StaffRoomDetails\Staffloadlistwith.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomBasis\AddRoomPage.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomBasis\HttpGetUpdRoom.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2162,11 +2164,6 @@
     <Content Include="Scripts\layui-v2.5.4\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui-v2.5.4\layui\font\iconfont.woff" />
     <Content Include="Scripts\layui-v2.5.4\layui\font\iconfont.woff2" />
-    <Content Include="Scripts\layui-v2.5.4\文档与示例\GitHub.url" />
-    <Content Include="Scripts\layui-v2.5.4\文档与示例\Git码云.url" />
-    <Content Include="Scripts\layui-v2.5.4\文档与示例\在线示例.url" />
-    <Content Include="Scripts\layui-v2.5.4\文档与示例\快速上手.url" />
-    <Content Include="Scripts\layui-v2.5.4\更新日志.url" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~HEAD" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
