@@ -506,9 +506,9 @@
                                 console.log("dong");
                                 zhixing(treeNode.nodeId, "-1", true);
                             }
-                            if (treeNode.level=="2") {
+                            if (treeNode.level == "2") {
                                 console.log("lou");
-                                zhixing(treeNode.parentId,treeNode.nodeId, false);
+                                zhixing(treeNode.parentId, treeNode.nodeId, false);
                             }
 
                         },
@@ -517,7 +517,7 @@
                             //console.log(buttons);
                             //console.log(param);
                             //console.log($div);
-                            if (param.parentId!="0") { // 如果是叶子节点
+                            if (param.parentId != "0") { // 如果是叶子节点
                                 buttons.addToolbar = "";  // 取消新增功能
                                 buttons.editToolbar = "";  // 取消修改的功能
                             }

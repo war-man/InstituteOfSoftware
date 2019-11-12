@@ -218,6 +218,7 @@
     <Compile Include="Areas\Dormitory\Controllers\NewbornRController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\RegistrationforlatearrivalController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\RoomBasisController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\RoomDisabledController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StaffAdjustmentController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StaffRoomDetailsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StudentBedtimeController.cs" />
@@ -462,6 +463,9 @@
     <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\AddRoomPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\HttpGetUpdRoom.cshtml" />
+    <Content Include="xmlfile\Pointsdeductionproject.xml" />
+    <Content Include="xmlfile\RoomdeWithPage.xml" />
+    <Content Include="Areas\Dormitory\Views\RoomDisabled\RoomDisabledIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+﻿using SiliconValley.InformationSystem.Entity.Entity;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,25 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 }
             }
             return list0;
+        }
+
+        /// <summary>
+        /// 名字是否重复 true 就是存在 不能使用
+        /// </summary>
+        /// <param name="param0">栋楼层id</param>
+        /// <param name="param1">房间名字</param>
+        /// <returns></returns>
+        public bool DuplicateName(int param0,string param1)
+        {
+            //根据这个楼层来说房间号是不能重复的。
+            List<DormInformation> querydormlist = this.GetDormsByTungFloorID(param0).ToList();
+            DormInformation querydorm = querydormlist.Where(a => a.DormInfoName == param1).FirstOrDefault();
+            bool result = false;
+            if (querydorm!=null)
+            {
+                return true;
+            }
+            return result;
         }
     }
 }

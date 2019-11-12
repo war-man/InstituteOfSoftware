@@ -382,7 +382,7 @@
                 data: { TungID: tungid, FloorID: floorid },
                 datatype: 'json',
                 success: function (successdata) {
-                    console.log(successdata);
+                    //console.log(successdata);
                     @*男寝：male 女寝：female  满人：danger 没满：primary 仓库：util 参观寝：group 员工寝室：user  禁用disabled *@
                     $("#leftroomlist").children().remove();
                     $("#rightroomlist").children().remove();
@@ -403,10 +403,6 @@
                 }
             });
         }
-
-
-
-
 
         $(document).off("click", '.rommbtn').on('click', '.rommbtn', function () {
 
@@ -486,7 +482,7 @@
                                         jslayer.close(index0);
                                     });
                                 } else {
-                                    layer.msg(SuccessData.Msg, {
+                                    jslayer.msg(SuccessData.Msg, {
                                         icon: 1,
                                         time: 3000
                                     }, function () {
@@ -497,7 +493,7 @@
                                 loadroom(jstungid, jsfloorid);
                             },
                             error: function () {
-                                layer.msg('你的网络不佳。', {
+                                jslayer.msg('你的网络不佳。', {
                                     icon: 1,
                                     time: 3000
                                 }, function () {
@@ -518,18 +514,46 @@
               //编辑房间
         $("#btn2").click(function () {
             var roomid = $(this).attr("roomid");
-            jslayer.open({
-                type: 2,
-                content: "/Dormitory/RoomBasis/HttpGetUpdRoom?param0="+roomid,
-                title: "编辑房间",
-                area: ['490px', '560px'],
-                success: function (layero, index) {
-                    let body = layui.layer.getChildFrame('body', index);
+            $.ajax({
+                url: '/Dormitory/RoomBasis/AllowEditors',
+                type: 'GET',
+                data: { param0: roomid },
+                ansyc: true,
+                success: function (SuccessData) {
+                    if (!SuccessData.Success) {
+                        jslayer.msg(SuccessData.Msg, {
+                            icon: 1,
+                            time: 3000
+                        }, function () {
+                        });
+                    } else {
+                        jslayer.open({
+                            type: 2,
+                            content: "/Dormitory/RoomBasis/HttpGetUpdRoom?param0=" + roomid,
+                            title: "编辑房间",
+                            area: ['630px', '360px'],
+                            success: function (layero, index) {
+                                let body = layui.layer.getChildFrame('body', index);
+                                body.find("#tungid").val(jstungid);
+                                body.find("#floorid").val(jsfloorid);
+                                body.find("#ID").val(roomid);
+                            },
+                            end: function () {
+                                 $("#caozuodiv").hide();
+                                loadroom(jstungid, jsfloorid);
+                            }
+                        });
+                    }
                 },
-                end: function () {
-                   loadroom(jstungid, jsfloorid);
+                error: function (ErrorData) {
+                    layer.msg('网络不佳！', {
+                            icon: 1,
+                            time: 3000
+                    }, function () {
+                    });
                 }
             });
+        
         });
     </script>
 }
