@@ -272,6 +272,7 @@
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />
     <Compile Include="ViewEntity\ProClassScheduleView.cs" />
+    <Compile Include="ViewEntity\ProRoomDisabledView.cs" />
     <Compile Include="ViewEntity\ProStudentInformationView.cs" />
     <Compile Include="ViewEntity\PublicConvertView.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />

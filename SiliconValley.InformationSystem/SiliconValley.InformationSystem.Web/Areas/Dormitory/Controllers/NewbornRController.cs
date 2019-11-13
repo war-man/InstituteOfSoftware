@@ -53,26 +53,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         {
             dbconversion = new ConversionToViewBusiness();
             List<ProStudentView> resultdata = new List<ProStudentView>();
-            try
-            {
-                dbaccstu = new dbacc_dbstu();
-                List<StudentInformation> data = dbaccstu.GetUninhabitedData();
-    
-                var data2= dbconversion.StudentInformationToProStudentView(data, false);
 
-                resultdata = data2.OrderByDescending(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
-               
-            }
-            catch (Exception ex)
-            {
-              
-            }
+            dbaccstu = new dbacc_dbstu();
+            List<StudentInformation> data = dbaccstu.GetUninhabitedData();
+
+            var data2 = dbconversion.StudentInformationToProStudentView(data, false);
+
+            var resultdata1 = data2.OrderByDescending(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
+
             var returnObj = new
             {
                 code = 0,
                 msg = "",
                 count = resultdata.Count(),
-                data = resultdata
+                data = resultdata1
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
 

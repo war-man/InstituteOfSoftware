@@ -212,6 +212,7 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\BasicsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\DormitoryInfoController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\EmployeeCheckInController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\HealthRegistrationController.cs" />
@@ -466,6 +467,7 @@
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Dormitory\Views\RoomDisabled\RoomDisabledIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\Basics\BasicsIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
