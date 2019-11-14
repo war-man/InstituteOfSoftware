@@ -168,7 +168,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// 根据阶段id 获取阶段对象
         /// </summary>
         /// <returns></returns>
-        public Grand GetGrandByID(int GrandID)
+        public Grand GetGrandByID(int? GrandID)
         {
             return this.GetGrandAll().Where(a => a.Id == GrandID).FirstOrDefault();
 

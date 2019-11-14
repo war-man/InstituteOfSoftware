@@ -1176,7 +1176,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
 
                 //排课集合
-                var templist = db_reconile.GetList().Where(d => d.Teacher_Id == teacher.TeacherID && d.ClassSchedule_Id == classnumber).ToList();
+                var templist = db_reconile.GetList().Where(d => d.ClassSchedule_Id == classnumber).ToList();
 
               
 
@@ -1184,7 +1184,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 foreach (var item in templist)
                 {
-                    list.Add(db_course.GetCurriculas().Where(d => d.CurriculumID == item.Curriculum_Id &&d.IsDelete==false).FirstOrDefault());
+                    list.Add(db_course.GetCurriculas().Where(d => d.CourseName == item.Curse_Id &&d.IsDelete==false).FirstOrDefault());
                 }
 
                 //去掉重复项
@@ -1460,13 +1460,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
 
                 //排课筛选之后的数据
-                var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.Teacher_Id == teacher.TeacherID && d.ClassSchedule_Id == classnumber).ToList();
+                var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.ClassSchedule_Id == classnumber).ToList();
 
                 List<Curriculum> list = new List<Curriculum>();
 
                 foreach (var item in templist)
                 {
-                    var tempobj = db_course.GetList().Where(d => d.CurriculumID == item.Curriculum_Id).FirstOrDefault();
+                    var tempobj = db_course.GetList().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
                     list.Add(tempobj);
                 }
 

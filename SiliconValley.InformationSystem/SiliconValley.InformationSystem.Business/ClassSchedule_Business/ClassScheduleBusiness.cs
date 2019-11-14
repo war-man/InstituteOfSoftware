@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
         //时间段
-        BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
+       public BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业
@@ -459,7 +459,16 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
             if (type == 1)
             {
-                return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
+                Specialty find_s = Techarcontext.GetEntity(CLaaNuma.Major_Id);
+                if (find_s==null)
+                {
+                    return "无";
+                }
+                else
+                {
+                    return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
+                }
+                
             }
             else if(type==2)
             {

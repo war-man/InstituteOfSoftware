@@ -1,0 +1,161 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.Reconcile
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+        #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .TextAreCss1
+        {
+            height: 80px;
+        }
+
+        .butCss1
+        {
+            float: right;
+            margin-right: 100px;
+        }
+
+        .butCss2
+        {
+            border: 0px solid black;
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }        
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" lay-filter="Edit_Reconcile_form">
+            <div class="layui-container">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">教室:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(r=>r.ClassRoom_Id, ViewBag.Editclassrrrom as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "class", "layui-unselect linu" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">班级:</label>
+                        <div class="layui-input-block">
+                             @Html.LabelFor(r=>r.ClassSchedule_Id,new Dictionary<string, object>() { { "class", "LableCss1" } })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">日期:</label>
+                        <div class="layui-input-block">
+                             @Html.TextBoxFor(r=>r.AnPaiDate, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">内容:</label>
+                        <div class="layui-input-block">
+                            @Html.LabelFor(r => r.Curriculum_Id, new Dictionary<string, object>() { { "class", "LableCss1" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="LableCss1">时间类型:</label>
+                        <div class="layui-input-block">
+                            <input style="color:black" type="radio" name="time" value="上午" title="上午">
+                            <input style="color:black" type="radio" name="time" value="下午" title="下午">
+                        </div>
+                    </div>                    
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">说明:</label>
+                        <div class="layui-input-block">
+                             @Html.TextAreaFor(r=>r.Rmark, new Dictionary<string, object>() { { "class", "TextAreCss1" } })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn butCss1" id="quxiao">修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+
+    </script>
+</body>
+</html>

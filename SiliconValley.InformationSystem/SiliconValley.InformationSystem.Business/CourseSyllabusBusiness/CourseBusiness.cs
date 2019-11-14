@@ -127,7 +127,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         /// <returns></returns>
         public List<Curriculum> GetRelevantCurricul(int grand_id, int marjon_id)
         {
-           return this.GetCurriculas().Where(d => d.Grand_Id == grand_id && d.MajorID == marjon_id).ToList();
+           return this.GetCurriculas().Where(d => d.Grand_Id == grand_id && d.MajorID == marjon_id && d.IsDelete==false).ToList();
 
         }
     }

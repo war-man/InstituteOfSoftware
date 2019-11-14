@@ -18,5 +18,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
            return this.GetList().Where(d=>d.IsDelete==false && d.Id==GrandID).FirstOrDefault();
         }
 
+        /// <summary>
+        /// 根据阶段名称获取阶段数据
+        /// </summary>
+        /// <param name="Name">阶段名称</param>
+        /// <returns></returns>
+        public Grand FindNameGetData(string Name)
+        {
+            return this.GetList().Where(g => g.GrandName == Name).FirstOrDefault();
+        }
     }
 }
