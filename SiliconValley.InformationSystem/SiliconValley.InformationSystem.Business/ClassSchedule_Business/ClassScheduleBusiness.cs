@@ -11,15 +11,14 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
-using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
-using SiliconValley.InformationSystem.Entity.Entity;
-using SiliconValley.InformationSystem.Business.FinaceBusines;
-using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
+using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
+        //时间段
+       public BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业
@@ -34,22 +33,13 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         ScheduleForTraineesBusiness ss = new ScheduleForTraineesBusiness();
         //班级群管理
         BaseBusiness<GroupManagement> GetBase = new BaseBusiness<GroupManagement>();
+
         //班会
         BaseBusiness<Assmeetings> myassmeetings = new BaseBusiness<Assmeetings>();
         //拆班记录
         BaseBusiness<RemovalRecords> Dismantle = new BaseBusiness<RemovalRecords>();
         //班级异动表
         BaseBusiness<ClassDynamics> CLassdynamic = new BaseBusiness<ClassDynamics>();
-        //升学阶段
-        BaseBusiness<GotoschoolStage> GotoschoolStageBusiness = new BaseBusiness<GotoschoolStage>();
-        //费用明目
-        CostitemsBusiness costitemsBusiness = new CostitemsBusiness();
-        //学员费用
-        BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
-        //班主任
-        HeadmasterBusiness Hadmst = new HeadmasterBusiness();
-        //学员信息
-        StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -77,7 +67,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 }
 
                 classStudentView.Name = item.Name;
-                classStudentView.Sex = (bool)item.Sex;
 
                 classStudentView.StuNameID = item.StudentNumber;
                 if (classStudentView != null)
@@ -90,6 +79,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
         }
+
         public List<ClassStudentView> ClassStudentneViewList(string classid)
         {
             //学员班级
@@ -116,6 +106,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
         }
+
         /// <summary>
         /// 根据班级查询返回出班级人数,微信号,QQ号,班级名称
         /// </summary>
@@ -144,6 +135,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             list.Add(classdetailsView);
             return list;
         }
+
         /// <summary>
         /// 根据班级号查询出班级的联系方式
         /// </summary>
@@ -275,6 +267,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return retus;
         }
+
         /// <summary>
         /// 班会数据操作
         /// </summary>
@@ -341,6 +334,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return myassmeetings.GetList().Where(a => a.IsDelete == false && a.ClassNumber == ClassName).ToList();
         }
+
         /// <summary>
         /// 查询这个委员是否有重复的
         /// </summary>
@@ -453,129 +447,37 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return retus;
         }
+
         /// <summary>
         /// 根据班级名称获取阶段跟专业
         /// </summary>
         /// <param name="ClassNumber">班级名称</param>
-        /// // <param name="type">1是专业名称，否则是阶段</param>
+        /// // <param name="type">1是专业名称，2是阶段,否则是班级上课时间</param>
         /// <returns></returns>
         public string GetClassGrand(string ClassNumber, int type)
         {
             var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
             if (type == 1)
             {
-                return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
+                Specialty find_s = Techarcontext.GetEntity(CLaaNuma.Major_Id);
+                if (find_s==null)
+                {
+                    return "无";
+                }
+                else
+                {
+                    return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
+                }
+                
             }
-            else
+            else if(type==2)
             {
                 return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
             }
-        }
-        /// <summary>
-        /// 获取班级学员缴费记录
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
-        /// <param name="ClassName">班级名称</param>
-        /// <returns></returns>
-        public List<DetailedcostView> listTuiton(int page, int limit, string ClassName)
-        {
-            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassName).FirstOrDefault();
-            var Mylist = this.ClassStudentneList(ClassName);
-            List<DetailedcostView> lisrDetaild = new List<DetailedcostView>();
-            foreach (var item in Mylist)
+            else
             {
-
-                DetailedcostView detailedcostView = this.GotoschoolTuition(CLaaNuma.grade_Id, item.StuNameID);
-                detailedcostView.ClassName = ClassName;
-                detailedcostView.Name = item.Name;
-                detailedcostView.Stidentid = item.StuNameID;
-                detailedcostView.Sex = item.Sex == false ? "女" : "男";
-                detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName).EmpName;
-                lisrDetaild.Add(detailedcostView);
+                return BaseDataEnum_Entity.GetSingData(CLaaNuma.BaseDataEnum_Id.ToString(), true).Name;
             }
-            lisrDetaild = lisrDetaild.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
-            return lisrDetaild;
-        }
-        /// <summary>
-        /// 获取升学费用
-        /// </summary>
-        /// 
-        /// <param name="Grand"></param>
-        /// <param name="StudentID"></param>
-        /// <returns></returns>
-        public DetailedcostView GotoschoolTuition(int Grand, string StudentID)
-        {
-            //已交费用
-            decimal price = 0;
-            //应交费用
-            decimal myprice = 0;
-            //拿到下一个阶段
-            var x = GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == Grand).FirstOrDefault();
-
-            var mylist = costitemsBusiness.GetList().Where(a => a.IsDelete == false && a.Grand_id == x.NextStageID).ToList();
-            foreach (var item in mylist)
-            {
-                myprice = myprice + item.Amountofmoney;
-                var x1 = studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == StudentID && a.Costitemsid == item.id).ToList();
-                decimal? Amountofmoney = 0;
-                foreach (var item1 in x1)
-                {
-                    Amountofmoney = Amountofmoney + item1.Amountofmoney;
-                }
-
-                price = price + (decimal)Amountofmoney;
-
-            }
-            DetailedcostView detailedcostView = new DetailedcostView();
-            detailedcostView.Amountofmoney = price;
-            detailedcostView.Isitinturn = price >= myprice ? "交齐" : "未交齐";
-            detailedcostView.ShouldJiao = myprice;
-            detailedcostView.Surplus = myprice - price;
-
-            detailedcostView.NextStageID = Grandcontext.GetEntity(x.NextStageID).GrandName;
-            detailedcostView.CurrentStageID = Grandcontext.GetEntity(Grand).GrandName;
-            return detailedcostView;
-        }
-        /// <summary>
-        /// 通过班级名称查询是否有重复名称
-        /// </summary>
-        /// <param name="ClassName">班级名称</param>
-        /// <returns></returns>
-        public int ClassNameCount(string ClassName)
-        {
-            return this.GetList().Where(a => a.ClassNumber == ClassName).Count();
-        }
-        /// <summary>
-        /// 手机短信实例
-        /// </summary>
-        /// <param name="numbers">电话</param>
-        /// <param name="smsTexts">内容</param>
-        /// <returns></returns>
-        public string PhoneSMS(string numbers, string smsTexts)
-        {
-            string number = numbers;
-            string smsText = smsTexts;
-            string t = PhoneMsgHelper.SendMsg(number, smsText);
-            return t;
-        }
-        /// <summary>
-        /// 短信催费
-        /// </summary>
-        /// <param name="Datailedcost">序列化集合对象</param>
-        /// <returns></returns>
-        public string SMScharging(List<DetailedcostView> Datailedcost)
-        {
-            string count = "";
-            foreach (var item in Datailedcost)
-            {
-                //电话Familyphone
-                var student = studentInformationBusiness.GetEntity(item.Stidentid);
-                var msmTexts = item.Name + student.Guardian.Split(',')[1] + "您好：您的孩子有" + item.NextStageID + "升学费用未交齐，应交" + item.ShouldJiao + "元，未交" + item.Surplus +
-                    "元，已交" + item.Amountofmoney + "元。请您尽快交齐，否则学校将给您的孩子做停课处理！有问题请联系：" + item.HeadmasterName + "班主任";
-                count = PhoneSMS(student.Familyphone, msmTexts);
-            }
-            return count;
         }
     }
 }

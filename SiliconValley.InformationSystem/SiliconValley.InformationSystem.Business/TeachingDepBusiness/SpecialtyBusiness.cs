@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
    public class SpecialtyBusiness:BaseBusiness<Specialty>
     {
 
-        public Specialty GetSpecialtyByID(int SpecialtyId)
+        public Specialty GetSpecialtyByID(int? SpecialtyId)
         {
 
             return this.GetSpecialties().Where(t=>t.Id==SpecialtyId ).FirstOrDefault();
@@ -72,6 +72,15 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             return this.GetList().Where(d=>d.IsDelete==false && d.SpecialtyName.ToUpper().Contains(majorName.ToUpper())).ToList();
 
+        }
+        /// <summary>
+        /// 根据Name找专业
+        /// </summary>
+        /// <param name="name">专业名称</param>
+        /// <returns></returns>
+        public Specialty FindNameSame(string name)
+        {
+           return  this.GetList().Where(s => s.SpecialtyName == name).FirstOrDefault();
         }
     }
 }

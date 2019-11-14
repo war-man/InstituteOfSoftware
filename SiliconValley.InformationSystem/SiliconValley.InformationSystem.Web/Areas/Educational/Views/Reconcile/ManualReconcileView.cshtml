@@ -1,0 +1,205 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ManualReconcileView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #but1
+        {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover
+            {
+                background-color: aqua;
+            }
+
+        #Nation
+        {
+            width: 100px;
+        }
+
+        .linu
+        {
+            width: 200px;
+        }
+
+        .mm
+        {
+            border: 1px solid black;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .layButCss1
+        {
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            background-color: #009688;
+            color: #fff;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            border: 0px solid #C9C9C9;
+            background-color: #fff;
+            color: #555;
+            height: 18px;
+            line-height: 18px
+        }
+
+        .layui-unselect
+        {
+            width: 130px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">阶段:</label>
+                <div class="layui-input-block">
+                    @Html.DropDownList("childview_grand", ViewBag.Child_grandlist as IEnumerable<SelectListItem>,new Dictionary<string, object> { { "class", "layui-unselect linu" }, { "lay-filter", "childview_grand" } })
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">班级:</label>
+                <div id="class_childdiv" class="layui-input-block">
+
+                </div>
+            </div>
+
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">排课日期:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="childview_AnpiDate" id="childview_AnpiDate" class="layui-input linu" />
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">类型:</label>
+                <div class="layui-input-block">
+                    @Html.DropDownList("childview_Currtype", ViewBag.Child_typelist as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "class", "layui-unselect linu" }, { "lay-filter", "childview_Currtype" } })
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">上课时间段:</label>
+                <div class="layui-input-block">
+                    <select id="childview_timetype" lay-filter="childview_timetype">
+                        <option value="0">--请选择--</option>
+                        <option value="上午12节">上午1/2节</option>
+                        <option value="下午12节">下午1/2节</option>
+                        <option value="上午34节">上午3/4节</option>
+                        <option value="下午34节">下午3/4节</option>
+                        <option value="上午">上午</option>
+                        <option value="下午">下午</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">教室:</label>
+                <div id="room_childdiv" class="layui-input-block">
+                    <select id="childview_room" name="childview_room">
+
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">任课老师:</label>
+                <div class="layui-input-block">
+
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">备注:</label>
+                <div class="layui-input-block">
+
+                </div>
+            </div>
+        </div>
+    </form>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', function () {
+            var form = layui.form;
+            //阶段点击事件
+            form.on('select(childview_grand)', function (data) {
+                if (data.value == "0") {
+                    $("#class_childdiv")[0].innerHTML = "";
+                } else {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                        success: function (sudata) {
+                            //获取班级slect
+                            var child_class = $('<select id="child_class" name="child_class" class="layui-select" lay-filter="class_child"><option value="0" selected>--请选择--</select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                            }
+                            $("#class_childdiv")[0].innerHTML = "";
+                            $("#class_childdiv").append(child_class);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
+
+            });      
+            //上课时间点击事件
+            form.on('select(childview_timetype)', function (data) {
+                if (data.value == "0") {
+                     
+                } else {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                        success: function (sudata) {
+                            //获取班级slect
+                            var child_class = $('<select id="child_class" name="child_class" class="layui-select" lay-filter="class_child"><option value="0" selected>--请选择--</select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                            }
+                            $("#class_childdiv")[0].innerHTML = "";
+                            $("#class_childdiv").append(child_class);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
+
+            });      
+        }])
+    </script>
+</body>
+</html>

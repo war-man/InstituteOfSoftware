@@ -844,7 +844,15 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return result;
 
         }
-
-
+        /// <summary>
+        /// 根据教学编号获取对应的员工
+        /// </summary>
+        /// <param name="Teac_ID"></param>
+        /// <returns></returns>
+        public EmployeesInfo FindTeacher(int Teac_ID)
+        {
+            Teacher t= this.GetEntity(Teac_ID);
+           return db_emp.GetEntity(t.EmployeeId);
+        }
     }
 }

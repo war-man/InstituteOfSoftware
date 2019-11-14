@@ -1,0 +1,45 @@
+﻿
+@{
+    ViewBag.Title = "NewsRexoncileView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+     .linu{
+     width:150px;
+     }
+    </style>
+    }
+    <form class="layui-form">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">日期:</label>
+                <div class="layui-input-block">
+                    <input type="text" name="generateTime" id="generateTime" class="layui-input linu"/>
+                </div>
+            </div>
+             
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                 <input type="button" value="生成课表" class="layui-btn"/>
+            </div>
+        </div>
+        <fieldset>
+            <legend>课表生成区</legend>
+
+        </fieldset>
+    </form>
+@section script{
+    <script>
+        layui.use(['form', 'laydate', 'table'], function () {
+            var form = layui.table;
+            var laydate = layui.laydate;
+            var table = layui.table;
+            //日期
+            laydate.render({
+                elem: '#generateTime'
+            });
+        });
+    </script>
+    }
+

@@ -56,6 +56,7 @@
       <HintPath>..\packages\System.Linq.Dynamic.1.0.7\lib\net40\System.Linq.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -104,12 +105,22 @@
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\AttendanceInfoManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
     <Compile Include="EnroExamination_Business\EnroExaminationBusiness.cs" />
     <Compile Include="EnrollmentBusiness\EnrollmentBusinesse.cs" />
+    <Compile Include="ExaminationSystemBusiness\AnswerQuestionBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ChoiceQuestionBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ComputerTestQuestionsBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ExaminationBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ExaminationPaperBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ExaminationRoomBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\ExamScoresBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\QuestionLevelBusiness.cs" />
+    <Compile Include="ExaminationSystemBusiness\StudentExamBusiness.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
     <Compile Include="Logger\ElasticSearchLogger.cs" />

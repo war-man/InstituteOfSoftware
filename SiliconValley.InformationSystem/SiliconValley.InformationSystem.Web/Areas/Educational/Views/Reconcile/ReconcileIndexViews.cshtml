@@ -3,7 +3,7 @@
     ViewBag.Title = "ReconcileIndexViews";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@using SiliconValley.InformationSystem.Entity.MyEntity
 @section style{
     <style>
         #but1
@@ -17,7 +17,7 @@
             line-height: 36px;
         }
 
-            #but1:hover
+        #but1:hover
             {
                 background-color: aqua;
             }
@@ -49,23 +49,7 @@
             line-height: 20px;
             text-align: right
         }
-
-        .TextAreCss1
-        {
-            height: 80px;
-        }
-
-        .butCss1
-        {
-            float: right;
-            margin-right: 100px;
-        }
-
-        .butCss2
-        {
-            border: 0px solid black;
-        }
-
+                
         .layButCss1
         {
             display: inline-block;
@@ -117,52 +101,85 @@
         </div>
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
             <label class="layui-form-label">教室:</label>
-            <div class="layui-input-block">
-                
+            <div class="layui-input-block">                
+                @Html.DropDownList("myclassroom", ViewBag.classrrrom as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" } })
             </div>
         </div>
     </div>
     <div class="layui-row layui-form-item">
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
             <label class="layui-form-label">课程:</label>
-            <div class="layui-input-block">
+            <div id="currr_div" class="layui-input-block">
 
             </div>
 
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
             <label class="LableCss1">上课时间段:</label>
-            <div id="ClssTime" class="layui-input-block">
-
+            <div id="ClssTime" class="layui-input-block">                
+              <input style="color:black" type="radio" name="time" value="上午" title="上午" disabled="disabled">
+              <input style="color:black" type="radio" name="time" value="下午" title="下午" disabled="disabled">         
             </div>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <input type="button" class="layui-btn" value="排课" />
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <label class="LableCss1">开始日期:</label>
+            <div class="layui-input-block">
+                <input type="text" name="startTime" id="startTime" class="layui-input"/>
+            </div>
         </div>
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" style="text-align:right">
+            <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="系统排课" />
+            <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="手动排课" />
+        </div>
+
     </div>
     <fieldset>
         <legend>排课显示</legend>
-        <table id="Reconcile_table"></table>
+        <div id="Reconcile_div">
+            <table lay-filter="Reconcile_table" id="Reconcile_table"></table>
+        </div>        
     </fieldset>
 </form>
 @section script{
-    <script>        
-        layui.use(['form'], function () {
+    <script>       
+        //转换时间的方法
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if ((month + 1) < 10) {
+                month = "0" + Number(month + 1);
+            } else {
+                month = Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = "0" + day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+        layui.use(['form','laydate','table'], function () {
             var form = layui.form;
+            var laydate = layui.laydate;
+            var table = layui.table;
+            
             form.on('select(grandselect)', function (data) {
                 if (data.value == "0") {
-
+                    $("#myclass")[0].innerHTML = "";
                 } else {
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
                         success: function (sudata) {
                             //获取班级slect
-                            var classselect = $('<select id="class_select" class="layui-select" lay-filter="bianji"><option value="0" selected>--请选择--</select>');
+                            var classselect = $('<select id="class_select" name="class_select" class="layui-select" lay-filter="bianji"><option value="0" selected>--请选择--</select>');
                             for (var i = 0; i < sudata.length; i++) {
                                 $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber+ '<option>').appendTo(classselect);
                             }
                             $("#myclass")[0].innerHTML = "";
-                            $("#myclass").append(classselect);
+                            $("#myclass").append(classselect);   
                             form.render(); //更新全部
                         }
                     });
@@ -171,9 +188,102 @@
             });      
 
             form.on('select(bianji)', function (data) {
-                alert(data.value);
-            })
+                // alert(data.value);
+                $("#currr_div")[0].innerHTML = "";
+                $("#marjon")[0].innerHTML = "";
+                if (data.value != "0") {                     
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassDate/' + data.value,
+                        success: function (sucdata) {
+                            if (sucdata.stataus == "true") {
+                                $("<span class='LableCss1'>" + sucdata.classData.marjoiName + "</span>").appendTo($("#marjon"));//加载专业数据
+                                var myselect_c = $("<select name='kecheng' id='kecheng'></select>");
+                                for (var i = 0; i < sucdata.c_list.length; i++) {
+                                    $("<option value=" + sucdata.c_list[i].CourseName + ">" + sucdata.c_list[i].CourseName + "<option>").appendTo(myselect_c);
+                                }
+                                $("#currr_div").append(myselect_c);
+                                //上课时间
+                                $(":radio").each(function (index, ele) {
+                                    if (ele.value == sucdata.classData.ClassDate) {
+                                        ele.checked = "checked";
+                                        $(ele).removeAttr("disabled");
+                                    } else {
+                                        $(ele).attr("disabled","disabled");
+                                    }
+                                });
+                                form.render(); //更新全部
+                            } else {
+                                layer.msg('班级名称错误！！！', { icon: 2 });
+                            }
+
+                        }
+                    });  
+                    //表格重载
+                    table.reload('Reconcile_table', {
+                        url: '/Educational/Reconcile/GetTableData',
+                        where: { "classname": data.value} //设定异步数据接口的额外参数
+                    });
+                }                  
+            });
+            //table加载
+            table.render({
+                elem: '#Reconcile_table'
+                , url:'/Educational/Reconcile/GetTableData'
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'classname', title: '班级', fixed: 'left' }
+                    , { field: 'classroom', title: '教室', }
+                    , { field: 'curriName', title: '课程' }
+                    , { field: 'Sketime', title: '上课时间段' }
+                    , { field:'Teacher',title:'任课老师'}
+                    , {
+                        field: 'ADate', title: '日期', templet: function (res) {
+                            return TimeChange(res.ADate);
+                        }
+                    }
+                ]]
+                , page: true
+            });
+            //日期
+            laydate.render({
+                elem: '#startTime'
+            });
+             //排课
+            form.on('submit(Anpai)', function (data) {
+                var mydata = data.field;
+                console.log(mydata);
+                if (mydata.class_select == "0") {
+                    layer.msg('请选择有效的班级！！！', { icon: 2 });
+                } else if (mydata.startTime == "") {
+                    layer.msg('请选择排课日期', { icon: 2 });
+                } else {
+                    $.ajax({
+                        url: '/Educational/Reconcile/PaikeFunction',
+                        type: 'POST',
+                        data: mydata,
+                        success: function (Sucdata) {
+                            if (Sucdata == "ok") {
+                                layer.msg("生成成功！！！", { icon: 1,shade:0.8 }, function () {
+                                    table.reload('Reconcile_table', {
+                                        url: '/Educational/Reconcile/GetTableData',
+                                        where: { "classname": mydata.class_select } //设定异步数据接口的额外参数
+                                    });
+                                });
+                            } else {
+                                layer.msg(Sucdata, { icon: 2 }, function () {
+                                    table.reload('Reconcile_table', {
+                                        url: '/Educational/Reconcile/GetTableData',
+                                        where: { "classname": mydata.class_select } //设定异步数据接口的额外参数
+                                    });
+                                });
+                            }
+                        }
+                    });
+                }
+                return false;
+            });
         });
+                
     </script>
 }
 

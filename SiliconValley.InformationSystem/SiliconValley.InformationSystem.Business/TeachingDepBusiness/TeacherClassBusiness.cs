@@ -25,7 +25,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         SpecialtyBusiness db_major = new SpecialtyBusiness();
         GrandBusiness db_grand = new GrandBusiness();
 
-        TeacherBusiness db_teacher = new TeacherBusiness();
+        public TeacherBusiness db_teacher = new TeacherBusiness();
 
         /// <summary>
         /// 学员所在班级
@@ -284,6 +284,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
                              
         }
+         
 
     }
 }

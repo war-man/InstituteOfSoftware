@@ -22,5 +22,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> Count { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 所属校区
+        /// </summary>
+        public Nullable<int> BaseData_Id { get; set; }
     }
 }

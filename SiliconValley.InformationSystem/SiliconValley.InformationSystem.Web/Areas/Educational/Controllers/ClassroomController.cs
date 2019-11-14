@@ -12,7 +12,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     {
         public static readonly ClassroomManeger Classroom_Entity = new ClassroomManeger();
 
-        // GET: /Educational/Classroom/FindSameName
+        // GET: /Educational/Classroom/ClassroomIndexView
         public ActionResult ClassroomIndexView()
         {
             return View();

@@ -18,10 +18,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 开始月份
         /// </summary>
-        public string StartmonthName { get; set; }
+        public int StartmonthName { get; set; }
         /// <summary>
         /// 结束月份
         /// </summary>
-        public string EndmonthName { get; set; }
+        public int EndmonthName { get; set; }
     }
 }
