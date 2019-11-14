@@ -5,19 +5,36 @@
 }
 <link href="~/Scripts/dtree2.5.4/layui_ext/dtree/dtree.css" rel="stylesheet" />
 <link href="~/Scripts/dtree2.5.4/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
+<style>
+    #left {
+        width: 25%;
+        float: left;
+    }
+
+    #right {
+        width: 74%;
+        float: right;
+    }
+</style>
 <div>
     <div id="left">
         <ul id="toolbarTree5" class="dtree" style="width:300px" data-id="0"></ul>
     </div>
     <div id="right">
-        <table class="layui-hide" id="table0" lay-filter="table0"></table>
+        <table id="mytable" lay-filter="mytable"></table>
     </div>
 </div>
 <script src="~/Scripts/underscore.js"></script>
 <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
 
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+    </div>
+</script>
 @section script{
     <script>
+        var myDTree;
         layui.extend({
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dleiool/dtree'
         }).use(['element', 'layer', 'table', 'code', 'util', 'dtree', 'form'], function () {
@@ -27,7 +44,24 @@
             $(function () {
                 loadtree();
             });
-            var myDTree = dtree.render({
+            //时间转化
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+            myDTree = dtree.render({
                 elem: "#toolbarTree5",
                 url: '/Dormitory/DormitoryInfo/EstablishTree',
                 formatter: {
@@ -49,14 +83,16 @@
                 toolbarFun: {
                     addTreeNode: function (treeNode, $div) { //添加树节点后调用的函数，用于用户自定义，如未指定则树不会发生变化
                         //location.reload();
-                        reloaddtree();
-                        console.log(treeNode);
+                        // console.log('join');
+                        //loadtree();
+                        //console.log('join');
+                        //console.log(treeNode);
                     },
 
                     editTreeNode: function (treeNode, $div) { //编辑树节点后调用的函数，用于用户自定义，如未指定则树不会发生变化
-                        console.log(treeNode);
+                        //console.log(treeNode);
                         $.ajax({
-                            url: '/Dormitory/DormitoryInfo/updatetung',
+                            url: '/Dormitory/Basics/updatetung',
                             data: { TungName: treeNode.context, tungid: treeNode.nodeId },
                             type: 'GET',
                             success: function (successdata) {
@@ -81,11 +117,11 @@
                     delTreeNode: function (treeNode, $div) { //删除树后调用的函数，用于用户自定义，如未指定则树不会发生变化
                         console.log(treeNode);
                         if (treeNode.level == "1") {
-                            console.log("dong");
+                            //console.log("dong");
                             zhixing(treeNode.nodeId, "-1", true);
                         }
                         if (treeNode.level == "2") {
-                            console.log("lou");
+                            //console.log("lou");
                             zhixing(treeNode.parentId, treeNode.nodeId, false);
                         }
 
@@ -135,7 +171,7 @@
             }
             function zhixing(tungid, floorid, istung) {
                 $.ajax({
-                    url: '/Dormitory/DormitoryInfo/del',
+                    url: '/Dormitory/Basics/del',
                     data: { tungid: tungid, floorid: floorid, istung: istung },
                     type: 'GET',
                     success: function (successdata) {
@@ -156,30 +192,89 @@
                 });
             }
 
-            //加载树
-            function loadtree() {
-                $.ajax({
-                    url: '/Dormitory/DormitoryInfo/EstablishTree',
-                    type: 'GET',
-                    success: function (successdata) {
-                        console.log(successdata);
-                        // var nodes = JSON.parse(successdata);
-                        //console.log(nodes);
-                        //可以重载所有基础参数
-                        myDTree.reload(
-                            'demoTree',
-                            {
-                                data: successdata
+            var table11 = table.render({
+                elem: '#mytable'
+                , skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , url: '/Dormitory/Basics/SeachData'
+                , limit: 20
+                , limits: [10, 20, 30, 45, 60, 75]
+                , page: true
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , cols: [[ //标题栏
+                    //, { field: 'ID', title: 'id'/*, width: 180*/, hide: true }
+                     { field: 'TungName', title: '栋名称', width: 200 }
+                    , {
+                        field: 'TungAddress', title: '地址', width: 250
+                    }
+                    , {
+                        field: 'CreationTime', title: '创建时间', width: 150, templet: function (d) {
 
-                            });
-                    },
-                    error: function (errordata) {
 
+                            return "<span style=color:blue;>"+TimeChange(d.CreationTime)+"</span>"
+
+                        }
+                    }
+                    , {
+                        field: 'personcount', title: '居住人数', width: 100, templet: function (d) {
+
+
+                            return "<span style=color:red;>" + d.personcount + "</span>"
+
+                        }
+                    }
+                    , { field: 'Remark', title: '备注', width: 350 }
+                ]]
+            });
+            function loadtable11() {
+                table11.reload({
+                    url: '/Dormitory/RoomDisabled/SeachData'
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
                     }
                 });
             }
+            //头工具栏事件
+            table.on('toolbar(mytable)', function (obj) {
+                switch (obj.event) {
+                    case 'add':
+                        layer.open({
+                            type: 2,
+                            content: "/Dormitory/Basics/AddTungPage",
+                            title: "添加栋",
+                            area: ['390px', '320px'],
+                            end: function () {
+                                loadtree();
+                            }
+                        });
+                        break;
+                };
+            });
+
         });
 
+        //加载树
+        function loadtree() {
+            $.ajax({
+                url: '/Dormitory/DormitoryInfo/EstablishTree',
+                type: 'GET',
+                success: function (successdata) {
+                    console.log(successdata);
+                    // var nodes = JSON.parse(successdata);
+                    //console.log(nodes);
+                    //可以重载所有基础参数
+                    myDTree.reload(
+                        'demoTree',
+                        {
+                            data: successdata
+
+                        });
+                },
+                error: function (errordata) {
+
+                }
+            });
+        }
 
 
     </script>

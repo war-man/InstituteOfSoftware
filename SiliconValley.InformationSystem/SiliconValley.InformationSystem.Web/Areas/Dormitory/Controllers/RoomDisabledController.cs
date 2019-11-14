@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
@@ -34,9 +35,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             dbtung = new TungBusiness();
             dbfloor = new DormitoryfloorBusiness();
 
-            var tian = dbdorm.GetIQueryable().Where(a => a.IsDelete == true).ToList();
+            List<Tung> tunglist= dbtung.GetTungs();
+            List<TungFloor> tungfoolrlist = new List<TungFloor>();
+            List<DormInformation> dormlist = new List<DormInformation>();
+            foreach (var item in tunglist)
+            {
+                tungfoolrlist.AddRange(dbtungfloor.GetTungFloorByTungID(item.Id));
+            }
+            tungfoolrlist = tungfoolrlist.Where(a => a.IsDel == false).ToList();
 
-            var resultdata = tian.OrderByDescending(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            foreach (var item in tungfoolrlist)
+            {
+                dormlist.AddRange(dbdorm.GetIQueryable().Where(a => a.TungFloorId == item.Id && a.IsDelete == true).ToList()) ;
+            }
+          
+            var resultdata = dormlist.OrderByDescending(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
 
             var tian1 = new List<ProRoomDisabledView>();    
             foreach (var item in resultdata)
@@ -59,7 +72,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             {
                 code = 0,
                 msg = "",
-                count = tian.Count(),
+                count = dormlist.Count(),
                 data = tian1
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);

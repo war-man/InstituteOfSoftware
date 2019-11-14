@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 
         private RoomdeWithPageXmlHelp dbxml;
         private StaffAccdationBusiness dbstaffacc;
+        private AccdationinformationBusiness dbacc;
         /// <summary>
         /// 获取正在使用的房间
         /// </summary>
@@ -104,6 +105,28 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 return true;
             }
             return result;
+        }
+
+        /// <summary>
+        /// 排除没有居住信息的房间
+        /// </summary>
+        /// <param name="querydorm"></param>
+        /// <returns></returns>
+        public List<DormInformation> Exclude(List<DormInformation> querydorm)
+        {
+            dbstaffacc = new StaffAccdationBusiness();
+            dbacc = new AccdationinformationBusiness();
+            //排除存在居住信息的房间
+            for (int i = querydorm.Count - 1; i >= 0; i--)
+            {
+                List<StaffAccdation> querystaffacc = dbstaffacc.GetStaffAccdationsByDorminfoID(querydorm[i].ID);
+                List<Accdationinformation> queryacc = dbacc.GetAccdationinformationByDormId(querydorm[i].ID);
+                if (querystaffacc.Count == 0 && queryacc.Count == 0)
+                {
+                    querydorm.Remove(querydorm[i]);
+                }
+            }
+            return querydorm;
         }
     }
 }

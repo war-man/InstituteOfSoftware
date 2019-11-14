@@ -3237,7 +3237,7 @@ layui.define(['jquery','layer','form'], function(exports) {
 			$p_li = $div.parent("li[data-index]"),	//当前选中节点的顶级li节点
 			$p_ul = $p_li.parent("ul"),	//当前选中节点的顶级li节点的父级ul
 			$p_div = $p_ul.prev("div"), //当前选中节点的顶级li节点的父级ul的前一个div
-			title = $cite.html();
+            title = $cite.html().split('<')[0];
 		switch (tool) {
 			case defaultTool.pulldown:
 				_this.toolbarMethod().pulldown($ul);
@@ -3252,7 +3252,7 @@ layui.define(['jquery','layer','form'], function(exports) {
                     title: "为" + title+"添加层",
                     type: 2,
                     area: ['530px', '290px'],
-                    content: "/Dormitory/DormitoryInfo/AddFloorPage",
+                    content: "/Dormitory/Basics/AddFloorPage",
                                                 
                     success: function (layero, index) {
                         form.render();
@@ -3260,8 +3260,8 @@ layui.define(['jquery','layer','form'], function(exports) {
                         body.find("#nodeTitle").val(title);
                         body.find("#parentId").val(jsparent);
                     },
-                    end : function (index, layero) {
-                        reloaddtree();
+                    end: function (index, layero) {
+                        window.parent.loadtree();
                     }
                 });
 				//layer.open({

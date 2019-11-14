@@ -1,0 +1,133 @@
+﻿
+@{
+    ViewBag.Title = "SResearchRecordIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>SResearchRecordIndex</h2>*@
+
+<script>
+    layui.use(['table', 'layer'], function () {
+        var table = layui.table;
+        var layer = layui.layer; //layui对象
+        MrDLayer = layer;
+
+        //监听表格复选框选择
+        table.on('checkbox(EnterpriseInfo)', function (obj) {
+            console.log(obj)
+        });
+
+        //展示已知数据
+        var tableIns = table.render({
+            elem: '#Enterprise'
+            , url: '/BusinessManagement/SearchEnterpriseInfo' //数据接口
+            , page: true //开启分页
+            //, skin: 'line' //行边框风格
+            , even: true //开启隔行背景
+            , limit: 15
+            , limits: [15, 30, 45, 60, 75]
+            , cols: [[ //标题栏
+                , { type: 'checkbox' }
+                , { field: 'EnterpriseInfoID', title: '企业信息ID', width: 80, sort: true, hide: true }
+                , { field: 'EntName', title: '企业名称', width: 165 }
+                , { field: 'EntAddress', title: '企业地址', width: 165 }
+                , { field: 'EntScale', title: '规模', width: 100 }
+                , { field: 'EntNature', title: '性质', width: 178 }
+                , { field: 'EntWelfare', title: '福利', width: 178 }
+                , { field: 'EmploymentStaffName', title: '录入人姓名', width: 165 }
+                , { field: 'CooperaEnterprisesID', title: '合作企业ID', hide: true }
+                , { field: 'EntContacts', title: '联系人', width: 165 }
+                , { field: 'EntPhone', title: '联系电话', width: 165 }
+                , {
+                    field: 'EntDate', title: '时间', width: 165, templet: function (v) {
+                        return TimeChange(v.EntDate);
+                    }
+                }
+                , { field: 'Remark', title: '备注', width: 165 }
+                , { fixed: 'right', width: 198, align: 'center', toolbar: '#barDemo' }
+            ]]
+
+        });
+
+        MrDtableIns = tableIns;
+        //监听工具条
+        table.on('tool(EnterpriseInfo)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'detail') {
+                layer.open({
+                    type: 2
+                    , area: ["800px", "620px"]
+                    , title: "弹出层"
+                    , content: '/Obtainemployment/BusinessManagement/Enterdetail/' + data.EnterpriseInfoID
+                    , anim: "2" /* 改变弹出层弹出方式*/
+                    , end: function () {
+                        table.reload('Enterprise', {
+                            page: {
+                                curr: 1
+                            }
+                        });
+
+                    }
+                });
+
+            }
+            else if (obj.event === 'del') {
+                var EntContacts = data.EntContacts;
+                console.log(data.EnterpriseInfoID);
+                console.log(data);
+                if (EntContacts != "") {
+
+                    layer.confirm('真的解除合作关系么', function (index) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/BusinessManagement/DelEnterpriseInfo/",
+                            async: false,
+                            data: { EntID: data.EnterpriseInfoID },
+                            success: function (data) {
+                                layer.msg('解除合作企业成功。', { icon: 6 });
+                                table.reload('Enterprise', {
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                            },
+                            error: function () {
+                            }
+                        });
+
+                    });
+                } else {
+                    layer.msg('并不是合作企业。', { icon: 5 });
+
+                }
+
+            } else if (obj.event === 'edit') {
+                var EnterpriseInfoID = data.EnterpriseInfoID;
+                layer.open({
+                    type: 2
+                    , area: ["800px", "620px"]
+                    , title: "弹出层"
+                    , content: '/Obtainemployment/BusinessManagement/EditEnterprise/' + EnterpriseInfoID
+                    , anim: "2" /* 改变弹出层弹出方式*/
+                    , end: function () {
+                        table.reload('Enterprise', {
+                            page: {
+                                curr: 1
+                            }
+                        });
+
+                    }
+                });
+            }
+        });
+
+
+        $('.demoTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+
+    });
+</script>
+
+

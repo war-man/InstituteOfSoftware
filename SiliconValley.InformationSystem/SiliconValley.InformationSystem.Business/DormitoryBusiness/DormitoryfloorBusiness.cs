@@ -28,5 +28,21 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public Dormitoryfloor GetDormitoryfloorByFloorID(int FloorID) {
             return this.GetDormitoryfloors().Where(a => a.ID == FloorID).FirstOrDefault();
         }
+
+        /// <summary>
+        /// 验证楼层名字是否存在
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public bool verifyname(string param0)
+        {
+            bool result = false;
+            var aa = this.GetDormitoryfloors().Where(a => a.FloorName == param0);
+            if (aa != null)
+            {
+                return true;
+            }
+            return result;
+        }
     }
 }

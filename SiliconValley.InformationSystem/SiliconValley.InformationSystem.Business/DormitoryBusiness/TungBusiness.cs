@@ -29,5 +29,20 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public Tung GetTungByTungID(int TungID) {
             return this.GetTungs().Where(a => a.Id == TungID).FirstOrDefault();
         }
+
+        /// <summary>
+        /// 验证名字是否存在
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public bool verifyname(string param0) {
+            var fp= this.GetTungs().Where(a => a.TungName == param0).FirstOrDefault();
+            bool result = false;
+            if (fp!=null)
+            {
+                result = true;
+            }
+            return result;
+        }
     }
 }
