@@ -729,13 +729,6 @@
     <Content Include="Areas\Educational\Views\Goods\GoodsAddorEditView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\WarehouseIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
-    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord2019年10月9日.png" />
-    <Content Include="uploadXLSXfile\DaysOffImage\20191014030555.jpeg" />
-    <Content Include="uploadXLSXfile\DaysOffImage\20191014030701.jpeg" />
-    <Content Include="uploadXLSXfile\DaysOffImage\20191014031141.jpeg" />
-    <Content Include="uploadXLSXfile\DaysOffImage\20191014032831.jpeg" />
-    <Content Include="uploadXLSXfile\DaysOffImage\20191014033608.jpeg" />
-    <Content Include="uploadXLSXfile\DaysOffImage\20191015030855.jpeg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="Areas\MyEducation\Views\Education\AddCoursecategory.cshtml" />
     <Content Include="Areas\MyEducation\Views\Education\AddCoursecategoryX.cshtml" />
@@ -776,9 +769,6 @@
     <Content Include="Areas\ExaminationSystem\Views\StudentExamSys\AnswerSheet.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\StudentExamSys\StuExamIndex.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\web.config" />
-    <Content Include="Areas\Educational\Views\Reconcile\EditView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\NewsRexoncileView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2491,8 +2481,6 @@
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\测试.xls" />
     <Content Include="uploadXLSXfile\Sheet1.xlsx" />
-    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年10月10日.rtf" />
-    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年11月1日.rar" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
