@@ -12,20 +12,22 @@
         border: 1px solid red;
         float: left;
         height: 800px;
-       
     }
+
     #content0 {
-    margin-top:20px;
+        margin-top: 20px;
     }
+
     #rightdiv {
         width: 83%;
         border: 1px solid red;
         float: right;
-        height:800px;
+        height: 800px;
     }
-    #top0{
+
+    #top0 {
         font-size: 27px;
-    text-align: center;
+        text-align: center;
     }
 </style>
 <div od="mybody">
@@ -45,6 +47,14 @@
 
     </div>
 </div>
+<script src="~/Scripts/underscore.js"></script>
 <script>
     //ViewBag.list
+    layui.use(['laypage', 'layedit'], function () {
+        //获取设备信息
+        var device = layui.device();
+        console.log('11');
+        console.log(device);
+
+    });
 </script>
