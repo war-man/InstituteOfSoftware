@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class EmplSalaryEmbodyController : Controller//员工工资体系
@@ -67,6 +67,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var ese = esemanage.GetEntity(id);
             ViewBag.eseid = id;
             return View(ese);
+        }
+        [HttpPost]
+        public ActionResult EditESE(EmplSalaryEmbody ese) {
+            return View();
         }
 
         public ActionResult GetESEById(int id)
