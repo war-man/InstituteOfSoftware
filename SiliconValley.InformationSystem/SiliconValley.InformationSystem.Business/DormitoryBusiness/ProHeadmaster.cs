@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     public class ProHeadmaster : BaseBusiness<Headmaster>
     {
         private EmployeesInfoManage dbemp;
+        private ProHeadClass dbproHeadClass;
         /// <summary>
         /// 获取在职的班主任
         /// </summary>
@@ -49,6 +50,29 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbemp = new EmployeesInfoManage();
             var obj0=this.GetHeadById(id);
           return  dbemp.GetEntity(obj0.informatiees_Id);
+        }
+
+        /// <summary>
+        /// 根据班级编号返回班主任id
+        /// </summary>
+        /// <param name="Classno"></param>
+        /// <returns></returns>
+        public Headmaster GetHeadmasterByClassno(string Classno)
+        {
+            dbproHeadClass = new ProHeadClass();
+            var a = dbproHeadClass.GetClassByClassNO(Classno);
+            return this.GetEntity(a.LeaderID);
+        }
+
+        /// <summary>
+        /// 根据班级编号返回员工对象
+        /// </summary>
+        /// <param name="Classno"></param>
+        /// <returns></returns>
+        public EmployeesInfo GetEmpinfoByClassno(string Classno) {
+           var a= this.GetHeadmasterByClassno(Classno);
+            dbemp = new EmployeesInfoManage();
+           return dbemp.GetEntity(a.informatiees_Id);
         }
     }
 }

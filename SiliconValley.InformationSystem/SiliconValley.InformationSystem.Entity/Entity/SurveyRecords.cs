@@ -17,22 +17,56 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Table(name: "SurveyRecords")]
     public partial class SurveyRecords
     {
-       
+        /// <summary>
+        /// 调研记录ID
+        /// </summary>
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学生学号
+        /// </summary>
         public string StudentNO { get; set; }
-        public Nullable<int> EmpStaffID { get; set; }
+        /// <summary>
+        /// 就业专员ID
+        /// </summary>
+        public int EmpStaffID { get; set; }
+        /// <summary>
+        /// 记录时间
+        /// </summary>
         public Nullable<System.DateTime> RecordsDate { get; set; }
-        public string AppraisalComments { get; set; }
+
+        /// <summary>
+        /// 就业专员评语
+        /// </summary>
         public string EmpStaffComments { get; set; }
+        /// <summary>
+        /// 就业期望
+        /// </summary>
         public string EmpExpectations { get; set; }
+        /// <summary>
+        /// 掌握技术
+        /// </summary>
         public string MasterTechnology { get; set; }
+        /// <summary>
+        /// 实践经验
+        /// </summary>
         public string PracticalExperience { get; set; }
+        /// <summary>
+        /// 自评等级
+        /// </summary>
         public string SelfRating { get; set; }
+        /// <summary>
+        /// 调研评级
+        /// </summary>
         public string SurRating { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        /// <summary>
+        /// 想学的专业
+        /// </summary>
         public Nullable<int> WantSpceID { get; set; }
     
     }

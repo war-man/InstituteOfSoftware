@@ -2,8 +2,7 @@
 @{
     Layout = null;
 }
-@using SiliconValley.InformationSystem.Entity.MyEntity
-@model ClassSchedule
+
 <!DOCTYPE html>
 
 <html>
@@ -55,6 +54,11 @@
         label {
             font-size: 18px;
         }
+
+        .lad {
+            width: 140px;
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+        }
     </style>
 
 </head>
@@ -70,121 +74,82 @@
                     <div class="layui-row layui-form-item">
 
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">班级编号:</label>
+                            <label class="layui-form-label lad">班级编号:</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a=>a.ClassNumber,new { @class = "layui-input", @readonly = "d" })
+                                <input type="text" id="ClassName" class="layui-input" readonly="readonly" />
                             </div>
                         </div>
 
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">阶段:</label>
+                            <label class="layui-form-label lad">阶段:</label>
                             <div class="layui-input-inline">
-                                @*@Html.TextBoxFor(t => t.emp.EmployeeId, new { @class = "layui-input", @readonly = "d" })*@
-                            </div>
-                        </div>
-
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">就业方向:</label>
-                            <div class="layui-input-inline">
-                                @*@Html.TextBoxFor(t => t.emp.Phone, new { @class = "layui-input", @readonly = "d" }*@
-
-                            </div>
-                        </div>
-
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">班级人数:</label>
-                            <div class="layui-input-inline">
-                                @*<input type="tel" name="birhday" readonly id="birhday" class="layui-input" value="@Model.emp.Birthdate">*@
-
-
-                            </div>
-                        </div>
-
-
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                            <label class="layui-form-label">S3班主任姓名:</label>
-                            <div class="layui-input-inline">
-
-                                @*<input type="radio" name="sex" value="@Model.emp.Sex" checked title="@Model.emp.Sex">*@
-
-                            </div>
-                        </div>
-
-
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                            <label class="layui-form-label">S3班主任电话:</label>
-                            <div class="layui-input-inline">
-
-                                @*<input class="layui-input" type="text" name="sex" value="@Model.Department.DeptName">*@
-
-                            </div>
-                        </div>
-
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                            <label class="layui-form-label">代课老师姓名:</label>
-                            <div class="layui-input-inline">
-
-                                @*<input class="layui-input" type="text" name="sex" value="@Model.Position.PositionName">*@
-
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">代课老师电话:</label>
-                            <div class="layui-input-inline">
-                                @*@Html.TextBoxFor(t => t.Areas.AreaName, new { @class = "layui-input", @readonly = "d" }*@
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">未学习课程:</label>
-                            <div class="layui-input-block">
-                                @*@{ foreach (var item in Model.ClassSchedulesing)
-                                        {
-                                            <button type="button" class="layui-btn">@item.ClassNumber</button>
-                                        }
-                                    }*@
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">已完成课程:</label>
-                            <div class="layui-input-block">
-                                @*@{ foreach (var item in Model.ClassSchedulesing)
-                                        {
-                                            <button type="button" class="layui-btn">@item.ClassNumber</button>
-                                        }
-                                    }*@
-                            </div>
-                        </div>
-
-
-                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                            <label class="layui-form-label">学生调研分析图:</label>
-                            <div class="layui-input-block">
-                                <div height="400" width="600" style="margin:50px">
-                                    <canvas id="chart"> 你的浏览器不支持HTML5 canvas </canvas>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">未调研学生:</label>
-                            <div class="layui-input-block">
-                                @*@{ foreach (var item in Model.ClassSchedulesing)
-                                        {
-                                            <button type="button" class="layui-btn">@item.ClassNumber</button>
-                                        }
-                                    }*@
+                                <input type="text" id="GrandName" class="layui-input" readonly="readonly" />
                             </div>
                         </div>
                     </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label lad">专业方向:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="SpecialtyName" class="layui-input" readonly="readonly" />
+
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label lad">班级人数:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="StudentCount" class="layui-input" readonly="readonly" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                            <label class="layui-form-label lad">S3班主任姓名:</label>
+                            <div class="layui-input-inline">
+
+                                <input type="text" id="HeadmasterName" class="layui-input" readonly="readonly" />
+
+                            </div>
+                        </div>
+
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                            <label class="layui-form-label lad">S3班主任电话:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="HeadmasterPhone" class="layui-input" readonly="readonly" />
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                            <label class="layui-form-label lad">任课老师姓名:</label>
+                            <div class="layui-input-inline">
+
+                                <input type="text" id="TeacherName" class="layui-input" readonly="readonly" />
+
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label lad">任课老师电话:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="TeacherPhone" class="layui-input" readonly="readonly" />
+                            </div>
+                        </div>
+                    </div>
+  
 
                 </fieldset>
                 <fieldset>
 
                     <legend>选择专员</legend>
                     <div class="layui-col-xs9 layui-col-sm9 layui-col-md9">
-                        <label class="layui-form-label">专员列表:</label>
+                        <label class="layui-form-label lad">专员列表:</label>
                         <div class="layui-input-inline">
                             @Html.DropDownList("stafflist", ViewBag.EmpStaff as List<SelectListItem>, new Dictionary<string, object> { { "lay-filter", "mystafflist" }, { "id", "mystafflist" } })
                         </div>
@@ -192,17 +157,16 @@
                             <button type="button" onclick="distributionbtn()" class="layui-btn layui-btn-radius layui-btn-warm">确认</button>
                         </div>
                     </div>
-                </fieldset>
-                <fieldset>
-                    <legend>专员信息</legend>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">正带班级:</label>
+              
+               
+                  
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" style="margin-top: 20px;">
+                            <label class="layui-form-label lad">正带班级:</label>
                             <div class="layui-input-block" id="classlist">
 
                             </div>
                         </div>
-                    </div>
+                 
 
                 </fieldset>
             </div>
@@ -217,14 +181,14 @@
 
     <script>
         jQuery(function () {
-            var data = JSON.parse('@Html.Raw(ViewBag.pielist)');
-            var arr= jsontoarr(data);
-            goChart(arr);
+            var data = JSON.parse('@Html.Raw(ViewBag.distributionView)');
+            loadform(data);
             var staffid = $("#mystafflist").val();
             showclassing(staffid);
 
         });
         function showclassing(jsempstaffid) {
+           
              $.ajax({
                     type: "get",
                     url: "/Obtainemployment/EmpClass/GetClassList/",
@@ -243,7 +207,7 @@
                             for (var i = 0; i < data.length; i++) {
                             var compiled = _.template($("#muban").html());
                                 var jsclassnumber = data[i].ClassNumber;
-                                console.log(jsclassnumber   );
+                                //console.log(jsclassnumber   );
                             var html = compiled({ content: jsclassnumber });
                             $("#classlist").append($(html));
                              }
@@ -256,25 +220,25 @@
                 });
         }
         function distributionbtn() {
-           
+
             var staffid = $("#mystafflist").val();
-            var jsclassno = $("#ClassNumber").val();
+            var jsclassno = $("#ClassName").val();
             $.ajax({
                 type: "POST",
                 url: "/Obtainemployment/EmpClass/ClassToEmpstaff/",
                 async: true,
                 data: { ClassNO:jsclassno,empstaffid:staffid },
                 success: function (data) {
-                   
+
                     if (data.Success) {
-                      
+
                         layer.msg(data.Msg, { icon: 1 }, function () {
                             //先得到当前iframe层的索引
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index); //再执行关闭
                         })
                     } else {
-                        layer.msg("分配失败，请重新刷新页面！");  
+                        layer.msg("分配失败，请重新刷新页面！");
                     }
                 },
                 error: function (data) {
@@ -283,28 +247,24 @@
             });
         }
         layui.use(['form', 'laydate'], function () {
-
-            var birhday = $("#birhday").val();
-
-            var date = new Date(birhday);
-
-            var year = date.getFullYear();
-
-            var mouth = date.getMonth() + 1;
-
-            var day = date.getDate();
-
-            var birhday = $("#birhday").val(year + '年' + mouth + '月' + day + '日');
-
             var form = layui.form;
-            var laydate = layui.laydate;
-
             form.on('select(mystafflist)', function (data) {
                 var jsempstaffid = data.value;
                 showclassing(jsempstaffid);
             });
 
         });
+        function loadform(data) {
+            console.log(data);
+            $('#ClassName').val(data.ClassName);
+            $('#GrandName').val(data.GrandName);
+            $('#SpecialtyName').val(data.SpecialtyName);
+            $('#StudentCount').val(data.StudentCount);
+            $('#HeadmasterName').val(data.HeadmasterName);
+            $('#HeadmasterPhone').val(data.HeadmasterPhone);
+            $('#TeacherName').val(data.TeacherName);
+            $('#TeacherPhone').val(data.TeacherPhone);
+        }
     </script>
 </body>
 </html>

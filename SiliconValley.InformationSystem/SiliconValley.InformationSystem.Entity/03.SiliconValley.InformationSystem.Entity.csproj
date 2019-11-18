@@ -270,6 +270,7 @@
     <Compile Include="ViewEntity\MyStaticsData.cs" />
     <Compile Include="ViewEntity\My_StudentDataOne.cs" />
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />
     <Compile Include="ViewEntity\ProClassScheduleView.cs" />
     <Compile Include="ViewEntity\ProRoomDisabledView.cs" />
@@ -331,7 +332,6 @@
     <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\DistinguishView.cs" />
-    <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\DivTwoData.cs" />
     <Compile Include="ViewEntity\DormInformationView.cs" />
     <Compile Include="ViewEntity\DormInfoView.cs" />

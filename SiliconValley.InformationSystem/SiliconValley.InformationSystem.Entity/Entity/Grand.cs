@@ -13,6 +13,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 阶段表
+    /// </summary>
     [Table(name: "Grand")]
     public partial class Grand
     {

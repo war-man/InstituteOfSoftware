@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 专业表
+    /// </summary>
     [Table(name: "Specialty")]
     public partial class Specialty: IEqualityComparer<Specialty>
     {

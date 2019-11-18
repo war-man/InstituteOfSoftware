@@ -52,6 +52,7 @@
         var MrDWhyShow;
         jQuery(function () {
             MrDWhyShow = "all";
+            
         });
         //时间转换方法
         function TimeChange(newtime) {
@@ -102,7 +103,7 @@
                 , limits: [15, 30, 45, 60, 75]
                 , cols: [[ //标题栏
                     , { type: 'checkbox' }
-                    , { field: 'ClassNumber', title: '班级编号', width: 165, sort: true }
+                    , { field: 'ClassNumber', title: '班级编号', width: 165}
                     , { field: 'EntID', title: '员工id', width: 165, hide: true }
                     , { field: 'EmpName', title: '员工姓名', width: 145 }
                     , { field: 'Phone', title: '联系方式', width: 165 }
@@ -123,7 +124,7 @@
             table.on('tool(empclassInfo)', function (obj) {
                 var data = obj.data;
                 console.log(data);
-                if (obj.event === 'distribution') {
+                if (obj.event == 'distribution') {
                     if (data.EntID) {
                         layer.msg('该班级已经分配专员了。', {
                             time: 1000, //20s后自动关闭

@@ -6,6 +6,7 @@
 
 @*<h2>SResearchRecordIndex</h2>*@
 
+<table class="layui-hide" id="table11" lay-filter="table11"></table>
 <script>
     layui.use(['table', 'layer'], function () {
         var table = layui.table;
@@ -19,7 +20,7 @@
 
         //展示已知数据
         var tableIns = table.render({
-            elem: '#Enterprise'
+            elem: '#table11'
             , url: '/BusinessManagement/SearchEnterpriseInfo' //数据接口
             , page: true //开启分页
             //, skin: 'line' //行边框风格
@@ -27,23 +28,22 @@
             , limit: 15
             , limits: [15, 30, 45, 60, 75]
             , cols: [[ //标题栏
-                , { type: 'checkbox' }
-                , { field: 'EnterpriseInfoID', title: '企业信息ID', width: 80, sort: true, hide: true }
-                , { field: 'EntName', title: '企业名称', width: 165 }
-                , { field: 'EntAddress', title: '企业地址', width: 165 }
-                , { field: 'EntScale', title: '规模', width: 100 }
-                , { field: 'EntNature', title: '性质', width: 178 }
-                , { field: 'EntWelfare', title: '福利', width: 178 }
-                , { field: 'EmploymentStaffName', title: '录入人姓名', width: 165 }
-                , { field: 'CooperaEnterprisesID', title: '合作企业ID', hide: true }
-                , { field: 'EntContacts', title: '联系人', width: 165 }
-                , { field: 'EntPhone', title: '联系电话', width: 165 }
+                 { field: 'EnterpriseInfoID', title: '调研记录ID', width: 80, sort: true, hide: true }
+                , { field: 'EntName', title: '学生学号', width: 165 }
+                , { field: 'EntName', title: '学生名字', width: 165 }
+                , { field: 'EntAddress', title: '记录id', width: 165 }
+                , { field: 'EntAddress', title: '记录人', width: 165 }
+                , { field: 'EntScale', title: '就业专员评语', width: 100 }
+                , { field: 'EntNature', title: '就业期望', width: 178 }
+                , { field: 'EntWelfare', title: '掌握技术', width: 178 }
+                , { field: 'EmploymentStaffName', title: '实践经验', width: 165 }
+                , { field: 'CooperaEnterprisesID', title: '自评等级', hide: true }
+                , { field: 'EntContacts', title: '调研评级', width: 165 }
+                , { field: 'EntPhone', title: '备注', width: 165 }
                 , {
-                    field: 'EntDate', title: '时间', width: 165, templet: function (v) {
-                        return TimeChange(v.EntDate);
-                    }
+                    field: 'EntDate', title: '时间', width: 165
                 }
-                , { field: 'Remark', title: '备注', width: 165 }
+                , { field: 'Remark', title: '想学专业ID', width: 165 }
                 , { fixed: 'right', width: 198, align: 'center', toolbar: '#barDemo' }
             ]]
 

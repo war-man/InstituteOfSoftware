@@ -8,8 +8,11 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
+    using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
     using SiliconValley.InformationSystem.Util;
     public class EmpClassController : Controller
     {
@@ -25,6 +28,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// 方向专业业务类
         /// </summary>
         private SpecialtyBusiness dbspee;
+
+        private ProTeacher dbproTeacher;
+
+        private ProHeadmaster dbproHeadmaster;
+
+        private ProScheduleForTrainees dbproScheduleForTrainees;
+        private EmployeesInfoManage dbemp;
+        private SpecialtyBusiness dbspecialtyBusiness;
+        private GrandBusiness dbgrandBusiness;
         /// <summary>
         /// 就业班级管理
         /// </summary>
@@ -35,7 +47,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return View();
         }
 
-        
+
         /// <summary>
         /// 展示数据
         /// </summary>
@@ -108,11 +120,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         }
 
 
+        #region echarts
+        //List<PiechartView> mypie = new List<PiechartView>();
+        //PiechartView pie = new PiechartView();
+        //pie.count = 100;
+        //pie.Corlor = "red";
+        //pie.showname = "小白";
+        //PiechartView pie1 = new PiechartView();
+        //pie1.count = 500;
+        //pie1.Corlor = "#b6a2dd";
+        //pie1.showname = "小弟弟";
+        //PiechartView pie2 = new PiechartView();
+        //pie2.count = 10;
+        //pie2.Corlor = "#2dc6c8";
+        //pie2.showname = "臭美没";
+        //PiechartView pie3 = new PiechartView();
+        //pie3.count = 300;
+        //pie3.Corlor = "#d7797f";
+        //pie3.showname = "闹可能";
+        //mypie.Add(pie);
+        //mypie.Add(pie1);
+        //mypie.Add(pie2);
+        //mypie.Add(pie3);
+        //ViewBag.pielist = Newtonsoft.Json.JsonConvert.SerializeObject(mypie);
+        #endregion
+
+        /// <summary>
+        /// 分配页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Distribution(string id)
         {
             dbempclass = new EmpClassBusiness();
             dbempstaff = new EmploymentStaffBusiness();
-            var resultclass = dbempclass.GetClassingByID(id);
+            dbproTeacher = new ProTeacher();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbgrandBusiness = new GrandBusiness();
+            dbspecialtyBusiness = new SpecialtyBusiness();
+            dbproHeadmaster = new ProHeadmaster();
+            var classpbj = dbempclass.GetClassingByID(id);
+            var teempobj = dbproTeacher.GetEmpInfoByClssno(id);
+            var headempobj = dbproHeadmaster.GetEmpinfoByClassno(id);
+
             var empstaffdata = dbempstaff.GetALl();
             var resultdata = empstaffdata.Select(a => new SelectListItem
             {
@@ -120,29 +170,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 Value = a.ID.ToString()
             }).ToList();
             ViewBag.EmpStaff = resultdata;
-            List<PiechartView> mypie = new List<PiechartView>();
-            PiechartView pie = new PiechartView();
-            pie.count = 100;
-            pie.Corlor = "red";
-            pie.showname = "小白";
-            PiechartView pie1 = new PiechartView();
-            pie1.count = 500;
-            pie1.Corlor = "#b6a2dd";
-            pie1.showname = "小弟弟";
-            PiechartView pie2 = new PiechartView();
-            pie2.count = 10;
-            pie2.Corlor = "#2dc6c8";
-            pie2.showname = "臭美没";
-            PiechartView pie3 = new PiechartView();
-            pie3.count = 300;
-            pie3.Corlor = "#d7797f";
-            pie3.showname = "闹可能";
-            mypie.Add(pie);
-            mypie.Add(pie1);
-            mypie.Add(pie2);
-            mypie.Add(pie3);
-            ViewBag.pielist = Newtonsoft.Json.JsonConvert.SerializeObject(mypie);
-            return View(resultclass);
+
+            DistributionView distributionView = new DistributionView();
+            distributionView.ClassName = classpbj.ClassNumber;
+            distributionView.HeadmasterName = headempobj.EmpName;
+            distributionView.HeadmasterPhone = headempobj.Phone;
+            distributionView.TeacherName = teempobj.EmpName;
+            distributionView.TeacherPhone = teempobj.Phone;
+            distributionView.StudentCount = dbproScheduleForTrainees.GetTraineesByClassNO(id).Count;
+            distributionView.SpecialtyName = dbspecialtyBusiness.GetEntity(classpbj.Major_Id).SpecialtyName;
+            distributionView.GrandName = dbgrandBusiness.GetEntity(classpbj.grade_Id).GrandName;
+
+            ViewBag.distributionView = Newtonsoft.Json.JsonConvert.SerializeObject(distributionView);
+
+            return View();
         }
 
         public ActionResult GetClassList(int empstaffid)
@@ -153,7 +194,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(classinglist, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ClassToEmpstaff(string ClassNO,int empstaffid) {
+        public ActionResult ClassToEmpstaff(string ClassNO, int empstaffid)
+        {
             dbempclass = new EmpClassBusiness();
             EmpClass empClass = new EmpClass();
             empClass.ClassNO = ClassNO;
@@ -180,7 +222,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 ajaxResult.Msg = ex.Message;
                 ajaxResult.Success = true;
             }
-            return Json(ajaxResult,JsonRequestBehavior.AllowGet);
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
     }
 }

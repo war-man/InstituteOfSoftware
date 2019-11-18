@@ -613,6 +613,7 @@
     <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmploymentCommissionerIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\web.config" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordRegister.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
