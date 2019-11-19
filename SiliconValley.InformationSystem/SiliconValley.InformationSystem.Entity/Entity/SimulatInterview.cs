@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 模拟面试登记表
+    /// </summary>
     [Table(name: "SimulatInterview")]
     public partial class SimulatInterview
     {

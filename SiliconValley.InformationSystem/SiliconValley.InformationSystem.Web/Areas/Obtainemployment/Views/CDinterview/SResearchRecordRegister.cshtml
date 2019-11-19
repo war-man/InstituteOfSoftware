@@ -3,7 +3,7 @@
     Layout = null;
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity
-@model SurveyRecords
+@model CDInterview
 <!DOCTYPE html>
 
 <html>
@@ -75,32 +75,11 @@
                                 </div>
                             </div>
 
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                    <label class="layui-form-label lad">自评等级:</label>
-                                    <div class=" radiodiv">
-                                        <input type="radio" name="SelfRating" value="A" title="A" checked>
-                                        <input type="radio" name="SelfRating" value="B" title="B">
-                                        <input type="radio" name="SelfRating" value="C" title="C">
-                                        <input type="radio" name="SelfRating" value="D" title="D">
-                                    </div>
-                                </div>
-                            </div>
+
 
                             <div class="layui-row layui-form-item">
                                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                    <label class="layui-form-label lad">调研等级:</label>
-                                    <div class=" radiodiv">
-                                        <input type="radio" name="SurRating" value="A" title="A" checked>
-                                        <input type="radio" name="SurRating" value="B" title="B">
-                                        <input type="radio" name="SurRating" value="C" title="C">
-                                        <input type="radio" name="SurRating" value="D" title="D">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                    <label class="layui-form-label lad">选择专业:</label>
+                                    <label class="layui-form-label lad">专业列表:</label>
                                     <div class=" radiodiv" id="radiodivlist">
 
                                     </div>
@@ -108,39 +87,12 @@
 
                             </div>
 
+
                             <div class="layui-row layui-form-item">
                                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                    <label class="layui-form-label lad">老师评语:</label>
+                                    <label class="layui-form-label lad"> 谈话内容:</label>
                                     <div class="layui-input-inline">
-                                        <textarea placeholder="请输入内容" lay-verify="required" name="EmpStaffComments" class="layui-textarea mytext"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                    <label class="layui-form-label lad">就业期望:</label>
-                                    <div class="layui-input-inline">
-                                        <textarea placeholder="请输入内容" lay-verify="required" name="EmpExpectations" class="layui-textarea mytext"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-
-                                    <label class="layui-form-label lad"> 掌握技术:</label>
-                                    <div class="layui-input-inline">
-                                        <textarea placeholder="请输入内容" lay-verify="required" name="MasterTechnology" class="layui-textarea mytext"></textarea>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-
-                                    <label class="layui-form-label lad"> 实践经验:</label>
-                                    <div class="layui-input-inline">
-                                        <textarea placeholder="请输入内容" lay-verify="required" name="PracticalExperience" class="layui-textarea mytext"></textarea>
-
+                                        <textarea placeholder="请输入内容" name="CDIntContent" class="layui-textarea mytext"></textarea>
                                     </div>
                                 </div>
 
@@ -154,6 +106,7 @@
                                 </div>
 
                             </div>
+
                             <div class="layui-row layui-form-item">
                                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                     <div class="layui-input-block">
@@ -179,7 +132,7 @@
         <input type="radio" lay-filter="vvv" name="StudentNumber" value="{{=StudentNumber}}" title="{{=Name}}" {{=checked}}>
     </script>
     <script type="text/template" id="muban1">
-        <input type="radio" name="WantSpceID" value="{{=Id}}" title="{{=SpecialtyName}}" {{=checked}}>
+        <input type="radio" name="MajorID" value="{{=Id}}" title="{{=SpecialtyName}}" {{=checked}}>
     </script>
     <script src="~/Scripts/underscore.js"></script>
     <script>
@@ -197,7 +150,7 @@
             function loaddata() {
 
                 $.ajax({
-                    url: '/Obtainemployment/SResearchRecord/getmudata',
+                    url: '/Obtainemployment/CDinterview/getmudata',
                     type: 'GET',
                     async: false,//设置按钮是否禁用
                     data: { param0: classnumber },
@@ -283,7 +236,7 @@
                 var param0 = data.field;
                 console.log(param0);
                 $.ajax({
-                    url: '/Obtainemployment/SResearchRecord/SResearchRecordRegister',
+                    url: '/Obtainemployment/CDinterview/SResearchRecordRegister',
                     type: 'POST',
                     data: {param0:param0},
                     success: function (successdata) {

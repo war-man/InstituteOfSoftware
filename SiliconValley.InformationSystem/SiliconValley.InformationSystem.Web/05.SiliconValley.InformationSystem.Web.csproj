@@ -90,6 +90,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -226,8 +227,10 @@
     <Compile Include="Areas\Dormitory\Controllers\StudentRoomDetailsController.cs" />
     <Compile Include="Areas\Dormitory\DormitoryAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\BusinessManagementController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\CDinterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
@@ -614,6 +617,9 @@
     <Content Include="Areas\Obtainemployment\Views\web.config" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordRegister.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\SResearchRecordRegister.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SimulatInterviewIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

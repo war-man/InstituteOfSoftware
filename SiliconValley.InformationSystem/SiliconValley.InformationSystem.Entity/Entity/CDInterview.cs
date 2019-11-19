@@ -13,17 +13,43 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// CD访谈
+    /// </summary>
     [Table("CDInterview")]
     public partial class CDInterview
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> SurID { get; set; }
+
+        /// <summary>
+        /// 访谈内容
+        /// </summary>
         public string CDIntContent { get; set; }
-        public Nullable<System.DateTime> CDIntDate { get; set; }
-        public Nullable<int> MajorID { get; set; }
+        /// <summary>
+        /// 记录时间
+        /// </summary>
+        public System.DateTime CDIntDate { get; set; }
+        /// <summary>
+        /// 选择的专业id
+        /// </summary>
+        public int MajorID { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remark { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
+        public bool IsDel { get; set; }
+        /// <summary>
+        /// 就业专员ID
+        /// </summary>
+        public int EmpStaffID { get; set; }
+        /// <summary>
+        /// 学生学号
+        /// </summary>
+        public string StudentNO { get; set; }
     }
 }

@@ -143,12 +143,15 @@
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
+    <Compile Include="Employment\CDInterviewBusiness.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="Employment\ProTeacher.cs" />
+    <Compile Include="Employment\SimulatInterviewBusiness.cs" />
+    <Compile Include="Employment\SurveyRecordsBusiness.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
     <Compile Include="FinaceBusines\CostitemsBusiness.cs" />
     <Compile Include="FinanceBusiness\FinanceModelBusiness.cs" />
