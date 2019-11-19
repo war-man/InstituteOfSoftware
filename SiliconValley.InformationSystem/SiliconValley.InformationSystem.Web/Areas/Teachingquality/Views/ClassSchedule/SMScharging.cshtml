@@ -1,0 +1,147 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SMScharging</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+    <style>
+        #container {
+            height: 400px;
+        
+        }
+    </style>
+</head>
+<body>
+    <label style="color:red;margin-left:10px;">请遵守系统规则，如{Name},删除则删除完(把花括号删除完)，请勿留一半({Na)！！！</label>
+    <div style="margin-top:20px;">
+        <form class="layui-form" action="" lay-filter="example">
+            <div class="layui-container">
+                <!-- 加载编辑器的容器 -->
+                <script id="container" name="Datailedcost"  lay-verify="required" type="text/plain">
+
+                </script>
+
+                <div class="layui-row layui-form-item" style="margin-top:84px;">
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary" id="context" >取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- 配置文件 -->
+
+    <script src="~/Areas/Teachingquality/js/ueditor/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+
+    <script src="~/Areas/Teachingquality/js/ueditor/ueditor.all.js"></script>
+
+    <!-- 实例化编辑器 -->
+    <script type="text/javascript">
+        //初始化编辑框
+        function conta() {
+            var ue = UE.getEditor('container', {
+                toolbars: [
+                    ['watermark', '|', 'macros', '|', 'formatcontent', '|', 'adwordfilter', '|', 'fileupload', '| ', 'camnpr', '|', 'che', '|', 'stuid', '|']
+                ],
+                labelMap: {
+                    'watermark': '学生姓名', 'macros': '阶段', 'formatcontent': '总额',
+                    'adwordfilter': '欠费', 'fileupload': '班主任姓名', 'camnpr': '班主任电话', 'che': '班级', 'stuid': '学员学号'
+                },
+
+                maximumWords: 1000,
+
+            });
+        }
+        //ViewBag.horetem
+        conta();
+        //给编辑器赋值
+        var content = '@Html.Raw(ViewBag.horetem)';
+        $("#container").text(content);
+        //学号
+        UE.commands['stuid'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{Stidentid}}'); return true;
+            }
+        };
+        //班级
+        UE.commands['che'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{ClassName}}'); return true;
+            }
+        };
+        //学生姓名
+        UE.commands['watermark'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{Name}}'); return true;
+            }
+        };
+        UE.commands['macros'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{NextStageID}}'); return true;
+            }
+        };
+        UE.commands['formatcontent'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{ShouldJiao}}'); return true;
+            }
+        };
+        UE.commands['adwordfilter'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{Surplus}}'); return true;
+            }
+        };
+        UE.commands['fileupload'] = {
+            execCommand: function () {
+                this.execCommand('insertHtml', '{{HeadmasterName}}'); return true;
+            }
+        };
+      
+       
+        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+
+            var layer = layui.layer;
+            var form = layui.form;
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                //layer.alert(JSON.stringify(data.field), {
+                //    title: '最终的提交信息'
+                //})
+                //return false;
+
+                var datas = data.field;
+                // datas.Datailedcost;
+                //  datas.Datailedcost=  UE.getEditor('container').getContentTxt();
+                if (datas.Datailedcost != "") {
+                    ajaxUniom("/Teachingquality/ClassSchedule/SMScharging", datas);
+                } else {
+                    Errye("该编辑器内容不能为空！");
+                }
+             
+            
+            });
+            //取消
+            $("#context").click(function () {
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关
+            });
+        });
+      
+    </script>
+    <script>
+        
+    </script>
+</body>
+</html>

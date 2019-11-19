@@ -19,6 +19,8 @@ using System.Web.Script.Serialization;
 using SiliconValley.InformationSystem.Business.EnroExamination_Business;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Business.EducationalBusiness;
+using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -45,6 +47,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         HeadmasterBusiness Hadmst = new HeadmasterBusiness();
         //成考管理
         EnroExaminationBusiness enroExaminationBusiness = new EnroExaminationBusiness();
+        //短信模板
+        ShortmessageBusiness shortmessageBusiness = new ShortmessageBusiness();
         // GET: Teachingquality/ClassSchedule
         //主页面
         public ActionResult Index()
@@ -116,7 +120,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 IsDelete = a.IsDelete,
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
-                Major_Id = Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
+                Major_Id = a.Major_Id==null?"暂无专业": Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
                 HeadmasterName= Hadmst.ClassHeadmaster(a.ClassNumber)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.ClassNumber).EmpName,
                 IsBool = Dismantle.GetList().Where(c=>c.IsDelete==false&&c.FormerClass==a.ClassNumber).FirstOrDefault()==null?"正常":"不可使用",
                  stuclasss = Stuclass.GetList().Where(c=>c.ClassID==a.ClassNumber&&c.CurrentClass==true).Count()//专业
@@ -143,13 +147,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
          [HttpGet]
         public ActionResult AddClassSchedule()
         {
-          
+            //公共类库
+            BaseDataEnumManeger baseDataEnumManeger = new BaseDataEnumManeger();
+            //GetsameFartherData
             //专业课时段
-            ViewBag.BaseDataEnum_Id = BanseDatea.GetList().Select(a => new SelectListItem { Text = a.Name, Value = a.Id.ToString() });
+            ViewBag.BaseDataEnum_Id = baseDataEnumManeger.GetsameFartherData("上课时间类型").Select(a => new SelectListItem { Text = a.Name, Value = a.Id.ToString() });
             //专业
             ViewBag.Major_Id = Techarcontext.GetList().Select(a => new SelectListItem { Text = a.SpecialtyName, Value = a.Id.ToString() });
                 //阶段
-                ViewBag.grade_Id = Grandcontext.GetList().Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
+          ViewBag.grade_Id = Grandcontext.GetList().Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
             return View();
         }
         //添加班级数据
@@ -405,21 +411,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        public ActionResult SMScharging()
+        {
+            var x = shortmessageBusiness.FineShortmessage("学费催费");
+            ViewBag.horetem = x == null ? "" : x.content;
+            return View();
+        }
+        /// <summary>
+        /// 短信模板
+        /// </summary>
+        /// <param name="Datailedcost">内容</param>
+        /// <returns></returns>
+        [HttpPost]
+       [ValidateInput(false)]
+        public ActionResult SMScharging(string Datailedcost)
+        {
+            // 引入序列化
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+         //   string str = Datailedcost.Substring(3, Datailedcost.Length - 7);
+            //Replace("Name", "替换").Replace("NextStageID","S2");
+            // 序列化
+            // var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
+            //return dbtext.SMScharging(personlist);
+            return Json(dbtext.EntiShortmessage(Datailedcost), JsonRequestBehavior.AllowGet);
+
+        }
         /// <summary>
         /// 短信催费
         /// </summary>
-        /// <param name="Datailedcost">序列化集合对象</param>
+        /// <param name="Datailedcost">字符串集合数据</param>
         /// <returns></returns>
-        public string SMScharging(string Datailedcost)
+        public ActionResult SendoutSMScharging(string Datailedcost)
         {
-           // 引入序列化
-           JavaScriptSerializer serializer = new JavaScriptSerializer();
-          
-           // 序列化
-             var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
-            return dbtext.SMScharging(personlist);
-
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            var personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
+            return Json(dbtext.SMScharging(personlist), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult PhoneSMS()
+        {
+            string str = "<p>湖南硅谷高科软件学员逾期缴费学员通知：</p><p>{Name}家长：您好！经财务核查，您孩子{NextStageID}阶段升学费用逾期未缴，应交{ShouldJiao}元，欠费{Surplus}元。请您于本周内经财务办理缴费手续，逾期不缴教务处将根据学员管理规定予以听课处理。感谢您的配合与理解！</p><p>班主任：{HeadmasterName}&nbsp; 电话：{Phone}</p><p><br/></p>";
+             dbtext.PhoneSMS("15073315702",str);
+            return null;
+        }
     }
 }

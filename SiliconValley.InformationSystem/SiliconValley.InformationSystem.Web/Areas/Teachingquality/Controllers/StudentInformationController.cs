@@ -389,7 +389,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     studentInformation.Password = x.Password;
                     studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
                     studentInformation.InsitDate = x.InsitDate;
-                   
+                    studentInformation.IsDelete = false;
                     dbtext.Update(studentInformation);
                     result = new SuccessResult();
                         result.Msg = "修改成功";

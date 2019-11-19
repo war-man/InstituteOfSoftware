@@ -103,7 +103,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 }
                 proBedtimeStudentsView.StudentNmber = obj.StudentNumber;
                 proBedtimeStudentsView.SutdentName = obj.Name;
-                proBedtimeStudentsView.Sex = obj.Sex;
+                proBedtimeStudentsView.Sex = (bool)obj.Sex;
 
                 var obj0 = dbproScheduleForTrainees.GetTraineesByStudentNumber(obj.StudentNumber);
                 if (obj0 != null)

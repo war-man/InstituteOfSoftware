@@ -40,11 +40,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 专业id
         /// </summary>
-        public Nullable<int> Major_Id { get; set; }
+        public int ?Major_Id { get; set; }
         /// <summary>
         /// 阶段id
         /// </summary>
-        public Nullable<int> grade_Id { get; set; }
+        public int grade_Id { get; set; }
         /// <summary>
         /// 枚举 1是上午
         /// </summary>

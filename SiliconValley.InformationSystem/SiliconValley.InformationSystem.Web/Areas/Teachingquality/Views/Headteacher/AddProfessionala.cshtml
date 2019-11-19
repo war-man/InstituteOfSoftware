@@ -81,14 +81,27 @@
 </html>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
+ 
     layui.use(['form', 'layedit', 'laydate', 'upload', 'layer'], function () {
 
         var form = layui.form
             , layer = layui.layer
             , layedit = layui.layedit
             , laydate = layui.laydate;
+
+        //日期正则
+        var curDate = new Date();
+        var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
         laydate.render({
             elem: '#TrainingDate'
+            , format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var endTime = new Date(value).getTime();
+                if (endTime > curDate.getTime()) {
+                    layer.msg('结束时间不能大于当前时间');
+                    $('#TrainingDate').val(curYearMonthrDay);
+                }
+            }
         });
 
         var $ = layui.jquery

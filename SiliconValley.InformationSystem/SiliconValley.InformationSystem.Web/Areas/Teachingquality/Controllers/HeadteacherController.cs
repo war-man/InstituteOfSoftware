@@ -151,6 +151,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return View(dbtext.FineProfessionala(id));
         }
+        /// <summary>
+        /// 班主任带班分布图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Teamleaderdistribution()
+        {
+           ViewBag.ListTeam= Newtonsoft.Json.JsonConvert.SerializeObject(dbtext.ListTeamleaderdistributionView());
+            ViewBag.ListTeamleaderdistributionView = dbtext.ListTeamleaderdistributionView();
+            return View();
+        }
         public string Text()
         {
           

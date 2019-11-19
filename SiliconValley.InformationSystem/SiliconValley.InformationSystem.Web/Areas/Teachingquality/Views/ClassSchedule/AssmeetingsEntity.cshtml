@@ -50,14 +50,14 @@
 
                                     @Html.HiddenFor(a => a.ID)
 
-                                    @Html.TextBoxFor(a => a.ClassNumber, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "disabled", "disabled" }, { "class", "layui-input bordel" } })
+                                    @Html.TextBoxFor(a => a.ClassNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input bordel" } })
 
                                 </div>
                             </div>
                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                                 <label class="layui-form-label">班会标题</label>
                                 <div class="layui-input-inline">
-                                    @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入班级标题" }, { "class", "layui-input width" } })
+                                    @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入班会标题" }, { "class", "layui-input width" } })
                                     
                                 </div>
                             </div>
@@ -104,13 +104,13 @@
                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                                 <label class="layui-form-label">班会内容</label>
                                 <div class="layui-input-block">
-                                    @Html.TextAreaFor(a => a.Content, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "lay-verify", "required" }, { "class", "llayui-textarea Nation" } })
+                                    @Html.TextAreaFor(a => a.Content, new Dictionary<string, object>() { { "placeholder", "请输入班会内容" }, { "lay-verify", "required|MyText" }, { "class", "llayui-textarea Nation" } })
                                 </div>
                             </div>
                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                                 <label class="layui-form-label">备注</label>
                                 <div class="layui-input-block">
-                                    @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入访谈标题" }, { "class", "llayui-textarea Nation" } })
+                                    @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入备注" }, { "class", "llayui-textarea Nation" } })
                                 </div>
                             </div>
 
@@ -193,6 +193,23 @@
            
         });
 
+
+        //正则表达式
+        form.verify({
+            MyText: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                   
+                        if (!/[\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*/.test(value)) {
+                            return '输入内容不规范';
+                        }
+                   
+                }
+
+            }
+
+        });
     });
 
 </script>

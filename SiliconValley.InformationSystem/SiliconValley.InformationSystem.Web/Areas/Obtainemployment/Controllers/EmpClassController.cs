@@ -60,7 +60,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 GrandName = dbempclass.GetGrandByClassNo(a.ClassNO).GrandName,
                 empclassDate = a.dirDate,
                 Remark = a.Remark,
-                SpecialtyName = dbspee.GetSpecialtyByID(dbempclass.GetClassingByID(a.ClassNO).Major_Id).SpecialtyName
+                SpecialtyName = dbspee.GetSpecialtyByID((int)dbempclass.GetClassingByID(a.ClassNO).Major_Id).SpecialtyName
             }).ToList();
             var noemplist = NoGraduation.Select(a => new EmpClassView
             {
@@ -71,7 +71,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 GrandName = dbempclass.GetGrandByID(a.grade_Id).GrandName,
                 empclassDate = null,
                 Remark = "",
-                SpecialtyName = dbspee.GetSpecialtyByID(a.Major_Id).SpecialtyName
+                SpecialtyName = dbspee.GetSpecialtyByID((int)a.Major_Id).SpecialtyName
             }).ToList();
             var resultdata = new List<EmpClassView>();
             switch (whyshow)

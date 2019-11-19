@@ -244,6 +244,8 @@
     <Compile Include="Entity\ScheduleForTrainees.cs" />
     <Compile Include="Entity\SchoolYearPlan.cs" />
     <Compile Include="Entity\SelfObtainRcored.cs" />
+    <Compile Include="Entity\Shortmessage.cs" />
+    <Compile Include="Entity\ShortmessageType.cs" />
     <Compile Include="Entity\ShppingDetail.cs" />
     <Compile Include="Entity\SimulatInterview.cs" />
     <Compile Include="Entity\SocialSecProportion.cs" />
@@ -384,6 +386,7 @@
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
+    <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />
     <Compile Include="ViewEntity\UninhabitedList.cs" />

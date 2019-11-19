@@ -27,7 +27,7 @@
 
                         <label class="layui-form-label title">学&nbsp;&nbsp;&nbsp;&nbsp;号</label>
                         <div class="layui-input-inline">
-                            <input type="tel" style="width:100%;" name="StudentNumberID" lay-verify="" id="StudentNumberID" autocomplete="off" class="layui-input">
+                            <input type="tel" style="width:100%;" name="StudentNumberID" lay-verify="number" id="StudentNumberID" autocomplete="off" class="layui-input">
 
                         </div>
 
@@ -38,7 +38,7 @@
 
                         <label class="layui-form-label title">谈话标题</label>
                         <div class="layui-input-inline">
-                            <input type="tel" name="InterviewTopics" lay-verify="Name" id="InterviewTopics" autocomplete="off" class="layui-input">
+                            <input type="tel" name="InterviewTopics"  id="InterviewTopics" autocomplete="off" class="layui-input">
 
                         </div>
 
@@ -124,6 +124,58 @@
                     }
                 }
             })
+            //正则表达式
+            form.verify({
+                Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                                return '姓名不能有特殊字符';
+                            }
+                            if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                                return '姓名首尾不能出现下划线\'_\'';
+                            }
+                            if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                                return '姓名只能由中文或字母组成';
+                            }
+                        }
+                    }
+
+                },//(^$)|^\d{10}$/
+                number: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /^\d/;
+                            if (!identitydocument.test(value)) {
+                                return '学号由数字组成';
+                            }
+                        }
+                    }
+
+                }
+            });
+
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#Classmeetingdate',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var endTime = new Date(value).getTime();
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#Classmeetingdate').val(curYearMonthrDay);
+                    }
+                }
+            })
+
             // 时间选择器初始化 结束时间
             laydate.render({ //结束时间
                 elem: '#qEndTime',

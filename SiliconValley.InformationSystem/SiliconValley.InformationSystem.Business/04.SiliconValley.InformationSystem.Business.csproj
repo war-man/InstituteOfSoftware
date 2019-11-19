@@ -197,6 +197,7 @@
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\OvertimeRecordManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\SalaryRaiseApplyManage.cs" />
+    <Compile Include="Shortmessage_Business\ShortmessageBusiness.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
