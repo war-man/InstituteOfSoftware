@@ -400,7 +400,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 code = "",
                 msg = "",
-                count = x.Count,
+              
                 data = x
             };
             return Json(data, JsonRequestBehavior.AllowGet);

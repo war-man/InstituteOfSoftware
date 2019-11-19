@@ -448,6 +448,21 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             return retus;
         }
 
+        public string SMScharging(List<DetailedcostView> personlist)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object listTuiton(int page, int limit, string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object ClassNameCount(string id)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// 根据班级名称获取阶段跟专业
         /// </summary>
