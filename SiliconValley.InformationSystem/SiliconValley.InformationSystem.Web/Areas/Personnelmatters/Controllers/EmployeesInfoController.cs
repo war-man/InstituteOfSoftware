@@ -280,6 +280,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 }
                 emp.IsDel = false;
+
                 empinfo.Insert(emp);
                 AjaxResultxx = empinfo.Success();
                 if (AjaxResultxx.Success) {
