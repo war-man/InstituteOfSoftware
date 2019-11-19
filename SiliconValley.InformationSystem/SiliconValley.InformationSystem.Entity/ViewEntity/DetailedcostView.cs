@@ -53,5 +53,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 班主任
         /// </summary>
         public string HeadmasterName { get; set; }
+        /// <summary>
+        /// 班主任联系电话
+        /// </summary>
+        public string Phone { get; set; }
     }
 }

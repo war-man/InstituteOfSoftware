@@ -1,7 +1,17 @@
-﻿
+﻿//月份小于10的前面加个0
+function MoDay(a) {
+    if (a < 10) {
+        return "0" + a;
+    }
+    return a;
+}
 
 
-
+//关闭弹出层
+function closeopen() {
+    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+    parent.layer.close(index); //再执行关
+}
 //弹出层
 function Popup(url, mytitle, width, hegin) {
     layui.use('layer', function () {

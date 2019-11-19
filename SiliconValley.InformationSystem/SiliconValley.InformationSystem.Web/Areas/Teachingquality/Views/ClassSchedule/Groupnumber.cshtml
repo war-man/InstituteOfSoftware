@@ -29,7 +29,7 @@
                 <label class="layui-form-label">QQ群号</label>
                 <div class="layui-input-inline">
                    
-                    @Html.TextBoxFor(a => a.QQGroupnumber, new Dictionary<string, object>() { { "placeholder", "请输入QQ群号" }, { "class", "layui-input " } })
+                    @Html.TextBoxFor(a => a.QQGroupnumber, new Dictionary<string, object>() { { "placeholder", "请输入QQ群号" },{ "lay-verify","number"}, { "class", "layui-input " } })
 
                 </div>
             </div>
@@ -62,8 +62,7 @@
         //监听提交
         form.on('submit(demo1)', function (data) {
             var db = data.field;
-            console.log(db);
-            console.log(db.QQGroupnumber);
+        
             if (db.QQGroupnumber != ""||db.WechatGroupNumber != "") {
                 $.ajax({
                     url: '/Teachingquality/ClassSchedule/GroupEntity',
@@ -120,6 +119,41 @@
             }
           
         });
+        //正则验证
+        form.verify({
+         
+        
+            number: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var identitydocument = /^\d/;
+                        if (!identitydocument.test(value)) {
+                            return '群号由数字组成';
+                        }
+                    }
+                }
+
+            },
+     
+
+        });
+
+        // 时间选择器初始化 结束时间
+        laydate.render({ //结束时间
+            elem: '#Classmeetingdate',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var endTime = new Date(value).getTime();
+                if (endTime > curDate.getTime()) {
+                    layer.msg('结束时间不能大于当前时间');
+                    $('#Classmeetingdate').val(curYearMonthrDay);
+                }
+            }
+        })
         $("#but1").click(function () {
             var index = parent.layer.getFrameIndex(window.name);
             parent.layer.close(index);

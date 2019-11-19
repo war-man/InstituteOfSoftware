@@ -1,0 +1,160 @@
+﻿
+@{
+    ViewBag.Title = "Teamleaderdistribution";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@section style{
+    <style>
+        .Title {
+            width: 200px;
+            height: 130px;
+            border: 1px solid red;
+            float: left;
+            margin-left: 10px;
+            margin-top: 10px;
+            background-position-y: -40px;
+            color: #1cc09f;
+        }
+
+        .div1 {
+            width: 700px;
+            float: left;
+            border-right: 1px solid #808080;
+            margin-left: 40px;
+            margin-top: 40px;
+        }
+
+        .round_icon {
+            width: 44px;
+            height: 44px;
+            display: flex;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .hover {
+     
+            background-image: url('/Images/班级.jpg');
+        }
+    </style>
+}
+<h2 style="color:#1cc09f;">班主任带班分布图</h2>
+    <form class="layui-form" action="">
+        <div class="layui-container">
+            <div class="layui-row layui-form-item" >
+                <div  class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label" style="width:100px;" >显示方式</label>
+                    <div class="layui-input-block">
+                        <select name="interest" lay-filter="college">
+
+                            <option value="Stage" selected="">阶段</option>
+                            <option value="HeadmasterName">班主任</option>
+                            <option value="Major">方向</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+ 
+  <div id="context">
+
+   
+</div>
+@section script{
+    <script>
+        var Team = JSON.parse('@Html.Raw(ViewBag.ListTeam)');
+        //去重
+        function unique(arr, field) {
+            var map = {};
+            var res = [];
+            for (var i = 0; i < arr.length; i++) {
+                if (!map[arr[i][field]]) {
+                    map[arr[i][field]] = 1;
+                    res.push(arr[i]);
+                }
+            }
+            return res;
+        }
+        //排序
+        function compare(prop) {
+            return function (b, a) {
+                var x1 = a[prop].toUpperCase();
+                var x2 = b[prop].toUpperCase();
+                if (x1 < x2) {
+                    return 1;
+                }
+                if (x1 > x2) {
+                    return -1;
+                }
+                return 0;
+            }
+        }
+        //加载数据
+        function Listdome(Type) {
+            var select1 = unique(Team, Type);
+          
+            var select = select1.sort(compare(Type));
+         
+            for (var i = 0; i < select.length; i++) {
+                var Name = "";
+
+                if (Type == "Stage") { Name = select[i].Stage } else if (Type == "HeadmasterName") { Name = select[i].HeadmasterName; } else { Name = select[i].Major };
+                var dome = $('<div class="div1"><div style="text-align:center;"><label style="font-size:14pt;">' + Name + '</label></div></div>');
+                for (var A = 0; A < Team.length; A++) {
+                    var TeamName = "";
+                    if (Type == "Stage") { TeamName = Team[A].Stage } else if (Type == "HeadmasterName") { TeamName = Team[A].HeadmasterName; } else { TeamName = Team[A].Major };
+                   
+                    if (Name == TeamName) {
+                        var div2 = $(' <div class="Title hover"> <div style="font-size:22pt;text-align:center;margin-top:10px;">' + Team[A].ClassName + '</div></div>');
+                        console.log(Type);
+                        if (Type == "Stage") {
+                            
+                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Major + '</div><div style="font-size:14pt;margin-top:1px;text-align:center;"><div style="position:relative;left:20px;"><img src="/Images/562108.jpg" class="round_icon" /></div> <label style="position:relative;top:-35px;left:3px;">' + Team[A].HeadmasterName + '</label></div>'));
+                        } else if (Type == "HeadmasterName") {
+
+                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Stage + '</div><div style="font-size:14pt;margin-top:5px;text-align:center;"><div style="position:relative;left:20px;"><img src="/Images/562108.jpg" class="round_icon" /></div> <label style="position:relative;top:-30px;left:10px;">' + Team[A].Major + '</label></div>'));
+                        } else {
+                         
+                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Stage + '</div><div style="font-size:14pt;margin-top:5px;text-align:center;"><div style="position:relative;left:20px;"><img src="/Images/562108.jpg" class="round_icon" /></div> <label style="position:relative;top:-30px;left:10px;">' + Team[A].HeadmasterName + '</label></div>'));
+                        }
+                     
+                        dome.append(div2);
+                    }
+
+                }
+                $("#context").append(dome);
+            }
+        }
+        //第一次加载
+        Listdome("Stage");
+        layui.use(['element', 'form','layer'], function () {
+            var element = layui.element;
+            var form = layui.form;
+            var layer = layui.layer;
+            //下拉框加载数据
+            form.on('select(college)', function (data) {
+                $($("#context").children()).remove();
+              
+                Listdome(data.value);
+              
+            });
+        });
+
+        $("body").on("mouseover",".Title",function () {
+
+            $(this).removeClass("hover")
+        });
+        $("body").on("mouseout",".Title", function () {
+            $(this).addClass("hover");
+        });
+          //双击详细
+        $("body").on("dblclick", ".Title", function () {
+            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).text();
+        });
+      
+    </script>
+}

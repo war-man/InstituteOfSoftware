@@ -36,7 +36,7 @@
                    
                     <div class="layui-row layui-form-item" style="margin-left:60px;">
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                            <label class="layui-form-label">拆分班级</label>
+                            <label class="layui-form-label">当前班级</label>
                             <div class="layui-input-inline" style="margin-top:10px;">
 
                                 <input type="text" style="border:0px;" readonly="readonly" name="FormerClass" value=" @ViewBag.ClassName" />
@@ -74,7 +74,7 @@
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                             <label class="layui-form-label">拆班原因</label>
                             <div class="layui-input-block">
-                                @Html.TextAreaFor(a => a.Reasong, new Dictionary<string, object>() { { "placeholder", "拆班原因" }, { "class", "llayui-textarea Nation" } })
+                                @Html.TextAreaFor(a => a.Reasong, new Dictionary<string, object>() { { "placeholder", "拆班原因" }, { "lay-verify", "required" }, { "class", "llayui-textarea Nation" } })
                             </div>
                         </div>
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">

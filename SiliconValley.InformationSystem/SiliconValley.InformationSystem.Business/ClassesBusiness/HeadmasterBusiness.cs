@@ -1,6 +1,8 @@
-﻿using SiliconValley.InformationSystem.Business.Common;
+﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -71,7 +73,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
         //班主任职业素养培训
         BaseBusiness<Professionala> ProfessionalaBusiness = new BaseBusiness<Professionala>();
-
+        
         //班主任离职时间
         public bool QuitEntity(string informatiees_Id)
         {
@@ -278,6 +280,22 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         public Professionala FineProfessionala(int id)
         {
             return ProfessionalaBusiness.GetEntity(id);
+        }
+        /// <summary>
+        /// 班主任带班数据
+        /// </summary>
+        /// <returns></returns>
+        public List<TeamleaderdistributionView> ListTeamleaderdistributionView()
+        {
+            //班级业务
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            return   Hoadclass.GetList().Where(a => a.IsDelete == false).Select(a => new TeamleaderdistributionView
+            {
+               HeadmasterName= employeesInfoManage.GetEntity(this.GetEntity(a.LeaderID).informatiees_Id).EmpName,
+                ClassName=a.ClassID,
+                 Stage= classScheduleBusiness.GetClassGrand(a.ClassID,222),
+                 Major= classScheduleBusiness.GetClassGrand(a.ClassID, 1)
+            }).ToList();
         }
     }
 }

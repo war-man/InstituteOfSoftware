@@ -15,7 +15,7 @@
     <style>
         .widths {
             height: 50px;
-          
+          margin-left:100px;
         }
     </style>
 </head>
@@ -30,8 +30,7 @@
 
 
                     <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2 widths">
-                        </div>
+                      
                         <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
                             <label class="layui-form-label">班级名称</label>
                             <div class="layui-input-inline">
@@ -41,25 +40,19 @@
                             <input type="text" style="display:none" id="BoolClassName" />
                             <label style="color:red;line-height:37px;display:none;"id="labClassName">班级名称重复</label></div>
                         </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2 widths">
-                        </div>
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths" layui-col-md6">
+                      
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
                             <label class="layui-form-label">阶段</label>
                             <div class="layui-input-inline">
 
-                                @Html.DropDownListFor(a => a.grade_Id, ViewBag.grade_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" } })
+                                @Html.DropDownListFor(a => a.grade_Id, ViewBag.grade_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" },{ "lay-filter", "Stage" } })
                             </div>
                         </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2 widths">
+                        
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths" style="display:none;" id="domes">
+                         
                         </div>
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
-                            <label class="layui-form-label">专业</label>
-                            <div class="layui-input-inline">
-                                @Html.DropDownListFor(a => a.Major_Id, ViewBag.Major_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" } })
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2 widths">
-                        </div>
+                        
                         <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
                             <label class="layui-form-label">专业课时段</label>
                             <div class="layui-input-inline">
@@ -85,6 +78,15 @@
     </div>
 </body>
 </html>
+<script type="text/template" id="studenthtml">
+    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+        <label class="layui-form-label">专业</label>
+        <div class="layui-input-inline">
+            @Html.DropDownListFor(a => a.Major_Id, ViewBag.Major_Id as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" } })
+        </div>
+    </div>
+</script>
+<script src="~/Scripts/underscore.js"></script>
 <script>
     layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
 
@@ -99,7 +101,15 @@
 
             }
         });
-
+        //这个是专业是否显示
+        function Tuition() {
+            $($("#domes").children()).remove();
+            $("#domes").css("display", "block");
+            var templates = _.template($("#studenthtml").html());
+            var dates = templates({});
+            $("#domes").append($(dates));
+            form.render();
+        }
         //监听提交
         form.on('submit(demo1)', function (data) {
             //layer.alert(JSON.stringify(data.field), {
@@ -201,6 +211,19 @@
           
             }
 
+        });
+
+        //监听阶段下拉框
+        form.on('select(Stage)', function (data) {
+            if ($(this).text() != "S1" && $(this).text() != "Y1") {
+                console.log("成功");
+                console.log($(this).text());
+                Tuition();
+            } else {
+                console.log("aaa");
+                $($("#domes").children()).remove();
+                $("#domes").css("display", "none");
+            }
         });
     });
 </script>

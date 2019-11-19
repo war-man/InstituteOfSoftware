@@ -15,7 +15,7 @@ using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.FinaceBusines;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
-
+using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
@@ -50,6 +50,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         HeadmasterBusiness Hadmst = new HeadmasterBusiness();
         //学员信息
         StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+        //短信模板
+        ShortmessageBusiness shortmessageBusiness = new ShortmessageBusiness();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -464,7 +466,16 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
             if (type == 1)
             {
-                return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
+                Specialty find_s = Techarcontext.GetEntity(CLaaNuma.Major_Id);
+                if (find_s != null)
+                {
+                    return find_s.SpecialtyName;
+                }
+                else
+                {
+                    return "无";
+                }
+
             }
             else
             {
@@ -492,6 +503,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 detailedcostView.Stidentid = item.StuNameID;
                 detailedcostView.Sex = item.Sex == false ? "女" : "男";
                 detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName).EmpName;
+                detailedcostView.Phone = Hadmst.ClassHeadmaster(ClassName).Phone;
                 lisrDetaild.Add(detailedcostView);
             }
             lisrDetaild = lisrDetaild.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
@@ -567,15 +579,27 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public string SMScharging(List<DetailedcostView> Datailedcost)
         {
             string count = "";
+          var fine=  shortmessageBusiness.FineShortmessage("学费催费").content;
             foreach (var item in Datailedcost)
             {
                 //电话Familyphone
                 var student = studentInformationBusiness.GetEntity(item.Stidentid);
-                var msmTexts = item.Name + student.Guardian.Split(',')[1] + "您好：您的孩子有" + item.NextStageID + "升学费用未交齐，应交" + item.ShouldJiao + "元，未交" + item.Surplus +
-                    "元，已交" + item.Amountofmoney + "元。请您尽快交齐，否则学校将给您的孩子做停课处理！有问题请联系：" + item.HeadmasterName + "班主任";
-                count = PhoneSMS(student.Familyphone, msmTexts);
+               var msmTexts= fine.Replace("{{Name}}", item.Name).Replace("{{NextStageID}}", item.NextStageID).Replace("{{ShouldJiao}}", item.ShouldJiao.ToString()).Replace("{{Surplus}}", item.Surplus.ToString()).Replace("{{HeadmasterName}}", item.HeadmasterName).
+                    Replace("{{Phone}}", item.Phone).Replace("{{Stidentid}}", item.Stidentid).Replace("{{ClassName}}", item.ClassName);
+                string strText = System.Text.RegularExpressions.Regex.Replace(msmTexts, "<[^>]+>", "");
+                strText = System.Text.RegularExpressions.Regex.Replace(strText, "&[^;]+;", ""); 
+                count = PhoneSMS(student.Familyphone, strText);
             }
             return count;
+        }
+        /// <summary>
+        /// 添加学费催费模板
+        /// </summary>
+        /// <param name="content">内容</param>
+        /// <returns></returns>
+        public AjaxResult EntiShortmessage(string content)
+        {
+            return shortmessageBusiness.EntiShortmessage("学费催费", content);
         }
     }
 }
