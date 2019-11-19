@@ -26,6 +26,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
+    using System.Text;
+    using System.IO;
+
     public class EmployeesInfoController : Controller
     {
         // GET: Personnelmatters/EmployeesInfo
@@ -930,7 +933,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
 
 
-      
-      
+        // 图片上传
+        public string ImageUpload()
+        {
+
+            StringBuilder ProName = new StringBuilder();
+            HttpPostedFileBase file = Request.Files["Image"];
+            string fname = file.FileName; //获取上传文件名称（包含扩展名）
+            string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+            string name = Path.GetExtension(fname);//获取扩展名
+            string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/EmpImage/";//获取当前程序集下面的uploads文件夹中的文件夹目录
+            string completefilePath = DateTime.Now.ToString("yyyyMMddhhmmss") + name;//将上传的文件名称转变为当前项目名称
+            ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+            file.SaveAs(ProName.ToString());//上传文件   
+
+            return completefilePath;
+        }
+
+
     }
 }

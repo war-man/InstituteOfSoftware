@@ -52,5 +52,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Material { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+        public string Image { get; set; }
     }
 }

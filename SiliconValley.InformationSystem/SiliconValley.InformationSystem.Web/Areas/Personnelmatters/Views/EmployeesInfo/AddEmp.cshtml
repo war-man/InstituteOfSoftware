@@ -124,7 +124,7 @@
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:120px;margin-left:-40px;">合同起始时间:</label>
-                        <div class="layui-input-block" style="width:320px;" >
+                        <div class="layui-input-block" style="width:320px;">
                             @Html.TextBoxFor(a => a.ContractStartTime, new Dictionary<string, object>() { { "placeholder", "yyyy-MM-dd" }, { "class", "layui-input" } })
                         </div>
                     </div>
@@ -139,25 +139,25 @@
                 </div>
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" >
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">生日:</label>
                         <div class="layui-input-inline">
-                                <input style="width:50px;height:30px;display:inline-block;" id="month" name="month" class="layui-input" lay-verify="mymonth" />
-                                <label style="margin-left:5px;display:inline-block;">  月</label>
+                            <input style="width:50px;height:30px;display:inline-block;" id="month" name="month" class="layui-input" lay-verify="mymonth" />
+                            <label style="margin-left:5px;display:inline-block;">  月</label>
                         </div>
 
-                        <div class="layui-input-inline"  style="margin-left:-120px;">
-                                <input type="text" style="width:50px;height:30px;display:inline-block;" id="day" name="day"  class="layui-input" lay-verify="myday" />
+                        <div class="layui-input-inline" style="margin-left:-120px;">
+                            <input type="text" style="width:50px;height:30px;display:inline-block;" id="day" name="day" class="layui-input" lay-verify="myday" />
                             <label style="margin-left:5px;display:inline-block;">日</label>
                         </div>
 
-                        <div class="layui-input-inline" style="margin-left:-100px;" >
+                        <div class="layui-input-inline" style="margin-left:-100px;">
                             <input type="radio" name="yinyang" value="农历" title="农历" checked>
                             <input type="radio" name="yinyang" value="阳历" title="阳历">
                         </div>
                     </div>
-                    <input type="hidden" id="Birthday"  value="Birthday"/>
-                 
+                    <input type="hidden" id="Birthday" value="Birthday" />
+
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:120px;margin-left:-60px;">身份证有效期:</label>
                         <div class="layui-input-block">
@@ -254,28 +254,44 @@
                     </div>
 
                 </div>
+
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">工作经验:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">图片:</label>
+                        <div class="layui-input-block">
+                            <input type="file" id="Image" name="Image" />
+                            <div style="border:1px solid #808080;width:400px;height:200px;">
+                                <img id="showimg" style="width:400px;height:200px;" />
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -347,6 +363,28 @@
 
 
     <script>
+        //异步读取图片并显示
+        document.querySelector("#Image").onchange = function () {
+            //1.0获取选择的文件
+            var f = this.files[0];
+            //创建文件读取器
+            var file = new FileReader();
+            //读取文件,参数代表要读取的文件
+            file.readAsDataURL(f);
+
+            //开始读取文件
+            //file.start();
+            //注意文件的读取时异步读取的
+            //要在file.onload事件中才能获取到文件的内容
+            file.onload = function (e) {
+                document.querySelector("#showimg").src = e.target.result;
+            };
+
+            //最后通过file.result属性返回读取文件的内容
+            document.querySelector("#showimg").src = file.result;
+        }
+
+
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
@@ -484,7 +522,7 @@
             //添加提交
             form.on('submit(demo1)', function (data) {
                 data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
-
+                console.log($("#Image").val());
                 $.post("/Personnelmatters/EmployeesInfo/AddEmpInfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {

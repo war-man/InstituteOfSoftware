@@ -6,8 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
+   
+
   public  class EmplSalaryEmbodyManage:BaseBusiness<EmplSalaryEmbody>
     {
         /// <summary>
@@ -19,12 +22,26 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             bool result = false;
             try
             {
-                EmplSalaryEmbody ese = new EmplSalaryEmbody();
+                EmplSalaryEmbody ese = new EmplSalaryEmbody();               
                 ese.EmployeeId = empid;
+
+                EmployeesInfoManage empmanage = new EmployeesInfoManage();
+                var emp=empmanage.GetEntity(empid);
+                ese.BaseSalary = 2000;
+                ese.PerformancePay = 0;
+                if (emp.ProbationSalary != null)
+                {
+                    ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                }
+                else {
+                    ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                }
+
+
                 this.Insert(ese);
                 result = true;
                 BusHelper.WriteSysLog("工资体系表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
-
+                
             }
             catch (Exception ex)
             {
