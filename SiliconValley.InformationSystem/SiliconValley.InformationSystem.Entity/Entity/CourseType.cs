@@ -9,6 +9,7 @@
 
 namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -21,6 +22,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string TypeName { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
+
     }
 }

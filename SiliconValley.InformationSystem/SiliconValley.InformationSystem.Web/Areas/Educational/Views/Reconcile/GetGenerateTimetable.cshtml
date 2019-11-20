@@ -1,0 +1,191 @@
+﻿
+@{
+    ViewBag.Title = "GetGenerateTimetable";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@section style{
+    <style>
+      th{
+      width:195px;
+      text-align:center;
+      border:1px solid black;
+      height:40px;
+      }
+        #mytable{
+        z-index:3;
+        }
+    </style>
+    }
+    <div id="table_div">
+        <table id="mytable">
+            <thead>
+                <tr style="text-align:center"><th colspan="10"><span>2019年11月19号</span></th><th><span>星期二</span></th></tr>
+            </thead>
+            <tr>
+                <th>午别</th>
+                <th>课时</th>
+                @{
+                    List<SelectListItem> s_list = ViewBag.classroom_all as List<SelectListItem>;
+                    foreach (SelectListItem item in s_list)
+                    {
+                        <th>@item.Text</th>
+                    }
+                }
+            </tr>
+
+
+
+            <tr>
+                <th rowspan="4">
+                    上午
+                </th>
+                <th rowspan="2">
+                    一二节
+                </th>
+                @{
+                    List<AnPaiData> anpai_list = ViewBag.mongingOne as List<AnPaiData>;
+                    foreach (AnPaiData item in anpai_list)
+                    {
+                        <th>@item.ClassName</th>
+                    }
+                }
+            </tr>
+            <tr>
+                @{
+                    foreach (AnPaiData item in anpai_list)
+                    {
+                        if (item.ClassName != null)
+                        {
+                            <th><span>@item.NeiRong</span><span>/</span><span>@item.Teacher</span></th>
+                        }
+                        else
+                        {
+                            <th></th>
+                        }
+
+                    }
+                }
+            </tr>
+            <tr>
+                <th rowspan="2">
+                    三四节
+                </th>
+                @{
+                    List<AnPaiData> anpai_list2 = ViewBag.mongingTwo as List<AnPaiData>;
+                    foreach (AnPaiData item in anpai_list2)
+                    {
+                        <th>@item.ClassName</th>
+                    }
+                }
+            </tr>
+            <tr>
+                @{
+                    foreach (AnPaiData item in anpai_list2)
+                    {
+                        if (item.ClassName != null)
+                        {
+                            <th><span>@item.NeiRong</span><span>/</span><span>@item.Teacher</span></th>
+                        }
+                        else
+                        {
+                            <th></th>
+                        }
+
+                    }
+                }
+            </tr>
+            <tr>
+                <th rowspan="4">
+                    下午
+                </th>
+                <th rowspan="2">
+                    一二节
+                </th>
+                @{
+                    List<AnPaiData> anpai_list3 = ViewBag.afternoonOne as List<AnPaiData>;
+                    foreach (AnPaiData item in anpai_list3)
+                    {
+                        <th>@item.ClassName</th>
+                    }
+                }
+            </tr>
+            <tr>
+                @{
+                    foreach (AnPaiData item in anpai_list3)
+                    {
+                        if (item.ClassName != null)
+                        {
+                            <th><span>@item.NeiRong</span><span>/</span><span>@item.Teacher</span></th>
+                        }
+                        else
+                        {
+                            <th></th>
+                        }
+
+                    }
+                }
+            </tr>
+            <tr>
+                <th rowspan="2">
+                    三四节
+                </th>
+                @{
+                    List<AnPaiData> anpai_list4 = ViewBag.afternoonTwo as List<AnPaiData>;
+                    foreach (AnPaiData item in anpai_list4)
+                    {
+                        <th>@item.ClassName</th>
+                    }
+                }
+            </tr>
+            <tr>
+                @{
+                    foreach (AnPaiData item in anpai_list4)
+                    {
+                        if (item.ClassName != null)
+                        {
+                            <th><span>@item.NeiRong</span><span>/</span><span>@item.Teacher</span></th>
+                        }
+                        else
+                        {
+                            <th></th>
+                        }
+
+                    }
+                }
+            </tr>
+            <tr>
+                <th rowspan="2">
+                    晚自习
+                </th>
+                <th>
+                    晚一
+                </th>
+                @{
+                   
+                    foreach (AnPaiData item in anpai_list4)
+                    {
+                        <th></th>
+                    }
+                }
+            </tr>
+            <tr>
+                <th>
+                    晚二
+                </th>
+                @{
+
+                    foreach (AnPaiData item in anpai_list4)
+                    {
+                        <th></th>
+                    }
+                }
+            </tr>
+        </table>
+    </div>
+@section script{
+    <script>
+
+    </script>
+    }
+

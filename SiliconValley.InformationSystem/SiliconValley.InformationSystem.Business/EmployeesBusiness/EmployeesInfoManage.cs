@@ -232,8 +232,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                 employees = this.GetList().Where(e => e.EmpName == name).FirstOrDefault();
             }
             return employees;
-        }
-
+        }       
         #endregion
     }
 }

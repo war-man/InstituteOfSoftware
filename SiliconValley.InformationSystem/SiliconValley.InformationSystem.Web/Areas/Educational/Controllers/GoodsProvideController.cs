@@ -8,7 +8,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
-    using System.Transactions;
+
     public class GoodsProvideController : Controller
     {        
             public static readonly GoodsProvideManeger GoodsProvide_Entity = new GoodsProvideManeger();

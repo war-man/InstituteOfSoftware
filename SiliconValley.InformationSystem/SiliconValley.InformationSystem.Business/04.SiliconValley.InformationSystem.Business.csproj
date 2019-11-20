@@ -212,6 +212,7 @@
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TalentDemandPlanBusiness\TalentDemandPlanManage.cs" />
     <Compile Include="TeachingDepBusiness\ConversationBusiness.cs" />
+    <Compile Include="TeachingDepBusiness\GoodSkillManeger.cs" />
     <Compile Include="TeachingDepBusiness\GrandBusiness.cs" />
     <Compile Include="TeachingDepBusiness\ProjectBusiness.cs" />
     <Compile Include="TeachingDepBusiness\SatisfactionSurveyBusiness.cs" />

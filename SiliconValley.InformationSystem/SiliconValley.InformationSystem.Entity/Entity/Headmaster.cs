@@ -35,7 +35,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 添加时间
         /// </summary>
         public Nullable<System.DateTime> AddTime { get; set; }
-
+        /// <summary>
+        /// true--表示该班主任可以上职素课，false--表示班主任不可以上职素课
+        /// </summary>
+        public Nullable<bool> IsAttend
+        {
+            get;set;
+        }
 
     }
 }
