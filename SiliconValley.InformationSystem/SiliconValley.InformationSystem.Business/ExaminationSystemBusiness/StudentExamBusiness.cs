@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 {
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using System.Xml;
 
 
@@ -22,7 +23,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         private readonly ChoiceQuestionBusiness db_choiceQuestion;
 
-        private readonly BaseBusiness<GrandCourse> db_grandCourse;
+        private readonly CourseBusiness db_Course;
 
         private readonly AnswerQuestionBusiness db_answerQuextion;
 
@@ -32,7 +33,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             db_exam = new ExaminationBusiness();
             db_candidateinfo = new BaseBusiness<CandidateInfo>();
             db_choiceQuestion = new ChoiceQuestionBusiness();
-            db_grandCourse = new BaseBusiness<GrandCourse>();
+            db_Course = new CourseBusiness();
             db_answerQuextion = new AnswerQuestionBusiness();
             db_computerQuestion = new ComputerTestQuestionsBusiness();
         }
@@ -49,7 +50,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             foreach (var item in sturdentexanmlist)
             {
-                resultlist.Add(examlist.Where(d => d.ID == item.Examination).FirstOrDefault());
+                var tempobj = examlist.Where(d => d.ID == item.Examination).FirstOrDefault();
+                if(tempobj !=null)
+
+                    resultlist.Add(tempobj);
+
             }
             return resultlist;
 
@@ -61,9 +66,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// 随机获取选择题题目  //升学考试使用本函数抽题目
         /// </summary>
         /// <param name="co unt">个数</param>
-        /// <param name="Level">难度级别</param>
+        /// <param name="kecheng">课程（当为阶段考试id时候传入该参数）</param>
         /// <returns></returns>
-        public List<ChoiceQuestionTableView> ProductChoiceQuestion(Examination examination)
+        public List<ChoiceQuestionTableView> ProductChoiceQuestion(Examination examination,int kecheng)
         {
 
             List<ChoiceQuestionTableView> questionlist = new List<ChoiceQuestionTableView>();
@@ -78,10 +83,28 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item));
             }
-            //筛选出S2的课程
+            List<Curriculum> sourchlist = new List<Curriculum>();
+            if (examview.ExamType.ExamTypeID == 1)
+            {
+                //筛选出S2的课程
 
-            var sourchlist = db_grandCourse.GetList().Where(d => d.isDel == false && d.GrandId == examview.ExamType.GrandID);
+                sourchlist = db_Course.GetList().Where(d => d.IsDelete==false == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
 
+            }
+
+            if (examview.ExamType.ExamTypeID == 2)
+            {
+
+               var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
+
+                if (course != null)
+
+                    sourchlist.Add(course);
+
+
+            }
+
+            
 
 
             //筛选题目
@@ -90,7 +113,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 foreach (var item1 in sourchlist)
                 {
 
-                    if (item.Course.CurriculumID == item1.courseId)
+                    if (item.Course.CurriculumID == item1.CurriculumID)
                     {
                         //判断是否存在
                         if (!IsContain(questionlist, item))
@@ -190,7 +213,14 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return returnlist;
         }
 
-        public List<AnswerQuestionView> productAnswerQuestion(Examination examination)
+
+        /// <summary>
+        /// 生成考试解答题
+        /// </summary>
+        /// <param name="examination"></param>
+        /// <param name="kecheng">课程(如果考试为阶段考试责需要传入此参数 否则为NULL)</param>
+        /// <returns></returns>
+        public List<AnswerQuestionView> productAnswerQuestion(Examination examination, int kecheng)
         {
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_answerQuextion.AllAnswerQuestion();
@@ -201,7 +231,27 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
             //筛选出S2的课程
 
-            var sourchlist = db_grandCourse.GetList().Where(d => d.isDel == false && d.GrandId == examview.ExamType.GrandID);
+            List<Curriculum> sourchlist = new List<Curriculum>();
+            if (examview.ExamType.ExamTypeID == 1)
+            {
+                //筛选出S2的课程
+
+                sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+
+            }
+
+            if (examview.ExamType.ExamTypeID == 2)
+            {
+
+                var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
+
+                if (course != null)
+
+                    sourchlist.Add(course);
+
+
+            }
+
             List<AnswerQuestionView> questionlist = new List<AnswerQuestionView>();
 
 
@@ -211,7 +261,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 foreach (var item1 in sourchlist)
                 {
 
-                    if (item.Course.CurriculumID == item1.courseId)
+                    if (item.Course.CurriculumID == item1.CurriculumID)
                     {
                         //判断是否存在
                         if (!IsContain(questionlist, item))
@@ -309,7 +359,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
             //筛选出S2的课程
 
-            var sourchlist = db_grandCourse.GetList().Where(d => d.isDel == false && d.GrandId == examview.ExamType.GrandID).ToList();
+            var sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
             List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
 
             //获取S2的题目
@@ -319,7 +369,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 {
                     if (!IsContain(questionlist, item))
                     {
-                        if (item.Course.CurriculumID == item1.courseId)
+                        if (item.Course.CurriculumID == item1.Grand_Id) 
                         {
                             questionlist.Add(item);
                         }
@@ -381,14 +431,30 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 return new List<ChoiceQuestionTableView>();
             }
             Random random = new Random();
-            List<ChoiceQuestionTableView> result = new List<ChoiceQuestionTableView>();
 
+            List<ChoiceQuestionTableView> result = new List<ChoiceQuestionTableView>();
 
 
             for (int i = 0; i < count; i++)
             {
                 int index = random.Next(0, source.Count);
-                result.Add(source[index]);
+
+                var question = source[index];
+
+                //判断是否重复
+                if (this.IsContain(result, question))
+                {
+                    //如果已经存在
+
+                    i--;
+
+                }
+                else
+                {
+                    result.Add(question);
+                }
+
+
             }
 
             return result;
@@ -408,7 +474,21 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             for (int i = 0; i < count; i++)
             {
                 int index = random.Next(0, source.Count);
-                result.Add(source[index]);
+                var question = source[index];
+
+                //判断是否重复
+                if (this.IsContain(result, question))
+                {
+                    //如果已经存在
+
+                    i--;
+
+                }
+                else
+                {
+                    result.Add(question);
+                }
+
             }
 
             return result;
@@ -702,6 +782,29 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         }
 
 
+        /// <summary>
+        /// 获取学员的历史考试数据
+        /// </summary>
+        /// <param name="studentNo"></param>
+        /// <returns></returns>
+        public List<Examination> StuExaminationEnd(string studentNo)
+        {
+           var candlist = db_exam.AllCandidateInfo().Where(d => d.StudentID == studentNo).ToList();
+
+            List<Examination> resultlist = new List<Examination>();
+
+            foreach (var item in candlist)
+            {
+               var exam = db_exam.AllExamination().Where(d => d.ID == item.Examination).FirstOrDefault();
+
+                if (exam != null)
+                    resultlist.Add(exam);
+            }
+
+            return resultlist;
+
+
+        }
 
     }
 }

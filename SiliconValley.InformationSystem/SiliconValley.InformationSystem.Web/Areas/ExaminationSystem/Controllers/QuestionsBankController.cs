@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
-    using ICSharpCode.SharpZipLib.Zip;
+   
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;

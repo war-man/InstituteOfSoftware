@@ -19,13 +19,32 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int Id { get; set; }
         public Nullable<System.DateTime> ApplyDate { get; set; }
+        /// <summary>
+        /// 申请人
+        /// </summary>
         public Nullable<int> TeacherID { get; set; }
         public string Reason { get; set; }
+
+        /// <summary>
+        /// 上课老师
+        /// </summary>
         public Nullable<int> AttendClassTeacher { get; set; }
         public string ClassNumber { get; set; }
         public Nullable<System.DateTime> BeforDate { get; set; }
         public Nullable<System.DateTime> AfterDate { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+
+        /// <summary>
+        /// 上午 下午
+        /// </summary>
+        public string BefoDaterSpecific { get; set; }
+
+        /// <summary>
+        /// 上午 下午
+        /// </summary>
+        public string AfterDateSpecific { get; set; }
+
+
     }
 }

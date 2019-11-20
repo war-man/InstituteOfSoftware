@@ -91,13 +91,30 @@
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
+    <Compile Include="EducationalBusiness\BaseDataEnumManeger.cs" />
+    <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
+    <Compile Include="EducationalBusiness\BreakManeger.cs" />
+    <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
+    <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
+    <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
+    <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
+    <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\AttendanceInfoManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
+    <Compile Include="EmpSalaryManagementBusiness\MonthlySalaryRecordManage.cs" />
     <Compile Include="EmpTransactionBusiness\EmpTransactionManage.cs" />
+    <Compile Include="EnrollmentBusiness\EnrollmentBusinesse.cs" />
     <Compile Include="ExaminationSystemBusiness\AnswerQuestionBusiness.cs" />
     <Compile Include="ExaminationSystemBusiness\ChoiceQuestionBusiness.cs" />
     <Compile Include="ExaminationSystemBusiness\ComputerTestQuestionsBusiness.cs" />
@@ -131,9 +148,14 @@
     <Compile Include="RecruitPhoneTraceBusiness\RecruitPhoneTraceManage.cs" />
     <Compile Include="RegionManage\RegionManeges.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\ApplyForFullMemberManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\DaysOffManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\DimissionApplyManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\JobTransferApplyManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveRequestManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\LeaveTypeManage.cs" />
     <Compile Include="SchoolAttendanceManagementBusiness\MoveTypeManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\OvertimeRecordManage.cs" />
+    <Compile Include="SchoolAttendanceManagementBusiness\SalaryRaiseApplyManage.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
@@ -176,6 +198,9 @@
       <Project>{59b37762-4cc3-45cf-b910-ae11eb6ee79b}</Project>
       <Name>01.SiliconValley.InformationSystem.Util</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="NewExcel\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -158,6 +158,7 @@
     <Compile Include="Entity\ExaminationRoom.cs" />
     <Compile Include="Entity\ExamRoomDistributed.cs" />
     <Compile Include="Entity\ExamType.cs" />
+    <Compile Include="Entity\ExamTypeName.cs" />
     <Compile Include="Entity\FinanceModel.cs" />
     <Compile Include="Entity\Fiveroutines.cs" />
     <Compile Include="Entity\FollwingInfo.cs" />
@@ -166,10 +167,12 @@
     <Compile Include="Entity\GoodsProvide.cs" />
     <Compile Include="Entity\GoodsType.cs" />
     <Compile Include="Entity\Grand.cs" />
+    <Compile Include="Entity\GrandCourse.cs" />
     <Compile Include="Entity\GroupManagement.cs" />
     <Compile Include="Entity\Groupmembers.cs" />
     <Compile Include="Entity\HeadClass.cs" />
     <Compile Include="Entity\Headmaster.cs" />
+    <Compile Include="Entity\HeadMasterGrand.cs" />
     <Compile Include="Entity\HomeWorkFinishRate.cs" />
     <Compile Include="Entity\InStock.cs" />
     <Compile Include="Entity\InStockGoods.cs" />
@@ -186,6 +189,7 @@
     <Compile Include="Entity\MachineTestQuestionPaper.cs" />
     <Compile Include="Entity\MachTestQuesBank.cs" />
     <Compile Include="Entity\MarketChair.cs" />
+    <Compile Include="Entity\MarkingArrange.cs" />
     <Compile Include="Entity\MaterialPriceList.cs" />
     <Compile Include="Entity\Members.cs" />
     <Compile Include="Entity\MeritsCheck.cs" />
@@ -307,6 +311,17 @@
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnrollmentView.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
+    <Compile Include="ViewEntity\ExaminationRoomView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerQuestionView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetHelp.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ChoiceQuestionTableView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ComputerTestQuestionsView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeEnum.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\HeadMasterSortView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\MarkingArrangeView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\StudentIsReExamHelper.cs" />
+    <Compile Include="ViewEntity\ExaminationView.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
@@ -335,6 +350,7 @@
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
+    <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />

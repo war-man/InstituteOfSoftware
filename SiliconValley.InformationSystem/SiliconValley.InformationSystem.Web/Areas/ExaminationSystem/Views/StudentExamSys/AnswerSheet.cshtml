@@ -498,7 +498,10 @@
 
                                 if (result.ErrorCode == 200) {
 
-                                    layer.msg('成功。。', { icon: 1 });
+                                    layer.msg('成功。。', { icon: 1 }, function () {
+
+                                        window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex';
+                                    });
 
                                     layui.form.render();
                                 }

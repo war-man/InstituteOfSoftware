@@ -18,5 +18,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public EmployeesInfo Invigilator2 { get; set; }
         public string Remark { get; set; }
         public Examination Examination { get; set; }
+       
     }
 }

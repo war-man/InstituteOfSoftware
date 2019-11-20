@@ -25,6 +25,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string MajorName { get; set; }
         public string ClassName { get; set; }
         public string PositionName { get; set; }
+        
+        public string IdCard { get; set; }
 
     }
 }

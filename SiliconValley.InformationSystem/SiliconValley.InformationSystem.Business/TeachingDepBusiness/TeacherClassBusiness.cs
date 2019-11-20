@@ -101,7 +101,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             detailView.StudentNumber = student.StudentNumber;
             detailView.Telephone = student.Telephone;
             detailView.WeChat = student.WeChat;
-           
+            detailView.IdCard = student.identitydocument;
 
             //获取这个学员的当前班级
 
@@ -120,9 +120,28 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             
 
            detailView.ClassName = myclass.ClassNumber;
+            var grand =  db_grand.GetGrandByID((int)myclass.grade_Id);
 
-            detailView.GrandName = db_grand.GetGrandByID((int)myclass.grade_Id).GrandName;
-            detailView.MajorName = db_major.GetSpecialtyByID((int)myclass.Major_Id).SpecialtyName;
+            if (grand != null)
+            {
+                detailView.GrandName = grand.GrandName;
+            }
+            else
+            {
+                detailView.GrandName = "";
+            }
+
+            var marjor = db_major.GetSpecialtyByID((int)myclass.Major_Id);
+
+            if (marjor != null)
+            {
+                detailView.MajorName = marjor.SpecialtyName;
+            }
+            else
+            {
+                detailView.MajorName = "";
+            }
+            
 
 
             return detailView;

@@ -1,6 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Xml;
 
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
@@ -36,6 +38,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         private readonly BaseBusiness<HeadClass> db_headclass;
 
         private readonly GrandBusiness db_grand;
+
+        private readonly CourseBusiness db_course;
+
+        private readonly ExamScoresBusiness db_scores;
         public ExamArrangementController()
         {
             db_Paper = new ExaminationPaperBusiness();
@@ -51,6 +57,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             db_headclass = new BaseBusiness<HeadClass>();
             db_grand = new GrandBusiness();
+            db_course = new CourseBusiness();
+            db_scores = new ExamScoresBusiness();
         }
 
         // GET: ExaminationSystem/ExamArrangement
@@ -274,11 +282,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             {
                 bool Isend = db_examination.IsEnd(db_examination.AllExamination().Where(d => d.ID == item.ID).FirstOrDefault());
 
+               var examtypeview = db_examination.ConvertToExamTypeView(item.ExamType);
 
                 var temobj1 = new {
                     ID = item.ID,
                     Title = item.Title,
-                    TypeName = item.ExamType.TypeName,
+                    TypeName = examtypeview.TypeName.TypeName,
                     BeginDate = item.BeginDate,
                     TimeLimit = item.TimeLimit,
                     Remark = item.Remark,
@@ -316,7 +325,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         {
             List<ExamType> list = db_Paper.AllexamTypes();
 
-            ViewBag.ExamTypes = list;
+            List<ExamTypeView> viewlist = new List<ExamTypeView>();
+            //转换类型
+            foreach (var item in list)
+            {
+                var tempobj = db_examination.ConvertToExamTypeView(item);
+
+                if (tempobj != null)
+                    viewlist.Add(tempobj);
+            }
+            ViewBag.ExamTypes = viewlist;
+
+            //提供课程数据
+
+            ViewBag.Courselist = db_course.GetCurriculas();
+
 
             List<QuestionLevel> questionLevels = db_examination.AllQuestionLevel();
             ViewBag.QuestionLevels = questionLevels;
@@ -330,7 +353,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// <returns></returns>
         /// 
         [HttpPost]
-        public ActionResult ReleaseExamination(Examination examination)
+        public ActionResult ReleaseExamination(Examination examination, int course)
         {
 
             AjaxResult result = new AjaxResult();
@@ -340,6 +363,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 examination.ExamNo = db_examination.ProductExamNumber(examination);
 
                 db_examination.Insert(examination);
+
+                if (examination.ExamType == 2)
+                {
+                    //记录课程
+                    db_examination.ExamCouresConfigAdd(examination.ID, course);
+
+
+
+                }
+
+
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
@@ -746,6 +780,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 {
                     db_examination.subscribeExam(list, examid);
 
+                    //初始化成绩单
+
+                    foreach (var item in list)
+                    {
+                        db_scores.InitExamScores(examid, item.Key);
+                    }
+                    
+
                     result.ErrorCode = 200;
                     result.Msg = "成功";
                     result.Data = null;
@@ -793,6 +835,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 else
                 {
                     db_examination.cancelsubscribeExam(studentlist, examid);
+
+                    foreach (var item in studentlist)
+                    {
+                       var candidinfo = db_examination.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
+
+                        db_scores.RemoveExamScores(examid, candidinfo.CandidateNumber);
+
+                    }
+                    
+
                     result.ErrorCode = 200;
                     result.Msg = "成功";
                     result.Data = null;
@@ -1057,5 +1109,54 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
         }
 
+        /// <summary>
+        /// 安排座位表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ArrangeSeatingChart()
+        {
+
+            //提供考试数据
+
+            List<Examination> examinations = db_examination.NoEndExamination();
+
+            ViewBag.Exams = examinations;
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 安排座位表
+        /// </summary>
+        /// <returns></returns>
+      
+        public ActionResult ArrangeSeatingChartData(int examid)
+        {
+            AjaxResult result = new AjaxResult();
+            try
+            {
+                //生成座位表
+                var seatobj = db_examination.GenerateSeatTable(examid);
+
+                result.Data = seatobj;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+                throw;
+            }
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+
+        }
     }
 }

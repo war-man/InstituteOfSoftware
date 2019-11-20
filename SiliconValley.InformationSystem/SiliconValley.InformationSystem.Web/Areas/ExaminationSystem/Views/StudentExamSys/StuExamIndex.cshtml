@@ -87,25 +87,25 @@
         <hr />
         <ul class="hList">
             <li>
-                <a href="#click" class="menu">
+                <a href="JavaScript:void(0)" class="menu IndexView">
                     <h2 class="menu-title"><i class="layui-icon layui-icon-home"></i>首页</h2>
 
                 </a>
             </li>
             <li>
-                <a href="#click" class="menu">
+                <a href="JavaScript:void(0)" class="menu examScoreSearch">
                     <h2 class="menu-title menu-title_2nd">成绩查询</h2>
 
                 </a>
             </li>
             <li>
-                <a href="#click" class="menu">
+                <a href="JavaScript:void(0)" class="menu">
                     <h2 class="menu-title menu-title_3rd">题目练习</h2>
 
                 </a>
             </li>
             <li>
-                <a href="#click" class="menu">
+                <a href="JavaScript:void(0)" class="menu">
                     <h2 class="menu-title menu-title_4th">返回</h2>
 
                 </a>
@@ -176,6 +176,16 @@
 
         var Countdown;
 
+        //点击首页 进入首页
+
+        $(".IndexView").click(function () {
+
+
+            window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex';
+
+        });
+
+        
 
         layui.use(['form', 'util', 'layer', 'laydate'], function () {
             var util = layui.util
@@ -263,6 +273,22 @@
 
                 alert("本次考试ID为" + examid);
                 
+            });
+
+
+            //成绩查询按钮
+
+            $(".examScoreSearch").click(function () {
+
+
+                layer.open({
+                    title: "成绩查询",
+                    area: ["1200px", "300px"],
+                    type: 2,
+                    content:"/ExaminationSystem/ExamScores/StuPersonalScores"
+                    
+                });
+
             });
         });
     </script>

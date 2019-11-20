@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -33,6 +35,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         private readonly EmployeesInfoManage db_emp;
 
         private readonly ComputerTestQuestionsBusiness db_computerQuestion;
+
+        private readonly GrandBusiness db_grand;
         /// <summary>
         /// 排课业务实例
         /// </summary>
@@ -53,6 +57,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             db_reconicle = new BaseBusiness<Reconcile>();
             db_computerQuestion = new ComputerTestQuestionsBusiness();
+            db_grand = new GrandBusiness();
         }
 
         public List<Examination> AllExamination()
@@ -262,6 +267,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 view.Invigilator2 = null;
             }
 
+          
 
             view.Remark = examinationRoom.Remark;
 
@@ -306,7 +312,12 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<CandidateInfo> AllCandidateInfo(int examid)
         {
-          return db_candidateinfo.GetList().Where(d => d.Examination == examid).ToList();
+            return db_candidateinfo.GetList().Where(d => d.Examination == examid).ToList();
+        }
+
+        public List<CandidateInfo> AllCandidateInfo()
+        {
+            return db_candidateinfo.GetList();
         }
 
 
@@ -331,7 +342,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 if (tempstu == null)
                 {
                     CandidateInfo candidateInfo = new CandidateInfo();
-                    candidateInfo.CandidateNumber = examination.ExamNo.Substring(0, 5) + item.Key;
+                    candidateInfo.CandidateNumber = Guid.NewGuid().ToString();
                     candidateInfo.ComputerPaper = null;
                     candidateInfo.Examination = examid;
                     candidateInfo.IsReExam = item.Value;
@@ -371,6 +382,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 if (tempexamobj != null)
                 {
                     db_candidateinfo.Delete(tempexamobj);
+
+                    //删除成绩单
+
+                    
                 }
 
             }
@@ -569,6 +584,235 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return resutlist;
         }
 
+
+        /// <summary>
+        /// 转换模型视图
+        /// </summary>
+        /// <returns></returns>
+        public ExamTypeView ConvertToExamTypeView(ExamType examType)
+        {
+            ExamTypeView view = new ExamTypeView();
+
+            BaseBusiness<ExamTypeName> db_examtypenaem = new BaseBusiness<ExamTypeName>();
+
+            view.ID = examType.ID;
+            view.GrandID = db_grand.GetGrandByID((int)examType.GrandID);
+            view.TypeName = db_examtypenaem.GetList().Where(d => d.ID == examType.ExamTypeID).FirstOrDefault();
+
+            return view;
+        }
+
+
+        public XmlElement ExamCouresConfigAdd(int examid, int courseid)
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/ExamCourseconfig.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            //添加节点
+            var examElemet = xmlDocument.CreateElement("exam");
+            examElemet.SetAttribute("id", examid.ToString());
+
+            var courseElemt = xmlDocument.CreateElement("course");
+            courseElemt.SetAttribute("id", courseid.ToString());
+
+            examElemet.AppendChild(courseElemt);
+
+            xmlRoot.AppendChild(examElemet);
+
+            xmlDocument.Save(System.Web.HttpContext.Current.Server.MapPath("/Config/ExamCourseconfig.xml"));
+
+            return examElemet;
+            
+        }
+
+        public XmlElement ExamCourseConfigRead(int examid)
+        {
+
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/ExamCourseconfig.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            var list = xmlRoot.ChildNodes;
+
+            foreach (XmlElement item in list)
+            {
+                var id = item.Attributes["id"];
+
+                if (id.Value == examid.ToString())
+                {
+                    return item;
+                }
+            }
+
+            return null;
+        }
+
+        public XmlElement ExamCourseConfigRemove(int examid)
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/ExamCourseconfig.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            var list = xmlRoot.ChildNodes;
+
+            foreach (XmlElement item in list)
+            {
+                var id = item.Attributes["id"];
+
+                if (id.Value == examid.ToString())
+                {
+                    xmlRoot.RemoveChild(item);
+                    xmlDocument.Save(System.Web.HttpContext.Current.Server.MapPath("/Config/ExamCourseconfig.xml"));
+                    return item;
+                }
+            }
+            return null;
+
+        }
+
+
+
+        /// <summary>
+        /// 考试座位安排  返回值结构 : 匿名对象，属性> classroom(教室),seat(座位表)   seat(匿名对象) 属性> student(学生) seat(座位)
+        /// </summary>
+        /// <param name="exam">考试ID</param>
+        /// <returns></returns>
+        public List<object> GenerateSeatTable(int exam)
+
+        {
+            TeacherClassBusiness teacherClass = new TeacherClassBusiness();
+
+            List<object> resultlist = new List<object>();
+
+            BaseBusiness<Classroom> db_classRoom = new BaseBusiness<Classroom>();
+
+
+            //获取这次考试的考场
+
+           List<ExaminationRoom> examroomlist = this.AllExaminationRoom().Where(d => d.Examination == exam).ToList();
+
+            //获取参加考试的人数  
+            var candidateinfolist = this.AllCandidateInfo(exam).OrderBy(d => d.CandidateNumber).ToList() ;
+
+
+            foreach (var item in examroomlist)
+            {
+                //座位表
+                List<string> seatlist = new List<string>();
+
+               var classroom = db_classRoom.GetList().Where(d => d.Id == item.Classroom_Id).FirstOrDefault();
+
+
+                //班级能容纳的人数
+                var classroomcount = (int)classroom.Count;
+
+
+               var stulist = candidateinfolist.Take(classroomcount).ToList();
+
+
+                //将这些考生分配到教室
+
+                foreach (var item2 in stulist)
+                {
+                    var tempbuted = this.AllExamroomDistributed(exam).Where(d => d.CandidateNumber == item2.CandidateNumber).FirstOrDefault();
+
+                    if (tempbuted == null)
+                    {
+                        ExamRoomDistributed distributed = new ExamRoomDistributed();
+                        distributed.CandidateNumber = item2.CandidateNumber;
+                        distributed.ExamID = exam;
+                        distributed.ExaminationRoom = item.ID;
+                        db_examroomDistributed.Insert(distributed);
+                    }
+                    else
+                    {
+                        tempbuted.ExaminationRoom = item.ID;
+
+                        db_examroomDistributed.Update(tempbuted);
+                    }
+                }
+
+
+                //创建随机数
+                Random r = new Random();
+
+
+                for (int i = 0; i < stulist.Count; i++)
+                {
+                    //生成随机数
+                    int randomNum = r.Next(1, stulist.Count+1);
+
+
+                    string Snum = seatlist.Where(d => d == randomNum.ToString()).FirstOrDefault();
+
+                    if (Snum == null)
+                    {
+                        seatlist.Add(randomNum.ToString());
+
+                        //
+                    }
+                    else
+                    {
+                        i--;
+                    }
+
+                    
+                }
+
+                List<object> seat =  new List<object>();
+
+                for (int i = 0; i < seatlist.Count; i++)
+                {
+
+                    BaseBusiness<StudentInformation> db_student = new BaseBusiness<StudentInformation>();
+
+                   var stu = db_student.GetList().Where(d => d.StudentNumber == stulist[i].StudentID).FirstOrDefault();
+                   var stuView = teacherClass.GetStudetentDetailView(stu);
+
+                    if (stu != null)
+                    {
+                       var seatd = new
+                        {
+                            student= stuView,
+                            seat = seatlist[i]
+
+
+                        };
+
+                        seat.Add(seatd);
+
+
+                    }
+                    
+
+                }
+
+                //组装
+                 var obj = new {
+
+                    classroom= classroom,
+                    seat = seat
+                };
+                resultlist.Add(obj);
+
+
+            }
+
+            return resultlist;
+
+
+
+        }
 
     }
 }

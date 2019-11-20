@@ -1,0 +1,91 @@
+﻿
+@{
+    ViewBag.Title = "Application";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+
+    <style>
+        #mywarp {
+            width: 80%;
+            margin: 0 auto;
+            height: 600px;
+            background-color: #ffffff;
+        }
+
+        .item {
+            display: inline-block;
+            width: 200px;
+            height: 80px;
+            /*border:1px solid red;*/
+            text-align: center;
+            font-size: 15px;
+            color: gray;
+            margin-left: 50px;
+            margin-top: 100px;
+        }
+
+        SatisfactionItems span {
+            cursor: pointer;
+        }
+    </style>    
+    
+}
+
+    <div id="mywarp">
+
+        <div class="item" id="AdjustmentCourse">
+            <i class="layui-icon layui-icon-form" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>调课申请</span>
+        </div>
+
+        <div class="item" id="AddCourse">
+            <i class="layui-icon layui-icon-form" style="font-size: 50px; color: #1E9FFF;"></i>
+            <br />
+            <span>加课申请</span>
+        </div>
+
+
+    </div>
+
+@section script{
+ 
+        <script>
+            
+        $(".item").mouseover(function () {
+
+            $(this).attr("style","color:red;");
+
+        });
+
+            $(".item").mouseout(function () {
+
+            $(this).attr("style", "color:gray;");
+
+            });
+
+
+            layui.use(["layer"], function () {
+
+                var layer = layui.layer;
+
+                $("#AdjustmentCourse").click(function () {
+
+                    layer.open({
+                        type: 2,
+                        title: "调课申请",
+                        area: ["1000px", "700px;"],
+                        content:"/Teaching/Teacher/AdjustmentCourse"
+
+                    });
+
+                });
+
+            });
+       
+        </script>
+    
+ }
+
+

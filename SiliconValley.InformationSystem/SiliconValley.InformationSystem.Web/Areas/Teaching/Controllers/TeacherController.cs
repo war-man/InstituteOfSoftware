@@ -11,8 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
-
-
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
 
     [CheckLogin]
     public class TeacherController : Controller
@@ -31,6 +30,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         private readonly GrandBusiness db_grand;
 
+        
         public TeacherController()
         {
             db_teacher = new TeacherBusiness();
@@ -866,5 +866,71 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
+
+
+        public ActionResult Application()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 调课课表单
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AdjustmentCourse()
+        {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+            //获取当前登录老师的班级
+            TeacherClassBusiness db = new TeacherClassBusiness();
+           var classScadu = db.GetCrrentMyClass(teacher.TeacherID); //班级
+            ViewBag.classList = classScadu;
+
+
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 获取班级的课程
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CourseData(string classnumber, string date, string specific)
+        {
+            return null;
+        }
+
+
+        /// <summary>
+        /// 调课操作 
+        /// </summary>
+        /// <param name="convertCourse"></param>
+        /// <returns></returns>
+        /// []
+        /// 
+        [HttpPost]
+        public ActionResult AdjustmentCourse(ConvertCourse convertCourse)
+        {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+            convertCourse.ApplyDate = DateTime.Now;
+            convertCourse.IsDel = false;
+            convertCourse.TeacherID = teacher.TeacherID;
+           
+
+            // 调课
+
+
+
+            return null;
+           
+        }
+
     }
 }
