@@ -31,6 +31,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         //专业业务类
         public static readonly SpecialtyBusiness Specialty_Entity = new SpecialtyBusiness();
 
+        //老师擅长课程业务类
+        public static readonly GoodSkillManeger GoodSkill_Entity = new GoodSkillManeger();
+
         /// <summary>
         /// 向Xml文件读取配置
         /// </summary>
@@ -89,12 +92,41 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
         }
         /// <summary>
-        /// 获取有效的阶段集合
+        /// 获取阶段集合
         /// </summary>
         /// <returns></returns>
-        public List<Grand> GetEffectiveData()
+        public List<Grand> GetEffectiveData(bool s)
         {
-            return Grand_Entity.GetList().Where(g => g.IsDelete == false).ToList();
+            List<Grand> g_list = new List<Grand>();
+            List<Grand> grands= Grand_Entity.GetList().Where(g=>g.IsDelete==false).ToList();
+            if (s)
+            {
+                //s1s2阶段
+                foreach (Grand item in grands)
+                {
+                    if (item.GrandName=="S1" || item.GrandName=="S2")
+                    {
+                        g_list.Add(item);
+                    }
+                }
+            }
+            else
+            {
+                //s3.s4阶段
+                foreach (Grand item in grands)
+                {
+                    if (item.GrandName != "S1")
+                    {
+                        if (item.GrandName!="S2")
+                        {
+                             g_list.Add(item);
+                        }
+                       
+                    }
+                }
+            }
+
+            return g_list;
         }
         /// <summary>
         /// 获取属于某个阶段的有效班级集合
@@ -174,7 +206,22 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return s;
         }
-       
+       /// <summary>
+       /// 是否有重复的数据
+       /// </summary>
+       /// <param name="r"></param>
+       /// <returns></returns>
+        public bool IsExcit(Reconcile r)
+        {
+            bool s = false;
+            Reconcile find_r= this.GetList().Where(rs => rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curse_Id == r.Curse_Id).FirstOrDefault();
+            if (find_r!=null)
+            {
+                s = true;
+            }
+            return s;
+        }
+        
         /// <summary>
         /// 获取一周日期
         /// </summary>
@@ -281,6 +328,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 获取空教室
         /// </summary>
         /// <param name="TimeName">'上午'--获取下午的空教室'下午'--获取上午的空教室</param>
+        /// <param name="base_id">那个校区的</param>
+        /// <param name="time">获取哪个日期里的空教室</param>
         /// <returns></returns>
         public List<Classroom> GetClassrooms(string TimeName,int base_id,DateTime time)
         {
@@ -299,12 +348,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return c_list;
         }
         /// <summary>
-        /// 判断这个班级是什么阶段在上什么课程
-        /// </summary>
-        /// <param name="c"></param>
-        /// <returns></returns>
-        /// <summary>
-        /// 
+        /// 安排这个班级是什么阶段在上什么课程
         /// </summary>
         /// <param name="time">获取课表日期</param>
         /// <param name="basedae_id">校区名称</param>
@@ -356,8 +400,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<EmployeesInfo> GetEmployees(string PosionName)
         {
             BaseBusiness<EmployeesInfo> baseEmplo = new BaseBusiness<EmployeesInfo>();
-            BaseBusiness<Position> basePosition = new BaseBusiness<Position>();
-            
+            BaseBusiness<Position> basePosition = new BaseBusiness<Position>();            
             Position p = basePosition.GetList().Where(b=>b.IsDel==false && b.PositionName==PosionName).FirstOrDefault();
             if (p!=null)
             {
@@ -368,14 +411,93 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return new List<EmployeesInfo>();
             }
         }
+        //获取可以上职素的班主任
+        public List<Headmaster> GetMasTeacher()
+        {
+            BaseBusiness<Headmaster> basemaster = new BaseBusiness<Headmaster>();
+            BaseBusiness<EmployeesInfo> baseEmplo = new BaseBusiness<EmployeesInfo>();
+            List<Headmaster> find_m= basemaster.GetList().Where(m => m.IsDelete == false && m.IsAttend == true).ToList();
+            return find_m;
+        }
+        //获取教官
+        public List<EmployeesInfo> GetSir()
+        {
+            BaseBusiness<Position> position = new BaseBusiness<Position>();
+            List<Position> p_list=  position.GetList().Where(p=>p.PositionName=="教官").ToList();
+            List<EmployeesInfo> employees = new BaseBusiness<EmployeesInfo>().GetList();
+            List<EmployeesInfo> em = new List<EmployeesInfo>();
+            foreach (Position item1 in p_list)
+            {
+                foreach (EmployeesInfo item2 in employees)
+                {
+                    if (item2.PositionId==item1.Pid)
+                    {
+                        em.Add(item2);
+                    }
+                }
+            }
+            return em;
+        }
         /// <summary>
-        /// 获取空教室
+        /// 获取排课数据
         /// </summary>
+        /// <param name="time">日期</param>
+        /// <param name="timename">上课时间段</param>
+        /// <param name="classrooms">教室集合</param>
         /// <returns></returns>
-        //public List<Classroom> GetEmptyRoom(DateTime d,string time)
-        //{
-        //  // List<Reconcile> find_r= this.GetList().Where(r => r.AnPaiDate == d && r.Curse_Id == time).ToList();
-           
-        //}
+        public List<AnPaiData> GetPaiDatas(DateTime time,string timename,List<Classroom> classrooms)
+        {
+            List<AnPaiData> a_list = new List<AnPaiData>();
+            List<Reconcile> r_list= this.GetList().Where(r=>r.AnPaiDate==time).ToList();
+            BaseBusiness<EmployeesInfo> entity = new BaseBusiness<EmployeesInfo>();
+            if (timename=="上午12节"||timename=="上午34节")
+            {
+                foreach (Classroom c1 in classrooms)
+                {
+                    AnPaiData new_a = new AnPaiData();
+                    foreach (Reconcile r1 in r_list)
+                    {
+                        if (r1.ClassRoom_Id == c1.Id && (r1.Curse_Id == timename || r1.Curse_Id=="上午"))
+                        {
+                            new_a.ClassName = r1.ClassSchedule_Id;
+                            new_a.Teacher = r1.EmployeesInfo_Id==null?"无":entity.GetEntity(r1.EmployeesInfo_Id).EmpName;
+                            new_a.NeiRong = r1.Curriculum_Id;
+                        }
+                    }
+                    a_list.Add(new_a);
+                }
+            }
+            else if(timename == "下午12节" || timename == "下午34节")
+            {
+                foreach (Classroom c1 in classrooms)
+                {
+                    AnPaiData new_a = new AnPaiData();
+                    foreach (Reconcile r1 in r_list)
+                    {
+                        if (r1.ClassRoom_Id == c1.Id && (r1.Curse_Id == timename || r1.Curse_Id == "下午"))
+                        {
+                            new_a.ClassName = r1.ClassSchedule_Id;
+                            new_a.Teacher = r1.EmployeesInfo_Id == null ? "无" : entity.GetEntity(r1.EmployeesInfo_Id).EmpName;
+                            new_a.NeiRong = r1.Curriculum_Id;
+                        }
+                    }
+                    a_list.Add(new_a);
+                }
+            }
+            return a_list;
+        }
+        #region 提供修改排课数据的方法
+        /// <summary>
+        /// 获取XX班级在这XX天上XX课程的排课情况
+        /// </summary>
+        /// <param name="time">日期</param>
+        /// <param name="ClassNumber">班级编号</param>
+        /// <param name="Time">上午或下午</param>
+        /// <returns></returns>
+        public List<Reconcile> GetReconcile(DateTime time, string ClassNumber, string currName)
+        {
+           return this.GetList().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == ClassNumber && r.Curse_Id == currName).ToList();
+        }
+        #endregion
     }
 }

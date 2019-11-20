@@ -15,13 +15,14 @@ using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.FinaceBusines;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
+using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
         //时间段
-        BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
+      public  BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业
@@ -466,11 +467,33 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
             if (type == 1)
             {
-                return Techarcontext.GetEntity(CLaaNuma.Major_Id).SpecialtyName;
+                Specialty find_s = Techarcontext.GetEntity(CLaaNuma.Major_Id);
+                if (find_s!=null)
+                {
+                    return find_s.SpecialtyName;
+                }
+                else
+                {
+                    return "无";
+                }
+                
             }
-            else if(type==2)
+            else 
             {
                 return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
+            }
+        }
+        public string GetClassTime(string ClassNumber)
+        {
+            ClassSchedule CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
+            BaseDataEnum find_b= BaseDataEnum_Entity.GetList().Where(b => b.Id == CLaaNuma.BaseDataEnum_Id).FirstOrDefault();
+            if (find_b!=null)
+            {
+                return find_b.Name;
+            }
+            else
+            {
+                return "无";
             }
         }
         /// <summary>
@@ -506,7 +529,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="Grand"></param>
         /// <param name="StudentID"></param>
         /// <returns></returns>
-        public DetailedcostView GotoschoolTuition(int Grand, string StudentID)
+        public DetailedcostView GotoschoolTuition(int? Grand, string StudentID)
         {
             //已交费用
             decimal price = 0;

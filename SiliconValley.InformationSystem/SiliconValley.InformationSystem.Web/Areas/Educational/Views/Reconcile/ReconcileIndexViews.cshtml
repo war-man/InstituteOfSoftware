@@ -6,6 +6,13 @@
 @using SiliconValley.InformationSystem.Entity.MyEntity
 @section style{
     <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
         #but1
         {
             position: absolute;
@@ -93,18 +100,19 @@
 
             </div>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
             <label class="layui-form-label">专业:</label>
             <div id="marjon" class="layui-input-block">
-                
+
             </div>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="layui-form-label">教室:</label>
-            <div class="layui-input-block">                
-                @Html.DropDownList("myclassroom", ViewBag.classrrrom as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" } })
+        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+            <label class="LableCss1">上课时间段:</label>
+            <div id="ClssTime" class="layui-input-block">
+                <input style="color:black" type="radio" name="time" value="上午" title="上午" disabled="disabled">
+                <input style="color:black" type="radio" name="time" value="下午" title="下午" disabled="disabled">
             </div>
-        </div>
+        </div>         
     </div>
     <div class="layui-row layui-form-item">
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
@@ -114,24 +122,22 @@
             </div>
 
         </div>
-        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-            <label class="LableCss1">上课时间段:</label>
-            <div id="ClssTime" class="layui-input-block">                
-              <input style="color:black" type="radio" name="time" value="上午" title="上午" disabled="disabled">
-              <input style="color:black" type="radio" name="time" value="下午" title="下午" disabled="disabled">         
-            </div>
-        </div>
-        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
             <label class="LableCss1">开始日期:</label>
             <div class="layui-input-block">
-                <input type="text" name="startTime" id="startTime" class="layui-input"/>
+                <input type="text" name="startTime" id="startTime" class="layui-input linu" />
+            </div>
+        </div>
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+            <label class="layui-form-label">教室:</label>
+            <div id="classroom_div" class="layui-input-block">
+
             </div>
         </div>
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" style="text-align:right">
             <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="系统排课" />
-            <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="手动排课" />
+            <input id="Anan" type="button" class="layui-btn" value="手动排课" onclick="OpenNanualView()" />
         </div>
-
     </div>
     <fieldset>
         <legend>排课显示</legend>
@@ -246,7 +252,28 @@
             });
             //日期
             laydate.render({
-                elem: '#startTime'
+                elem: '#startTime',
+                done: function (value) {
+                     //获取教室
+                     //获取上课时间段
+                    var timeName = $("#time").val();
+                    var Time = value;
+                    var mydata = { "timeName": timeName, "Time": Time };
+                    $("#classroom_div")[0].innerHTML = "";
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetEmptyRoom',
+                        type: 'POST',
+                        data:mydata,
+                        success: function (suc) {
+                            var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
+                            for (var i = 0; i < suc.length; i++) {
+                                $('<option value=' + suc[i].Id + '>' + suc[i].ClassroomName + '</option>').appendTo(classroom);
+                            }
+                            $("#classroom_div").append(classroom);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
             });
              //排课
             form.on('submit(Anpai)', function (data) {
@@ -255,8 +282,10 @@
                 if (mydata.class_select == "0") {
                     layer.msg('请选择有效的班级！！！', { icon: 2 });
                 } else if (mydata.startTime == "") {
-                    layer.msg('请选择排课日期', { icon: 2 });
-                } else {
+                    layer.msg('请选择排课日期！！！', { icon: 2 });
+                } else if (mydata.myclassroom == undefined || mydata.myclassroom == 0) {
+                    layer.msg('请选择教室！！！', { icon: 2 });
+                }else {
                     $.ajax({
                         url: '/Educational/Reconcile/PaikeFunction',
                         type: 'POST',
@@ -283,7 +312,19 @@
                 return false;
             });
         });
-                
+        //打开手动排课页面
+        function OpenNanualView() {
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: '/Educational/Reconcile/ManualReconcileView'  
+                , area: ['1000px', '500px'],
+                title: '手动排课'
+                , shade: 0.8
+                , anim: 4
+                , skin: 'demo-class'
+            });
+        }
     </script>
 }
 
