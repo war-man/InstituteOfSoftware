@@ -425,18 +425,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <returns></returns>
         [HttpPost]
        [ValidateInput(false)]
-        public ActionResult SMScharging(string Datailedcost)
-        {
-            // 引入序列化
-            JavaScriptSerializer serializer = new JavaScriptSerializer();
-         //   string str = Datailedcost.Substring(3, Datailedcost.Length - 7);
-            //Replace("Name", "替换").Replace("NextStageID","S2");
-            // 序列化
-            // var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
-            //return dbtext.SMScharging(personlist);
-            return Json(dbtext.EntiShortmessage(Datailedcost), JsonRequestBehavior.AllowGet);
+        //public ActionResult SMScharging(string Datailedcost)
+        //{
+        //    // 引入序列化
+        //    JavaScriptSerializer serializer = new JavaScriptSerializer();
+        // //   string str = Datailedcost.Substring(3, Datailedcost.Length - 7);
+        //    //Replace("Name", "替换").Replace("NextStageID","S2");
+        //    // 序列化
+        //    // var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
+        //    //return dbtext.SMScharging(personlist);
+        //    return Json(dbtext.EntiShortmessage(Datailedcost), JsonRequestBehavior.AllowGet);
 
-        }
+        //}
         /// <summary>
         /// 短信催费
         /// </summary>

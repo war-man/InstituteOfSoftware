@@ -33,6 +33,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
         //老师擅长课程业务类
         public static readonly GoodSkillManeger GoodSkill_Entity = new GoodSkillManeger();
+       
 
         /// <summary>
         /// 向Xml文件读取配置
@@ -51,23 +52,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return g;
 
         }
-        /// <summary>
-        /// 判断某年是否是闰年
-        /// </summary>
-        /// <param name="year">年份</param>
-        /// <returns></returns>
-        public bool IsRunYear(int year)
-        {
-            //true--是闰年2月有29天，false--不是闰年   
-            if ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0)//是闰年
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        
         /// <summary>
         /// 判断该日期是否是周六或周末（1--周六，2--周日）
         /// </summary>
@@ -439,7 +424,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return em;
         }
         /// <summary>
-        /// 获取排课数据
+        /// 获取排课数据(显示课表形式)
         /// </summary>
         /// <param name="time">日期</param>
         /// <param name="timename">上课时间段</param>
@@ -486,6 +471,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a_list;
         }
+        /// <summary>
+        /// 通过XX课程找到XX老师
+        /// </summary>
+        /// <returns></returns>
+        //public List<EmployeesInfo> GetTeacherGoodSkill()
+        //{
+
+        //}
         #region 提供修改排课数据的方法
         /// <summary>
         /// 获取XX班级在这XX天上XX课程的排课情况
@@ -497,6 +490,28 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<Reconcile> GetReconcile(DateTime time, string ClassNumber, string currName)
         {
            return this.GetList().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == ClassNumber && r.Curse_Id == currName).ToList();
+        }
+
+        /// <summary>
+        /// 转视图模型
+        /// </summary>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public ResconcileView ConvertToView(Reconcile r)
+        {
+            BaseBusiness<EmployeesInfo> entity = new BaseBusiness<EmployeesInfo>();
+            ResconcileView new_r = new ResconcileView();
+            new_r.AnPaiDate = r.AnPaiDate;
+            new_r.ClassRoom_Id = Classroom_Entity.GetEntity(r.ClassRoom_Id);
+            new_r.ClassSchedule_Id = r.ClassSchedule_Id;
+            new_r.Curriculum_Id = r.Curriculum_Id;
+            new_r.Curse_Id = r.Curse_Id;
+            new_r.EmployeesInfo_Id = entity.GetEntity(r.EmployeesInfo_Id);
+            new_r.Id = r.Id;
+            new_r.IsDelete = r.IsDelete;
+            new_r.NewDate = r.NewDate;
+            new_r.Rmark = r.Rmark;
+            return new_r;
         }
         #endregion
     }
