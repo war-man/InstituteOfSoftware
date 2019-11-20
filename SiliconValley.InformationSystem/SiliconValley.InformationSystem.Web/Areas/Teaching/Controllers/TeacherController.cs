@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
     [CheckLogin]
     public class TeacherController : Controller
@@ -901,6 +902,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <returns></returns>
         public ActionResult CourseData(string classnumber, string date, string specific)
         {
+            ReconcileManeger db_reconcileTemp = new ReconcileManeger();
+
+            //获取当前登录用户
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var resconcileList =   db_reconcileTemp.GetReconcile(DateTime.Parse(date), classnumber, specific);
+
+            var resultList = resconcileList.Where(d => d.EmployeesInfo_Id == user.EmpNumber).ToList();
+
+
+
             return null;
         }
 
@@ -924,7 +935,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             convertCourse.TeacherID = teacher.TeacherID;
            
 
-            // 调课
+            // 调课 
 
 
 

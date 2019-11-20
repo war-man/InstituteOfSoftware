@@ -160,6 +160,7 @@
     <Compile Include="Entity\ExaminationRoom.cs" />
     <Compile Include="Entity\ExamRoomDistributed.cs" />
     <Compile Include="Entity\ExamType.cs" />
+    <Compile Include="Entity\ExamTypeName.cs" />
     <Compile Include="Entity\FinanceModel.cs" />
     <Compile Include="Entity\Fiveroutines.cs" />
     <Compile Include="Entity\FollwingInfo.cs" />
@@ -192,6 +193,7 @@
     <Compile Include="Entity\MachineTestQuestionPaper.cs" />
     <Compile Include="Entity\MachTestQuesBank.cs" />
     <Compile Include="Entity\MarketChair.cs" />
+    <Compile Include="Entity\MarkingArrange.cs" />
     <Compile Include="Entity\MaterialPriceList.cs" />
     <Compile Include="Entity\Members.cs" />
     <Compile Include="Entity\MeritsCheck.cs" />
@@ -302,6 +304,7 @@
     <Compile Include="ViewEntity\AchievementView.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
+    <Compile Include="ViewEntity\AnPaiData.cs" />
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
     <Compile Include="ViewEntity\ChannelSortView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
@@ -332,9 +335,13 @@
     <Compile Include="ViewEntity\EssentialinformationEnucView.cs" />
     <Compile Include="ViewEntity\ExaminationRoomView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\AnswerQuestionView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetHelp.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ChoiceQuestionTableView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ComputerTestQuestionsView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeEnum.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\HeadMasterSortView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\MarkingArrangeView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\StudentIsReExamHelper.cs" />
     <Compile Include="ViewEntity\ExaminationView.cs" />
     <Compile Include="ViewEntity\flooralloryes.cs" />
@@ -365,6 +372,7 @@
     <Compile Include="ViewEntity\ProStudentPageView.cs" />
     <Compile Include="ViewEntity\ProStudentView.cs" />
     <Compile Include="ViewEntity\PublicConvertView.cs" />
+    <Compile Include="ViewEntity\Recon_Login_Data.cs" />
     <Compile Include="ViewEntity\resultdtree.cs" />
     <Compile Include="ViewEntity\RoomArrangeEmpinfoView.cs" />
     <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
