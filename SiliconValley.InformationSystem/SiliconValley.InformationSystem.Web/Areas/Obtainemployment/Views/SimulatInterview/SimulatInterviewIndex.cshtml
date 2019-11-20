@@ -94,44 +94,22 @@
             , cols: [[ //标题栏
                  { field: 'ID', title: '调研记录ID', width: 80, hide: true }
                 , {
-                    field: 'StudentName', title: '学生名字', width: 100, templet: function (d) {
-                        if (d.SurRating.toLowerCase() == "c" || d.SurRating.toLowerCase() == "d") {
-                            return "<span style=color:red;>" + d.StudentName + "</span>"
-                        } else {
-                            return "<span style=color:green;>" + d.StudentName + "</span>"
-                        }
-
-                    }
+                    field: 'StudentName', title: '学生名字', width: 100
                 }
                 , { field: 'EmpStaffName', title: '记录人', width: 100 }
                 , {
-                    field: 'SelfRating', title: '自评等级', width: 100, templet: function (d) {
-                        if (d.SelfRating.toLowerCase()=="c"||d.SelfRating.toLowerCase()=="d") {
-                            return "<span style=color:red;>" + d.SelfRating + "</span>"
-                        } else {
-                            return "<span style=color:green;>" + d.SelfRating + "</span>"
-                        }
-
-                    }
+                    field: 'knowMyself', title: '自我介绍', width: 100
                 }
                 , {
-                    field: 'SurRating', title: '调研评级', width: 100, templet: function (d) {
-                        if (d.SurRating.toLowerCase() == "c" || d.SurRating.toLowerCase() == "d") {
-                            return "<span style=color:red;>" + d.SurRating + "</span>"
-                        } else {
-                            return "<span style=color:green;>" + d.SurRating + "</span>"
-                        }
-
-                    }
+                    field: 'ShowAbility', title: '表达能力', width: 100
                 }
-                , { field: 'WantSpceName', title: '想学专业', width: 178 }
-                , { field: 'EmpStaffComments', title: '就业专员评语', width: 178 }
-                , { field: 'EmpExpectations', title: '就业期望', width: 178 }
-                , { field: 'MasterTechnology', title: '掌握技术', width: 178 }
-                , { field: 'PracticalExperience', title: '实践经验', width: 178 }
+                , { field: 'PerIntQues', title: '人事面试问题情况', width: 178 }
+                , { field: 'Resume', title: '简历背诵', width: 178 }
+                , { field: 'ObjectInfo', title: '项目回答情况', width: 178 }
+                , { field: 'Pandect', title: '总评', width: 178 }
                 , {
-                    field: 'RecordsDate', title: '时间', width: 120, templet: function (d) {
-                            return TimeChange(d.RecordsDate);
+                    field: 'AddDate', title: '时间', width: 120, templet: function (d) {
+                            return TimeChange(d.AddDate);
                     }
                 }
 
@@ -141,7 +119,7 @@
         });
         function reloadtable() {
             table.reload('table11', {
-                url:'/Obtainemployment/SResearchRecord/SearchData',
+                url:'/Obtainemployment/SimulatInterview/SearchData',
                 where: {
                     param0: clickclassnumber
                 }
@@ -180,9 +158,9 @@
                 case 'add':
                     layer.open({
                         type: 2,
-                        content: "/Obtainemployment/SResearchRecord/SResearchRecordRegister?param0="+clickclassnumber,
+                        content: "/Obtainemployment/SimulatInterview/SResearchRecordRegister?param0="+clickclassnumber,
                         title: "添加谈话",
-                        area: ['690px', '830px'],
+                        area: ['690px', '820px'],
                         //area: ['850px', '760px'],
                         success: function (layero, index) {
                             let body = layui.layer.getChildFrame('body', index);

@@ -620,6 +620,7 @@
     <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\SResearchRecordRegister.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SimulatInterviewIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SResearchRecordRegister.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
