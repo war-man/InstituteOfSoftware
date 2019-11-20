@@ -259,13 +259,13 @@
             //添加提交
             form.on('submit(demo1)', function (data) {
                 var fd = new FormData();
-
                 var myimg = document.querySelector("#Image").files[0];
                 fd.append('Image', myimg);
                 for (var item in data.field) {
                     fd.append(item, data.field[item]);
                 }
                 console.log(fd);
+
                 $.ajax({
                     type: "post",
                     url: "/Personnelmatters/ApprovalManagement/DaysOffApply",

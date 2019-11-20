@@ -280,7 +280,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 }
                 emp.IsDel = false;
-
+                if (emp.Image != null)
+                {
+                    emp.Image = ImageUpload();
+                }
+                else {
+                    emp.Image = null;
+                }
                 empinfo.Insert(emp);
                 AjaxResultxx = empinfo.Success();
                 if (AjaxResultxx.Success) {
@@ -890,7 +896,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.BCNum,
                 e.Material,
                 e.Remark,
-                e.IsDel
+                e.IsDel,
+                e.Image
                 #endregion
             };
             return Json(empobj, JsonRequestBehavior.AllowGet);
@@ -918,9 +925,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 var emp2 = empmanage.GetInfoByEmpID(emp.EmployeeId);
-                emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
-                emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
+                if (emp.IdCardNum!=null) {
+                    emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
+                    emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
+                }
+               
                 emp.IsDel = emp2.IsDel;
+                if (emp.Image != "undefined")
+                {
+                    emp.Image = ImageUpload();
+                }
+                else {
+                    emp.Image = emp2.Image;
+                }
+
                 empmanage.Update(emp);
                 ajaxresult = empmanage.Success();
             }

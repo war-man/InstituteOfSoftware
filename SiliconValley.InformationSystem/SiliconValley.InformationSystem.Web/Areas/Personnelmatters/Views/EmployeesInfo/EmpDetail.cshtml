@@ -65,8 +65,8 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">性别:</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="Sex" value="男" title="男" readonly>
-                            <input type="radio" name="Sex" value="女" title="女" readonly>
+                            @Html.TextBoxFor(a => a.Sex, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input " } })
+                          
                         </div>
                     </div>
 
@@ -77,14 +77,14 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">所属部门:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;"/>
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">所属岗位:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="pname" name="pname"  readonly class="layui-input" style="border:0px;"/>
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
 
@@ -191,7 +191,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">学历:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="Education" name="Education" readonly class="layui-input"  style="border:0px;"/>
+                            <input type="text" id="Education" name="Education" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
 
@@ -202,9 +202,9 @@
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">婚姻状态:</label>
-                        <div class="layui-input-block">
-                            <input type="radio" name="MaritalStatus" value="false" title="未婚" readonly>
-                            <input type="radio" name="MaritalStatus" value="true" title="已婚" readonly>
+                        <div class="layui-input-block">                         
+                    <input type="radio" name="MaritalStatus"  id="MaritalStatus" value="false" title="未婚" readonly >
+                    <input type="radio" name="MaritalStatus" value="true" title="已婚" readonly>
                         </div>
                     </div>
 
@@ -276,35 +276,50 @@
                 </div>
 
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">工作经验:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input AreaStyle" } })
                         </div>
                     </div>
-                </div>
 
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">图片:</label>
+                        <div class="layui-input-block">
+                            <div style="border:1px solid #808080;width:420px;height:220px;">
+                                <img id="Image" style="width:420px;height:220px;" />
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+             
             </div>
 
-            <div class="layui-form-item" style="margin-left:400px;">
+            @*<div class="layui-form-item" style="margin-left:400px;">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
                 </div>
-            </div>
+            </div>*@
         </form>
     </div>
 
@@ -316,13 +331,12 @@
         });
         function loademp() {
             var id = $("#EmployeeId").val();
-            console.log(id);
+        
             $.get("/Personnelmatters/EmployeesInfo/GetempById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;
-                    data.Sex = data.Sex.toString();
+                   // data.Sex = data.Sex.toString();
                     data.MaritalStatus = data.MaritalStatus.toString();
-                   // data.PoliticsStatus = data.PoliticsStatus.toString();
                     data.EntryTime = GetYMD(data.EntryTime);
                     data.PositiveDate = GetYMD(data.PositiveDate);
                     data.ContractStartTime = GetYMD(data.ContractStartTime);
@@ -330,6 +344,10 @@
                     data.Birthdate = GetYMD(data.Birthdate); 
                     data.IdCardIndate = GetYMD(data.IdCardIndate); 
                     data.SSStartMonth = GetYearAndMonth(data.SSStartMonth); 
+                    if (data.Image != null) {
+                        $("#Image")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
+                    }
+                    console.log("图片："+$("#Image")[0].src);
                     form.val("formtest", data);
 
                 });
@@ -359,12 +377,12 @@
                 elem: '#Birthdate',
             });//出生日期
 
-            //关闭添加页面
-            $("#btnclose1").click(function () {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('myEmpInfo');
-                parent.layer.close(index);
-            });
+            ////关闭添加页面
+            //$("#btnclose1").click(function () {
+            //    var index = parent.layer.getFrameIndex(window.name);
+            //    parent.layui.table.reload('myEmpInfo');
+            //    parent.layer.close(index);
+            //});
         });
 
 

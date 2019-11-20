@@ -48,12 +48,13 @@
 
      
             //监听行工具事件
-            table.on('tool(salarytab)', function (obj) {
+            table.on('tool(salarysystemtab)', function (obj) {
                 var data = obj.data;
+                console.log(data.Id);
                 if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
-                        content: '/Personnelmatters/EmplSalaryEmbody/EditESE/?id=' + data.Id
+                        content: '/Personnelmatters/EmplSalaryEmbody/EditESE?id=' + data.Id
                         , area: ["1200px", "730px"]
                         , title: '编辑员工工资体系'
                         , shade: 0.8

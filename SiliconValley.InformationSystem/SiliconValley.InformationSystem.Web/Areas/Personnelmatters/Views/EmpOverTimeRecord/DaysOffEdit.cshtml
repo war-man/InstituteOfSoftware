@@ -79,8 +79,10 @@
                     <div class="layui-form-item">
                         <label class="layui-form-label">图片:</label>
                         <div class="layui-input-block">
-                            <div style="border:1px solid #808080;width:420px;height:220px;">
-                                <img id="Image" style="width:420px;height:220px;" />
+                            <input type="file" id="MyImage" name="MyImage" />
+                            <div style="border:0px solid #808080;width:400px;height:200px;">
+                                <img id="showImage" style="width:400px;height:200px;" />
+
                             </div>
                         </div>
                     </div>
@@ -100,6 +102,28 @@
 
     <script>
 
+        //异步读取图片并显示
+        document.querySelector("#MyImage").onchange = function () {
+            //1.0获取选择的文件       
+            var f = this.files[0];
+            //创建文件读取器
+            var file = new FileReader();
+            //读取文件,参数代表要读取的文件
+            file.readAsDataURL(f);
+
+            //开始读取文件
+            //file.start();
+            //注意文件的读取时异步读取的
+            //要在file.onload事件中才能获取到文件的内容
+            file.onload = function (e) {
+                document.querySelector("#showImage").src = e.target.result;
+            };
+
+            //最后通过file.result属性返回读取文件的内容
+            document.querySelector("#showImage").src = file.result;
+        }
+
+
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
@@ -115,12 +139,11 @@
                     layui.use(['layer', 'form', 'table'], function () {
                         var form = layui.form;
                         $("#empName").val(data.empName);
-                        if (data.Image == null) {
+                        if (data.Image != null) {
+                            $("#showImage")[0].src = "../../../uploadXLSXfile/DaysOffImage/" + data.Image;
 
-                        } else {
-                            $("#Image")[0].src = "../../../uploadXLSXfile/DaysOffImage/" + data.Image;
                         }
-                        console.log($("#Image")[0].src);
+
                         data.StartTime = changeDateTimeFormat(data.StartTime);
                         data.EndTime = changeDateTimeFormat(data.EndTime);
                         form.val("formtest", data);
@@ -131,19 +154,40 @@
 
             //提交
             form.on('submit(demo1)', function (data) {
-                $.post("/Personnelmatters/EmpOverTimeRecord/DaysOffEdit", data.field, function (data) {
-                    if (data.Success) {
-                        layer.alert("编辑成功!", { icon: 1 }, function () {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layui.table.reload('myApprovedDaysOff');
-                            parent.layui.table.reload('myStatisticsTime');
-                            parent.layer.close(index);
-                        });
-                    } else {
-                        layer.alert("编辑失败!");
+
+                var fd = new FormData();
+                var myimg = document.querySelector("#MyImage").files[0];
+                console.log(myimg);
+                fd.append('Image', myimg);
+                for (var item in data.field) {
+                    fd.append(item, data.field[item]);
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "/Personnelmatters/EmpOverTimeRecord/DaysOffEdit",
+                    data: fd,
+                    dataType: "json",
+
+                    //报错请加入以下三行，则ajax提交无问题
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.Success) {
+                            layer.alert("编辑成功!", { icon: 1 }, function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layui.table.reload('myApprovedDaysOff');
+                                parent.layui.table.reload('myStatisticsTime');
+                                parent.layer.close(index);
+
+                            });
+                        } else {
+                            layer.alert("编辑失败!");
+                        }
                     }
                 });
-                return false;
+
             });
 
             //关闭页面
