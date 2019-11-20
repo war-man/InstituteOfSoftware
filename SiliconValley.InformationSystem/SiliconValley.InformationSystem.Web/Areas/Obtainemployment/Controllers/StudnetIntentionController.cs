@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
     public class StudnetIntentionController : Controller
     {
         private EmpClassBusiness dbempClass;
+        private EIntentionClassXMLHelp eIntentionClassXMLHelp;
         // GET: Obtainemployment/StudnetIntention
         public ActionResult StudnetIntentionIndex()
         {
@@ -22,6 +24,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }).ToList();
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
             return View();
+        }
+
+        /// <summary>
+        /// 开启这个班的学生有权限使用这个填写就业意向表
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public ActionResult open(string param0)
+        {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                eIntentionClassXMLHelp = new EIntentionClassXMLHelp();
+                if (eIntentionClassXMLHelp.isexistence(param0))
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "该班级学生已经可以填写就业意向表！";
+                }
+                else
+                {
+                    if (eIntentionClassXMLHelp.AddEIntentionClass(param0))
+                    {
+                        ajaxResult.Success = true;
+                    }
+                    else
+                    {
+                        ajaxResult.Success = false;
+                        ajaxResult.Msg = "请联系信息部成员！";
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
     }
 }

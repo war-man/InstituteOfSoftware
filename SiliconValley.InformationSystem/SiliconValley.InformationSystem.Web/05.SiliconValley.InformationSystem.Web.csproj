@@ -593,6 +593,7 @@
     <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\AddRoomPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\HttpGetUpdRoom.cshtml" />
+    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Dormitory\Views\RoomDisabled\RoomDisabledIndex.cshtml" />

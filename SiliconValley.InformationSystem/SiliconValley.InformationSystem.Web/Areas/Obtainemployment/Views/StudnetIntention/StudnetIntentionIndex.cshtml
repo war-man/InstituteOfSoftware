@@ -8,7 +8,7 @@
 <style>
     #leftdiv {
         width: 16%;
-        /*border: 1px solid red;*/
+   /*border: 1px solid red;*/
         float: left;
         height: 800px;
     }
@@ -48,7 +48,7 @@
 </script>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">添加谈话</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">开启学生填写功能</button>
     </div>
 </script>
 
@@ -109,7 +109,7 @@
                         } else {
                             return "<span style=color:green;>" + d.SelfRating + "</span>"
                         }
-
+                        
                     }
                 }
                 , {
@@ -132,7 +132,7 @@
                             return TimeChange(d.RecordsDate);
                     }
                 }
-
+                
                 , { field: 'Remark', title: '备注', width: 165 }
             ]]
 
@@ -176,24 +176,32 @@
         table.on('toolbar(table11)', function (obj) {
             switch (obj.event) {
                 case 'add':
-                    layer.open({
-                        type: 2,
-                        content: "/Obtainemployment/SResearchRecord/SResearchRecordRegister?param0="+clickclassnumber,
-                        title: "添加谈话",
-                        area: ['690px', '830px'],
-                        //area: ['850px', '760px'],
-                        success: function (layero, index) {
-                            let body = layui.layer.getChildFrame('body', index);
-                            body.find("#classnumnber").val(clickclassnumber);
+                    $.ajax({
+                        url: '/Obtainemployment/StudnetIntention/open',
+                        async: false,
+                        data: { param0: clickclassnumber },
+                        success: function (successdata) {
+                            if (successdata.Success) {
+                                layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
+
+                                });
+
+                            } else {
+                                layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
                         },
-                        end: function () {
-                            reloadtable();
+                        error: function (errordata) {
+                            layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                            });
                         }
                     });
                     break;
             };
         });
-
+        
     });
 </script>
 
