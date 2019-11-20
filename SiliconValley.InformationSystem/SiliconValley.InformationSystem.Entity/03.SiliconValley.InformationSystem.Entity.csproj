@@ -302,6 +302,7 @@
     <Compile Include="ViewEntity\AchievementView.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
+    <Compile Include="ViewEntity\AnPaiData.cs" />
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
     <Compile Include="ViewEntity\ChannelSortView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
@@ -365,6 +366,8 @@
     <Compile Include="ViewEntity\ProStudentPageView.cs" />
     <Compile Include="ViewEntity\ProStudentView.cs" />
     <Compile Include="ViewEntity\PublicConvertView.cs" />
+    <Compile Include="ViewEntity\Recon_Login_Data.cs" />
+    <Compile Include="ViewEntity\ResconcileView.cs" />
     <Compile Include="ViewEntity\resultdtree.cs" />
     <Compile Include="ViewEntity\RoomArrangeEmpinfoView.cs" />
     <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
