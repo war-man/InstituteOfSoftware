@@ -80,6 +80,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             var EXAMVIEW = db_exam.ConvertToExaminationView(exam);
             ViewBag.EXAMVIEW = EXAMVIEW;
             
+            //学员进入答题
 
             return View();
         }
@@ -94,8 +95,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             AjaxResult result = new AjaxResult();
             try
             {
+                //获取考试的类型
+
+
                 var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
-                var data = db_stuExam.ProductChoiceQuestion(exam);
+
+
+                List<ChoiceQuestionTableView> data = new List<ChoiceQuestionTableView>();
+                //判断考试类型
+                if (exam.ExamType == 1)
+                {
+                    data = db_stuExam.ProductChoiceQuestion(exam, 0);
+                }
+
+                if (exam.ExamType == 2)
+                {
+
+                    //需要获取课程
+
+                     XmlElement xmlelm  = db_exam.ExamCourseConfigRead(examid);
+
+                    int courseid =int.Parse( xmlelm.FirstChild.Attributes["id"].Value);
+
+                    data = db_stuExam.ProductChoiceQuestion(exam, courseid);
+                }
+
+                
                 var scores = db_stuExam.distributionScores(data);
 
                 var res = new {
@@ -129,7 +154,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
-                var data = db_stuExam.productAnswerQuestion(exam);
+                List<AnswerQuestionView> data = new List<AnswerQuestionView>();
+                //判断考试类型
+                if (exam.ExamType == 1)
+                {
+                    data = db_stuExam.productAnswerQuestion(exam, 0);
+                }
+
+                if (exam.ExamType == 2)
+                {
+
+                    //需要获取课程
+
+                    XmlElement xmlelm = db_exam.ExamCourseConfigRead(examid);
+
+                    int courseid = int.Parse(xmlelm.FirstChild.Attributes["id"].Value);
+
+                    data = db_stuExam.productAnswerQuestion(exam, courseid);
+                }
+
                 var scores = db_stuExam.distributionScores(data);
 
                 var res = new
@@ -293,12 +336,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 //1 将解答题答案存入文件 首先新建学生答卷文件夹
                 //名称规则 学号加上考试ID
                 string direName = "19081997072400002_" + examid;
-                DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/"+ direName));
+                DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName));
                 directoryInfo.Create();
 
                 //写文件
                 string answerfilename = "AnswerSheet.txt";
-                FileInfo fileinfo = new FileInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName+"/"+ answerfilename));
+                FileInfo fileinfo = new FileInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename));
                 var stream1 = fileinfo.CreateText();
                 stream1.Write(AnswerCommit);
                 stream1.Flush();
@@ -307,27 +350,59 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 //2 将机试题保存到文件夹 
                 string computerfielnaem = "computerfielnaem";
                 var computerfile = Request.Files["rarfile"];
-                //获取文件拓展名称
-                var exait = Path.GetExtension( computerfile.FileName);
-                computerfile.SaveAs(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + computerfielnaem + exait));
+
+                //保存的机试题路径
+                string computerUrl = "";
+                if (computerfile != null)
+                {
+                    //获取文件拓展名称 
+                    var exait = Path.GetExtension(computerfile.FileName);
+                    computerUrl = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + computerfielnaem + exait);
+                    computerfile.SaveAs(computerUrl);
+
+                }
 
                 //3.修改数据库值（选择题分数，解答题答案路径，机试题路径）
-                db_exam.AllExamination().Where(d=>d.ID == examid).FirstOrDefault();
-                var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d=>d.Examination == examid && d.StudentID == "19081997072400002").FirstOrDefault();
+                db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
+                var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.Examination == examid && d.StudentID == "19081997072400002").FirstOrDefault();
                 Candidateinfo.Paper = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename);
-                Candidateinfo.ComputerPaper = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + computerfielnaem + exait);
+
+                //获取需要替换的字符串路径
+                var old = Candidateinfo.ComputerPaper.Substring(Candidateinfo.ComputerPaper.IndexOf(',') + 1);
+                if (old.Length == 0)
+                {
+                    Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper + computerUrl;
+                }
+                else
+
+                {
+                    Candidateinfo.ComputerPaper = Candidateinfo.ComputerPaper.Replace(old, computerUrl);
+                   
+                }
                 db_exam.UpdateCandidateInfo(Candidateinfo);
 
                 //4.记录选择题分数
 
                 //获取考生
-                
-                TestScore testScore = new TestScore();
-                testScore.CandidateInfo = Candidateinfo.CandidateNumber;
-                testScore.ChooseScore = ChoiceScores;
-                testScore.Examination = examid;
 
-                db_examScores.Insert(testScore);
+               var stuScores = db_examScores.StuExamScores(examid, "19081997072400002");
+
+                if (stuScores == null)
+                {
+                    TestScore testScore = new TestScore();
+                    testScore.CandidateInfo = Candidateinfo.CandidateNumber;
+                    testScore.ChooseScore = ChoiceScores;
+                    testScore.Examination = examid;
+
+                    db_examScores.Insert(testScore);
+                }
+
+                else
+                {
+                    stuScores.ChooseScore = ChoiceScores;
+                    db_examScores.Update(stuScores);
+                }
+              
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";

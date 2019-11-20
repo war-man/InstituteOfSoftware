@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         
         [Key]
         public int ID { get; set; }
-        public string TypeName { get; set; }
+        public int ExamTypeID { get; set; }
         public Nullable<int> GrandID { get; set; }
     
     }

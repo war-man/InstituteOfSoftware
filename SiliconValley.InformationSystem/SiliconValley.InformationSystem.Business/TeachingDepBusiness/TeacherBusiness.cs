@@ -29,11 +29,17 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         //专业上下文
 
         private readonly SpecialtyBusiness db_specialty;
+
+        /// <summary>
+        /// 调课业务实例
+        /// </summary>
+        private readonly BaseBusiness<ConvertCourse> db_convertCourse;
         public TeacherBusiness()
         {
             db_grand = new GrandBusiness();
             db_emp = new EmployeesInfoManage();
             db_specialty = new SpecialtyBusiness();
+            db_convertCourse = new BaseBusiness<ConvertCourse>();
 
         }
 
@@ -844,15 +850,26 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return result;
 
         }
+
         /// <summary>
-        /// 根据教学编号获取对应的员工
+        /// 调课
         /// </summary>
-        /// <param name="Teac_ID"></param>
-        /// <returns></returns>
-        public EmployeesInfo FindTeacher(int Teac_ID)
+        public void AdjustmentCourse(ConvertCourse convertCourse)
         {
-            Teacher t= this.GetEntity(Teac_ID);
-           return db_emp.GetEntity(t.EmployeeId);
+
+            //1`填写表单  2.修改课表 3.通知相应人员 
+
+            //1
+            db_convertCourse.Insert(convertCourse);
+
+            //2
+
+
+
+
+
         }
+
+
     }
 }

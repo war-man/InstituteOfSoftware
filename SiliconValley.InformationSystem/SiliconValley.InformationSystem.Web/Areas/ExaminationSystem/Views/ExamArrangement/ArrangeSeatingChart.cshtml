@@ -1,0 +1,256 @@
+﻿
+@{
+    ViewBag.Title = "ArrangeSeatingChart";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+
+@section style{
+
+    <style>
+
+        #currentWarp {
+            width: 100%;
+        }
+
+        #toordiv {
+            width: 80%;
+            margin: 0 auto;
+            border-bottom: 1px solid gray;
+        }
+        thead tr th {
+            font-size:25px;
+        }
+        table {
+            border :1px solid gray;
+        }
+        table th  {
+            border: 1px solid gray;
+        }
+      
+    </style>
+
+
+}
+    <div id="currentWarp">
+        <div id="toordiv">
+
+            <form class="layui-form">
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">考试</label>
+                        <div class="layui-input-inline">
+                            <select name="exam">
+                                @{ 
+                                    foreach (var item in ViewBag.Exams as List<Examination>)
+                                    {
+                                        <option value="@item.ID"> @item.Title </option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+
+                        <button type="button" id="createSeat" class="layui-btn layui-btn-danger"><i class="layui-icon layui-icon-list"></i>生成座位表</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div id="seat">
+
+
+            <div class="layui-tab">
+                <ul class="layui-tab-title"></ul>
+
+                <div class="layui-tab-content">
+
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+
+        </div>
+
+        <div>
+            <button id="print" class="layui-btn layui-btn-primary"> 打印</button>
+        </div>
+
+
+    </div>
+
+<script type="text/template" id="seattable">
+    <div class="container">
+        <table  style="width:800px;" border="1" cellspacing="0"  class="table table-striped">
+            <thead>
+
+                <tr class="row">
+                    <th class="col-lg-2">序号</th>
+                    <th class="col-lg-2">姓名</th>
+                    <th class="col-lg-2">性别</th>
+                    <th class="col-lg-2">班级</th>
+                    <th class="col-lg-3">身份证</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </div>
+
+
+
+</script>
+
+
+<script type="text/template" id="seatmoban">
+    <tr class="row">
+        <th class="col-lg-2">{{=index}}</th>
+        <th class="col-lg-2">{{=name}}</th>
+        <th class="col-lg-2">{{=sex}}</th>
+        <th class="col-lg-2">{{=classname}}</th>
+        <th class="col-lg-2">{{=idcard}}</th>
+    </tr>
+</script>
+
+@section script{
+
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/LodopFuncs.js"></script>
+    <script>
+
+
+        var LODOP; //声明为全局变量
+
+        function prn1_preview() {
+            CreateOneFormPage();
+            LODOP.PREVIEW();
+        };
+        function prn1_print() {
+            CreateOneFormPage();
+            LODOP.PRINT();
+        };
+        function prn1_printA() {
+            CreateOneFormPage();
+            LODOP.PRINTA();
+        };
+
+        function CreateOneFormPage() {
+            LODOP = getLodop();
+            LODOP.PRINT_INIT("打印控件功能演示_Lodop功能_表单一");
+            LODOP.SET_PRINT_PAGESIZE(3, 0, 0, 'A4');
+            LODOP.SET_PRINT_STYLE("FontSize", 18);
+            LODOP.SET_PRINT_STYLE("Bold", 0);
+            
+            LODOP.ADD_PRINT_HTM(10, 50, 350, 1000, document.getElementById("seat").innerHTML);
+        };
+
+        
+
+        layui.use(['form', 'table', 'element','layer'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var table = layui.table;
+            var element = layui.element;
+            
+
+            $("#createSeat").click(function () {
+
+                var examid = document.getElementsByName("exam")[0].value;
+
+
+                if (examid != undefined) {
+
+                    $.post('/ExaminationSystem/ExamArrangement/ArrangeSeatingChartData', { examid: "8" }, function (result) {
+
+                        console.log(result);
+
+                        if (result.ErrorCode == 200) {
+
+
+                            for (var i = 0; i < result.Data.length; i++) {
+
+
+                                //添加选项卡
+
+                                var li = $("<li class='layui-this'></li>");
+                                li.text(result.Data[i].classroom.ClassroomName);
+
+                                var div = $('<div class="layui-tab-item layui-show"></div>');
+
+                                var layerthtml = _.template($("#seattable").html());
+
+                                div.append(layerthtml);
+
+
+                                var seatlist = result.Data[i].seat;
+
+                                for (var j = 0; j < seatlist.length; j++) {
+
+                                    var layerthtml1 = _.template($("#seatmoban").html());
+                                    console.log(layerthtml1);
+
+                                    var layerdata = layerthtml1({ index: j, sex: seatlist[j].student.Sex, classname: seatlist[j].student.ClassName, name: seatlist[j].student.Name, idcard: seatlist[j].student.IdCard });
+
+                                    div.find("tbody").append(layerdata);
+
+                                }
+
+
+
+
+
+
+
+                                $(".layui-tab .layui-tab-title").append(li);
+
+                                $(".layui-tab .layui-tab-content").append(div);
+
+
+
+                            }
+
+                        }
+
+
+                    });
+                }
+                else {
+
+                    layer.msg("请选择考试");
+                }
+
+
+            });
+
+            //打印按钮
+            $("#print").click(function () {
+
+                //首先检查是否安装打印控件
+                if (LODOP == undefined) {
+
+                    layer.msg("您没有安装控件");
+                }
+                else {
+
+                    prn1_preview();
+                }
+
+
+            });
+
+        });
+    </script>
+
+}
+
+
