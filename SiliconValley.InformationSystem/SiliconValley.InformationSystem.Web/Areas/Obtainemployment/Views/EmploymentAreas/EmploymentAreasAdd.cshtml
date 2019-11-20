@@ -1,0 +1,142 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model EmploymentAreas
+    <!DOCTYPE html>
+
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+        <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+        <script src="~/Scripts/layui/layui.js"></script>
+        <style>
+
+            .mytext {
+                min-height: 55px;
+                width: 350px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div>
+            <form class="layui-form">
+                <div class="layui-container">
+
+                    <div class="layui-row layui-form-item" style="margin-top:20px;">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label ">区域名字:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="AreaName"  lay-verify="required|name" name="AreaName" class="layui-input" />
+                            </div>
+                        </div>
+
+
+                    </div>
+
+
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label "> 备注:</label>
+                            <div class="layui-input-inline">
+                                <textarea placeholder="请输入内容" name="Remark" class="layui-textarea mytext"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <div class="layui-input-block">
+                                <button type="button" class="layui-btn layui-btn-radius" id="signout">退出</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+
+        </div>
+        <script type="text/template" id="muban0">
+            <input type="radio" lay-filter="vvv" name="StudentNumber" value="{{=StudentNumber}}" title="{{=Name}}" {{=checked}}>
+        </script>
+        <script type="text/template" id="muban1">
+            <input type="radio" name="WantSpceID" value="{{=Id}}" title="{{=SpecialtyName}}" {{=checked}}>
+        </script>
+        <script src="~/Scripts/underscore.js"></script>
+        <script>
+
+            layui.use(['form', 'layer', 'element'], function () {
+                //获取设备信息
+                var layer = layui.layer, form = layui.form, element = layui.element;
+
+                form.verify({
+                    name: function (value, item) {
+                        var aa = "";
+                        $.ajax({
+                            url: '/Obtainemployment/EmploymentAreas/verificationname',
+                            async: false,
+                            data: { param0: value },
+                            success: function (successdata) {
+                                aa = successdata;
+                            },
+                            error: function (errordata) {
+                                return "网络不佳！";
+                            }
+                        });
+                        if (aa.Success) {
+                            return "已经存在  " + value + "  地区！";
+                        } else {
+                            if (aa.Msg == "false") {
+                                return "请联系信息部成员~"
+                            }
+                        }
+                    }
+                    
+                });
+                form.on('submit(demo1)', function (data) {
+                    var param0 = data.field;
+                    $.ajax({
+                        url: '/Obtainemployment/EmploymentAreas/EmploymentAreasAdd',
+                        type: 'POST',
+                        data: { param0: param0 },
+                        success: function (successdata) {
+                            if (successdata.Success) {
+                                layer.msg('操作成功!', { icon: 6, time: 2000 }, function () {
+                                    close();
+                                });
+                            } else {
+                                layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    });
+                    return false;
+                });
+                $('#signout').click(function () {
+                    close();
+                });
+                function close() {
+                    //当你在iframe页面关闭自身时
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                }
+            });
+        </script>
+    </body>
+</html>

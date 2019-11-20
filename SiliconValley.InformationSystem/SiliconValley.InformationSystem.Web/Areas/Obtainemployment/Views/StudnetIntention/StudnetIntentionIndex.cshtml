@@ -1,15 +1,14 @@
 ﻿
 @{
-    ViewBag.Title = "SResearchRecordRegister";
+    ViewBag.Title = "StudnetIntentionIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<h2>SResearchRecordRegister</h2>*@
-
+@*<h2>StudnetIntentionIndex</h2>*@
 <style>
     #leftdiv {
         width: 16%;
-   /*border: 1px solid red;*/
+        /*border: 1px solid red;*/
         float: left;
         height: 800px;
     }
@@ -110,7 +109,7 @@
                         } else {
                             return "<span style=color:green;>" + d.SelfRating + "</span>"
                         }
-                        
+
                     }
                 }
                 , {
@@ -133,7 +132,7 @@
                             return TimeChange(d.RecordsDate);
                     }
                 }
-                
+
                 , { field: 'Remark', title: '备注', width: 165 }
             ]]
 
@@ -194,6 +193,7 @@
                     break;
             };
         });
-        
+
     });
 </script>
+
