@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
                 }
 
-
+                ese.IsDel = false;
                 this.Insert(ese);
                 result = true;
                 BusHelper.WriteSysLog("工资体系表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
@@ -62,7 +62,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 ese.IsDel = true;
                 this.Update(ese);
                 result = true;
-                BusHelper.WriteSysLog("工资体系表编辑员工离职成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog("工资体系表去除该员工", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
             {

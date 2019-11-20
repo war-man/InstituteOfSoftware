@@ -250,12 +250,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                         break;
                                 }
 
-                                EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();//员工工资体系中员工离职改变
-                                bool s;
-                                s = esemanage.EditEmpSalaryState(emp.EmployeeId);
-                                MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资表中员工离职改变
-                                s = msrmanage.EditEmpMS(emp.EmployeeId);
-                                ajaxresult.Success = s;
+                                //EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();//员工工资体系中员工离职改变
+                                //bool s;
+                                //s = esemanage.EditEmpSalaryState(emp.EmployeeId);
+                                //MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资表中员工离职改变
+                                //s = msrmanage.EditEmpMS(emp.EmployeeId);
+                                //ajaxresult.Success = s;
 
                             }
                             #endregion

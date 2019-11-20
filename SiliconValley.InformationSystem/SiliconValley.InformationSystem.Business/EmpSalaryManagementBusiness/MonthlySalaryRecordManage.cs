@@ -21,6 +21,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             {
                 MonthlySalaryRecord ese = new MonthlySalaryRecord();
                 ese.EmployeeId = empid;
+                ese.IsDel = false;
                 this.Insert(ese);
                 result = true;
                 BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
@@ -41,9 +42,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             bool result = false;
             try
             {
+                ems.IsDel = true;
                 this.Update(ems);
                 result = true;
-                BusHelper.WriteSysLog("月度工资表编辑员工离职成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog("月度工资表去除该员工", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
             {

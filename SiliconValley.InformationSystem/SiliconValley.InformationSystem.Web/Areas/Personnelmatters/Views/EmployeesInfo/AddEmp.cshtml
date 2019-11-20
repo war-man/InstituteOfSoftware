@@ -522,20 +522,41 @@
             //添加提交
             form.on('submit(demo1)', function (data) {
                 data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
-                console.log($("#Image").val());
-                $.post("/Personnelmatters/EmployeesInfo/AddEmpInfo", data.field, function (data) {
-                    if (data.Success) {
-                        layer.alert("添加成功!", { icon: 1 }, function () {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layui.table.reload('myEmpInfo');
-                            parent.layer.close(index);
 
-                        });
-                    } else {
-                        layer.alert("添加失败!");
+                var fd = new FormData();
+                var myimg = document.querySelector("#Image").files[0];
+                fd.append('Image', myimg);
+                for (var item in data.field) {
+                    fd.append(item, data.field[item]);
+                }
+                console.log(fd);
+
+              
+                console.log($("#Image").val());
+                $.ajax({
+                    type: "post",
+                    url: "/Personnelmatters/EmployeesInfo/AddEmpInfo",
+                    data: fd,
+                    dataType: "json",
+
+                    //报错请加入以下三行，则ajax提交无问题
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.Success) {
+                            layer.alert("添加成功!", { icon: 1 }, function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layui.table.reload('myEmpInfo');
+                                parent.layer.close(index);
+
+                            });
+                        } else {
+                            layer.alert("添加失败!");
+                        }
                     }
                 });
-                return false;
+                
             });
 
             //关闭添加页面

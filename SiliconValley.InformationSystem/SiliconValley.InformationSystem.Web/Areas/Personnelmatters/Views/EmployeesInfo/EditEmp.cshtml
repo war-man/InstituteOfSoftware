@@ -289,28 +289,45 @@
 
                 </div>
 
+
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">工作经验:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">图片:</label>
+                        <div class="layui-input-block">
+                            <input type="file" id="MyImage" name="MyImage" />
+                            <div style="border:0px solid #808080;width:400px;height:200px;">
+                                <img id="showImage" style="width:400px;height:200px;" />
+                               
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
             </div>
@@ -361,7 +378,12 @@
                         });
                     }
                    
-              
+                    if (data.Image != null) {
+                        $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
+                       
+                    }
+                    
+                   
                     form.val("formtest", data);
                     //日期
                     var startTime = laydate.render({
@@ -406,6 +428,27 @@
                     });//社保起始月份
                 });
             })
+        }
+
+        //异步读取图片并显示
+        document.querySelector("#MyImage").onchange = function () {
+            //1.0获取选择的文件       
+            var f = this.files[0];
+            //创建文件读取器
+            var file = new FileReader();
+            //读取文件,参数代表要读取的文件
+            file.readAsDataURL(f);
+
+            //开始读取文件
+            //file.start();
+            //注意文件的读取时异步读取的
+            //要在file.onload事件中才能获取到文件的内容
+            file.onload = function (e) {
+                document.querySelector("#showImage").src = e.target.result;
+            };
+
+            //最后通过file.result属性返回读取文件的内容
+            document.querySelector("#showImage").src = file.result;
         }
 
       
@@ -478,20 +521,45 @@
        
             //添加提交
             form.on('submit(demo1)', function (data) {
-                console.log(data.field);
                 data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
-                $.post("/Personnelmatters/EmployeesInfo/EditEmp", data.field, function (data) {
-                    if (data.Success) {
-                        layer.alert("编辑成功!", { icon: 1 }, function () {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layui.table.reload('myEmpInfo');
-                            parent.layer.close(index);
-                        });
-                    } else {
-                        layer.alert("编辑失败!");
+              //  data.field.Image = $("#Image").val();
+
+
+                console.log(data.field.MyImage);
+                var fd = new FormData();
+                var myimg = document.querySelector("#MyImage").files[0];
+                console.log(myimg);
+                fd.append('Image', myimg);
+                for (var item in data.field) {
+                    fd.append(item, data.field[item]);
+                }
+               
+                $.ajax({
+                    type: "post",
+                    url: "/Personnelmatters/EmployeesInfo/EditEmp",
+                    data: fd,
+                    dataType: "json",
+
+                    //报错请加入以下三行，则ajax提交无问题
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        if (data.Success) {
+                            layer.alert("编辑成功!", { icon: 1 }, function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layui.table.reload('myEmpInfo');
+                                parent.layer.close(index);
+
+                            });
+                        } else {
+                            layer.alert("编辑失败!");
+                        }
                     }
                 });
-                return false;
+
+
+               
             });
 
             //关闭添加页面

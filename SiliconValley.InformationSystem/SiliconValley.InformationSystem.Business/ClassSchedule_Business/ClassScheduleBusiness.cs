@@ -16,10 +16,14 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.FinaceBusines;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.Shortmessage_Business;
+using SiliconValley.InformationSystem.Business.EducationalBusiness;
+
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
+        //时间段
+        public BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业

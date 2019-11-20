@@ -242,11 +242,11 @@
             form.on('submit(demo1)', function (data) {
                 console.log(data.field);
                 data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
-                $.post("/Personnelmatters/EmployeesInfo/EditEmp", data.field, function (data) {
+                $.post("/Personnelmatters/EmplSalaryEmbody/EditESE", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layui.table.reload('myEmpInfo');
+                            parent.layui.table.reload('mySalarySystem');
                             parent.layer.close(index);
                         });
                     } else {
