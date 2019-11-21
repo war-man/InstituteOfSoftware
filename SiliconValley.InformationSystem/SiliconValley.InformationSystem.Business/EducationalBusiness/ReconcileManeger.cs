@@ -89,7 +89,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 //s1s2阶段
                 foreach (Grand item in grands)
                 {
-                    if (item.GrandName=="S1" || item.GrandName=="S2")
+                    if (item.GrandName=="S1" || item.GrandName=="S2" ||item.GrandName=="Y1")
                     {
                         g_list.Add(item);
                     }
@@ -104,7 +104,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     {
                         if (item.GrandName!="S2")
                         {
-                             g_list.Add(item);
+                            if (item.GrandName!="Y1")
+                            {
+                                g_list.Add(item);
+                            }
+                             
                         }
                        
                     }
@@ -471,14 +475,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a_list;
         }
-        /// <summary>
-        /// 通过XX课程找到XX老师
-        /// </summary>
-        /// <returns></returns>
-        //public List<EmployeesInfo> GetTeacherGoodSkill()
-        //{
-
-        //}
+         /// <summary>
+         /// 判断这个老师在这个日期中的这个时间段是否有课
+         /// </summary>
+         /// <param name="Teacher_Id">老师编号</param>
+         /// <param name="timename">时间段</param>
+         /// <param name="date">日期</param>
+         /// <returns></returns>
+        public bool IsHaveClass(string Teacher_Id,string timename,DateTime date)
+        {
+            bool s = false;
+            List<Reconcile> find_r= this.GetList().Where(r => r.EmployeesInfo_Id == Teacher_Id && r.AnPaiDate == date && r.Curse_Id==timename).ToList();
+            if (find_r.Count>0)
+            {
+                s = true;
+            }
+            return s;
+        }
         #region 提供修改排课数据的方法
         /// <summary>
         /// 获取XX班级在这XX天上XX课程的排课情况
