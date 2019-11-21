@@ -27,7 +27,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> PerformanceSalary { get; set; }//绩效工资
         //public string NetbookSubsidy { get; set; }
         public Nullable<decimal> OvertimeCharges { get; set; }//加班费用
-                                                            
+        public Nullable<decimal> Bonus { get; set; }  //奖金/元
         public Nullable<decimal> LeaveDeductions { get; set; }//（请假）扣款
         public Nullable<decimal> OtherDeductions { get; set; }//其他扣款
         public string PersonalSocialSecurity { get; set; }//个人社保
