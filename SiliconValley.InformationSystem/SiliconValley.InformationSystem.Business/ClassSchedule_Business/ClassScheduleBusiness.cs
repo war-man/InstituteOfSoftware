@@ -16,10 +16,14 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.FinaceBusines;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.Shortmessage_Business;
+using SiliconValley.InformationSystem.Business.EducationalBusiness;
+
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
+        //时间段
+        public BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业
@@ -52,6 +56,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
         //短信模板
         ShortmessageBusiness shortmessageBusiness = new ShortmessageBusiness();
+        //班级状态
+        BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -117,6 +123,15 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
 
+        }
+        /// <summary>
+        /// 通过班级名称获取一个班级
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public ClassSchedule FintClassSchedule(string ClassName)
+        {
+         return this.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber==ClassName).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级查询返回出班级人数,微信号,QQ号,班级名称
@@ -397,6 +412,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 if (x < 1)
                 {
 
+                   
+                    var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+                  var fint=  this.FintClassSchedule(FormerClass);
+                    fint.ClassstatusID = staid;
+                    this.Update(fint);
                     RemovalRecords removalRecords = new RemovalRecords();
                     removalRecords.Addtime = Convert.ToDateTime(Addtime);
                     removalRecords.FormerClass = FormerClass;
@@ -463,7 +483,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public string GetClassGrand(string ClassNumber, int type)
         {
-            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
+            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber&&a.ClassstatusID==null).FirstOrDefault();
+            CLaaNuma = CLaaNuma == null ? new ClassSchedule() : CLaaNuma;
             if (type == 1)
             {
                 Specialty find_s = Techarcontext.GetEntity(CLaaNuma.Major_Id);
@@ -479,7 +500,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             else
             {
-                return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
+                return CLaaNuma.grade_Id <1?"": Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
             }
         }
         /// <summary>
@@ -556,7 +577,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public int ClassNameCount(string ClassName)
         {
-            return this.GetList().Where(a => a.ClassNumber == ClassName).Count();
+            return this.GetList().Where(a => a.ClassNumber == ClassName&&a.ClassstatusID == null).Count();
         }
         /// <summary>
         /// 手机短信实例
@@ -600,6 +621,71 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public AjaxResult EntiShortmessage(string content)
         {
             return shortmessageBusiness.EntiShortmessage("学费催费", content);
+        }
+       
+        /// <summary>
+        /// S2,S3,S4升学
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public AjaxResult EntitAddClassSchedule(string ClassName)
+        {
+            AjaxResult result = null;
+            try
+            {
+            List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
+            List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
+         
+           var ClassSchedules= this.GetList().Where(a => a.ClassNumber == ClassName && a.ClassstatusID == null).FirstOrDefault();
+            var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+            ClassSchedules.ClassstatusID = staid;
+            //先修改原来班级
+               this.Update(ClassSchedules);
+            var x=  GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == ClassSchedules.grade_Id).FirstOrDefault();
+            ClassSchedules.grade_Id = x.NextStageID;
+            ClassSchedules.ClassstatusID = null;
+         
+            result = new SuccessResult();
+            result.Success = true;
+            //再添加一个新班级
+            this.Insert(ClassSchedules);
+       
+            var ClassStudent=  ss.GetList().Where(a => a.ClassID == ClassName && a.CurrentClass == true).ToList();
+            
+            foreach (var item in ClassStudent)
+            {
+                var UpdateSche = ss.GetList().Where(a => a.StudentID == item.StudentID && a.ClassID == ClassName).FirstOrDefault();
+                if (UpdateSche != null)
+                {
+                    UpdateSche.CurrentClass = false;
+                    UpdateScheduleFor.Add(UpdateSche);
+                }
+                ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                scheduleForTrainees.ClassID =item.ClassID;
+                scheduleForTrainees.StudentID = item.StudentID;
+                scheduleForTrainees.CurrentClass = true;
+                scheduleForTrainees.ID_ClassName = item.ID;
+                scheduleForTrainees.AddDate = DateTime.Now;
+                AddScheduleFor.Add(scheduleForTrainees);
+            }
+            ss.Update(UpdateScheduleFor);
+            ss = new ScheduleForTraineesBusiness();
+            ss.Insert(AddScheduleFor);
+            BusHelper.WriteSysLog("添加班级学员", EnumType.LogType.添加数据);
+            result.Msg = "升学成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
         }
     }
 }

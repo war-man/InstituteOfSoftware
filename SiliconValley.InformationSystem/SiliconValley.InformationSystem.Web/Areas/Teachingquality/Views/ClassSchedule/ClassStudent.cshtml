@@ -252,9 +252,22 @@
     <div class="layui-colla-item">
         <h2 class="layui-colla-title"> 升学管理</h2>
         <div class="layui-colla-content layui-anim">
-            <div>
-                <button type="button" id="Dismantleclasses" class="layui-btn layui-btn-fluid mybut">升学分配班级</button>
-            </div>
+            @{
+                if (@ViewBag.Stage == "S1" || ViewBag.Stage == "Y1")
+                {
+                    <div>
+                        <button type="button" id="Dismantleclasses" class="layui-btn layui-btn-fluid mybut">升学分配班级</button>
+                    </div>
+                }
+                else if(@ViewBag.Stage!="")
+                {
+                    <div>
+                        <button type="button" id="EntitAddClassSchedule" class="layui-btn layui-btn-fluid mybut">一键升学</button>
+                    </div>
+                }
+            }
+
+
             <div>
                 <button type="button" id="Tuition" class="layui-btn layui-btn-fluid mybut">升学缴费情况</button>
             </div>
@@ -663,6 +676,12 @@
                 layer.alert('请选择一个学员', { icon: 0 });
             }
 
+        });
+        //升学业务
+        $("#EntitAddClassSchedule").click(function () {
+            $.post("/Teachingquality/ClassSchedule/EntitAddClassSchedule?ClassName="+'@Html.Raw(ViewBag.ClassName)', function () {
+                layer.msg(db.Msg);
+            })
         });
     });
 

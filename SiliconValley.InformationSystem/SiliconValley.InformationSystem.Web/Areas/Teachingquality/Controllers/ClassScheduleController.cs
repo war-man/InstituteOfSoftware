@@ -21,6 +21,7 @@ using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.EducationalBusiness;
 using SiliconValley.InformationSystem.Business.Shortmessage_Business;
+using SiliconValley.InformationSystem.Entity.Entity;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -110,8 +111,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 int maid = int.Parse(BaseDataEnum_Id);
                 list = list.Where(a => a.BaseDataEnum_Id == maid).ToList();
             }
-
-            var listx = list.Select(a => new
+            //班级状态表
+                BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
+              var listx = list.Select(a => new
             {
                 //  a.BaseDataEnum_Id,
                 ClassNumber = a.ClassNumber,
@@ -122,7 +124,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
                 Major_Id = a.Major_Id==null?"暂无专业": Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
                 HeadmasterName= Hadmst.ClassHeadmaster(a.ClassNumber)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.ClassNumber).EmpName,
-                IsBool = Dismantle.GetList().Where(c=>c.IsDelete==false&&c.FormerClass==a.ClassNumber).FirstOrDefault()==null?"正常":"不可使用",
+                IsBool = classtatus.GetList().Where(c=>c.IsDelete==false&&c.id==a.ClassstatusID).FirstOrDefault()==null?"正常":classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
                  stuclasss = Stuclass.GetList().Where(c=>c.ClassID==a.ClassNumber&&c.CurrentClass==true).Count()//专业
             }).ToList();
             var dataList = listx.OrderBy(a => a.ClassNumber).Skip((page - 1) * limit).Take(limit).ToList();
@@ -137,7 +139,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             catch (Exception ex)
             {
-
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
                 return Json("数据有误", JsonRequestBehavior.AllowGet);
             }
@@ -208,6 +209,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.ClassName = classNumberss;
             ViewBag.ClassdetailsView = dbtext.Listdatails(classNumberss);
             ViewBag.Members = dbtext.MembersList();
+            ViewBag.Stage = dbtext.GetClassGrand(classNumberss, 234);
             return View(x);
         }
 
@@ -449,6 +451,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(dbtext.SMScharging(personlist), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult EntitAddClassSchedule()
+        {
+            string classname = Request.QueryString["ClassName"];
+            return Json(dbtext.EntitAddClassSchedule(classname), JsonRequestBehavior.AllowGet);
+        }
         public ActionResult PhoneSMS()
         {
             string str = "<p>湖南硅谷高科软件学员逾期缴费学员通知：</p><p>{Name}家长：您好！经财务核查，您孩子{NextStageID}阶段升学费用逾期未缴，应交{ShouldJiao}元，欠费{Surplus}元。请您于本周内经财务办理缴费手续，逾期不缴教务处将根据学员管理规定予以听课处理。感谢您的配合与理解！</p><p>班主任：{HeadmasterName}&nbsp; 电话：{Phone}</p><p><br/></p>";
