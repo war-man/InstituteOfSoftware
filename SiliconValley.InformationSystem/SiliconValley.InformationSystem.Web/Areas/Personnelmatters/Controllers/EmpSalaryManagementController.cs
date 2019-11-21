@@ -39,14 +39,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.PerformanceSalary,//绩效工资
                              netbookSubsidy = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).NetbookSubsidy,//笔记本补助
                              socialSecuritySubsidy = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).SocialSecuritySubsidy,//社保补贴
-                            //应发工资1(基本工资+岗位工资+绩效工资+笔记本补助+社保补贴)
+                          //应发工资1(基本工资+岗位工资+绩效工资+笔记本补助+社保补贴)
                              SalaryOne = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).BaseSalary + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PositionSalary + e.PerformanceSalary + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).NetbookSubsidy + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).SocialSecuritySubsidy,
+
                              e.OvertimeCharges,//加班费用
+                             e.Bonus, // 奖金/元
                              leavedays = msrmanage.GetAttendanceInfoByEmpid(e.EmployeeId).LeaveDays,//请假天数
                              e.LeaveDeductions,//（请假）扣款/元
                              e.OtherDeductions,//其他扣款
-                             //应发工资2
-                             SalaryTwo = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).BaseSalary +  msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).NetbookSubsidy ,
+                            
+                             //应发工资2(加班)
+                             SalaryTwo = msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).BaseSalary + msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).NetbookSubsidy,
+
                              e.PersonalSocialSecurity,//个人社保
                              msrmanage.GetEmpsalaryByEmpid(e.EmployeeId).PersonalIncomeTax,//个税
                              e.Total,//合计

@@ -82,6 +82,20 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             PositionManage pmanage = new PositionManage();
             return pmanage.GetEntity(id);
         }
+
+        //根据岗位编号获取该岗位的员工
+        public List<EmployeesInfo> GetEmpByPid(int pid) {
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+            foreach (var item in this.GetList())
+            {
+                if (item.PositionId==pid) {
+                    emplist.Add(item);
+                }
+            }
+            return emplist;
+        }
+
+
         /// <summary>
         /// 根据类型编号获取员工异动类型对象
         /// </summary>
