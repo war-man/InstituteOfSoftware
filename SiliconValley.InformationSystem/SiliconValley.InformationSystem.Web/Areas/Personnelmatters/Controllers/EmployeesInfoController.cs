@@ -267,6 +267,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             FinanceModelBusiness fmmanage = new FinanceModelBusiness();
             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+            AttendanceInfoManage attinfomanage = new AttendanceInfoManage();
+            MeritsCheckManage mcmanage = new MeritsCheckManage();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -338,6 +340,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     if (AjaxResultxx.Success) {
                         bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
                         AjaxResultxx.Success = monthss;
+                    }
+                    if (AjaxResultxx.Success) {
+                        bool att = attinfomanage.AddEmpToAttendanceInfo(emp.EmployeeId);
+                        AjaxResultxx.Success = att;
+                    }
+                    if (AjaxResultxx.Success) {
+                        bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);
+                        AjaxResultxx.Success = mc;
                     }
                    
                 }  

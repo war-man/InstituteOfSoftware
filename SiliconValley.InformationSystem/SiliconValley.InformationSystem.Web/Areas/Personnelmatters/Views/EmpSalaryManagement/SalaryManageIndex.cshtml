@@ -4,13 +4,16 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-            @*操作栏*@
-            <script type="text/html" id="barDemo">
-                <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">工资详情</a>
-            </script>
-            <table id="salarytab" lay-filter="salarytab"></table>
-      
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="AddEmps">工资编辑</button>
+        <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>
+    </div>
+</script>
+
+<table id="salarytab" lay-filter="salarytab"></table>
+
 
 @section script{
     <script>
@@ -21,7 +24,7 @@
             var form = layui.form;
             var laydate = layui.laydate;
             var element = layui.element;
-
+           // console.log(@ViewBag.yearandmonth);
             table.render({
                 elem: '#salarytab'
                 , url: '/Personnelmatters/EmpSalaryManagement/EmpSalaryData'
@@ -29,8 +32,10 @@
                 , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
-                , cols: [[
-                      { field: 'empName', title: '姓名', width: 100, sort: true }
+                , cols: [[{ title: '湖南硅谷云教育科技有限公司--' + "@ViewBag.yearandmonth"+ "--工资表", colspan: 23 }],
+                    [
+                      { type:'checkbox',width:18 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
                     , { field: 'Depart', title: '所属部门', width: 130, sort: true }
                     , { field: 'Position', title: '所属岗位', width: 110, sort: true }
                     , { field: 'toRegularDays', title: '出勤天数', width: 110, sort: true }
@@ -52,37 +57,8 @@
                     , { field: 'Total', title: '合计', sort: true, width: 120 }
                     , { field: 'PayCardSalary', title: '实发工资(工资卡)', sort: true, width: 140}
                     , { field: 'CasehSalary', title: '实发工资(现金)', sort: true, width: 140 }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
                 ]]
                 , page: true
-            });
-
-           
-            //监听行工具事件
-            table.on('tool(salarytab)', function (obj) {
-                var data = obj.data;
-                if (obj.event === 'edit') {
-                    layer.open({
-                        type: 2,
-                        content: '/Personnelmatters/EmpSalaryManagement/EditEmp/?id=' + data.EmployeeId
-                        , area: ["1200px", "730px"]
-                        , title: '编辑'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                } else if (obj.event === 'detail') {
-                    layer.open({
-                        type: 2,
-                        content: '/Personnelmatters/EmployeesInfo/EmpDetail/?id=' + data.EmployeeId
-                        , area: ['1000px', '750px'],
-                        title: '员工详细信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                }
-             
             });
 
 
