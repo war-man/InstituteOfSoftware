@@ -84,7 +84,7 @@
         }
         .AreCss1{
             width:97%;
-            height:70px;
+            height:100px;
         }
     </style>
 </head>
@@ -118,20 +118,13 @@
                 </div>
             </div>
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                <label class="LableCss1">任课老师:</label>
-                <div id="childteacher_div" class="layui-input-block">
-                    <input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher" />
-                </div>
-            </div>
-        </div>
-        <div class="layui-row layui-form-item">
-
-            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="LableCss1">上课日期:</label>
                 <div class="layui-input-block">
                     <input type="text" name="childview_AnpiDate" id="childview_AnpiDate" class="layui-input linu" />
                 </div>
             </div>
+        </div>
+        <div class="layui-row layui-form-item">
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="LableCss1">上课时间段:</label>
                 <div class="layui-input-block">
@@ -148,13 +141,19 @@
                 </div>
             </div>
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="LableCss1">任课老师:</label>
+                <div id="childteacher_div" class="layui-input-block">
+                    <input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher" />
+                </div>
+            </div>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="layui-form-label">教室:</label>
                 <div id="childvieroom_div" class="layui-input-block">
 
                 </div>
             </div>
         </div>
-        <div class="layui-row layui-form-item">
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">备注:</label>
                 <div class="layui-input-block">
@@ -178,8 +177,38 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
- 
-        layui.use(['form','laydate'], function () {
+        //加载上午下午1234节
+        function My_sametime(num) {   
+            if (num==1) {
+                $("#childview_timetype option").each(function (index, ele) {
+                    $(ele).remove();
+                });
+            }               
+                var timetype = $("#childview_timetype");
+                $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
+                $('<option value="上午12节">上午1/2节</option>').appendTo(timetype);
+                $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);
+                $('<option value="上午34节">上午3/4节</option>').appendTo(timetype);
+                $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
+        }
+        //加载上午，下午
+        function My_times(num) {
+            var timetype = $("#childview_timetype"); 
+            if (num==1) {
+                $("#childview_timetype option").each(function (index, ele) {
+                    $(ele).remove();
+                });
+                $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
+            }                                 
+            $('<option value="上午">上午</option>').appendTo(timetype);
+            $('<option value="下午">下午</option>').appendTo(timetype);   
+        }
+        //加载整天
+        function My_zhengtian() {
+            var timetype = $("#childview_timetype");
+            $('<option value="整天">整天</option>').appendTo(timetype);
+        }
+        layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             laydate.render({
@@ -190,14 +219,17 @@
             form.on('select(childview_grand)', function (data) {
                 //每当重新选择阶段时，类型，课程名称，任课老师重新设定
                 form.val("manual_form", {
-                    "childview_Currtype": "其他"              
+                    "childview_Currtype": "0"   //给课程类型设为初始值(其他)          
                 });
-                $("#childviewcurr_div")[0].innerHTML = "";
-                $("#childteacher_div")[0].innerHTML = "";
-
+                $("#childviewcurr_div")[0].innerHTML = "";//将课程div清空
+                $("#childteacher_div")[0].innerHTML = "";//将任课老师div清空
+                $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname" />').appendTo($("#childviewcurr_div"));//将输入框添加到课程div中
+                //如果阶段为“--请选择--”，则清空班级下拉框
                 if (data.value == "0") {
                     $("#class_childdiv")[0].innerHTML = "";
+                    $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));//将任课老师输入框添加到任课老师div中
                 } else {
+                    //根据阶段获取班级列表
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
                         success: function (sudata) {
@@ -213,24 +245,40 @@
                     });
                 }
 
-            });      
-            //上课时间点击事件(获取教室)
+            });
+            //上课时间点击事件(获取教室跟任课老师)
             form.on('select(childview_timetype)', function (data) {
+                $("#childvieroom_div")[0].innerHTML = "";//教室更新
                 var anpaiTime = $("#childview_AnpiDate").val();
-                if (anpaiTime == "") {
-                    layer.msg('上课日期不能为空!!!');
-                } else {
+                var kengcheng = $("#childview_currname").val();
+                if (kengcheng == "0" || kengcheng == undefined || kengcheng == "") {
+                    layer.msg('课程不能为空!!!', {}, function () {
+                        form.val("manual_form", {
+                            "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                        });
+                    });
+                } else if (anpaiTime == "") {                     
+                    layer.msg('上课日期不能为空!!!', {}, function () {
+                        form.val("manual_form", {
+                            "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                        });
+                    });
+                }
+                else {
                     if (data.value == "0") {
                         //清空childview_room
                         $("#childvieroom_div")[0].innerHTML = "";
+                        //清空老师
+                        $("#childteacher_div")[0].innerHTML = "";
                     } else {
                         var mydata = { "Time": anpaiTime, "timeName": data.value }
+                        //获取教室
                         $.ajax({
                             url: '/Educational/Reconcile/GetEmptyRoom',
                             data: mydata,
-                            type:"POST",
+                            type: "POST",
                             success: function (sudata) {
-                               var select_list= $('<select id="childview_room" name="childview_room"></select >');
+                                var select_list = $('<select id="childview_room" name="childview_room"></select >');
                                 for (var i = 0; i < sudata.length; i++) {
                                     $('<option value=' + sudata[i].Id + '>' + sudata[i].ClassroomName + '<option>').appendTo(select_list);
                                 }
@@ -238,11 +286,47 @@
                                 form.render(); //更新全部
                             }
                         });
+                        //通过课程，日期，时间段获取任课老师
+                        //获取课程
+                        var type = $("#childview_Currtype").val();//获取上课类型
+                        var tt = type.substr(0,2);
+                        var curr = $("#childview_currname").val();
+                        var mydata2 = { "Time": anpaiTime, "timeName": data.value, "Curr": curr }
+                        if (type != "0") {
+                            if (type == "专业课") {
+                                $.ajax({
+                                    url: '/Educational/Reconcile/GetTeacher',
+                                    data: mydata2,
+                                    type: "POST",
+                                    success: function (succ) {
+                                        $("#childteacher_div")[0].innerHTML = "";
+                                        var teacher_child = $('<select id="teacher_child" name="teacher_child" lay-filter="teacher_child"></select>');
+                                        for (var i = 0; i < succ.length; i++) {
+                                            $('<option value=' + succ[i].Value + '>' + succ[i].Text + '</option>').appendTo(teacher_child);
+                                            $("#childteacher_div").append(teacher_child);
+                                        }
+                                        form.render(); //更新全部
+                                    }
+                                });
+                            } else if (tt != "0" && tt != "专业") {                                
+                                //根据其他课程（职素，英语，数学，语文）获取任课老师
+                                $.ajax({
+                                    url: '/Educational/Reconcile/GetNoMajoiThercher/' + tt,
+                                    success: function (suc) {
+                                        $("#childteacher_div")[0].innerHTML = "";//任课老师div为空
+                                        var teacher_child = $('<select id="teacher_child" name="teacher_child" lay-filter="teacher_child"></select>');
+                                        for (var i = 0; i < suc.length; i++) {
+                                            $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teacher_child);
+                                            $("#childteacher_div").append(teacher_child);
+                                        }
+                                        form.render(); //更新全部
+                                    }
+                                });
+                            }
+                        }
                     }
-                }
-                 
-
-            });      
+                } 
+            });
             //给班级注册点击事件
             form.on('select(class_child)', function (data) {
                 //获取班级
@@ -250,117 +334,94 @@
             });
             //获取课程和任课老师
             form.on('select(childview_Currtype)', function (data) {
+                form.val("manual_form", {
+                    "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                });
+                form.render(); //更新全部
                 //获取选择的班级是哪一个阶段的,根据阶段获取课程
                 if (classnumber == 0) {
+                    //如果班级未选择，则清空任课老师div
                     layer.msg('请选择班级!!!', {}, function () {
+                        form.val("manual_form", {
+                            "childview_Currtype": "0"   //给课程类型设为初始值(其他)          
+                        });
                         $("#childteacher_div")[0].innerHTML = "";
-                    });
+                    });                   
                 } else {
+                    //如果类型选择的是其他
                     if (data.value == "0") {
-                        $("#childviewcurr_div")[0].innerHTML = "";
-                        $("#childteacher_div")[0].innerHTML = "";//老师重新选择
-                        //获取用户选择的课程类型(如果是专业课，则去掉input添加select)
-                        $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));
-                        $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));
+                        My_sametime(1);
+                        My_times(2);
+                        My_zhengtian();
+                        form.render(); //更新全部
+                        $("#childviewcurr_div")[0].innerHTML = "";//清空课程div
+                        $("#childteacher_div")[0].innerHTML = "";//老师重新选择                      
+                        $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));//课程div初始化
+                        $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));//任课老师div初始化
                     } else {
-                        $("#childteacher_div")[0].innerHTML = "";//老师重新选择
+                        $("#childteacher_div")[0].innerHTML = "";
                         //获取课程类型
                         var type = data.value;
-                        $.ajax({
-                            url: '/Educational/Reconcile/CaseClassGetCurr/' + classnumber,
-                            success: function (sucdata) {
-                                if (type.indexOf("专业") != -1) {
-                                    $("#childviewcurr_div")[0].innerHTML = "";
-                                    //添加课程
+                        if (type.indexOf("专业") != -1) {
+                            //上课时间段只能是上午或下午
+                            My_times(1);
+                            $("#childviewcurr_div")[0].innerHTML = "";
+                            //添加专业课程
+                            $.ajax({
+                                url: '/Educational/Reconcile/CaseClassGetCurr/' + classnumber,
+                                success: function (sucdata) {
                                     var curr_list = $('<select id="childview_currname" name="childview_currname" lay-filter="curr_child"></select>');
                                     for (var i = 0; i < sucdata.length; i++) {
                                         $('<option value=' + sucdata[i].CurriculumID + '>' + sucdata[i].CourseName + '</option>').appendTo(curr_list);
-                                        $("#childviewcurr_div").append(curr_list);                                                                 
+                                        $("#childviewcurr_div").append(curr_list);
                                     }
                                     form.render(); //更新全部
-                                } else {            
-                                        $("#childviewcurr_div")[0].innerHTML = "";//课程div为空
-                                        $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));
-                                        $("#childview_currname").attr("disabled", "disabled");
-                                        $("#childview_currname")[0].value = data.value;
-                                    //根据其他课程（职素，英语，数学，语文）获取任课老师
-                                    if (data.value == "职素课") {
-                                        $.ajax({
-                                            url: '/Educational/Reconcile/GetNoMajoiThercher/职素',
-                                            success: function (suc) {
-                                                $("#childteacher_div")[0].innerHTML = "";//任课老师div为空
-                                                var teacher_child = $('<select id="teacher_child" name="teacher_child" lay-filter="teacher_child"></select>');
-                                                for (var i = 0; i < suc.length; i++) {
-                                                    $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teacher_child);
-                                                    $("#childteacher_div").append(teacher_child);
-                                                }
-                                                form.render(); //更新全部
-                                            }
-                                        });
-                                    } else if (data.value=="军事课") {
-                                        $.ajax({
-                                            url: '/Educational/Reconcile/GetNoMajoiThercher/军事',
-                                            success: function (suc) {
-                                                $("#childteacher_div")[0].innerHTML = "";
-                                                var teacher_child = $('<select id="teacher_child" name="teacher_child" lay-filter="teacher_child"></select>');
-                                                for (var i = 0; i < suc.length; i++) {
-                                                    $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teacher_child);
-                                                    $("#childteacher_div").append(teacher_child);
-                                                }
-                                                form.render(); //更新全部
-                                            }
-                                        });
-                                    }
-                                     
-                                } 
-                            }
-                        });
-                    }
-                     
-                }              
-                 
-            });
-            //根据专业课程选择任课老师
-            form.on('select(curr_child)', function (data) {
-                if (data.value == "--请选择--") {
-                    $("#childteacher_div")[0].innerHTML = "";
-                } else {
-                    $.ajax({
-                        url: '/Educational/Reconcile/GetTeacher/' + data.value,
-                        success: function (succ) {
-                            $("#childteacher_div")[0].innerHTML = "";
-                            var teacher_child = $('<select id="teacher_child" name="teacher_child" lay-filter="teacher_child"></select>');
-                            for (var i = 0; i < succ.length; i++) {
-                                $('<option value=' + succ[i].Value + '>' + succ[i].Text + '</option>').appendTo(teacher_child);
-                                $("#childteacher_div").append(teacher_child);
-                            }
-                            form.render(); //更新全部
-                        }
-                    });
-                }
-                
-            });
+                                }
+                            });
+                        } else if (type != "专业课" && type != "0") {
+                            My_sametime(1);
+                            var tt = type.substr(0, 2);
+                            $("#childviewcurr_div")[0].innerHTML = "";//课程div为空
+                            $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));
+                            $("#childview_currname").attr("disabled", "disabled");
+                            $("#childview_currname")[0].value = data.value;                             
+                        } 
 
+                    }
+
+                }
+
+            });
+            //课程点击事件
+            form.on('select(curr_child)', function (data) {
+                form.val("manual_form", {
+                    "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                });
+                //任课老师
+                $("#childteacher_div")[0].innerHTML = "";
+                //教室
+                $("#childvieroom_div")[0].innerHTML = "";
+            })
             //监听提交
             form.on('submit(childview_add)', function (data) {
 
                 if (data.field.child_class == undefined) {
                     layer.msg("请选择班级!!!");
-                } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname=="--请选择--") {
+                } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
                     layer.msg("请选择或填写课程!!!");
-                } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {                    
-                        layer.msg("请选择任课老师!!!");
+                } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
+                    layer.msg("请选择任课老师!!!");
                 } else if (data.field.childview_AnpiDate == "") {
                     layer.msg("请选择上课日期!!!");
                 } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
                     layer.msg("请选择上课时间段!!!");
                 } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
                     layer.msg("请选择教室!!!");
-                }else {
+                } else {
                     //提交数据
                     $.ajax({
                         url: '/Educational/Reconcile/AddHandDataFunction',
-                        type:'POST',
+                        type: 'POST',
                         data: data.field,
                         success: function (suc) {
                             if (suc == "ok") {
@@ -369,14 +430,15 @@
                                     Myclose();
                                 });
                             } else {
-                                layer.msg(suc, {icon:2});
+                                layer.msg(suc, { icon: 2 });
                             }
                         }
                     });
                 }
                 return false;
-            });           
-        })
+            });
+           
+        });
         //关闭弹出层
         function Myclose() {
             var layer = layui.layer;

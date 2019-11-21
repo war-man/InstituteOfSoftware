@@ -46,8 +46,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return new_re;
         }
         //获取当前登录员是哪个校区的教务
-          static int base_id = GetBaseData("201911190040").ClassRoom_Id;
-          static bool IsOld = GetBaseData("201911190040").IsOld;//确定教务
+          static int base_id = GetBaseData("201911190041").ClassRoom_Id;
+          static bool IsOld = GetBaseData("201911190041").IsOld;//确定教务
         #region 高中生课表安排
         public ActionResult ReconcileIndexViews()
         {
@@ -325,9 +325,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(c_list,JsonRequestBehavior.AllowGet);
         }
         //根据专业课程获取专业老师
-        public ActionResult GetTeacher(int id)
+        [HttpPost]
+        public ActionResult GetTeacher()
         {
-            List<Teacher> find_t= ReconcileManeger.GoodSkill_Entity.GetTeachers(id);
+            DateTime anpai= Convert.ToDateTime(Request.Form["Time"]);
+            int curr_id = Convert.ToInt32(Request.Form["Curr"]);
+            string timename = Request.Form["timeName"];
+            List<Teacher> find_t= ReconcileManeger.GoodSkill_Entity.GetTeachers(curr_id);
             List<EmployeesInfo> all= Employees_Entity.GetList();
             List<EmployeesInfo> find_e = new List<EmployeesInfo>();
             foreach (EmployeesInfo item1 in all)
@@ -336,6 +340,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 {
                     if (item2.EmployeeId==item1.EmployeeId)
                     {
+
                         find_e.Add(item1);
                     }
                 }
@@ -347,8 +352,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         public ActionResult GetNoMajoiThercher(string id)
         {
             List<SelectListItem> select = new List<SelectListItem>();
+            PositionManage position = new PositionManage();
             switch (id)
-            {
+            {               
                 case "职素":
                     //获取可以上职素课的班主任
                     select= Reconcile_Entity.GetMasTeacher().Select(m => new SelectListItem() { Text = Employees_Entity.GetEntity(m.informatiees_Id).EmpName, Value = m.informatiees_Id }).ToList();
@@ -357,8 +363,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     //获取教官
                     select= Reconcile_Entity.GetSir().Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList();
                     break;
+                case "英语":
+                    //获取英语老师
+                   Position find_p1= position.GetList().Where(p=>p.PositionName=="英语老师").FirstOrDefault();
+                    break;
+                case "数学":
+                    Position find_p2= position.GetList().Where(p => p.PositionName == "数学老师").FirstOrDefault();
+                    //获取数学老师
+                    break;
+                case "语文":
+                    Position find_p3= position.GetList().Where(p => p.PositionName == "语文老师").FirstOrDefault();
+                    //获取语文老师
+                    break;
             }
-
             return Json(select, JsonRequestBehavior.AllowGet);
         }
         //手动排课数据提交
