@@ -26,7 +26,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<bool> CurrentClass { get; set; }
          public DateTime AddDate { get; set; }
-
+        /// <summary>
+        /// 班级id
+        /// </summary>
+        public int ID_ClassName { get; set; }
 
     }
 }

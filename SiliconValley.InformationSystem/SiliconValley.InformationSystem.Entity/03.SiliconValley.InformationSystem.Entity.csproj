@@ -103,6 +103,7 @@
     <Compile Include="Entity\Classroom.cs" />
     <Compile Include="Entity\Classroomequipment.cs" />
     <Compile Include="Entity\ClassSchedule.cs" />
+    <Compile Include="Entity\Classstatus.cs" />
     <Compile Include="Entity\ClassStudyGroup.cs" />
     <Compile Include="Entity\ClassTeacher.cs" />
     <Compile Include="Entity\ClassTeacherKeep.cs" />
@@ -409,6 +410,5 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

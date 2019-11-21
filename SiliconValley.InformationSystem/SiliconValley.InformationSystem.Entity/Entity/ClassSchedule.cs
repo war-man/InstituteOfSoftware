@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 班级编号
         /// </summary>
-      [Key]
+        [Key]
         public string ClassNumber { get; set; }
         /// <summary>
         /// 班级状态 false为未毕业班 true为毕业班
@@ -38,6 +38,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<bool> IsDelete { get; set; }
         /// <summary>
+        /// 编号
+        /// </summary>
+        public int id { get; set; }
+        /// <summary>
         /// 专业id
         /// </summary>
         public Nullable<int> Major_Id { get; set; }
@@ -49,6 +53,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 枚举 1是上午
         /// </summary>
         public Nullable<int> BaseDataEnum_Id { get; set; }
+        /// <summary>
+        /// 班级状态，升学！
+        /// </summary>
+        public int? ClassstatusID { get; set; }
     }
 }
 

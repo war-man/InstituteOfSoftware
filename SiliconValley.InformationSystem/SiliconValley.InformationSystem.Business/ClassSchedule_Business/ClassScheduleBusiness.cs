@@ -15,6 +15,7 @@ using SiliconValley.InformationSystem.Business.StudentmanagementBusinsess;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.FinaceBusines;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
+using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
@@ -22,7 +23,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
     public class ClassScheduleBusiness : BaseBusiness<ClassSchedule>
     {
         //时间段
-      public  BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
+        public BaseDataEnumManeger BaseDataEnum_Entity = new BaseDataEnumManeger();
         //学生委员职位
         BaseBusiness<Members> MemBers = new BaseBusiness<Members>();
         //专业
@@ -53,6 +54,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         HeadmasterBusiness Hadmst = new HeadmasterBusiness();
         //学员信息
         StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+        //短信模板
+        ShortmessageBusiness shortmessageBusiness = new ShortmessageBusiness();
+        //班级状态
+        BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -118,6 +123,15 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
 
+        }
+        /// <summary>
+        /// 通过班级名称获取一个班级
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public ClassSchedule FintClassSchedule(string ClassName)
+        {
+         return this.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber==ClassName).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级查询返回出班级人数,微信号,QQ号,班级名称
@@ -398,6 +412,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 if (x < 1)
                 {
 
+                   
+                    var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+                  var fint=  this.FintClassSchedule(FormerClass);
+                    fint.ClassstatusID = staid;
+                    this.Update(fint);
                     RemovalRecords removalRecords = new RemovalRecords();
                     removalRecords.Addtime = Convert.ToDateTime(Addtime);
                     removalRecords.FormerClass = FormerClass;
@@ -464,11 +483,12 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public string GetClassGrand(string ClassNumber, int type)
         {
-            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
+            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber&&a.ClassstatusID==null).FirstOrDefault();
+            CLaaNuma = CLaaNuma == null ? new ClassSchedule() : CLaaNuma;
             if (type == 1)
             {
                 Specialty find_s = Techarcontext.GetEntity(CLaaNuma.Major_Id);
-                if (find_s!=null)
+                if (find_s != null)
                 {
                     return find_s.SpecialtyName;
                 }
@@ -476,24 +496,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 {
                     return "无";
                 }
-                
-            }
-            else 
-            {
-                return Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
-            }
-        }
-        public string GetClassTime(string ClassNumber)
-        {
-            ClassSchedule CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
-            BaseDataEnum find_b= BaseDataEnum_Entity.GetList().Where(b => b.Id == CLaaNuma.BaseDataEnum_Id).FirstOrDefault();
-            if (find_b!=null)
-            {
-                return find_b.Name;
+
             }
             else
             {
-                return "无";
+                return CLaaNuma.grade_Id <1?"": Grandcontext.GetEntity(CLaaNuma.grade_Id).GrandName;
             }
         }
         /// <summary>
@@ -517,6 +524,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 detailedcostView.Stidentid = item.StuNameID;
                 detailedcostView.Sex = item.Sex == false ? "女" : "男";
                 detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName).EmpName;
+                detailedcostView.Phone = Hadmst.ClassHeadmaster(ClassName).Phone;
                 lisrDetaild.Add(detailedcostView);
             }
             lisrDetaild = lisrDetaild.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
@@ -529,7 +537,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="Grand"></param>
         /// <param name="StudentID"></param>
         /// <returns></returns>
-        public DetailedcostView GotoschoolTuition(int? Grand, string StudentID)
+        public DetailedcostView GotoschoolTuition(int Grand, string StudentID)
         {
             //已交费用
             decimal price = 0;
@@ -569,7 +577,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public int ClassNameCount(string ClassName)
         {
-            return this.GetList().Where(a => a.ClassNumber == ClassName).Count();
+            return this.GetList().Where(a => a.ClassNumber == ClassName&&a.ClassstatusID == null).Count();
         }
         /// <summary>
         /// 手机短信实例
@@ -592,15 +600,92 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public string SMScharging(List<DetailedcostView> Datailedcost)
         {
             string count = "";
+          var fine=  shortmessageBusiness.FineShortmessage("学费催费").content;
             foreach (var item in Datailedcost)
             {
                 //电话Familyphone
                 var student = studentInformationBusiness.GetEntity(item.Stidentid);
-                var msmTexts = item.Name + student.Guardian.Split(',')[1] + "您好：您的孩子有" + item.NextStageID + "升学费用未交齐，应交" + item.ShouldJiao + "元，未交" + item.Surplus +
-                    "元，已交" + item.Amountofmoney + "元。请您尽快交齐，否则学校将给您的孩子做停课处理！有问题请联系：" + item.HeadmasterName + "班主任";
-                count = PhoneSMS(student.Familyphone, msmTexts);
+               var msmTexts= fine.Replace("{{Name}}", item.Name).Replace("{{NextStageID}}", item.NextStageID).Replace("{{ShouldJiao}}", item.ShouldJiao.ToString()).Replace("{{Surplus}}", item.Surplus.ToString()).Replace("{{HeadmasterName}}", item.HeadmasterName).
+                    Replace("{{Phone}}", item.Phone).Replace("{{Stidentid}}", item.Stidentid).Replace("{{ClassName}}", item.ClassName);
+                string strText = System.Text.RegularExpressions.Regex.Replace(msmTexts, "<[^>]+>", "");
+                strText = System.Text.RegularExpressions.Regex.Replace(strText, "&[^;]+;", ""); 
+                count = PhoneSMS(student.Familyphone, strText);
             }
             return count;
+        }
+        /// <summary>
+        /// 添加学费催费模板
+        /// </summary>
+        /// <param name="content">内容</param>
+        /// <returns></returns>
+        public AjaxResult EntiShortmessage(string content)
+        {
+            return shortmessageBusiness.EntiShortmessage("学费催费", content);
+        }
+       
+        /// <summary>
+        /// S2,S3,S4升学
+        /// </summary>
+        /// <param name="ClassName">班级名称</param>
+        /// <returns></returns>
+        public AjaxResult EntitAddClassSchedule(string ClassName)
+        {
+            AjaxResult result = null;
+            try
+            {
+            List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
+            List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
+         
+           var ClassSchedules= this.GetList().Where(a => a.ClassNumber == ClassName && a.ClassstatusID == null).FirstOrDefault();
+            var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+            ClassSchedules.ClassstatusID = staid;
+            //先修改原来班级
+               this.Update(ClassSchedules);
+            var x=  GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == ClassSchedules.grade_Id).FirstOrDefault();
+            ClassSchedules.grade_Id = x.NextStageID;
+            ClassSchedules.ClassstatusID = null;
+         
+            result = new SuccessResult();
+            result.Success = true;
+            //再添加一个新班级
+            this.Insert(ClassSchedules);
+       
+            var ClassStudent=  ss.GetList().Where(a => a.ClassID == ClassName && a.CurrentClass == true).ToList();
+            
+            foreach (var item in ClassStudent)
+            {
+                var UpdateSche = ss.GetList().Where(a => a.StudentID == item.StudentID && a.ClassID == ClassName).FirstOrDefault();
+                if (UpdateSche != null)
+                {
+                    UpdateSche.CurrentClass = false;
+                    UpdateScheduleFor.Add(UpdateSche);
+                }
+                ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                scheduleForTrainees.ClassID =item.ClassID;
+                scheduleForTrainees.StudentID = item.StudentID;
+                scheduleForTrainees.CurrentClass = true;
+                scheduleForTrainees.ID_ClassName = item.ID;
+                scheduleForTrainees.AddDate = DateTime.Now;
+                AddScheduleFor.Add(scheduleForTrainees);
+            }
+            ss.Update(UpdateScheduleFor);
+            ss = new ScheduleForTraineesBusiness();
+            ss.Insert(AddScheduleFor);
+            BusHelper.WriteSysLog("添加班级学员", EnumType.LogType.添加数据);
+            result.Msg = "升学成功";
+
+            }
+            catch (Exception ex)
+            {
+
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
         }
     }
 }
