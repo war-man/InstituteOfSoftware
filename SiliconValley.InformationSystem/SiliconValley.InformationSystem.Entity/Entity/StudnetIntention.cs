@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 就业意向调查问卷
+    /// </summary>
     [Table(name: "StudnetIntention")]
     public partial class StudnetIntention
     {
@@ -21,7 +24,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Key]
         public int ID { get; set; }
         public string StudentNO { get; set; }
-        public Nullable<int> EmpID { get; set; }
+        public int AreaID { get; set; }
         public string Salary { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }

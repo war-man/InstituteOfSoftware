@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public List<ScheduleForTrainees> GetScheduleForTrainees()
         {
             return this.GetIQueryable().Where(a => a.CurrentClass == true).ToList();
+            
         }
 
         /// <summary>

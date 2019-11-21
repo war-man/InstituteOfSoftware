@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
     public class EmploymentAreasController : Controller
     {
-        private EmploymentAreasBuiness dbemploymentAreas;
+        private EmploymentAreasBusiness dbemploymentAreas;
         // GET: Obtainemployment/EmploymentAreas
         public ActionResult EmploymentAreasIndex()
         {
@@ -35,7 +35,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
-                dbemploymentAreas = new EmploymentAreasBuiness();
+                dbemploymentAreas = new EmploymentAreasBusiness();
 
                 ajaxResult.Success = dbemploymentAreas.verificationname(param0);
             }
@@ -56,7 +56,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 if (!string.IsNullOrWhiteSpace(param0.AreaName))
                 {
-                    dbemploymentAreas = new EmploymentAreasBuiness();
+                    dbemploymentAreas = new EmploymentAreasBusiness();
                     if (dbemploymentAreas.verificationname(param0.AreaName))
                     {
                         ajaxResult.Success = false;
@@ -96,7 +96,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <returns></returns>
         public ActionResult SearchData(int page, int limit)
         {
-            dbemploymentAreas = new EmploymentAreasBuiness();
+            dbemploymentAreas = new EmploymentAreasBusiness();
             var aa = dbemploymentAreas.GetIQueryable().ToList();
             var resultdata1 = aa.OrderByDescending(a => a.Date).Skip((page - 1) * limit).Take(limit).ToList();
 
@@ -120,7 +120,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
-                dbemploymentAreas = new EmploymentAreasBuiness();
+                dbemploymentAreas = new EmploymentAreasBusiness();
                 var aa = dbemploymentAreas.GetIQueryable().Where(a => a.ID == param0).FirstOrDefault();
                 if (aa != null)
                 {

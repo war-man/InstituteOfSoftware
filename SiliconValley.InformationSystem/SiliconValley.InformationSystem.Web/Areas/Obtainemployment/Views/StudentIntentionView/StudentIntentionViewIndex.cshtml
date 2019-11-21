@@ -4,5 +4,200 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>StudentIntentionViewIndex</h2>
+<style>
+    #bb {
+        background-color: transparent;
+    }
 
+    .aabvv {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: left;
+    }
+
+    #stuname {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        font-size: 42px;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #212529;
+        text-align: left;
+    }
+
+    .mycorlor {
+        background-color: transparent;
+    }
+</style>
+
+@*<h2>StudentIntentionViewIndex</h2>*@
+@*<link href="~/Areas/Obtainemployment/css/bootstrap.css" rel="stylesheet" />*@
+
+<div class="aabvv">
+
+    <div class="jumbotron" id="bb">
+
+        <h1 class="display-4" id="stuname"></h1>
+        <p class="lead">Congratulations on your graduation. Please fill in your employment intention questionnaire.</p>
+        <hr class="my-4">
+        <p>祝贺你毕业。请填写您的就业意向调查表。</p>
+
+        <div>
+
+            <form class="layui-form">
+                <div class="layui-container">
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="layui-form-label lad">学生姓名:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="StudentName" class="layui-input mycorlor" readonly="readonly" style="border:none" />
+                                <input type="text" id="StudentNO" name="StudentNO" class="layui-input mycorlor" readonly="readonly" style="border:none;display:none;" />
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="layui-form-label lad">班级名称:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="classnumnber" class="layui-input mycorlor" readonly="readonly" style="border:none" />
+
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="layui-form-label lad"> 性别:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="sex" class="layui-input mycorlor" readonly="readonly" style="border:none" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="layui-form-label lad"> 联系方式:</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="Telephone" class="layui-input mycorlor" name="Telephone" lay-verify="required|phone" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label lad"> 确定就业城市:</label>
+                            <div class="layui-input-inline" id="city" style="width:479px">
+
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
+                                <label class="layui-form-label lad"> 期望薪资:</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="Salary" name="Salary" class="layui-input mycorlor" />
+                                </div>
+                            </div>
+                            <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                                <div class="layui-input-inline" id="btn0">
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/template" id="muban0">
+    <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
+</script>
+
+<script type="text/template" id="muban2">
+    <input type="text" id="AreaName" name="AreaName" class="layui-input" value="{{=val}}" readonly="readonly" style="border:none" />
+</script>
+<script type="text/template" id="muban3">
+    <input type="radio" name="AreaID" value="{{=AreaID}}" title="{{=cityname}}" {{=checked}}>
+</script>
+<script src="~/Scripts/underscore.js"></script>
+@section script{
+    <script>
+        layui.use(['table', 'layer', 'form'], function () {
+            var table = layui.table, layer = layui.layer, AreaID = "", form = layui.form;
+
+            jQuery(function () {
+                var existence = '@Html.Raw(ViewBag.existence)';
+                var myobj = JSON.parse('@Html.Raw(ViewBag.myobj)');
+                var city = JSON.parse('@Html.Raw(ViewBag.city)');
+                $("#stuname").text("Hello," + myobj.StudentName);
+                if (existence != 'False') {
+                    loadmuban2(myobj);
+                } else {
+                    loadform(myobj, city);
+                }
+            });
+            function loadmuban0() {
+                var obj = _.template($("#muban0").html());
+                var html = obj({});
+                $("#btn0").append($(html));
+            }
+
+            function loadmuban2(data) {
+                    var obj = _.template($("#muban2").html());
+                var html = obj({val:data.AreaName});
+                $("#city").append($(html));
+            }
+            function loadmuban3(data) {
+                $('#city').children().remove();
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban3").html());
+                    var html = '';
+                    if (i == 0) {
+                        html = obj({ AreaID: data[i].ID, cityname: data[i].AreaName, checked: "checked" });
+                        AreaID = data[i].ID;
+                    } else {
+                        html = obj({ AreaID: data[i].ID, cityname: data[i].AreaName, checked: "" });
+                    }
+
+                    $("#city").append($(html));
+                }
+                var obj = _.template($("#muban3").html());
+                var html = obj({ AreaID: "", cityname: "其他城市", checked: "" });
+                $("#city").append($(html));
+            }
+            function loadform(data, data1) {
+                $("#StudentName").val(data.StudentName);
+                $("#classnumnber").val(data.classnumnber);
+                $("#sex").val(data.sex);
+                $("#Telephone").val(data.Telephone);
+                loadmuban0();
+                loadmuban3(data1);
+                $("#Telephone").val(data.Telephone);
+                $("#Salary").val(data.Salary);
+                $("#StudentNO").val(data.StudentNO);
+                form.render();
+            }
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                console.log(data.field);
+                // $.ajax({
+                //     url: '/Obtainemployment/StudentIntentionView/typing',
+                //    type: "POST",
+                //    data: { param0: data.field },
+                //    success: function (successdata) {
+                //        if (successdata.Success) {
+                //             layer.msg('录入成功!', { icon: 6, time: 2000 }, function () {
+
+                //            });
+
+                //        } else {
+                //            layer.msg('请及时跟就业班主任汇报!', { icon: 6, time: 2000 }, function () {
+
+                //            });
+                //        }
+                //    },
+                //    error: function (errordata) {
+                //        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                //        });
+                //    }
+                //});
+            });
+        });
+    </script>
+}

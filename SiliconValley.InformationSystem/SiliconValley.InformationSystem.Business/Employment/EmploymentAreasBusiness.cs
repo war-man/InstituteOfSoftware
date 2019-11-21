@@ -21,8 +21,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<EmploymentAreas> GetAll()
         {
-            var bb = this.GetIQueryable().Where(a => a.IsDel == false).ToList();
-            return bb;
+            return  this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
         /// <summary>
         /// 根据id查询对象
@@ -73,5 +72,23 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
             return resultdata;
         }
+
+        /// <summary>
+        ///验证名字是否重复
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public bool verificationname(string param0)
+        {
+            var vcc = false;
+            var param1 = param0.Replace(" ", "");
+            var aa = this.GetIQueryable().Where(a => a.AreaName == param1).FirstOrDefault();
+            if (aa != null)
+            {
+                vcc = true;
+            }
+            return vcc;
+        }
+
     }
 }
