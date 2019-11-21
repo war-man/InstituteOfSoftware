@@ -145,7 +145,6 @@
                                 <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                                     <label class="layui-form-label">员工姓名</label>
                                     <div class="layui-input-inline">
-                                        <input type="hidden" id="EmployeeId" name="EmployeeId" />
                                         <input type="text" style="border:none;" readonly="readonly" value="小老鼠" id="EmpName" name="EmpName" lay-verify="title" autocomplete="off" class="layui-input">
                                     </div>
                                 </div>
@@ -337,7 +336,11 @@
 
 
                 if (empinfoidtop1 == undefined) {
-                    changecolor(data.StaffaccdationList[0].EmployeeId);
+                    if (data.StaffaccdationList.length>0) {
+                         changecolor(data.StaffaccdationList[0].EmployeeId);
+                    } else {
+                        layer.msg("该房间没有人居住。");
+                    }
                     loadstaffdata(data.StaffaccdationList[0].EmployeeId);
                 } else {
                     changecolor(empinfoidtop1);

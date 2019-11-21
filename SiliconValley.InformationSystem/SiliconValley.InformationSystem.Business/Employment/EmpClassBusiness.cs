@@ -9,6 +9,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
 {
     public class EmpClassBusiness : BaseBusiness<EmpClass>
     {
+
+        private EmploymentStaffBusiness dbemploymentStaffBusiness;
         /// <summary>
         /// 获取所有的专员带班记录
         /// </summary>
@@ -148,6 +150,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                     if (alldata[i].ClassNumber == empclass.ClassNO)
                     {
                         alldata.Remove(alldata[i]);
+                        break;
                     }
                 }
             }
@@ -206,6 +209,18 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 //BusHelper.WriteSysLog("Obtainemployment区域EmpClass控制器ClassToEmpstaff方法", EnumType.LogType.上传文件异常);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 根据员工编号返回员工带班记录
+        /// </summary>
+        /// <param name="empinfoid"></param>
+        /// <returns></returns>
+        public List<EmpClass> GetEmpClassesByempinfoid(string empinfoid)
+        {
+            dbemploymentStaffBusiness = new EmploymentStaffBusiness();
+            var a = dbemploymentStaffBusiness.GetEmploymentByEmpInfoID(empinfoid);
+            return this.GetEmpsByEmpID(a.ID);
         }
     }
 }

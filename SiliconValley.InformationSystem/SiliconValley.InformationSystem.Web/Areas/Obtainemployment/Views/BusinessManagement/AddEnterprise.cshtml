@@ -57,18 +57,29 @@
                                 @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "lay-verify", "required|EntNameZz|EntNameOnly" }, { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">公司地址</label>
                             <div class="layui-input-inline">
                                 @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "请输入公司地址" }, { "lay-reqtext", "公司名称不可为空" } })
                             </div>
                         </div>
-
                     </div>
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">联系人姓名</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">联系方式</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone|EntPhoneOnly" }, { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                             <label class="layui-form-label">公司规模</label>
                             <div class="layui-input-block">
                                 <input type="radio" name="EntScale" value="少于50人" title="少于50人" checked="">
@@ -80,7 +91,7 @@
 
                     </div>
                     <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
                             <label class="layui-form-label">公司性质</label>
                             <div class="layui-input-block">
                                 <input type="radio" name="EntNature" value="国企" title="国企">
@@ -134,22 +145,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">联系人姓名</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">联系方式</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone|EntPhoneOnly" }, { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
-                            </div>
-                        </div>
-                    </div>
+
                 </fieldset>
             </div>
             <div class="layui-form-item">

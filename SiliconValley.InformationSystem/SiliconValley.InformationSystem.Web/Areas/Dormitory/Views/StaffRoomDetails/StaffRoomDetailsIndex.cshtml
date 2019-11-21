@@ -444,18 +444,19 @@
                                     }
                                     break;
                                 case "name1":
-                                    loadlistwith(dududata);
-                                    break;
-                                case "name2":
-                                    if (dududata.RoomStayTypeId == studentroom.id) {
+                                    if (dududata.RoomStayTypeId != studentroom.id) {
 
                                         clickroomid = dududata.ID;
                                         openroomdewith();
                                     } else {
-                                        layer.msg("你无权访问查看非学生宿舍房间信息。", { icon: 6, time: 2000 }, function () {
+                                        layer.msg("你无权访问查看学生宿舍房间信息。", { icon: 6, time: 2000 }, function () {
 
                                         });
                                     }
+                                    break;
+
+                                case "name2":
+                                    loadlistwith(dududata);
                                     break;
                             }
                         } else {

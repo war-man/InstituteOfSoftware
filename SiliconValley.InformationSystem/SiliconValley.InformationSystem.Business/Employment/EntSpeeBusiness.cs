@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.Employment
 {
+    /// <summary>
+    /// 企业专业表业务类
+    /// </summary>
     public class EntSpeeBusiness : BaseBusiness<EntSpee>
     {
         public EntSpee GetEntSpeeByID(int ID)

@@ -62,5 +62,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 方向左右，false为左，true为右
         /// </summary>
         public bool Direction { get; set; }
+
+        /// <summary>
+        /// 禁用原因
+        /// </summary>
+        public string ProhibitRemark { get; set; }
     }
 }

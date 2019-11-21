@@ -10,5 +10,23 @@ namespace SiliconValley.InformationSystem.Business.PositionBusiness
     
    public class PositionManage:BaseBusiness<Position>
     {
+
+        /// <summary>
+        /// 获取没有没禁用的岗位集合
+        /// </summary>
+        /// <returns></returns>
+        public List<Position> GetPositions() {
+          return  this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+        }
+
+        /// <summary>
+        /// 根据部门id 返回属于该部门的岗位
+        /// </summary>
+        /// <param name="param">部门id</param>
+        /// <returns></returns>
+        public List<Position> GetPositionByDepeID(int param) {
+          return  this.GetPositions().Where(a => a.DeptId == param).ToList();
+        }
+
     }
 }

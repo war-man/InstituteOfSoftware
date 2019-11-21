@@ -251,9 +251,11 @@
                     ,{ field: 'StudentName', title: '学生姓名', width: 90 }
                     , { field: 'Reason', title: '晚归原因', width: 348 }
                     , { field: 'InspectorName', title: '登记人', width: 80 }
-                    , { field: 'HeadMasterName', title: '班主任', width: 80, templet: function (d) {
+                    , {
+                        field: 'HeadMasterName', title: '班主任', width: 80, templet: function (d) {
                             return "<span style=color:red;>" + d.HeadMasterName + "</span>"
-                        } }
+                        }
+                    }
                     , {
                         field: 'RegisterTime', title: '记录时间', width: 105, templet: function (d) {
                             return TimeChange(d.RegisterTime);

@@ -3,41 +3,36 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@section style{
 
-    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
-
-}
-
-
-
-<!-- Single button -->
-<div class="btn-group">
-    <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        显示全部 <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" id="grandlist">
-        <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
-        <li><a whyshow="ShowCoop" href="javascript:void(0);">显示合作企业</a></li>
-        <li><a whyshow="ShowNoCoop" href="javascript:void(0);">显示未合作企业</a></li>
-    </ul>
-</div>
-
-<div style="display:inline-block;width:600px;" class="form-inline">
-
-    <div class="form-group">
-        <input type="text" class="form-control" id="EntName" placeholder="请输入查询的公司名称">
+<div>
+    <!-- Single button -->
+    <div class="btn-group">
+        <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            显示全部 <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" id="grandlist">
+            <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
+            <li><a whyshow="ShowCoop" href="javascript:void(0);">显示合作企业</a></li>
+            <li><a whyshow="ShowNoCoop" href="javascript:void(0);">显示未合作企业</a></li>
+        </ul>
     </div>
 
-    <div class="form-group">
-        <input type="tel" class="form-control" id="EntContacts" placeholder="请输入查询的联系人名字">
+    <div style="display:inline-block;width:600px;" class="form-inline">
+
+        <div class="form-group">
+            <input type="text" class="form-control" id="EntName" placeholder="请输入查询的公司名称">
+        </div>
+
+        <div class="form-group">
+            <input type="tel" class="form-control" id="EntContacts" placeholder="请输入查询的联系人名字">
+        </div>
+
+        <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
+        <button class="layui-btn layui-btn-radius layui-btn-primary" id="AddCooper">添加合作企业</button>
     </div>
 
-    <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
-    <button class="layui-btn layui-btn-radius layui-btn-primary" id="AddCooper">添加合作企业</button>
+    <table class="layui-hide" id="Enterprise" lay-filter="EnterpriseInfo"></table>
 </div>
-
-<table class="layui-hide" id="Enterprise" lay-filter="EnterpriseInfo"></table>
 
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>

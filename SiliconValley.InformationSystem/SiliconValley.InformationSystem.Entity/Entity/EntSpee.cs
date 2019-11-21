@@ -14,7 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    //企业专业表
+    /// <summary>
+    /// 企业专业表
+    /// </summary>
     [Table(name: "EntSpee")]
     public partial class EntSpee
     {

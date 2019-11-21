@@ -1,0 +1,204 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model DormInformation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UpdRoom</title>
+    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+</head>
+<body>
+    <div style="width:600px;height:99%;margin-left:10px;margin-right:10px;margin-top:20px;">
+        <form class="layui-form" action="" id="formTest" lay-filter="formTest">
+            <div class="layui-form-item">
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">房间名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="DormInfoName" autocomplete="off" lay-verify="required|name" class="layui-input">
+                        <input type="text" name="tungid" id="tungid" autocomplete="off" class="layui-input" style="display:none">
+                        <input type="text" name="floorid" id="floorid" autocomplete="off" class="layui-input" style="display:none">
+                        <input type="text" name="ID" id="ID" autocomplete="off" class="layui-input" style="display:none">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">房间类型</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("RoomStayTypeId", ViewBag.SelectListItemlist as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "lay-filter", "myroomtype" }, { "id", "myroomtype" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" id="numberdiv">
+                    <label class="layui-form-label">房间人数</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("RoomStayNumberId", ViewBag.RoomNumber as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "lay-filter", "myroomnumber" }, { "id", "myroomnumber" } })
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">寝室方向</label>
+                    <div class="layui-input-block">
+                        <input type="radio" id="right" name="Direction" value="true" title="右侧">
+                        <input type="radio" id="left" name="Direction" value="false" title="左侧">
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" id="sexdiv">
+                    <label class="layui-form-label">寝室类型</label>
+                    <div class="layui-input-block">
+                        <input type="radio" id="Male" name="SexType" value="1" title="男寝">
+                        <input type="radio" id="Female" name="SexType" value="2" title="女寝">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">房间备注</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="Remark" lay-verify="title" autocomplete="off" placeholder="请输入房间备注" class="layui-input">
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                        <button class="layui-btn" id="clode">取消</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form, layer = layui.layer,Warehouse,Male;
+            var obj = JSON.parse('@Html.Raw(ViewBag.obj)');
+            Warehouse = $roomstaytype('Warehouse');
+            Male = $getsex('Male');
+            form.verify({
+                name: function (value, item) {
+                   var tungid= $("#tungid").val();
+                   var floorid= $("#floorid").val();
+                    var ID = $("#ID").val();
+                    var data;
+                    $.ajax({
+                        url: '/Dormitory/RoomBasis/VerifyName',
+                        async: false,
+                        data: { param0: tungid, param1: floorid, param2: ID, param3: value },
+                        success: function (successdata) {
+                            data = successdata;                        },
+                        error: function () {
+                            return '网络不佳，刷新页面！'
+                        }
+                    });
+
+                    if (data.Success) {
+                        return '已经存在该名称了!';
+                    } else {
+                        if (data.Msg == 'false') {
+                            return '请联系信息部成员!';
+                        }
+                    }
+                }
+
+            }); 
+            //console.log(Male);
+            if (obj.RoomStayTypeId == Warehouse.id) {
+                $("#numberdiv").hide();
+            } else {
+                $("#numberdiv").show();
+            }
+            if (obj.RoomStayTypeId == $roomstaytype("StudentRoom").id || obj.RoomStayTypeId == $roomstaytype("StaffRoom").id) {
+                $("#sexdiv").show();
+                if (obj.SexType == Male.val) {
+                    $("#Male").attr('checked', 'checked');
+                } else {
+                    $("#Female").attr('checked', 'checked');
+                }
+                
+            } else {
+                $("#Male").attr('checked', 'checked');
+                $("#sexdiv").hide();
+            }
+            if (obj.Direction) {
+                $("#right").attr('checked', 'checked');
+            } else {
+                $("#left").attr('checked', 'checked');
+            }
+            //赋值：
+            form.val("formTest", {
+                "DormInfoName": obj.DormInfoName
+                , "Remark": obj.Remark
+            });
+           //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field;
+                console.log(jsonStr);
+                var tungid = $("#tungid").val();
+                var floorid = $("#floorid").val();
+               
+                $.ajax({
+                    url: '/Dormitory/RoomBasis/HttpPostUpdRoom',
+                    type: 'POST',
+                    data: { param0: jsonStr, param1: tungid, param2: floorid },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('添加成功!', { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg("网络延迟!", { icon: 6, time: 2000 }, function () {
+                            close();
+                        });
+                    }
+                });
+                return false;
+            });
+
+            form.on('select(myroomtype)', function (data) {
+                //console.log(data.elem); //得到select原始DOM对象
+                //console.log(data.value); //得到被选中的值
+                //console.log(data.othis); //得到美化后的DOM对象
+                if (data.value == $roomstaytype("Warehouse").id) {
+                    $("#sexdiv").hide();
+                     $("#numberdiv").hide();
+
+                } else {
+                    $("#sexdiv").show();
+                     $("#numberdiv").show();
+                }
+                //console.log($roomstaytype("StaffRoom").id);
+                if (data.value == $roomstaytype("StudentRoom").id || data.value == $roomstaytype("StaffRoom").id) {
+                    $("#sexdiv").show();
+                } else {
+
+                    $("#sexdiv").hide();
+                }
+            });
+            function close() {
+                //先得到当前iframe层的索引
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+    </script>
+</body>
+</html>

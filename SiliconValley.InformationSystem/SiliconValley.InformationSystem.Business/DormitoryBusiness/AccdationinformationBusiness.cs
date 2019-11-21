@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     public class AccdationinformationBusiness:BaseBusiness<Accdationinformation>
     {
         private DormInformationBusiness dbdorm;
+        private StaffAccdationBusiness dbstaffacc;
+        private RoomdeWithPageXmlHelp dbroomxml;
         /// <summary>
         /// 返回正在居住的入住信息
         /// </summary>
@@ -72,6 +75,40 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 result0.AddRange(this.GetAccdationinformationByDormId(item.ID));
             }
             return result0;
+        }
+
+        /// <summary>
+        /// 是否i有人
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public bool HasSomeone(int param0) {
+           
+            dbdorm = new DormInformationBusiness();
+            dbroomxml = new RoomdeWithPageXmlHelp();
+            var fpxnb = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StaffRoom);
+            var fpxnb1 = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom);
+
+            var entity0 = dbdorm.GetEntity(param0);
+            bool Candelete = true;
+            if (entity0.RoomStayTypeId == fpxnb)
+            {
+                dbstaffacc = new StaffAccdationBusiness();
+                var fpxnb3 = dbstaffacc.GetStaffAccdationsByDorminfoID(param0);
+                if (fpxnb3.Count != 0)
+                {
+                    Candelete = false;
+                }
+            }
+            if (entity0.RoomStayTypeId == fpxnb1)
+            {
+                var fpx4 = this.GetAccdationinformationByDormId(param0);
+                if (fpx4.Count != 0)
+                {
+                    Candelete = false;
+                }
+            }
+            return Candelete;
         }
     }
 }

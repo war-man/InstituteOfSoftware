@@ -14,21 +14,45 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 模拟面试登记表
+    /// </summary>
     [Table(name: "SimulatInterview")]
     public partial class SimulatInterview
     {
         [Key]
         public int ID { get; set; }
         public string StudentNo { get; set; }
-        public Nullable<int> EntStaffID { get; set; }
+        public int EntStaffID { get; set; }
         public string Remark { get; set; }
-        public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> Date { get; set; }
+        public bool IsDel { get; set; }
+        /// <summary>
+        /// 记录时间
+        /// </summary>
+        public System.DateTime AddDate { get; set; }
+        /// <summary>
+        /// 自我介绍
+        /// </summary>
         public string knowMyself { get; set; }
+        /// <summary>
+        /// 表达能力
+        /// </summary>
         public string ShowAbility { get; set; }
+        /// <summary>
+        /// 人事面试问题情况
+        /// </summary>
         public string PerIntQues { get; set; }
+        /// <summary>
+        /// 简历背诵
+        /// </summary>
         public string Resume { get; set; }
+        /// <summary>
+        /// 项目回答情况
+        /// </summary>
         public string ObjectInfo { get; set; }
+        /// <summary>
+        /// 总评
+        /// </summary>
         public string Pandect { get; set; }
     
        

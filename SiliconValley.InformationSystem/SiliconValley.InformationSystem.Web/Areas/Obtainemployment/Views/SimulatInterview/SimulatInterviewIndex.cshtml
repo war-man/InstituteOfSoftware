@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewBag.Title = "SimulatInterviewIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>SimulatInterviewIndex</h2>*@
+
+<style>
+    #leftdiv {
+        width: 16%;
+        /*border: 1px solid red;*/
+        float: left;
+        height: 800px;
+    }
+
+    #content0 {
+        margin-top: 20px;
+    }
+
+    #rightdiv {
+        width: 83%;
+        /*border: 1px solid red;*/
+        float: right;
+        height: 800px;
+    }
+
+    #top0 {
+        font-size: 27px;
+        text-align: center;
+    }
+</style>
+<div od="mybody">
+    <div id="leftdiv">
+        <div id="top0">
+            所管班级列表
+        </div>
+        <div id="content0">
+            <div class="layui-btn-container" id="classlist" style=" margin:0 auto;width:70%;">
+            </div>
+        </div>
+    </div>
+    <div id="rightdiv">
+        <table class="layui-hide" id="table11" lay-filter="table11"></table>
+    </div>
+</div>
+<script type="text/ng-template" id="classmuban">
+    <button type="button" class="layui-btn layui-btn-radius myclass {{=style}}">{{=classname}}</button>
+</script>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加谈话</button>
+    </div>
+</script>
+
+
+<script src="~/Scripts/underscore.js"></script>
+
+<script>
+
+    layui.use(['laypage', 'layedit','table','layer'], function () {
+        //获取设备信息
+        var device = layui.device(), table = layui.table, clickclassnumber = '', layer = layui.layer;
+        jQuery(function () {
+            loadclass();
+        });
+          //时间转化
+        function TimeChange(newtime) {
+            if (newtime == null)
+                return "";
+            var date = new Date(parseInt(newtime.slice(6)));
+            var year = date.getFullYear();
+            var month = date.getMonth();
+            if (month < 10) {
+                month = Number(month + 1);
+            }
+            var day = date.getDate();
+            if (day < 10) {
+                day = day;
+            }
+            var result = year + '-' + month + '-' + day;
+            return result;
+        }
+              //展示已知数据
+       table.render({
+            elem: '#table11'
+            //, url: '' //数据接口
+            , page: true //开启分页
+            //, skin: 'line' //行边框风格
+            ,toolbar: '#toolbarDemo'
+            , even: true //开启隔行背景
+            , limit: 15
+            , limits: [15, 30, 45, 60, 75]
+            , cols: [[ //标题栏
+                 { field: 'ID', title: '调研记录ID', width: 80, hide: true }
+                , {
+                    field: 'StudentName', title: '学生名字', width: 100
+                }
+                , { field: 'EmpStaffName', title: '记录人', width: 100 }
+                , {
+                    field: 'knowMyself', title: '自我介绍', width: 100
+                }
+                , {
+                    field: 'ShowAbility', title: '表达能力', width: 100
+                }
+                , { field: 'PerIntQues', title: '人事面试问题情况', width: 178 }
+                , { field: 'Resume', title: '简历背诵', width: 178 }
+                , { field: 'ObjectInfo', title: '项目回答情况', width: 178 }
+                , { field: 'Pandect', title: '总评', width: 178 }
+                , {
+                    field: 'AddDate', title: '时间', width: 120, templet: function (d) {
+                            return TimeChange(d.AddDate);
+                    }
+                }
+
+                , { field: 'Remark', title: '备注', width: 165 }
+            ]]
+
+        });
+        function reloadtable() {
+            table.reload('table11', {
+                url:'/Obtainemployment/SimulatInterview/SearchData',
+                where: {
+                    param0: clickclassnumber
+                }
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        }
+        function loadclass() {
+            var data = JSON.parse('@Html.Raw(ViewBag.list)');
+            $("#classlist").children().remove();
+            for (var i = 0; i < data.length; i++) {
+                var obj = _.template($("#classmuban").html());
+                var html = '';
+                if (i == 0) {
+                     html= obj({ classname: data[i].ClassNumber,style:'layui-btn-warm'});
+                    clickclassnumber = data[i].ClassNumber;
+                    reloadtable();
+                } else {
+                    html= obj({ classname: data[i].ClassNumber,style:'' });
+                }
+
+                $("#classlist").append($(html));
+            }
+            console.log(data);
+        }
+        $(document).off('click', '.myclass').on('click', '.myclass', function (e) {
+            $('.myclass').removeClass('layui-btn-warm');
+            $(this).addClass('layui-btn-warm');
+            clickclassnumber = $(this).text();
+            reloadtable();
+        });
+         //头工具栏事件
+        table.on('toolbar(table11)', function (obj) {
+            switch (obj.event) {
+                case 'add':
+                    layer.open({
+                        type: 2,
+                        content: "/Obtainemployment/SimulatInterview/SResearchRecordRegister?param0="+clickclassnumber,
+                        title: "添加谈话",
+                        area: ['690px', '820px'],
+                        //area: ['850px', '760px'],
+                        success: function (layero, index) {
+                            let body = layui.layer.getChildFrame('body', index);
+                            body.find("#classnumnber").val(clickclassnumber);
+                        },
+                        end: function () {
+                            reloadtable();
+                        }
+                    });
+                    break;
+            };
+        });
+
+    });
+</script>

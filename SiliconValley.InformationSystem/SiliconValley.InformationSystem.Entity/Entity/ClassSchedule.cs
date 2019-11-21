@@ -40,7 +40,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 专业id
         /// </summary>
-        public int ?Major_Id { get; set; }
+        public Nullable<int> Major_Id { get; set; }
         /// <summary>
         /// 阶段id
         /// </summary>

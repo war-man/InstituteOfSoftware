@@ -1,0 +1,118 @@
+﻿
+@{
+    ViewBag.Title = "RoomDisabledIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<table class="layui-hide" id="table11" lay-filter="table11"></table>
+@section script{
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Dormitory/Script/operationdormxml.js"></script>
+    @*右侧按钮*@
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">解禁</a>
+    </script>
+    <script>
+        layui.extend({
+            dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
+            var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
+            var staff = $roomstaytype("StaffRoom"), student = $roomstaytype("StudentRoom"), warehouse = $roomstaytype("Warehouse"), visitRoom = $roomstaytype("VisitRoom");
+            var male = $getsex('Male'), female = $getsex('Female');
+            var table11 = table.render({
+                elem: '#table11'
+                , skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , url: '/Dormitory/RoomDisabled/SeachData'
+                , limit: 20
+                , limits: [10, 20, 30, 45, 60, 75]
+                , page: true
+                , cols: [[ //标题栏
+                    , { field: 'ID', title: '房间号码'/*, width: 180*/, hide: true }
+                    , { field: 'DormInfoName', title: '房间号码', width: 100 }
+                    , {
+                        field: 'RoomStayTypeId', title: '房间类型', width: 150, templet: function (d) {
+                            if (d.RoomStayTypeId == staff.id) {
+                                return "员工寝室"
+                            }
+                            if (d.RoomStayTypeId == student.id) {
+                                return "学生寝室"
+                            }
+                            if (d.RoomStayTypeId == warehouse.id) {
+                                return "仓库"
+                            }
+                            if (d.RoomStayTypeId == visitRoom.id) {
+                                return "参观寝室"
+                            }
+                        }
+                    }
+                    , {
+                        field: 'SexType', title: '居住类型', width: 120, templet: function (d) {
+
+                            if (d.SexType == male.val) {
+                                return "<span style=color:blue;>男寝</span>"
+                            }
+                            if (d.SexType == female.val) {
+                                return "<span style=color:red;>女寝</span>"
+                            }
+                            if (d.SexType == 0) {
+                                return "";
+                            }
+                        }
+                    }
+                    , { field: 'Address', title: '房间地址'/*, width: 145,*/ }
+                    , { field: 'ProhibitRemark', title: '禁用原因'/*, width: 145,*/ }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 80 }
+                ]]
+            });
+            function loadtable11() {
+                table11.reload({
+                    url: '/Dormitory/RoomDisabled/SeachData'
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+            table.on('tool(table11)', function (obj) {
+                console.log(obj);
+                //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+
+                if (layEvent === 'del') { //解禁
+                    layer.confirm('真的解禁吗？', function (index) {
+                        $.ajax({
+                            url: '/Dormitory/RoomDisabled/LiftABan',
+                            data: {param0:data.ID},
+                            success: function (SuccessData) {
+                                if (SuccessData.Success) {
+                                    layer.msg('解禁成功。', { icon: 6, time: 2000 }, function () {
+                                        obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+                                        layer.close(index);
+                                    });
+                                  
+                                } else {
+                                    layer.msg(SuccessData.Msg, { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            },
+                            error: function (ErrorData) {
+                                layer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        });
+                      
+                    });
+                }
+
+            });
+
+        });
+
+
+    </script>
+}
