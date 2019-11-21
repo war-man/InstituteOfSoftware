@@ -151,6 +151,7 @@
     <Compile Include="Entity\EmpStaffAndStu.cs" />
     <Compile Include="Entity\EmpTransaction.cs" />
     <Compile Include="Entity\EnroExamination.cs" />
+    <Compile Include="Entity\EnroExaminationAchievement.cs" />
     <Compile Include="Entity\Enrollment.cs" />
     <Compile Include="Entity\EnterpriseInfo.cs" />
     <Compile Include="Entity\EntSpee.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Entity\ExaminationRoom.cs" />
     <Compile Include="Entity\ExamRoomDistributed.cs" />
     <Compile Include="Entity\ExamType.cs" />
+    <Compile Include="Entity\ExamTypeName.cs" />
     <Compile Include="Entity\FinanceModel.cs" />
     <Compile Include="Entity\Fiveroutines.cs" />
     <Compile Include="Entity\FollwingInfo.cs" />
@@ -167,6 +169,7 @@
     <Compile Include="Entity\GoodSkill.cs" />
     <Compile Include="Entity\GoodsProvide.cs" />
     <Compile Include="Entity\GoodsType.cs" />
+    <Compile Include="Entity\GotoschoolStage.cs" />
     <Compile Include="Entity\Grand.cs" />
     <Compile Include="Entity\GrandCourse.cs" />
     <Compile Include="Entity\GroupManagement.cs" />
@@ -191,6 +194,7 @@
     <Compile Include="Entity\MachineTestQuestionPaper.cs" />
     <Compile Include="Entity\MachTestQuesBank.cs" />
     <Compile Include="Entity\MarketChair.cs" />
+    <Compile Include="Entity\MarkingArrange.cs" />
     <Compile Include="Entity\MaterialPriceList.cs" />
     <Compile Include="Entity\Members.cs" />
     <Compile Include="Entity\MeritsCheck.cs" />
@@ -243,6 +247,8 @@
     <Compile Include="Entity\ScheduleForTrainees.cs" />
     <Compile Include="Entity\SchoolYearPlan.cs" />
     <Compile Include="Entity\SelfObtainRcored.cs" />
+    <Compile Include="Entity\Shortmessage.cs" />
+    <Compile Include="Entity\ShortmessageType.cs" />
     <Compile Include="Entity\ShppingDetail.cs" />
     <Compile Include="Entity\SimulatInterview.cs" />
     <Compile Include="Entity\SocialSecProportion.cs" />
@@ -254,13 +260,23 @@
     <Compile Include="Entity\Undergraduatemajor.cs" />
     <Compile Include="Entity\Undergraduateschool.cs" />
     <Compile Include="Entity\Warehouse.cs" />
+    <Compile Include="Registerforexamination.cs" />
+    <Compile Include="ViewEntity\AchievementView.cs" />
+    <Compile Include="ViewEntity\AnPaiData.cs" />
     <Compile Include="ViewEntity\ClassSchedltData.cs" />
+    <Compile Include="ViewEntity\DetailedcostView.cs" />
+    <Compile Include="ViewEntity\EnrollmentStudentView.cs" />
     <Compile Include="ViewEntity\EnrollmentView.cs" />
+    <Compile Include="ViewEntity\EssentialinformationEnucView.cs" />
     <Compile Include="ViewEntity\ExaminationRoomView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\AnswerQuestionView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetHelp.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ChoiceQuestionTableView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ComputerTestQuestionsView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeEnum.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\HeadMasterSortView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\MarkingArrangeView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\StudentIsReExamHelper.cs" />
     <Compile Include="ViewEntity\ExaminationView.cs" />
     <Compile Include="ViewEntity\flooralloryes.cs" />
@@ -268,6 +284,7 @@
     <Compile Include="ViewEntity\GetYear.cs" />
     <Compile Include="ViewEntity\HealthRegistrationtableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
+    <Compile Include="ViewEntity\Mydate.cs" />
     <Compile Include="ViewEntity\MyStaticsData.cs" />
     <Compile Include="ViewEntity\My_StudentDataOne.cs" />
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
@@ -279,6 +296,8 @@
     <Compile Include="ViewEntity\ProRoomDisabledView.cs" />
     <Compile Include="ViewEntity\ProStudentInformationView.cs" />
     <Compile Include="ViewEntity\PublicConvertView.cs" />
+    <Compile Include="ViewEntity\Recon_Login_Data.cs" />
+    <Compile Include="ViewEntity\ResconcileView.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="Entity\StageGrade.cs" />
     <Compile Include="Entity\StockInfo.cs" />
@@ -380,6 +399,7 @@
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
+    <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\TungView.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />

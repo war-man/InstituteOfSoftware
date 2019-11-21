@@ -116,9 +116,11 @@
     <Compile Include="DormitoryBusiness\ProClassSchedule.cs" />
     <Compile Include="DormitoryBusiness\ProClassScheduleViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProDormInfoViewBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ProEmpinfoBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
+    <Compile Include="DormitoryBusiness\ProStudentAndTeacherBussiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
@@ -142,11 +144,17 @@
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
+    <Compile Include="Employment\CDInterviewBusiness.cs" />
+    <Compile Include="Employment\EIntentionClassXMLHelp.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
+    <Compile Include="Employment\EmploymentAreasBuiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="Employment\ProTeacher.cs" />
+    <Compile Include="Employment\SimulatInterviewBusiness.cs" />
+    <Compile Include="Employment\SurveyRecordsBusiness.cs" />
     <Compile Include="EmpSalaryManagementBusiness\AttendanceInfoManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
@@ -172,9 +180,6 @@
     <Compile Include="MarketChair_Business\MarketChairManeger.cs" />
     <Compile Include="NetClientRecordBusiness\NetClientRecordManage.cs" />
     <Compile Include="NewExcel\ExcelHelper.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="PositionBusiness\PositionManage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Psychro\ChannelAreaBusiness.cs" />
@@ -225,7 +230,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="obj\Release\04.SiliconValley.InformationSystem.Business.csproj.CoreCompileInputs.cache" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
