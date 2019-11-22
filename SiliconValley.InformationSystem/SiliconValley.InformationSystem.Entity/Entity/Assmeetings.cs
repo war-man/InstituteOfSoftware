@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public string ClassNumber { get; set; }
+        public int ClassNumber { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public Nullable<System.DateTime> Classmeetingdate { get; set; }

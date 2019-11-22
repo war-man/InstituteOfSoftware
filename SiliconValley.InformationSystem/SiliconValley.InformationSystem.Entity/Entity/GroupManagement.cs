@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public string ClassNumber { get; set; }
+        public int ClassNumber { get; set; }
         public string QQGroupnumber { get; set; }
         public string WechatGroupNumber { get; set; }
         public string Remarks { get; set; }

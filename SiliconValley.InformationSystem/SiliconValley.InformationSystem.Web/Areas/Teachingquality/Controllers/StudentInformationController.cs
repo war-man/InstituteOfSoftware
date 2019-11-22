@@ -134,8 +134,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //当前年份
             string n = date.Year.ToString().Substring(2);//获取年份
 
-            //学员总数
-            var laststr = dbtext.Mylist("StudentInformation").Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n&& a.IsDelete != true).Count()+1;
+            //学员总数Mylist("StudentInformation")
+            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count()+1;
             string sfz = IDnumber.Substring(6,8);
 
             string y = Month(Convert.ToInt32(date.Month)).ToString();
@@ -178,7 +178,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 List = List.Where(a => a.ClassNumber != item.FormerClass).ToList();
             }
-            ViewBag.List = List.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber });
+            ViewBag.List = List.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id)&&id!= "undefined")
             {
@@ -201,8 +201,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
             //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
-            //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
-              List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true&&a.State==null).ToList();
+            List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
+             // List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true).ToList();
             try
             {
               
@@ -329,7 +329,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
         }
         //注册学员编辑学员
-        public ActionResult Enti(StudentInformation studentInformation,string List)
+        public ActionResult Enti(StudentInformation studentInformation,int List)
         {
            
             
@@ -350,17 +350,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
-                        scheduleForTrainees.ClassID = List;//班级名称
+                        scheduleForTrainees.ClassID = classschedu.GetEntity( List).ClassNumber;//班级名称
+                        scheduleForTrainees.ID_ClassName = List;//班级编号
                         scheduleForTrainees.CurrentClass = true;
                         scheduleForTrainees.StudentID = studentInformation.StudentNumber;
                         scheduleForTrainees.AddDate = DateTime.Now;
                         Stuclass.Insert(scheduleForTrainees);
-                        Stuclass.Remove("ScheduleForTrainees");
+                       // Stuclass.Remove("ScheduleForTrainees");
                         result = new SuccessResult();
                         result.Msg = "注册成功";
                         result.Success = true;
                         result.Data = studentInformation.StudentNumber;
-                        dbtext.Remove("StudentInformation");
+                        //dbtext.Remove("StudentInformation");
                         BusHelper.WriteSysLog("注册学员成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
                     }
@@ -394,7 +395,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     result = new SuccessResult();
                         result.Msg = "修改成功";
                         result.Success = true;
-                    dbtext.Remove("StudentInformation");
+                 //   dbtext.Remove("StudentInformation");
                     BusHelper.WriteSysLog("修改学员信息成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
                     catch (Exception ex)
@@ -422,8 +423,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult Select()
         {
             string stuid = Request.QueryString["stuid"];
-            var a = Finds(stuid);
-            var ClassID = Stuclass.Mylist("ScheduleForTrainees").Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ClassID;
+            var a = Finds(stuid);//Mylist("ScheduleForTrainees")
+            var ClassID = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber).First().ClassID;
             var x = new
             {
                 a.Familyphone,
@@ -442,8 +443,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Hobby = a.Hobby,//兴趣爱好
                 Nation = a.Nation,//民族
                 Sex = a.Sex,//性别,
-                Guardian=a.Guardian,//亲属
-                AddDate = Stuclass.Mylist("ScheduleForTrainees").Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().AddDate,//入班时间
+                Guardian=a.Guardian,//亲属Mylist("ScheduleForTrainees").
+                AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber ).First().AddDate,//入班时间
                classa = classschedu.GetList().Where(q=> q.IsDelete == false && q.ClassStatus == false&&q.ClassNumber== ClassID).FirstOrDefault().ClassNumber//班级号
                                   //a => a.IsDelete == false && a.ClassStatus == false
             };

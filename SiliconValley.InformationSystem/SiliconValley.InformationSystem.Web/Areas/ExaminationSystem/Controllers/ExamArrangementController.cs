@@ -866,31 +866,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
 
-        public ActionResult SearchStudentData(string classnumber, string studentName, int page, int limit)
+        public ActionResult SearchStudentData(int classnumber, string studentName, int page, int limit)
         {
             ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
 
             List<StudentInformation> resultlist = new List<StudentInformation>();
 
-            if (classnumber == "0" && studentName == "")
-            {
-                //获取全部
-                resultlist = db_examination.GetMyStudentData();
+            //if (classnumber == "0" && studentName == "")
+            //{
+            //    //获取全部
+            //    resultlist = db_examination.GetMyStudentData();
 
 
-            }
-            else if (classnumber != "0" && studentName == "")
-            {
-                resultlist = scheduleForTraineesBusiness.ClassStudent(classnumber);
-            }
-            else if (classnumber == "0" && studentName != "")
-            {
-                resultlist = db_examination.GetMyStudentData().Where(d => d.Name.Contains(studentName)).ToList();
-            }
-            else
-            {
-                resultlist = scheduleForTraineesBusiness.ClassStudent(classnumber).Where(d => d.Name.Contains(studentName)).ToList();
-            }
+            //}
+            //else if (classnumber != "0" && studentName == "")
+            //{
+            //    resultlist = scheduleForTraineesBusiness.ClassStudent(classnumber);
+            //}
+            //else if (classnumber == "0" && studentName != "")
+            //{
+            //    resultlist = db_examination.GetMyStudentData().Where(d => d.Name.Contains(studentName)).ToList();
+            //}
+            //else
+            //{
+            //    resultlist = scheduleForTraineesBusiness.ClassStudent(classnumber).Where(d => d.Name.Contains(studentName)).ToList();
+            //}
 
             var skiplist = resultlist.Skip((page - 1) * limit).Take(limit).ToList();
 

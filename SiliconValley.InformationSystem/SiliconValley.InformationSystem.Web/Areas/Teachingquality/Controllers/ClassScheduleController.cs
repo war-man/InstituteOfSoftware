@@ -28,7 +28,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     
     public class ClassScheduleController : Controller
     {
-        private static string classNumberss = "";
+        private static int? classNumberss = null;
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
         {
@@ -88,9 +88,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
                         foreach (var item in x)
                         {
-                            list.Add(dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false && a.ClassNumber == item.ClassID).FirstOrDefault());
+                            list.Add(dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false && a.id == item.ClassID).FirstOrDefault());
                         }
                     }
+
+
                 }
             if (!string.IsNullOrEmpty(ClassNumber))
             {
@@ -116,6 +118,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
               var listx = list.Select(a => new
             {
                 //  a.BaseDataEnum_Id,
+                a.id,
                 ClassNumber = a.ClassNumber,
                 ClassRemarks = a.ClassRemarks,
                 ClassStatus = a.ClassStatus,
@@ -123,7 +126,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
                 Major_Id = a.Major_Id==null?"暂无专业": Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
-                HeadmasterName= Hadmst.ClassHeadmaster(a.ClassNumber)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.ClassNumber).EmpName,
+                HeadmasterName= Hadmst.ClassHeadmaster(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
                 IsBool = classtatus.GetList().Where(c=>c.IsDelete==false&&c.id==a.ClassstatusID).FirstOrDefault()==null?"正常":classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
                  stuclasss = Stuclass.GetList().Where(c=>c.ClassID==a.ClassNumber&&c.CurrentClass==true).Count()//专业
             }).ToList();
@@ -204,20 +207,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult ClassStudent()
         {
 
-            classNumberss = Request.QueryString["ClassNumber"];
-            var x = dbtext.ClassStudentneViewList(classNumberss);
-            ViewBag.ClassName = classNumberss;
-            ViewBag.ClassdetailsView = dbtext.Listdatails(classNumberss);
+            classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
+            var x = dbtext.ClassStudentneViewList((int)classNumberss);
+            ViewBag.ClassName =dbtext.GetEntity( classNumberss).ClassNumber;
+            ViewBag.ClassdetailsView = dbtext.Listdatails((int)classNumberss);
+            ViewBag.ClassID = classNumberss;
             ViewBag.Members = dbtext.MembersList();
-            ViewBag.Stage = dbtext.GetClassGrand(classNumberss, 234);
+            ViewBag.Stage = dbtext.GetClassGrand((int)classNumberss, 234);
             return View(x);
         }
 
         //群号操作页面
         public ActionResult Groupnumber()
         {
-            string ClassNumber = Request.QueryString["ClassNumber"];
+            int ClassNumber =int.Parse( Request.QueryString["ClassNumber"]);
             ViewBag.ClassNumber = ClassNumber;
+            ViewBag.ClassName = dbtext.GetEntity(ClassNumber).ClassNumber;
             return View(dbtext.Grouselect(ClassNumber));
         }
         //群号数据操作
@@ -232,7 +237,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //获取班委
         public ActionResult DateMembers()
         {
-            return Json(dbtext.ClassStudentneList(classNumberss), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.ClassStudentneList((int)classNumberss), JsonRequestBehavior.AllowGet);
         }
         //班委数据操作
         public ActionResult AddMembers()
@@ -245,7 +250,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string Entity = Request.QueryString["Entity"];
 
 
-         return Json(dbtext.Entityembers(Stuid, MenName, classNumberss, Entity),JsonRequestBehavior.AllowGet);
+         return Json(dbtext.Entityembers(Stuid, MenName, (int)classNumberss, Entity),JsonRequestBehavior.AllowGet);
 
 
 
@@ -263,12 +268,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 ViewBag.Name = "添加班会记录";
                 assmeetings =  dbtext.AssmeetingsSelect(int.Parse(uid));
+                ViewBag.ClassName = dbtext.GetEntity(assmeetings.ClassNumber).ClassNumber;
                 return View(assmeetings);
             }
             else
             {
                 ViewBag.Name = "编辑班会记录";
-                assmeetings.ClassNumber = classNumberss;
+                assmeetings.ClassNumber =(int) classNumberss;
+                ViewBag.ClassName = dbtext.GetEntity(assmeetings.ClassNumber).ClassNumber;
                 return View(assmeetings);
             }
          
@@ -287,12 +294,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string MenName = Request.QueryString["MenName"];
             //学号
             string Stuid = Request.QueryString["Stuid"];
-            return Json(dbtext.AssmeetingsBool(MenName, classNumberss, Stuid), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.AssmeetingsBool(MenName,(int)classNumberss, Stuid), JsonRequestBehavior.AllowGet);
         }
         //班级班会数据
         public ActionResult AssmeetingsGetDate(int page, int limit,string Title,string qBeginTime,string qEndTime)
         {
-            var dataList = dbtext.AssmeetingsList(classNumberss) ;
+            var dataList = dbtext.AssmeetingsList((int)classNumberss) ;
             if (!string.IsNullOrEmpty(Title))
             {
                 dataList = dataList.Where(a => a.Title.Contains(Title)).ToList();
@@ -338,7 +345,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 List = List.Where(a => a.ClassNumber != item.FormerClass).ToList();
             }
-            ViewBag.List= List.Where(a=>a.ClassNumber!= classNumberss).Select(a => new SelectListItem { Value = a.ClassNumber, Text = a.ClassNumber }).ToList();
+            ViewBag.List= List.Where(a=>a.id!= classNumberss).Select(a => new SelectListItem { Value = a.ClassNumber, Text = a.ClassNumber }).ToList();
             studentID = studentID.Substring(0, studentID.Length - 1);
             string[] stu = studentID.Split(',');
             List<StudentInformation> list = new List<StudentInformation>();
@@ -401,7 +408,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <param name="limit"></param>
         /// <param name="id">班级号</param>
         /// <returns></returns>
-        public ActionResult listTuiton(int page, int limit,string id)
+        public ActionResult listTuiton(int page, int limit,int id)
         {
            var x= dbtext.listTuiton(page, limit, id);
             var data = new

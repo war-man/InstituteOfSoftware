@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,9 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <param name="ClassNO"></param>
         /// <returns></returns>
         public HeadClass GetClassByClassNO(string ClassID) {
-          return  this.GetHeadClasses().Where(a => a.ClassID == ClassID).FirstOrDefault();
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            return  this.GetHeadClasses().Where(a => a.ClassID == classScheduleBusiness.GetEntity(ClassID).id).FirstOrDefault();
         }
 
         /// <summary>

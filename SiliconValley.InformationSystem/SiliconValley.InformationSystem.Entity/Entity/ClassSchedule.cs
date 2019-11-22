@@ -19,11 +19,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Table("ClassSchedule")]
     public partial class ClassSchedule
     {
-        
+
+
+
         /// <summary>
-        /// 班级编号
+        /// 编号
         /// </summary>
-        [Key]
+          [Key]
+        public int id { get; set; }
+        /// <summary>
+        /// 班级名称
+        /// </summary>
         public string ClassNumber { get; set; }
         /// <summary>
         /// 班级状态 false为未毕业班 true为毕业班
@@ -37,10 +43,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 是否删除 false 存在 true 停用
         /// </summary>
         public Nullable<bool> IsDelete { get; set; }
-        /// <summary>
-        /// 编号
-        /// </summary>
-        public int id { get; set; }
+    
         /// <summary>
         /// 专业id
         /// </summary>

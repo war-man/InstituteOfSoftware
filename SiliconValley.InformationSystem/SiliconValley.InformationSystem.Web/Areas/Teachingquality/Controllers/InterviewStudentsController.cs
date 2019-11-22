@@ -86,7 +86,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 InterviewRecorderID = a.InterviewRecorderID, //记录人编号
                 InterviewRecorderName = infoBusiness.GetEntity(a.InterviewRecorderID).EmpName, //姓名
                 Dateofinterview = a.Dateofinterview //谈话日期
-            });
+            }).ToList();
             var dataList = mylist.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
           
             var data = new

@@ -168,7 +168,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
-        public List<StudentInformation> UngetProjectItem(int projectid ,string classnumber)
+        public List<StudentInformation> UngetProjectItem(int projectid ,int classnumber)
         {
             ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
 
