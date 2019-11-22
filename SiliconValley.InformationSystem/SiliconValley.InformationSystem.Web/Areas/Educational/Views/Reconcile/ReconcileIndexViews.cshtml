@@ -190,7 +190,7 @@
                             //获取班级slect
                             var classselect = $('<select id="class_select" name="class_select" class="layui-select" lay-filter="bianji"><option value="0" selected>--请选择--</select>');
                             for (var i = 0; i < sudata.length; i++) {
-                                $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber+ '<option>').appendTo(classselect);
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber+ '<option>').appendTo(classselect);
                             }
                             $("#myclass")[0].innerHTML = "";
                             $("#myclass").append(classselect);   
@@ -290,9 +290,9 @@
                             type: 'POST',
                             data: Getdata,
                             success: function (suc) {
-                                var teachersele = $('<select id="teachersele" id="teachersele"><option value="0">--请选择--</select>');
+                                var teachersele = $('<select id="teachersele" name="teachersele"><option value="0">--请选择--</select>');
                                 for (var i = 0; i < suc.length; i++) {
-                                    $('<option vlaue=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teachersele);
+                                    $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teachersele);
                                 }
                                 $("#teacher_div").append(teachersele);
                                 form.render(); //更新全部

@@ -236,7 +236,7 @@
                             //获取班级slect
                             var child_class = $('<select id="child_class" name="child_class" class="layui-select" lay-filter="class_child"><option value="0" selected>--请选择--</option></select>');
                             for (var i = 0; i < sudata.length; i++) {
-                                $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber + '<option>').appendTo(child_class);
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(child_class);
                             }
                             $("#class_childdiv")[0].innerHTML = "";
                             $("#class_childdiv").append(child_class);

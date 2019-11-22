@@ -125,7 +125,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<ClassSchedule> GetGrandClass(int grand_id)
         {
             //获取有效的班级数据//获取属于某个阶段的班级
-            List<ClassSchedule> c_list = ClassSchedule_Entity.GetList().Where(c => c.ClassStatus == false && c.IsDelete == false && c.grade_Id == grand_id).ToList();
+            List<ClassSchedule> c_list = ClassSchedule_Entity.GetList().Where(c => c.ClassStatus == false && c.IsDelete == false && c.grade_Id == grand_id && c.ClassstatusID==null).ToList();
             return c_list;
         }
         /// <summary>
@@ -188,7 +188,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         s = true;                    
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 s = false;
@@ -260,7 +260,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="ClassName">班级</param>
         /// <param name="CurrName">英语课或班会课</param>
         /// <returns></returns>
-        public bool Existence(Mydate time, string ClassName, string CurrName)
+        public bool Existence(Mydate time, int ClassName, string CurrName)
         {
             bool s = false;
             int count = this.GetList().Where(r => r.AnPaiDate >= time.StarTime && r.AnPaiDate <= time.EndTime && r.ClassSchedule_Id == ClassName && r.Curriculum_Id==CurrName).ToList().Count;
@@ -357,7 +357,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 foreach (ClassSchedule item in afternoonclass)
                 {
                     //判断这个班级是否可以排英语，军事，职素课
-                    bool s1 = Existence(mydate, item.ClassNumber, "英语");//判断这周这个班安排英语课
+                    bool s1 = Existence(mydate, item.id, "英语");//判断这周这个班安排英语课
                     if (s1 == false)
                     {
                         //看看这个教室排满了没有
@@ -369,7 +369,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             r.AnPaiDate = time;
                             r.ClassRoom_Id = room.Id;
                             r.Curse_Id = str;
-                            r.ClassSchedule_Id = item.ClassNumber;
+                            r.ClassSchedule_Id = item.id;
                             r.NewDate = DateTime.Now;
                             r.Curriculum_Id = "英语";
                             this.Insert(r);
@@ -460,7 +460,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     {
                         if (r1.ClassRoom_Id == c1.Id && (r1.Curse_Id == timename || r1.Curse_Id=="上午"))
                         {
-                            new_a.ClassName = r1.ClassSchedule_Id;
+                            new_a.class_Id = r1.Id;
+                            new_a.ClassName =ClassSchedule_Entity.GetEntity( r1.Id).ClassNumber;
                             new_a.Teacher = r1.EmployeesInfo_Id==null?"无":entity.GetEntity(r1.EmployeesInfo_Id).EmpName;
                             new_a.NeiRong = r1.Curriculum_Id;
                         }
@@ -477,7 +478,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     {
                         if (r1.ClassRoom_Id == c1.Id && (r1.Curse_Id == timename || r1.Curse_Id == "下午"))
                         {
-                            new_a.ClassName = r1.ClassSchedule_Id;
+                            new_a.class_Id = r1.Id;
+                            new_a.ClassName = ClassSchedule_Entity.GetEntity(r1.Id).ClassNumber;
                             new_a.Teacher = r1.EmployeesInfo_Id == null ? "无" : entity.GetEntity(r1.EmployeesInfo_Id).EmpName;
                             new_a.NeiRong = r1.Curriculum_Id;
                         }
@@ -503,18 +505,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 s = true;
             }
             return s;
-        }        
+        }
         #region 提供修改排课数据的方法
         /// <summary>
         /// 获取XX班级在这XX天上XX课程的排课情况
         /// </summary>
         /// <param name="time">日期</param>
-        /// <param name="ClassNumber">班级编号</param>
+        /// <param name="class_id">班级编号</param>
         /// <param name="Time">上午或下午</param>
         /// <returns></returns>
-        public List<Reconcile> GetReconcile(DateTime time, string ClassNumber, string currName)
+        public List<Reconcile> GetReconcile(DateTime time, int class_id, string currName)
         {
-           return this.GetList().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == ClassNumber && r.Curse_Id == currName).ToList();
+           return this.GetList().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == class_id && r.Curse_Id == currName).ToList();
         }
         
         /// <summary>
@@ -528,7 +530,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             ResconcileView new_r = new ResconcileView();
             new_r.AnPaiDate = r.AnPaiDate;
             new_r.ClassRoom_Id = Classroom_Entity.GetEntity(r.ClassRoom_Id);
-            new_r.ClassSchedule_Id = r.ClassSchedule_Id;
+            new_r.ClassSchedule_Id = ClassSchedule_Entity.GetEntity(r.Id);
             new_r.Curriculum_Id = r.Curriculum_Id;
             new_r.Curse_Id = r.Curse_Id;
             new_r.EmployeesInfo_Id = entity.GetEntity(r.EmployeesInfo_Id);
@@ -544,14 +546,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="dateTime">代课日期</param>
         /// <param name="emp_id">代课老师</param>
         /// <param name="timename">代课时间段（上午，下午）</param>
-        /// <param name="classname">代课班级</param>
+        /// <param name="class_id">代课班级Id</param>
         /// <returns></returns>
-        public bool Daike(DateTime dateTime,string emp_id,string timename,string classname)
+        public bool Daike(DateTime dateTime,string emp_id,string timename,int class_id)
         {
             bool s = false;
             try
             {
-                Reconcile find_r = this.GetList().Where(r => r.AnPaiDate == dateTime && r.Curse_Id == timename && r.ClassSchedule_Id == classname).FirstOrDefault();
+                Reconcile find_r = this.GetList().Where(r => r.AnPaiDate == dateTime && r.Curse_Id == timename && r.ClassSchedule_Id == class_id).FirstOrDefault();
                 find_r.EmployeesInfo_Id = emp_id;
                 this.Update(find_r);
                 s = true;

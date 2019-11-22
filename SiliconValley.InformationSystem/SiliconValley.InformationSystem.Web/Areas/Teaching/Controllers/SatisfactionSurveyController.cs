@@ -1162,7 +1162,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <param name="classnumber">班级编号 </param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult GetCursor(string empid, string classnumber)
+        public ActionResult GetCursor(string empid, int classnumber)
         {
 
 
@@ -1440,68 +1440,68 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// 获取教员在班级上过的课程
         /// </summary>
         /// <returns></returns>
-        public ActionResult GetCorsueOnReconile(string classnumber)
-        {
+        //public ActionResult GetCorsueOnReconile(string classnumber)
+        //{
 
 
-            AjaxResult result = new AjaxResult();
-            List<Curriculum> resultlist = new List<Curriculum>();
-            try
-            {
+        //    AjaxResult result = new AjaxResult();
+        //    List<Curriculum> resultlist = new List<Curriculum>();
+        //    try
+        //    {
 
              
 
 
-                //排课业务类
-                BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
+        //        //排课业务类
+        //        BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
 
-                CourseBusiness db_course = new CourseBusiness();
-
-
-                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
-
-                //排课筛选之后的数据
-                var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.ClassSchedule_Id == classnumber).ToList();
-
-                List<Curriculum> list = new List<Curriculum>();
-
-                foreach (var item in templist)
-                {
-                    var tempobj = db_course.GetList().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
-                    list.Add(tempobj);
-                }
-
-                //去掉重复项
-
-                foreach (var item in list)
-                {
-                    if (!db_course.isContain(resultlist, item))
-                    {
-                        resultlist.Add(item);
-                    }
-                }
-
-                result.ErrorCode = 200;
-                result.Data = resultlist;
-                result.Msg = "成功";
-            }
-            catch (Exception ex)
-            {
+        //        CourseBusiness db_course = new CourseBusiness();
 
 
-                result.ErrorCode = 500;
-                result.Data = resultlist;
-                result.Msg = ex.Message;
-            }
+        //        Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+        //        var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+        //        //排课筛选之后的数据
+        //        var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.ClassSchedule_Id == classnumber).ToList();
+
+        //        List<Curriculum> list = new List<Curriculum>();
+
+        //        foreach (var item in templist)
+        //        {
+        //            var tempobj = db_course.GetList().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
+        //            list.Add(tempobj);
+        //        }
+
+        //        //去掉重复项
+
+        //        foreach (var item in list)
+        //        {
+        //            if (!db_course.isContain(resultlist, item))
+        //            {
+        //                resultlist.Add(item);
+        //            }
+        //        }
+
+        //        result.ErrorCode = 200;
+        //        result.Data = resultlist;
+        //        result.Msg = "成功";
+        //    }
+        //    catch (Exception ex)
+        //    {
 
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+        //        result.ErrorCode = 500;
+        //        result.Data = resultlist;
+        //        result.Msg = ex.Message;
+        //    }
+
+
+        //    return Json(result, JsonRequestBehavior.AllowGet);
             
 
 
-        }
+        //}
 
 
         [HttpPost]

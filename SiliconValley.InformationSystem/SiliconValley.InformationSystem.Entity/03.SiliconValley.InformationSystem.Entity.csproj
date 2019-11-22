@@ -366,6 +366,7 @@
     <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchRecordRegisterView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\StudentIntentionView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />
