@@ -64,9 +64,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <summary>
         /// 获取班级学员
         /// </summary>
-        /// <param name="classnumber">编辑编号</param>
+        /// <param name="classnumber">班级编号</param>
         /// <returns></returns>
-        public ActionResult GetStudentByClass(string classnumber)
+        public ActionResult GetStudentByClass(int classnumber)
         {
 
             ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
@@ -302,7 +302,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <returns></returns>
 
         [HttpPost]
-        public ActionResult GetClassCadres(string classnumber)
+        public ActionResult GetClassCadres(int classnumber)
         {
 
             AjaxResult result = new AjaxResult();

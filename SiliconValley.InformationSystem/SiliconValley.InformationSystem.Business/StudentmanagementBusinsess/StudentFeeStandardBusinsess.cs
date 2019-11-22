@@ -295,7 +295,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         {
       
           var a=  studentInformationBusiness.GetEntity(studentid);
-          var ClassID=  scheduleForTraineesBusiness.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ClassID;
+          var ClassID=  scheduleForTraineesBusiness.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ID_ClassName;
             var x = new
             {
                 StudentNumber = a.StudentNumber,//学号
@@ -303,8 +303,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 identitydocument = a.identitydocument,//身份证号码
                 Sex = a.Sex,//性别,
             
-                GrandName = classschedu.GetClassGrand(classschedu.GetList().Where(q => q.IsDelete == false && q.ClassStatus == false && q.ClassNumber == ClassID).FirstOrDefault().ClassNumber,22),//阶段
-                classa = classschedu.GetList().Where(q => q.IsDelete == false && q.ClassStatus == false && q.ClassNumber == ClassID).FirstOrDefault().ClassNumber//班级号                                                                                                                                              //a => a.IsDelete == false && a.ClassStatus == false
+                GrandName = classschedu.GetClassGrand(ClassID, 22),//阶段
+                classa = classschedu.GetList().Where(q => q.IsDelete == false && q.ClassStatus == false && q.id == ClassID).FirstOrDefault().ClassNumber//班级号                                                                                                                                              //a => a.IsDelete == false && a.ClassStatus == false
             };
             return x;
         }

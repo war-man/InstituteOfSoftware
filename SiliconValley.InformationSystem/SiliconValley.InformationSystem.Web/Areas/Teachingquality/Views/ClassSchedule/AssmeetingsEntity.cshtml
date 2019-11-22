@@ -49,8 +49,8 @@
                                 <div class="layui-input-inline">
 
                                     @Html.HiddenFor(a => a.ID)
-
-                                    @Html.TextBoxFor(a => a.ClassNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "disabled", "disabled" }, { "class", "layui-input bordel" } })
+                                    <input type="text" value="@ViewBag.ClassName" disabled="disabled" class="layui-input bordel" />
+                                    @Html.HiddenFor(a => a.ClassNumber, new Dictionary<string, object>() { { "lay-verify", "required" } })
 
                                 </div>
                             </div>

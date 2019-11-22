@@ -160,7 +160,8 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
 
             if (!string.IsNullOrEmpty(ClassName))
             {
-                var studentlist = scheduleForTraineesBusiness.ClassStudent(ClassName);
+                int classid = int.Parse(ClassName);
+                var studentlist = scheduleForTraineesBusiness.ClassStudent(classid);
                 List<StudentInformation> Mylist = new List<StudentInformation>();
                 foreach (var item in studentlist)
                 {

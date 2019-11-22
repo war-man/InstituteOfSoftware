@@ -270,7 +270,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult UngetProjectItem(string classnumber, int projectid)
+        public ActionResult UngetProjectItem(int classnumber, int projectid)
         {
 
             return Json(db_project.UngetProjectItem(projectid, classnumber));

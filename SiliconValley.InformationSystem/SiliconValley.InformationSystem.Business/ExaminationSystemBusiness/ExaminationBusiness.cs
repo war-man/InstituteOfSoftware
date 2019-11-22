@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
@@ -157,7 +158,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         {
             //获取当前登陆的班主任
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
             ///获取到班主任
            var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
@@ -170,7 +172,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             foreach (var item in classs)
             {
-               var templist = scheduleForTraineesBusiness.ClassStudent(item.ClassID);
+               var templist = scheduleForTraineesBusiness.ClassStudent((int)item.ClassID);
 
                 if (templist != null)
                 {

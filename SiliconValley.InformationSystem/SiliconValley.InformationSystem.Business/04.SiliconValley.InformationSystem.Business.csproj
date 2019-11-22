@@ -116,6 +116,7 @@
     <Compile Include="DormitoryBusiness\ProClassSchedule.cs" />
     <Compile Include="DormitoryBusiness\ProClassScheduleViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProDormInfoViewBusiness.cs" />
+    <Compile Include="DormitoryBusiness\ProEmpinfoBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
+    <Compile Include="Employment\ProTeacher.cs" />
     <Compile Include="EmpSalaryManagementBusiness\AttendanceInfoManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />

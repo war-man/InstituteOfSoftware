@@ -20,8 +20,8 @@
                 <label class="layui-form-label"></label>
                 <div class="layui-input-inline">
                     @Html.HiddenFor(a => a.ID)
-                    班级名称 <input type="text" value="@ViewBag.ClassNumber" name="ClassNumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" id="StudentNumber" />
-
+                    班级名称 <input type="text" value="@ViewBag.ClassName" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;"  />
+                    <input type="text" style="display:none;"  name="ClassNumber"  value="@ViewBag.ClassNumber" />
 
                 </div>
             </div>

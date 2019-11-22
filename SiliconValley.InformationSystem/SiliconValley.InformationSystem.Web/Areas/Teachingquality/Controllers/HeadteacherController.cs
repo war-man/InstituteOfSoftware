@@ -82,7 +82,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            
             //带班人
             object obj = new object();
-            List<ClassSchedule> ListClass = ClasHead.GetList();
+            List<ClassSchedule> ListClass = ClasHead.GetList().Where(a=>a.ClassstatusID==null).ToList();
             List<ClassSchedule> MyClass = new List<ClassSchedule>();
            var x=   HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HeadteID).ToList();
             //3
@@ -90,12 +90,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //0
             foreach (var item in x)
             {
+                var classstudent = ClasHead.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.id == item.ClassID&& a.ClassstatusID == null).FirstOrDefault();
+                if (classstudent!=null)
+                {
+                    MyClass.Add(classstudent);
+                }
                
-                MyClass.Add(ClasHead.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassNumber == item.ClassID).FirstOrDefault());
             }
             foreach (var item in x1)
             {
-                ListClass = ListClass.Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassNumber != item.ClassID).ToList();
+                ListClass = ListClass.Where(a => a.IsDelete == false && a.ClassStatus == false && a.id != item.ClassID).ToList();
             }
 
             var data=new

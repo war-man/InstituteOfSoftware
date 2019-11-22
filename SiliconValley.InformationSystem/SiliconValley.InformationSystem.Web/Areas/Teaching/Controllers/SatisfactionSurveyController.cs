@@ -17,6 +17,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
+    using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
     /// <summary>
     /// 满意度调查控制器
@@ -41,6 +42,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         TeacherClassBusiness db_teacherclass = new TeacherClassBusiness();
 
         BaseBusiness<ClassSchedule> db_class = new BaseBusiness<ClassSchedule>();
+        //学员班级
+        ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
 
         private readonly TeacherBusiness db_teacher;
 
@@ -1000,8 +1003,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 foreach (var item in templist)
                 {
-
-                   var tempobj = db_class.GetList().Where(d => d.ClassNumber == item.ClassID).FirstOrDefault();
+                  
+                   var tempobj = db_class.GetList().Where(d => d.ClassNumber ==   classScheduleBusiness.GetEntity(item.ClassID).ClassNumber).FirstOrDefault();
 
                     resultlist .Add( db_teacherclass.GetClassTableView(tempobj));
                 }

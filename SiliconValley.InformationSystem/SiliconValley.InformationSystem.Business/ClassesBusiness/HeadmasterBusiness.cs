@@ -73,7 +73,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
         //班主任职业素养培训
         BaseBusiness<Professionala> ProfessionalaBusiness = new BaseBusiness<Professionala>();
-        
+      
         //班主任离职时间
         public bool QuitEntity(string informatiees_Id)
         {
@@ -108,14 +108,17 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             string[] ClassNames = ClassName.Split(',');
             foreach (var item in ClassNames)
             {
-                var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.LeaderID == int.Parse(id) && a.ClassID == item).FirstOrDefault();
+                //学员班级
+                ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+                var class_id = classScheduleBusiness.FintClassSchedule(item).id;
+                var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.LeaderID == int.Parse(id) && a.ClassID == class_id).FirstOrDefault();
 
                 if (Index==0)
                 {
                     HeadClass headClass = new HeadClass();
                     headClass.AddTime = DateTime.Now;
                     headClass.LeadTime = DateTime.Now;
-                    headClass.ClassID = item;
+                    headClass.ClassID = class_id;
                     headClass.IsDelete = false;
                     headClass.LeaderID = int.Parse(id);
                     list.Add(headClass);
@@ -156,9 +159,12 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public EmployeesInfo ClassHeadmaster(string ClassName)
+        public EmployeesInfo ClassHeadmaster(int ClassName)
         {
-            var mysex = Hoadclass.GetList().Where(a =>  a.ClassID == ClassName).FirstOrDefault();
+
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            var mysex = Hoadclass.GetList().Where(a =>  a.ClassID ==ClassName).FirstOrDefault();
             var leid =mysex==null?new Headmaster(): this.GetEntity(mysex.LeaderID);
             return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
         }
@@ -169,7 +175,8 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
         public bool HeadClassEntis(string id, string ClassName)
-        {
+        {  //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             bool str = true;
             List<HeadClass> list = new List<HeadClass>();
             if (!string.IsNullOrEmpty( ClassName))
@@ -181,7 +188,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
                     HeadClass headClass = new HeadClass();
                     headClass.AddTime = DateTime.Now;
                     headClass.LeadTime = DateTime.Now;
-                    headClass.ClassID = item;
+                    headClass.ClassID = classScheduleBusiness.FintClassSchedule(item).id;
                     headClass.IsDelete = false;
                     headClass.LeaderID = int.Parse(id);
                     list.Add(headClass);
@@ -191,12 +198,19 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             try
             {
                  var mysex = Hoadclass.GetList().Where(a => a.IsDelete == false && a.LeaderID == int.Parse(id)).ToList();
-                    Hoadclass.Delete(mysex);
-                    BusHelper.WriteSysLog("删除数据", Entity.Base_SysManage.EnumType.LogType.删除数据);
+                    List<HeadClass> HeadList = new List<HeadClass>();
+                    foreach (var item in mysex)
+                    {
+                        item.IsDelete = true;
+                        item.EndingTime = DateTime.Now;
+                        HeadList.Add(item);
+                    }
+                    Hoadclass.Update(HeadList);
+                    BusHelper.WriteSysLog("修改班主任带班数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 if (list.Count>0)
                 {
                     Hoadclass.Insert(list);
-                    BusHelper.WriteSysLog("添加数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                    BusHelper.WriteSysLog("添加班主任带班数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 }
                   
             }
@@ -216,7 +230,8 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// <returns></returns>
         public EmployeesInfo Listheadmasters(string StudentID)
         {
-          var ClassID=  scheduleForTraineesBusiness.GetList().Where(q => q.CurrentClass == true && q.StudentID == StudentID).FirstOrDefault().ClassID;//获取班级号
+        
+            var ClassID=  scheduleForTraineesBusiness.GetList().Where(q => q.CurrentClass == true && q.StudentID == StudentID).FirstOrDefault().ID;//获取班级号
             var leid = Hoadclass.GetList().Where(c => c.IsDelete == false && c.EndingTime == null && c.ClassID == ClassID).FirstOrDefault().LeaderID;//查询带班班长id
           var Empid = this.GetEntity(leid).informatiees_Id;//员工编号
             return employeesInfoManage.GetEntity(Empid);
@@ -292,9 +307,9 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             return   Hoadclass.GetList().Where(a => a.IsDelete == false).Select(a => new TeamleaderdistributionView
             {
                HeadmasterName= employeesInfoManage.GetEntity(this.GetEntity(a.LeaderID).informatiees_Id).EmpName,
-                ClassName=a.ClassID,
-                 Stage= classScheduleBusiness.GetClassGrand(a.ClassID,222),
-                 Major= classScheduleBusiness.GetClassGrand(a.ClassID, 1)
+                ClassName= classScheduleBusiness.GetEntity( a.ClassID).ClassNumber,
+                 Stage= classScheduleBusiness.GetClassGrand((int)a.ClassID, 222),
+                 Major= classScheduleBusiness.GetClassGrand((int)a.ClassID, 1)
             }).ToList();
         }
     }

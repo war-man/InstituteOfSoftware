@@ -17,10 +17,10 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// </summary>
         /// <param name="ClassID"></param>
         /// <returns></returns>
-        public List<StudentInformation> ClassStudent(string ClassID)
+        public List<StudentInformation> ClassStudent(int ClassID)
         {
             //CurrentClass是否为正常状态 查询使用以参数为班级的学员学号
-            var stuid = this.GetList().Where(a => a.ClassID == ClassID && a.CurrentClass == true).ToList();
+            var stuid = this.GetList().Where(a => a.ID == ClassID && a.CurrentClass == true).ToList();
             //查询班级所有学生
             StudentInformationBusiness student = new StudentInformationBusiness();
 
@@ -46,6 +46,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// <returns></returns>
         public ScheduleForTrainees SutdentCLassName(string Sutdentid)
         {
+
             return this.GetList().Where(q => q.CurrentClass == true && q.StudentID == Sutdentid).FirstOrDefault();
         }
     }

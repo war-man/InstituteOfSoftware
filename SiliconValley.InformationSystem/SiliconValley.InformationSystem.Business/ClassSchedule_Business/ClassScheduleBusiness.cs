@@ -62,7 +62,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
         /// <returns></returns>
-        public List<ClassStudentView> ClassStudentneList(string classid)
+        public List<ClassStudentView> ClassStudentneList(int classid)
         {
 
             List<ClassStudentView> listview = new List<ClassStudentView>();
@@ -98,7 +98,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
 
         }
-        public List<ClassStudentView> ClassStudentneViewList(string classid)
+        public List<ClassStudentView> ClassStudentneViewList(int classid)
         {
             //学员班级
             ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
@@ -106,7 +106,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             StudentInformationBusiness student = new StudentInformationBusiness();
 
             List<ClassStudentView> listview = new List<ClassStudentView>();
-            var x = scheduleForTraineesBusiness.GetList().Where(a => a.ClassID == classid).ToList();
+            var x = scheduleForTraineesBusiness.GetList().Where(a => a.ID_ClassName == classid).ToList();
             foreach (var item in x)
             {
                 ClassStudentView classStudentView = new ClassStudentView();
@@ -125,20 +125,20 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
         }
         /// <summary>
-        /// 通过班级名称获取一个班级
+        /// 通过班级名称获取一个正常班级
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
         public ClassSchedule FintClassSchedule(string ClassName)
         {
-         return this.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber==ClassName).FirstOrDefault();
+         return this.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber==ClassName&&a.ClassstatusID==null).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级查询返回出班级人数,微信号,QQ号,班级名称
         /// </summary>
         /// <param name="claassid"></param>
         /// <returns></returns>
-        public List<ClassdetailsView> Listdatails(string claassid)
+        public List<ClassdetailsView> Listdatails(int claassid)
         {
             int count = ss.ClassStudent(claassid).Count();
             List<ClassdetailsView> list = new List<ClassdetailsView>();
@@ -149,14 +149,14 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 classdetailsView.count = count;
                 classdetailsView.QQ = x.QQGroupnumber;
                 classdetailsView.WeChat = x.WechatGroupNumber;
-                classdetailsView.ClassName = claassid;
+                classdetailsView.ClassName =this.GetEntity( claassid).ClassNumber;
             }
             else
             {
                 classdetailsView.count = count;
                 classdetailsView.QQ = "未记录";
                 classdetailsView.WeChat = "未记录";
-                classdetailsView.ClassName = claassid;
+                classdetailsView.ClassName =this.GetEntity( claassid).ClassNumber;
             }
             list.Add(classdetailsView);
             return list;
@@ -166,7 +166,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// </summary>
         /// <param name="className"></param>
         /// <returns></returns>
-        public GroupManagement Grouselect(string className)
+        public GroupManagement Grouselect(int className)
         {
             return GriupMan.GetList().Where(a => a.ClassNumber == className && a.IsDelete == false).FirstOrDefault();
 
@@ -240,7 +240,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="ClassNumber">班级号</param>
         /// <param name="Entity">数据操作为空则添加</param>
         /// <returns></returns>
-        public AjaxResult Entityembers(string Stuid, string Typeofposition, string ClassNumber, string Entity)
+        public AjaxResult Entityembers(string Stuid, string Typeofposition, int ClassNumber, string Entity)
         {
             //获取班委id
 
@@ -354,7 +354,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public List<Assmeetings> AssmeetingsList(string ClassName)
+        public List<Assmeetings> AssmeetingsList(int ClassName)
         {
             return myassmeetings.GetList().Where(a => a.IsDelete == false && a.ClassNumber == ClassName).ToList();
         }
@@ -365,7 +365,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="ClassNumber">班级号</param>
         /// /// <param name="Stuid">学号</param>
         /// <returns></returns>
-        public AjaxResult AssmeetingsBool(string Typeofposition, string ClassNumber, string Stuid)
+        public AjaxResult AssmeetingsBool(string Typeofposition, int ClassNumber, string Stuid)
         {
             AjaxResult retus = null;
             retus = new SuccessResult();
@@ -481,9 +481,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="ClassNumber">班级名称</param>
         /// // <param name="type">1是专业名称，否则是阶段</param>
         /// <returns></returns>
-        public string GetClassGrand(string ClassNumber, int type)
+        public string GetClassGrand(int ClassNumber, int type)
         {
-            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassNumber&&a.ClassstatusID==null).FirstOrDefault();
+            var CLaaNuma = this.GetEntity(ClassNumber);
             CLaaNuma = CLaaNuma == null ? new ClassSchedule() : CLaaNuma;
             if (type == 1)
             {
@@ -510,16 +510,16 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="limit"></param>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public List<DetailedcostView> listTuiton(int page, int limit, string ClassName)
+        public List<DetailedcostView> listTuiton(int page, int limit, int ClassName)
         {
-            var CLaaNuma = this.GetList().Where(a => a.ClassNumber == ClassName).FirstOrDefault();
+            var CLaaNuma = this.GetList().Where(a => a.id == ClassName).FirstOrDefault();
             var Mylist = this.ClassStudentneList(ClassName);
             List<DetailedcostView> lisrDetaild = new List<DetailedcostView>();
             foreach (var item in Mylist)
             {
 
                 DetailedcostView detailedcostView = this.GotoschoolTuition(CLaaNuma.grade_Id, item.StuNameID);
-                detailedcostView.ClassName = ClassName;
+                detailedcostView.ClassName =this.GetEntity( ClassName).ClassNumber;
                 detailedcostView.Name = item.Name;
                 detailedcostView.Stidentid = item.StuNameID;
                 detailedcostView.Sex = item.Sex == false ? "女" : "男";
@@ -687,5 +687,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return result;
         }
+
+        
     }
 }

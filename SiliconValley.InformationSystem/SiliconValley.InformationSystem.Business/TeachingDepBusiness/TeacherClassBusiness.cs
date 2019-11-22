@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
+    using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
 
@@ -107,7 +108,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
            var temp = db_studentclass.GetList().Where(d => d.CurrentClass == true && d.StudentID == student.StudentNumber).FirstOrDefault();
             ClassSchedule myclass = db_class.GetList().Where(d=>d.IsDelete==false && d.ClassNumber==temp.ClassID).FirstOrDefault();
-            var classmenber = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == myclass.ClassNumber && d.Studentnumber == student.StudentNumber).FirstOrDefault();
+            var classmenber = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == myclass.id && d.Studentnumber == student.StudentNumber).FirstOrDefault();
 
 
             if (classmenber != null)
@@ -169,12 +170,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             classTableView.IsDelete = classSchedule.IsDelete;
             classTableView.MajorName = db_major.GetSpecialtyByID((int)classSchedule.Major_Id).SpecialtyName;
 
-            classTableView.ClassSize= scheduleForTraineesBusiness.ClassStudent(classSchedule.ClassNumber).Count;//班级人数
+            classTableView.ClassSize= scheduleForTraineesBusiness.ClassStudent(classSchedule.id).Count;//班级人数
+             //学员班级                                                                                              //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
 
             try
             {
-
-                var master = headerclass.GetList().Where(d => d.IsDelete == false && d.ClassID == classSchedule.ClassNumber).FirstOrDefault();
+                
+                var master = headerclass.GetList().Where(d => d.IsDelete == false && d.ClassID == classScheduleBusiness.GetEntity(classSchedule.ClassNumber).id).FirstOrDefault();
 
                 var temp1 = headermaster.GetList().Where(d => d.IsDelete == false && d.ID == master.LeaderID).FirstOrDefault();//获取到班主任
                 classTableView.Headmaster = emp.GetList().Where(d => d.IsDel == false && d.EmployeeId == temp1.informatiees_Id).FirstOrDefault().EmpName;
@@ -189,7 +192,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             try
             {
-                classTableView.qqGroup = classgroup.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classSchedule.ClassNumber).FirstOrDefault().QQGroupnumber;
+                classTableView.qqGroup = classgroup.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classSchedule.id).FirstOrDefault().QQGroupnumber;
             }
             catch (Exception ex)
             {
@@ -221,7 +224,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <param name="classnumber"></param>
         /// <returns></returns>
-        public Dictionary<string, StudentInformation> GetClassCadres(string classnumber)
+        public Dictionary<string, StudentInformation> GetClassCadres(int classnumber)
         {
 
             Dictionary<string, StudentInformation> result = new Dictionary<string, StudentInformation>();

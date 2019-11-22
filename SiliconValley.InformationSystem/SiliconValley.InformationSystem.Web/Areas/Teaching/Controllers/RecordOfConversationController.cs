@@ -188,7 +188,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
-        public ActionResult GetStudentByClass(string classnumber)
+        public ActionResult GetStudentByClass(int classnumber)
         {
             
 

@@ -53,7 +53,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 List<StudentAttendance> lists = new List<StudentAttendance>();
                 if (!string.IsNullOrEmpty(ClassName))
                 {
-                    var it = classSchedule.ClassStudentneList(ClassName);
+                    int ClassNames = Convert.ToInt32(ClassName);
+                    var it = classSchedule.ClassStudentneList(ClassNames);
                     foreach (var item in it)
                     {
                         list.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StuNameID).ToList());
@@ -71,10 +72,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                             else { lists.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StudentNumber)); }
                             }
                         list = lists;
-                   
-                  
-                    
-            } else if(string.IsNullOrEmpty(Name)&&string.IsNullOrEmpty(ClassName)) { list = dbtext.Mylist("StudentAttendance"); }
+
+                    //.Mylist("StudentAttendance");
+
+                }
+                else if(string.IsNullOrEmpty(Name)&&string.IsNullOrEmpty(ClassName)) { list = dbtext.GetList(); }
            
             if (!string.IsNullOrEmpty(Attendancestatus))
             {
@@ -135,7 +137,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             List<PiechartView> stulist = new List<PiechartView>();
             if (!string.IsNullOrEmpty(ClassName))
             {
-                var it = classSchedule.ClassStudentneList(ClassName);
+                int ClassNames = int.Parse(ClassName);
+                var it = classSchedule.ClassStudentneList(ClassNames);
                 foreach (var item in it)
                 {
                     list.AddRange(dbtext.GetList().Where(a => a.StudentID == item.StuNameID).ToList());

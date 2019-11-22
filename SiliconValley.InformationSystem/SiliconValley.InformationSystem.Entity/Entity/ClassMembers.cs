@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public Nullable<int> Typeofposition { get; set; }
-        public string ClassNumber { get; set; }
+        public int ClassNumber { get; set; }
         public string Studentnumber { get; set; }
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }

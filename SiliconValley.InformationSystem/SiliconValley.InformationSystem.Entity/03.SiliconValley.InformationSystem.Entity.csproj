@@ -47,6 +47,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
@@ -320,7 +321,6 @@
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\DetailedcostView.cs" />
     <Compile Include="ViewEntity\DistinguishView.cs" />
-    <Compile Include="ViewEntity\DistributionView.cs" />
     <Compile Include="ViewEntity\DivTwoData.cs" />
     <Compile Include="ViewEntity\DormInformationView.cs" />
     <Compile Include="ViewEntity\DormInfoView.cs" />
@@ -363,12 +363,16 @@
     <Compile Include="ViewEntity\MyStaticsData.cs" />
     <Compile Include="ViewEntity\My_StudentDataOne.cs" />
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\SResearchRecordRegisterView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />
     <Compile Include="ViewEntity\ProClassScheduleView.cs" />
     <Compile Include="ViewEntity\ProjectDetailView.cs" />
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
+    <Compile Include="ViewEntity\ProRoomDisabledView.cs" />
     <Compile Include="ViewEntity\ProStudentInformationView.cs" />
     <Compile Include="ViewEntity\ProStudentPageView.cs" />
     <Compile Include="ViewEntity\ProStudentView.cs" />
@@ -398,6 +402,7 @@
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
+    <Compile Include="ViewEntity\TungView.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />
     <Compile Include="ViewEntity\UninhabitedList.cs" />
     <Compile Include="ViewEntity\vierprice.cs" />

@@ -176,8 +176,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     mystudentdata.ClassName = className.ClassID;//获取班级名称
                     mystudentdata.Teacher = TB_Entity.ClassTeacher(className.ClassID).EmpName;//获取任课老师
-                    mystudentdata.Grand = CB_Entity.GetClassGrand(className.ClassID, 2);//阶段
-                    mystudentdata.ZhuanyeName = CB_Entity.GetClassGrand(className.ClassID, 1);//专业
+                    mystudentdata.Grand = CB_Entity.GetClassGrand(className.ID_ClassName, 2);//阶段
+                    mystudentdata.ZhuanyeName = CB_Entity.GetClassGrand(className.ID_ClassName, 1);//专业
                 }                
                 EmployeesInfo find_e = HB_Entity.Listheadmasters(find_s.StudentNumber);
                 if (find_e != null)

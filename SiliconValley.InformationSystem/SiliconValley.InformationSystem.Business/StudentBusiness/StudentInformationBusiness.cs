@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
@@ -103,7 +104,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public object StuClass(string studentid)
         {
-
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             var x = this.GetEntity(studentid);
             var Enti = new
             {
