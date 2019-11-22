@@ -183,9 +183,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             try
             {
                 foreach (Reconcile item in new_list)
-                {
-                    this.Insert(item);
-                    s = true;
+                {                    
+                        this.Insert(item);
+                        s = true;                    
                 }
             }
             catch (Exception)
@@ -196,7 +196,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return s;
         }
        /// <summary>
-       /// 是否有重复的数据
+       /// 是否有重复的数据 (false--没有重复，true--重复)
        /// </summary>
        /// <param name="r"></param>
        /// <returns></returns>
@@ -207,7 +207,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             if (find_r!=null)
             {
                 s = true;
-            }
+            }             
             return s;
         }
         
@@ -341,13 +341,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="time">获取课表日期</param>
         /// <param name="basedae_id">校区名称</param>
-        public void mmm(DateTime time, int basedae_id)
+        public void mmm(DateTime time, int basedae_id,int grand_id)
         {          
             //获取这周日期
             Mydate mydate = GetMydate(time);
             //获取上午班级跟下午班级
            // List<ClassSchedule> moringclass = ClassSchedule_Entity.GetList().Where(c => c.BaseDataEnum_Id == GetClassTime("上午").Id).ToList();
-            List<ClassSchedule> afternoonclass = ClassSchedule_Entity.GetList().Where(c => c.BaseDataEnum_Id == GetClassTime("上午").Id && c.ClassStatus==false && c.IsDelete==false).ToList();
+            List<ClassSchedule> afternoonclass = ClassSchedule_Entity.GetList().Where(c => c.BaseDataEnum_Id == GetClassTime("上午").Id && c.ClassStatus==false && c.IsDelete==false && c.grade_Id==grand_id).ToList();
             //获取教室 
             List<Classroom> moringroom = GetClassrooms("下午", basedae_id,time);
  
@@ -401,12 +401,24 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
         }
         //获取可以上职素的班主任
-        public List<Headmaster> GetMasTeacher()
+        public List<EmployeesInfo> GetMasTeacher()
         {
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
             BaseBusiness<Headmaster> basemaster = new BaseBusiness<Headmaster>();
             BaseBusiness<EmployeesInfo> baseEmplo = new BaseBusiness<EmployeesInfo>();
+            List<EmployeesInfo> elist = baseEmplo.GetList();
             List<Headmaster> find_m= basemaster.GetList().Where(m => m.IsDelete == false && m.IsAttend == true).ToList();
-            return find_m;
+            foreach (EmployeesInfo e1 in elist)
+            {
+                foreach (Headmaster m1 in find_m)
+                {
+                    if (m1.informatiees_Id==e1.EmployeeId)
+                    {
+                        list.Add(e1);
+                    }
+                }
+            }
+            return list;
         }
         //获取教官
         public List<EmployeesInfo> GetSir()
@@ -476,7 +488,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a_list;
         }
          /// <summary>
-         /// 判断这个老师在这个日期中的这个时间段是否有课
+         /// 判断这个老师在这个日期中的这个时间段是否有课(false--没有，true--有)
          /// </summary>
          /// <param name="Teacher_Id">老师编号</param>
          /// <param name="timename">时间段</param>
@@ -491,7 +503,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 s = true;
             }
             return s;
-        }
+        }        
         #region 提供修改排课数据的方法
         /// <summary>
         /// 获取XX班级在这XX天上XX课程的排课情况
@@ -504,7 +516,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return this.GetList().Where(r => r.AnPaiDate == time && r.ClassSchedule_Id == ClassNumber && r.Curse_Id == currName).ToList();
         }
-
+        
         /// <summary>
         /// 转视图模型
         /// </summary>
@@ -526,6 +538,31 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             new_r.Rmark = r.Rmark;
             return new_r;
         }
+        /// <summary>
+        /// 代课业务(fasle--操作不成功，ture--操作成功)
+        /// </summary>
+        /// <param name="dateTime">代课日期</param>
+        /// <param name="emp_id">代课老师</param>
+        /// <param name="timename">代课时间段（上午，下午）</param>
+        /// <param name="classname">代课班级</param>
+        /// <returns></returns>
+        public bool Daike(DateTime dateTime,string emp_id,string timename,string classname)
+        {
+            bool s = false;
+            try
+            {
+                Reconcile find_r = this.GetList().Where(r => r.AnPaiDate == dateTime && r.Curse_Id == timename && r.ClassSchedule_Id == classname).FirstOrDefault();
+                find_r.EmployeesInfo_Id = emp_id;
+                this.Update(find_r);
+                s = true;
+            }
+            catch (Exception)
+            {
+
+                s = false;
+            }
+            return s;
+        }       
         #endregion
     }
 }

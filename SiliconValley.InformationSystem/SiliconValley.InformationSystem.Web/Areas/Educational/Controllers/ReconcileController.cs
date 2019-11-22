@@ -16,8 +16,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     public class ReconcileController : Controller
     {
-        // GET: /Educational/Reconcile/GetEmptyRoom
-          static readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
+        // GET: /Educational/Reconcile/NewsRexoncileView
+        static readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
           static readonly EmployeesInfoManage Employees_Entity = new EmployeesInfoManage();
           static readonly TeacherBusiness Teacher_Entity = new TeacherBusiness();
           static Recon_Login_Data GetBaseData(string Emp)
@@ -120,25 +120,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             string grand_Id = Request.Form["mygrand"];
             string class_Id =Request.Form["class_select"];
             int classroom_Id =Convert.ToInt32(Request.Form["myclassroom"]);
-            string kengcheng = Request.Form["kecheng"];
+            int kengcheng =Convert.ToInt32( Request.Form["kecheng"]);
+            string ke = ReconcileManeger.Curriculum_Entity.GetEntity(kengcheng).CourseName;
             string time = Request.Form["time"];
+            string techar = Request.Form["teachersele"];
             DateTime startTime =Convert.ToDateTime( Request.Form["startTime"]);
             //判断该班级这个课程是否已排完课
-            int count= Reconcile_Entity.GetList().Where(r => r.Curriculum_Id == kengcheng && r.ClassSchedule_Id == class_Id).ToList().Count;
+            int count= Reconcile_Entity.GetList().Where(r => r.Curriculum_Id == ke && r.ClassSchedule_Id == class_Id).ToList().Count;
             if (count>0)
-            {
-                string coursename= ReconcileManeger.Curriculum_Entity.GetEntity(kengcheng).CourseName;
-                db.Append(class_Id + "的" + coursename + "已排好,请选择其他课程");
+            {               
+                db.Append(class_Id + "的" + ke + "已排好,请选择其他课程");
                
             }
             else
             {
-                //判断该课程是否安排了教学老师
-                ClassTeacher Ishave= TeacherClass_Entity.GetList().Where(t => t.IsDel == false && t.ClassNumber == class_Id).FirstOrDefault();
-                if (Ishave!=null)
-                {
                     //开始排课
-                    Curriculum find_c = ReconcileManeger.Curriculum_Entity.GetList().Where(c => c.CourseName == kengcheng).FirstOrDefault();
+                    Curriculum find_c = ReconcileManeger.Curriculum_Entity.GetList().Where(c => c.CourseName == ke).FirstOrDefault();
                     //查看这个课程的课时数
                     int Kcount = Convert.ToInt32(find_c.CourseCount) / 4;
                     //获取单休双休月份
@@ -180,11 +177,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         }
                         r.ClassRoom_Id = classroom_Id;
                         r.ClassSchedule_Id = class_Id;
-                        r.EmployeesInfo_Id = Teacher_Entity.GetEntity(Ishave.TeacherID).EmployeeId;
+                        r.EmployeesInfo_Id = techar;
                         if (i == Kcount)
                         {
                             //课程考试
-                            bool iscurr = Reconcile_Entity.IsEndCurr(kengcheng);
+                            bool iscurr = Reconcile_Entity.IsEndCurr(ke);
                             if (iscurr)
                             {
                                 r.Curriculum_Id = "升学考试";
@@ -197,7 +194,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         }
                         else
                         {
-                            r.Curriculum_Id = kengcheng;
+                            r.Curriculum_Id = ke;
                         }
                         r.NewDate = DateTime.Now;
                         r.Curse_Id = time;
@@ -214,14 +211,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         {
                             db.Append("ok");
                         }
-                    }
-                     
-                }
-                else
-                {
-                    db.Append("请联系教学主任安排"+ class_Id+"班级"+"的"+ kengcheng+"课程的教学老师！！！");
-                }
-                           
+                    }                                              
             }
             return Json(db.ToString(),JsonRequestBehavior.AllowGet);
         }
@@ -263,10 +253,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         //生成课表页面
         public ActionResult NewsRexoncileView()
         {
-            //Mydate d= Reconcile_Entity.GetMydate(Convert.ToDateTime("2019-11-12"));
-            //获取当前登录员是哪个角色是哪个校区的教务
-            int base_id = ReconcileManeger.ClassSchedule_Entity.BaseDataEnum_Entity.GetSingData("继善高科校区", false).Id;
-            Reconcile_Entity.mmm(Convert.ToDateTime("2019-11-13"), base_id);
+                //获取S1阶段id,跟S2阶段Id,Y1
+                List<Grand> glist=  Reconcile_Entity.GetEffectiveData(IsOld);
+                foreach (Grand item in glist)
+                {
+                    Reconcile_Entity.mmm(Convert.ToDateTime("2019-11-13"), base_id,item.Id);
+                }   
             return View();
         }
         //手动排课页面
@@ -340,8 +332,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 {
                     if (item2.EmployeeId==item1.EmployeeId)
                     {
-
-                        find_e.Add(item1);
+                        bool s = Reconcile_Entity.IsHaveClass(item2.EmployeeId, timename, anpai);
+                        if (s==false)
+                        {
+                            find_e.Add(item1);
+                        }
+                       
                     }
                 }
             }
@@ -349,33 +345,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(result,JsonRequestBehavior.AllowGet); 
         }
         //获取非专业课的老师
-        public ActionResult GetNoMajoiThercher(string id)
+        [HttpPost]
+        public ActionResult GetNoMajoiThercher()
         {
+            DateTime anpai = Convert.ToDateTime(Request.Form["Time"]);
+            string currname = Request.Form["Curr"];
+            string timename = Request.Form["timeName"];
+            List<EmployeesInfo> e_list = new List<EmployeesInfo>();
             List<SelectListItem> select = new List<SelectListItem>();
             PositionManage position = new PositionManage();
-            switch (id)
+            switch (currname)
             {               
                 case "职素":
                     //获取可以上职素课的班主任
-                    select= Reconcile_Entity.GetMasTeacher().Select(m => new SelectListItem() { Text = Employees_Entity.GetEntity(m.informatiees_Id).EmpName, Value = m.informatiees_Id }).ToList();
+                    e_list = Reconcile_Entity.GetMasTeacher();
                     break;
                 case "军事":
                     //获取教官
-                    select= Reconcile_Entity.GetSir().Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList();
+                    e_list = Reconcile_Entity.GetSir();                    
                     break;
                 case "英语":
                     //获取英语老师
                    Position find_p1= position.GetList().Where(p=>p.PositionName=="英语老师").FirstOrDefault();
+                    List<EmployeesInfo> e2= Employees_Entity.GetEmpByPid(find_p1.Pid);
                     break;
                 case "数学":
                     Position find_p2= position.GetList().Where(p => p.PositionName == "数学老师").FirstOrDefault();
+                    e_list= Employees_Entity.GetEmpByPid(find_p2.Pid);
                     //获取数学老师
                     break;
                 case "语文":
                     Position find_p3= position.GetList().Where(p => p.PositionName == "语文老师").FirstOrDefault();
+                    e_list= Employees_Entity.GetEmpByPid(find_p3.Pid);
                     //获取语文老师
                     break;
             }
+            foreach (EmployeesInfo item in e_list)
+            {
+                bool s = Reconcile_Entity.IsHaveClass(item.EmployeeId, timename, anpai);
+                if (s==false)
+                {
+                    SelectListItem sele = new SelectListItem();
+                    sele.Value = item.EmployeeId;
+                    sele.Text = item.EmpName;
+                    select.Add(sele);
+                }
+            }                   
             return Json(select, JsonRequestBehavior.AllowGet);
         }
         //手动排课数据提交
@@ -415,10 +430,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 new_r.NewDate = DateTime.Now;
                 //排课的时间
                 new_r.AnPaiDate = Convert.ToDateTime(Request.Form["childview_AnpiDate"]);
-
-                Reconcile_Entity.Insert(new_r);
-
-                sb.Append("ok");
+                bool Is= Reconcile_Entity.IsExcit(new_r);
+                if (Is==false)
+                {
+                    Reconcile_Entity.Insert(new_r);
+                    sb.Append("ok");
+                }
+                else
+                {
+                    sb.Append("已有重复数据！！！");
+                }                
+                
             }
             catch (Exception)
             {
