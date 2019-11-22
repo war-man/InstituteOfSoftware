@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.EducationalBusiness;
 
     [CheckLogin]
     public class TeacherController : Controller
@@ -890,6 +891,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             ViewBag.classList = classScadu;
 
 
+            //提供专业老师
+
+           var teachers = db_teacher.GetTeachers();
+
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+            foreach (var item in teachers)
+            {
+               var empobj = db_teacher.GetEmpByEmpNo(item.EmployeeId);
+
+                if (empobj != null)
+                    emplist.Add(empobj);
+            }
+
+            ViewBag.Teachers = emplist;
+
+
 
             return View();
         }
@@ -901,7 +919,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <returns></returns>
         public ActionResult CourseData(string classnumber, string date, string specific)
         {
-            return null;
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                ReconcileManeger db_reconcileTemp = new ReconcileManeger();
+
+                //获取当前登录用户
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date), classnumber, specific);
+
+                var resultList = resconcileList.Where(d => d.EmployeesInfo_Id == user.EmpNumber).ToList();
+
+                List<ResconcileView> resconcileViewList = new List<ResconcileView>();
+
+                foreach (var item in resultList)
+                {
+                    var tempObj = db_reconcileTemp.ConvertToView(item);
+
+                    resconcileViewList.Add(tempObj);
+
+                }
+
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = resconcileViewList;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+
+            }
+
+         
+
+            return Json(result);
         }
 
 
@@ -915,21 +972,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpPost]
         public ActionResult AdjustmentCourse(ConvertCourse convertCourse)
         {
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+            AjaxResult result = new AjaxResult();
 
-            convertCourse.ApplyDate = DateTime.Now;
-            convertCourse.IsDel = false;
-            convertCourse.TeacherID = teacher.TeacherID;
-           
+            try
+            {
 
-            // 调课
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
 
+                convertCourse.ApplyDate = DateTime.Now;
+                convertCourse.IsDel = false;
+                convertCourse.TeacherID = teacher.TeacherID;
+                convertCourse.AttendClassTeacher = teacher.TeacherID;
+                
+                //添加记录
+                db_teacher.AdjustmentCourse(convertCourse);
+                 
+                result.Msg = "成功";
+                result.Data = "";
+                result.ErrorCode = 200;
 
-            return null;
-           
+            }
+            catch (Exception ex)
+            {
+                result.Msg = "失败";
+                result.Data = "";
+                result.ErrorCode = 500;
+
+            }
+            //1
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
     }
