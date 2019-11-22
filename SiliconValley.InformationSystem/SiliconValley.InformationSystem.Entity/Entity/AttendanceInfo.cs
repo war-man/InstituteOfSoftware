@@ -32,6 +32,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string LeaveEarlyRecord { get; set; }//早退记录
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
-    
+        public int DeserveToRegularDays { get; set; }//应到勤天数
     }
 }

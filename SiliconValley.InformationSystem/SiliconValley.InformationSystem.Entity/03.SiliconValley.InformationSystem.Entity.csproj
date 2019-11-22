@@ -104,6 +104,7 @@
     <Compile Include="Entity\Classroom.cs" />
     <Compile Include="Entity\Classroomequipment.cs" />
     <Compile Include="Entity\ClassSchedule.cs" />
+    <Compile Include="Entity\Classstatus.cs" />
     <Compile Include="Entity\ClassStudyGroup.cs" />
     <Compile Include="Entity\ClassTeacher.cs" />
     <Compile Include="Entity\ClassTeacherKeep.cs" />
@@ -299,6 +300,7 @@
     <Compile Include="ViewEntity\PublicConvertView.cs" />
     <Compile Include="ViewEntity\Recon_Login_Data.cs" />
     <Compile Include="ViewEntity\ResconcileView.cs" />
+    <Compile Include="ViewEntity\SalaryView\MySalaryObjView.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="Entity\StageGrade.cs" />
     <Compile Include="Entity\StockInfo.cs" />
