@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public List<ClassSchedule> GetClassSchedules() {
             return this.GetIQueryable().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
+            
         }
 
         /// <summary>
