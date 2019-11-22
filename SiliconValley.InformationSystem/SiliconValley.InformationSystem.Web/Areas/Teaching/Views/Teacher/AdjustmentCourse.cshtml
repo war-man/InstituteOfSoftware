@@ -31,7 +31,7 @@
                 <div class="layui-form-item">
                     <label class="layui-form-label">班级:</label>
                     <div class="layui-input-block">
-                        <select name="ClassNumber">
+                        <select name="ClassNumber" lay-filter="classnumber">
 
                             @{
 
@@ -56,8 +56,8 @@
                     <div class="layui-input-inline">
                         .
 
-                        <input type="radio" name="BefoDaterSpecific" value="上午" title="上午" checked="">
-                        <input type="radio" name="BefoDaterSpecific" value="下午" title="下午">
+                        <input type="radio" lay-filter="BefoDaterSpecific" name="BefoDaterSpecific" value="上午" title="上午" checked="">
+                        <input type="radio"lay-filter="BefoDaterSpecific" name="BefoDaterSpecific" value="下午" title="下午">
 
 
                     </div>
@@ -67,9 +67,9 @@
                 <div class="layui-form-item">
 
 
-                    <div class="layui-input-block">
+                    <div class="layui-input-block" id="speclist1">
 
-                        <code><label>课程：</label> <span class="course">C#</span> &nbsp;&nbsp;&nbsp;<label>教员：</label> <span class="teacher">王湘</span> &nbsp;&nbsp;&nbsp; <label>时间：</label><span class="date">2019年-11月-12日</span>&nbsp;&nbsp;&nbsp; <span class="sepcdate">上午</span></code>
+                       
 
 
                     </div>
@@ -93,27 +93,13 @@
 
                 </div>
 
-                <div class="layui-form-item">
-
-                    <label class="layui-form-label">上课老师：</label>
-
-                    <!--默认自己-->
-                    <div class="layui-input-inline">
-                        <select name="AttendClassTeacher">
-                            <option value="1002">王湘</option>
-                        </select>
-                    </div>
-
-                </div>
-
 
                 <div class="layui-form-item">
 
 
                     <div class="layui-input-block">
 
-                        <code><label>课程：</label> <span class="course1">C#</span> &nbsp;&nbsp;&nbsp;<label>教员：</label> <span class="teacher1">王湘</span> &nbsp;&nbsp;&nbsp; <label>时间：</label><span class="date1">2019年-11月-12日</span>&nbsp;&nbsp;&nbsp; <span class="sepcdate1">上午</span></code>
-
+                      
 
                     </div>
 
@@ -145,35 +131,16 @@
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
-
+    <script src="~/Scripts/underscore.js"></script>
+    <script type="text/ng-template" id="moban">
+        <div><code><label>课程：</label> <span class="course">{{=course}}</span> &nbsp;&nbsp;&nbsp;<label>教员：</label> <span class="teacher">{{=teacher}}</span> &nbsp;&nbsp;&nbsp; <label>时间：</label><span class="date">{{=date}}</span>&nbsp;&nbsp;&nbsp; <span class="sepcdate">{{=sepcdate}}</span></code></div>
+    </script>
     <script>
+
+        var isHvaeRescon = true;
+
+        var course;
         var layer;
-
-        /// specific: 上午/下午
-        function loadCourse(date, specific,classnumber) {
-
-            $.post('/Teaching/Teacher/CourseData', { date: date, specific: specific, classnumber }, function (result) {
-
-                console.log(result);
-
-                if (result.ErrorCode == 200) {
-
-                    $(".course").text("C#");
-                    $(".teacher").text("王湘");
-                    $(".date").text("2019年-11月-12日");
-                    $(".sepcdate").text("上午");
-
-                }
-                else {
-
-                    layer.msg('服务器错误。。', { icon: 2 });
-                }
-
-            });
-
-
-        }
-
 
         layui.use(['form', 'layer','laydate'], function () {
 
@@ -182,7 +149,40 @@
             var form = layui.form;
             var laydate = layui.laydate;
             //日期
-        
+
+            //加载课表
+            function loadrecon(classnumber, date, spec) {
+                $("#speclist1").html("");
+                $.post("/Teaching/Teacher/CourseData", { classnumber: classnumber, date: date, specific: spec }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+                        if (result.Data.length == 0) {
+                            isHvaeRescon == false;
+                        }
+                        else {
+
+                            for (var i = 0; i < result.Data.length; i++) {
+
+                                var dateutc = result.Data[i].AnPaiDate.substr(result.Data[i].AnPaiDate.indexOf('(') + 1, 13);
+
+                                var getdate = new Date(parseInt(dateutc));
+                                var strdate = getdate.getFullYear() + '年-' + getdate.getMonth() + '月-' + getdate.getDate() + '日';
+
+                                var html = _.template($("#moban").html());
+                                var htmldate = html({ course: result.Data[i].Curriculum_Id, teacher: result.Data[i].EmployeesInfo_Id.EmpName, date: strdate, sepcdate: result.Data[i].Curse_Id });
+
+                                $("#speclist1").append(htmldate);
+                            }
+                        }
+
+
+                    }
+                    else {
+                        layer.msg('服务器错误。。', { icon: 2 });
+                    }
+                });
+            }
 
             laydate.render({
                 elem: '#date1'
@@ -191,22 +191,62 @@
                     //console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
                     //console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
 
-                    //发送请求
+                    
+                    //获取班级
+                    var classnumber = document.getElementsByName("ClassNumber")[0].value;
+
+                    //获取上午 、 下午
+                    var spec = document.getElementsByName("BefoDaterSpecific")[0].value
+
+                    if (classnumber == undefined) {
+                        return;
+                    }
+
+                    if (spec == undefined) {
+                        return;
+                    }
+                    //发送请求 
+                    loadrecon(classnumber, value, spec);
+                   
+
 
                 }
             });
+
+            form.on('radio(BefoDaterSpecific)', function (data) {
+
+               
+                //获取班级
+                var classnumber = document.getElementsByName("ClassNumber")[0].value;
+                var specDate = document.getElementsByName("BeforDate")[0].value;
+
+                console.log(specDate);
+                if (classnumber == undefined) {
+                    return;
+
+                }
+
+                if (specDate == undefined || specDate == "") {
+                    return;
+                }
+
+                loadrecon(classnumber, specDate, data.value);
+
+            });  
+
+
 
             laydate.render({
                 elem: '#date2'
                 , done: function (value, date, endDate) {
                     //console.log(value); //得到日期生成的值，如：2017-08-18
-                    //console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
-                    //console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
-
-                    //发送请求
+                   
+                    
                 }
             });
 
+
+            ///表单提交
             form.on('submit(commit)', function (data) {
                 console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
                 console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
@@ -215,7 +255,20 @@
 
                 $.post("/Teaching/Teacher/AdjustmentCourse", data.field, function (result) {
 
-                    console.log(result);
+                    if (result.ErrorCode == 200) {
+
+                      
+
+                        layer.msg('调课申请已提交', { icon: 1, time: 2000 }, function () {
+
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭  
+                        });
+
+                    }
+                    else {
+                        layer.msg('服务器错误', { icon: 2 });
+                    }
 
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
@@ -229,6 +282,27 @@
                 parent.layer.close(index); //再执行关闭   
 
             });
+
+
+            ///监听班级下拉框
+            form.on('select(classnumber)', function (data) {
+                
+             
+                //获取时间
+                var date = document.getElementsByName("BeforDate")[0].value;
+              
+                var spec = document.getElementsByName("BefoDaterSpecific")[0].value;
+
+          
+                if (date == "" || date == undefined || spec == undefined || spec == "") {
+                    return;
+
+                }
+
+                loadrecon(data.value, date, spec);
+
+            });
+
 
 
 

@@ -857,17 +857,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public void AdjustmentCourse(ConvertCourse convertCourse)
         {
 
-            //1`填写表单  2.修改课表 3.通知相应人员 
-
-            //1
-            db_convertCourse.Insert(convertCourse);
-
-            //2
-
-
-
-
-
+            //1`填写表单  
+                db_convertCourse.Insert(convertCourse);
+               
         }
 
 
