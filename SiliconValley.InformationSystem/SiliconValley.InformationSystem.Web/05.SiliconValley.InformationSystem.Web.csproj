@@ -261,6 +261,7 @@
     <Compile Include="Areas\MyEducation\MyEducationAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\BusinessManagementController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\CDinterviewController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\DistributionController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
@@ -1155,6 +1156,7 @@
     <Content Include="Areas\Obtainemployment\Views\Quarter\addquarter.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\Quarter\QuarterIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\Quarter\uptquarter.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Distribution\DistributionIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
