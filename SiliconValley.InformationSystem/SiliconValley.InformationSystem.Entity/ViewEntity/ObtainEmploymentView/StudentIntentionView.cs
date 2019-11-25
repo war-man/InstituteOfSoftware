@@ -9,8 +9,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
     /// <summary>
     /// 学生就业意向的视图model
     /// </summary>
-  public  class StudentIntentionView
+    public class StudentIntentionView
     {
+        /// <summary>
+        /// 意向id
+        /// </summary>
+        public int ID { get; set; }
         /// <summary>
         /// 班级名称
         /// </summary>
@@ -65,9 +69,19 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         public string AreaName { get; set; }
 
         /// <summary>
-        /// 
+        /// 区域id
+        /// </summary>
+        public Nullable<int> AreaID { get; set; }
+
+        /// <summary>
+        /// 希望薪资
         /// </summary>
         public string Salary { get; set; }
+
+        /// <summary>
+        /// 身份证
+        /// </summary>
+        public string identitydocument { get; set; }
 
     }
 }

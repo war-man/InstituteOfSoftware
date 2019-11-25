@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+﻿using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     /// </summary>
    public class ProClassSchedule:BaseBusiness<ClassSchedule>
     {
+        private EmpQuarterClassBusiness dbempQuarterClass;
         /// <summary>
         /// 获取没有毕业的还在用的班级
         /// </summary>
@@ -29,5 +31,35 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public ClassSchedule GetNotgraduatedClassByClassNumber(string ClassNumber) {
             return this.GetClassSchedules().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
         }
+
+        /// <summary>
+        /// 获取S4的班级对象表
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassSchedule> GetS4Classes() {
+            return this.GetClassSchedules().Where(a => a.grade_Id == 4).ToList();
+        }
+        /// <summary>
+        /// 获取s4 阶段的班级 而且没有规划到毕业计划的班级
+        /// </summary>
+        public List<ClassSchedule> GetClassGraduating()
+        {
+            var classdata = this.GetS4Classes();
+            dbempQuarterClass = new EmpQuarterClassBusiness();
+            var querydata = dbempQuarterClass.GetEmpQuarters();
+            for (int i = classdata.Count - 1; i >= 0; i--)
+            {
+                foreach (var item in querydata)
+                {
+                    if (classdata[i].ClassNumber == item.ClassNO)
+                    {
+                        classdata.Remove(classdata[i]);
+                        break;
+                    }
+                }
+            }
+            return classdata;
+        }
+
     }
 }

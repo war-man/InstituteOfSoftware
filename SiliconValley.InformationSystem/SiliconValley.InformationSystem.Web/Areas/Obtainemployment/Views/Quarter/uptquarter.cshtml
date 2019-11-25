@@ -1,0 +1,177 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>uptquarter</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .mytext {
+            min-height: 55px;
+            width: 464px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form">
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item" style="margin-top:30px;">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label lad">计划标题:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="QuaTitle" name="QuaTitle" lay-verify="required" class="layui-input" placeholder="例:2019年第三次毕业计划" />
+                            <input type="text" id="ID" name="ID" style="display:none;" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label lad"> 选择就业班级:</label>
+                        <div class="layui-input-inline" id="classlist" style="width:540px">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label lad"> 备注:</label>
+                        <div class="layui-input-inline">
+                            <textarea placeholder="请输入内容" id="Remark" name="Remark" class="layui-textarea mytext"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <div class="layui-input-block">
+                            <button type="button" class="layui-btn layui-btn-radius" id="signout">退出</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </form>
+    </div>
+    <script type="text/template" id="muban0">
+        <input type="checkbox" class="mycheckbox" lay-filter="vvv" name="ClassNO" lay-skin="primary" value="{{=ClassNO}}" title="{{=ClassNO}}" {{=checked}}>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        layui.use(['form', 'layer', 'element'], function () {
+            //获取设备信息
+            var layer = layui.layer, form = layui.form, element = layui.element, jsclasslist = new Array();
+
+            jQuery(function () {
+                var classlist = JSON.parse('@Html.Raw(ViewBag.classlist)');
+                var queryformdata = JSON.parse('@Html.Raw(ViewBag.queryformdata)');
+                loadform(queryformdata);
+                loadclass(classlist);
+
+            });
+            function loadform(data) {
+                $("#Remark").val(data.Remark);
+                $("#QuaTitle").val(data.QuaTitle);
+                $("#ID").val(data.ID);
+            }
+            function loadclass(data) {
+                 $("#classlist").children().remove();
+                //console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban0").html());
+                    var html = obj({ ClassNO: data[i].ClassNumber, checked: "" });
+                    $("#classlist").append($(html));
+                    form.render();
+                }
+                checktocheckbox();
+            }
+            function checktocheckbox() {
+                var checkclasslist = JSON.parse('@Html.Raw(ViewBag.checkclasslist)');
+                $(".mycheckbox").each(function (index) {
+                    for (var i = 0; i < checkclasslist.length; i++) {
+                        if ($(this).val() == checkclasslist[i].ClassNumber) {
+                            $(this).attr('checked', 'checked');
+                            jsclasslist.push( checkclasslist[i].ClassNumber);
+                        }
+                    }
+                    form.render();
+                });
+            }
+
+            form.on('checkbox(vvv)', function (data) {
+                if (data.elem.checked) {
+                    jsclasslist.push(data.value);
+                } else {
+                    for (var i = 0; i < jsclasslist.length; i++) {
+                        if (jsclasslist[i] == data.value) {
+                            jsclasslist.splice(i,1)
+                        }
+                    }
+                }
+                console.log(jsclasslist);
+            });
+
+            form.on('submit(demo1)', function (data) {
+                var param0 = data.field;
+                console.log(param0);
+                if (jsclasslist.length != 0) {
+                    var param1 = "";
+                    for (var i = 0; i < jsclasslist.length; i++) {
+                        param1 = param1 + jsclasslist[i] + ',';
+                    }
+                    param1 = param1.substring(0, param1.length - 1);
+                    $.ajax({
+                        url: '/Obtainemployment/Quarter/uptquarter',
+                        type: 'POST',
+                        data: { param0: param0, param1: param1 },
+                        success: function (successdata) {
+                            if (successdata.Success) {
+                                layer.msg('操作成功!', { icon: 6, time: 2000 }, function () {
+                                    close();
+                                });
+                            } else {
+                                layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    });
+                } else {
+                    layer.msg('请选择班级在提交!', { icon: 6, time: 2000 }, function () {
+
+                    });
+                }
+
+                return false;
+            });
+            $('#signout').click(function () {
+                close();
+            });
+            function close() {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+    </script>
+</body>
+</html>

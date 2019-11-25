@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string QuaTitle { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> DelDate { get; set; }
+        public DateTime RegDate { get; set; }
     
        
     }

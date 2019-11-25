@@ -248,6 +248,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\QuarterController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\StudentIntentionViewController.cs" />
@@ -1114,6 +1115,10 @@
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordRegister.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Quarter\QuarterIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Quarter\addquarter.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Quarter\uptquarter.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
