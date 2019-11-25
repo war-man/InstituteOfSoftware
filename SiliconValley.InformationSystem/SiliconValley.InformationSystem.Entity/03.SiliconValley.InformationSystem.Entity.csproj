@@ -385,6 +385,7 @@
     <Compile Include="ViewEntity\RoomArrangeEmpinfoView.cs" />
     <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
     <Compile Include="ViewEntity\RoomTypeEnum.cs" />
+    <Compile Include="ViewEntity\SalaryView\MySalaryObjView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />
