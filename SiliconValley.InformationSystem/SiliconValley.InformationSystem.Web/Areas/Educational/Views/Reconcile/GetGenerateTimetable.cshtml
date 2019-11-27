@@ -17,10 +17,13 @@
         }
     </style>
     }
+    <div id="time_div">
+        <input class="layui-input" />
+    </div>
     <div id="table_div">
         <table id="mytable">
             <thead>
-                <tr style="text-align:center"><th colspan="10"><span>2019年11月19号</span></th><th><span>星期二</span></th></tr>
+                <tr style="text-align:center"><th colspan="10"><span>2019年11月19号</span></th><th colspan="4"><span>星期二</span></th></tr>
             </thead>
             <tr>
                 <th>午别</th>
@@ -57,7 +60,9 @@
                     {
                         if (item.ClassName != null)
                         {
-                            <th><span>@item.NeiRong</span><span>/</span><span>@item.Teacher</span></th>
+                            <th>
+                                <span>@item.NeiRong</span><span>/</span><span>@item.Teacher</span>
+                            </th>
                         }
                         else
                         {
@@ -185,7 +190,9 @@
     </div>
 @section script{
     <script>
+        //layui.use('', function () {
 
+        //});
     </script>
     }
 

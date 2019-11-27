@@ -235,7 +235,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入试用期工资" }, { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() {  { "placeholder", "请输入试用期工资" }, { "class", "layui-input salary" } })
                         </div>
                     </div>
 
@@ -521,8 +521,12 @@
 
             //添加提交
             form.on('submit(demo1)', function (data) {
-                data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
-
+                if (data.field.month == "" && data.field.day == "") {
+                    data.field.Birthday = null;
+                } else {
+                    data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
+                }
+               
                 var fd = new FormData();
                 var myimg = document.querySelector("#Image").files[0];
                 fd.append('Image', myimg);
