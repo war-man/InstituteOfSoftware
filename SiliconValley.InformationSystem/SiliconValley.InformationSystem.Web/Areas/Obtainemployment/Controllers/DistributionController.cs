@@ -11,6 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         // GET: Obtainemployment/Distribution
         public ActionResult DistributionIndex()
         {
+
             return View();
         }
     }

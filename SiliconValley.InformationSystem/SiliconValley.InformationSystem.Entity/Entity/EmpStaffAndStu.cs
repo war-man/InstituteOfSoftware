@@ -14,16 +14,39 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 就业专员带学员记录
+    /// </summary>
     [Table(name: "EmpStaffAndStu")]
     public partial class EmpStaffAndStu
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 就业专员id
+        /// </summary>
         public Nullable<int> EmpStaffID { get; set; }
+        /// <summary>
+        /// 学生id
+        /// </summary>
         public Nullable<int> StuIntID { get; set; }
         public string Remark { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public Nullable<bool> IsDel { get; set; }
-    
+
+        /// <summary>
+        /// 季度id
+        /// </summary>
+        public int QuarterID { get; set; }
+
+        /// <summary>
+        ///就业阶段 1：第一次就业 2：第二次就业
+        /// </summary>
+        public int EmploymentStage { get; set; }
+
+        /// <summary>
+        /// 就业状态 1：就业中 2：已就业 3：未就业
+        /// </summary>
+         public int EmploymentState { get; set; }
     }
 }

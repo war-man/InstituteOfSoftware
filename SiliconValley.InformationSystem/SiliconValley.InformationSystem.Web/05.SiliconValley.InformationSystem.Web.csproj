@@ -1120,6 +1120,7 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\LodopFuncs.js" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
+    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
@@ -1157,6 +1158,11 @@
     <Content Include="Areas\Obtainemployment\Views\Quarter\QuarterIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\Quarter\uptquarter.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\Distribution\DistributionIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomDisabled\RoomDisabledIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomBasis\AddRoomPage.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomBasis\HttpGetUpdRoom.cshtml" />
+    <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\StaffRoomDetails\Staffloadlistwith.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

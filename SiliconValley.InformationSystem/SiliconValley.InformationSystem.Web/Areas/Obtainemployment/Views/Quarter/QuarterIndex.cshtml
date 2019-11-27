@@ -106,6 +106,7 @@
                         return aa;
                     }
                 }
+                , { field: 'peoplenumber', title: '参与人数', width: 100 }
                 , {
                     field: 'RegDate', title: '时间', width: 120, templet: function (d) {
                         return TimeChange(d.RegDate);
@@ -148,6 +149,7 @@
             $('.myclass').removeClass('layui-btn-warm');
             $(this).addClass('layui-btn-warm');
             clickyear = $(this).attr('myvalue');
+            console.log(clickyear);
             reloadtable();
         });
          //头工具栏事件
@@ -158,7 +160,7 @@
                             type: 2,
                             content: "/Obtainemployment/Quarter/addquarter",
                             title: '添加就业计划',
-                            area: ['690px', '350px'],
+                            area: ['720px', '380px'],
                             success: function (layero, index) {
                                 //let body = layui.layer.getChildFrame('body', index);
                                 //body.find("#classnumnber").val(clickclassnumber);
@@ -181,7 +183,7 @@
                             type: 2,
                             content: "/Obtainemployment/Quarter/uptquarter?param0=" + data[0].ID,
                             title: '修改就业计划',
-                            area: ['690px', '650px'],
+                            area: ['720px', '380px'],
                             success: function (layero, index) {
                                 //let body = layui.layer.getChildFrame('body', index);
                                 //body.find("#classnumnber").val(clickclassnumber);

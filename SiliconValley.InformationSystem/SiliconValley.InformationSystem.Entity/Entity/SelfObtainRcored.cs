@@ -14,17 +14,29 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 自主就业申请
+    /// </summary>
     [Table(name: "SelfObtainRcored")]
     public partial class SelfObtainRcored
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学生编号
+        /// </summary>
         public string StudentNO { get; set; }
+        /// <summary>
+        /// 审批人
+        /// </summary>
         public Nullable<int> EmpStaffID { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
-    
-       
+
+        /// <summary>
+        /// 计划id
+        /// </summary>
+        public int QuarterID { get; set; }
     }
 }

@@ -13,6 +13,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 就业计划表
+    /// </summary>
     [Table(name: "Quarter")]
     public partial class Quarter
     {
@@ -21,6 +25,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string QuaTitle { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+        public int peoplenumber { get; set; }
         public DateTime RegDate { get; set; }
     
        
