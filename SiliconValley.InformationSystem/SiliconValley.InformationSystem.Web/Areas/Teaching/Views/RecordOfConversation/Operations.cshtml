@@ -23,12 +23,20 @@
             <div class="layui-inline">
                 <label class="layui-form-label">我的班级</label>
                 <div class="layui-input-inline">
-                    <select name="myclass" lay-verify="required" id="class" lay-filter="class"  lay-search="">
+                    <select name="myclass" lay-verify="required" id="class" lay-filter="class" lay-search="">
                         <option value="">直接选择或搜索选择</option>
+
                         @{
+                            if ((ViewBag.student as StudentDetailView) != null)
+                            {
+                                var student = ViewBag.student as StudentDetailView;
+
+                                
+                            }
+
                             foreach (var item in ViewBag.myclass as List<ClassSchedule>)
                             {
-                                <option value="@item.ClassNumber">@item.ClassNumber</option>
+                                <option value="@item.id">@item.ClassNumber</option>
                             }
                         }
                     </select>

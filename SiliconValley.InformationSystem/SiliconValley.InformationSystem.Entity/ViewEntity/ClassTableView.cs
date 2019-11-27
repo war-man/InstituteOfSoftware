@@ -9,7 +9,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
    public class ClassTableView
     {
 
-
+        public int classid { get; set; }
         public string ClassNumber { get; set; }
         public Nullable<bool> ClassStatus { get; set; }
         public string ClassRemarks { get; set; }

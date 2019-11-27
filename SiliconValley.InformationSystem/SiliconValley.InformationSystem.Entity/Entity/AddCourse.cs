@@ -23,9 +23,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> TeacherID { get; set; }
         public string ClassNumber { get; set; }
         public Nullable<System.DateTime> ApplyDate { get; set; }
-        public Nullable<System.DateTime> AddDate { get; set; }
-        public string Remark { get; set; }
+        public Nullable<System.DateTime> TeachDate { get; set; }
+
+        /// <summary>
+        /// 具体日期 (上午 下午 晚自习)
+        /// </summary>
+        public string SpecDate { get; set; }
     
-   
+
+       /// <summary>
+       /// 课程
+       /// </summary>
+        public int Course { get; set; }
+
+
     }
 }

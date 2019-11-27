@@ -5,6 +5,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 {
+    using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
@@ -22,11 +23,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         private readonly TeacherBusiness db_teacher;
         private readonly StuHomeWorkBusiness db_homework;
 
+        /// <summary>
+        /// 学员对应班级的业务类实例
+        /// </summary>
+        private readonly BaseBusiness<ScheduleForTrainees> db_student_class;
+
         public ClassController()
         {
             db_homework = new StuHomeWorkBusiness();
             db_teacherclass = new TeacherClassBusiness();
             db_teacher = new TeacherBusiness();
+            db_student_class = new BaseBusiness<ScheduleForTrainees>();
         }
 
         public ActionResult Index()
@@ -61,6 +68,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
 
+
+        
+
         /// <summary>
         /// 获取班级学员
         /// </summary>
@@ -71,8 +81,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
 
-            var list = scheduleForTraineesBusiness.ClassStudent(classnumber);
+            //var list = scheduleForTraineesBusiness.ClassStudent(classnumber);
 
+           var list = db_teacherclass.GetStudentByClass(classnumber);
 
             List<StudentDetailView> resultlist = new List<StudentDetailView>();
 
@@ -348,6 +359,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
             return View(workView);
+        }
+
+
+        /// <summary>
+        /// 学员详细信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult StudentDetailData(string studentNumber)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               StudentInformation student = db_teacherclass.GetStudentByNumber(studentNumber);
+
+                var stuDetail = db_teacherclass.GetStudetentDetailView(student);
+
+                result.Data = stuDetail;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 

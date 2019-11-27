@@ -23,7 +23,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 课程id
         /// </summary>
         public Nullable<int> Skill { get; set; }
-        public string ClassNumber { get; set; }
+        public int ClassNumber { get; set; }
         public Nullable<bool> IsDel { get; set; }
+
+        public DateTime BeginDate { get; set; }
+
+        public Nullable<DateTime> EndDate { get; set; }
     }
 }

@@ -7,266 +7,418 @@
 @using SiliconValley.InformationSystem.Entity.MyEntity
 @using SiliconValley.InformationSystem.Entity.ViewEntity
 @section style{
+<link href="~/Areas/Teaching/css/font-awesome.min.css" rel="stylesheet" />
+<link href="~/Areas/Teaching/css/zzsc.css" rel="stylesheet" />
+    <style>
 
-
-<style>
-
-    hr {
-        width: 100%;
-        z-index: 11;
-        background: url(//fanyi.bdstatic.com/static/translation/img/header/colorbar_623c2a2.png) center no-repeat;
-        background-image: url(//fanyi.bdstatic.com/static/translation/img/header/colorbar_623c2a2.png);
-        background-position-x: center;
-        background-position-y: center;
-        background-size: initial;
-        background-repeat-x: no-repeat;
-        background-repeat-y: no-repeat;
-        background-attachment: initial;
-        background-origin: initial;
-        background-clip: initial;
-        background-color: initial;
-        position: relative;
-    }
-
-    #classlist {
-        width: 20%;
-        height: 500px;
-        border: 1px solid white;
-        float: left
-    }
-
-    #studenttable {
-        width: 79%;
-        height: 500px;
-        border: 1px solid white;
-        float: right;
-    }
-
-    .classbtn {
-        display: block;
-        width: 100%;
-        height: 50px;
-        border: 1px solid #808080;
-        margin-top: 10px;
-        font-size: 20px;
-    }
-
-    .studentbtn {
-        display: inline-block;
-        margin-left: 10px;
-        margin-top: 10px;
-        margin-left: 20px;
-    }
-
-        .studentbtn button {
-            width: 100px;
-            height: 60px;
+        hr {
+            width: 100%;
+            z-index: 11;
+            background: url(//fanyi.bdstatic.com/static/translation/img/header/colorbar_623c2a2.png) center no-repeat;
+            background-image: url(//fanyi.bdstatic.com/static/translation/img/header/colorbar_623c2a2.png);
+            background-position-x: center;
+            background-position-y: center;
+            background-size: initial;
+            background-repeat-x: no-repeat;
+            background-repeat-y: no-repeat;
+            background-attachment: initial;
+            background-origin: initial;
+            background-clip: initial;
+            background-color: initial;
+            position: relative;
         }
 
-    .classinfodiv, .ClassCadresdiv {
-        display: inline-block;
-        margin-top: 0px;
-        margin-left: 50px;
+        #classlist {
+            width: 20%;
+            height: 500px;
+            border: 1px solid white;
+            float: left
+        }
         
-    }
+        #studenttable {
+            width: 79%;
+            height: 500px;
+            border: 1px solid white;
+            float: right;
+        }
 
-    legend {
-        text-align: center;
-    }
+        .classbtn {
+            display: block;
+            width: 100%;
+            height: 50px;
+            border: 1px solid #808080;
+            margin-top: 10px;
+            font-size: 20px;
+        }
 
-    #classstudent {
-        height: 90px;
-    }
+        .studentbtn {
+            display: inline-block;
+            margin-left: 10px;
+            margin-top: 10px;
+            margin-left: 20px;
+        }
 
-    #div {
-        position: relative !important;
-        left: 30%;
-        top: 40%;
-        /*宽高50块元素*/
-        width: 300px !important;
-        height: 300px !important;
-        background-color: blue !important;
-        /*相邻边框不同色*/
-        border-bottom: 90px solid #33b892 !important;
-        border-top: 90px solid #33b892 !important;
-        border-right: 90px solid #786cda !important;
-        border-left: 90px solid #786cda !important;
-        /*输入不同圆角半径值测试效果，注意临界值“width一半+边框厚度”*/
-        border-radius: 10px;
-        display: none;
-    }
+            .studentbtn button {
+                width: 100px;
+                height: 60px;
+            }
+        
+        .classinfodiv, .ClassCadresdiv {
+            display: inline-block;
+            margin-top: 0px;
+            margin-left: 50px;
+        }
 
-    #div {
-        cursor:pointer;
+        legend {
+            text-align: center;
+        }
 
-    }
+        #classstudent {
+            height: 90px;
+            color:black;
+        }
 
+        #studentlist {
+            float:left;
+            width:70%;
+
+           
+
+        }
+
+        #studentInfo {
+            float: left;
+            width: 30%;
+            color:black;
+            
+        }
+
+     
+
+    </style>
+
+    <style type="text/css">
+        .demo {
+            padding: 2em 0;
+            transform: translate3d(0, 0, 0);
+            display: none;
+        }
+
+        .navbarTews {
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            border-radius: 50%;
+            background: #288c83;
+            margin: 70px auto;
+            position: relative;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1.75em;
+            font-weight: bold;
+            color: #99b977;
+            transition: 0.24s 0.2s;
+        }
+
+        .navbarTews:hover {
+            background: rgba(255, 255, 255, 0.75);
+        }
+
+        .navbarTews .menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            position: absolute;
+            top: -75px;
+            left: -75px;
+            border: 150px solid transparent;
+            cursor: default;
+            border-radius: 50%;
+            transform: scale(0);
+            transition: transform 1.4s 0.07s;
+            z-index: -1;
+        }
+
+            .navbarTews:hover .menu {
+                transition: transform 0.4s 0.08s, z-index 0s 0.5s;
+                transform: scale(1);
+                z-index: 1;
+            }
+
+        .navbarTews .menu li {
+            position: absolute;
+            top: -100px;
+            left: -100px;
+            transform-origin: 100px 100px;
+            transition: all 0.5s 0.1s;
+        }
+
+        .navbarTews:hover .menu li {
+            transition: all 0.6s;
+        }
+
+        .navbarTews .menu li a {
+            width: 45px;
+            height: 45px;
+            line-height: 45px;
+            border-radius: 50%;
+            background: #fff;
+            position: absolute;
+            font-size: 60%;
+            color: #99b977;
+            transition: 0.6s;
+        }
+
+        .navbarTews:hover .menu li:nth-child(1) {
+            transition-delay: 0.02s;
+            transform: rotate(85deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(1) a {
+            transition-delay: 0.04s;
+            transform: rotate(635deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(2) {
+            transition-delay: 0.04s;
+            transform: rotate(125deg);
+        }
+
+            .navbarTews:hover .menu li:nth-child(2) a {
+                transition-delay: 0.08s;
+                transform: rotate(595deg);
+            }
+
+        .navbarTews:hover .menu li:nth-child(3) {
+            transition-delay: 0.06s;
+            transform: rotate(165deg);
+        }
+
+            .navbarTews:hover .menu li:nth-child(3) a {
+                transition-delay: 0.12s;
+                transform: rotate(555deg);
+            }
+
+        .navbarTews:hover .menu li:nth-child(4) {
+            transition-delay: 0.08s;
+            transform: rotate(205deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(4) a {
+            transition-delay: 0.16s;
+            transform: rotate(515deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(5) {
+            transition-delay: 0.1s;
+            transform: rotate(245deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(5) a {
+            transition-delay: 0.2s;
+            transform: rotate(475deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(6) {
+            transition-delay: 0.12s;
+            transform: rotate(285deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(6) a {
+            transition-delay: 0.24s;
+            transform: rotate(435deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(7) {
+            transition-delay: 0.14s;
+            transform: rotate(325deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(7) a {
+            transition-delay: 0.28s;
+            transform: rotate(395deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(8) {
+            transition-delay: 0.16s;
+            transform: rotate(365deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(8) a {
+            transition-delay: 0.32s;
+            transform: rotate(355deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(9) {
+            transition-delay: 0.18s;
+            transform: rotate(405deg);
+        }
+
+        .navbarTews:hover .menu li:nth-child(9) a {
+            transition-delay: 0.36s;
+            transform: rotate(315deg);
+        }
     </style>
 }
 
-    <div>
+<div>
 
-        <div id="classstudent">
+    <div id="classstudent">
 
-            <div id="classinfodiv">
-
-            </div>
-
-            <div id="classCadres"></div>
-
-        </div>
-        <div id="classlist">
-            <!--我的班级编号列表-->
-            <h2 style="text-align:center;">我的班级列表</h2>
-            @{
-
-                foreach (var item in ViewBag.classlist as List<ClassTableView>)
-                {
-                    <div style="height:50px;">
-                        <button type="button" classnumber="@item.ClassNumber" style="margin-top:0px !important;" class="layui-btn classbtn">@item.ClassNumber <span style="padding:0px;  margin-left:5px;height:40px; font-size:18px;">@item.GradeName 阶段</span></button>
-                    </div>
-                    <div style="margin:0 auto; height:30px; border:1px solid #6579ee;width:1px;">
-
-                    </div>
-                }
-            }
+        <div id="classinfodiv">
 
         </div>
 
-        <div id="studenttable">
+        <div id="classCadres"></div>
 
-            <div id="studentlist"></div>
+    </div>
 
-            
-                <div id="div">
+    <br />
+    <br />
 
+    <div id="classlist">
+        <!--我的班级编号列表-->
+        <h4 style="text-align:center;">我的班级列表</h4>
+        <br />
+        @{
 
-                    <div class="detailinfo" style="position: absolute; font-size:20px; width: 100%; text-align: center;line-height: 100px; ">学员详细</div>
-                    <div id="GetConversationRecordBtn" style="margin-top:0px; width: 135px;height: 50px; vertical-align: middle; left:-11px; background-color: transparent; position:absolute; top: -56px; text-align:center;font-size: 20px; ">查看谈话记录</div>
-
-                    <div id="AddConversationRecordBtn" style="margin-top:0px; width: 135px;height: 50px; vertical-align: middle;left:-11px; background-color: transparent; position:absolute; top: 150px;; text-align:center;font-size: 20px; ">添加谈话记录</div>
-
-                    <div id="GetHomeWorkSubmission" style="margin-top:-20px; width: 30px;height: 155px; vertical-align: middle; background-color: transparent; position:absolute; left: -59px; text-align:center;font-size: 20px; ">查看作业情况</div>
-                    
-                    <div id="RecordtHomeWorkSubmission" style="margin-top:-20px; width: 30px;height: 150px; vertical-align: middle; background-color: transparent; position:absolute; left: 144px; text-align:center;font-size: 20px; ">添加作业记录</div>
+            foreach (var item in ViewBag.classlist as List<ClassTableView>)
+            {
+                <div style="height:50px;">
+                    <button type="button" classnumber="@item.classid" style="margin-top:0px !important;" class="layui-btn classbtn">@item.ClassNumber <span style="padding:0px;  margin-left:5px;height:40px; font-size:18px;">@item.GradeName 阶段</span></button>
                 </div>
-          
+                <div style="margin:0 auto; height:30px; border:1px solid #6579ee;width:1px;">
 
-        </div>
+                </div>
+            }
+        }
 
-        <script type="text/template" id="studenthtml">
+    </div>
 
-            <div class="studentbtn callback1">
+    <div id="studenttable">
 
-                <button studentnumber="{{=studentnumber}}" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    {{=studentname}}
-                </button>
-                
+        <div id="studentlist"></div>
+        <div id="studentInfo">
+
+            <!--头像-->
+            <div   id="Avatar">
+                <img style="border-radius:50%;" src="/Areas/ExaminationSystem/Images/考场.jpg" width="120" height="120" />
             </div>
 
-        </script>
+            <div style="margin-left:50px;" id="info">
 
-        <script type="text/template" id="classinfohtml">
-            <div class="classinfodiv">
-                <span>班级：</span><label>{{=classnumber}}</label>
+                <div class="studentInfoItem studentname">
+                    <label>姓名：</label><span>唐敏</span>
+                </div>
+                <div class="studentInfoItem sex">
+                    <label>性别：</label><span>女</span>
+                </div>
+                <div class="studentInfoItem birthday">
+                    <label>生日：</label><span>2000-09-12</span>
+                </div>
+                <div class="studentInfoItem xueli">
+                    <label>学历：</label><span>专科</span>
+                </div>
+                <div class="studentInfoItem address">
+                    <label>住址：</label><span>湖南长沙 邵阳市</span>
+                </div>
+                <div class="studentInfoItem qq">
+                    <label>QQ：</label><span>265659498</span>
+                </div>
+                <div class="studentInfoItem wechat">
+                    <label>微信：</label><span>265fdsa</span>
+                </div>
+                <div class="studentInfoItem phone">
+                    <label>电话：</label><span>13723860463</span>
+                </div>
+
+                <div class="studentInfoItem classnumber">
+                    <label>班级：</label><span>1710NA</span>
+                </div>
+                <div class="studentInfoItem grand">
+                    <label>阶段：</label><span>S3</span>
+                </div>
+                <div class="studentInfoItem major">
+                    <label>专业：</label><span>JAVA</span>
+                </div>
 
             </div>
-            <div class="classinfodiv">
-                <span>班级人数：</span><label>{{=studentcount}}人</label>
-            </div>
-            <div class="classinfodiv">
-                <span>班主任：</span><label>{{=headermaster}}</label>
-            </div>
-            <div class="classinfodiv">
-                <span>班级qq群：</span><label>{{=qqgourp}}</label>
-            </div>
-            <div class="classinfodiv">
-                <span>阶段：</span><label>{{=grandName}}</label>
-            </div>
 
-            <hr />
-        </script>
-
-        <script type="text/template" id="ClassCadreshtml">
-
-            <div class="ClassCadresdiv">
-                <span>{{=CadresName}}：</span><label>{{=studentname}}</label>
-
-            </div>
-            
 
            
-        </script>
+        </div>
 
-
-
-
-        <!--弹窗模板-->
-        <script type="text/template" id="layerthtml">
-
-            <div>
-                <div>
-
-
-
-                    <div style="margin-top:0px;">
-                        <button style="margin-top:0px;" studentnumber="{{=studentnumber}}" id="detailinfo" class="layui-btn layui-btn-radius  classbtn">
-                            <i class="layui-icon">&#xe615;</i>查看学生详细信息
-
-
-                        </button>
-
-                    </div>
-
-
-                    <div style="margin-top:0px;">
-                        <button studentnumber="{{=studentnumber}}" id="GetConversationRecordBtn" class="layui-btn layui-btn-radius classbtn ">
-                            <i class="layui-icon">&#xe615;</i>谈话记录
-
-
-                        </button>
-                    </div>
-
-                    <div style="margin-top:0px;">
-                        <button studentnumber="{{=studentnumber}}" id="AddConversationRecordBtn" class="layui-btn layui-btn-radius  classbtn">
-                            <i class="layui-icon">&#xe654;</i>谈话记录
-
-
-                        </button>
-                    </div>
-
-
-
-
-
-
-
-                    <div style="margin-top:0px;">
-                        <button style="margin-top:0px;" studentnumber="{{=studentnumber}}" id="GetHomeWorkSubmission" class="layui-btn layui-btn-radius  classbtn">
-                            <i class="layui-icon">&#xe615;</i>作业提交情况
-
-
-                        </button>
-                    </div>
-                    <div style="margin-top:0px;">
-                        <button style="margin-top:0px;" studentnumber="{{=studentnumber}}" id="RecordtHomeWorkSubmission" class="layui-btn layui-btn-radius  classbtn">
-                            <i class="layui-icon">&#xe654;</i>作业提交情况
-
-
-                        </button>
-
-                    </div>
-
-
-
-
-                </div>
+        
+            <div class="demo" style="width:150px; height:150px; margin:0 auto;" id="myMenuss">
+               
+                            <div class="navbarTews">
+                                <label  style="font-size:18px; width:100%; position:absolute; left:0px;" id="navbarTewsText">主菜单</label>
+                                <ul class="menu">
+                                    <li class="detailinfo"><a href="javascript:void(0)" class="fa fa-facebook"></a></li>
+                                    <li id="AddConversationRecordBtn"><a href="javascript:void(0)" class="fa fa-google-plus"></a></li>
+                                    <li id="GetConversationRecordBtn"><a href="javascript:void(0)" class="fa fa-twitter"></a></li>
+                                    <li id="GetHomeWorkSubmission"><a href="javascript:void(0)" class="fa fa-linkedin"></a></li>
+                                    <li id="RecordtHomeWorkSubmission"><a href="javascript:void(0)" class="fa fa-pinterest"></a></li>
+                                   
+                                </ul>
+                            </div>
+                     
             </div>
 
-        </script>
+          
 
 
     </div>
+
+    <script type="text/template" id="studenthtml">
+
+        <div class="studentbtn callback1">
+
+            <button studentnumber="{{=studentnumber}}" class="layui-btn">
+                <i class="layui-icon">&#xe66f;</i>    {{=studentname}}
+            </button>
+
+        </div>
+
+    </script>
+
+    <script type="text/template" id="classinfohtml">
+        <div class="classinfodiv">
+            <span>班级：</span><label>{{=classnumber}}</label>
+
+        </div>
+        <div class="classinfodiv">
+            <span>班级人数：</span><label>{{=studentcount}}人</label>
+        </div>
+        <div class="classinfodiv">
+            <span>班主任：</span><label>{{=headermaster}}</label>
+        </div>
+        <div class="classinfodiv">
+            <span>班级qq群：</span><label>{{=qqgourp}}</label>
+        </div>
+        <div class="classinfodiv">
+            <span>阶段：</span><label>{{=grandName}}</label>
+        </div>
+
+        <hr />
+    </script>
+
+    <script type="text/template" id="ClassCadreshtml">
+
+        <div class="ClassCadresdiv">
+            <span>{{=CadresName}}：</span><label>{{=studentname}}</label>
+
+        </div>
+
+
+
+    </script>
+
+
+
+
+  
+</div>
 
 @section script{
 
@@ -276,7 +428,7 @@
     <script src="~/Areas/Teaching/Scripts/TeacherClass.js"></script>
 
 
- 
+
     <script src="~/Areas/Teaching/Scripts/JavaScript1.1.js"></script>
 
 

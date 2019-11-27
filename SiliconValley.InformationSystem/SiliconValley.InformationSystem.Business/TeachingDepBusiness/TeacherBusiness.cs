@@ -13,6 +13,8 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using System.Linq.Dynamic;
     using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
     using SiliconValley.InformationSystem.Util;
+    using SiliconValley.InformationSystem.Entity.Entity;
+    using System.Xml;
 
     public class TeacherBusiness : BaseBusiness<Teacher>
     {
@@ -34,13 +36,78 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// 调课业务实例
         /// </summary>
         private readonly BaseBusiness<ConvertCourse> db_convertCourse;
+
+        private readonly BaseBusiness<SubstituteTeachCourse> db_substituteTeacherCourse;
         public TeacherBusiness()
         {
             db_grand = new GrandBusiness();
             db_emp = new EmployeesInfoManage();
             db_specialty = new SpecialtyBusiness();
             db_convertCourse = new BaseBusiness<ConvertCourse>();
+            db_substituteTeacherCourse = new BaseBusiness<SubstituteTeachCourse>();
 
+        }
+
+        public EmpDetailView ConvertToEmpDetailView(EmployeesInfo employeesInfo)
+        {
+            EmpDetailView view = new EmpDetailView();
+
+            view.Address = employeesInfo.Address;
+            view.Age = employeesInfo.Age;
+            view.BCNum = employeesInfo.BCNum;
+            view.Birthdate = employeesInfo.Birthdate;
+            view.Birthday = employeesInfo.Birthday;
+            view.ContractEndTime = employeesInfo.ContractEndTime;
+            view.ContractStartTime = employeesInfo.ContractStartTime;
+            view.DDAppId = db_emp.GetDeptByEmpid(employeesInfo.EmployeeId);
+            view.DomicileAddress = employeesInfo.DomicileAddress;
+            view.Education = employeesInfo.Education;
+            view.EmployeeId = employeesInfo.EmployeeId;
+            view.EmpName = employeesInfo.EmpName;
+            view.EntryTime = employeesInfo.EntryTime;
+            view.IdCardIndate = employeesInfo.IdCardIndate;
+            view.IdCardNum = employeesInfo.IdCardNum;
+
+            //获取图片路径
+
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/teacherConfig.xml"));
+
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            var Avatar = (XmlElement)xmlRoot.GetElementsByTagName("Avatar")[0];
+
+            //头像路径 
+            var avatarUrl = Avatar.Attributes["url"].Value;
+            if (employeesInfo.Image == null || employeesInfo.Image == "")
+            {
+                //默认头像
+                var defaultImg = Avatar.GetElementsByTagName("default")[0];
+                view.Image = avatarUrl + defaultImg.Attributes["img"].Value;
+            }
+            else
+            {
+                view.Image = avatarUrl + employeesInfo.Image;
+            }
+
+            
+            view.IsDel = employeesInfo.IsDel;
+            view.MaritalStatus = employeesInfo.MaritalStatus;
+            view.Material = employeesInfo.Material;
+            view.Nation = employeesInfo.Nation;
+            view.Phone = employeesInfo.Phone;
+            view.PoliticsStatus = employeesInfo.PoliticsStatus;
+            view.PositionId = db_emp.GetPositionByEmpid(employeesInfo.EmployeeId);
+            view.PositiveDate = employeesInfo.PositiveDate;
+            view.ProbationSalary = employeesInfo.ProbationSalary;
+            view.Remark = employeesInfo.Remark;
+            view.Salary = employeesInfo.Salary;
+            view.Sex = employeesInfo.Sex;
+            view.SSStartMonth = employeesInfo.SSStartMonth;
+            view.UrgentPhone = employeesInfo.UrgentPhone;
+            view.WorkExperience = employeesInfo.WorkExperience;
+
+            return view;
         }
 
 
@@ -168,12 +235,17 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in majors)
             {
-                var dd = db_specialty.GetList().Where(t => t.Id == item.Major && t.IsDelete == false).FirstOrDefault();
-
-                if (!db_specialty.IsInList(returnList, dd))
+                if (item.Major != null)
                 {
-                    returnList.Add(dd);
+
+                    var dd = db_specialty.GetList().Where(t => t.Id == item.Major && t.IsDelete == false).FirstOrDefault();
+
+                    if (!db_specialty.IsInList(returnList, dd))
+                    {
+                        returnList.Add(dd);
+                    }
                 }
+
             }
             return returnList;
 
@@ -861,6 +933,44 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 db_convertCourse.Insert(convertCourse);
                
         }
+
+        /// <summary>
+        /// 提交代课表单
+        /// </summary>
+        /// <param name="convertCourse"></param>
+        public void SubstituteTeachCourse(SubstituteTeachCourse convertCourse)
+        {
+
+            //1`填写表单  
+            db_substituteTeacherCourse.Insert(convertCourse);
+
+        }
+
+
+        /// <summary>
+        /// 获取专业老师
+        /// </summary>
+        /// <returns></returns>
+        public List<Teacher> GetTeacherByMajor(int majorId)
+        {
+            List<Teacher> teachers = new List<Teacher>();
+
+            TecharOnstageBearingBusiness techarOnstageBearingBusiness = new TecharOnstageBearingBusiness();
+
+           var templist = techarOnstageBearingBusiness.AllTeacherOnstageBearing().Where(d => d.Major == majorId).ToList();
+
+
+            foreach (var item in templist)
+            {
+               var teacher = this.GetTeacherByID(item.TeacherID);
+
+                if (teacher != null)
+                    teachers.Add(teacher);
+            }
+
+            return teachers;
+        }
+
 
 
     }

@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+using System.Collections.Generic;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
@@ -7,6 +8,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     /// </summary>
     public class TecharOnstageBearingBusiness:BaseBusiness<TecharOnstageBearing>
     {
-        
+
+        public List<TecharOnstageBearing> AllTeacherOnstageBearing()
+        {
+            return this.GetList();
+        }
+
     }
 }

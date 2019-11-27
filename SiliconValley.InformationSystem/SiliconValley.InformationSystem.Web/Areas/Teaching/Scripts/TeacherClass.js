@@ -91,15 +91,15 @@ $(document).bind('click', function (e) {
     var e = e || window.event; //浏览器兼容性 
     var elem = e.target || e.srcElement;
     while (elem) { //循环判断至跟节点，防止点击的是div子元素 
-        if (elem.id && elem.id == 'div') {
+        if (elem.id && elem.id == 'myMenuss') {
             return;
         }
         elem = elem.parentNode;
     }
-    $('#div').css('display', 'none'); //点击的不是div或其子元素 
+    $('#myMenuss').css('display', 'none'); //点击的不是div或其子元素 
 });
 
-layui.use(["table", "layer","element"], function () {
+layui.use(["table", "layer", "element"], function () {
 
     var table = layui.table;
     var layer = layui.layer;
@@ -107,7 +107,7 @@ layui.use(["table", "layer","element"], function () {
 
     element.init();
 
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //加载第一个班级的班级学员
     var clickclassnumber = $($("#classlist .classbtn")[0]).attr("classnumber");
 
@@ -116,6 +116,9 @@ layui.use(["table", "layer","element"], function () {
     //发送请求获取班级信息
 
     GetClassInfo(classnumber1, function (data) {
+
+
+        console.log(data);
 
         if (data.ErrorCode == 200) {
 
@@ -127,7 +130,7 @@ layui.use(["table", "layer","element"], function () {
 
         layer.msg("班级信息数据加载异常...");
 
-        });
+    });
 
 
     loadclassCadres(classnumber1);
@@ -138,29 +141,29 @@ layui.use(["table", "layer","element"], function () {
     //发送请求
     GetStudentByClass(clickclassnumber, function (data) {
 
-            /*BirthDate: "/Date(985881600000)/"
-            Education: "大专"
-            Familyaddress: "中国"
-            Guardian: "陈神仙,父亲              "
-            Hobby: null
-            InsitDate: "/Date(1566230400000)/"
-            IsDelete: null
-            Name: "陈海石"
-            Nation: "汉"
-            Password: "000000"
-            Picture: null
-            Reack: null
-            Sex: true
-            State: null
-            StudentNumber: "19082001033000001"
-            StudentPutOnRecord_Id: 1020
-            Telephone: "15673151748"
-            Traine: null
-            WeChat: null
-            identitydocument: "431124200103303850"
-            qq: null*/
+        /*BirthDate: "/Date(985881600000)/"
+        Education: "大专"
+        Familyaddress: "中国"
+        Guardian: "陈神仙,父亲              "
+        Hobby: null
+        InsitDate: "/Date(1566230400000)/"
+        IsDelete: null
+        Name: "陈海石"
+        Nation: "汉"
+        Password: "000000"
+        Picture: null
+        Reack: null
+        Sex: true
+        State: null
+        StudentNumber: "19082001033000001"
+        StudentPutOnRecord_Id: 1020
+        Telephone: "15673151748"
+        Traine: null
+        WeChat: null
+        identitydocument: "431124200103303850"
+        qq: null*/
 
-      
+
 
         if (data.length != 0) {
             //渲染数据
@@ -173,7 +176,7 @@ layui.use(["table", "layer","element"], function () {
                 $("#studentlist").append($(studentdata));
             }
 
-           
+
 
         }
 
@@ -183,22 +186,22 @@ layui.use(["table", "layer","element"], function () {
 
         layer.msg("数据加载异常");
 
-        });//
-//<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    });//
+    //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //班级按钮的点击事件
     $(".classbtn").click(function () {
 
 
-    
+
 
         $(this).parent().siblings().each(function () {
 
             $($(this).children()[0]).removeClass("layui-btn-warm");
 
         });
-   
+
 
         $(this).addClass("layui-btn-warm");
 
@@ -214,19 +217,19 @@ layui.use(["table", "layer","element"], function () {
 
             console.log(data);
 
-      
+
             if (data.length > 0) {
-             
-             
+
+
 
                 for (var i = 0; i < data.length; i++) {
 
                     //渲染数据
-                  
+
 
                     var studenthtml = _.template($("#studenthtml").html());
 
-                    var studentdata = studenthtml({ studentnumber: data[i].StudentNumber, studentname: data[i].Name, posi: data[i].PositionName});
+                    var studentdata = studenthtml({ studentnumber: data[i].StudentNumber, studentname: data[i].Name, posi: data[i].PositionName });
 
                     $("#studentlist").append($(studentdata));
 
@@ -238,7 +241,7 @@ layui.use(["table", "layer","element"], function () {
 
             layer.msg("数据加载异常");
 
-            });//
+        });//
 
 
         //获取班级信息
@@ -257,7 +260,7 @@ layui.use(["table", "layer","element"], function () {
 
             layer.msg("班级信息数据加载异常...");
 
-            });
+        });
 
         loadclassCadres(classnumber);
 
@@ -268,7 +271,7 @@ layui.use(["table", "layer","element"], function () {
 
 
     $(document).off("mouseover", ".studentbtn button").on('mouseover', '.studentbtn button', function () {
-  
+
         $(this).addClass("layui-btn-warm");
     });
 
@@ -279,48 +282,97 @@ layui.use(["table", "layer","element"], function () {
     });
 
 
-//学生的按钮点击事件
+    //学生的按钮点击事件
 
     $(document).off("click", ".studentbtn button").on('click', '.studentbtn button', function () {
 
-    
+       
 
-        $("#div").show(); 
+        $("#myMenuss").fadeIn();
 
         var studentnumber = $(this).attr("studentnumber");
 
 
-        $("#div div").attr("studentnumber", studentnumber);
+        $("#myMenuss ul li").attr("studentnumber", studentnumber);
+
+        //获取学员详细资料
+
+        $.post("/Teaching/Class/StudentDetailData", { studentNumber: studentnumber }, function (data) {
 
 
-        ////获取弹窗模板html
+            console.log(data);
 
-        //var layerthtml = _.template($("#layerthtml").html());
+            if (data.ErrorCode == 200) {
 
-        //var layerdata = layerthtml({ studentnumber: studentnumber});
+                $("#studentInfo .studentname span").text(data.Data.Name);
 
-        //layer.open({
-        //    type: 1,
-        //    area:["400px", "500px"],
-        //    title: "操作选择框",
-        //    content: layerdata
+                $("#studentInfo .sex span").text(data.Data.Sex);
 
-        //});
+              
+                var birthdayUtc = data.Data.BirthDate.substr(data.Data.BirthDate.indexOf('(') + 1, 13);
+
+                var date = new Date(parseInt(birthdayUtc));
+
+                var year = date.getFullYear();
+
+                var mouth = date.getMonth() + 1;
+
+                var day = date.getDate();
+
+                $("#Avatar img").attr("src", data.Data.Avatar);
+
+                $("#studentInfo .birthday span").text(year + "年" + mouth + "月" + day + "日");
+
+                $("#studentInfo .xueli span").text(data.Data.Education);
+
+                $("#studentInfo .address span").text(data.Data.Familyaddress);
+
+                $("#studentInfo .qq span").text(data.Data.qq);
+
+                $("#studentInfo .wechat span").text(data.Data.WeChat);
+
+                $("#studentInfo .phone span").text(data.Data.Telephone);
+
+                $("#studentInfo .classnumber span").text(data.Data.ClassName);
+
+                $("#studentInfo .grand span").text(data.Data.GrandName);
+
+                $("#studentInfo .major span").text(data.Data.MajorName);
+            }
+
+
+
+        });
+
+
+
     });
 
     //查看学生详细信息
-    
+
     $(document).off("click", ".detailinfo").on('click', '.detailinfo', function () {
 
         var studentnumber = $(this).attr("studentnumber");
 
         layer.open({
             type: 2,
-            area:["500px","800px;"],
+            area: ["500px", "800px;"],
             title: "学员基本信息",
-            content: '/Teaching/Class/StudentDetailInfo?studentnumber='+studentnumber
+            content: '/Teaching/Class/StudentDetailInfo?studentnumber=' + studentnumber
 
         });
+
+    });
+
+    $(document).off("mouseover", ".detailinfo").on('mouseover', '.detailinfo', function () {
+
+        $("#navbarTewsText").text("学员详细信息");
+
+    });
+
+    $(document).off("mouseout", ".detailinfo").on('mouseout', '.detailinfo', function () {
+
+        $("#navbarTewsText").text("主菜单");
 
     });
 
@@ -339,8 +391,18 @@ layui.use(["table", "layer","element"], function () {
         });
 
     });
+    $(document).off("mouseover", "#AddConversationRecordBtn").on('mouseover', '#AddConversationRecordBtn', function () {
 
-   
+        $("#navbarTewsText").text("+学生谈话记录");
+
+    });
+
+    $(document).off("mouseout", "#AddConversationRecordBtn").on('mouseout', '#AddConversationRecordBtn', function () {
+
+        $("#navbarTewsText").text("主菜单");
+
+    });
+
 
     //查看学生访谈记录
     $(document).off("click", "#GetConversationRecordBtn").on('click', '#GetConversationRecordBtn', function () {
@@ -350,7 +412,17 @@ layui.use(["table", "layer","element"], function () {
 
         window.location.href = '/Teaching/RecordOfConversation/ConversationIndex?studentnumber=' + studentnumber;
 
-        
+
+    });
+    $(document).off("mouseover", "#GetConversationRecordBtn").on('mouseover', '#GetConversationRecordBtn', function () {
+
+        $("#navbarTewsText").text("查看学生访谈记录");
+
+    });
+
+    $(document).off("mouseout", "#GetConversationRecordBtn").on('mouseout', '#GetConversationRecordBtn', function () {
+
+        $("#navbarTewsText").text("主菜单");
 
     });
 
@@ -363,7 +435,7 @@ layui.use(["table", "layer","element"], function () {
 
         layer.open({
             type: 2,
-            area: ["1300px", "1000px;"],
+            area: ["1300px", "800px;"],
             title: "作业提交情况  （提示：按月份统计）",
             content: '/Teaching/Class/StuHomeWorkSubmission?studentnumber=' + studentnumber
 
@@ -372,8 +444,20 @@ layui.use(["table", "layer","element"], function () {
 
 
     });
+
+    $(document).off("mouseover", "#GetHomeWorkSubmission").on('mouseover', '#GetHomeWorkSubmission', function () {
+
+        $("#navbarTewsText").text("学员作业提交情况");
+
+    });
+
+    $(document).off("mouseout", "#GetHomeWorkSubmission").on('mouseout', '#GetHomeWorkSubmission', function () {
+
+        $("#navbarTewsText").text("主菜单");
+
+    });
     //RecordtHomeWorkSubmission
-      //记录学员未完成情况
+    //记录学员未完成情况
     $(document).off("click", "#RecordtHomeWorkSubmission").on('click', '#RecordtHomeWorkSubmission', function () {
 
         var studentnumber = $(this).attr("studentnumber");
@@ -390,48 +474,17 @@ layui.use(["table", "layer","element"], function () {
 
 
     });
+    $(document).off("mouseover", "#RecordtHomeWorkSubmission").on('mouseover', '#RecordtHomeWorkSubmission', function () {
+
+        $("#navbarTewsText").text("+学员未完成情况");
+
+    });
+
+    $(document).off("mouseout", "#RecordtHomeWorkSubmission").on('mouseout', '#RecordtHomeWorkSubmission', function () {
+
+        $("#navbarTewsText").text("主菜单");
+
+    });
 
 
-    //function dragPanelMove(downDiv, moveDiv) {
-      
-    //    $(downDiv).mousedown(function (e) {
-    //        var isMove = true;
-    //        var div_x = e.pageX - $(moveDiv).offset().left;
-    //        var div_y = e.pageY - $(moveDiv).offset().top;
-    //        $(document).mousemove(function (e) {
-    //            if (isMove) {
-    //                var obj = $(moveDiv);
-    //                obj.css({ "left": e.pageX - div_x, "top": e.pageY - div_y });
-    //            }
-    //        }).mouseup(
-    //            function () {
-    //                isMove = false;
-    //            });
-    //    });
-
-    //}
-
-
-    //dragPanelMove("#div", "div");
-
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-})
+});

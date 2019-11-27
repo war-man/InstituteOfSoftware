@@ -27,5 +27,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             return this.GetList().Where(g => g.GrandName == Name).FirstOrDefault();
         }
+
+        public List<Grand> AllGrand()
+        {
+            return this.GetList();
+        }
     }
 }

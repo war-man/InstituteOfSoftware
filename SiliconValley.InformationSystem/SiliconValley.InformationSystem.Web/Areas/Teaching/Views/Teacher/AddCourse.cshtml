@@ -1,0 +1,178 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddCourse</title>
+
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet"/>
+</head>
+<body>
+    <div>
+
+        <div style="width:60%; margin:0 auto; margin-top:10px;">
+            <h3 style="text-align:center;">加课申请单</h3>
+            <hr class="layui-bg-gray">
+        </div>
+        <div id="form">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">班级:</label>
+                    <div class="layui-input-block">
+                        <select name="ClassNumber" lay-filter="classnumber">
+
+                            @{
+
+                                foreach (var item in ViewBag.classList as List<ClassSchedule>)
+                                {
+                                    <option value="@item.id">@item.ClassNumber</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class="layui-form-item">
+
+                    <label class="layui-form-label">加课日期:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="TeachDate" id="date1" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline" style="width:280px;">
+                        .
+
+                        <input type="radio" name="SpecDate" value="上午" title="上午" checked="">
+                        <input type="radio"  name="SpecDate" value="下午" title="下午">
+                        <input type="radio" name="SpecDate" value="晚自习" title="晚自习">
+
+
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
+
+
+
+                    <label class="layui-form-label">课程:</label>
+                    <div class="layui-input-inline">
+                        <select name="Course" lay-verify="required" lay-search="">
+                            <option value="">当前课程:asp.net</option>
+                            @{
+                                foreach (var item in ViewBag.CourseList as List<Curriculum>)
+                                {
+                                    <option value="@item.CurriculumID">@item.CourseName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                    <div>
+
+                    <label class="layui-form-label">加课次数</label>
+                    <div class="layui-input-inline" style="width:300px;">
+                        <button type="button" id="reduceCountBtn" class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-left"></i></button>
+                        <button type="button" class="layui-btn layui-btn-primary">次数:<span class="count">1</span></button>
+
+                        <button type="button" id="addCountBtn" class="layui-btn layui-btn-sm"><i class="layui-icon layui-icon-right"></i></button>
+                    </div>
+
+
+                </div>
+                <br />
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">理由：</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" name="reason" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <hr />
+                <div class="layui-form-item" style="text-align:center;">
+
+
+                    <button style="width:200px;" class="layui-btn layui-btn-primary" lay-submit lay-filter="commit" type="button" id="commit">提交</button>
+                    <button style="width:200px;" class="layui-btn layui-btn-primary" type="button" id="close">关闭</button>
+                </div>
+
+            </form>
+
+
+
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'layer','laydate'], function(){
+            var form = layui.form;
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#date1'
+                , done: function (value, date, endDate) {
+                   
+                }
+            });
+
+            //增加加课次数
+            $("#addCountBtn").click(function () {
+
+                var count = parseInt( $(".count").text());
+
+                count += 1;
+
+                $(".count").text(count);
+                
+
+
+            }); 
+            //减少加课次数
+            $("#reduceCountBtn").click(function () {
+
+                var count = parseInt($(".count").text());
+
+                if (count <= 1) {
+
+                    layer.msg('次数已达到最小值', { icon: 2 });
+
+                    return;
+                }
+                count -= 1;
+
+                $(".count").text(count);
+
+
+
+            });
+
+            ///表单提交
+            form.on('submit(commit)', function (data) {
+
+                var postData = {
+
+                    Count: $(".count").text(),
+                    reason: data.field.reason,
+                    ClassNumber: data.field.ClassNumber,
+                    SpecDate: data.field.SpecDate,
+                    Course: data.field.Course
+
+                };
+
+               //发送请求
+                $.post("");
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+    </script>
+</body>
+</html>

@@ -277,6 +277,7 @@
     <Compile Include="Entity\StuInfomationType.cs" />
     <Compile Include="Entity\StuStatus.cs" />
     <Compile Include="Entity\SubjectAchieve.cs" />
+    <Compile Include="Entity\SubstituteTeachCourse.cs" />
     <Compile Include="Entity\SurveyRecords.cs" />
     <Compile Include="Entity\TalentDemandPlan.cs" />
     <Compile Include="Entity\TeacheMitoryonduty.cs" />
@@ -328,6 +329,7 @@
     <Compile Include="ViewEntity\dtreeview.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
+    <Compile Include="ViewEntity\EmpDetailView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EnrollmentStudentView.cs" />
@@ -366,6 +368,7 @@
     <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchRecordRegisterView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\StudentIntentionView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  
+  <!--默认-->
+  <Avatar url="/uploadXLSXfile/EmpImage/">
+    <default img="default.jpg"></default>
+  </Avatar>
+  
+</root>

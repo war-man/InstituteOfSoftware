@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string Telephone { get; set; }
         public string qq { get; set; }
         public string WeChat { get; set; }
-        public string Picture { get; set; }
+        
         public Nullable<int> State { get; set; }
         public string Familyaddress { get; set; }
         public Nullable<System.DateTime> BirthDate { get; set; }
@@ -27,6 +27,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string PositionName { get; set; }
         
         public string IdCard { get; set; }
+
+        /// <summary>
+        /// 头像
+        /// </summary>
+        public string Avatar { get; set; }
 
     }
 }

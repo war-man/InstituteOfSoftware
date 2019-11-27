@@ -1,0 +1,308 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SubstituteTeachCourse</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        #form {
+            width: 80%;
+            height: 400px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        <div style="width:60%; margin:0 auto; margin-top:10px;">
+            <h3 style="text-align:center;">代课申请</h3>
+            <hr class="layui-bg-gray">
+        </div>
+        <div id="form">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">班级:</label>
+                    <div class="layui-input-block">
+                        <select name="ClassNumber" lay-filter="classnumber">
+
+                            @{
+
+                                foreach (var item in ViewBag.classList as List<ClassSchedule>)
+                                {
+                                    <option value="@item.id">@item.ClassNumber</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+
+                </div>
+                <div class="layui-form-item">
+
+                    <label class="layui-form-label">上课时间:</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="TeachDate" id="date1" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <label class="layui-form-label"></label>
+                    <div class="layui-input-inline">
+                        .
+
+                        <input type="radio" lay-filter="BefoDaterSpecific" name="TeachDateSpec" value="上午" title="上午" checked="">
+                        <input type="radio" lay-filter="BefoDaterSpecific" name="TeachDateSpec" value="下午" title="下午">
+
+
+                    </div>
+
+                </div>
+
+
+
+                <div class="layui-form-item">
+
+
+                    <div class="layui-input-block" id="speclist1">
+
+
+
+
+                    </div>
+
+
+                </div>
+
+                <div class="layui-form-item">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">代课老师:</label>
+                        <div class="layui-input-inline">
+                            <select name="Teacher" lay-verify="required" lay-search="">
+
+                                <option value="0">搜索/选择框</option>
+                                @{ 
+                                    foreach (var item in ViewBag.Teachers as List<EmployeesInfo>)
+                                    {
+                                        <option value="@item.EmployeeId">@item.EmpName</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+              
+
+                <div class="layui-form-item layui-form-text">
+                    <label class="layui-form-label">理由：</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="请输入内容" name="Reson" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+                <hr />
+                <div class="layui-form-item" style="text-align:center;">
+
+
+                    <button style="width:200px;" class="layui-btn layui-btn-primary" lay-submit lay-filter="commit" type="button" id="commit">提交</button>
+                    <button style="width:200px;" class="layui-btn layui-btn-primary" type="button" id="close">关闭</button>
+                </div>
+
+            </form>
+
+
+
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script type="text/ng-template" id="moban">
+        <div><code><label>课程：</label> <span class="course">{{=course}}</span> &nbsp;&nbsp;&nbsp;<label>教员：</label> <span class="teacher">{{=teacher}}</span> &nbsp;&nbsp;&nbsp; <label>时间：</label><span class="date">{{=date}}</span>&nbsp;&nbsp;&nbsp; <span class="sepcdate">{{=sepcdate}}</span></code></div>
+    </script>
+    <script>
+
+        var isHvaeRescon = false;
+
+        var course;
+        var layer;
+
+        layui.use(['form', 'layer', 'laydate'], function () {
+
+
+            layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            //日期
+
+            //加载课表
+            function loadrecon(classnumber, date, spec) {
+                $("#speclist1").html("");
+                $.post("/Teaching/Teacher/CourseData", { classnumber: classnumber, date: date, specific: spec }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+                        if (result.Data.length == 0) {
+                            
+                        }
+                        else {
+                            isHvaeRescon == true;
+                            for (var i = 0; i < result.Data.length; i++) {
+
+                                var dateutc = result.Data[i].AnPaiDate.substr(result.Data[i].AnPaiDate.indexOf('(') + 1, 13);
+
+                                var getdate = new Date(parseInt(dateutc));
+                                var strdate = getdate.getFullYear() + '年-' + getdate.getMonth() + '月-' + getdate.getDate() + '日';
+
+                                var html = _.template($("#moban").html());
+                                var htmldate = html({ course: result.Data[i].Curriculum_Id, teacher: result.Data[i].EmployeesInfo_Id.EmpName, date: strdate, sepcdate: result.Data[i].Curse_Id });
+
+                                $("#speclist1").append(htmldate);
+                            }
+                        }
+
+
+                    }
+                    else {
+                        layer.msg('服务器错误。。', { icon: 2 });
+                    }
+                });
+            }
+
+            laydate.render({
+                elem: '#date1'
+                , done: function (value, date, endDate) {
+                    //console.log(value); //得到日期生成的值，如：2017-08-18
+                    //console.log(date); //得到日期时间对象：{year: 2017, month: 8, date: 18, hours: 0, minutes: 0, seconds: 0}
+                    //console.log(endDate); //得结束的日期时间对象，开启范围选择（range: true）才会返回。对象成员同上。
+
+
+                    //获取班级
+                    var classnumber = document.getElementsByName("ClassNumber")[0].value;
+
+                    //获取上午 、 下午
+                    var spec = document.getElementsByName("TeachDateSpec")[0].value
+
+                    console.log(spec);
+                    if (classnumber == undefined) {
+                        return;
+                    }
+
+                    if (spec == undefined) {
+                        return;
+                    }
+                    //发送请求
+                    loadrecon(classnumber, value, spec);
+
+
+
+                }
+            });
+
+            form.on('radio(BefoDaterSpecific)', function (data) {
+
+
+                //获取班级
+                var classnumber = document.getElementsByName("ClassNumber")[0].value;
+                var specDate = document.getElementsByName("TeachDate")[0].value;
+
+                console.log(specDate);
+                if (classnumber == undefined) {
+                    return;
+
+                }
+
+                if (specDate == undefined || specDate == "") {
+                    return;
+                }
+
+                loadrecon(classnumber, specDate, data.value);
+
+            });
+
+
+
+            laydate.render({
+                elem: '#date2'
+                , done: function (value, date, endDate) {
+                    //console.log(value); //得到日期生成的值，如：2017-08-18
+
+
+                }
+            });
+
+
+            ///表单提交
+            form.on('submit(commit)', function (data) {
+
+                if (!isHvaeRescon) {
+                    layer.msg('您选择的日期当日没有您的课', { icon: 2 });
+                    return;
+                }
+
+                $.post("/Teaching/Teacher/SubstituteTeachCourse", data.field, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+
+
+                        layer.msg('调课申请已提交', { icon: 1, time: 2000 }, function () {
+
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+                        });
+
+                    }
+                    else {
+                        layer.msg('服务器错误', { icon: 2 });
+                    }
+
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            ///关闭按钮
+            $("#close").click(function () {
+
+
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+
+            });
+
+
+            ///监听班级下拉框
+            form.on('select(classnumber)', function (data) {
+
+
+                //获取时间
+                var date = document.getElementsByName("TeachDate")[0].value;
+
+                var spec = document.getElementsByName("TeachDateSpec")[0].value;
+
+
+                if (date == "" || date == undefined || spec == undefined || spec == "") {
+                    return;
+
+                }
+
+                loadrecon(data.value, date, spec);
+
+            });
+
+
+
+
+
+        });
+
+    </script>
+</body>
+</html>

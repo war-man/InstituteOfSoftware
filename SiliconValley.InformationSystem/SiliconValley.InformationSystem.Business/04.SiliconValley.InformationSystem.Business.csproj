@@ -143,12 +143,18 @@
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
+    <Compile Include="Employment\CDInterviewBusiness.cs" />
+    <Compile Include="Employment\EIntentionClassXMLHelp.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="Employment\ProTeacher.cs" />
+    <Compile Include="Employment\SimulatInterviewBusiness.cs" />
+    <Compile Include="Employment\StudentIntentionBusiness.cs" />
+    <Compile Include="Employment\StudentIntentionViewBusiness.cs" />
+    <Compile Include="Employment\SurveyRecordsBusiness.cs" />
     <Compile Include="EmpSalaryManagementBusiness\AttendanceInfoManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\EmplSalaryEmbodyManage.cs" />
     <Compile Include="EmpSalaryManagementBusiness\MeritsCheckManage.cs" />
@@ -213,6 +219,7 @@
     <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TalentDemandPlanBusiness\TalentDemandPlanManage.cs" />
+    <Compile Include="TeachingDepBusiness\AddCourseBusiness.cs" />
     <Compile Include="TeachingDepBusiness\ConversationBusiness.cs" />
     <Compile Include="TeachingDepBusiness\GoodSkillManeger.cs" />
     <Compile Include="TeachingDepBusiness\GrandBusiness.cs" />

@@ -45,7 +45,7 @@
             <br />
             <span>加课申请</span>
         </div>
-        <div class="item" id="AddCourse">
+        <div class="item" id="SubstituteTeachCourse">
             <i class="layui-icon layui-icon-form" style="font-size: 50px; color: #1E9FFF;"></i>
             <br />
             <span>代课申请</span>
@@ -81,6 +81,32 @@
                         title: "调课申请",
                         area: ["1000px", "700px;"],
                         content:"/Teaching/Teacher/AdjustmentCourse"
+
+                    });
+
+                });
+
+                //代课申请
+                $("#SubstituteTeachCourse").click(function () {
+
+                    layer.open({
+                        type: 2,
+                        title: "代课申请",
+                        area: ["1000px", "700px;"],
+                        content: "/Teaching/Teacher/SubstituteTeachCourse"
+
+                    });
+
+                });
+
+                //加课申请
+                $("#AddCourse").click(function () {
+
+                    layer.open({
+                        type: 2,
+                        title: "加课申请",
+                        area: ["800px", "500px;"],
+                        content: "/Teaching/Teacher/AddCourse"
 
                     });
 

@@ -13,6 +13,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
+    using SiliconValley.InformationSystem.Entity.Entity;
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
 
     [CheckLogin]
     public class TeacherController : Controller
@@ -32,6 +34,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         private readonly GrandBusiness db_grand;
 
         
+
+        
+        
         public TeacherController()
         {
             db_teacher = new TeacherBusiness();
@@ -49,7 +54,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             var grandlist = db_grand.GetList();
             ViewBag.grands = grandlist;
+            //提供登录人信息
 
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var emp = db_teacher.GetEmpByEmpNo(user.EmpNumber);
+
+            ViewBag.empDetail = db_teacher.ConvertToEmpDetailView(emp);
             return View();
         }
 
@@ -69,8 +79,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             var grandlist = db_grand.GetList();
             ViewBag.grands = grandlist;
 
+           
             return View();
 
+        }
+
+        public ActionResult Teachers()
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               var list = db_teacher.GetTeachers();
+
+                result.Data = list;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetEmpData(int limit, int page)
@@ -99,11 +134,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             if (major == 0 && grand == 0)
             {
 
-                list = db_teacher.GetTeachers().Where(d => d.IsDel == false).ToList().Skip((page - 1) * limit).Take(limit).ToList();
+              
+                list = db_teacher.GetTeachers().Where(d => d.IsDel == false).ToList().Skip((page - 1) * limit).Take(limit).ToList().OrderBy(d => d.TeacherID).ToList();
             }
             else
             {
-                list = db_teacher.getTeacherByMajorAndGrand(major, grand).Skip((page - 1) * limit).Take(limit).ToList();
+                list = db_teacher.getTeacherByMajorAndGrand(major, grand).Skip((page - 1) * limit).Take(limit).ToList().OrderBy(d => d.TeacherID).ToList();
             }
 
           
@@ -172,7 +208,86 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return View();
 
         }
-       
+
+        /// <summary>
+        /// 获取阶段教员人数 和 阶段下各个专业的人数
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MajorTeacherNumber()
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                List<object> returnlist = new List<object>();
+                //获取所有教员
+                var teacherlist = db_teacher.GetTeachers();
+
+                //获取阶段
+
+                var grands = db_grand.AllGrand();
+
+                //所有专业
+                var majors = db_specialty.GetSpecialties();
+
+                foreach (var item in grands)
+                {
+                    //获取阶段总人数 :
+
+                    var list = db_teacher.BrushSelectionByGrand(item.Id);
+
+
+                    List<object> templist = new List<object>();
+
+                    foreach (var item1 in majors)
+                    {
+                        var templist1 = db_teacher.getTeacherByMajorAndGrand(item1.Id, item.Id);
+
+                        var tempobj = new
+                        {
+
+                            major = item1,
+                            teachers = templist1
+
+
+                        };
+
+                        templist.Add(tempobj);
+
+                    }
+
+                    var obj = new
+                    {
+                        grand = item,
+                        Tcount = list,
+                        majors= templist
+
+                    };
+
+                    returnlist.Add(obj);
+
+
+                }
+
+
+                result.Data = returnlist;
+                result.Msg = "";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+        }
 
         /// <summary>
         /// 对教员的操作的视图
@@ -927,7 +1042,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 //获取当前登录用户
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date), classnumber, specific);
+
+                //获取班级对象
+
+                TeacherClassBusiness db = new TeacherClassBusiness();
+               var classObj = db.AllClassSchedule().Where(d => d.id == int.Parse(classnumber)).FirstOrDefault();
+                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date), classObj.ClassNumber, specific);
 
                 var resultList = resconcileList.Where(d => d.EmployeesInfo_Id == user.EmpNumber).ToList();
 
@@ -1003,6 +1123,162 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             }
             //1
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 代课表单视图
+        /// </summary>
+        public ActionResult SubstituteTeachCourse()
+        {
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+            //获取当前登录老师的班级
+            TeacherClassBusiness db = new TeacherClassBusiness();
+            var classScadu = db.GetCrrentMyClass(teacher.TeacherID); //班级
+            ViewBag.classList = classScadu;
+
+            //提供专业老师
+
+            var teachers = db_teacher.GetTeachers();
+
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+            foreach (var item in teachers)
+            {
+                var empobj = db_teacher.GetEmpByEmpNo(item.EmployeeId);
+
+                if (empobj != null)
+                    emplist.Add(empobj);
+            }
+
+            ViewBag.Teachers = emplist;
+            return View();
+             
+        }
+
+
+        /// <summary>
+        /// 代课表单提交
+        /// </summary>
+        /// <param name="substituteTeachCourse"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SubstituteTeachCourse(SubstituteTeachCourse substituteTeachCourse)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+                substituteTeachCourse.Applier = teacher.TeacherID; //申请人为当前登录人
+                substituteTeachCourse.ApplyDate = DateTime.Now;
+                substituteTeachCourse.IsDel = false;
+
+                db_teacher.SubstituteTeachCourse(substituteTeachCourse);
+                result.Msg = "成功";
+                result.Data = "";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Msg = "失败";
+                result.Data = "";
+                result.ErrorCode = 500;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+
+        /// <summary>
+        /// 加课表单视图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddCourse()
+        {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+            //获取当前登录老师的班级
+            TeacherClassBusiness db = new TeacherClassBusiness();
+            var classScadu = db.GetCrrentMyClass(teacher.TeacherID); //班级
+            ViewBag.classList = classScadu;
+
+            ///提供课程数据
+            CourseBusiness db_course = new CourseBusiness();
+
+            var courselist = db_course.GetCurriculas().ToList();
+
+            ViewBag.CourseList = courselist;
+            return View();
+
+        }
+
+
+
+        /// <summary>
+        /// 提交加课表单
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AddCourse(AddCourse addCourse)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 员工详细信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EmpDetailData(string empId)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               var emp = db_teacher.GetEmpByEmpNo(empId);
+
+               var empview = db_teacher.ConvertToEmpDetailView(emp);
+
+                result.Data = empview;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+
+
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+
+            }
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

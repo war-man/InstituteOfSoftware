@@ -118,7 +118,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// 添加访谈记录
         /// </summary>
         /// <returns></returns>
-        public ActionResult Operations()
+        public ActionResult Operations(string  studentnumber)
         {
 
             var resultlist = new List<ConversationRecordView>();
@@ -133,6 +133,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
            var classlist = db_teachingclass.GetCrrentMyClass(teacher.TeacherID);
 
             ViewBag.myclass = classlist;
+
+            if (studentnumber != null && studentnumber != "")
+            {
+                var student  = db_teachingclass.GetStudentByNumber(studentnumber);
+
+                var studentView = db_teachingclass.GetStudetentDetailView(student);
+
+                ViewBag.student = studentView;
+            }
 
             return View();
 
@@ -190,10 +199,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         public ActionResult GetStudentByClass(int classnumber)
         {
-            
 
-            ScheduleForTraineesBusiness db_studentclass = new ScheduleForTraineesBusiness();
-           var list = db_studentclass.ClassStudent(classnumber);
+
+           var list = db_teachingclass.GetStudentByClass(classnumber);
 
 
             return Json(list, JsonRequestBehavior.AllowGet);

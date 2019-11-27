@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public Teacher ClassTeacher(string ClassNumber)
         {
             db_calssteacer = new BaseBusiness<ClassTeacher>();
-            var tempteacherclass = db_calssteacer.GetIQueryable().Where(d => d.ClassNumber == ClassNumber && d.IsDel == false).FirstOrDefault();
+            var tempteacherclass = db_calssteacer.GetIQueryable().Where(d => d.ClassNumber == int.Parse(ClassNumber) && d.IsDel == false).FirstOrDefault();
             return this.GetEntity(tempteacherclass.TeacherID);
 
         }
