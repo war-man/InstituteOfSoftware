@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// 年度 eg：2019 /2020
         /// </summary>
         /// <returns></returns>
-        public object yearplan()
+        public List<EmploymentYearView> yearplan()
         {
             var data = this.GetQuarters();
             for (int i = 0; i < data.Count; i++)
@@ -38,11 +39,16 @@ namespace SiliconValley.InformationSystem.Business.Employment
                     }
                 }
             }
-            var result = data.Select(a => new
+
+            List<EmploymentYearView> result = new List<EmploymentYearView>();
+            foreach (var item in data)
             {
-                title = a.RegDate.Year + "年度",
-                year = a.RegDate.Year
-            }).ToList();
+                EmploymentYearView view = new EmploymentYearView();
+                view.YearTitle = item.RegDate.Year + "年度";
+                view.Year = item.RegDate.Year;
+                result.Add(view);
+            }
+           
             return result;
         }
 

@@ -211,11 +211,14 @@
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\BasicsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\DormitoryInfoController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\EmployeeCheckInController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\HealthRegistrationController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\NewbornRController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\RegistrationforlatearrivalController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\RoomBasisController.cs" />
+    <Compile Include="Areas\Dormitory\Controllers\RoomDisabledController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StaffAdjustmentController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StaffRoomDetailsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\StudentBedtimeController.cs" />
@@ -266,9 +269,9 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\QuarterController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\SelfObtainRcoredController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\StudentIntentionViewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\StudnetIntentionController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
@@ -1118,6 +1121,7 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.ttf" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
+    <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
@@ -1131,7 +1135,6 @@
     <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SResearchRecordRegister.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordRegister.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
     <Content Include="Areas\Educational\Views\BaseDataEnum\AddorEditView.cshtml" />
     <Content Include="Areas\Educational\Views\BaseDataEnum\BaseDataEnumIndexView.cshtml" />
@@ -1163,6 +1166,12 @@
     <Content Include="Areas\Dormitory\Views\RoomBasis\HttpGetUpdRoom.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\StaffRoomDetails\Staffloadlistwith.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\SelfObtainRcoredIndex.cshtml" />
+    <Content Include="Areas\Dormitory\Views\Basics\AddFloorPage.cshtml" />
+    <Content Include="Areas\Dormitory\Views\Basics\AddTungPage.cshtml" />
+    <Content Include="Areas\Dormitory\Views\Basics\BasicsIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2812,6 +2821,7 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
     <Folder Include="uploadXLSXfile\EmpImage\" />
+    <Folder Include="uploadXLSXfile\SelfObtainRcoredImg\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

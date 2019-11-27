@@ -154,6 +154,7 @@
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="Employment\ProTeacher.cs" />
     <Compile Include="Employment\QuarterBusiness.cs" />
+    <Compile Include="Employment\SelfObtainRcoredBusiness.cs" />
     <Compile Include="Employment\SimulatInterviewBusiness.cs" />
     <Compile Include="Employment\StudentIntentionBusiness.cs" />
     <Compile Include="Employment\StudentIntentionViewBusiness.cs" />

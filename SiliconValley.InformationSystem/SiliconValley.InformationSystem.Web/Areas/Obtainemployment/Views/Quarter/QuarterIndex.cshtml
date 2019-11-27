@@ -134,11 +134,11 @@
                 var obj = _.template($("#yearmuban").html());
                 var html = '';
                 if (i == 0) {
-                    html = obj({ yeartitle: data[i].title, style: 'layui-btn-warm', myvalue: data[i].year });
-                    clickyear = data[i].ClassNumber;
+                    html = obj({ yeartitle: data[i].YearTitle, style: 'layui-btn-warm', myvalue: data[i].Year });
+                    clickyear = data[i].Year;
                     reloadtable();
                 } else {
-                    html= obj({ yeartitle: data[i].title, style: '', myvalue: data[i].year  });
+                    html= obj({ yeartitle: data[i].YearTitle, style: '', myvalue: data[i].Year  });
                 }
 
                 $("#yearlist").append($(html));

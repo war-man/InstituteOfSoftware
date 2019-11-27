@@ -25,7 +25,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Base_SysManage.Controllers
             //SessionHelper._Session session = new SessionHelper._Session();
             //session["UserId"] = user.UserId;
 
-
+            //1.0：学生登陆的时候，
+            //提前询问的是自主就业的学生，事先要排除掉，就不加载这个就业意向这个菜单
             List<Menu> menus = SystemMenuManage.GetOperatorMenu();
 
             return Json(menus, JsonRequestBehavior.AllowGet);

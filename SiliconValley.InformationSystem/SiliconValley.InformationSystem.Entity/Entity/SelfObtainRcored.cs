@@ -38,5 +38,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 计划id
         /// </summary>
         public int QuarterID { get; set; }
+
+        /// <summary>
+        /// 学生申请书图片
+        /// </summary>
+        public string ImgUrl { get; set; }
     }
 }
