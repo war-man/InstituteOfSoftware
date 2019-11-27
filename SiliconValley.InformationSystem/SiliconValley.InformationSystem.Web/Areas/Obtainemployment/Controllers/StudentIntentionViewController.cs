@@ -30,29 +30,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbemploymentAreas = new EmploymentAreasBusiness();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             dbstudentDataKeepAndRecord = new StudentDataKeepAndRecordBusiness();
-            var studentno = "19111990101200014";
+            var studentno = "19111999033000015";
             var obj = dbstudentIntention.GetStudnetIntentionByStudentNO(studentno);
             var stuobj= dbproStudentInformation.GetEntity(studentno); 
             StudentIntentionView view = new StudentIntentionView();
             var undres = dbproScheduleForTrainees.GetTraineesByStudentNumber(studentno);
             view.classnumnber = undres.ClassID;
             var studentobj = dbproStudentInformation.GetEntity(studentno);
-            view.Familyphone = studentobj.Familyphone;
             view.StudentNO = stuobj.StudentNumber;
-            var stringlist=  studentobj.Guardian.Split(',');
-            view.RelativesName = stringlist[0].Replace(" ","");
-            view.Relationship = stringlist[1].Replace(" ", "");
             view.sex = studentobj.Sex == true ? "男" : "女";
             view.StudentName = studentobj.Name;
             view.Telephone = studentobj.Telephone;
-            var studentDataKeepAndRecordobj= dbstudentDataKeepAndRecord.GetEntity(studentobj.StudentPutOnRecord_Id);
-            view.StuSchoolName = studentDataKeepAndRecordobj.StuSchoolName;
             if (obj != null)
             {
                 ViewBag.existence = true;
-                var areasobj= dbemploymentAreas.GetEntity(obj.AreaID);
-                view.AreaName = areasobj.AreaName;
+                if (obj.AreaID==null)
+                {
+                    view.AreaName = "其他城市";
+                }
+                else
+                {
+                    var areasobj = dbemploymentAreas.GetEntity(obj.AreaID);
+                    view.AreaName = areasobj.AreaName;
+                }
                 view.Salary = obj.Salary;
+
             }
             else
             {
@@ -76,18 +78,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="param0"></param>
         /// <returns></returns>
-        public ActionResult typing(StudnetIntention param0)
+        public ActionResult typing(StudentIntentionView param0)
         {
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
                 dbstudentIntention = new StudentIntentionBusiness();
                 var StudnetIntentionobj=  dbstudentIntention.GetStudnetIntentionByStudentNO(param0.StudentNO);
-                if (StudnetIntentionobj!=null)
+                
+                if (StudnetIntentionobj==null)
                 {
-                    param0.IsDel = false;
-                    param0.Remark = string.Empty;
-                    param0.Date = DateTime.Now;
+                    dbproStudentInformation = new ProStudentInformationBusiness();
+                    var studentobj= dbproStudentInformation.GetStudent(param0.StudentNO);
+                    if (studentobj.Telephone!=param0.Telephone)
+                    {
+                        studentobj.Telephone = param0.Telephone;
+                        dbproStudentInformation.Update(studentobj);
+                    }
+                    StudnetIntention studnetIntention = new StudnetIntention();
+                    if (param0.AreaID!=0)
+                    {
+                        studnetIntention.AreaID = param0.AreaID;
+                    }
+                    else
+                    {
+                        studnetIntention.AreaID = null;
+                    }
+                   
+                    studnetIntention.Salary = param0.Salary;
+                    studnetIntention.StudentNO = param0.StudentNO;
+                    studnetIntention.IsDel = false;
+                    studnetIntention.Remark = string.Empty;
+                    studnetIntention.Date = DateTime.Now;
+                    dbstudentIntention.Insert(studnetIntention);
+                    ajaxResult.Success = true;
                 }
                 else
                 {

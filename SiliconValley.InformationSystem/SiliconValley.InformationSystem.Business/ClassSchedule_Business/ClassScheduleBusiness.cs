@@ -504,6 +504,24 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
         }
         /// <summary>
+        /// 获取班级时间段
+        /// </summary>
+        /// <param name="ClassNumber"></param>
+        /// <returns></returns>
+        public string GetClassTime(int ClassNumber)
+        {
+            ClassSchedule CLaaNuma = this.GetEntity(ClassNumber);
+            BaseDataEnum find_b= BaseDataEnum_Entity.GetEntity(CLaaNuma.BaseDataEnum_Id);
+            if (find_b!=null)
+            {
+                return find_b.Name;
+            }
+            else
+            {
+                return "无";
+            }
+        }
+        /// <summary>
         /// 获取班级学员缴费记录
         /// </summary>
         /// <param name="page"></param>

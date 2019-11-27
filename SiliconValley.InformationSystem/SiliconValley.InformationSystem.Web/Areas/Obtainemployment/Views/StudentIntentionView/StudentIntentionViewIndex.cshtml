@@ -109,10 +109,10 @@
 </script>
 
 <script type="text/template" id="muban2">
-    <input type="text" id="AreaName" name="AreaName" class="layui-input" value="{{=val}}" readonly="readonly" style="border:none" />
+    <input type="text" id="AreaName" name="AreaName" class="layui-input mycorlor" value="{{=val}}" readonly="readonly" style="border:none" />
 </script>
 <script type="text/template" id="muban3">
-    <input type="radio" name="AreaID" value="{{=AreaID}}" title="{{=cityname}}" {{=checked}}>
+    <input type="radio" name="AreaID" lay-filter="myradio" value="{{=AreaID}}" title="{{=cityname}}" {{=checked}}>
 </script>
 <script src="~/Scripts/underscore.js"></script>
 @section script{
@@ -123,13 +123,24 @@
             jQuery(function () {
                 var existence = '@Html.Raw(ViewBag.existence)';
                 var myobj = JSON.parse('@Html.Raw(ViewBag.myobj)');
-                var city = JSON.parse('@Html.Raw(ViewBag.city)');
+
                 $("#stuname").text("Hello," + myobj.StudentName);
                 if (existence != 'False') {
                     loadmuban2(myobj);
+                    console.log(myobj);
+                    loadform(myobj);
+                    $("#Salary").addClass('mycorlor');
+                    $("#Telephone").addClass('mycorlor');
+                    $("#Salary").css('border','none');
+                    $("#Telephone").css('border','none');
                 } else {
-                    loadform(myobj, city);
+                    var city = JSON.parse('@Html.Raw(ViewBag.city)');
+                    loadform(myobj);
+                    loadmuban0();
+                    loadmuban3(city);
+                  
                 }
+                form.render();
             });
             function loadmuban0() {
                 var obj = _.template($("#muban0").html());
@@ -157,46 +168,52 @@
                     $("#city").append($(html));
                 }
                 var obj = _.template($("#muban3").html());
-                var html = obj({ AreaID: "", cityname: "其他城市", checked: "" });
+                var html = obj({ AreaID: "0", cityname: "其他城市", checked: "" });
                 $("#city").append($(html));
             }
-            function loadform(data, data1) {
+            function loadform(data) {
                 $("#StudentName").val(data.StudentName);
                 $("#classnumnber").val(data.classnumnber);
                 $("#sex").val(data.sex);
                 $("#Telephone").val(data.Telephone);
-                loadmuban0();
-                loadmuban3(data1);
+
                 $("#Telephone").val(data.Telephone);
                 $("#Salary").val(data.Salary);
                 $("#StudentNO").val(data.StudentNO);
-                form.render();
+               
             }
             //监听提交
             form.on('submit(demo1)', function (data) {
                 console.log(data.field);
-                // $.ajax({
-                //     url: '/Obtainemployment/StudentIntentionView/typing',
-                //    type: "POST",
-                //    data: { param0: data.field },
-                //    success: function (successdata) {
-                //        if (successdata.Success) {
-                //             layer.msg('录入成功!', { icon: 6, time: 2000 }, function () {
+                 $.ajax({
+                     url: '/Obtainemployment/StudentIntentionView/typing',
+                    type: "POST",
+                    data: { param0: data.field },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('录入成功!', { icon: 6, time: 2000 }, function () {
+                                location.reload();
+                            });
 
-                //            });
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
 
-                //        } else {
-                //            layer.msg('请及时跟就业班主任汇报!', { icon: 6, time: 2000 }, function () {
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
 
-                //            });
-                //        }
-                //    },
-                //    error: function (errordata) {
-                //        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+                        });
+                    }
+                });
+            });
+            form.on('radio(myradio)', function (data) {
+                if (data.value==0) {
+                    layer.msg('dudu', { icon: 6, time: 2000 }, function () {
 
-                //        });
-                //    }
-                //});
+                    });
+                }
             });
         });
     </script>

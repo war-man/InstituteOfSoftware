@@ -282,12 +282,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 }
                 emp.IsDel = false;
-                if (emp.Image != null)
+                if (emp.Image != "undefined")
                 {
                     emp.Image = ImageUpload();
                 }
                 else {
                     emp.Image = null;
+                }
+                if (emp.ProbationSalary==null) {
+                    emp.PositiveDate = emp.EntryTime;//当该员工的试用期工资为空时（即没有试用期)，该员工的转正时间即等同于该员工入职时间
                 }
                 empinfo.Insert(emp);
                 AjaxResultxx = empinfo.Success();

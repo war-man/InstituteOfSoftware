@@ -236,7 +236,7 @@
                             //获取班级slect
                             var child_class = $('<select id="child_class" name="child_class" class="layui-select" lay-filter="class_child"><option value="0" selected>--请选择--</option></select>');
                             for (var i = 0; i < sudata.length; i++) {
-                                $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber + '<option>').appendTo(child_class);
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(child_class);
                             }
                             $("#class_childdiv")[0].innerHTML = "";
                             $("#class_childdiv").append(child_class);
@@ -310,8 +310,11 @@
                                 });
                             } else if (tt != "0" && tt != "专业") {                                
                                 //根据其他课程（职素，英语，数学，语文）获取任课老师
+                                var Getdata = { "Curr": tt, "Time": anpaiTime, "timeName": data.value };
                                 $.ajax({
-                                    url: '/Educational/Reconcile/GetNoMajoiThercher/' + tt,
+                                    url: '/Educational/Reconcile/GetNoMajoiThercher',
+                                    type: 'POST',
+                                    data: Getdata,
                                     success: function (suc) {
                                         $("#childteacher_div")[0].innerHTML = "";//任课老师div为空
                                         var teacher_child = $('<select id="teacher_child" name="teacher_child" lay-filter="teacher_child"></select>');
@@ -380,12 +383,13 @@
                             });
                         } else if (type != "专业课" && type != "0") {
                             My_sametime(1);
+                            form.render(); //更新全部
                             var tt = type.substr(0, 2);
                             $("#childviewcurr_div")[0].innerHTML = "";//课程div为空
                             $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));
                             $("#childview_currname").attr("disabled", "disabled");
-                            $("#childview_currname")[0].value = data.value;                             
-                        } 
+                            $("#childview_currname")[0].value = data.value;
+                        }  
 
                     }
 

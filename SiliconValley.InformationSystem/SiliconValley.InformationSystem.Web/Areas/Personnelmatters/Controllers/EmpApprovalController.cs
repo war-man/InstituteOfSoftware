@@ -88,7 +88,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     ajaxresult = affmmanage.Success();
                     try
                     {
-                        if (ajaxresult.Success)//转正申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        if (ajaxresult.Success)//转正申请通过之后，将该条员工异动情况添加到员工异动表中
                         {
                             et.EmployeeId = positive.EmployeeId;
                             et.IsDel = false;
@@ -104,6 +104,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                 emp.PositiveDate = et.TransactionTime;
                                 empmanage.Update(emp);
                                 ajaxresult = empmanage.Success();
+
+                                //员工转正时间修改好之后将该员工的绩效工资及岗位工资修改一下
+                                if (ajaxresult.Success) {
+                                    EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                                    var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                                    if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                                    {
+                                        ese.PerformancePay = 1000;
+                                    }
+                                    else
+                                    {
+                                        ese.PerformancePay = 500;
+                                    }
+                                    ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                                    esemanage.Update(ese);
+                                   ajaxresult= esemanage.Success();
+                                }
                             }
                         }
 
@@ -307,7 +324,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              esex = emanage.GetInfoByEmpID(e.EmployeeId).Sex,
                              dname = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                              pname = emanage.GetPosition(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).PositionName,
-                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
+                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).PositiveDate == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
                              nowdname = emanage.GetDeptById((int)e.PlanTurnDeptId).DeptName,
                              nowpname = emanage.GetPobjById((int)e.PlanTurnPositionId).PositionName,
                              e.TurnAfterSalary,
@@ -359,7 +376,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             et.Reason = positive.Reason;
                             et.PreviousDept = emanage.GetDept(emanage.GetInfoByEmpID(et.EmployeeId).PositionId).DeptId;
                             et.PreviousPosition = emanage.GetPosition(emanage.GetInfoByEmpID(et.EmployeeId).PositionId).Pid;
-                            et.PreviousSalary = emanage.GetInfoByEmpID(et.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(et.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(et.EmployeeId).Salary;
+                            et.PreviousSalary = emanage.GetInfoByEmpID(et.EmployeeId).PositiveDate == null ? emanage.GetInfoByEmpID(et.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(et.EmployeeId).Salary;
                             et.PresentDept = positive.PlanTurnDeptId;
                             et.PresentPosition = positive.PlanTurnPositionId;
                             et.PresentSalary = positive.TurnAfterSalary;
@@ -369,7 +386,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             if (ajaxresult.Success)
                             {
                                 var emp = emanage.GetEntity(et.EmployeeId);
-                                if (emp.Salary == null)
+                                if (emp.PositiveDate == null)
                                 {
                                     emp.ProbationSalary = et.PresentSalary;
                                     emanage.Update(emp);
@@ -380,6 +397,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                     emanage.Update(emp);
                                 }
                                 ajaxresult = emanage.Success();
+                                if (ajaxresult.Success) {
+                                    EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                                    var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                                    if (emanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                                    {
+                                        ese.PerformancePay = 1000;
+                                    }
+                                    else
+                                    {
+                                        ese.PerformancePay = 500;
+                                    } if (emp.PositiveDate == null)
+                                    {
+                                        ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                                    }
+                                    else {
+                                        ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                                    }
+                                    esemanage.Update(ese);
+                                    ajaxresult = esemanage.Success();
+                                }
                             }
                         }
                     }
@@ -428,7 +465,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              EntryTime = emanage.GetInfoByEmpID(e.EmployeeId).EntryTime,
                              Education = emanage.GetInfoByEmpID(e.EmployeeId).Education,
                              PositiveDate = emanage.GetInfoByEmpID(e.EmployeeId).PositiveDate,
-                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
+                             presalary = emanage.GetInfoByEmpID(e.EmployeeId).PositiveDate == null ? emanage.GetInfoByEmpID(e.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(e.EmployeeId).Salary,//未转正的情况下员工工资指的是实习工资
                              e.RaisesLimit,
                              e.RaisesReason,
                              e.IsApproval,
@@ -470,12 +507,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     ajaxresult = sramanage.Success();
                     try
                     {
-                        if (ajaxresult.Success)//加薪申请通过修改成功之后，将该条员工异动情况添加到员工异动表中
+                        if (ajaxresult.Success)//加薪申请通过之后，将该条员工异动情况添加到员工异动表中
                         {
                             et.EmployeeId = positive.EmployeeId;
                             et.IsDel = false;
                             et.TransactionType = m.GetList().Where(s => s.MoveTypeName == "加薪").FirstOrDefault().ID;
-                            et.PreviousSalary = emanage.GetInfoByEmpID(et.EmployeeId).Salary == null ? emanage.GetInfoByEmpID(et.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(et.EmployeeId).Salary;
+                            et.PreviousSalary = emanage.GetInfoByEmpID(et.EmployeeId).PositiveDate == null ? emanage.GetInfoByEmpID(et.EmployeeId).ProbationSalary : emanage.GetInfoByEmpID(et.EmployeeId).Salary;
                             et.PresentSalary = (decimal)et.PreviousSalary + (decimal)positive.RaisesLimit;
                             et.Reason = positive.RaisesReason;
                             etmanage.Insert(et);
@@ -483,7 +520,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             if (ajaxresult.Success)
                             {//异动添加成功后将员工表中的员工工资也改变
                                 var emp = emanage.GetEntity(et.EmployeeId);
-                                if (emp.Salary == null)
+                                if (emp.PositiveDate == null)
                                 {
                                     emp.ProbationSalary = et.PresentSalary;
                                 }
@@ -493,6 +530,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                 }
                                 emanage.Update(emp);
                                 ajaxresult = emanage.Success();
+                                //员工工资改变之后，将员工岗位工资也改一下
+                                if (ajaxresult.Success) {
+                                    EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                                    var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                                    if (emp.PositiveDate == null)
+                                    {
+                                        ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                                    }
+                                    else
+                                    {
+                                        ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                                    }
+                                   
+                                    esemanage.Update(ese);
+                                    ajaxresult = esemanage.Success();
+                                }
                             }
                         }
                     }

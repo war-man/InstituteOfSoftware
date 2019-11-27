@@ -9,6 +9,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
    public class AnPaiData
     {
         /// <summary>
+        /// 班级Id
+        /// </summary>
+        public int class_Id
+        {
+            get;set;
+        }
+        /// <summary>
         /// 班级名称
         /// </summary>
         public string ClassName

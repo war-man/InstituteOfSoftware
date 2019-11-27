@@ -109,8 +109,8 @@
         <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
             <label class="LableCss1">上课时间段:</label>
             <div id="ClssTime" class="layui-input-block">
-                <input style="color:black" type="radio" name="time" value="上午" title="上午" disabled="disabled">
-                <input style="color:black" type="radio" name="time" value="下午" title="下午" disabled="disabled">
+                <input style="color:black" type="radio" name="time" id="time" value="上午" title="上午" disabled="disabled">
+                <input style="color:black" type="radio" name="time" id="time" value="下午" title="下午" disabled="disabled">
             </div>
         </div>         
     </div>
@@ -134,7 +134,15 @@
 
             </div>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3" style="text-align:right">
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+            <label class="LableCss1">任课老师:</label>
+            <div id="teacher_div" class="layui-input-block">
+
+            </div>
+        </div>         
+    </div>
+    <div class="layui-row layui-form-item" style="text-align:right">
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:right">
             <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="系统排课" />
             <input id="Anan" type="button" class="layui-btn" value="手动排课" onclick="OpenNanualView()" />
         </div>
@@ -171,7 +179,7 @@
             var form = layui.form;
             var laydate = layui.laydate;
             var table = layui.table;
-            
+            //获取班级
             form.on('select(grandselect)', function (data) {
                 if (data.value == "0") {
                     $("#myclass")[0].innerHTML = "";
@@ -182,7 +190,7 @@
                             //获取班级slect
                             var classselect = $('<select id="class_select" name="class_select" class="layui-select" lay-filter="bianji"><option value="0" selected>--请选择--</select>');
                             for (var i = 0; i < sudata.length; i++) {
-                                $('<option value=' + sudata[i].ClassNumber + '>' + sudata[i].ClassNumber+ '<option>').appendTo(classselect);
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber+ '<option>').appendTo(classselect);
                             }
                             $("#myclass")[0].innerHTML = "";
                             $("#myclass").append(classselect);   
@@ -192,7 +200,7 @@
                 }
                 
             });      
-
+            //获取课程
             form.on('select(bianji)', function (data) {
                 // alert(data.value);
                 $("#currr_div")[0].innerHTML = "";
@@ -205,7 +213,7 @@
                                 $("<span class='LableCss1'>" + sucdata.classData.marjoiName + "</span>").appendTo($("#marjon"));//加载专业数据
                                 var myselect_c = $("<select name='kecheng' id='kecheng'></select>");
                                 for (var i = 0; i < sucdata.c_list.length; i++) {
-                                    $("<option value=" + sucdata.c_list[i].CourseName + ">" + sucdata.c_list[i].CourseName + "<option>").appendTo(myselect_c);
+                                    $("<option value=" + sucdata.c_list[i].CurriculumID + ">" + sucdata.c_list[i].CourseName + "<option>").appendTo(myselect_c);
                                 }
                                 $("#currr_div").append(myselect_c);
                                 //上课时间
@@ -254,25 +262,47 @@
             laydate.render({
                 elem: '#startTime',
                 done: function (value) {
-                     //获取教室
                      //获取上课时间段
                     var timeName = $("#time").val();
                     var Time = value;
                     var mydata = { "timeName": timeName, "Time": Time };
+                    var Getdata = { "Time": Time, "Curr": $("#kecheng").val(), "timeName": timeName };
                     $("#classroom_div")[0].innerHTML = "";
-                    $.ajax({
-                        url: '/Educational/Reconcile/GetEmptyRoom',
-                        type: 'POST',
-                        data:mydata,
-                        success: function (suc) {
-                            var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
-                            for (var i = 0; i < suc.length; i++) {
-                                $('<option value=' + suc[i].Id + '>' + suc[i].ClassroomName + '</option>').appendTo(classroom);
+                    $("#teacher_div")[0].innerHTML = "";
+                    if (value.length > 0) {
+                        //获取教室
+                        $.ajax({
+                            url: '/Educational/Reconcile/GetEmptyRoom',
+                            type: 'POST',
+                            data: mydata,
+                            success: function (suc) {
+                                var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
+                                for (var i = 0; i < suc.length; i++) {
+                                    $('<option value=' + suc[i].Id + '>' + suc[i].ClassroomName + '</option>').appendTo(classroom);
+                                }
+                                $("#classroom_div").append(classroom);
+                                form.render(); //更新全部
                             }
-                            $("#classroom_div").append(classroom);
-                            form.render(); //更新全部
-                        }
-                    });
+                        });
+                        //获取任课老师
+                        $.ajax({
+                            url: '/Educational/Reconcile/GetTeacher',
+                            type: 'POST',
+                            data: Getdata,
+                            success: function (suc) {
+                                var teachersele = $('<select id="teachersele" name="teachersele"><option value="0">--请选择--</select>');
+                                for (var i = 0; i < suc.length; i++) {
+                                    $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teachersele);
+                                }
+                                $("#teacher_div").append(teachersele);
+                                form.render(); //更新全部
+                            }
+                        });
+                    } else {
+                        $("#classroom_div")[0].innerHTML = "";
+                        $("#teacher_div")[0].innerHTML = "";
+                    }
+                     
                 }
             });
              //排课
@@ -285,6 +315,8 @@
                     layer.msg('请选择排课日期！！！', { icon: 2 });
                 } else if (mydata.myclassroom == undefined || mydata.myclassroom == 0) {
                     layer.msg('请选择教室！！！', { icon: 2 });
+                } else if (mydata.teachersele == "0" || mydata.teachersele == undefined) {
+                    layer.msg('请选择任课老师！！！', { icon: 2 });
                 }else {
                     $.ajax({
                         url: '/Educational/Reconcile/PaikeFunction',

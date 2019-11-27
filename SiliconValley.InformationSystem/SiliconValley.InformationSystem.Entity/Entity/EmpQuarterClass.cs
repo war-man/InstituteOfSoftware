@@ -14,6 +14,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+
+    /// <summary>
+    /// 毕业季度参与的班级中间表
+    /// </summary>
     [Table(name: "EmpQuarterClass")]
     public partial class EmpQuarterClass
     {
@@ -23,7 +27,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string ClassNO { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
-        public Nullable<System.DateTime> DelDate { get; set; }
-    
+        public Nullable<System.DateTime> RegDate { get; set; }
+
     }
 }

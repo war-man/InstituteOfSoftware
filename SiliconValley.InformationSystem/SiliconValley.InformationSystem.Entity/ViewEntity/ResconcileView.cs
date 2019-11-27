@@ -16,7 +16,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 课程时间字段
         /// </summary>
         public string Curse_Id { get; set; }
-        public string ClassSchedule_Id { get; set; }
+        public ClassSchedule ClassSchedule_Id { get; set; }
         /// <summary>
         /// 系统创建时间
         /// </summary>

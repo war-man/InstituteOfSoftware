@@ -367,6 +367,7 @@
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\QuarterView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchRecordRegisterView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\StudentIntentionView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
@@ -386,6 +387,7 @@
     <Compile Include="ViewEntity\RoomArrangeEmpinfoView.cs" />
     <Compile Include="ViewEntity\RoomdeWithPageView.cs" />
     <Compile Include="ViewEntity\RoomTypeEnum.cs" />
+    <Compile Include="ViewEntity\SalaryView\MySalaryObjView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />

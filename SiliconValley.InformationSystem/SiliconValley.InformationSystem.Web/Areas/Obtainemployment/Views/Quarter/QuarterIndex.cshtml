@@ -1,13 +1,13 @@
 ﻿
 @{
-    ViewBag.Title = "StudnetIntentionIndex";
+    ViewBag.Title = "QuarterIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@*<h2>StudnetIntentionIndex</h2>*@
+@*<h2>QuarterIndex</h2>*@
 <style>
     #leftdiv {
-        width: 16%;
+        width: 18%;
         /*border: 1px solid red;*/
         float: left;
         height: 800px;
@@ -18,7 +18,7 @@
     }
 
     #rightdiv {
-        width: 83%;
+        width: 81%;
         /*border: 1px solid red;*/
         float: right;
         height: 800px;
@@ -32,10 +32,11 @@
 <div od="mybody">
     <div id="leftdiv">
         <div id="top0">
-            所管班级列表
+            年度
         </div>
         <div id="content0">
-            <div class="layui-btn-container" id="classlist" style=" margin:0 auto;width:70%;">
+            <div class="layui-btn-container" id="yearlist" style=" margin:0 auto;width:70%;">
+               
             </div>
         </div>
     </div>
@@ -43,13 +44,13 @@
         <table class="layui-hide" id="table11" lay-filter="table11"></table>
     </div>
 </div>
-<script type="text/ng-template" id="classmuban">
-    <button type="button" class="layui-btn layui-btn-radius myclass {{=style}}">{{=classname}}</button>
+<script type="text/ng-template" id="yearmuban">
+    <button type="button" class="layui-btn layui-btn-radius myclass {{=style}}" myvalue="{{=myvalue}}">{{=yeartitle}}</button>
 </script>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">开启学生填写功能</button>
-        <button class="layui-btn layui-btn-sm" lay-event="upt">修改意向</button>
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加毕业计划</button>
+        <button class="layui-btn layui-btn-sm" lay-event="upt">修改毕业计划</button>
     </div>
 </script>
 
@@ -59,9 +60,9 @@
 
     layui.use(['laypage', 'layedit','table','layer'], function () {
         //获取设备信息
-        var device = layui.device(), table = layui.table, clickclassnumber = '', layer = layui.layer;
+        var device = layui.device(), table = layui.table, c = '', layer = layui.layer;
         jQuery(function () {
-            loadclass();
+            loadyear();
         });
           //时间转化
         function TimeChange(newtime) {
@@ -93,86 +94,84 @@
             , cols: [[ //标题栏
                 { type: 'radio', fixed: 'left' }
                 , { field: 'ID', title: 'ID', width: 80, hide: true }
-                , { field: 'classnumnber', title: '班级', width: 80 }
-                , { field: 'StudentName', title: '姓名', width: 90 }
-                , { field: 'sex', title: '性别', width: 80 }
-                , { field: 'identitydocument', title: '身份证', width: 180 }
-                , { field: 'AreaName', title: '确定就业城市', width: 118 }
-                , { field: 'Salary', title: '期望薪资', width: 108 }
-                , { field: 'Nation', title: '籍贯', width: 80 }
-                , { field: 'StuSchoolName', title: '毕业高中', width: 178 }
-                , { field: 'Telephone', title: '电话号码', width: 120 }
-                , { field: 'Relationship', title: '亲属关系', width: 100 }
-                , { field: 'RelativesName', title: '亲属名字', width: 100 }
-                , { field: 'Familyphone', title: '亲属电话', width: 120 }
+                , { field: 'QuaTitle', title: '标题', width: 256 }
+                , {
+                    field: 'EmpQuarterClassList', title: '参与班级', width: 246, templet: function (d) {
+
+                        console.log(d.EmpQuarterClassList);
+                        var aa = "";
+                        for (var i = 0; i < d.EmpQuarterClassList.length; i++) {
+                           aa=aa+  "<button class='layui-btn layui-btn-xs layui-btn-radius layui-btn-danger' myvalue='"+d.EmpQuarterClassList[i].ID+"'>"+d.EmpQuarterClassList[i].ClassNO+"</button>"
+                        }
+                        return aa;
+                    }
+                }
+                , {
+                    field: 'RegDate', title: '时间', width: 120, templet: function (d) {
+                        return TimeChange(d.RegDate);
+                    }
+                }
+                , { field: 'Remark', title: '备注', width: 120 }
             ]]
 
         });
         function reloadtable() {
             table.reload('table11', {
-                url:'/Obtainemployment/StudnetIntention/SearchData',
+                url:'/Obtainemployment/Quarter/SearchData',
                 where: {
-                    param0: clickclassnumber
+                    param0: clickyear
                 }
                 , page: {
                     curr: 1 //重新从第 1 页开始
                 }
             });
         }
-        function loadclass() {
+        function loadyear() {
             var data = JSON.parse('@Html.Raw(ViewBag.list)');
-            $("#classlist").children().remove();
+            $("#yearlist").children().remove();
             for (var i = 0; i < data.length; i++) {
-                var obj = _.template($("#classmuban").html());
+                var obj = _.template($("#yearmuban").html());
                 var html = '';
                 if (i == 0) {
-                     html= obj({ classname: data[i].ClassNumber,style:'layui-btn-warm'});
-                    clickclassnumber = data[i].ClassNumber;
+                    html = obj({ yeartitle: data[i].title, style: 'layui-btn-warm', myvalue: data[i].year });
+                    clickyear = data[i].ClassNumber;
                     reloadtable();
                 } else {
-                    html= obj({ classname: data[i].ClassNumber,style:'' });
+                    html= obj({ yeartitle: data[i].title, style: '', myvalue: data[i].year  });
                 }
 
-                $("#classlist").append($(html));
+                $("#yearlist").append($(html));
             }
             console.log(data);
         }
         $(document).off('click', '.myclass').on('click', '.myclass', function (e) {
             $('.myclass').removeClass('layui-btn-warm');
             $(this).addClass('layui-btn-warm');
-            clickclassnumber = $(this).text();
+            clickyear = $(this).attr('myvalue');
             reloadtable();
         });
          //头工具栏事件
         table.on('toolbar(table11)', function (obj) {
             switch (obj.event) {
                 case 'add':
-                    $.ajax({
-                        url: '/Obtainemployment/StudnetIntention/open',
-                        async: false,
-                        data: { param0: clickclassnumber },
-                        success: function (successdata) {
-                            if (successdata.Success) {
-                                layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
-
-                                });
-
-                            } else {
-                                layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
-
-                                });
+                       layer.open({
+                            type: 2,
+                            content: "/Obtainemployment/Quarter/addquarter",
+                            title: '添加就业计划',
+                            area: ['690px', '350px'],
+                            success: function (layero, index) {
+                                //let body = layui.layer.getChildFrame('body', index);
+                                //body.find("#classnumnber").val(clickclassnumber);
+                            },
+                            end: function () {
+                                reloadtable();
                             }
-                        },
-                        error: function (errordata) {
-                            layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
-
-                            });
-                        }
-                    });
+                        });
                     break;
                 case 'upt':
                     var checkStatus = table.checkStatus(obj.config.id);
                     var data = checkStatus.data;
+                    console.log(data);
                     if (data.length == 0) {
                         layer.msg('请先选择你要修改的意向!', { icon: 6, time: 2000 }, function () {
 
@@ -180,9 +179,9 @@
                     } else {
                         layer.open({
                             type: 2,
-                            content: "/Obtainemployment/StudnetIntention/uptstudnetintention?param0=" + data[0].ID,
-                            title: "修改"+data[0].StudentName+'就业意向',
-                            area: ['690px', '350px'],
+                            content: "/Obtainemployment/Quarter/uptquarter?param0=" + data[0].ID,
+                            title: '修改就业计划',
+                            area: ['690px', '650px'],
                             success: function (layero, index) {
                                 //let body = layui.layer.getChildFrame('body', index);
                                 //body.find("#classnumnber").val(clickclassnumber);

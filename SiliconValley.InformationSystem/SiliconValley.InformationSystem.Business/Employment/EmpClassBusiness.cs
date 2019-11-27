@@ -39,10 +39,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
 
             ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
-            var classdata = dbclass.GetIQueryable().Where(a => a.IsDelete == false).ToList();
-
-
-            return classdata;
+            return dbclass.GetIQueryable().Where(a => a.IsDelete == false).ToList();
 
 
         }
@@ -222,5 +219,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
             var a = dbemploymentStaffBusiness.GetEmploymentByEmpInfoID(empinfoid);
             return this.GetEmpsByEmpID(a.ID);
         }
+
     }
 }
