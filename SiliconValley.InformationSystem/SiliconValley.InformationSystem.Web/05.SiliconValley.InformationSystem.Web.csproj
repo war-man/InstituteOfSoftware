@@ -1146,7 +1146,6 @@
     <Content Include="Areas\Educational\Views\Reconcile\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\NewsRexoncileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
