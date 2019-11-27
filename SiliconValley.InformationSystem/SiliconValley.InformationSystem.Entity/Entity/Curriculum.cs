@@ -52,6 +52,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> PeriodMoney { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
-    
+        /// <summary>
+        /// 是否是最后一门课
+        /// </summary>
+        public Nullable<bool> IsEndCurr { get; set; }
     }
 }
