@@ -1448,7 +1448,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             List<Curriculum> resultlist = new List<Curriculum>();
             try
             {
-
+               //var classObj = db_teacherclass.AllClassSchedule().Where(d => d.IsDelete == false && d.id == int.Parse(classnumber)).FirstOrDefault();
              
 
 

@@ -1154,6 +1154,10 @@
     <Content Include="Areas\Teaching\Views\Class\GetStuHomeWorkDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\RecordStuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\StuHomeWorkSubmission.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateTeacherSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\HeadMasterSatisfactionQuestionnaire.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\StudentSurveyIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
