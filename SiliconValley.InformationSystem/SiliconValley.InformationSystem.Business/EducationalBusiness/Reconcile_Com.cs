@@ -37,7 +37,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
         public static readonly TeacherClassBusiness TeacherClass_Entity = new TeacherClassBusiness();
 
+        public static readonly BaseBusiness<HeadClass> Hoadclass_Entity = new BaseBusiness<HeadClass>();
+
         public static readonly  RedisCache redisCache = new RedisCache();
+
 
         /// <summary>
         /// 根据阶段名称获取阶段Id
@@ -59,5 +62,64 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             List<BaseDataEnum> b_list= ClassSchedule_Entity.BaseDataEnum_Entity.GetsameFartherData(father);
             return b_list.Where(b=>b.Name==name).FirstOrDefault().Id;
         }
+        /// <summary>
+        /// 获取带班的班主任
+        /// </summary>
+        /// <param name="class_id"></param>
+        /// <returns></returns>
+        public static AjaxResult GetZhisuTeacher(int class_id)
+        {
+            AjaxResult result = new AjaxResult();
+            result.Success = false;
+            BaseBusiness<EmployeesInfo> emp_Entity = new BaseBusiness<EmployeesInfo>();
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            HeadClass mysex = Hoadclass_Entity.GetList().Where(a => a.ClassID ==class_id && a.EndingTime==null).FirstOrDefault();
+            if (mysex!=null)
+            {
+                Headmaster heasmaster=  Headmaster_Etity.GetEntity(mysex.LeaderID);
+                if (heasmaster!=null)
+                {
+                    EmployeesInfo find_e= emp_Entity.GetEntity(heasmaster.informatiees_Id);
+                    if (find_e!=null)
+                    {
+                        result.Data = find_e.EmployeeId;
+                        result.Success = true;
+                    }
+                }
+                else
+                {
+                    result.Msg = "没有找到数据";
+                }
+            }
+            else
+            {
+                result.Msg = "没有找到数据";
+            }
+            return result;
+        }
+        /// <summary>
+        /// 获取班主任带领的班级
+        /// </summary>
+        /// <param name="emp_id"></param>
+        /// <returns></returns>
+        public static AjaxResult GetHadMasterClass(string emp_id)
+        {
+            AjaxResult result = new AjaxResult();
+            result.Success = false;
+            //根据员工Id找班主任编号
+            Headmaster find_h= Headmaster_Etity.GetList().Where(h => h.informatiees_Id == emp_id).FirstOrDefault();
+            //根据编号获取班主任带的班级
+            List<HeadClass> hc_list= Hoadclass_Entity.GetList().Where(h => h.EndingTime == null && h.LeaderID == find_h.ID).ToList();
+            if (hc_list.Count>0)
+            {
+                result.Success = true;
+                result.Data = hc_list;
+            }
+
+            return result;
+                 
+        }
+             
     }
 }
