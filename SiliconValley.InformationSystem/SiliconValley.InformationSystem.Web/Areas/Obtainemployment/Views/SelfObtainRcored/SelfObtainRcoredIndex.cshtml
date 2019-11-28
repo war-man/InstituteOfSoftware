@@ -65,6 +65,10 @@
     </div>
 
 </div>
+<div id="divimg" style="width:800px;height:800px;">
+    <img id="showImage" />
+</div>
+
 @section script{
 
     @*右侧按钮*@
@@ -135,9 +139,9 @@
                 return result;
             }
             function loadtable() {
-               table00= table.render({
+                table00 = table.render({
                     elem: '#table00'
-                    , url: '/Obtainemployment/SelfObtainRcored/table00?leave='+myleave+'&string2='+string2
+                    , url: '/Obtainemployment/SelfObtainRcored/table00?leave=' + myleave + '&string2=' + string2
                     , skin: 'line' //行边框风格
                     , even: true //开启隔行背景
                     , limit: 20
@@ -147,13 +151,13 @@
                     , cols: [[ //标题栏
                         { type: 'radio' }
                         , { field: 'ID', title: 'id'/*, width: 180*/, hide: true }
-                        , { field: 'studnetname', title: '学生姓名' ,width: 117}
-                        , { field: 'empname', title: '审批人',width: 117 }
+                        , { field: 'studnetname', title: '学生姓名', width: 117 }
+                        , { field: 'empname', title: '审批人', width: 117 }
                         , { field: 'classno', title: '班级', width: 117 }
                         , { field: 'title', title: '毕业计划标题', width: 217 }
                         , {
                             field: 'ImgUrl', title: '图片', width: 145, templet: function (d) {
-                                return "<button class='layui-btn layui-btn-xs layui-btn-radius layui-btn-danger' myvalue='" + d.ImgUrl + "'>查看图片</button>"
+                                return "<button class='layui-btn myimgbtn layui-btn-xs layui-btn-radius layui-btn-danger' myvalue='" + d.ImgUrl + "'>查看图片</button>"
                             }
                         }
                         , { field: 'Remark', title: '备注', width: 245 }
@@ -191,7 +195,7 @@
                         break;
                     //最里层
                     case '3':
-                        
+
                         empQuarterclassid = dtreeobj.nodeId;
                         string2 = dtreeobj.context;
                         break;
@@ -235,6 +239,20 @@
                 });
             }
 
+            //添加栋的按钮
+            $(document).off("click", '.myimgbtn').on('click', '.myimgbtn', function () {
+                console.log($(this).attr('myvalue'));
+                $("#showImage")[0].src = "../../../uploadXLSXfile/SelfObtainRcoredImg/" + $(this).attr('myvalue');
+                layer.open({
+                    type: 1,
+                    area: ['730px', '830px'],
+                    content: $('#divimg'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    end: function () {
+                        $("#divimg").hide();
+                    }
+                });
+
+            });
         });
 
 
