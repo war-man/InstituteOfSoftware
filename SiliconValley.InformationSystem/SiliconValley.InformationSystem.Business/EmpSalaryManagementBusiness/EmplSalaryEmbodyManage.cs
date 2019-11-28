@@ -41,7 +41,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
                 }
                 else {
-                    ese.PerformancePay = 0;
+                    ese.PerformancePay = null;
                     ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
                 }
                

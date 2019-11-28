@@ -1117,6 +1117,12 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120033610.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
@@ -1151,6 +1157,9 @@
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\WarehouseIndexView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2799,7 +2808,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
-    <Folder Include="uploadXLSXfile\EmpImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
