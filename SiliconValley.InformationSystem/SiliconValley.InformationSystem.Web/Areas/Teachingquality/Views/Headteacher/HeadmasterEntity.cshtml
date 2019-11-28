@@ -33,12 +33,12 @@
 
     var mycars = [];
     var data4 = JSON.parse('@Html.Raw(ViewBag.HeadMa)');
-
+    console.log(data4);
     //$.post("/Teachingquality/Headteacher/HeadmasreClass", function (data) {
     //    data3 = data.d1;
     //    data4 = data.d2;
-        for (var i = 0; i < data4.d2.length; i++) {
-            mycars[i] = data4.d2[i].ClassNumber;
+    for (var i = 0; i < data4.d2.length; i++) {
+        mycars[i] = data4.d2[i].value;
         }
 
 

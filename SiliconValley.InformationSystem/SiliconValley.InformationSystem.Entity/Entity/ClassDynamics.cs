@@ -20,8 +20,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int ID { get; set; }
         public string Remarks { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
-        public string FormerClass { get; set; }
-        public string CurrentClass { get; set; }
+        /// <summary>
+        /// 之前班级
+        /// </summary>
+        public int FormerClass { get; set; }
+        /// <summary>
+        /// 当前班级
+        /// </summary>
+        public int CurrentClass { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string Studentnumber { get; set; }
         public string Reason { get; set; }
         public Nullable<bool> IsDelete { get; set; }

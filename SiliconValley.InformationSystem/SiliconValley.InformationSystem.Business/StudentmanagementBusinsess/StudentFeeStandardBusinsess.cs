@@ -89,7 +89,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 a.BirthDate,
                 a.identitydocument,
                 ClassName= scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
-                Headmasters =headmasters.Listheadmasters(a.StudentNumber).EmpName
+                Headmasters =headmasters.Listheadmasters(a.StudentNumber)==null?"暂无": headmasters.Listheadmasters(a.StudentNumber).EmpName
 
            }).ToList();
             var dataList = xz.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
@@ -315,40 +315,52 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// <returns></returns>
         public AjaxResult StudentPrices(List<StudentFeeRecord> studentFeeRecords,  string Remarks)
         {
+            AjaxResult retus = null;
             List<StudentFeeRecord> listFeeRecord = new List<StudentFeeRecord>();
             //当前登陆人
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             var fine = finacemo.GetList().Where(a => a.Financialstaff == user.EmpNumber).FirstOrDefault();
-            foreach (var item in studentFeeRecords)
+            if (fine == null)
             {
-                StudentFeeRecord studentFeeRecord = new StudentFeeRecord();
-                studentFeeRecord.IsDelete = false;
-                studentFeeRecord.AddDate = DateTime.Now;
-                studentFeeRecord.FinanceModelid = fine.id;
-                studentFeeRecord.Costitemsid = item.Costitemsid;
-                studentFeeRecord.Amountofmoney = item.Amountofmoney;
-                studentFeeRecord.StudenID = item.StudenID;
-                studentFeeRecord.Remarks = Remarks;
-                listFeeRecord.Add(studentFeeRecord);
-            }
-            AjaxResult retus = null;
-            try
-            {
-                SessionHelper.Session["person"] = listFeeRecord;
-                studentfee.Insert(listFeeRecord);
-                retus = new SuccessResult();
-                retus.Success = true;
-                retus.Msg = "录入费用成功";
-                BusHelper.WriteSysLog("录入费用数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            catch (Exception ex)
-            {
-
                 retus = new ErrorResult();
-                retus.Msg = "服务器错误";
+                retus = new ErrorResult();
+                retus.Msg = "对不起,当前登陆账号不能进行缴费！";
                 retus.Success = false;
                 retus.ErrorCode = 500;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            else
+            {
+                foreach (var item in studentFeeRecords)
+                {
+                    StudentFeeRecord studentFeeRecord = new StudentFeeRecord();
+                    studentFeeRecord.IsDelete = false;
+                    studentFeeRecord.AddDate = DateTime.Now;
+                    studentFeeRecord.FinanceModelid = fine.id;
+                    studentFeeRecord.Costitemsid = item.Costitemsid;
+                    studentFeeRecord.Amountofmoney = item.Amountofmoney;
+                    studentFeeRecord.StudenID = item.StudenID;
+                    studentFeeRecord.Remarks = Remarks;
+                    listFeeRecord.Add(studentFeeRecord);
+                }
+
+                try
+                {
+                    SessionHelper.Session["person"] = listFeeRecord;
+                    studentfee.Insert(listFeeRecord);
+                    retus = new SuccessResult();
+                    retus.Success = true;
+                    retus.Msg = "录入费用成功";
+                    BusHelper.WriteSysLog("录入费用数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                }
+                catch (Exception ex)
+                {
+
+                    retus = new ErrorResult();
+                    retus.Msg = "服务器错误";
+                    retus.Success = false;
+                    retus.ErrorCode = 500;
+                    BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                }
             }
             return retus;
         }

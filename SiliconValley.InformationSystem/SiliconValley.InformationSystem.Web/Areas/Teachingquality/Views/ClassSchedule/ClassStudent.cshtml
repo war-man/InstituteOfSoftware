@@ -250,40 +250,57 @@
             </div>
         </div>
     </div>
-    <div class="layui-colla-item">
-        <h2 class="layui-colla-title"> 升学管理</h2>
-        <div class="layui-colla-content layui-anim">
-            @{
-                if (@ViewBag.Stage == "S1" || ViewBag.Stage == "Y1")
-                {
+    @{
+        if (ViewBag.Stage == "S4" && ViewBag.Status == null)
+        {
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title"> 毕业管理</h2>
+                <div class="layui-colla-content layui-anim">
                     <div>
-                        <button type="button" id="Dismantleclasses" class="layui-btn layui-btn-fluid mybut">升学分配班级</button>
+                        <button type="button" id="ClassEnd" class="layui-btn layui-btn-fluid mybut">一键毕业</button>
                     </div>
-                }
-                else if(@ViewBag.Stage!="")
-                {
-                    <div>
-                        <button type="button" id="EntitAddClassSchedule" class="layui-btn layui-btn-fluid mybut">一键升学</button>
-                    </div>
-                }
-            }
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title"> 升学管理</h2>
+                <div class="layui-colla-content layui-anim">
+                    @{
+                        if (ViewBag.Stage == "S1" || ViewBag.Stage == "Y1"&&ViewBag.Status==null)
+                        {
+                            <div>
+                                <button type="button" id="Dismantleclasses" class="layui-btn layui-btn-fluid mybut">升学分配班级</button>
+                            </div>
+                        }
+                        else if (ViewBag.Stage != "" && ViewBag.Status == null)
+                        {
+                            <div>
+                                <button type="button" id="EntitAddClassSchedule" class="layui-btn layui-btn-fluid mybut">一键升学</button>
+                            </div>
+                        }
+                    }
 
 
-            <div>
-                <button type="button" id="Tuition" class="layui-btn layui-btn-fluid mybut">升学缴费情况</button>
+                    <div>
+                        <button type="button" id="Tuition" class="layui-btn layui-btn-fluid mybut">升学缴费情况</button>
+                    </div>
+                    <div>
+                        <button type="button" class="layui-btn layui-btn-fluid mybut">升学考试成绩</button>
+                    </div>
+                </div>
             </div>
-            <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">升学考试成绩</button>
-            </div>
-        </div>
-    </div>
+        }
+    }
+
     <div class="layui-colla-item">
         <h2 class="layui-colla-title"> 成考管理</h2>
         <div class="layui-colla-content layui-anim">
             <div>
                 <button type="button" id="AddEnroExamination" class="layui-btn layui-btn-fluid mybut">成考报名</button>
             </div>
-           
+
         </div>
     </div>
 
@@ -349,7 +366,7 @@
             @foreach (var item in Model as List<ClassStudentView>)
             {
                 if (item.ClassNameView == null)
-                {
+                 {
                     <div class="Mydiv layui-col-xs4">
                         <div style="display:none;">@item.StuNameID</div>
                         <div style="text-align:center;margin-top:20px;line-height:23px;">
@@ -680,9 +697,20 @@
         });
         //升学业务
         $("#EntitAddClassSchedule").click(function () {
-            $.post("/Teachingquality/ClassSchedule/EntitAddClassSchedule?ClassName="+'@Html.Raw(ViewBag.ClassName)', function () {
-                layer.msg(db.Msg);
-            })
+            var dbase = {
+                ClassName:@Html.Raw(ViewBag.ClassID),
+            };
+            WhateverAdd("/Teachingquality/ClassSchedule/EntitAddClassSchedule", dbase);
+        
+        }); 
+        //S4毕业
+        $("#ClassEnd").click(function () {
+            var dbase = {
+                ClassID:@Html.Raw(ViewBag.ClassID),
+            };
+
+           WhateverAdd("/Teachingquality/ClassSchedule/ClassEnd", dbase);
+        
         });
     });
 

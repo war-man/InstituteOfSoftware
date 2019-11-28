@@ -21,6 +21,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int LeaderID { get; set; }
         public Nullable<int> ClassID { get; set; }
         public Nullable<System.DateTime> LeadTime { get; set; }
+        /// <summary>
+        /// 结束带班
+        /// </summary>
         public Nullable<System.DateTime> EndingTime { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public Nullable<System.DateTime> AddTime { get; set; }

@@ -67,6 +67,7 @@
 @section script{
     <script>
         var Team = JSON.parse('@Html.Raw(ViewBag.ListTeam)');
+ 
         //去重
         function unique(arr, field) {
             var map = {};
@@ -109,7 +110,7 @@
                     if (Type == "Stage") { TeamName = Team[A].Stage } else if (Type == "HeadmasterName") { TeamName = Team[A].HeadmasterName; } else { TeamName = Team[A].Major };
                    
                     if (Name == TeamName) {
-                        var div2 = $(' <div class="Title hover"> <div style="font-size:22pt;text-align:center;margin-top:10px;">' + Team[A].ClassName + '</div></div>');
+                        var div2 = $(' <div class="Title hover">  <input type="text" style="display:none" value=' + Team[A].ClassID + ' /> <div style="font-size:22pt;text-align:center;margin-top:10px;">' + Team[A].ClassName + '</div></div>');
                         console.log(Type);
                         if (Type == "Stage") {
                             
@@ -153,7 +154,8 @@
         });
           //双击详细
         $("body").on("dblclick", ".Title", function () {
-            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).text();
+    
+            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
         });
       
     </script>

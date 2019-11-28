@@ -37,16 +37,15 @@
           
             , cols: [[
 
-                , { field: 'StuName',title: '姓名' }
-               
-                , {
+                 { field: 'StuName',title: '姓名' },
+                {
                     field: 'StuSex', title: '性别', templet: function (c) {
                         if (c.StuSex == 0) {
                             return "女";
                         } else { return "男"; }
                     }
-                }
-                , { field: 'StuPhone',title: '电话号码'}
+                },
+                 { field: 'StuPhone',title: '电话号码'},
             ]]
         });
         //双击一条数据进行操作

@@ -120,7 +120,6 @@
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
-    <Compile Include="DormitoryBusiness\ProStudentAndTeacherBussiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />
@@ -140,7 +139,6 @@
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
     <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
-    <Compile Include="EducationalBusiness\Reconcile_Com.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
@@ -150,11 +148,9 @@
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
-    <Compile Include="Employment\EmpQuarterClassBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="Employment\ProTeacher.cs" />
-    <Compile Include="Employment\QuarterBusiness.cs" />
     <Compile Include="Employment\SimulatInterviewBusiness.cs" />
     <Compile Include="Employment\StudentIntentionBusiness.cs" />
     <Compile Include="Employment\StudentIntentionViewBusiness.cs" />

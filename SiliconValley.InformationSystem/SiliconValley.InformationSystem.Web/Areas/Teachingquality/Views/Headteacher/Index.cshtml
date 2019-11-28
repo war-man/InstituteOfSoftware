@@ -14,9 +14,13 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="AddHeadClass"><i class="layui-icon">&#xe654;</i>添加带班</button>
-            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>查看班主任值日表</button>
-            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>交接班级</button>
+
         </div>
+      
+    </script>
+    @*右边按钮*@
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="select">带班记录</a>
     </script>
     <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
     <script>
@@ -34,8 +38,8 @@
                 , page: true
                 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    { type: 'radio',field:"ID" }
-                    ,{ field: 'informatiees_Id', title: '班主任编号', sort: true }
+                    { type: 'radio', field: "ID" }
+                    , { field: 'informatiees_Id', title: '班主任编号', sort: true }
                     , { field: 'informatiees_Name', title: '班主任姓名' }
                     , { field: 'informatiees_Sex', title: '班主任性别' }
                     , { field: 'Name', title: '岗位' }
@@ -45,6 +49,7 @@
                             return TimeChange(c.EntryTime);
                         }
                     }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true
                 , limit: 8
@@ -56,9 +61,9 @@
                     case 'AddHeadClass':
                         console.log(checkStatus.data);
                         if (checkStatus.data.length > 0) {
-                          
+
                             var id = checkStatus.data[0].ID;
-                   
+
                             layer.open({
                                 title: '班主任接班',
                                 type: 2,
@@ -71,12 +76,12 @@
                         } else {
                             layer.alert('请选择一条数据', { icon: 0 });
                         }
-                       
+
                         break;
                     case 'getUpdate':
 
 
-                        
+
                         break;
                 };
             });
@@ -86,17 +91,7 @@
                 var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
                 var tr = obj.tr; //获得当前行 tr 的DOM对象
 
-                if (layEvent === 'select') { //查看
-
-                    layer.open({
-                        title: name,
-                        type: 2,
-                        area: ['500px', '830px']
-                        , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + data.StudentNumber
-
-                        //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                    });
-                }
+                window.location = "/Teachingquality/Headteacher/Successionrecord?HeadID=" + data.ID;
 
             });
         })
