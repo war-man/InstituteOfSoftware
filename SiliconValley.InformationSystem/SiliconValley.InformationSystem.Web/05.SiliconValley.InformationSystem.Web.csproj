@@ -1159,6 +1159,7 @@
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Shiftwork.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

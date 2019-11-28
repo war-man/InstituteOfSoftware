@@ -1,0 +1,146 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Shiftwork</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        table{
+           margin:20px auto;
+        }
+        table td{
+            
+        }
+        .th1{
+            width:100px;
+            height:50px;
+        }
+        span {
+            padding-bottom: 5px;
+            border-bottom: 2px solid #f89;
+        }
+        .borid {
+            border-right:#ffffff solid 1px;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-top:30px;">
+        <h2 style="text-align:center;">硅谷高科软件学院学员转班申请表</h2>
+        <table border="1">
+
+            <tr>
+                <th class="th1">学员学号</th>
+                <td></td>
+                <th class="th1">学员姓名</th>
+                <td></td>
+                <th class="th1">性   别</th>
+                <td></td>
+
+            </tr>
+            <tr>
+                <th class="th1">身份证号</th>
+                <td></td>
+                <th class="th1">原所班级名称</th>
+                <td></td>
+                <th class="th1">原班级班主任姓名</th>
+                <td></td>
+
+            </tr>
+            <tr>
+                <th class="th1">希望转入班级</th>
+                <td colspan="1">
+                    @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "list" } })
+                </td>
+                <th class="th1">联系电话</th>
+                <td colspan="3"></td>
+
+            </tr>
+            <tr>
+                <th class="th1">宿舍地址</th>
+                <td></td>
+                <th class="th1">通讯地址</th>
+                <td colspan="3"></td>
+            </tr>
+            <tr>
+
+                <th class="th1">申请转班原因</th>
+                <td colspan="5" style="text-align:end;">
+                    学员签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    __________年_____月_____日 &nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <th class="th1">原转出班级班主任意见</th>
+                <td colspan="5" style="text-align:end;">
+                    原转出班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    __________年_____月_____日 &nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+
+                <th class="th1">转入班级班主任意见</th>
+                <td colspan="5" style="text-align:end;">
+                    转入班级班主签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    __________年_____月_____日 &nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+
+                <th class="th1">部门主管意见</th>
+                <td colspan="5" style="text-align:end;">
+                    部门主签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    __________年_____月_____日 &nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <th class="th1">教学校长意见</th>
+                <td colspan="5" style="text-align:end;">
+                    教学校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    __________年_____月_____日 &nbsp;&nbsp;&nbsp;&nbsp;
+                </td>
+            </tr>
+            <tr>
+                <th class="th1">备     注</th>
+                <td colspan="5"></td>
+            </tr>
+            <tr>
+              
+                <td  class="borid" style="text-align:end"> 注：</td>
+                <td colspan="5">1.适用范围：在学期间因特殊情况必须转班的学员;</td>
+            </tr>
+            <tr style="border-top:#ffffff solid 1px; ">
+                <td class="borid"></td>
+                <td  colspan="5"> 2.上报时间：在接到学员申请的24小时内上报给部门主管并在处理完后的24小时内在系统内更新</td>
+            </tr>
+            <tr style="border-top:#ffffff solid 1px; ">
+                <td class="borid"></td>
+                <td  colspan="5">  3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
+            </tr>
+            <tr style="border-top:#ffffff solid 1px; ">
+                <td class="borid"></td>
+                <td  colspan="5">   4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如报考，报档，升学等其它日常工作的责任班主任。</td>
+            </tr>
+          
+        </table>
+    </div>
+</body>
+</html>
