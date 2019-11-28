@@ -447,6 +447,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         #region 生成课表
         public ActionResult GetGenerateTimetable()
         {
+            Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             #region 生成非专业课程
             //获取班级
             if (IsOld)
@@ -470,10 +471,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 int baid2 = Reconcile_Com.GetBase_Id("上课时间类型", "下午");
                 List<ClassSchedule> monring= class_list1.Where(c => c.BaseDataEnum_Id == baid1).ToList();//获取上午班
                 List<ClassSchedule> afternoon = class_list1.Where(c=>c.BaseDataEnum_Id==baid2).ToList();//获取下午班
-                List<Classroom> getroom1 = Reconcile_Entity.GetClassrooms("上午", base_id, Convert.ToDateTime("2019-11-25")).Where(c => c.ClassroomName != "报告厅" && c.ClassroomName != "操场").ToList(); 
-                List<Classroom> getroom2 = Reconcile_Entity.GetClassrooms("下午", base_id, Convert.ToDateTime("2019-11-25")).Where(c => c.ClassroomName != "报告厅" && c.ClassroomName != "操场").ToList();
-                Reconcile_Entity.mmm("英语", Convert.ToDateTime("2019-11-25"), monring, getroom1);
-                Reconcile_Entity.mmm("英语", Convert.ToDateTime("2019-11-25"), afternoon, getroom2);
+                List<Classroom> getroom1 = Reconcile_Entity.GetClassrooms("上午", base_id, Convert.ToDateTime("2019-11-29")).Where(c => c.ClassroomName != "报告厅" && c.ClassroomName != "操场").ToList(); 
+                List<Classroom> getroom2 = Reconcile_Entity.GetClassrooms("下午", base_id, Convert.ToDateTime("2019-11-29")).Where(c => c.ClassroomName != "报告厅" && c.ClassroomName != "操场").ToList();
+                Reconcile_Entity.mmm("职素", Convert.ToDateTime("2019-11-29"), monring, getroom2, IsOld);
+                Reconcile_Entity.mmm("军事", Convert.ToDateTime("2019-11-29"), afternoon, getroom1, IsOld);
             }
              
             #endregion
@@ -481,11 +482,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             List<Classroom> c_list = Reconcile_Com.Classroom_Entity.GetList().Where(c => c.BaseData_Id == base_id).OrderBy(c => c.Id).ToList();
             ViewBag.classroom_all= c_list.Select(c=>new SelectListItem() { Text=c.ClassroomName,Value=c.Id.ToString()}).ToList();
             //获取所有教室的上午班级上课情况
-            ViewBag.mongingOne= Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-27"), "上午12节", c_list);
-            ViewBag.mongingTwo = Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-27"), "上午34节", c_list);
+            ViewBag.mongingOne= Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-29"), "上午12节", c_list);
+            ViewBag.mongingTwo = Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-29"), "上午34节", c_list);
             //下午
-            ViewBag.afternoonOne = Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-27"), "下午12节", c_list);
-            ViewBag.afternoonTwo = Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-27"), "下午34节", c_list);
+            ViewBag.afternoonOne = Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-29"), "下午12节", c_list);
+            ViewBag.afternoonTwo = Reconcile_Entity.GetPaiDatas(Convert.ToDateTime("2019-11-29"), "下午34节", c_list);
             //晚自习
             return View();
         }
