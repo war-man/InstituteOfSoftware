@@ -24,6 +24,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private ProScheduleForTrainees dbproScheduleForTrainees;
         private ProStudentInformationBusiness dbproStudentInformation;
         private SelfObtainRcoredBusiness dbselfObtainRcored;
+        private StudentIntentionBusiness dbstudentIntention;
+        private EmploymentStaffBusiness dbemploymentStaff;
         // GET: Obtainemployment/SelfObtainRcored
         public ActionResult SelfObtainRcoredIndex()
         {
@@ -58,10 +60,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dtreeview seconddtree = new dtreeview();
                 try
                 {
-                    if (i == 0)
-                    {
-                        seconddtree.spread = true;
-                    }
+                    //if (i == 0)
+                    //{
+                    //    seconddtree.spread = true;
+                    //}
                     seconddtree.nodeId = querydata[i].Year.ToString();
                     seconddtree.context = querydata[i].YearTitle;
                     seconddtree.last = false;
@@ -89,10 +91,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                             var empQuarterClasslist = dbempQuarterClass.GetEmpQuartersByYearID(Quarterslist[j].ID);
                             if (empQuarterClasslist.Count > 0)
                             {
-                                if (j == 0)
-                                {
-                                    Quarters.spread = true;
-                                }
+                                //if (j == 0)
+                                //{
+                                //    Quarters.spread = true;
+                                //}
                                 //第三层tree数据
                                 List<dtreeview> QuarterClasslist = new List<dtreeview>();
                                 foreach (var item1 in empQuarterClasslist)
@@ -177,13 +179,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         [HttpPost]
         public ActionResult add(SelfObtainRcored param0)
         {
-            dbselfObtainRcored = new SelfObtainRcoredBusiness();
-           
-            param0.Date = DateTime.Now;
-            param0.EmpStaffID =1007;
-            param0.IsDel = false;
-            param0.ImgUrl = ImageUpload(param0.StudentNO);
-            return View();
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+
+                dbselfObtainRcored = new SelfObtainRcoredBusiness();
+                var name = ImageUpload(param0.StudentNO);
+                if (string.IsNullOrEmpty(name))
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "莫乱搞！";
+                }
+                else
+                {
+                    dbstudentIntention = new StudentIntentionBusiness();
+                    var query = dbstudentIntention.GetIntention(param0.QuarterID, param0.StudentNO);
+                    if (query != null)
+                    {
+                        query.IsDel = false;
+                        dbstudentIntention.Update(query);
+                    }
+                    param0.ImgUrl = name;
+                    param0.Date = DateTime.Now;
+                    param0.EmpStaffID = 1007;
+                    param0.IsDel = false;
+
+                    dbselfObtainRcored.Insert(param0);
+                    ajaxResult.Success = true;
+                }
+
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+
+
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 
         public static void DeleteImgFile(string fileUrl)
@@ -195,8 +228,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
         }
 
-
-
         /// <summary>
         /// 图片上传
         /// </summary>
@@ -205,20 +236,90 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public string ImageUpload(string studentno)
         {
             dbproStudentInformation = new ProStudentInformationBusiness();
-            var student= dbproStudentInformation.GetEntity(studentno);
+            var student = dbproStudentInformation.GetEntity(studentno);
             dbproScheduleForTrainees = new ProScheduleForTrainees();
-           var query=  dbproScheduleForTrainees.GetTraineesByStudentNumber(studentno);
+            var query = dbproScheduleForTrainees.GetTraineesByStudentNumber(studentno);
             StringBuilder ProName = new StringBuilder();
             HttpPostedFileBase file = Request.Files["Image"];
-            string fname = file.FileName; //获取上传文件名称（包含扩展名）
-            string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
-            string name = Path.GetExtension(fname);//获取扩展名
-            string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/";//获取当前程序集下面的uploads文件夹中的文件夹目录
-            string completefilePath =query.ClassID+ student.Name + name;//将上传的文件名称转变为当前项目名称
-            ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
-            file.SaveAs(ProName.ToString());//上传文件   
+            if (file != null)
+            {
+                string fname = file.FileName; //获取上传文件名称（包含扩展名）
+                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                string name = Path.GetExtension(fname);//获取扩展名
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/";//获取当前程序集下面的uploads文件夹中的文件夹目录
+                string completefilePath = query.ClassID + student.Name + name;//将上传的文件名称转变为当前项目名称
+                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                file.SaveAs(ProName.ToString());//上传文件
+                return completefilePath;
+            }
 
-            return completefilePath;
+            else
+            {
+                return null;
+            }
         }
+
+        /// <summary>
+        /// 数据表格
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="leave">1为年度，2为计划，3为班级</param>
+        /// <param name="string1">学生编号</param>
+        /// <param name="string2">eg:年度是2019  计划7  班级1801TA</param>
+        /// <returns></returns>
+        public ActionResult table00(int page, int limit, string leave ,string string1,string string2)
+        {
+            dbselfObtainRcored = new SelfObtainRcoredBusiness();
+            dbquarter = new QuarterBusiness();
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            var data =new List<SelfObtainRcored>();
+            
+            switch (leave)
+            {
+                case "1":
+                    var  year = int.Parse(string2);
+                    data = dbselfObtainRcored.GetSelfObtainRcoredsByYear(year);
+                    break;
+                case "2":
+                    var quarterid= int.Parse(string2);
+                    data = dbselfObtainRcored.GetSelfObtainsByQuarterID(quarterid);
+                    break;
+                case "3":
+                    data = dbselfObtainRcored.GetSelfObtainRcoredsByClassno(string2);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(string1))
+            {
+                data = data.Where(a => a.StudentNO == string1).ToList();
+            }
+
+            var resultdata = data.Select(a => new
+            {
+                a.ID,
+                a.Date,
+                a.ImgUrl,
+                a.Remark,
+                studnetname=dbproStudentInformation.GetEntity(a.StudentNO).Name,
+                empname=dbemploymentStaff.GetEmpInfoByEmpID(a.EmpStaffID).EmpName,
+                title=dbquarter.GetEntity(a.QuarterID).QuaTitle,
+                classno= dbproScheduleForTrainees.GetTraineesByStudentNumber(a.StudentNO).ClassID
+            }).ToList();
+
+            var data1 = resultdata.OrderByDescending(a => a.Date).Skip((page - 1) * limit).Take(limit).ToList();
+
+            var returnObj = new
+            {
+                code = 0,
+                msg = "",
+                count = resultdata.Count(),
+                data = data1
+            };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

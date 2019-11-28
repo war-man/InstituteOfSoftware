@@ -54,5 +54,16 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return result;
         }
+
+        /// <summary>
+        /// 根据计划id 以及学生id 获取这个对象
+        /// </summary>
+        /// <param name="quarterid"></param>
+        /// <param name="studentno"></param>
+        /// <returns></returns>
+        public StudnetIntention GetIntention(int quarterid,string studentno)
+        {
+           return this.GetStudentIntentions().Where(a => a.QuarterID == quarterid && a.StudentNO == studentno).FirstOrDefault();
+        }
     }
 }

@@ -60,5 +60,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public List<Quarter> GetQuartersByYear(int year) {
           return  this.GetQuarters().Where(a => a.RegDate.Year == year).ToList();
         }
+
+       
     }
 }

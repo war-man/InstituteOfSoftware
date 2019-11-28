@@ -84,7 +84,7 @@
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
 
-            var empQuarterclassid, treedata;
+            var empQuarterclassid, treedata, myleave, string1, string2, table00;
             //初始化树
             var myDTree = dtree.render({
                 elem: "#demoTree",
@@ -98,7 +98,10 @@
                     //console.log($obj);
                     //console.log(first);
                     empQuarterclassid = res.data[0].children[0].children[0].nodeId;
+                    myleave = 1;
+                    string2 = res.data[0].nodeId;
                     treedata = res.data;
+                    loadtable();
                 },
                 formatter: {
                     title: function (data) {  // 示例给有子集的节点返回节点统计
@@ -114,48 +117,62 @@
                 icon: ["3", "11"], // 使用
                 response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
             });
-
-            var table00 = table.render({
-                elem: '#table00'
-                , url: '/Dormitory/StaffAdjustment/table00'
-                , skin: 'line' //行边框风格
-                , even: true //开启隔行背景
-                , limit: 20
-                , limits: [10, 20, 30, 45, 60, 75]
-                , page: true
-                , toolbar: '#toolbarDemo'
-                , cols: [[ //标题栏
-                    { type: 'radio' }
-                    , { field: 'EmployeeId', title: '员工编号'/*, width: 180*/, hide: true }
-                    , { field: 'EmpName', title: '员工姓名' }
-                    , {
-                        field: 'Sex', title: '性别', width: 60, templet: function (d) {
-
-                            if (d.Sex == "男") {
-                                return "<span style=color:blue;>男</span>"
-                            } else {
-                                return "<span style=color:red;>女</span>"
+            //时间转化
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+            function loadtable() {
+               table00= table.render({
+                    elem: '#table00'
+                    , url: '/Obtainemployment/SelfObtainRcored/table00?leave='+myleave+'&string2='+string2
+                    , skin: 'line' //行边框风格
+                    , even: true //开启隔行背景
+                    , limit: 20
+                    , limits: [10, 20, 30, 45, 60, 75]
+                    , page: true
+                    , toolbar: '#toolbarDemo'
+                    , cols: [[ //标题栏
+                        { type: 'radio' }
+                        , { field: 'ID', title: 'id'/*, width: 180*/, hide: true }
+                        , { field: 'studnetname', title: '学生姓名' ,width: 117}
+                        , { field: 'empname', title: '审批人',width: 117 }
+                        , { field: 'classno', title: '班级', width: 117 }
+                        , { field: 'title', title: '毕业计划标题', width: 217 }
+                        , {
+                            field: 'ImgUrl', title: '图片', width: 145, templet: function (d) {
+                                return "<button class='layui-btn layui-btn-xs layui-btn-radius layui-btn-danger' myvalue='" + d.ImgUrl + "'>查看图片</button>"
                             }
                         }
-                    }
-                    , { field: 'Phone', title: '联系电话', width: 117 }
-                    , { field: 'DeptName', title: '部门'/*, width: 145,*/ }
-                    , { field: 'DormName', title: '寝室'/*, width: 145,*/ }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo'/*, width: 80*/ }
-                ]]
-            });
+                        , { field: 'Remark', title: '备注', width: 245 }
+                        , {
+                            field: 'Date', title: '时间', width: 145, templet: function (d) {
+                                return TimeChange(d.Date);
+                            }
+                        }
+                        , { fixed: 'right', title: '操作', toolbar: '#barDemo'/*, width: 80*/ }
+                    ]]
+                });
+            }
 
-
-            $(function () {
-              
-            });
-
-
-          
             //绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
                 //console.log(obj);
                 var dtreeobj = obj.param;
+                myleave = dtreeobj.level;
+                string2 = dtreeobj.nodeId;
                 switch (dtreeobj.level) {
                     //最外层
                     case '1':
@@ -170,36 +187,53 @@
                     //中间层
                     case '2':
                         empQuarterclassid = obj.childParams[0].nodeId;
+
                         break;
                     //最里层
                     case '3':
+                        
                         empQuarterclassid = dtreeobj.nodeId;
+                        string2 = dtreeobj.context;
                         break;
                 }
+                loadtable00();
                 //console.log(empQuarterclassid);
             });
 
             table.on('toolbar(table00)', function (obj) {
-              
+
                 switch (obj.event) {
                     case 'add':
                         layer.open({
                             type: 2,
-                            content: "/Obtainemployment/SelfObtainRcored/add?param0="+empQuarterclassid,
+                            content: "/Obtainemployment/SelfObtainRcored/add?param0=" + empQuarterclassid,
                             title: "添加谈话",
                             area: ['730px', '830px'],
                             //area: ['850px', '760px'],
                             success: function (layero, index) {
                             },
                             end: function () {
-                                //reloadtable();
+                                loadtable00();
                             }
                         });
-                        break;  
+                        break;
                 };
             });
 
-
+            //重新加载表格数据
+            function loadtable00() {
+                table00.reload({
+                    url: '/Obtainemployment/SelfObtainRcored/table00'
+                    , where: {
+                        leave: myleave,
+                        string1: string1,
+                        string2: string2
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
 
         });
 

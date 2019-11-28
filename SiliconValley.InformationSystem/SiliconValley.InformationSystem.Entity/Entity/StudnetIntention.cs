@@ -30,6 +30,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
     
-       
+       public int QuarterID { get; set; }
     }
 }

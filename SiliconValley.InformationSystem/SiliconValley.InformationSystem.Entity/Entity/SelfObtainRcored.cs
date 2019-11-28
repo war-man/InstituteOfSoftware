@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 审批人
         /// </summary>
-        public Nullable<int> EmpStaffID { get; set; }
+        public int EmpStaffID { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
