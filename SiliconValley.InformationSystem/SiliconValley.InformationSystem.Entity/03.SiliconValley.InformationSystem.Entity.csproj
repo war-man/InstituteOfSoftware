@@ -408,6 +408,7 @@
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
+    <Compile Include="ViewEntity\TransactionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\TungView.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />

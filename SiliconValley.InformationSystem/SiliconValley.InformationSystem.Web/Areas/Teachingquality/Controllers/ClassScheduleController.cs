@@ -434,7 +434,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// </summary>
         /// <param name="Datailedcost">内容</param>
         /// <returns></returns>
-       // [HttpPost]
+        // [HttpPost]
        //[ValidateInput(false)]
        // public ActionResult SMScharging(string Datailedcost)
        // {
@@ -477,6 +477,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult ClassEnd(int ClassID)
         {
             return Json(dbtext.ClassEnd(ClassID), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Shiftwork()
+        {
+            string StudentID = Request.QueryString["StudentID"];
+
+            return View();
         }
         public ActionResult PhoneSMS()
         {
