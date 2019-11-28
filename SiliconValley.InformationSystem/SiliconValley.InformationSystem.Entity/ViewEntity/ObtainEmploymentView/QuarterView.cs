@@ -16,7 +16,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         public string QuaTitle { get; set; }
         public string Remark { get; set; }
         public DateTime RegDate { get; set; }
-
+        public int peoplenumber { get; set; }
         public object EmpQuarterClassList { get; set; }
     }
 }
