@@ -3,7 +3,29 @@
     ViewBag.Title = "AttendanceStatisticsIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm  layui-btn-radius layui-btn-normal " lay-event="timeanddaysChange">年月份及应到勤天数改变</button>
+    </div>
+</script>
+@*操作栏*@
+<script type="text/html" id="barDemo">
+    <a class="layui-btn  layui-btn-xs" lay-event="edit">编辑</a>
+</script>
+
+
+@*员工在职状态*@
+<script type="text/html" id="empstate">
+    {{# if(d.empIsDel==false){ }}
+    {{ d.empIsDel="在职" }}
+    {{# }else{ }}
+    {{ d.empIsDel="离职" }}
+    {{# } }}
+</script>
+
 <div>
+    <h3 style="text-align:center;">湖南硅谷云教育科技有限公司考勤统计表</h3>
     <table id="CheckingIntab" lay-filter="CheckingIntab"></table>
 </div>
 
@@ -21,33 +43,78 @@
             table.render({
                 elem: '#CheckingIntab'
                 , url: '/Personnelmatters/AttendanceStatistics/GetCheckingInData'
-                , id: "myPerAss"
-                //, toolbar: '#toolbarDemo'
+                , id: "myAttendanceinfo"
+                , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
-                , cols: [[
-                    { field: 'empName', title: '姓名', width: 110, sort: true }
-                    , { field: 'empDept', title: '所属部门', width: 110, sort: true }
+                , cols: [[{ title: "@ViewBag.yearandmonth" + "   应到勤天数：" + "@ViewBag.DeserveToRegularDays" + "天", colspan: 16 }],
+                    [ { field: 'empName', title: '姓名', width: 110, sort: true }
+                    , { field: 'empDept', title: '所属部门', width: 120, sort: true }
                     , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
-                    , { field: 'RoutineWork', title: '到勤天数', sort: true, width: 90 }
-                    , { field: 'RoutineWorkPropotion', title: '请假天数', sort: true, width: 120 }
-                    , { field: 'RoutineWorkFillRate', title: '上班缺卡次数', sort: true, width: 110 }
-                    , { field: 'OtherWork', title: '上班缺卡记录', sort: true, width: 110 }
-                    , { field: 'OtherWorkPropotion', title: '下班缺卡次数', sort: true, width: 110 }
-                    , { field: 'OtherWorkFillRate', title: '下班缺卡记录', sort: true, width: 110 }
-                    , { field: 'SelfReportedScore', title: '迟到次数', sort: true, width: 110 }
-                    , { field: 'SuperiorGrade', title: '迟到记录', sort: true, width: 110 }
-                    , { field: 'FinalGrade', title: '早退次数', sort: true, width: 110 }
-                    , { field: 'Remark', title: '早退记录', sort: true, width: 110 }
-                    , { field: 'IsDel', title: '备注', sort: true, width: 110 }
-                    , { title: '操作', toolbar: '#barDemo', width: 110, fixed: 'right' }
+                    , { field: 'ToRegularDays', title: '到勤天数', sort: true, width: 110 }
+                        , { field: 'LeaveDays', title: '请假天数', sort: true, width: 110 }
+                        , { field: 'WorkAbsentNum', title: '上班缺卡次数', sort: true, width: 140 }
+                        , { field: 'WorkAbsentRecord', title: '上班缺卡记录', sort: true, width: 140 }
+                        , { field: 'OffDutyAbsentNum', title: '下班缺卡次数', sort: true, width: 140 }
+                        , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录', sort: true, width: 140 }
+                        , { field: 'TardyNum', title: '迟到次数', sort: true, width: 110 }
+                        , { field: 'TardyRecord', title: '迟到记录', sort: true, width: 110 }
+                        , { field: 'LeaveEarlyNum', title: '早退次数', sort: true, width: 110 }
+                        , { field: 'LeaveEarlyRecord', title: '早退记录', sort: true, width: 110 }
+                        , { field: 'Remark', title: '备注', sort: true, width: 110 }
+                        , { field: 'empIsDel', title: '是否离职', sort: true, width: 110, templet: '#empstate' }
+                    , { /*title: '操作',*/ toolbar: '#barDemo', width: 100, fixed: 'right' }
                 ]]
                 , page: true
 
             });
 
+            //头工具栏事件
+            table.on('toolbar(CheckingIntab)', function (obj) {
+                //var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'timeanddaysChange':
+                        TimeandDaysChange();
+                        break;
+
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(CheckingIntab)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/AttendanceStatistics/EditAttendanceInfo/?id=' + data.AttendanceId
+                        , area: ["800px", "700px"]
+                        , title: '编辑员工考勤信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                } 
+             
+            });
+
 
         });
+        //年月份/应到勤天数改变
+        function TimeandDaysChange() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+
+                layer.open({
+                    type: 2
+                    , area: ["400px", "400px"]
+                    , title: ""
+                    , content: '/Personnelmatters/AttendanceStatistics/ChangeTimeandDays'
+                    , anim: 2
+                });
+
+            })
+
+        }
 
 
         //格式化时间

@@ -1,0 +1,305 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@model SiliconValley.InformationSystem.Entity.MyEntity.AttendanceInfo
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditAttendanceInfo</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 120px;
+        }
+    </style>
+
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div class="layui-container" style="margin-top:20px;">
+                @Html.HiddenFor(a => a.AttendanceId, new Dictionary<string, object>() { { "class", "layui-input" } })
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="empName" name="empName" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="esex" name="esex" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">所属岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">到勤天数:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.ToRegularDays, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">请假天数:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.LeaveDays, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">上班缺卡次数:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.WorkAbsentNum, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">上班缺卡记录:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.WorkAbsentRecord, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">下班缺卡次数:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.OffDutyAbsentNum, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">下班缺卡记录:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.OffDutyAbsentRecord, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到次数:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.TardyNum, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到记录:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.TardyRecord, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">早退次数:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.LeaveEarlyNum, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">早退记录:</label>
+                        <div class="layui-input-block" style="width:190px;">
+                            @Html.TextBoxFor(a => a.LeaveEarlyRecord, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(function () {
+            loademp();// 初始化编辑数据加载
+        });
+        function loademp() {
+            var id = $("#AttendanceId").val();
+          
+            $.get("/Personnelmatters/AttendanceStatistics/GetAttById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    $("#empName").val(data.empName);
+                    $("#esex").val(data.esex);
+                    $("#dname").val(data.dname);
+                    $("#pname").val(data.pname);
+                    //data.EntryTime = GetYMD(data.EntryTime);
+                    //data.TransactionTime = GetYMD(data.TransactionTime);
+                    form.val("Positive", data);
+                   
+                });
+            })
+        }
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit;
+
+
+            //自定义验证
+            form.verify({
+                myIdCardNum: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var ver = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                        if (!ver.test(value)) {
+                            return '身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X';
+                        }
+                    }
+                },//身份证号
+                myUrgentPhone: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^1[3456789]\d{9}$/;
+                        if (!v.test(value)) {
+                            return '号码格式输入错误';
+                        }
+                    }
+                },//联系电话
+                mymonth: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^0[1-9]$|^[1-9]$|^1[0-2]$/;
+                        if (!v.test(value)) {
+                            return '月份只能是1至12之间';
+                        }
+                    }
+                },//验证月份
+                myday: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^0[1-9]$|^[1-9]$|^1[0-9]$|^2[0-9]$|^3[0-1]$/;
+                        if (!v.test(value)) {
+                            return '月份只能是1至31之间';
+                        }
+                    }
+                }//验证哪天
+            });
+
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
+            //提交
+            form.on('submit(demo1)', function (data) {
+                data.field.AttendanceId = $("#AttendanceId").val();
+                console.log("考勤编号1：" + $("#AttendanceId").val());
+                console.log("考勤编号2：" + data.field.AttendanceId);
+                console.log(data);
+                $.post("/Personnelmatters/AttendanceStatistics/EditAttendanceInfo", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layui.table.reload('myAttendanceinfo');
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
+                return false;
+            });
+ 
+        });
+
+        //关闭添加页面
+        $("#btnclose1").click(function () {
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layui.table.reload('myAttendanceinfo');
+            parent.layer.close(index);
+        });
+        
+    </script>
+
+
+</body>
+</html>

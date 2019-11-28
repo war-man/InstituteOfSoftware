@@ -16,7 +16,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
     [Table(name: "EmplSalaryEmbody")]
     public partial class EmplSalaryEmbody
-    {
+    { 
         [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }

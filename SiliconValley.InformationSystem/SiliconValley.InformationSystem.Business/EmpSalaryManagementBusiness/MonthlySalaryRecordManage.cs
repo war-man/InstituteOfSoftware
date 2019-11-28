@@ -72,10 +72,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public AttendanceInfo GetAttendanceInfoByEmpid(string empid)
+        public AttendanceInfo GetAttendanceInfoByEmpid(string empid,DateTime time)
         {
             AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            var att = attmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            var att = attmanage.GetList().Where(s => s.EmployeeId == empid && s.YearAndMonth==time).FirstOrDefault();
             return att;
         }
 
@@ -85,10 +85,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public MeritsCheck GetMCByEmpid(string empid)
+        public MeritsCheck GetMCByEmpid(string empid,DateTime time)
         {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
-            var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid && s.YearAndMonth==time).FirstOrDefault();
             return mcobj;
         }
     }
