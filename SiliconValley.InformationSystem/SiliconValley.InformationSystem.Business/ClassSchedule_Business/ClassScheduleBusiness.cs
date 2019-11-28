@@ -72,7 +72,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             {
                 List<ClassStudentView> Nameofmember = new List<ClassStudentView>();
                 ClassStudentView classStudentView = new ClassStudentView();
-                if (Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false).ToList().Count > 0)
+                if (Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false&&a.ClassNumber==classid).ToList().Count > 0)
                 {
                     var mylist = Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false).ToList();
                     foreach (var item1 in mylist)
@@ -114,7 +114,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 classStudentView.StuNameID = student.GetEntity(item.StudentID).StudentNumber;
                 if (item.CurrentClass == false)
                 {
-                    var z = scheduleForTraineesBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.CurrentClass == true).FirstOrDefault();
+                    var z = scheduleForTraineesBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.ID_ClassName == classid).FirstOrDefault();
                     classStudentView.ClassNameView = z.ClassID;
                 }
                 listview.Add(classStudentView);
@@ -129,9 +129,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public ClassSchedule FintClassSchedule(string ClassName)
+        public ClassSchedule FintClassSchedule(int ClassID)
         {
-         return this.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false&&a.ClassNumber==ClassName&&a.ClassstatusID==null).FirstOrDefault();
+            return this.GetEntity(ClassID) ;
         }
         /// <summary>
         /// 根据班级查询返回出班级人数,微信号,QQ号,班级名称
@@ -401,7 +401,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="Remarks">备注</param>
         /// <param name="StudentID">学号</param>
         /// <returns></returns>
-        public AjaxResult Dismantleclasses(string Addtime, string FormerClass, string List, string Reasong, string Remarks, string StudentID)
+        public AjaxResult Dismantleclasses(string Addtime, int FormerClass, int List, string Reasong, string Remarks, string StudentID)
         {
             var x = Dismantle.GetList().Where(a => a.IsDelete == false && a.FormerClass == FormerClass).Count();
             AjaxResult retus = null;
@@ -412,8 +412,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 if (x < 1)
                 {
 
-                   
-                    var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+                    Hadmst.EndDai(FormerClass);
+                     var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
                   var fint=  this.FintClassSchedule(FormerClass);
                     fint.ClassstatusID = staid;
                     this.Update(fint);
@@ -443,14 +443,14 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     classDynamics.Reason = Reasong;
                     classDynamics.IsDelete = false;
                     MyDynamise.Add(classDynamics);
-                    var UpdateSche = ss.GetList().Where(a => a.StudentID == item && a.ClassID == FormerClass).FirstOrDefault();
+                    var UpdateSche = ss.GetList().Where(a => a.StudentID == item && a.ID_ClassName == FormerClass).FirstOrDefault();
                     if (UpdateSche != null)
                     {
                         UpdateSche.CurrentClass = false;
                         UpdateScheduleFor.Add(UpdateSche);
                     }
                     ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
-                    scheduleForTrainees.ClassID = List;
+                    scheduleForTrainees.ID_ClassName = List;
                     scheduleForTrainees.StudentID = item;
                     scheduleForTrainees.CurrentClass = true;
                     scheduleForTrainees.AddDate = Convert.ToDateTime(Addtime);
@@ -624,24 +624,25 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         }
        
         /// <summary>
-        /// S2,S3,S4升学
+        /// S2,S3升学
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public AjaxResult EntitAddClassSchedule(string ClassName)
+        public AjaxResult EntitAddClassSchedule(int ClassID)
         {
             AjaxResult result = null;
             try
             {
             List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
             List<ScheduleForTrainees> AddScheduleFor = new List<ScheduleForTrainees>();
-         
-           var ClassSchedules= this.GetList().Where(a => a.ClassNumber == ClassName && a.ClassstatusID == null).FirstOrDefault();
+                Hadmst.EndDai(ClassID);
+                var ClassSchedules = this.GetEntity(ClassID);
             var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
             ClassSchedules.ClassstatusID = staid;
             //先修改原来班级
                this.Update(ClassSchedules);
             var x=  GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == ClassSchedules.grade_Id).FirstOrDefault();
+
             ClassSchedules.grade_Id = x.NextStageID;
             ClassSchedules.ClassstatusID = null;
          
@@ -650,21 +651,21 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             //再添加一个新班级
             this.Insert(ClassSchedules);
        
-            var ClassStudent=  ss.GetList().Where(a => a.ClassID == ClassName && a.CurrentClass == true).ToList();
+            var ClassStudent=  ss.GetList().Where(a => a.ID_ClassName == ClassID).ToList();
             
             foreach (var item in ClassStudent)
             {
-                var UpdateSche = ss.GetList().Where(a => a.StudentID == item.StudentID && a.ClassID == ClassName).FirstOrDefault();
+                var UpdateSche = ss.GetList().Where(a => a.StudentID == item.StudentID && a.ID_ClassName == ClassID).FirstOrDefault();
                 if (UpdateSche != null)
                 {
                     UpdateSche.CurrentClass = false;
                     UpdateScheduleFor.Add(UpdateSche);
                 }
                 ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
-                scheduleForTrainees.ClassID =item.ClassID;
+                scheduleForTrainees.ClassID = ClassSchedules.ClassNumber;
                 scheduleForTrainees.StudentID = item.StudentID;
                 scheduleForTrainees.CurrentClass = true;
-                scheduleForTrainees.ID_ClassName = item.ID;
+                scheduleForTrainees.ID_ClassName = ClassSchedules.id;
                 scheduleForTrainees.AddDate = DateTime.Now;
                 AddScheduleFor.Add(scheduleForTrainees);
             }
@@ -687,7 +688,63 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return result;
         }
+        /// <summary>
+        /// S4毕业操作
+        /// </summary>
+        /// <param name="ClassID">班级编号</param>
+        /// <returns></returns>
+        public AjaxResult ClassEnd(int ClassID)
+        {
+            AjaxResult result = null;
+            try
+            {
+                result = new SuccessResult();
+                result.Success = true;
+                List<ScheduleForTrainees> UpdateScheduleFor = new List<ScheduleForTrainees>();
 
-        
+                Hadmst.EndDai(ClassID);
+                var ClassSchedules = this.GetEntity(ClassID);
+                var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "毕业").FirstOrDefault().id;
+                ClassSchedules.ClassstatusID = staid;
+                //先修改原来班级
+                this.Update(ClassSchedules);
+             
+             
+                
+                var ClassStudent = ss.GetList().Where(a => a.ID_ClassName == ClassID).ToList();
+
+                foreach (var item in ClassStudent)
+                {
+                    var UpdateSche = ss.GetList().Where(a => a.StudentID == item.StudentID && a.ID_ClassName == ClassID).FirstOrDefault();
+                    if (UpdateSche != null)
+                    {
+                        UpdateSche.CurrentClass = false;
+                        UpdateSche.IsGraduating = true;
+                        UpdateScheduleFor.Add(UpdateSche);
+                    }
+                
+                   
+                }
+                ss.Update(UpdateScheduleFor);
+           
+                BusHelper.WriteSysLog("编辑班级学员", EnumType.LogType.编辑数据);
+                result.Msg = "恭喜本班级顺利毕业！";
+
+            }
+            catch (Exception ex)
+            {
+
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
+        }
+
+
+
     }
 }

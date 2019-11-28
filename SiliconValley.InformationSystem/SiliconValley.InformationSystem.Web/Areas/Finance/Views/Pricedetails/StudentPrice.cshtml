@@ -151,6 +151,7 @@
         //监听阶段下拉框
         form.on('select(Stage)', function (data) {
             list.length = 0;
+          
             if (data.value != "") {
 
                 var dbase = {
@@ -159,6 +160,7 @@
                 };
                 $.post("/Finance/Pricedetails/Studentfeepayment", dbase, function (da) {
                     var price = 0;
+                  
                     $.each(da, function (i, item) {
                         if (item.Rategory == "学杂费" && item.countfee<1) {
                             price = price + item.Amountofmoney;

@@ -366,6 +366,7 @@
     <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchRecordRegisterView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\StudentIntentionView.cs" />
     <Compile Include="ViewEntity\PiechartView.cs" />
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />
@@ -397,6 +398,7 @@
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
+    <Compile Include="ViewEntity\SuccessionrecordView.cs" />
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />

@@ -30,6 +30,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 班级id
         /// </summary>
         public int ID_ClassName { get; set; }
+        /// <summary>
+        /// 是否毕业/true则为毕业
+        /// </summary>
+        public bool IsGraduating { get; set; }
 
     }
 }

@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public Nullable<System.DateTime> Addtime { get; set; }
-        public string FormerClass { get; set; }
+        public int FormerClass { get; set; }
         public string Reasong { get; set; }
         public string Remarks { get; set; }
         public Nullable<bool> IsDelete { get; set; }

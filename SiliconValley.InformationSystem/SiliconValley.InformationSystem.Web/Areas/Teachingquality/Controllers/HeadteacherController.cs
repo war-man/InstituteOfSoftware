@@ -3,7 +3,9 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -79,18 +81,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         public string HeadmasreClass()
         {
-           
+            //拿到该班主任负责班级的阶段
+            List<Grand> grands = new List<Grand>();
+            //阶段
+            GrandBusiness Grandcontext = new GrandBusiness();
+            var x1s = dbtext.GetEntity(HeadteID);
+            //班主任部门名称
+            string DeptName = employeesInfoManage.GetDeptByEmpid(x1s.informatiees_Id).DeptName;
+            if (DeptName.ToLower().Contains("s1"))
+            {
+                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S1" || a.GrandName == "S2"||a.GrandName=="Y1").ToList();
+            }
+            else
+            {
+                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3" || a.GrandName == "S4").ToList();
+            }
             //带班人
             object obj = new object();
-            List<ClassSchedule> ListClass = ClasHead.GetList().Where(a=>a.ClassstatusID==null).ToList();
+            //该班主任所有可负责的班级
+            List<ClassSchedule> classesList = new List<ClassSchedule>();
+            foreach (var item in grands)
+            {
+                classesList.AddRange(ClasHead.GetList().Where(a => a.ClassstatusID == null && a.grade_Id == item.Id).ToList());
+            }
+            List<ClassSchedule> ListClass = classesList;
             List<ClassSchedule> MyClass = new List<ClassSchedule>();
-           var x=   HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HeadteID).ToList();
+           var x=   HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HeadteID&&a.EndingTime==null).ToList();
             //3
-            var x1 = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID != HeadteID).ToList();
+            var x1 = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID != HeadteID&&a.EndingTime==null).ToList();
             //0
             foreach (var item in x)
             {
-                var classstudent = ClasHead.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.id == item.ClassID&& a.ClassstatusID == null).FirstOrDefault();
+                var classstudent = classesList.Where(a => a.IsDelete == false && a.ClassStatus == false && a.id == item.ClassID).FirstOrDefault();
                 if (classstudent!=null)
                 {
                     MyClass.Add(classstudent);
@@ -104,8 +126,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             var data=new
             {
-                d1=ListClass.Select(c => new { value = c.ClassNumber, title = c.ClassNumber }).ToList(),
-                d2= MyClass.Select(c => new { c.ClassNumber}).ToList()
+                d1=ListClass.Select(c => new { value = c.id, title = c.ClassNumber }).ToList(),
+                d2= MyClass.Select(c => new { title= c.ClassNumber, value =c.id}).ToList()
             };
             return Newtonsoft.Json.JsonConvert.SerializeObject(data);
             
@@ -164,6 +186,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            ViewBag.ListTeam= Newtonsoft.Json.JsonConvert.SerializeObject(dbtext.ListTeamleaderdistributionView());
             ViewBag.ListTeamleaderdistributionView = dbtext.ListTeamleaderdistributionView();
             return View();
+        }
+        //班主任接班记录
+        public ActionResult Successionrecord()
+        {
+            int HeadID = int.Parse(Request.QueryString["HeadID"]);
+            ViewBag.HeadID = HeadID;
+            var employees = employeesInfoManage.GetInfoByEmpID(dbtext.GetEntity(HeadID).informatiees_Id);
+            var department = employeesInfoManage.GetDeptByEmpid(dbtext.GetEntity(HeadID).informatiees_Id);
+            var Headyees = new SuccessionrecordView
+            {
+               Education=  employees.Education,//学历
+               EmpName= employees.EmpName,//姓名
+               Sex= employees.Sex,//性别
+               Phone= employees.Phone,//电话
+               DeptName= department.DeptName,//部门
+            };
+            return View(Headyees);
+        }
+        /// <summary>
+        /// 获取班主任带班的数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult SuccessionrecordDate(int page, int limit)
+        {
+            int HeadID = int.Parse(Request.QueryString["HeadID"]);
+            ViewBag.Employees= employeesInfoManage.GetInfoByEmpID(dbtext.GetEntity(HeadID).informatiees_Id);
+            return Json(dbtext.SuccessionrecordDate(page, limit, HeadID), JsonRequestBehavior.AllowGet);
         }
         public string Text()
         {
