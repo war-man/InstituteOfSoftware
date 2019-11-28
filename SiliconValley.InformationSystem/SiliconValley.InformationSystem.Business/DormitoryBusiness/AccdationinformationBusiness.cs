@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     /// <summary>
     ///学生房间入住信息业务类
     /// </summary>
-    public class AccdationinformationBusiness:BaseBusiness<Accdationinformation>
+    public class AccdationinformationBusiness : BaseBusiness<Accdationinformation>
     {
         private DormInformationBusiness dbdorm;
         private StaffAccdationBusiness dbstaffacc;
@@ -20,8 +20,9 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// 返回正在居住的入住信息
         /// </summary>
         /// <returns></returns>
-        public List<Accdationinformation> GetAccdationinformations() {
-           return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+        public List<Accdationinformation> GetAccdationinformations()
+        {
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
         /// <summary>
@@ -29,15 +30,17 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="DormId">房间号码</param>
         /// <returns></returns>
-        public List<Accdationinformation> GetAccdationinformationByDormId(int DormId) {
-           return this.GetAccdationinformations().Where(a => a.DormId == DormId).ToList();
+        public List<Accdationinformation> GetAccdationinformationByDormId(int DormId)
+        {
+            return this.GetAccdationinformations().Where(a => a.DormId == DormId).ToList();
         }
 
         /// <summary>
         /// 添加入住信息
         /// </summary>
         /// <returns></returns>
-        public bool AddAcc(Accdationinformation accdationinformation) {
+        public bool AddAcc(Accdationinformation accdationinformation)
+        {
             bool result = false;
             try
             {
@@ -57,8 +60,20 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="StudentNumber"></param>
         /// <returns></returns>
-        public Accdationinformation GetAccdationByStudentNumber(string StudentNumber) {
-           return this.GetAccdationinformations().Where(a => a.Studentnumber == StudentNumber).FirstOrDefault();
+        public Accdationinformation GetAccdationByStudentNumber(string StudentNumber)
+        {
+            return this.GetAccdationinformations().Where(a => a.Studentnumber == StudentNumber).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 根据学生编号返回房间对象
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public DormInformation GetDormBystudentno(string StudentNumber)
+        {
+            var query = this.GetAccdationByStudentNumber(StudentNumber);
+            return dbdorm.GetEntity(query.DormId);
         }
 
         /// <summary>
@@ -66,9 +81,10 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="tungfloorid"></param>
         /// <returns></returns>
-        public List<Accdationinformation> GetAccdationinformationsByTungFloorID(int tungfloorid) {
+        public List<Accdationinformation> GetAccdationinformationsByTungFloorID(int tungfloorid)
+        {
             dbdorm = new DormInformationBusiness();
-           var list0=  dbdorm.GetDormsByTungFloorID(tungfloorid);
+            var list0 = dbdorm.GetDormsByTungFloorID(tungfloorid);
             List<Accdationinformation> result0 = new List<Accdationinformation>();
             foreach (var item in list0)
             {
@@ -82,8 +98,9 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="param0"></param>
         /// <returns></returns>
-        public bool HasSomeone(int param0) {
-           
+        public bool HasSomeone(int param0)
+        {
+
             dbdorm = new DormInformationBusiness();
             dbroomxml = new RoomdeWithPageXmlHelp();
             var fpxnb = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.StaffRoom);

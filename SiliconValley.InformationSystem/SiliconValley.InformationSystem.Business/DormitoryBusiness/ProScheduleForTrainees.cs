@@ -13,14 +13,25 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     public class ProScheduleForTrainees : BaseBusiness<ScheduleForTrainees>
     {
 
+        private ProClassSchedule dbproClassSchedule;
         /// <summary>
-        ///获取班级学生记录
+        ///获取班级学生记录没毕业的
         /// </summary>
         /// <returns></returns>
         public List<ScheduleForTrainees> GetScheduleForTrainees()
         {
             return this.GetIQueryable().Where(a => a.CurrentClass == true).ToList();
             
+        }
+
+        /// <summary>
+        ///获取班级学生记录毕业的
+        /// </summary>
+        /// <returns></returns>
+        public List<ScheduleForTrainees> GetScheduleForTraineesed()
+        {
+            return this.GetIQueryable().Where(a => a.IsGraduating == true).ToList();
+
         }
 
         /// <summary>
@@ -38,7 +49,16 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <param name="ClassNO"></param>
         /// <returns></returns>
         public List<ScheduleForTrainees> GetTraineesByClassNO(string ClassNO) {
-            return this.GetScheduleForTrainees().Where(a => a.ClassID == ClassNO).ToList();
+            dbproClassSchedule = new ProClassSchedule();
+            if (dbproClassSchedule.isgraduationclass(ClassNO))
+            {
+                return this.GetScheduleForTraineesed().Where(a => a.ClassID == ClassNO).ToList();
+            }
+            else
+            {
+                return this.GetScheduleForTrainees().Where(a => a.ClassID == ClassNO).ToList();
+            }
+            
         }
 
     }

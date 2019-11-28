@@ -93,7 +93,7 @@
                         </div>
 
 
-</form>
+                    </form>
                 </div>
             </div>
         </div>
@@ -145,20 +145,27 @@
             function loadstudent(data) {
                 //console.log(data);
                 console.log(data.length);
-                for (var i = 0; i < data.length; i++) {
-                    var obj = _.template($("#muban0").html());
-                    var html = '';
-                    if (i == 0) {
-                        html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "checked" });
-                        StudentNO = data[i].StudentNumber;
-                        $('#StudentName').val(data[i].Name);
-                    } else {
-                        html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "" });
-                    }
+                if (data.length>0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var obj = _.template($("#muban0").html());
+                        var html = '';
+                        if (i == 0) {
+                            html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "checked" });
+                            StudentNO = data[i].StudentNumber;
+                            $('#StudentName').val(data[i].Name);
+                        } else {
+                            html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "" });
+                        }
 
-                    $("#studentlistdiv").append($(html));
-                    form.render();
+                        $("#studentlistdiv").append($(html));
+                        form.render();
+                    }
+                } else {
+                    layer.msg('该班级无可操作的学生!', { icon: 6, time: 1000 }, function () {
+                        close();
+                    });  
                 }
+                
             }
             form.on('radio(vvv)', function (data) {
                 //console.log(data.elem); //得到radio原始DOM对象
@@ -226,8 +233,6 @@
 
                     });
                 }
-
-
 
                 return false;
             });

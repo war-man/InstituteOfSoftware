@@ -154,18 +154,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbempQuarterClass = new EmpQuarterClassBusiness();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             dbproStudentInformation = new ProStudentInformationBusiness();
+            dbselfObtainRcored = new SelfObtainRcoredBusiness();
             var quyeryempquarterclsss = dbempQuarterClass.GetEntity(param0);
+
             List<ScheduleForTrainees> queryscheduleForTrainees = dbproScheduleForTrainees.GetTraineesByClassNO(quyeryempquarterclsss.ClassNO);
             List<StudentInformation> studentlist = new List<StudentInformation>();
             foreach (var item in queryscheduleForTrainees)
             {
                 studentlist.Add(dbproStudentInformation.GetEntity(item.StudentID));
             }
-            var resultStudentlist = studentlist.Select(aa => new
+            var query= dbselfObtainRcored.GetSelfObtainsByQuarterID(quyeryempquarterclsss.QuarterID);
+            for (int i = studentlist.Count-1; i>=0 ; i--)
+            {
+                foreach (var item in query)
+                {
+                    if (studentlist[i].StudentNumber==item.StudentNO)
+                    {
+                        studentlist.Remove(studentlist[i]);
+                        break;
+                    }
+                }
+            }
+           var resultStudentlist = studentlist.Select(aa => new
             {
                 StudentNumber = aa.StudentNumber,
                 Name = aa.Name
             }).ToList();
+
             ViewBag.studentlist = Newtonsoft.Json.JsonConvert.SerializeObject(resultStudentlist);
             ViewBag.param0 = quyeryempquarterclsss.ClassNO;
             ViewBag.param1 = quyeryempquarterclsss.QuarterID;
@@ -268,7 +283,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <param name="string1">学生编号</param>
         /// <param name="string2">eg:年度是2019  计划7  班级1801TA</param>
         /// <returns></returns>
-        public ActionResult table00(int page, int limit, string leave ,string string1,string string2)
+        public ActionResult table00(int page, int limit, string leave ,string string2)
         {
             dbselfObtainRcored = new SelfObtainRcoredBusiness();
             dbquarter = new QuarterBusiness();
@@ -292,10 +307,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     break;
             }
 
-            if (!string.IsNullOrEmpty(string1))
-            {
-                data = data.Where(a => a.StudentNO == string1).ToList();
-            }
+         
 
             var resultdata = data.Select(a => new
             {

@@ -88,7 +88,7 @@
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
 
-            var empQuarterclassid, treedata, myleave, string1, string2, table00;
+            var empQuarterclassid, treedata, myleave, string1="", string2, table00,studentdata,studentname;
             //初始化树
             var myDTree = dtree.render({
                 elem: "#demoTree",
@@ -148,6 +148,9 @@
                     , limits: [10, 20, 30, 45, 60, 75]
                     , page: true
                     , toolbar: '#toolbarDemo'
+                    , done: function (res, curr, count) {
+                        studentdata = res.data;
+                    }
                     , cols: [[ //标题栏
                         { type: 'radio' }
                         , { field: 'ID', title: 'id'/*, width: 180*/, hide: true }
@@ -224,13 +227,16 @@
                 };
             });
 
-            //重新加载表格数据
+            //重新加载表格数据 url
             function loadtable00() {
                 table00.reload({
                     url: '/Obtainemployment/SelfObtainRcored/table00'
+                    , done: function (res, curr, count) {
+                        studentdata = res.data;
+                    }
                     , where: {
                         leave: myleave,
-                        string1: string1,
+                        string1:string1,
                         string2: string2
                     }
                     , page: {
@@ -238,8 +244,8 @@
                     }
                 });
             }
+           
 
-            //添加栋的按钮
             $(document).off("click", '.myimgbtn').on('click', '.myimgbtn', function () {
                 console.log($(this).attr('myvalue'));
                 $("#showImage")[0].src = "../../../uploadXLSXfile/SelfObtainRcoredImg/" + $(this).attr('myvalue');
@@ -253,6 +259,20 @@
                 });
 
             });
+
+            //名字查询
+            form.on('submit(btn0)', function (data) {
+                studentname = data.field.name0;
+                for (var i = studentdata.length - 1; i >= 0; i--) {
+                    if (studentdata[i].studnetname == string1) {
+                        string1 = string1 + "-" + studentdata[i].ID;
+                    }
+                }
+                console.log(string1);
+                //loadtable00();
+                return false;
+            });
+            
         });
 
 

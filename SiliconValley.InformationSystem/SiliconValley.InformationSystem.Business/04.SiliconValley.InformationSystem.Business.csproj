@@ -140,6 +140,7 @@
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
     <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
+    <Compile Include="EducationalBusiness\Reconcile_Com.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
