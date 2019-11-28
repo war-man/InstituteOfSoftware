@@ -621,7 +621,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             ClassSchedule find_c= Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);
             Grand find_g= Reconcile_Com.Grand_Entity.GetEntity(find_c.grade_Id);
             //获取班级正在上的课程
-            int? curr_id = Reconcile_Com.TeacherClass_Entity.GetList().Where(c=>c.ClassNumber== classnumber && c.IsDel==false).FirstOrDefault().Skill;
+            int? curr_id = Reconcile_Com.TeacherClass_Entity.GetList().Where(c=>c.ClassNumber== class_id && c.IsDel==false).FirstOrDefault().Skill;
            //获取这个班级所在阶段
             switch (find_g.GrandName)
             {
