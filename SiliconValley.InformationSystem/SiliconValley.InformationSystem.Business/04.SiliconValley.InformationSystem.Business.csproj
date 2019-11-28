@@ -139,6 +139,7 @@
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
     <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
+    <Compile Include="EducationalBusiness\Reconcile_Com.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
@@ -148,6 +149,7 @@
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
+    <Compile Include="Employment\EmpQuarterClassBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />
     <Compile Include="Employment\EntSpeeBusiness.cs" />
     <Compile Include="Employment\ProTeacher.cs" />
