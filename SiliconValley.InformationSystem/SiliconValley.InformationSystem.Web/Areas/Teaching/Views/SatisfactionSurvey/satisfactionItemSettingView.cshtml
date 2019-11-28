@@ -3,6 +3,7 @@
     Layout = null;
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.Entity
 <!DOCTYPE html>
 
 <html>
@@ -38,10 +39,10 @@
                 <ul class="dropdown-menu" aria-labelledby="Dep">
 
                     @{
-                        foreach (var item in ViewBag.Department as List<Department>)
+                        foreach (var item in ViewBag.Department as List<SatisfactionSurveyObject>)
                         {
 
-                            <li><a depid="@item.DeptId" class="dep_a" href="javascript:void(0);">@item.DeptName</a></li>
+                            <li><a depid="@item.Id" class="dep_a" href="javascript:void(0);">@item.ObjectName</a></li>
 
                         }
                     }
@@ -90,7 +91,7 @@
 
         </div>
         <script type="text/html" id="barDemo">
-         
+
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
@@ -120,9 +121,9 @@
 
 
 
-          
 
-            
+
+
 
 
             table.render({
@@ -145,7 +146,7 @@
             //监听行工具事件
             table.on('tool(list)', function (obj) {
                 var data = obj.data;
-               
+
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
 
@@ -182,12 +183,12 @@
 
                         layer.close(index);
                     });
-                } 
+                }
             });
 
-           
+
             $(document).off("click", ".dep_a").on("click", ".dep_a", function () {
-                
+
                 var depid = $(this).attr("depid");
 
                 $(this).parent().parent().parent().find("button").attr("DepID", depid).find(".text").text($(this).text());
@@ -276,7 +277,7 @@
 
             });
 
-           
+
 
             $("#AddItem").click(function () {
 

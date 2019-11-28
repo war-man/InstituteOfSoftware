@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+    using System.Xml;
 
     /// <summary>
     /// 满意度调查控制器
@@ -31,7 +32,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         // GET: Teaching/SatisfactionSurvey
         BaseBusiness<Department> db_dep = new BaseBusiness<Department>();
 
-        BaseBusiness<EmployeesInfo> db_emp = new BaseBusiness<EmployeesInfo>();
+        EmployeesInfoManage db_emp = new EmployeesInfoManage();
 
         BaseBusiness<Headmaster> db_headmaster = new BaseBusiness<Headmaster>();
 
@@ -79,12 +80,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         public ActionResult satisfactionItemSettingView()
         {
-            //获取调查项
 
 
-
-            //获取所有部门
-            ViewBag.Department = db_dep.GetList().Where(d => d.IsDel == false).ToList();
+            //获取所有满意度调查对象
+            ViewBag.Department = db_survey.AllSatisfactionSurveyObject();
 
             return View();
         }
@@ -92,8 +91,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         public ActionResult satisfactionItemTypeSettingView()
         {
 
-            //获取所有部门
-            ViewBag.Department = db_dep.GetList().Where(d => d.IsDel == false).ToList();
+            //获取所有满意度调查对象
+            ViewBag.Department = db_survey.AllSatisfactionSurveyObject();
 
 
 
@@ -262,10 +261,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult AddSurveyItem()
         {
-            //提供部门数据
+            //获取所有满意度调查对象
 
-            ViewBag.Dep = db_dep.GetList().Where(d => d.IsDel == false).ToList();
 
+            ViewBag.Dep = db_survey.AllSatisfactionSurveyObject();
+          
             return View();
         }
 
@@ -1077,7 +1077,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
 
 
-           var sss =  db_survey.satisficingConfigs().Where(d=>d.ClassNumber == ClassNumber && d.CurriculumID==courseid).ToList();
+           var sss =  db_survey.satisficingConfigs().Where(d=>d.ClassNumber == int.Parse(ClassNumber) && d.CurriculumID==courseid).ToList();
 
            var bbb = db_survey.SatisficingResults().Where(d => d.SatisficingConfig == sss.FirstOrDefault().ID).ToList();
 
@@ -1237,10 +1237,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// 班主任满意度调查表
         /// </summary>
         /// <returns></returns>
-        public ActionResult HeadMasterSatisfactionQuestionnaire()
+        public ActionResult HeadMasterSatisfactionQuestionnaire(int surveyId)
         {
 
-            //获取当前学员所在班级的班主任
+
+
+          
+            var su = db_survey.satisficingConfigs().Where(d => d.ID == surveyId).FirstOrDefault();
+
+            var view = db_survey.ConvertToview(su);
+
+            ViewBag.SurveyConfig = view;
+
 
             return View();
 
@@ -1259,7 +1267,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             try
             {
-               resultlist = db_survey.Screen(1, 0);
+               resultlist = db_survey.Screen(2, 0);
 
                 result.Data = resultlist;
                 result.ErrorCode = 200;
@@ -1274,9 +1282,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
-            
+
 
         }
+
+        /// <summary>
+        /// 获取教员的调查问卷
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetSurveyQuectionTeacher()
+        {
+            AjaxResult result = new AjaxResult();
+
+            List<SatisficingItem> resultlist = new List<SatisficingItem>();
+
+            try
+            {
+                resultlist = db_survey.Screen(1, 0);
+
+                result.Data = resultlist;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = resultlist;
+                result.ErrorCode = 500;
+                result.Msg = ex.Message;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+       
 
         /// <summary>
         ///  提交班主任调查问卷
@@ -1285,37 +1326,139 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <param name="headmaster">班主任</param>
         /// <param name="sug">建议</param>
         /// <returns></returns>
-        public ActionResult SurveyQuectionCommitHeadMaster(SurveyCommitView surveyCommit, string headmaster,string sug)
+        public ActionResult SurveyQuectionCommitHeadMaster(List<SurveyCommitView> surveyCommit, int configId,string suggest)
         {
 
+           
             AjaxResult result = new AjaxResult();
 
-            SatisficingConfig satisficingConfig = new SatisficingConfig();
+            try
+            {
 
-            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+                //1. 添加结果表  2.添加详细表 
 
-            satisficingConfig.ClassNumber = scheduleForTraineesBusiness.SutdentCLassName(SessionHelper.Session["StudentNumber"].ToString()).ClassID;
+                SatisficingResult Surveyresult = new SatisficingResult();
+                Surveyresult.Answerer = "19081997072400005";
 
-            var date = DateTime.Now;
-            satisficingConfig.CreateTime = date;
-            satisficingConfig.CurriculumID = null;
-            satisficingConfig.EmployeeId = headmaster;
-            satisficingConfig.IsDel = false;
-            satisficingConfig.IsPastDue = false;
+                var date = DateTime.Now;
 
-            db_survey.AddSatisficingConfig(satisficingConfig);
+                Surveyresult.CreateDate = date;
+                Surveyresult.IsDel = false;
+                Surveyresult.SatisficingConfig = configId;
+                Surveyresult.Suggest = suggest;
 
-            ////////////////////////////////////////////////////////////////
+                db_survey.insertSatisfactionResult(Surveyresult);
 
-           var  db_survey1 = new SatisfactionSurveyBusiness();
+                BaseBusiness<SatisficingResult> dd = new BaseBusiness<SatisficingResult>();
 
-            SatisficingResult satisficingResult = new SatisficingResult();
+                var suResult = dd.GetList().Where(d => d.CreateDate.Value.ToString() == date.ToString()).FirstOrDefault();
+
+                //2 添加详细
+
+                List<SatisficingResultDetail> insertlIST = new List<SatisficingResultDetail>();
+
+                foreach (var item in surveyCommit)
+                {
+                    SatisficingResultDetail detail = new SatisficingResultDetail();
+                    detail.Remark = "";
+                    detail.SatisficingBill = suResult.ID;
+                    detail.SatisficingItem = item.SurveyItemId;
+                    detail.Scores = item.Score;
+
+                    insertlIST.Add(detail);
+
+                }
+
+                BaseBusiness<SatisficingResultDetail> bas = new BaseBusiness<SatisficingResultDetail>();
+
+                bas.Insert(insertlIST);
+
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
 
             return Json(result, JsonRequestBehavior.AllowGet);
+
+            
         }
 
 
-       
+
+        /// <summary>
+        /// 提交教员满意度调查问卷
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult commitTeacherSurvey(List<SurveyCommitHelper> list, string suggest,int configId)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                //1. 添加结果表  2.添加详细表 
+
+                SatisficingResult Surveyresult = new SatisficingResult();
+                Surveyresult.Answerer = "19081997072400005";
+
+                var date = DateTime.Now;
+
+                Surveyresult.CreateDate = date;
+                Surveyresult.IsDel = false;
+                Surveyresult.SatisficingConfig = configId;
+                Surveyresult.Suggest = suggest;
+
+                db_survey.insertSatisfactionResult(Surveyresult);
+
+                BaseBusiness<SatisficingResult> dd = new BaseBusiness<SatisficingResult>();
+
+                var suResult = dd.GetList().Where(d => d.CreateDate.Value.ToString() == date.ToString()).FirstOrDefault();
+
+                //2 添加详细
+
+                List<SatisficingResultDetail> insertlIST = new List<SatisficingResultDetail>();
+
+                foreach (var item in list)
+                {
+                    SatisficingResultDetail detail = new SatisficingResultDetail();
+                    detail.Remark = "";
+                    detail.SatisficingBill = suResult.ID;
+                    detail.SatisficingItem = item.contentId;
+                    detail.Scores = item.scores;
+
+                    insertlIST.Add(detail);
+
+                }
+
+                BaseBusiness<SatisficingResultDetail> bas = new BaseBusiness<SatisficingResultDetail>();
+
+                bas.Insert(insertlIST);
+
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
 
 
@@ -1340,7 +1483,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
            var head = headmaster.GetList().Where(d => d.informatiees_Id == user.EmpNumber && d.IsDelete==false).FirstOrDefault();
 
-           var list = headclass.GetList().Where(d => d.IsDelete == false && d.EndingTime == null && d.LeaderID == head.ID).ToList();
+            var list = db_teacherclass.AllClassSchedule().Where(d => d.IsDelete == false).ToList();
 
             ViewBag.classlist = list;
 
@@ -1357,16 +1500,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             try
             {
 
-                //获取当前登录的班主任
-
-                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+               
                 //首先判断是否已经存在
 
-                var date = DateTime.Now;
+                //获取班级的班主任
 
-                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmpNumber && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month).ToList();
+                BaseBusiness<HeadClass> db_headclass = new BaseBusiness<HeadClass>();
 
-                if (templist == null)
+                var headclass  = db_headclass.GetList().Where(d => d.IsDelete == false && d.ClassID == int.Parse(classnumber)).FirstOrDefault();
+
+               var master = db_headmaster.GetList().Where(d => d.ID == headclass.LeaderID).FirstOrDefault();
+
+               var user = db_emp.GetInfoByEmpID(master.informatiees_Id);
+
+                 var date = DateTime.Now;
+
+                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmployeeId && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month).ToList();
+
+                if (templist.Count != 0)
                 {
                     result.ErrorCode = 300;
                     result.Data = null;
@@ -1377,16 +1528,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 SatisficingConfig satisficingConfig = new SatisficingConfig();
 
-                
 
-                satisficingConfig.ClassNumber = classnumber;
+
+                satisficingConfig.ClassNumber = int.Parse(classnumber); ;
 
                 satisficingConfig.CreateTime = DateTime.Now;
                 satisficingConfig.CurriculumID = null;
-                satisficingConfig.EmployeeId = user.EmpNumber;
+                satisficingConfig.EmployeeId = user.EmployeeId;
                 satisficingConfig.IsDel = false;
                 satisficingConfig.IsPastDue = false;
 
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+
+                var xmlRoot = xmlDocument.DocumentElement;
+
+                var defaultTime = ((XmlElement)xmlRoot.GetElementsByTagName("defaultCutOffDate")[0]).Attributes["value"].Value;
+
+
+                satisficingConfig.CutoffDate = DateTime.Now.AddHours(int.Parse(defaultTime));
                 db_survey.AddSatisficingConfig(satisficingConfig);
 
 
@@ -1410,6 +1570,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
         /// <summary>
+        /// 教员满意度表单视图
+        /// </summary>
+        /// <param name="surveyId">满意度单ID</param>
+        /// <returns></returns>
+        public ActionResult TeacherSatisfactionQuestionnaire(int surveyId)
+        {
+            
+                
+               var su = db_survey.satisficingConfigs().Where(d => d.ID == surveyId).FirstOrDefault();
+
+            var view = db_survey.ConvertToview(su);
+            ViewBag.SurveyConfig = view;
+            return View();
+        }
+
+        /// <summary>
         /// 生成教员满意度调查问卷
         /// </summary>
         /// <returns></returns>
@@ -1417,91 +1593,88 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         public ActionResult CreateTeacherSurveyConfig()
         {
 
-            //需要给视图提供班级  课程
 
-            //获取当前登录的班主任
+            //获取班级
 
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
-
-            
-
-            //获取老师的班级
-
-           var classlist = db_teacherclass.GetCrrentMyClass(teacher.TeacherID);
+            var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList();
 
             ViewBag.classlist = classlist;
 
             return View();
         }
 
-        /// <summary>
-        /// 获取教员在班级上过的课程
-        /// </summary>
-        /// <returns></returns>
-        //public ActionResult GetCorsueOnReconile(string classnumber)
-        //{
+     /// <summary>
+     /// 获取教员在班级上过的课程
+       
+     /// </summary>
+     /// <param name="classnumber"></param>
+     /// <returns></returns>
+        public ActionResult GetCorsueOnReconile(string classnumber)
+        {
 
 
-        //    AjaxResult result = new AjaxResult();
-        //    List<Curriculum> resultlist = new List<Curriculum>();
-        //    try
-        //    {
+            AjaxResult result = new AjaxResult();
+            List<Curriculum> resultlist = new List<Curriculum>();
+            try
+            {
 
              
 
 
-        //        //排课业务类
-        //        BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
+                //排课业务类
+                BaseBusiness<Reconcile> db_reconile = new BaseBusiness<Reconcile>();
 
-        //        CourseBusiness db_course = new CourseBusiness();
-
-
-        //        Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-        //        var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
-
-        //        //排课筛选之后的数据
-        //        var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.ClassSchedule_Id == classnumber).ToList();
-
-        //        List<Curriculum> list = new List<Curriculum>();
-
-        //        foreach (var item in templist)
-        //        {
-        //            var tempobj = db_course.GetList().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
-        //            list.Add(tempobj);
-        //        }
-
-        //        //去掉重复项
-
-        //        foreach (var item in list)
-        //        {
-        //            if (!db_course.isContain(resultlist, item))
-        //            {
-        //                resultlist.Add(item);
-        //            }
-        //        }
-
-        //        result.ErrorCode = 200;
-        //        result.Data = resultlist;
-        //        result.Msg = "成功";
-        //    }
-        //    catch (Exception ex)
-        //    {
+                CourseBusiness db_course = new CourseBusiness();
 
 
-        //        result.ErrorCode = 500;
-        //        result.Data = resultlist;
-        //        result.Msg = ex.Message;
-        //    }
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+                //排课筛选之后的数据
+                var templist = db_reconile.GetList().Where(d => d.IsDelete == false && d.ClassSchedule_Id == int.Parse(classnumber)).ToList();
+
+                List<Curriculum> list = new List<Curriculum>();
+
+                foreach (var item in templist)
+                {
+                    var tempobj = db_course.GetList().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
+
+                    if(tempobj!=null)
+                        list.Add(tempobj);
 
 
-        //    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+                //去掉重复项
+
+                foreach (var item in list)
+                {
+                    if (!db_course.isContain(resultlist, item))
+                    {
+                        resultlist.Add(item);
+                    }
+                }
+
+                result.ErrorCode = 200;
+                result.Data = resultlist;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+
+                result.ErrorCode = 500;
+                result.Data = resultlist;
+                result.Msg = ex.Message;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
             
 
 
-        //}
+        }
 
 
         [HttpPost]
@@ -1516,9 +1689,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
                 //首先判断是否已经存在
 
-               var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == classnumber && d.CurriculumID == Curriculum).ToList();
+               var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == int.Parse(classnumber) && d.CurriculumID == Curriculum).ToList();
 
-                if (templist != null)
+                if (templist.Count !=0)
                 {
                     //已经存在
                     result.ErrorCode = 300;
@@ -1531,12 +1704,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 SatisficingConfig satisficingConfig = new SatisficingConfig();
 
-                satisficingConfig.ClassNumber = classnumber;
+                satisficingConfig.ClassNumber = int.Parse(classnumber);
                 satisficingConfig.CreateTime = DateTime.Now;
                 satisficingConfig.CurriculumID = Curriculum;
                 satisficingConfig.EmployeeId = user.EmpNumber;
                 satisficingConfig.IsDel = false;
                 satisficingConfig.IsPastDue = false;
+
+                //设置截止时间 默认截止日期
+
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+
+                var xmlRoot = xmlDocument.DocumentElement;
+
+                var defaultTime =( (XmlElement)xmlRoot.GetElementsByTagName("defaultCutOffDate")[0]).Attributes["value"].Value ;
+
+                satisficingConfig.CutoffDate = DateTime.Now.AddHours(int.Parse(defaultTime));
 
                 db_survey.AddSatisficingConfig(satisficingConfig);
 
@@ -1567,6 +1751,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         public ActionResult IsOkHeadMasterSurvey()
         {
             return null;
+        }
+
+
+        /// <summary>
+        /// 获取当前学员可以填写的满意度调查单
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult IsHaveSatisfaction(string type)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var data = db_survey.GetSatisficingConfigsByStudent("19081997072400005", type);
+                result.Data = data;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+            }
+            //获取当前登录的学员
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
         }
 
     }

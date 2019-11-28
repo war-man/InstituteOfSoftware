@@ -240,6 +240,7 @@
     <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
+    <Compile Include="Areas\ExaminationSystem\Controllers\ExamScoresController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\QuestionsBankController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\StudentExamSysController.cs" />
     <Compile Include="Areas\ExaminationSystem\ExaminationSystemAreaRegistration.cs" />
@@ -1150,6 +1151,13 @@
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\WarehouseIndexView.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateTeacherSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\HeadMasterSatisfactionQuestionnaire.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\StudentSurveyIndex.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\TeacherSatisfactionQuestionnaire.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamScores\Marking.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamScores\StuPersonalScores.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+ <!--满意度调查单配置-->
+
+  <defaultCutOffDate value="3"></defaultCutOffDate> <!--设置满意度调查单的填写截止时长 默认 3 小时 -->
+ 
+  
+</root>

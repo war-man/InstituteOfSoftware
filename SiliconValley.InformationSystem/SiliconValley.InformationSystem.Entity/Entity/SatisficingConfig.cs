@@ -21,11 +21,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public int ID { get; set; }
         public Nullable<int> CurriculumID { get; set; }
         public string EmployeeId { get; set; }
-        public string ClassNumber { get; set; }
+        public int ClassNumber { get; set; }
         public Nullable<System.DateTime> CreateTime { get; set; }
         public Nullable<bool> IsPastDue { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+
+
+        /// <summary>
+        /// 截止日期
+        /// </summary>
+        public DateTime CutoffDate { get; set; }
 
 
     }

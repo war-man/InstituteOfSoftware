@@ -385,6 +385,17 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             return result;
         }
+
+        /// <summary>
+        /// 获取学员班级
+        /// </summary>
+        /// <returns></returns>
+        public ClassSchedule GetScheduleByStudent(string studentnumber)
+        {
+           var tempobj = db_studentclass.GetIQueryable().Where(d => d.CurrentClass == true && d.StudentID == studentnumber).FirstOrDefault();
+
+           return this.AllClassSchedule().Where(d => d.id == tempobj.ID_ClassName).FirstOrDefault();
+        }
          
 
     }

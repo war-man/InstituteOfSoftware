@@ -536,76 +536,76 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="class_id"></param>
         /// <returns></returns>
-        public bool IsOkAnpiKecheng(int class_id ,string classnumber)
-        {
-            bool s = true;
-            //获取这个班级是哪个阶段
-            ClassSchedule find_c= Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);
-            Grand find_g= Reconcile_Com.Grand_Entity.GetEntity(find_c.grade_Id);
-            //获取班级正在上的课程
-            int? curr_id = Reconcile_Com.TeacherClass_Entity.GetList().Where(c=>c.ClassNumber== classnumber && c.IsDel==false).FirstOrDefault().Skill;
-           //获取这个班级所在阶段
-            switch (find_g.GrandName)
-            {
-                case "Y1":
+        //public bool IsOkAnpiKecheng(int class_id , classnumber)
+        //{
+        //    bool s = true;
+        //    //获取这个班级是哪个阶段
+        //    ClassSchedule find_c= Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);
+        //    Grand find_g= Reconcile_Com.Grand_Entity.GetEntity(find_c.grade_Id);
+        //    //获取班级正在上的课程
+        //    int? curr_id = Reconcile_Com.TeacherClass_Entity.GetList().Where(c=>c.ClassNumber== classnumber && c.IsDel==false).FirstOrDefault().Skill;
+        //   //获取这个班级所在阶段
+        //    switch (find_g.GrandName)
+        //    {
+        //        case "Y1":
                     
-                    break;
-                case "S1":
-                    //当上完C#考试之后就没有了
-                    //获取C#课程Id
-                    Curriculum find_curr= Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("C#", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                    if (find_curr!=null)
-                    {
-                        if (find_curr.CurriculumID==curr_id)
-                        {
-                            s = false;
-                        }
-                    }
-                    else
-                    {
-                        s = false;
-                    }
-                    break;
-                case "S2":
-                    //判断班级是net(C#ADB)专业还是java(javaADB)专业
-                    Specialty find_s1= Reconcile_Com.Specialty_Entity.GetList().Where(p => p.SpecialtyName.Equals("Java") && p.IsDelete == false).FirstOrDefault();
-                    Specialty find_s2 = Reconcile_Com.Specialty_Entity.GetList().Where(p => p.SpecialtyName.Equals("DotNet") && p.IsDelete == false).FirstOrDefault();
-                    if (find_c.Major_Id==find_s1.Id)
-                    {
-                        //java
-                        //获取javaADB的课程ID
-                        Curriculum find_java = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("Java-ADV", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                        if (find_java.CurriculumID== curr_id)
-                        {
-                            s = false;
-                        }
-                        else
-                        {
-                            s = true;
-                        }
-                    }
-                    else
-                    {
-                        //c#
-                        //获取NetADB的课程ID
-                        Curriculum find_net = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("C#-ADV", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                        if (find_net.CurriculumID == curr_id)
-                        {
-                            s = false;
-                        }
-                        else
-                        {
-                            s = true;
-                        }
-                    }
-                    break;
-                case "S3":
-                    break;
-                case "S4":
-                    break;                   
-            }
-            return s;
-        }
+        //            break;
+        //        case "S1":
+        //            //当上完C#考试之后就没有了
+        //            //获取C#课程Id
+        //            Curriculum find_curr= Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("C#", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        //            if (find_curr!=null)
+        //            {
+        //                if (find_curr.CurriculumID==curr_id)
+        //                {
+        //                    s = false;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                s = false;
+        //            }
+        //            break;
+        //        case "S2":
+        //            //判断班级是net(C#ADB)专业还是java(javaADB)专业
+        //            Specialty find_s1= Reconcile_Com.Specialty_Entity.GetList().Where(p => p.SpecialtyName.Equals("Java") && p.IsDelete == false).FirstOrDefault();
+        //            Specialty find_s2 = Reconcile_Com.Specialty_Entity.GetList().Where(p => p.SpecialtyName.Equals("DotNet") && p.IsDelete == false).FirstOrDefault();
+        //            if (find_c.Major_Id==find_s1.Id)
+        //            {
+        //                //java
+        //                //获取javaADB的课程ID
+        //                Curriculum find_java = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("Java-ADV", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        //                if (find_java.CurriculumID== curr_id)
+        //                {
+        //                    s = false;
+        //                }
+        //                else
+        //                {
+        //                    s = true;
+        //                }
+        //            }
+        //            else
+        //            {
+        //                //c#
+        //                //获取NetADB的课程ID
+        //                Curriculum find_net = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("C#-ADV", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        //                if (find_net.CurriculumID == curr_id)
+        //                {
+        //                    s = false;
+        //                }
+        //                else
+        //                {
+        //                    s = true;
+        //                }
+        //            }
+        //            break;
+        //        case "S3":
+        //            break;
+        //        case "S4":
+        //            break;                   
+        //    }
+        //    return s;
+        //}
         /// <summary>
         /// 安排这个班级是什么阶段在上什么课程
         /// </summary>
