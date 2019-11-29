@@ -243,11 +243,13 @@
     <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
+    <Compile Include="Areas\ExaminationSystem\Controllers\ExamScoresController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\QuestionsBankController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\StudentExamSysController.cs" />
     <Compile Include="Areas\ExaminationSystem\ExaminationSystemAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
+    <Compile Include="Areas\flow\flowAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\BiddingRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
@@ -272,6 +274,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\SelfObtainRcoredController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\StudentIntentionViewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\StudnetIntentionController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
@@ -1174,6 +1177,14 @@
     <Content Include="Areas\Dormitory\Views\Basics\BasicsIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
+    <Content Include="Areas\flow\Views\web.config" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
+    <Content Include="Areas\Dormitory\Controllers\StaffRoomDetailsController.cs~parent of cd53ee6... 123" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamScores\Marking.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamScores\StuPersonalScores.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2787,6 +2798,7 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />
     <Folder Include="Areas\Educational\Views\GoodsType\" />
