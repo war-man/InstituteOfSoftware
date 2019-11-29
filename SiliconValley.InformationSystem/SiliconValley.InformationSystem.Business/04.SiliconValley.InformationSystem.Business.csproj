@@ -146,7 +146,6 @@
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CDInterviewBusiness.cs" />
-    <Compile Include="Employment\EIntentionClassXMLHelp.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />

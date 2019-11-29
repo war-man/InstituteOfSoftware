@@ -49,18 +49,18 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classiD"></param>
         /// <returns></returns>
-        public ClassSchedule GetClassedByID(string classiD)
+        public ClassSchedule GetClassedByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级id获取正在学习的班级
         /// </summary>
         /// <param name="classiD"></param>
         /// <returns></returns>
-        public ClassSchedule GetClassingByID(string classiD)
+        public ClassSchedule GetClassingByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
         }
         /// <summary>
         /// 获取带班已毕业的

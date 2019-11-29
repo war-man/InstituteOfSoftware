@@ -28,9 +28,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
           [Key]
         public int id { get; set; }
         /// <summary>
-        /// 班级名称
+        /// 班级id
         /// </summary>
-        public string ClassNumber { get; set; }
+        public string classid { get; set; }
         /// <summary>
         /// 班级状态 false为未毕业班 true为毕业班
         /// </summary>

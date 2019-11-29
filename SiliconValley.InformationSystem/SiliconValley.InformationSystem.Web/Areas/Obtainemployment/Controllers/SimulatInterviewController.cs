@@ -11,6 +11,9 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    /// <summary>
+    /// 学生谈话
+    /// </summary>
     public class SimulatInterviewController : Controller
     {
         private EmpClassBusiness dbempClass;

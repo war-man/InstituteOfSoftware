@@ -148,9 +148,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <summary>
         /// 分配页面
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="classid"></param>
         /// <returns></returns>
-        public ActionResult Distribution(string id)
+        public ActionResult Distribution(int classid)
         {
             dbempclass = new EmpClassBusiness();
             dbempstaff = new EmploymentStaffBusiness();
@@ -159,9 +159,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbgrandBusiness = new GrandBusiness();
             dbspecialtyBusiness = new SpecialtyBusiness();
             dbproHeadmaster = new ProHeadmaster();
-            var classpbj = dbempclass.GetClassingByID(id);
-            var teempobj = dbproTeacher.GetEmpInfoByClssno(id);
-            var headempobj = dbproHeadmaster.GetEmpinfoByClassno(id);
+            var classpbj = dbempclass.GetClassingByID(classid);
+            var teempobj = dbproTeacher.GetEmpInfoByClssno(classid);
+            var headempobj = dbproHeadmaster.GetEmpinfoByClassno(classid);
 
             var empstaffdata = dbempstaff.GetALl();
             var resultdata = empstaffdata.Select(a => new SelectListItem

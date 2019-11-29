@@ -19,7 +19,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public int EmpStaffID { get; set; }
-        public string ClassNO { get; set; }
+        /// <summary>
+        /// 班级id
+        /// </summary>
+        public int ClassId { get; set; }
         public bool IsDel { get; set; }
         public System.DateTime dirDate { get; set; }
         public string Remark { get; set; }

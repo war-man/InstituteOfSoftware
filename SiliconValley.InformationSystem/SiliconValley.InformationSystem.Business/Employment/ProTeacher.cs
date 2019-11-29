@@ -21,10 +21,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="ClassNumber"></param>
         /// <returns></returns>
-        public Teacher ClassTeacher(string ClassNumber)
+        public Teacher ClassTeacher(int ClassNumber)
         {
             db_calssteacer = new BaseBusiness<ClassTeacher>();
-            var tempteacherclass = db_calssteacer.GetIQueryable().Where(d => d.ClassNumber == int.Parse(ClassNumber) && d.IsDel == false).FirstOrDefault();
+            var tempteacherclass = db_calssteacer.GetIQueryable().Where(d => d.ClassNumber == ClassNumber && d.IsDel == false).FirstOrDefault();
             return this.GetEntity(tempteacherclass.TeacherID);
 
         }
@@ -41,13 +41,13 @@ namespace SiliconValley.InformationSystem.Business.Employment
         }
 
         /// <summary>
-        /// 根据班级编号返回老师员工对象
+        /// 根据班级classid返回老师员工对象
         /// </summary>
-        /// <param name="classno"></param>
+        /// <param name="classid"></param>
         /// <returns></returns>
-        public EmployeesInfo GetEmpInfoByClssno(string classno)
+        public EmployeesInfo GetEmpInfoByClssno(int classid)
         {
-            var a = this.ClassTeacher(classno);
+            var a = this.ClassTeacher(classid);
             return this.GetEmpInfo(a.EmployeeId);
         }
     }
