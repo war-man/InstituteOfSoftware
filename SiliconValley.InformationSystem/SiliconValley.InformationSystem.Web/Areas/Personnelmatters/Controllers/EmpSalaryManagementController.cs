@@ -75,7 +75,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
               
                 view.netbookSubsidy = eseobj.NetbookSubsidy;
                 view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;
-                view.SalaryOne = view.baseSalary + view.positionSalary + view.PerformanceSalary + view.netbookSubsidy + view.socialSecuritySubsidy;
+                #region 应发工资1赋值
+                var one = view.baseSalary + view.positionSalary;
+                if (view.PerformanceSalary == null && view.netbookSubsidy == null && view.socialSecuritySubsidy == null)
+                {
+                    view.SalaryOne = one ;
+                }
+                if (view.PerformanceSalary != null && view.netbookSubsidy == null && view.socialSecuritySubsidy == null)
+                {
+                    view.SalaryOne = one + view.PerformanceSalary;
+                }
+                if (view.netbookSubsidy != null && view.PerformanceSalary == null && view.socialSecuritySubsidy == null)
+                {
+                    view.SalaryOne = one + view.netbookSubsidy;
+                }
+                if (view.socialSecuritySubsidy != null && view.PerformanceSalary == null && view.netbookSubsidy == null)
+                {
+                    view.SalaryOne = one + view.socialSecuritySubsidy;
+                }
+                if (view.PerformanceSalary != null && view.netbookSubsidy != null && view.socialSecuritySubsidy == null)
+                {
+                    view.SalaryOne = one + view.PerformanceSalary + view.netbookSubsidy;
+                }
+                if (view.PerformanceSalary != null && view.netbookSubsidy == null && view.socialSecuritySubsidy != null)
+                {
+                    view.SalaryOne = one + view.PerformanceSalary + view.socialSecuritySubsidy;
+                }
+                if (view.PerformanceSalary == null && view.netbookSubsidy != null && view.socialSecuritySubsidy != null)
+                {
+                    view.SalaryOne = one + view.netbookSubsidy + view.socialSecuritySubsidy; ;
+                }
+                if (view.PerformanceSalary != null && view.netbookSubsidy != null && view.socialSecuritySubsidy != null)
+                {
+                    view.SalaryOne = one + view.PerformanceSalary + view.netbookSubsidy + view.socialSecuritySubsidy;
+                }
+                #endregion
+
 
                 view.OvertimeCharges = item.OvertimeCharges;
                 view.Bonus = item.Bonus;
@@ -118,7 +153,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 result = performancelimit - performancelimit * (1 - finalGrade * (decimal)0.01);
             }
             else {
-                result =performancelimit*finalGrade;
+                result =performancelimit*(finalGrade*(decimal)0.01);
             }
             return result;
         }

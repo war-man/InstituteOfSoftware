@@ -224,6 +224,7 @@
     <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TalentDemandPlanBusiness\TalentDemandPlanManage.cs" />
+    <Compile Include="TeachingDepBusiness\AddCourseBusiness.cs" />
     <Compile Include="TeachingDepBusiness\ConversationBusiness.cs" />
     <Compile Include="TeachingDepBusiness\GoodSkillManeger.cs" />
     <Compile Include="TeachingDepBusiness\GrandBusiness.cs" />

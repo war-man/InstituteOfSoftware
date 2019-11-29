@@ -118,6 +118,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                         ese.PerformancePay = 500;
                                     }
                                     ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                                    if (positive.IsBuySS==false) {//代表该员工不需要购买社保,则该员工的社保补贴为500
+                                        ese.SocialSecuritySubsidy = 500;
+                                    }
                                     esemanage.Update(ese);
                                    ajaxresult= esemanage.Success();
                                 }
@@ -133,7 +136,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 else
                 {
                     positive.IsApproval = true;//表示该员工申请已审批
-                    positive.IsPass = false;//表示离职申请未通过
+                    positive.IsPass = false;//表示转正申请未通过
                     affmmanage.Update(positive);
                     ajaxresult = affmmanage.Success();
                 }
