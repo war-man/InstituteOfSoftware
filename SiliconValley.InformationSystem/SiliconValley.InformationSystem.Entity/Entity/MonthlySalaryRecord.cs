@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
     [Table(name: "MonthlySalaryRecord")]
     public partial class MonthlySalaryRecord
-    {
+    { 
         [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }

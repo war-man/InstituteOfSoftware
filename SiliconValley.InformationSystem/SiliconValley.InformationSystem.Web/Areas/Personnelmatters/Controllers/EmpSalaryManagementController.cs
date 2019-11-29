@@ -70,52 +70,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     view.PerformanceSalary = null;
                 }
                 else {
-                    view.PerformanceSalary = GetempPerformanceSalary((decimal)view.finalGrade, (decimal)eseobj.PerformancePay);
+                    view.PerformanceSalary =msrmanage.GetempPerformanceSalary((decimal)view.finalGrade, (decimal)eseobj.PerformancePay);
                 }
               
                 view.netbookSubsidy = eseobj.NetbookSubsidy;
                 view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;
                 #region 应发工资1赋值
                 var one = view.baseSalary + view.positionSalary;
-                if (view.PerformanceSalary == null && view.netbookSubsidy == null && view.socialSecuritySubsidy == null)
-                {
-                    view.SalaryOne = one ;
-                }
-                if (view.PerformanceSalary != null && view.netbookSubsidy == null && view.socialSecuritySubsidy == null)
-                {
-                    view.SalaryOne = one + view.PerformanceSalary;
-                }
-                if (view.netbookSubsidy != null && view.PerformanceSalary == null && view.socialSecuritySubsidy == null)
-                {
-                    view.SalaryOne = one + view.netbookSubsidy;
-                }
-                if (view.socialSecuritySubsidy != null && view.PerformanceSalary == null && view.netbookSubsidy == null)
-                {
-                    view.SalaryOne = one + view.socialSecuritySubsidy;
-                }
-                if (view.PerformanceSalary != null && view.netbookSubsidy != null && view.socialSecuritySubsidy == null)
-                {
-                    view.SalaryOne = one + view.PerformanceSalary + view.netbookSubsidy;
-                }
-                if (view.PerformanceSalary != null && view.netbookSubsidy == null && view.socialSecuritySubsidy != null)
-                {
-                    view.SalaryOne = one + view.PerformanceSalary + view.socialSecuritySubsidy;
-                }
-                if (view.PerformanceSalary == null && view.netbookSubsidy != null && view.socialSecuritySubsidy != null)
-                {
-                    view.SalaryOne = one + view.netbookSubsidy + view.socialSecuritySubsidy; ;
-                }
-                if (view.PerformanceSalary != null && view.netbookSubsidy != null && view.socialSecuritySubsidy != null)
-                {
-                    view.SalaryOne = one + view.PerformanceSalary + view.netbookSubsidy + view.socialSecuritySubsidy;
-                }
+                view.SalaryOne = msrmanage.GetSalaryone((decimal)one,(decimal)view.PerformanceSalary,(decimal)view.netbookSubsidy,(decimal)view.socialSecuritySubsidy);
                 #endregion
 
 
                 view.OvertimeCharges = item.OvertimeCharges;
                 view.Bonus = item.Bonus;
-               
-                view.LeaveDeductions = item.LeaveDeductions;
+
+                if (msrmanage.GetLeaveDeductions(item.Id,(decimal)one,(decimal)view.PerformanceSalary,(decimal)attendobj.DeserveToRegularDays,(decimal)view.leavedays)) {
+                    view.LeaveDeductions = item.LeaveDeductions;
+                }
                 view.OtherDeductions = item.OtherDeductions;
                 view.SalaryTwo = view.SalaryOne + view.OvertimeCharges + view.Bonus - view.LeaveDeductions + view.OtherDeductions;
                 view.PersonalSocialSecurity = item.PersonalSocialSecurity;
@@ -136,28 +107,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-        /// <summary>
-        /// 计算绩效工资
-        /// </summary>
-        /// <param name="finalGrade"></param>
-        /// <param name="performancelimit"></param>
-        /// <returns></returns>
-        public decimal GetempPerformanceSalary(decimal finalGrade,decimal performancelimit) {
-            decimal result;
-            if (finalGrade == 100)
-            {
-                result = performancelimit;
-            }
-            else if (finalGrade < 100)
-            {
-                result = performancelimit - performancelimit * (1 - finalGrade * (decimal)0.01);
-            }
-            else {
-                result =performancelimit*(finalGrade*(decimal)0.01);
-            }
-            return result;
-        }
-
+       
         public ActionResult UpdateTime() {
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
             var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
