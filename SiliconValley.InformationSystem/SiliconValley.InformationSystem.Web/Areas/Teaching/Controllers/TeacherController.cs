@@ -1047,7 +1047,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 TeacherClassBusiness db = new TeacherClassBusiness();
                var classObj = db.AllClassSchedule().Where(d => d.id == int.Parse(classnumber)).FirstOrDefault();
-                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date), classObj.ClassNumber, specific);
+                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date), int.Parse(classObj.ClassNumber), specific);
 
                 var resultList = resconcileList.Where(d => d.EmployeesInfo_Id == user.EmpNumber).ToList();
 

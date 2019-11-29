@@ -536,7 +536,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="class_id"></param>
         /// <returns></returns>
-        public bool IsOkAnpiKecheng(int class_id ,string classnumber)
+        public bool IsOkAnpiKecheng(int class_id ,int classnumber)
         {
             bool s = true;
             //获取这个班级是哪个阶段
