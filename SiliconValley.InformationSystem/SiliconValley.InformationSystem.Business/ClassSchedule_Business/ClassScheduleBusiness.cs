@@ -359,7 +359,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             return myassmeetings.GetList().Where(a => a.IsDelete == false && a.ClassNumber == ClassName).ToList();
         }
         /// <summary>
-`       /// 查询这个委员是否有重复的
+      /// 查询这个委员是否有重复的
         /// </summary>
         /// <param name="Typeofposition">委员名称</param>
         /// <param name="ClassNumber">班级号</param>
