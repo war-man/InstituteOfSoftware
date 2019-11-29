@@ -1782,5 +1782,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
+
+        /// <summary>
+        /// 历史记录
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SurveyHistory()
+        {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+
+            db_survey.GetSurveyHistoryData(user);
+            return View();
+        }
+
+
+
     }
 } 

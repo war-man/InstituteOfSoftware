@@ -9,16 +9,18 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
+    using System.Xml;
 
 
 
     /// <summary>
     /// 满意度调查业务类
     /// </summary>
-  public  class SatisfactionSurveyBusiness:BaseBusiness<SatisficingItem>
+    public  class SatisfactionSurveyBusiness:BaseBusiness<SatisficingItem>
     {
         CourseBusiness db_course = new CourseBusiness();
 
@@ -596,6 +598,79 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             view.Remark = satisficingConfig.Remark;
 
             return view;
+        }
+
+
+        /// <summary>
+        /// 根据角色获取满意度历史记录
+        /// </summary>
+        /// <returns></returns>
+        public List<SatisfactionSurveyDetailView> GetSurveyHistoryData(Base_UserModel user)
+        {
+
+            //获取账号所有的角色
+
+            var userRoles = user.RoleIdList;
+
+            //定义返回结果
+            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
+
+
+            //循环获取每个角色的权限
+
+            foreach (var role in userRoles)
+            {
+                // 权限id 权限名称 ,可查看的部门 
+
+
+                //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
+                BaseBusiness<Base_PermissionRole> db_permissrole = new BaseBusiness<Base_PermissionRole>();
+
+               var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
+               
+
+                foreach (var permission in permissions)
+                {
+                    //根据权限到 配置文件中去匹配
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+
+                    var xmlRoot = xmlDocument.DocumentElement;
+
+                    var permissionConfig = (XmlElement)xmlRoot.GetElementsByTagName("permissions")[0];
+
+                    //获取配置文件中的权限
+                    XmlNodeList  permissNmaes = permissionConfig.ChildNodes;
+
+                    foreach (XmlElement item in permissNmaes)
+                    {
+                        if (item.Attributes["permissionid"].Value == permission.PermissionValue)
+                        {
+                            //获取部门
+                            var depStr = item.Attributes["depIds"].Value.Split(',');
+                            List<string> deplist = depStr.ToList();
+                            if (depStr[depStr.Length - 1] == "")
+                            {
+                                deplist.RemoveAt(depStr.Length - 1);
+                            }
+                            //获取部门人员
+
+
+                            
+
+                            
+
+                        }
+                    }
+                   
+                }
+
+
+            }
+
+
+
+            return resultlist;
         }
 
 

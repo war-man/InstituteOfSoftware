@@ -1158,6 +1158,7 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\TeacherSatisfactionQuestionnaire.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\Marking.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\StuPersonalScores.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistory.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
