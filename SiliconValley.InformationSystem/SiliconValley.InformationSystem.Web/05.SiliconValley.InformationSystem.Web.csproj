@@ -1174,6 +1174,7 @@
     <Content Include="Areas\Dormitory\Views\Basics\BasicsIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\edit.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

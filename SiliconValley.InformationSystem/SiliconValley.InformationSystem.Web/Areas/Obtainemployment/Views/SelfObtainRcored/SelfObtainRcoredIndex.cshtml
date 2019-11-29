@@ -46,7 +46,7 @@
                             <label class="layui-form-label" id="querylable" style="width:100px">搜索选择框</label>
 
                             <div class="layui-input-inline" style="width:156px">
-                                <input type="text" name="name0" lay-verify="required" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                                <input type="text" name="name0" id="name0" lay-verify="required" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
                             </div>
 
                             <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn0">搜索</button>
@@ -73,7 +73,7 @@
 
     @*右侧按钮*@
     <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-warm layui-btn-radius layui-btn-xs" lay-event="upt">修改</a>
+        <a class="layui-btn layui-btn-warm layui-btn-radius layui-btn-xs" lay-event="edit">修改</a>
         <a class="layui-btn layui-btn-danger layui-btn-radius layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script type="text/html" id="toolbarDemo">
@@ -176,6 +176,9 @@
 
             //绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
+                string1 = "";
+                studentname = "";
+                $("#name0").val("");
                 //console.log(obj);
                 var dtreeobj = obj.param;
                 myleave = dtreeobj.level;
@@ -227,6 +230,50 @@
                 };
             });
 
+            //监听工具条
+            table.on('tool(table00)', function (obj) {
+                var data = obj.data;
+                if (obj.event == 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: "/Obtainemployment/SelfObtainRcored/edit?param0=" + data.ID,
+                        title: "修改学生申请书",
+                        area: ['1200px', '830px'],
+                        success: function (layero, index) {
+                            //let body = layui.layer.getChildFrame('body', index);
+                            //body.find("#classnumnber").val(clickclassnumber);
+                        },
+                        end: function () {
+                            loadtable00();
+                        }
+                    });
+                } else if (obj.event == 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            url: '/Obtainemployment/SelfObtainRcored/del',
+                            async: false,
+                            data: { param0: data.ID },
+                            success: function (successdata) {
+                                if (successdata.Success) {
+                                    layer.close(index);
+                                    loadtable00();
+                                } else {
+                                    layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            },
+                            error: function (errordata) {
+                                layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        });
+
+                    });
+                }
+            });
+
             //重新加载表格数据 url
             function loadtable00() {
                 table00.reload({
@@ -264,15 +311,19 @@
             form.on('submit(btn0)', function (data) {
                 studentname = data.field.name0;
                 for (var i = studentdata.length - 1; i >= 0; i--) {
-                    if (studentdata[i].studnetname == string1) {
-                        string1 = string1 + "-" + studentdata[i].ID;
+                 
+                    if (studentdata[i].studnetname == studentname) {
+                     
+                        string1 =   studentdata[i].ID+ "-" +string1
                     }
                 }
-                console.log(string1);
-                //loadtable00();
+                string1=string1.substring(0, string1.length - 1);
+                //console.log(string1);
+                loadtable00();
                 return false;
             });
-            
+
+
         });
 
 

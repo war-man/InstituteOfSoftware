@@ -1,0 +1,146 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>edit</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #content {
+            width: 99%;
+            height: 750px;
+        }
+
+        #left {
+            width: 49%;
+            height: 99%;
+            float: left;
+            border: 1px solid red;
+        }
+
+        #right {
+            width: 49%;
+            height: 99%;
+            float: right;
+            border: 1px solid red;
+        }
+        #leftbtn{
+            width: 49%;
+            float: left;
+        }
+        #rightbtn{
+            width: 49%;
+            float: right;
+        }
+        #leftbtn,#rightbtn{
+            margin:0px auto;
+            text-align:center;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div id="leftbtn">
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-radius" > 以前图片</button>
+        </div>
+        <div id="rightbtn">
+            <input type="file" id="Image" name="Image" />
+            <button type="button" class="layui-btn layui-btn-normal layui-btn-radius" id="Submission">修改</button>
+        </div>
+    </div>
+    <div id="content">
+        <div id="left">
+                
+            <div id="oldimgdiv">
+                <img id="oldimg" width="96%"   />
+            </div>
+        </div>
+        <div id="right">
+          
+            <div id="newimgdiv">
+                <img id="newimg" width="96%"  />
+            </div>
+        </div>
+    </div>
+    <script>
+        layui.use(['upload', 'form', 'layer', 'element'], function () {
+            var layer = layui.layer;
+            var isimg,obj;
+            jQuery(function () {
+                obj = JSON.parse('@Html.Raw(ViewBag.obj)');
+                $("#oldimg")[0].src = "../../../uploadXLSXfile/SelfObtainRcoredImg/" + obj.ImgUrl;
+            });
+            //异步读取图片并显示
+            document.querySelector("#Image").onchange = function () {
+                //1.0获取选择的文件
+                var f = this.files[0];
+                //创建文件读取器
+                var file = new FileReader();
+                //读取文件,参数代表要读取的文件
+                file.readAsDataURL(f);
+
+                //开始读取文件
+                //file.start();
+                //注意文件的读取时异步读取的
+                //要在file.onload事件中才能获取到文件的内容
+                file.onload = function (e) {
+                    document.querySelector("#newimg").src = e.target.result;
+                };
+
+                //最后通过file.result属性返回读取文件的内容
+                document.querySelector("#newimg").src = file.result;
+                isimg = true;
+            }
+            $("#Submission").click(function () {
+                if (isimg) {
+                    var fd = new FormData();
+                    var myimg = document.querySelector("#Image").files[0];
+                    fd.append('Image', myimg);
+                    fd.append('ID', obj.ID);
+                    $.ajax({
+                        url: '/Obtainemployment/SelfObtainRcored/edit',
+                        type: 'POST',
+                        data: fd,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (successdata) {
+                            if (successdata.Success) {
+                                layer.msg('操作成功!', { icon: 6, time: 2000 }, function () {
+                                    close();
+                                });
+                            } else {
+                                layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    });
+                } else {
+                    layer.msg('请选择图片!', { icon: 6, time: 2000 }, function () {
+
+                    });
+                }
+            });
+            function close() {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+     
+    </script>
+</body>
+</html>

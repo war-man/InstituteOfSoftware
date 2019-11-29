@@ -163,19 +163,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 studentlist.Add(dbproStudentInformation.GetEntity(item.StudentID));
             }
-            var query= dbselfObtainRcored.GetSelfObtainsByQuarterID(quyeryempquarterclsss.QuarterID);
-            for (int i = studentlist.Count-1; i>=0 ; i--)
+            var query = dbselfObtainRcored.GetSelfObtainsByQuarterID(quyeryempquarterclsss.QuarterID);
+            for (int i = studentlist.Count - 1; i >= 0; i--)
             {
                 foreach (var item in query)
                 {
-                    if (studentlist[i].StudentNumber==item.StudentNO)
+                    if (studentlist[i].StudentNumber == item.StudentNO)
                     {
                         studentlist.Remove(studentlist[i]);
                         break;
                     }
                 }
             }
-           var resultStudentlist = studentlist.Select(aa => new
+            var resultStudentlist = studentlist.Select(aa => new
             {
                 StudentNumber = aa.StudentNumber,
                 Name = aa.Name
@@ -234,14 +234,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 
-        public static void DeleteImgFile(string fileUrl)
-        {
-            string file = System.Web.HttpContext.Current.Server.MapPath(fileUrl);
-            if (System.IO.File.Exists(file))
-            {
-                System.IO.File.Delete(file);
-            }
-        }
+   
 
         /// <summary>
         /// 图片上传
@@ -283,23 +276,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <param name="string1">学生编号</param>
         /// <param name="string2">eg:年度是2019  计划7  班级1801TA</param>
         /// <returns></returns>
-        public ActionResult table00(int page, int limit, string leave ,string string2)
+        public ActionResult table00(int page, int limit, string leave, string string1, string string2)
         {
             dbselfObtainRcored = new SelfObtainRcoredBusiness();
             dbquarter = new QuarterBusiness();
             dbemploymentStaff = new EmploymentStaffBusiness();
             dbproStudentInformation = new ProStudentInformationBusiness();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
-            var data =new List<SelfObtainRcored>();
-            
+            var data = new List<SelfObtainRcored>();
+
             switch (leave)
             {
                 case "1":
-                    var  year = int.Parse(string2);
+                    var year = int.Parse(string2);
                     data = dbselfObtainRcored.GetSelfObtainRcoredsByYear(year);
                     break;
                 case "2":
-                    var quarterid= int.Parse(string2);
+                    var quarterid = int.Parse(string2);
                     data = dbselfObtainRcored.GetSelfObtainsByQuarterID(quarterid);
                     break;
                 case "3":
@@ -307,7 +300,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     break;
             }
 
-         
+            if (!string.IsNullOrEmpty(string1))
+            {
+                List<string> selfobtainid = string1.Split('-').ToList();
+                for (int i = data.Count - 1; i >= 0; i--)
+                {
+                    for (int j = 0; j < selfobtainid.Count; j++)
+                    {
+                        if (data[i].ID.ToString() != selfobtainid[j])
+                        {
+                            if (j == selfobtainid.Count - 1)
+                            {
+                                data.Remove(data[i]);
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
 
             var resultdata = data.Select(a => new
             {
@@ -315,10 +328,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 a.Date,
                 a.ImgUrl,
                 a.Remark,
-                studnetname=dbproStudentInformation.GetEntity(a.StudentNO).Name,
-                empname=dbemploymentStaff.GetEmpInfoByEmpID(a.EmpStaffID).EmpName,
-                title=dbquarter.GetEntity(a.QuarterID).QuaTitle,
-                classno= dbproScheduleForTrainees.GetTraineesByStudentNumber(a.StudentNO).ClassID
+                studnetname = dbproStudentInformation.GetEntity(a.StudentNO).Name,
+                empname = dbemploymentStaff.GetEmpInfoByEmpID(a.EmpStaffID).EmpName,
+                title = dbquarter.GetEntity(a.QuarterID).QuaTitle,
+                classno = dbproScheduleForTrainees.GetTraineesByStudentNumber(a.StudentNO).ClassID
             }).ToList();
 
             var data1 = resultdata.OrderByDescending(a => a.Date).Skip((page - 1) * limit).Take(limit).ToList();
@@ -333,5 +346,116 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(returnObj, JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult edit(int param0)
+        {
+            dbselfObtainRcored = new SelfObtainRcoredBusiness();
+            var query = dbselfObtainRcored.GetEntity(param0);
+            SelfObtainRcored self = new SelfObtainRcored();
+            self.ID = query.ID;
+            self.ImgUrl = query.ImgUrl;
+            ViewBag.obj = Newtonsoft.Json.JsonConvert.SerializeObject(self);
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult edit(SelfObtainRcored param0)
+        {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+
+                dbselfObtainRcored = new SelfObtainRcoredBusiness();
+                var query = dbselfObtainRcored.GetEntity(param0.ID);
+                var oldname = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/" + query.ImgUrl;
+                if (this.DeleteImgFile(oldname))
+                {
+                    var name = ImageUpload(query.StudentNO);
+                    if (string.IsNullOrEmpty(name))
+                    {
+                        ajaxResult.Success = false;
+                        ajaxResult.Msg = "莫乱搞！";
+                    }
+                    else
+                    {
+                        query.ImgUrl = name;
+                        dbselfObtainRcored.Update(query);
+                        ajaxResult.Success = true;
+                    }
+                }
+                else
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "请联系信息部成员！";
+                }
+               
+
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+
+
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+        public bool DeleteImgFile(string fileUrl)
+        {
+            try
+            {
+               
+                if (System.IO.File.Exists(fileUrl))
+                {
+                    System.IO.File.Delete(fileUrl);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public ActionResult del(int param0) {
+            
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                dbselfObtainRcored = new SelfObtainRcoredBusiness();
+                var query = dbselfObtainRcored.GetEntity(param0);
+                var oldname = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/" + query.ImgUrl;
+                if (this.DeleteImgFile(oldname))
+                {
+                   
+                        query.IsDel = true;
+                        dbselfObtainRcored.Update(query);
+                        ajaxResult.Success = true;
+                    
+                }
+                else
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "请联系信息部成员！";
+                }
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
     }
 }
