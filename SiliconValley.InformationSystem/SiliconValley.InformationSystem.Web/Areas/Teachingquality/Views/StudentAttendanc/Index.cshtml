@@ -351,7 +351,7 @@
             form.on('submit(demo2)', function (data) {
 
                 var x = data.field;
-                console.log(x.ClassName);
+                console.log(x);
                 Bing(x)
                 table.reload('idTest', {
                     where: {
@@ -360,7 +360,8 @@
                         qBeginTime: x.qBeginTime,
                         identitydocument: x.identitydocument,
                         qEndTime: x.qEndTime,
-                        ClassName:x.ClassName,
+                        ClassName: x.ClassName,
+                        AttendanceTitle: x.AttendanceTitle
                     }, page: {
                         curr: 1
                     }

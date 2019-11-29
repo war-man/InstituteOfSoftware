@@ -15,9 +15,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
     [Table("AttendanceInfo")]
     public partial class AttendanceInfo
-    {
+    { 
         [Key]
-        public int AAttendanceId { get; set; }
+        public int AttendanceId { get; set; }
         public string EmployeeId { get; set; }
         public Nullable<System.DateTime> YearAndMonth { get; set; }
         public Nullable<decimal> ToRegularDays { get; set; }//到勤天数
@@ -32,6 +32,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string LeaveEarlyRecord { get; set; }//早退记录
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
-        public int DeserveToRegularDays { get; set; }//应到勤天数
+        public Nullable<decimal> DeserveToRegularDays { get; set; }//应到勤天数
     }
 }

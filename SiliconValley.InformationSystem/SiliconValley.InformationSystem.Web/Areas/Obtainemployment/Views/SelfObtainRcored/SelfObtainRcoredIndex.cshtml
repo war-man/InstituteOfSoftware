@@ -1,0 +1,331 @@
+﻿
+@{
+    ViewBag.Title = "SelfObtainRcoredIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>SelfObtainRcoredIndex</h2>*@
+
+
+
+<style>
+    #procontent {
+        width: 100%;
+        height: 800px;
+        /*border: 1px solid pink;*/
+    }
+
+    #protree {
+        width: 19%;
+        height: 100%;
+        /*border: 1px solid pink;*/
+        float: left;
+    }
+
+    #prouninhabited {
+        width: 80%;
+        height: 100%;
+        /*border: 1px solid pink;*/
+        float: left;
+        margin-left: 10px;
+    }
+</style>
+
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/dtree.css" rel="stylesheet" />
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
+<div id="procontent">
+    <div id="protree">
+        <ul id="demoTree" class="dtree" data-id="0"></ul>
+    </div>
+    <div id="prouninhabited">
+        <div id="topdiv">
+            <div id="mystudentwhytop">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <div class="layui-inline" id="mubandiv">
+                            <label class="layui-form-label" id="querylable" style="width:100px">搜索选择框</label>
+
+                            <div class="layui-input-inline" style="width:156px">
+                                <input type="text" name="name0" id="name0" lay-verify="required" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                            </div>
+
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn0">搜索</button>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="tablediv">
+            <div id="table00div">
+                <table class="layui-hide" id="table00" lay-filter="table00"></table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div id="divimg" style="width:800px;height:800px;">
+    <img id="showImage" />
+</div>
+
+@section script{
+
+    @*右侧按钮*@
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-warm layui-btn-radius layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-radius layui-btn-xs" lay-event="del">删除</a>
+    </script>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm layui-btn-radius" lay-event="add">添加自主就业</button>
+        </div>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+        layui.extend({
+            dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'   // {/}的意思即代表采用自有路径，即不跟随 base 路径
+        }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
+            var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
+
+            var empQuarterclassid, treedata, myleave, string1="", string2, table00,studentdata,studentname;
+            //初始化树
+            var myDTree = dtree.render({
+                elem: "#demoTree",
+                initLevel: 1,
+                url: '/Obtainemployment/SelfObtainRcored/EstablishTree',
+                success: function (res, $obj, first) {
+                    // res:当前异步加载的数据，
+                    //$obj:当前组件的根节点的JQuery对象，
+                    //first:是否首次加载。
+                    //console.log(res);
+                    //console.log($obj);
+                    //console.log(first);
+                    empQuarterclassid = res.data[0].children[0].children[0].nodeId;
+                    myleave = 1;
+                    string2 = res.data[0].nodeId;
+                    treedata = res.data;
+                    loadtable();
+                },
+                formatter: {
+                    title: function (data) {  // 示例给有子集的节点返回节点统计
+                        var s = data.context;
+                        if (data.children) {
+                            s += ' <span style=\'color:blue\'>(' + data.children.length + ')</span>';
+                        }
+                        return s;
+                    }
+                },
+                nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
+                leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
+                icon: ["3", "11"], // 使用
+                response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
+            });
+            //时间转化
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+            function loadtable() {
+                table00 = table.render({
+                    elem: '#table00'
+                    , url: '/Obtainemployment/SelfObtainRcored/table00?leave=' + myleave + '&string2=' + string2
+                    , skin: 'line' //行边框风格
+                    , even: true //开启隔行背景
+                    , limit: 20
+                    , limits: [10, 20, 30, 45, 60, 75]
+                    , page: true
+                    , toolbar: '#toolbarDemo'
+                    , done: function (res, curr, count) {
+                        studentdata = res.data;
+                    }
+                    , cols: [[ //标题栏
+                        { type: 'radio' }
+                        , { field: 'ID', title: 'id'/*, width: 180*/, hide: true }
+                        , { field: 'studnetname', title: '学生姓名', width: 117 }
+                        , { field: 'empname', title: '审批人', width: 117 }
+                        , { field: 'classno', title: '班级', width: 117 }
+                        , { field: 'title', title: '毕业计划标题', width: 217 }
+                        , {
+                            field: 'ImgUrl', title: '图片', width: 145, templet: function (d) {
+                                return "<button class='layui-btn myimgbtn layui-btn-xs layui-btn-radius layui-btn-danger' myvalue='" + d.ImgUrl + "'>查看图片</button>"
+                            }
+                        }
+                        , { field: 'Remark', title: '备注', width: 245 }
+                        , {
+                            field: 'Date', title: '时间', width: 145, templet: function (d) {
+                                return TimeChange(d.Date);
+                            }
+                        }
+                        , { fixed: 'right', title: '操作', toolbar: '#barDemo'/*, width: 80*/ }
+                    ]]
+                });
+            }
+
+            //绑定节点点击
+            dtree.on("node('demoTree')", function (obj) {
+                string1 = "";
+                studentname = "";
+                $("#name0").val("");
+                //console.log(obj);
+                var dtreeobj = obj.param;
+                myleave = dtreeobj.level;
+                string2 = dtreeobj.nodeId;
+                switch (dtreeobj.level) {
+                    //最外层
+                    case '1':
+                        for (var i = 0; i < treedata.length; i++) {
+                            if (treedata[i].nodeId == dtreeobj.nodeId) {
+                                empQuarterclassid = treedata[i].children[0].children[0].nodeId;
+                                break;
+                            }
+                        }
+
+                        break;
+                    //中间层
+                    case '2':
+                        empQuarterclassid = obj.childParams[0].nodeId;
+
+                        break;
+                    //最里层
+                    case '3':
+
+                        empQuarterclassid = dtreeobj.nodeId;
+                        string2 = dtreeobj.context;
+                        break;
+                }
+                loadtable00();
+                //console.log(empQuarterclassid);
+            });
+
+            table.on('toolbar(table00)', function (obj) {
+
+                switch (obj.event) {
+                    case 'add':
+                        layer.open({
+                            type: 2,
+                            content: "/Obtainemployment/SelfObtainRcored/add?param0=" + empQuarterclassid,
+                            title: "添加谈话",
+                            area: ['730px', '830px'],
+                            //area: ['850px', '760px'],
+                            success: function (layero, index) {
+                            },
+                            end: function () {
+                                loadtable00();
+                            }
+                        });
+                        break;
+                };
+            });
+
+            //监听工具条
+            table.on('tool(table00)', function (obj) {
+                var data = obj.data;
+                if (obj.event == 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: "/Obtainemployment/SelfObtainRcored/edit?param0=" + data.ID,
+                        title: "修改学生申请书",
+                        area: ['1200px', '830px'],
+                        success: function (layero, index) {
+                            //let body = layui.layer.getChildFrame('body', index);
+                            //body.find("#classnumnber").val(clickclassnumber);
+                        },
+                        end: function () {
+                            loadtable00();
+                        }
+                    });
+                } else if (obj.event == 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            url: '/Obtainemployment/SelfObtainRcored/del',
+                            async: false,
+                            data: { param0: data.ID },
+                            success: function (successdata) {
+                                if (successdata.Success) {
+                                    layer.close(index);
+                                    loadtable00();
+                                } else {
+                                    layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            },
+                            error: function (errordata) {
+                                layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        });
+
+                    });
+                }
+            });
+
+            //重新加载表格数据 url
+            function loadtable00() {
+                table00.reload({
+                    url: '/Obtainemployment/SelfObtainRcored/table00'
+                    , done: function (res, curr, count) {
+                        studentdata = res.data;
+                    }
+                    , where: {
+                        leave: myleave,
+                        string1:string1,
+                        string2: string2
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+           
+
+            $(document).off("click", '.myimgbtn').on('click', '.myimgbtn', function () {
+                console.log($(this).attr('myvalue'));
+                $("#showImage")[0].src = "../../../uploadXLSXfile/SelfObtainRcoredImg/" + $(this).attr('myvalue');
+                layer.open({
+                    type: 1,
+                    area: ['730px', '830px'],
+                    content: $('#divimg'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                    end: function () {
+                        $("#divimg").hide();
+                    }
+                });
+
+            });
+
+            //名字查询
+            form.on('submit(btn0)', function (data) {
+                studentname = data.field.name0;
+                for (var i = studentdata.length - 1; i >= 0; i--) {
+                 
+                    if (studentdata[i].studnetname == studentname) {
+                     
+                        string1 =   studentdata[i].ID+ "-" +string1
+                    }
+                }
+                string1=string1.substring(0, string1.length - 1);
+                //console.log(string1);
+                loadtable00();
+                return false;
+            });
+
+
+        });
+
+
+    </script>
+}

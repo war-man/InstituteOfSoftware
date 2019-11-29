@@ -167,9 +167,6 @@
 
                     $("#city").append($(html));
                 }
-                var obj = _.template($("#muban3").html());
-                var html = obj({ AreaID: "0", cityname: "其他城市", checked: "" });
-                $("#city").append($(html));
             }
             function loadform(data) {
                 $("#StudentName").val(data.StudentName);
@@ -207,13 +204,6 @@
                         });
                     }
                 });
-            });
-            form.on('radio(myradio)', function (data) {
-                if (data.value==0) {
-                    layer.msg('dudu', { icon: 6, time: 2000 }, function () {
-
-                    });
-                }
             });
         });
     </script>

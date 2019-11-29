@@ -171,14 +171,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //学员注册编辑
         public ActionResult Registeredtrainees()
         {
-          
-            var Dismantl = Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
-            var List = classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
-            foreach (var item in Dismantl)
+            //阶段
+            GrandBusiness Grandcontext = new GrandBusiness();
+            //阶段id
+            var GranID = Grandcontext.GetList().Where(a => a.GrandName == "S1" || a.GrandName == "Y1").ToList(); ;
+            List<ClassSchedule> classSchedules = new List<ClassSchedule>();
+            foreach (var item in GranID)
             {
-                List = List.Where(a => a.ClassNumber != item.FormerClass).ToList();
+                classSchedules.AddRange(classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassstatusID == null && a.grade_Id == item.Id).ToList());
             }
-            ViewBag.List = List.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
+            ViewBag.List = classSchedules.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id)&&id!= "undefined")
             {
@@ -254,6 +256,46 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             return View();
         }
+        /// <summary>
+        /// 根据名字获取备案数据
+        /// </summary>
+        /// <param name="Name">姓名</param>
+        /// <returns></returns>
+        public List<StudentPutOnRecord> ListStudentPutOnRecord(string Name)
+        {
+            StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
+            List<StudentPutOnRecord> x = null;
+            x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+
+            var studentlist = dbtext.StudentList();
+            for (int i = x.Count - 1; i >= 0; i--)
+            {
+                if (x.Count > 0)
+                {
+                    foreach (var item in studentlist)
+                    {
+                        if (x.Count > 0)
+                        {
+                            if (x[i].Id == item.StudentPutOnRecord_Id)
+                            {
+                                x.Remove(x[i]);
+                            }
+                        }
+                       
+                    }
+                }
+            }
+            return x;
+        }
+        /// <summary>
+        /// 验证该名字是否已经注册了
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BoolStudentPut()
+        {
+            string Name = Request.QueryString["Name"];
+          return Json( ListStudentPutOnRecord(Name).Count,JsonRequestBehavior.AllowGet);
+        }
         //备案查询
         public ActionResult DataKeys()
         {
@@ -261,23 +303,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             List<StudentPutOnRecord> x = null;
             try
             {
-                StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
-                x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
-                var studentlist = dbtext.StudentList();
-                for (int i = x.Count-1; i >=0; i--)
-                {
-                    if (x.Count>0)
-                    {
-                        foreach (var item in studentlist)
-                        {
-                            if (x[i].Id==item.StudentPutOnRecord_Id)
-                            {
-                                x.Remove(x[i]);
-                            }
-                        }
-                    }
-                }
-               
+               x= ListStudentPutOnRecord(Name);
+
+
             }
             catch (Exception ex)
             {
@@ -355,6 +383,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         scheduleForTrainees.CurrentClass = true;
                         scheduleForTrainees.StudentID = studentInformation.StudentNumber;
                         scheduleForTrainees.AddDate = DateTime.Now;
+                        scheduleForTrainees.IsGraduating = false;
                         Stuclass.Insert(scheduleForTrainees);
                        // Stuclass.Remove("ScheduleForTrainees");
                         result = new SuccessResult();

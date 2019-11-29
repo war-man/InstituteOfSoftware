@@ -38,13 +38,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult Index()
         {
         
-            ViewBag.ClassName = classSchedule.GetList().Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.ClassNumber }).ToList();
+            ViewBag.ClassName = classSchedule.GetList().Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() }).ToList();
             return View();
 
        }
         //获取数据
       
-        public ActionResult GetDate(int page, int limit,string Name,string Attendancestatus,string qBeginTime,string identitydocument,string qEndTime,string ClassName)
+        public ActionResult GetDate(int page, int limit,string Name,string AttendanceTitle, string Attendancestatus,string qBeginTime,string identitydocument,string qEndTime,string ClassName)
         {
 
          
@@ -81,6 +81,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             if (!string.IsNullOrEmpty(Attendancestatus))
             {
                 list = list.Where(a => a.Attendancestatus==Attendancestatus).ToList();
+            }
+            if (!string.IsNullOrEmpty(AttendanceTitle))
+            { 
+                    list = list.Where(a => a.AttendanceTitle == AttendanceTitle).ToList();
             }
             if (!string.IsNullOrEmpty(qBeginTime))
             {

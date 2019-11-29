@@ -72,10 +72,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public AttendanceInfo GetAttendanceInfoByEmpid(string empid)
+        public AttendanceInfo GetAttendanceInfoByEmpid(string empid,DateTime time)
         {
             AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            var att = attmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            var att = attmanage.GetList().Where(s => s.EmployeeId == empid && s.YearAndMonth==time).FirstOrDefault();
             return att;
         }
 
@@ -85,11 +85,124 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public MeritsCheck GetMCByEmpid(string empid)
+        public MeritsCheck GetMCByEmpid(string empid,DateTime time)
         {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
-            var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid && s.YearAndMonth==time).FirstOrDefault();
             return mcobj;
         }
+
+        /// <summary>
+        /// 计算绩效工资
+        /// </summary>
+        /// <param name="finalGrade">绩效分</param>
+        /// <param name="performancelimit">绩效额度</param>
+        /// <returns></returns>
+        public decimal GetempPerformanceSalary(decimal finalGrade, decimal performancelimit)
+        {
+            decimal result;
+            if (finalGrade == 100)
+            {
+                result = performancelimit;
+            }
+            else if (finalGrade < 100)
+            {
+                result = performancelimit - performancelimit * (1 - finalGrade * (decimal)0.01);
+            }
+            else
+            {
+                result = performancelimit * (finalGrade * (decimal)0.01);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 计算应发工资1
+        /// </summary>
+        /// <param name="one">基本工资+岗位工资</param>
+        /// <param name="PerformanceSalary">绩效工资</param>
+        /// <param name="netbookSubsidy">笔记本补助</param>
+        /// <param name="socialSecuritySubsidy">社保补贴</param>
+        /// <returns></returns>
+        public decimal GetSalaryone(decimal one,decimal PerformanceSalary,decimal netbookSubsidy,decimal socialSecuritySubsidy)
+        {
+            decimal SalaryOne=0;
+            
+            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+                SalaryOne = one;
+            }
+            
+            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+                SalaryOne = one + PerformanceSalary;
+            }
+            if (string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+               SalaryOne = one + netbookSubsidy;
+            }
+            if (string.IsNullOrEmpty(socialSecuritySubsidy.ToString()) && string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()))
+            {
+              SalaryOne = one + socialSecuritySubsidy;
+            }
+            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+              SalaryOne = one +PerformanceSalary + netbookSubsidy;
+            }
+            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+              SalaryOne = one +PerformanceSalary + socialSecuritySubsidy;
+            }
+            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+              SalaryOne = one +netbookSubsidy +socialSecuritySubsidy; ;
+            }
+            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            {
+               SalaryOne = one + PerformanceSalary + netbookSubsidy + socialSecuritySubsidy;
+            }
+
+            return SalaryOne;
+        }
+
+
+        /// <summary>
+        /// 计算请假扣款
+        /// </summary>
+        /// <param name="one">基本工资+岗位工资</param>
+        /// <param name="persalary">绩效工资</param>
+        /// <param name="shouldday">应出勤天数</param>
+        /// <param name="leaveday">请假天数</param>
+        /// <returns></returns>
+        public bool GetLeaveDeductions(int id, decimal one, decimal persalary, decimal shouldday, decimal leaveday)
+        {
+            decimal countsalary;
+            bool result;
+            try
+            {
+                if (!string.IsNullOrEmpty(persalary.ToString()))
+                {
+                    countsalary = one + persalary;
+                }
+                else
+                {
+                    countsalary = one;
+                }
+                var leavewithhold = countsalary / shouldday * leaveday;
+                var msr = this.GetEntity(id);
+                msr.LeaveDeductions = leavewithhold;
+                this.Success();
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                this.Error(ex.Message);
+                result = false;
+            }
+            return result;
+
+        }
+
+
+
     }
 }

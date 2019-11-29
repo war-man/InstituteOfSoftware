@@ -37,6 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
                              empDept = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                              empPosition = emanage.GetPositionByEmpid(e.EmployeeId).PositionName,
+                             empIsDel=emanage.GetInfoByEmpID(e.EmployeeId).IsDel,
                              e.YearAndMonth,
                              e.RoutineWork,
                              e.RoutineWorkPropotion,

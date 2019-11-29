@@ -61,5 +61,30 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             return classdata;
         }
 
+        /// <summary>
+        /// 毕业班级
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassSchedule> GetClassSchedulesed() {
+            return this.GetIQueryable().Where(a => a.IsDelete == false && a.ClassStatus == true).ToList();
+        }
+
+        /// <summary>
+        /// 传入的班级编号是否是毕业班级
+        /// </summary>
+        /// <param name="classno"></param>
+        /// <returns></returns>
+        public bool isgraduationclass(string classno)
+        {
+            var query = this.GetClassSchedulesed().Where(a => a.ClassNumber == classno).FirstOrDefault();
+            if (query != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

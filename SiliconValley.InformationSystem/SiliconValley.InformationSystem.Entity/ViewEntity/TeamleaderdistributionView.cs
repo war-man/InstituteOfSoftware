@@ -12,9 +12,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
   public  class TeamleaderdistributionView
     {
         /// <summary>
-        /// 班级
+        /// 班级名称
         /// </summary>
         public string ClassName { get; set; }
+        /// <summary>
+        /// 班级编号
+        /// </summary>
+        public int ClassID { get; set; }
         /// <summary>
         /// 班主任姓名
         /// </summary>

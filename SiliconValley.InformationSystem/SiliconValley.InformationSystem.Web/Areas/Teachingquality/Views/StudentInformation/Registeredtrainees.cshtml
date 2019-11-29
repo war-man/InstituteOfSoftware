@@ -356,14 +356,21 @@
                     $.post("/Teachingquality/StudentInformation/Beian?Name=" + name, function (db) {
 
                         if (db.length > 0) {
-                            layer.open({
-                                title: "备案学员",
-                                type: 2,
+                            $.post("/Teachingquality/StudentInformation/BoolStudentPut?Name=" + name, function (da) {
+                                if (da > 0) {
+                                    layer.open({
+                                        title: "备案学员",
+                                        type: 2,
 
-                                btnAlign: 'c'
-                                , area: ['400px', '200px']
-                                , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
+                                        btnAlign: 'c'
+                                        , area: ['400px', '200px']
+                                        , content: "/Teachingquality/StudentInformation/DataKey?Name=" + name
+                                    });
+                                } else {
+                                    Errye("该学员已注册，请勿重复注册！！");
+                                }
                             });
+                          
 
                         } else {
 

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity.SalaryView;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
@@ -40,23 +41,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;
                 view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;
                 //考勤表对象
-                var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId);
-                view.toRegularDays = attendobj.ToRegularDays;
-              
+                var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth);
+                if (attendobj == null)
+                {
+                    view.toRegularDays = null;
+                    view.leavedays = null;
+                }
+                else {
+                    view.toRegularDays = attendobj.ToRegularDays;
+                    view.leavedays = attendobj.LeaveDays;
+                }
+               
                 //员工工资体系表
                 var eseobj= msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
                 view.baseSalary = eseobj.BaseSalary;
                 view.positionSalary = eseobj.PositionSalary;
-                view.finalGrade = msrmanage.GetMCByEmpid(item.EmployeeId).FinalGrade;
-                view.PerformanceSalary = item.PerformanceSalary;
+                if (msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth) == null)
+                {
+                    view.finalGrade =null;
+                 
+                }
+                else {
+                    view.finalGrade = msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth).FinalGrade;
+                   
+                }
+                if (view.finalGrade == null)
+                {
+                    view.PerformanceSalary = null;
+                }
+                else {
+                    view.PerformanceSalary =msrmanage.GetempPerformanceSalary((decimal)view.finalGrade, (decimal)eseobj.PerformancePay);
+                }
+              
                 view.netbookSubsidy = eseobj.NetbookSubsidy;
                 view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;
-                view.SalaryOne = view.baseSalary + view.positionSalary + view.PerformanceSalary + view.netbookSubsidy + view.socialSecuritySubsidy;
+                #region 应发工资1赋值
+                var one = view.baseSalary + view.positionSalary;
+                view.SalaryOne = msrmanage.GetSalaryone((decimal)one,(decimal)view.PerformanceSalary,(decimal)view.netbookSubsidy,(decimal)view.socialSecuritySubsidy);
+                #endregion
+
 
                 view.OvertimeCharges = item.OvertimeCharges;
                 view.Bonus = item.Bonus;
-                view.leavedays = attendobj.LeaveDays;
-                view.LeaveDeductions = item.LeaveDeductions;
+
+                if (msrmanage.GetLeaveDeductions(item.Id,(decimal)one,(decimal)view.PerformanceSalary,(decimal)attendobj.DeserveToRegularDays,(decimal)view.leavedays)) {
+                    view.LeaveDeductions = item.LeaveDeductions;
+                }
                 view.OtherDeductions = item.OtherDeductions;
                 view.SalaryTwo = view.SalaryOne + view.OvertimeCharges + view.Bonus - view.LeaveDeductions + view.OtherDeductions;
                 view.PersonalSocialSecurity = item.PersonalSocialSecurity;
@@ -77,6 +107,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-     
+       
+        public ActionResult UpdateTime() {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
+            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+            string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+            ViewBag.time = mytime;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult UpdateTime(string CurrentTime) {
+            var AjaxResultxx = new AjaxResult();
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
+            try
+            {
+                var msrlist=msrmanage.GetList().Where(s=>s.IsDel==false).ToList();
+                for (int i = 0; i < msrlist.Count(); i++)
+                {
+                    msrlist[i].YearAndMonth =Convert.ToDateTime(CurrentTime);
+                    msrmanage.Update(msrlist[i]);
+                    AjaxResultxx = msrmanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+               AjaxResultxx= msrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

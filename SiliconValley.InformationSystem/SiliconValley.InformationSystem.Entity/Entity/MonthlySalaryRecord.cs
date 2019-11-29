@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
     [Table(name: "MonthlySalaryRecord")]
     public partial class MonthlySalaryRecord
-    {
+    { 
         [Key]
         public int Id { get; set; }
         public string EmployeeId { get; set; }
@@ -24,7 +24,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         //public Nullable<decimal> BaseSalary { get; set; }
         //public Nullable<decimal> PositionSalary { get; set; }
         //public Nullable<int> PerformanceScore { get; set; }
-        public Nullable<decimal> PerformanceSalary { get; set; }//绩效工资
+      //  public Nullable<decimal> PerformanceSalary { get; set; }//绩效工资
         //public string NetbookSubsidy { get; set; }
         public Nullable<decimal> OvertimeCharges { get; set; }//加班费用
         public Nullable<decimal> Bonus { get; set; }  //奖金/元

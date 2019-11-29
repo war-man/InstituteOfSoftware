@@ -199,12 +199,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                //计算该员工的审批已通过的作为调休的加班总时间（可调休总时间）
-                var sumdaysofftime = otrmanage.GetList().Where(s => s.EmployeeId == id && s.IsPass == true && s.IsNoDaysOff == false).ToList().Sum(s => s.Duration);
-                //计算该员工已经调休了的总时间
-                var sumdaysoff = dfmanage.GetList().Where(s => s.EmployeeId == id && s.IsPass == true).ToList().Sum(s => s.Duration);
-               
-                if ((decimal)sumdaysofftime-(decimal)sumdaysoff<0 ) {//表示有提前调休的情况
+                if (GetResidueTime(id)< 0 ) {//表示有提前调休的情况
                     //找到上个月提前调休的记录
                     var lastdaysoff = dfmanage.GetList().LastOrDefault();
                     int lastmonth = DateTime.Parse(lastdaysoff.StartTime.ToString()).Month;
@@ -221,6 +216,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
 
+        }
+        /// <summary>
+        /// 计算剩余调休时间
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public decimal GetResidueTime(string id) {
+            DaysOffManage dfmanage = new DaysOffManage();
+            OvertimeRecordManage otrmanage = new OvertimeRecordManage();
+            //计算该员工的审批已通过的作为调休的加班总时间（可调休总时间）
+            var sumdaysofftime = otrmanage.GetList().Where(s => s.EmployeeId == id && s.IsPass == true && s.IsNoDaysOff == false).ToList().Sum(s => s.Duration);
+            //计算该员工已经调休了的总时间
+            var sumdaysoff = dfmanage.GetList().Where(s => s.EmployeeId == id && s.IsPass == true).ToList().Sum(s => s.Duration);
+
+            var resttime = (decimal)sumdaysofftime - (decimal)sumdaysoff;
+            return resttime;
         }
         //调休申请
         public ActionResult DaysOffApply() {

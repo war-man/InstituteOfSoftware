@@ -42,6 +42,15 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label lad"> 就业人数:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="peoplenumber" name="peoplenumber" lay-verify="required|number" class="layui-input" placeholder="" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label lad"> 备注:</label>
                         <div class="layui-input-inline">
                             <textarea placeholder="请输入内容" id="Remark" name="Remark" class="layui-textarea mytext"></textarea>
@@ -76,6 +85,19 @@
             //获取设备信息
             var layer = layui.layer, form = layui.form, element = layui.element, jsclasslist = new Array();
 
+            form.verify({
+                number: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
+                        return '只能全为数字';
+                    }
+                }
+            });  
             jQuery(function () {
                 var classlist = JSON.parse('@Html.Raw(ViewBag.classlist)');
                 var queryformdata = JSON.parse('@Html.Raw(ViewBag.queryformdata)');
@@ -87,6 +109,7 @@
                 $("#Remark").val(data.Remark);
                 $("#QuaTitle").val(data.QuaTitle);
                 $("#ID").val(data.ID);
+                $('#peoplenumber').val(data.peoplenumber);
             }
             function loadclass(data) {
                  $("#classlist").children().remove();

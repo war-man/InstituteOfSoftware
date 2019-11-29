@@ -88,7 +88,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
       
             var dataList = dbtext.UnionMembersList(UnName, page, limit, StuName, qEndTime, qBeginTime, quiz1, sex);
             //  var x = dbtext.GetList();
-            return Json(dataList, JsonRequestBehavior.AllowGet);
+            return Json( dataList, JsonRequestBehavior.AllowGet);
         }
         //添加学生会成员页面
         [HttpGet]

@@ -97,6 +97,18 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
 
 
         /// <summary>
+        /// 通过岗位编号获取该岗位所属部门
+        /// </summary>
+        /// <returns></returns>
+        public Department GetDeptByPid(int pid)
+        {
+            PositionManage pmanage = new PositionManage();
+            DepartmentManage dmanage = new DepartmentManage();
+            var deptid = pmanage.GetEntity(pid);
+            return dmanage.GetEntity(deptid.DeptId);
+        }
+
+        /// <summary>
         /// 根据类型编号获取员工异动类型对象
         /// </summary>
         /// <param name="id"></param>
@@ -104,6 +116,15 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         public MoveType GetETById(int id) {
             MoveTypeManage mtmanage = new MoveTypeManage();
             return mtmanage.GetEntity(id);
+        }
+       
+        /// <summary>
+        /// 根据部门编号获取该部门下的所有员工
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetEmpsByDeptid(int deptid)
+        {
+            return this.GetAll().Where(a => this.GetDeptByPid(a.PositionId).DeptId==deptid).ToList();
         }
 
 
@@ -157,11 +178,11 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         }
 
         /// <summary>
-        /// 获取副主任
+        /// 获取市场副主任
         /// </summary>
         /// <returns></returns>
         public List<EmployeesInfo> GetChannelStaffFuzhuren() {
-            return this.GetAll().Where(a => a.PositionId == 2010).ToList();
+            return this.GetAll().Where(a=>this.GetPositionByEmpid(a.EmployeeId).PositionName=="市场副主任").ToList();
         }
 
         /// <summary>

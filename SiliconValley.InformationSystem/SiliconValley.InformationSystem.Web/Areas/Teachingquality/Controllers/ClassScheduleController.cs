@@ -115,7 +115,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             //班级状态表
                 BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
-              var listx = list.Select(a => new
+              var dataList = list.Select(a => new
             {
                 //  a.BaseDataEnum_Id,
                 a.id,
@@ -128,15 +128,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Major_Id = a.Major_Id==null?"暂无专业": Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
                 HeadmasterName= Hadmst.ClassHeadmaster(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
                 IsBool = classtatus.GetList().Where(c=>c.IsDelete==false&&c.id==a.ClassstatusID).FirstOrDefault()==null?"正常":classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
-                 stuclasss = Stuclass.GetList().Where(c=>c.ClassID==a.ClassNumber&&c.CurrentClass==true).Count()//专业
-            }).ToList();
-            var dataList = listx.OrderBy(a => a.ClassNumber).Skip((page - 1) * limit).Take(limit).ToList();
+                 stuclasss = Stuclass.GetList().Where(c=>c.ID_ClassName==a.id&&c.CurrentClass==true).Count()//班级人数
+            }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+           
             //  var x = dbtext.GetList();
             var data = new
             {
                 code = "",
                 msg = "",
-                count = dataList.Count,
+                count = list.Count,
                 data = dataList
             }; return Json(data, JsonRequestBehavior.AllowGet);
             }
@@ -214,6 +214,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.ClassID = classNumberss;
             ViewBag.Members = dbtext.MembersList();
             ViewBag.Stage = dbtext.GetClassGrand((int)classNumberss, 234);
+            ViewBag.Status= dbtext.GetEntity(classNumberss).ClassstatusID;
             return View(x);
         }
 
@@ -343,9 +344,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var List = dbtext.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
             foreach (var item in Dismantl)
             {
-                List = List.Where(a => a.ClassNumber != item.FormerClass).ToList();
+                List = List.Where(a => a.id != item.FormerClass).ToList();
             }
-            ViewBag.List= List.Where(a=>a.id!= classNumberss).Select(a => new SelectListItem { Value = a.ClassNumber, Text = a.ClassNumber }).ToList();
+            ViewBag.List= List.Where(a=>a.id!= classNumberss).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
             studentID = studentID.Substring(0, studentID.Length - 1);
             string[] stu = studentID.Split(',');
             List<StudentInformation> list = new List<StudentInformation>();
@@ -355,7 +356,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
 
             ViewBag.StudentID = studentID;
-            ViewBag.ClassName = classNumberss;
+            ViewBag.ClassName = dbtext.FintClassSchedule((int)classNumberss).ClassNumber;
+            ViewBag.ClassID= classNumberss;
             ViewBag.Mylist = list;
 
 
@@ -363,7 +365,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         }
         //拆班数据操作
         [HttpPost]
-        public ActionResult Dismantleclasses(string Addtime,string FormerClass,string List,string Reasong,string Remarks,string StudentID)
+        public ActionResult Dismantleclasses(string Addtime,int FormerClass,int List,string Reasong,string Remarks,string StudentID)
         {
            return Json(dbtext. Dismantleclasses(Addtime, FormerClass, List, Reasong, Remarks, StudentID),JsonRequestBehavior.AllowGet);
 
@@ -432,7 +434,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// </summary>
         /// <param name="Datailedcost">内容</param>
         /// <returns></returns>
-       // [HttpPost]
+        // [HttpPost]
        //[ValidateInput(false)]
        // public ActionResult SMScharging(string Datailedcost)
        // {
@@ -457,11 +459,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             var personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
             return Json(dbtext.SMScharging(personlist), JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult EntitAddClassSchedule()
+        /// <summary>
+        /// S2,S3升学
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EntitAddClassSchedule(int ClassName)
         {
-            string classname = Request.QueryString["ClassName"];
-            return Json(dbtext.EntitAddClassSchedule(classname), JsonRequestBehavior.AllowGet);
+       
+            return Json(dbtext.EntitAddClassSchedule(ClassName), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// S4班级毕业
+        /// </summary>
+        /// <param name="ClassID">班级编号</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult ClassEnd(int ClassID)
+        {
+            return Json(dbtext.ClassEnd(ClassID), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Shiftwork()
+        {
+            string StudentID = Request.QueryString["StudentID"];
+
+            return View();
         }
         public ActionResult PhoneSMS()
         {

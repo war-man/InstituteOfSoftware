@@ -23,7 +23,7 @@
     <div>
         <form class="layui-form">
             <div class="layui-container">
-            
+
                 <div class="layui-row layui-form-item" style="margin-top:30px;">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label lad">计划标题:</label>
@@ -38,6 +38,15 @@
                         <div class="layui-input-inline" id="classlist" style="width:540px">
                         </div>
                     </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label lad"> 就业人数:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" id="peoplenumber" name="peoplenumber" lay-verify="required|number" class="layui-input" placeholder="" />
+                        </div>
+                    </div>
+
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -81,7 +90,19 @@
                 loadclass(classlist);
 
             });
-
+            form.verify({
+                number: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^\d+\d+\d$/.test(value)) {
+                        return '只能全为数字';
+                    }
+                }
+            }); 
             function loadclass(data) {
                  $("#classlist").children().remove();
                 //console.log(data);

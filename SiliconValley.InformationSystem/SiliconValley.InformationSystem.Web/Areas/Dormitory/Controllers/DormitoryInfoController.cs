@@ -366,8 +366,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 childrendtreedata.Add(seconddtree);
             }
 
-         
-
             result.status = dtreestatus;
             result.data = childrendtreedata;
 

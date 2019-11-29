@@ -1,0 +1,250 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>add</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .lad {
+            width: 60px;
+        }
+
+        .mytext {
+            min-height: 55px;
+            width: 333px;
+        }
+
+        .radiodiv {
+            width: 584px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="layui-collapse" lay-filter="collapse0" lay-accordion style="width:96%;margin-left:10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">学生列表</h2>
+                <div id="contentdiv" class="layui-colla-content layui-show">
+                    <form class="layui-form">
+                        <div id="studentlistdiv">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-collapse" lay-filter="collapse1" lay-accordion style="width:96%;margin-left:10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">学生自主就业</h2>
+                <div id="contentdiv1" class="layui-colla-content ">
+                    <form class="layui-form">
+                        <div class="layui-container">
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <label class="layui-form-label lad">学生姓名:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="StudentName" class="layui-input" readonly="readonly" style="border:none" />
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <label class="layui-form-label lad">班级名称:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="classnumnber" class="layui-input" readonly="readonly" style="border:none" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs9 layui-col-sm9 layui-col-md9">
+                                    <label class="layui-form-label lad"> 备注:</label>
+                                    <div class="layui-input-inline">
+                                        <textarea placeholder="请输入内容" name="Remark" id="Remark" class="layui-textarea mytext"></textarea>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                                    <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
+                                    <button type="button" class="layui-btn layui-btn-radius" id="signout">退出</button>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label lad">图片:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="file" id="Image" name="Image" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <img id="showimg" style="width: 620px; height: 740px;" />
+                                </div>
+                            </div>
+
+
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/template" id="muban0">
+        <input type="radio" lay-filter="vvv" name="StudentNumber" value="{{=StudentNumber}}" title="{{=Name}}" {{=checked}}>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+        layui.use(['upload', 'form', 'layer', 'element'], function () {
+            var upload = layui.upload, layer = layui.layer, form = layui.form, element = layui.element, StudentNO, quarterid, isimg = false;
+         //异步读取图片并显示
+            document.querySelector("#Image").onchange = function () {
+                //1.0获取选择的文件
+                var f = this.files[0];
+                //创建文件读取器
+                var file = new FileReader();
+                //读取文件,参数代表要读取的文件
+                file.readAsDataURL(f);
+
+                //开始读取文件
+                //file.start();
+                //注意文件的读取时异步读取的
+                //要在file.onload事件中才能获取到文件的内容
+                file.onload = function (e) {
+                    document.querySelector("#showimg").src = e.target.result;
+                };
+
+                //最后通过file.result属性返回读取文件的内容
+                document.querySelector("#showimg").src = file.result;
+                isimg = true;
+            }
+
+            jQuery(function () {
+
+                var data = JSON.parse('@Html.Raw(ViewBag.studentlist)');
+                loadform();
+                loadstudent(data);
+
+            });
+            function loadform() {
+                var classnumber = '@Html.Raw(ViewBag.param0)';
+                $("#classnumnber").val(classnumber);
+                quarterid = @Html.Raw(ViewBag.param1);
+                console.log(quarterid);
+            }
+            function loadstudent(data) {
+                //console.log(data);
+                console.log(data.length);
+                if (data.length>0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var obj = _.template($("#muban0").html());
+                        var html = '';
+                        if (i == 0) {
+                            html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "checked" });
+                            StudentNO = data[i].StudentNumber;
+                            $('#StudentName').val(data[i].Name);
+                        } else {
+                            html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "" });
+                        }
+
+                        $("#studentlistdiv").append($(html));
+                        form.render();
+                    }
+                } else {
+                    layer.msg('该班级无可操作的学生!', { icon: 6, time: 1000 }, function () {
+                        close();
+                    });  
+                }
+                
+            }
+            form.on('radio(vvv)', function (data) {
+                //console.log(data.elem); //得到radio原始DOM对象
+                //console.log(data.value); //被点击的radio的value值
+                $('#contentdiv').removeClass('layui-show');
+                $('#contentdiv1').addClass('layui-show');
+                $('#StudentName').val($(this).attr('title'));
+                StudentNO = data.value;
+            });
+            element.on('collapse(collapse0)', function (data) {
+                //console.log(data.show); //得到当前面板的展开状态，true或者false
+                //console.log(data.title); //得到当前点击面板的标题区域DOM对象
+                //console.log(data.content); //得到当  前点击面板的内容区域DOM对象
+                if (data.show) {
+                    $('#contentdiv1').removeClass('layui-show');
+                } else {
+                    $('#contentdiv1').addClass('layui-show');
+                }
+            });
+            element.on('collapse(collapse1)', function (data) {
+                if (data.show) {
+                    $('#contentdiv').removeClass('layui-show');
+                } else {
+                    $('#contentdiv').addClass('layui-show');
+                }
+            });
+
+            form.on('submit(demo1)', function (data) {
+                if (isimg) {
+                    var fd = new FormData();
+                    var myimg = document.querySelector("#Image").files[0];
+                    fd.append('Image', myimg);
+                    for (var item in data.field) {
+                        fd.append(item, data.field[item]);
+                    }
+                    fd.append('StudentNO', StudentNO)
+                    fd.append('QuarterID', quarterid)
+                    console.log(fd);
+                    $.ajax({
+                        url: '/Obtainemployment/SelfObtainRcored/add',
+                        type: 'POST',
+                        data: fd,
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (successdata) {
+                            if (successdata.Success) {
+                                layer.msg('操作成功!', { icon: 6, time: 2000 }, function () {
+                                    close();
+                                });
+                            } else {
+                                layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    });
+                } else {
+                    layer.msg('请选择图片!', { icon: 6, time: 2000 }, function () {
+
+                    });
+                }
+
+                return false;
+            });
+            $('#signout').click(function () {
+                close();
+            });
+            function close() {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+    </script>
+</body>
+</html>

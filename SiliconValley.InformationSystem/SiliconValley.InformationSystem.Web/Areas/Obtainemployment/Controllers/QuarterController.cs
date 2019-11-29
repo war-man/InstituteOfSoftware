@@ -107,6 +107,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbempQuarterClass = new EmpQuarterClassBusiness();
             var nowdate = DateTime.Now.Year;
             var querydata = dbquarter.GetQuartersByYear(nowdate);
+            if (!string.IsNullOrEmpty(param0))
+            {
+                querydata = querydata.Where(a => a.RegDate.Year == int.Parse(param0)).ToList();
+            }
             var resultlist = new List<QuarterView>();
             foreach (var item in querydata)
             {
@@ -115,7 +119,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 view.QuaTitle = item.QuaTitle;
                 view.RegDate = item.RegDate;
                 view.Remark = item.Remark;
-
+                view.peoplenumber = item.peoplenumber;
                 var querylist1 = dbempQuarterClass.GetEmpQuartersByYearID(item.ID);
                 var selectlist = querylist1.Select(a => new
                 {
@@ -188,6 +192,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 {
                     queryquarter.QuaTitle = param0.QuaTitle;
                     queryquarter.Remark = param0.Remark;
+                    queryquarter.peoplenumber = param0.peoplenumber;
                     dbquarter.Update(queryquarter);
 
                     for (int i = classlist.Count - 1; i >= 0; i--)

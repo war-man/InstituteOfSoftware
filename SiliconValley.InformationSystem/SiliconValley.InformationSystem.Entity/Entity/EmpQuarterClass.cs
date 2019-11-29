@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> QuarterID { get; set; }
+        public int QuarterID { get; set; }
         public string ClassNO { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }

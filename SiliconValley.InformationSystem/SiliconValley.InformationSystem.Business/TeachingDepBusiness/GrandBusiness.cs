@@ -12,7 +12,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     /// </summary>
    public class GrandBusiness:BaseBusiness<Grand>
     {
-
+        /// <summary>
+        /// 根据阶段编号获取阶段对象
+        /// </summary>
+        /// <param name="GrandID">阶段编号</param>
+        /// <returns></returns>
         public Grand GetGrandByID(int GrandID)
         {
            return this.GetList().Where(d=>d.IsDelete==false && d.Id==GrandID).FirstOrDefault();
