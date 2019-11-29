@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
+
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
     public class MonthlySalaryRecordManage : BaseBusiness<MonthlySalaryRecord>
@@ -98,9 +100,9 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="finalGrade">绩效分</param>
         /// <param name="performancelimit">绩效额度</param>
         /// <returns></returns>
-        public decimal GetempPerformanceSalary(decimal finalGrade, decimal performancelimit)
+        public decimal? GetempPerformanceSalary(decimal? finalGrade, decimal? performancelimit)
         {
-            decimal result;
+            decimal? result;
             if (finalGrade == 100)
             {
                 result = performancelimit;
@@ -123,42 +125,20 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="netbookSubsidy">笔记本补助</param>
         /// <param name="socialSecuritySubsidy">社保补贴</param>
         /// <returns></returns>
-        public decimal GetSalaryone(decimal one,decimal PerformanceSalary,decimal netbookSubsidy,decimal socialSecuritySubsidy)
+        public decimal? GetSalaryone(decimal? one,decimal? PerformanceSalary,decimal? netbookSubsidy,decimal? socialSecuritySubsidy)
         {
-            decimal SalaryOne=0;
-            
-            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            decimal ?SalaryOne=one;
+            if (!string.IsNullOrEmpty(PerformanceSalary.ToString()))
             {
-                SalaryOne = one;
+                SalaryOne = SalaryOne + PerformanceSalary;
             }
-            
-            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            if (!string.IsNullOrEmpty(netbookSubsidy.ToString()))
             {
-                SalaryOne = one + PerformanceSalary;
+                SalaryOne = SalaryOne + netbookSubsidy;
             }
-            if (string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
+            if (!string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
             {
-               SalaryOne = one + netbookSubsidy;
-            }
-            if (string.IsNullOrEmpty(socialSecuritySubsidy.ToString()) && string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()))
-            {
-              SalaryOne = one + socialSecuritySubsidy;
-            }
-            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
-            {
-              SalaryOne = one +PerformanceSalary + netbookSubsidy;
-            }
-            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
-            {
-              SalaryOne = one +PerformanceSalary + socialSecuritySubsidy;
-            }
-            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
-            {
-              SalaryOne = one +netbookSubsidy +socialSecuritySubsidy; ;
-            }
-            if (string.IsNullOrEmpty(PerformanceSalary.ToString()) && string.IsNullOrEmpty(netbookSubsidy.ToString()) && string.IsNullOrEmpty(socialSecuritySubsidy.ToString()))
-            {
-               SalaryOne = one + PerformanceSalary + netbookSubsidy + socialSecuritySubsidy;
+                SalaryOne = SalaryOne + socialSecuritySubsidy;
             }
 
             return SalaryOne;
@@ -173,10 +153,11 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="shouldday">应出勤天数</param>
         /// <param name="leaveday">请假天数</param>
         /// <returns></returns>
-        public bool GetLeaveDeductions(int id, decimal one, decimal persalary, decimal shouldday, decimal leaveday)
+        public decimal? GetLeaveDeductions(int id, decimal? one, decimal? persalary, decimal? shouldday, decimal? leaveday)
         {
-            decimal countsalary;
-            bool result;
+            AjaxResult result=new AjaxResult();
+            decimal? countsalary;
+            var msr = this.GetEntity(id);
             try
             {
                 if (!string.IsNullOrEmpty(persalary.ToString()))
@@ -187,19 +168,27 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 {
                     countsalary = one;
                 }
-                var leavewithhold = countsalary / shouldday * leaveday;
-                var msr = this.GetEntity(id);
-                msr.LeaveDeductions = leavewithhold;
-                this.Success();
-                result = true;
+                if (!string.IsNullOrEmpty(leaveday.ToString()))
+                {
+                    countsalary = countsalary / shouldday * leaveday;
+
+                    msr.LeaveDeductions = countsalary;
+                    this.Update(msr);
+                    result = this.Success();
+                    countsalary = (decimal)Math.Round(Convert.ToDouble(countsalary), 2);
+                }
+                else {
+                    countsalary = null;
+                }          
+               
             }
             catch (Exception ex)
             {
-                this.Error(ex.Message);
-                result = false;
+               result= this.Error(ex.Message);
+                countsalary = null;
             }
-            return result;
-
+           
+                return countsalary;
         }
 
 

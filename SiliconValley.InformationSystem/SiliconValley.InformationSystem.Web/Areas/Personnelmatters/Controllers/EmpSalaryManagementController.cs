@@ -70,25 +70,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     view.PerformanceSalary = null;
                 }
                 else {
-                    view.PerformanceSalary =msrmanage.GetempPerformanceSalary((decimal)view.finalGrade, (decimal)eseobj.PerformancePay);
+                    view.PerformanceSalary =msrmanage.GetempPerformanceSalary(view.finalGrade,eseobj.PerformancePay);
                 }
               
                 view.netbookSubsidy = eseobj.NetbookSubsidy;
                 view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;
                 #region 应发工资1赋值
                 var one = view.baseSalary + view.positionSalary;
-                view.SalaryOne = msrmanage.GetSalaryone((decimal)one,(decimal)view.PerformanceSalary,(decimal)view.netbookSubsidy,(decimal)view.socialSecuritySubsidy);
+              
+                view.SalaryOne = msrmanage.GetSalaryone(one,view.PerformanceSalary,view.netbookSubsidy,view.socialSecuritySubsidy);
                 #endregion
 
 
                 view.OvertimeCharges = item.OvertimeCharges;
                 view.Bonus = item.Bonus;
 
-                if (msrmanage.GetLeaveDeductions(item.Id,(decimal)one,(decimal)view.PerformanceSalary,(decimal)attendobj.DeserveToRegularDays,(decimal)view.leavedays)) {
-                    view.LeaveDeductions = item.LeaveDeductions;
-                }
+                    view.LeaveDeductions = msrmanage.GetLeaveDeductions(item.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);
+                
                 view.OtherDeductions = item.OtherDeductions;
+
+                #region 应发工资1赋值
                 view.SalaryTwo = view.SalaryOne + view.OvertimeCharges + view.Bonus - view.LeaveDeductions + view.OtherDeductions;
+                #endregion
+
                 view.PersonalSocialSecurity = item.PersonalSocialSecurity;
                 view.PersonalIncomeTax = eseobj.PersonalIncomeTax;
                 view.Total = item.Total;
