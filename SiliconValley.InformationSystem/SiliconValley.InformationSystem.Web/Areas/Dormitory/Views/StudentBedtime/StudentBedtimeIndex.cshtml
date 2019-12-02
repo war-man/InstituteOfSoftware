@@ -215,6 +215,11 @@
                 elem: "#demoTree",
                 initLevel: 1,
                 url: '/Dormitory/DormitoryInfo/EstablishTree',
+                success: function (res, $obj, first) {
+                    jstungid = res.data[0].nodeId;
+                    jsfloorid = res.data[0].children[0].nodeId;
+                    loaddata();
+                },
                 formatter: {
                     title: function (data) {  // 示例给有子集的节点返回节点统计
                         var s = data.context;
@@ -312,7 +317,6 @@
             });
 
             $(function () {
-                loadtree();
                 male = $getsex("Male");
 
             });
@@ -327,31 +331,7 @@
                     }
                 });
             }
-            //加载树
-            function loadtree() {
-                $.ajax({
-                    url: '/Dormitory/DormitoryInfo/EstablishTree',
-                    type: 'GET',
-                    success: function (successdata) {
-                        //console.log(successdata);
-                        jstungid = successdata.data[0].nodeId;
-                        jsfloorid = successdata.data[0].children[0].nodeId;
-                        loaddata();
-                        //可以重载所有基础参数
-                        myDTree.reload(
-                            'demoTree',
-                            {
-                                data: successdata
 
-                            });
-                    },
-                    error: function (errordata) {
-                        layer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
-
-                        });
-                    }
-                });
-            }
             // 绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
                 //console.log(obj);

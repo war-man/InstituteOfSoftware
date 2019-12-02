@@ -157,14 +157,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 ScheduleForTrainees querytrainees = dbprotrainees.GetTraineesByStudentNumber(Studentnumber);
                 view.ClassNO = querytrainees.ClassID;
                 HeadClass queryheadclass = dbproheadclass.GetClassByClassid(querytrainees.ID_ClassName);
-                Headmaster querymaster = dbpromaster.GetHeadById(queryheadclass.LeaderID);
-                if (querymaster == null)
+                
+                if (queryheadclass == null)
                 {
                     view.StaffName = "";
                     view.StaffPhone = "";
                 }
                 else
                 {
+                    Headmaster querymaster = dbpromaster.GetHeadById(queryheadclass.LeaderID);
                     EmployeesInfo queryempinfo = dbempinfo.GetInfoByEmpID(querymaster.informatiees_Id);
                     view.StaffName = queryempinfo.EmpName;
                     view.StaffPhone = queryempinfo.Phone;

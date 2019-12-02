@@ -103,6 +103,7 @@
                 , limits: [15, 30, 45, 60, 75]
                 , cols: [[ //标题栏
                     , { type: 'checkbox' }
+                    , { field: 'Classid', title: '班级id',width: 165, hide: true}
                     , { field: 'ClassNumber', title: '班级编号', width: 165}
                     , { field: 'EntID', title: '员工id', width: 165, hide: true }
                     , { field: 'EmpName', title: '员工姓名', width: 145 }
@@ -136,7 +137,7 @@
                             type: 2
                             , area: ["1000px", "620px"]
                             , title: "分配班级"
-                            , content: '/Obtainemployment/EmpClass/Distribution/' + data.ClassNumber
+                            , content: '/Obtainemployment/EmpClass/Distribution?classid=' + data.Classid
                             , anim: "2" /* 改变弹出层弹出方式*/
                             , end: function () {
                                 table.reload('empclass', {

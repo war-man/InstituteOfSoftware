@@ -13,6 +13,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         /// </summary>
         public string ClassName { get; set; }
         /// <summary>
+        // 班级id
+        /// </summary>
+        public int Classid { get; set; }
+        /// <summary>
         /// 专业名字
         /// </summary>
         public string SpecialtyName { get; set; }

@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 }
                 else
                 {
-                    obj0.EmpName = string.Empty;
+                    obj0.EmpName = "该班级暂未分配班主任";
                 }
                 result0.Add(obj0);
             }
