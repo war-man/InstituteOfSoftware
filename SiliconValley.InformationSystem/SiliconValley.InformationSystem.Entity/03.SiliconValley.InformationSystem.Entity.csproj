@@ -210,6 +210,8 @@
     <Compile Include="Entity\NurseTeamonDuty.cs" />
     <Compile Include="Entity\NurseTeamPosition.cs" />
     <Compile Include="Entity\Officebuildingonduty.cs" />
+    <Compile Include="Entity\OtherRoleMapPermissionValue.cs" />
+    <Compile Include="Entity\OthorPermission.cs" />
     <Compile Include="Entity\Outbreaksindormitories.cs" />
     <Compile Include="Entity\OvertimeRecord.cs" />
     <Compile Include="Entity\ParticiParticipants.cs" />
@@ -240,6 +242,7 @@
     <Compile Include="Entity\RoomStayType.cs" />
     <Compile Include="Entity\SalaryRaiseApply.cs" />
     <Compile Include="Entity\Satisfaction.cs" />
+    <Compile Include="Entity\SatisfactionSurveyObject.cs" />
     <Compile Include="Entity\SatisficingConfig.cs" />
     <Compile Include="Entity\SatisficingItem.cs" />
     <Compile Include="Entity\SatisficingResult.cs" />
@@ -391,6 +394,7 @@
     <Compile Include="ViewEntity\SalaryView\MySalaryObjView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyDetailView.cs" />
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
+    <Compile Include="ViewEntity\SatisficingConfigView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />
     <Compile Include="ViewEntity\ShowBaomingListView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
@@ -404,6 +408,7 @@
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
     <Compile Include="ViewEntity\SuccessionrecordView.cs" />
+    <Compile Include="ViewEntity\SurveyCommitHelper.cs" />
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />

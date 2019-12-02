@@ -9,19 +9,22 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Entity.Base_SysManage;
+    using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
+    using System.Xml;
 
 
 
     /// <summary>
     /// 满意度调查业务类
     /// </summary>
-  public  class SatisfactionSurveyBusiness:BaseBusiness<SatisficingItem>
+    public  class SatisfactionSurveyBusiness:BaseBusiness<SatisficingItem>
     {
         CourseBusiness db_course = new CourseBusiness();
 
-        BaseBusiness<EmployeesInfo> db_emp = new BaseBusiness<EmployeesInfo>();
+        EmployeesInfoManage db_emp = new EmployeesInfoManage();
 
         BaseBusiness<StudentInformation> db_student = new BaseBusiness<StudentInformation>();
 
@@ -33,13 +36,18 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         BaseBusiness<SatisficingResultDetail> db_satisresultdetail = new BaseBusiness<SatisficingResultDetail>();
 
+        private readonly BaseBusiness<SatisfactionSurveyObject> db_satisfactionObject;
 
+
+        /// <summary>
+        /// 满意度调查对象实例
+        /// </summary>
         private readonly BaseBusiness<SatisficingType> db_saitemtype;
         public SatisfactionSurveyBusiness()
         {
 
             db_saitemtype = new BaseBusiness<SatisficingType>();
-
+            db_satisfactionObject = new BaseBusiness<SatisfactionSurveyObject>();
         }
 
         public List<SatisficingItem> GetAllSatisfactionItems()
@@ -49,10 +57,30 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        public List<SatisficingResult> AllsatisficingResults()
+        {
+            return db_satisresult.GetIQueryable().ToList();
+        }
+
+
+        /// <summary>
+        /// 获取所有满意度调查对象实例
+        /// </summary>
+        /// <returns></returns>
+        public List<SatisfactionSurveyObject> AllSatisfactionSurveyObject()
+        {
+            return db_satisfactionObject.GetList().ToList();
+        }
+
+        public void insertSatisfactionResult(SatisficingResult satisficingResult)
+        {
+            db_satisresult.Insert(satisficingResult);
+        }
+
         /// <summary>
         /// 对调查具体项进行筛选
         /// </summary>
-        /// <param name="DepID">部门ID</param>
+        /// <param name="DepID">调查对象Id</param>
         /// <param name="satisfactionTypeID">调查类型ID 比如:学术能力、教学态度、教学能力</param>
         /// <returns></returns>
         public List<SatisficingItem> Screen(int DepID, int satisfactionTypeID)
@@ -220,7 +248,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             detailView.Emp = db_emp.GetList().Where(d => d.EmployeeId == satisficingConfig.EmployeeId && d.IsDel == false).FirstOrDefault();
 
-            detailView.investigationClass = db_class.GetList().Where(d => d.ClassNumber == satisficingConfig.ClassNumber).FirstOrDefault();
+            detailView.investigationClass = db_class.GetList().Where(d => d.id == satisficingConfig.ClassNumber).FirstOrDefault();
 
             detailView.FillInPerson = db_student.GetList().Where(d => d.StudentNumber == satisficingResult.Answerer).FirstOrDefault();
 
@@ -333,7 +361,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
             else
             {
-                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CurriculumID == Curriculum && d.ClassNumber == classnumber).ToList();
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CurriculumID == Curriculum && d.ClassNumber == int.Parse(classnumber)).ToList();
             }
 
             foreach (var item in templist)
@@ -371,7 +399,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
             else
             {
-                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >= DateTime.Parse(date) && d.CreateTime < DateTime.Parse(date).AddMonths(1) && d.ClassNumber == classnumber).ToList();
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >= DateTime.Parse(date) && d.CreateTime < DateTime.Parse(date).AddMonths(1) && d.ClassNumber == int.Parse(classnumber)).ToList();
             }
 
             foreach (var item in templist)
@@ -468,11 +496,260 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             DateTime da = DateTime.Parse(Date);
 
-            var list = this.satisficingConfigs().Where(d => d.IsDel == false && d.ClassNumber == classnumber && d.EmployeeId == empid && DateTime.Parse(d.CreateTime.ToString()).Year == da.Year && DateTime.Parse(d.CreateTime.ToString()).Month == da.Month).ToList();
+            var list = this.satisficingConfigs().Where(d => d.IsDel == false && d.ClassNumber == int.Parse(classnumber) && d.EmployeeId == empid && DateTime.Parse(d.CreateTime.ToString()).Year == da.Year && DateTime.Parse(d.CreateTime.ToString()).Month == da.Month).ToList();
 
             return list != null;
 
         }
+
+
+        /// <summary>
+        /// 获取还未过期的满意度调查
+        /// </summary>
+        /// <returns></returns>
+        public List<SatisficingConfig> GetSatisficingConfigNoCutOffdate()
+        {
+            return db_satisconfig.GetIQueryable().ToList().Where(d => d.CutoffDate >= DateTime.Now).ToList();
+        }
+
+
+        /// <summary>
+        /// 获取学员在某个满意度调查单中的结果
+        /// </summary>
+        /// <param name="student"></param>
+        /// <param name="SatisficingConfigId"></param>
+        /// <returns></returns>
+        public SatisficingResult GetSatisficingResult(string student, int SatisficingConfigId)
+        {
+             var result = db_satisresult.GetIQueryable().Where(d => d.Answerer == student && d.SatisficingConfig == SatisficingConfigId).FirstOrDefault();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 获取学员可以填写的满意度
+        /// </summary>
+        /// <param name="student"></param>
+        ///   /// <param name="type">教员(teacher), 教职(jiaozhi)</param>
+        /// <returns></returns>
+        public List <SatisficingConfig> GetSatisficingConfigsByStudent(string student, string type)
+        {
+            List<SatisficingConfig> result = new List<SatisficingConfig>();
+
+            //条件 未到满意度填写截止日期 为当前学员的班级 未填写过
+
+            //获取学员当前班级
+            TeacherClassBusiness db_teaclsss = new TeacherClassBusiness();
+
+           var stuClass = db_teaclsss.GetScheduleByStudent(student);
+
+            //var 
+
+            List<SatisficingConfig> list = new List<SatisficingConfig>();
+
+            if (type == "teacher")
+            {
+                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id).ToList();
+            }
+
+            if (type == "jiaozhi")
+            {
+                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id && d.CurriculumID ==null).ToList();
+            }
+
+
+            if (list.Count == 0)
+            {
+                return result;
+            }
+
+            foreach (var item in list)
+            {
+                //证明未填写过
+                var tempobj = GetSatisficingResult(student, item.ID);
+
+                if (tempobj == null)
+                {
+                    result.Add(item);
+                }
+
+            }
+
+            return result;
+
+
+
+        }
+
+        public SatisficingConfigView ConvertToview(SatisficingConfig satisficingConfig)
+        {
+            SatisficingConfigView view = new SatisficingConfigView();
+
+            TeacherClassBusiness db_teachclss = new TeacherClassBusiness();
+
+            view.ClassNumber = db_teachclss.GetClassByClassNumber(satisficingConfig.ClassNumber.ToString());
+            view.CreateTime = satisficingConfig.CreateTime;
+            view.CurriculumID = db_course.GetCurriculas().Where(d => d.CurriculumID == satisficingConfig.CurriculumID).FirstOrDefault();
+            view.CutoffDate = satisficingConfig.CutoffDate;
+            view.EmployeeId = db_emp.GetInfoByEmpID(satisficingConfig.EmployeeId);
+            view.ID = satisficingConfig.ID;
+            view.IsDel = satisficingConfig.IsDel;
+            view.IsPastDue = satisficingConfig.IsPastDue;
+            view.Remark = satisficingConfig.Remark;
+
+            return view;
+        }
+
+       
+        public bool IsContains(List<EmployeesInfo> sources, EmployeesInfo employeesInfo)
+        {
+            foreach (var item in sources)
+            {
+                if (item.EmployeeId == employeesInfo.EmployeeId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsContains(List<Department> sources, Department department)
+        {
+            foreach (var item in sources)
+            {
+                if (item.DeptId == department.DeptId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        /// <summary>
+        /// 根据角色获取满意度历史记录
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetMyDepEmp(Base_UserModel user)
+        {
+
+            //获取账号所有的角色
+
+            var userRoles = user.RoleIdList;
+
+            //当前登录人的部门下的人  (人员可能重复)
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+            //循环获取每个角色的权限
+
+            foreach (var role in userRoles)
+            {
+                // 权限id 权限名称 ,可查看的部门 
+
+
+                //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
+                BaseBusiness<OtherRoleMapPermissionValue> db_permissrole = new BaseBusiness<OtherRoleMapPermissionValue>();
+
+               var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
+
+                foreach (var permission in permissions)
+                {
+                    //根据权限到 配置文件中去匹配
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+
+                    var xmlRoot = xmlDocument.DocumentElement;
+
+                    var permissionConfig = (XmlElement)xmlRoot.GetElementsByTagName("permissions")[0];
+
+                    //获取配置文件中的权限
+                    XmlNodeList  permissNmaes = permissionConfig.ChildNodes;
+
+                    foreach (XmlElement item in permissNmaes)
+                    {
+                        if (item.Attributes["permissionid"].Value == permission.PermissionValue)
+                        {
+                            //获取部门
+                            var depStr = item.Attributes["depIds"].Value.Split(',');
+                            List<string> deplist = depStr.ToList();
+                            if (depStr[depStr.Length - 1] == "")
+                            {
+                                deplist.RemoveAt(depStr.Length - 1);
+                            }
+                            //获取部门人员
+
+                            foreach (var depItem in deplist)
+                            {
+                               emplist.AddRange(db_emp.GetEmpsByDeptid(int.Parse(depItem)));
+                            }
+                        }
+                    }
+                   
+                }
+
+
+            }
+
+            List<EmployeesInfo> resultEmplist  = new List<EmployeesInfo>();
+
+            foreach (var item in emplist)
+            {
+                if (!IsContains(resultEmplist, item))
+                {
+                    resultEmplist.Add(item);
+                }
+            }
+
+
+
+
+            return resultEmplist;
+        }
+
+        public List<SatisficingConfig> SurveyData_filter(string empnumber, string date)
+        {
+            DateTime surveyDate = DateTime.Parse(date);
+
+            if (empnumber == null || empnumber == "")
+            {
+
+                return this.satisficingConfigs().Where(d => ((DateTime)d.CreateTime).Year == surveyDate.Year && ((DateTime)d.CreateTime).Month == surveyDate.Month).ToList();
+            }
+            else
+            {
+                return this.satisficingConfigs().Where(d => d.EmployeeId == empnumber && ((DateTime)d.CreateTime).Year == surveyDate.Year && ((DateTime)d.CreateTime).Month == surveyDate.Month).ToList();
+            }
+
+            
+
+        }
+
+
+        /// <summary>
+        /// 获取参加满意度调查的学员
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentInformation> JoinSurveyStudents(int SurveyConfigId)
+        {
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+
+           var list = this.AllsatisficingResults().Where(d => d.SatisficingConfig == SurveyConfigId).ToList();
+
+            foreach (var item in list)
+            {
+               var tempobj = db_student.GetIQueryable().Where(d => d.StudentNumber == item.Answerer).FirstOrDefault();
+
+                if (tempobj != null)
+                    studentlist.Add(tempobj);
+            }
+
+            return studentlist;
+
+        }
+
+
 
 
     }

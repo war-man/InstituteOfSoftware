@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+ <!--满意度调查单配置-->
+
+  <defaultCutOffDate value="3"></defaultCutOffDate> <!--设置满意度调查单的填写截止时长 默认 3 小时 -->
+  
+  <!--权限配置-->
+  <permissions>
+    <permission permissionid="Principal_SearchSurveyHistory" depIds="1,2,1008,1009,1010"></permission>
+    <permission permissionid="s1s2MsterDirector_SearchSurveyHistory" depIds="1"></permission>
+    <permission permissionid="s1s2TeacherDirector_SearchSurveyHistory" depIds="2"></permission>
+    <permission permissionid="s3TeacherDirector_SearchSurveyHistory" depIds="1009"></permission>
+    <permission permissionid="s3MasterDirector_SearchSurveyHistory" depIds="1008"></permission>
+    <permission permissionid="s4TeacherDirector_SearchSurveyHistory" depIds="1010"></permission>
+    
+  </permissions>
+ 
+  
+</root>

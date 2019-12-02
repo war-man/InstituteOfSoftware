@@ -25,9 +25,9 @@
                     <select name="classnumber" id="classnumber">
 
                         @{
-                            foreach (var item in ViewBag.classlist as List<HeadClass>)
+                            foreach (var item in ViewBag.classlist as List<ClassSchedule>)
                             {
-                                <option value="@item.ClassID">@item.ClassID</option>
+                                <option value="@item.id">@item.ClassNumber</option>
                             }
 
                         }
@@ -41,7 +41,7 @@
 
             <div style="width:100%; text-align:center;">
 
-                <button id="Commit" class="layui-btn layui-btn-danger">确定</button>
+                <button id="Commit" type="button" class="layui-btn layui-btn-danger">确定</button>
 
             </div>
 
@@ -55,7 +55,7 @@
 
             var form = layui.form;
             var layer = layui.layer;
-            $("Commit").click(function () {
+            $("#Commit").click(function () {
 
                 layer.confirm("确认!", function (index) {
 
