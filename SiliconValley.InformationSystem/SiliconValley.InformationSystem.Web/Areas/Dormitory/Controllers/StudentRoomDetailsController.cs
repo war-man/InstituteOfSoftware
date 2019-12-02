@@ -67,7 +67,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                         if (obj0 != null)
                         {
                             dbproScheduleForTrainees = new ProScheduleForTrainees();
-                            var list0 = dbproScheduleForTrainees.GetTraineesByClassNO(obj0.ClassNumber);
+                            var list0 = dbproScheduleForTrainees.GetTraineesByClassid(obj0.id);
                             ajaxResult.Data = dbconversion.ScheduleForTraineesToProStudentView(list0, true); ;
                             ajaxResult.Success = true;
 
@@ -156,7 +156,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 view.StudentPhone = querystudent.Telephone;
                 ScheduleForTrainees querytrainees = dbprotrainees.GetTraineesByStudentNumber(Studentnumber);
                 view.ClassNO = querytrainees.ClassID;
-                HeadClass queryheadclass = dbproheadclass.GetClassByClassNO(querytrainees.ClassID);
+                HeadClass queryheadclass = dbproheadclass.GetClassByClassid(querytrainees.ID_ClassName);
                 Headmaster querymaster = dbpromaster.GetHeadById(queryheadclass.LeaderID);
                 if (querymaster == null)
                 {

@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             var list = dbempClass.GetEmpClassesByempinfoid("201908220012");
             var aa = list.Select(a => new
             {
-                ClassNumber = a.ClassNO
+                ClassNumber =a.ClassId
             }).ToList();
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
             return View();
@@ -74,9 +74,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <summary>
         /// 获取数据
         /// </summary>
-        /// <param name="param0"></param>
+        /// <param name="param0">班级id</param>
         /// <returns></returns>
-        public ActionResult getmudata(string param0)
+        public ActionResult getmudata(int param0)
         {
             AjaxResult ajaxResult = new AjaxResult();
             try
@@ -87,7 +87,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbsurveyRecords = new SurveyRecordsBusiness();
                 SResearchRecordRegisterView view = new SResearchRecordRegisterView();
                 var queryclass = dbproClassSchedule.GetEntity(param0);
-                var cdlist = dbsurveyRecords.GetCDSurveyRecordsByclassno(param0);
+                var cdlist = dbsurveyRecords.GetCDSurveyRecordsByclassid(param0);
                 List<StudentInformation> studentlist = new List<StudentInformation>();
 
                 foreach (var item in cdlist)
@@ -127,6 +127,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
+        /// <param name="param0">班级编号</param>
         /// <returns></returns>
         public ActionResult SearchData(int page, int limit, string param0)
         {
@@ -136,7 +137,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbspecialty = new SpecialtyBusiness();
             dbcDInterview = new CDInterviewBusiness();
            
-            var list1 = dbcDInterview.GetCDInterviewsByClassno(param0);
+            var list1 = dbcDInterview.GetCDInterviewsByClassid(int.Parse(param0));
 
             var aa = list1.Select(a => new
             {

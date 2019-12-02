@@ -49,18 +49,18 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classiD"></param>
         /// <returns></returns>
-        public ClassSchedule GetClassedByID(string classiD)
+        public ClassSchedule GetClassedByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级id获取正在学习的班级
         /// </summary>
         /// <param name="classiD"></param>
         /// <returns></returns>
-        public ClassSchedule GetClassingByID(string classiD)
+        public ClassSchedule GetClassingByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.ClassNumber == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
         }
         /// <summary>
         /// 获取带班已毕业的
@@ -72,7 +72,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             List<ClassSchedule> classedList = new List<ClassSchedule>();
             foreach (var item in emps)
             {
-                ClassSchedule classed = this.GetClassedByID(item.ClassNO);
+                ClassSchedule classed = this.GetClassedByID(item.ClassId);
                 classedList.Add(classed);
             }
             return classedList;
@@ -88,7 +88,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             List<ClassSchedule> classedList = new List<ClassSchedule>();
             foreach (var item in emps)
             {
-                ClassSchedule classed = this.GetClassingByID(item.ClassNO);
+                ClassSchedule classed = this.GetClassingByID(item.ClassId);
                 classedList.Add(classed);
             }
             return classedList;
@@ -144,7 +144,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             {
                 foreach (var empclass in empclasslist)
                 {
-                    if (alldata[i].ClassNumber == empclass.ClassNO)
+                    if (alldata[i].id == empclass.ClassId)
                     {
                         alldata.Remove(alldata[i]);
                         break;
@@ -178,9 +178,9 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="ClassNo"></param>
         /// <returns></returns>
-        public Grand GetGrandByClassNo(string ClassNo)
+        public Grand GetGrandByClassid(int classid)
         {
-            var classdata = this.GetClassFormServer().Where(a => a.ClassNumber == ClassNo).FirstOrDefault();
+            var classdata = this.GetClassFormServer().Where(a => a.id == classid).FirstOrDefault();
             return this.GetGrandByID(classdata.grade_Id);
         }
         /// <summary>

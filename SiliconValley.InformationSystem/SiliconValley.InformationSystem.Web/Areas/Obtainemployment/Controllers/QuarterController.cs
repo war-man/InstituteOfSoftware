@@ -68,7 +68,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     for (int i = 0; i < classlist.Length; i++)
                     {
                         EmpQuarterClass empQuarterClass = new EmpQuarterClass();
-                        empQuarterClass.ClassNO = classlist[i];
+                        empQuarterClass.Classid =int.Parse(classlist[i]);
                         empQuarterClass.IsDel = false;
                         empQuarterClass.QuarterID = bb.ID;
                         empQuarterClass.RegDate = DateTime.Now;
@@ -124,7 +124,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 var selectlist = querylist1.Select(a => new
                 {
                     a.ID,
-                    a.ClassNO
+                    a.Classid
                 }).ToList();
                 view.EmpQuarterClassList = selectlist;
                 resultlist.Add(view);
@@ -160,7 +160,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             var queryempQuarterclass = dbempQuarterClass.GetEmpQuartersByYearID(queryquarter.ID);
             foreach (var item in queryempQuarterclass)
             {
-                var queryclass = dbproClassSchedule.GetNotgraduatedClassByClassNumber(item.ClassNO);
+                var queryclass = dbproClassSchedule.GetEntity(item.Classid);
                 checkclasslist.Add(queryclass);
             }
             querydata.AddRange(checkclasslist);
@@ -199,7 +199,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     {
                         for (int j = quarterclasslist.Count - 1; j >= 0; j--)
                         {
-                            if (classlist[i] == quarterclasslist[j].ClassNO)
+                            if (classlist[i] == quarterclasslist[j].Classid.ToString())
                             {
                                 classlist.Remove(classlist[i]);
                                 quarterclasslist.Remove(quarterclasslist[j]);
@@ -215,7 +215,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     for (int i = 0; i < classlist.Count; i++)
                     {
                         EmpQuarterClass empQuarterClass = new EmpQuarterClass();
-                        empQuarterClass.ClassNO = classlist[i];
+                        empQuarterClass.Classid = int.Parse(classlist[i]);
                         empQuarterClass.IsDel = false;
                         empQuarterClass.QuarterID = queryquarter.ID;
                         empQuarterClass.RegDate = DateTime.Now;

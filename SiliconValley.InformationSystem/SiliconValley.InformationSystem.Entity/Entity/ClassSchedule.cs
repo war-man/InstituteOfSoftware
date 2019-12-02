@@ -22,13 +22,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
 
 
-        /// <summary>
-        /// 编号
+      
+        ///   /// <summary>
+        /// 班级id
         /// </summary>
-          [Key]
+        [Key]
         public int id { get; set; }
         /// <summary>
-        /// 班级名称
+        /// 编号
         /// </summary>
         public string ClassNumber { get; set; }
         /// <summary>

@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             dbmaster = new ProHeadmaster();
             dbempinfo = new EmployeesInfoManage();
             ScheduleForTrainees queryScheduleForTrainees = dbschedtrain.GetTraineesByStudentNumber(Studentnumber);
-            HeadClass queryHeadClass= dbheadclass.GetClassByClassNO(queryScheduleForTrainees.ClassID);
+            HeadClass queryHeadClass= dbheadclass.GetClassByClassid(queryScheduleForTrainees.ID_ClassName);
             Headmaster queryHeadmaster= dbmaster.GetEntity(queryHeadClass.LeaderID);
             return dbempinfo.GetEntity(queryHeadmaster.informatiees_Id);
         }

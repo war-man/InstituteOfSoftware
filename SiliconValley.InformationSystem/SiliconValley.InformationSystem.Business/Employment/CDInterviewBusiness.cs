@@ -22,12 +22,12 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<CDInterview> GetCDInterviewsByClassno(string classno)
+        public List<CDInterview> GetCDInterviewsByClassid(int classid)
         {
             var list = this.GetCDInterviews();
             List<CDInterview> dd = new List<CDInterview>();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
-            var list1 = dbproScheduleForTrainees.GetTraineesByClassNO(classno);
+            var list1 = dbproScheduleForTrainees.GetTraineesByClassid(classid);
             foreach (var item in list)
             {
                 foreach (var item1 in list1)

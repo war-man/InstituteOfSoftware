@@ -48,15 +48,15 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="ClassNO"></param>
         /// <returns></returns>
-        public List<ScheduleForTrainees> GetTraineesByClassNO(string ClassNO) {
+        public List<ScheduleForTrainees> GetTraineesByClassid(int classid) {
             dbproClassSchedule = new ProClassSchedule();
-            if (dbproClassSchedule.isgraduationclass(ClassNO))
+            if (dbproClassSchedule.isgraduationclass(classid))
             {
-                return this.GetScheduleForTraineesed().Where(a => a.ClassID == ClassNO).ToList();
+                return this.GetScheduleForTraineesed().Where(a => a.ID_ClassName == classid).ToList();
             }
             else
             {
-                return this.GetScheduleForTrainees().Where(a => a.ClassID == ClassNO).ToList();
+                return this.GetScheduleForTrainees().Where(a => a.ID_ClassName == classid).ToList();
             }
             
         }

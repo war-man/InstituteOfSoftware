@@ -24,7 +24,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public int QuarterID { get; set; }
-        public string ClassNO { get; set; }
+        /// <summary>
+        /// 班级id
+        /// </summary>
+        public int  Classid { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> RegDate { get; set; }

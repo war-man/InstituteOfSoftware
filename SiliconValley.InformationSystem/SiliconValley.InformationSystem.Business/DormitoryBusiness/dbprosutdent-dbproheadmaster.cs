@@ -28,7 +28,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbheadclass = new ProHeadClass();
             dbproheader = new ProHeadmaster();
             ScheduleForTrainees querytrainess = dbprotrainess.GetTraineesByStudentNumber(StudentNumber);
-            HeadClass queryheadclass = dbheadclass.GetClassByClassNO(querytrainess.ClassID);
+            HeadClass queryheadclass = dbheadclass.GetClassByClassid(querytrainess.ID_ClassName);
             return dbproheader.GetHeadById(queryheadclass.LeaderID);
         }
 
@@ -61,11 +61,11 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public Headmaster GetHeadmasterByClassno(string classno)
+        public Headmaster GetHeadmasterByClassno(int  classid)
         {
             dbproHeadClass = new ProHeadClass();
             dbproheader = new ProHeadmaster();
-            var obj0 = dbproHeadClass.GetClassByClassNO(classno);
+            var obj0 = dbproHeadClass.GetClassByClassid(classid);
             return dbproheader.GetEntity(obj0.LeaderID);
         }
     }

@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbproHeadClass = new ProHeadClass();
             dbheadmaster = new ProHeadmaster();
            var obj0=  dbproScheduleForTrainees.GetTraineesByStudentNumber(StudentNumber);
-           var obj1=  dbproHeadClass.GetClassByClassNO(obj0.ClassID);
+           var obj1=  dbproHeadClass.GetClassByClassid(obj0.ID_ClassName);
            return dbheadmaster.GetEmployeesInfoByHeadID(obj1.LeaderID);
         }
     }

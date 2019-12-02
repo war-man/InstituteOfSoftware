@@ -8,6 +8,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
     public class EmpClassView
     {
+
+        /// <summary>
+        /// 班级id
+        /// </summary>
+        public int  Classid{ get; set; }
         /// <summary>
         /// 班级编号
         /// </summary>

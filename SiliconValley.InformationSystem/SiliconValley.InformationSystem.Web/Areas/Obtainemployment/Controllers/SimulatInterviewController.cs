@@ -11,6 +11,9 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    /// <summary>
+    /// 学生谈话
+    /// </summary>
     public class SimulatInterviewController : Controller
     {
         private EmpClassBusiness dbempClass;
@@ -27,7 +30,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             var list = dbempClass.GetEmpClassesByempinfoid("201908220012");
             var aa = list.Select(a => new
             {
-                ClassNumber = a.ClassNO
+                ClassNumber = a.ClassId
             }).ToList();
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
             return View();
@@ -37,7 +40,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="param0"></param>
         /// <returns></returns>
-        public ActionResult getmudata(string param0)
+        public ActionResult getmudata(int param0)
         {
             AjaxResult ajaxResult = new AjaxResult();
             try
@@ -47,7 +50,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbproClassSchedule = new ProClassSchedule();
                 SResearchRecordRegisterView view = new SResearchRecordRegisterView();
 
-                var querylist = dbproScheduleForTrainees.GetTraineesByClassNO(param0);
+                var querylist = dbproScheduleForTrainees.GetTraineesByClassid(param0);
                 var queryclass = dbproClassSchedule.GetEntity(param0);
 
                 List<StudentInformation> studentlist = new List<StudentInformation>();
@@ -118,6 +121,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
+        /// <param name="param0">班级id</param>
         /// <returns></returns>
         public ActionResult SearchData(int page, int limit, string param0)
         {
@@ -125,7 +129,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproStudentInformation = new ProStudentInformationBusiness();
             dbemploymentStaff = new EmploymentStaffBusiness();
             dbsimulatInterview = new SimulatInterviewBusiness();
-          var dubu=  dbsimulatInterview.GetSimulatInterviewsByclassno(param0);
+          var dubu=  dbsimulatInterview.GetSimulatInterviewsByclassid(int.Parse(param0));
             var aa = dubu.Select(a => new
             {
                 ID = a.ID,

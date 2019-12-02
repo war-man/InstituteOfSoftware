@@ -57,10 +57,10 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="Classno"></param>
         /// <returns></returns>
-        public Headmaster GetHeadmasterByClassno(string Classno)
+        public Headmaster GetHeadmasterByClassid(int classid)
         {
             dbproHeadClass = new ProHeadClass();
-            var a = dbproHeadClass.GetClassByClassNO(Classno);
+            var a = dbproHeadClass.GetClassByClassid(classid);
             return this.GetEntity(a.LeaderID);
         }
 
@@ -69,8 +69,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="Classno"></param>
         /// <returns></returns>
-        public EmployeesInfo GetEmpinfoByClassno(string Classno) {
-           var a= this.GetHeadmasterByClassno(Classno);
+        public EmployeesInfo GetEmpinfoByClassid(int classid) {
+           var a= this.GetHeadmasterByClassid(classid);
             dbemp = new EmployeesInfoManage();
            return dbemp.GetEntity(a.informatiees_Id);
         }
