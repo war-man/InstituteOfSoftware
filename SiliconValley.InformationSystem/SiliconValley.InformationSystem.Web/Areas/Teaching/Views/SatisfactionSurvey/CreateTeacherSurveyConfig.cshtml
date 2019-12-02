@@ -81,8 +81,8 @@
                             $("#skill").append(new Option("请选择课程", ""));
                             $.each(resultData.Data, function (index, item) {
                                 //赋值
-                                $('#skill')
-                                    .append(new Option(item.CourseName, item.CurriculumID));
+                                alert("dd");
+                                $('#skill').append(new Option(item.CourseName, item.CurriculumID));
                             });
                         } else {
                             $("#skill").append(new Option("暂无数据", ""));

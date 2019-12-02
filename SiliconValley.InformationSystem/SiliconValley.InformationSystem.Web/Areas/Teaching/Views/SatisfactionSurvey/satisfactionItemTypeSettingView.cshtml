@@ -3,6 +3,7 @@
     Layout = null;
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.Entity
 <!DOCTYPE html>
 
 <html>
@@ -23,18 +24,20 @@
             margin-top: 15px;
             display: inline-block;
         }
+
         #list ul li {
             float: left;
             margin-left: 90px;
             margin-top: 80px;
         }
 
-        #list ul li button {
-            width:200px !important;
-            height:60px !important;
-        }
+            #list ul li button {
+                width: 200px !important;
+                height: 60px !important;
+            }
+
         .deleteActive {
-            color:#ff6a00;
+            color: #ff6a00;
         }
     </style>
 </head>
@@ -43,7 +46,7 @@
 
         <div class="toordiv">
 
-            <div style="display:inline-block; margin-left:50px;"id="depselectdiv" class="dropdown">
+            <div style="display:inline-block; margin-left:50px;" id="depselectdiv" class="dropdown">
                 <button DepID="2" style="width:150px !important;" class="btn btn-default dropdown-toggle" type="button" id="Dep" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                     <span class="text">教学部</span>
                     <span class="caret"></span>
@@ -52,10 +55,10 @@
 
 
                     @{
-                        foreach (var item in ViewBag.Department as List<Department>)
+                        foreach (var item in ViewBag.Department as List<SatisfactionSurveyObject>)
                         {
 
-                            <li><a depid="@item.DeptId" class="dep_a" href="javascript:void(0);">@item.DeptName</a></li>
+                            <li><a depid="@item.Id" class="dep_a" href="javascript:void(0);">@item.ObjectName</a></li>
 
                         }
                     }
@@ -77,7 +80,7 @@
 
             <div ondrop="drop(event)" ondragover="allowDrop(event)" style="display:inline-block; margin-left:785px;">
 
-              
+
                 <i id="delete" style="font-size:44px;" class="layui-icon layui-icon-delete "> </i>
 
             </div>
@@ -89,9 +92,7 @@
         <div id="list">
 
 
-            <ul>
-
-            </ul>
+            <ul></ul>
 
         </div>
 
@@ -115,10 +116,10 @@
             <select id="depselect" style="width:180px; text-align:center; height:38px;font-size:20px;">
 
                 @{
-                    foreach (var item in ViewBag.Department as List<Department>)
+                    foreach (var item in ViewBag.Department as List<SatisfactionSurveyObject>)
                     {
 
-                        <option value="@item.DeptId" style="font-size:20px;">@item.DeptName</option>
+                        <option value="@item.Id" style="font-size:20px;">@item.ObjectName</option>
 
 
                     }
@@ -166,18 +167,18 @@
 
                     if (data.ErrorCode == 200) {
 
-                       
+
 
                         for (var i = 0; i < data.Data.length; i++) {
 
                             var html1 = _.template($("#moban2").html());
 
-                            var data1 = html1({ typeid: data.Data[i].ID, name: data.Data[i].TypeName});
+                            var data1 = html1({ typeid: data.Data[i].ID, name: data.Data[i].TypeName });
 
                             $("#list ul").append($(data1));
                         }
 
-                       
+
 
 
 
@@ -352,9 +353,9 @@
 
         function drag(ev) {
 
-           
+
             BeginDelElement = ev.srcElement
-          
+
             ev.dataTransfer.setData("Text", ev.target.id);
         }
 
@@ -386,7 +387,7 @@
                             var depid = $("#Dep").attr("DepID");
 
                             load(depid);
-                            
+
 
                         }
 
@@ -395,7 +396,7 @@
 
                         layer.msg("异常错误");
 
-                        });
+                    });
 
 
                 });

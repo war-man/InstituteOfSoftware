@@ -17,11 +17,22 @@
             margin-left:10px;
         }
 
+        #info {
+            width: 80%;
+            margin-left: 50px;
+            border-bottom: 1px solid gray;
+        }
+
+        .infoItem {
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 50px;
+        }
        
     </style>
 
 </head>
-<body>
+<body><input type="hidden" id="configId" value="@ViewBag.SurveyConfig.ID" />
     <div>
 
         <h2 style="text-align:center; margin-top:20px;">班主任满意度调查问卷</h2>
@@ -30,27 +41,20 @@
 
 
 
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">班主任</label>
-                    <div class="layui-input-inline">
-                        <select name="headmaster" id="headmaster">
-                            <option value="">请选择问题</option>
+
+            <div id="info">
+                <br />
+
+                <h2 style="text-align:center;">教员满意度调查</h2>
+                <br />
+                <div class="infoItem"><label>班主任：</label><span>@ViewBag.SurveyConfig.EmployeeId.EmpName</span></div>
+
+                
+
+                <div class="infoItem" id="TotalScore"><label>当前分数：</label><span>0</span></div>
 
 
-                            <option value="你的工号">你的工号</option>
-                            <option value="你最喜欢的老师">你最喜欢的老师</option>
 
-                        </select>
-                    </div>
-                </div>
-
-                <div class="layui-inline">
-                    <label class="layui-form-label">当前分数</label>
-                    <div class="layui-input-inline">
-                        <input readonly style="border-right:0px solid white;border-top:0px solid white;border-left:0px solid white;" type="text" value="0" id="TotalScore" name="TotalScore" class="layui-input">
-                    </div>
-                </div>
             </div>
 
         </form>
@@ -236,7 +240,7 @@
 
                 GettotalScore();
 
-                $("#TotalScore").val(totalScore);
+                $("#TotalScore span").text(totalScore);
 
                 var itemid = $(data.elem).parent().parent().parent().parent().find(".quection").attr("quectionid");
 
@@ -250,12 +254,29 @@
                 //获取建议
                 var proposal = $("#proposal").val();
 
-                //班主任
-                var headmaster = $("#headmaster").val();
-                console.log(proposal);
-                console.log(headmaster);
+                var configId = $("#configId").val();
+              
 
-                console.log(resultlist);
+
+                $.post("/Teaching/SatisfactionSurvey/SurveyQuectionCommitHeadMaster", { surveyCommit: resultlist, configId: configId, sug: proposal }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.msg('提交成功', { icon: 1, time: 2000 }, function () {
+
+                            //当你在iframe页面关闭自身时
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭  
+
+                        });
+
+                    }
+
+                    else {
+                        layer.msg('服务器错误。。', { icon: 2 });
+                    }
+
+                });
 
             });
 

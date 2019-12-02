@@ -1046,8 +1046,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 //获取班级对象
 
                 TeacherClassBusiness db = new TeacherClassBusiness();
-               var classObj = db.AllClassSchedule().Where(d => d.id == int.Parse(classnumber)).FirstOrDefault();
-                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date), classObj.id, specific);
+                var classObj = db.AllClassSchedule().Where(d => d.id == int.Parse(classnumber)).FirstOrDefault();
+                var resconcileList = db_reconcileTemp.GetReconcile(DateTime.Parse(date),  classObj.id, specific);
 
                 var resultList = resconcileList.Where(d => d.EmployeesInfo_Id == user.EmpNumber).ToList();
 
@@ -1076,7 +1076,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             }
 
-         
+
 
             return Json(result);
         }
