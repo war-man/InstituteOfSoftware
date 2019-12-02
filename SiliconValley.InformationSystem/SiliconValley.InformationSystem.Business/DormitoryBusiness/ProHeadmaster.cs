@@ -61,7 +61,14 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         {
             dbproHeadClass = new ProHeadClass();
             var a = dbproHeadClass.GetClassByClassid(classid);
-            return this.GetEntity(a.LeaderID);
+            if (a!=null)
+            {
+                return this.GetEntity(a.LeaderID);
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -71,8 +78,19 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public EmployeesInfo GetEmpinfoByClassid(int classid) {
            var a= this.GetHeadmasterByClassid(classid);
-            dbemp = new EmployeesInfoManage();
-           return dbemp.GetEntity(a.informatiees_Id);
+            if (a!=null)
+            {
+                dbemp = new EmployeesInfoManage();
+                return dbemp.GetEntity(a.informatiees_Id);
+            }
+            else
+            {
+                EmployeesInfo employeesInfo = new EmployeesInfo();
+                employeesInfo.Phone = string.Empty;
+                employeesInfo.EmpName = "该班级没有班主任";
+                return employeesInfo;
+            }
+           
         }
     }
 }

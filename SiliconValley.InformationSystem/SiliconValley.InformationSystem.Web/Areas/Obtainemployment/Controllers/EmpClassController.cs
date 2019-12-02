@@ -79,6 +79,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }).ToList();
             var noemplist = NoGraduation.Select(a => new EmpClassView
             {
+                Classid = a.id,
                 ClassNumber = a.ClassNumber,
                 EmpName = "",
                 Phone = "",
@@ -176,6 +177,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             DistributionView distributionView = new DistributionView();
             distributionView.ClassName = classpbj.ClassNumber;
+            distributionView.Classid = classpbj.id;
             distributionView.HeadmasterName = headempobj.EmpName;
             distributionView.HeadmasterPhone = headempobj.Phone;
             distributionView.TeacherName = teempobj.EmpName;
@@ -197,11 +199,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(classinglist, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult ClassToEmpstaff(string ClassNO, int empstaffid)
+        public ActionResult ClassToEmpstaff(int Classid, int empstaffid)
         {
             dbempclass = new EmpClassBusiness();
             EmpClass empClass = new EmpClass();
-            empClass.ClassId = int.Parse(ClassNO);
+            empClass.ClassId = Classid;
             empClass.dirDate = DateTime.Now;
             empClass.EmpStaffID = empstaffid;
             empClass.IsDel = false;

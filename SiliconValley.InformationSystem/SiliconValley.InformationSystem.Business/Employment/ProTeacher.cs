@@ -25,7 +25,15 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
             db_calssteacer = new BaseBusiness<ClassTeacher>();
             var tempteacherclass = db_calssteacer.GetIQueryable().Where(d => d.ClassNumber == ClassNumber && d.IsDel == false).FirstOrDefault();
-            return this.GetEntity(tempteacherclass.TeacherID);
+            if (tempteacherclass!=null)
+            {
+                return this.GetEntity(tempteacherclass.TeacherID);
+            }
+            else
+            {
+                return null;
+            }
+           
 
         }
 
@@ -48,7 +56,18 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public EmployeesInfo GetEmpInfoByClssno(int classid)
         {
             var a = this.ClassTeacher(classid);
-            return this.GetEmpInfo(a.EmployeeId);
+            if (a!=null)
+            {
+                return this.GetEmpInfo(a.EmployeeId);
+            }
+            else
+            {
+                EmployeesInfo employeesInfo = new EmployeesInfo();
+                employeesInfo.Phone = string.Empty;
+                employeesInfo.EmpName = "该班级没有老师";
+                return employeesInfo;
+            }
+           
         }
     }
 }

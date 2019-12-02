@@ -77,6 +77,7 @@
                             <label class="layui-form-label lad">班级编号:</label>
                             <div class="layui-input-inline">
                                 <input type="text" id="ClassName" class="layui-input" readonly="readonly" />
+                                <input type="text" id="Classid" class="layui-input" style="display:none" />
                             </div>
                         </div>
 
@@ -222,12 +223,12 @@
         function distributionbtn() {
 
             var staffid = $("#mystafflist").val();
-            var jsclassno = $("#ClassName").val();
+            var jsClassid = $("#Classid").val();
             $.ajax({
                 type: "POST",
                 url: "/Obtainemployment/EmpClass/ClassToEmpstaff/",
                 async: true,
-                data: { ClassNO:jsclassno,empstaffid:staffid },
+                data: { Classid:jsClassid,empstaffid:staffid },
                 success: function (data) {
 
                     if (data.Success) {
@@ -257,6 +258,7 @@
         function loadform(data) {
             console.log(data);
             $('#ClassName').val(data.ClassName);
+            $('#Classid').val(data.Classid);
             $('#GrandName').val(data.GrandName);
             $('#SpecialtyName').val(data.SpecialtyName);
             $('#StudentCount').val(data.StudentCount);
