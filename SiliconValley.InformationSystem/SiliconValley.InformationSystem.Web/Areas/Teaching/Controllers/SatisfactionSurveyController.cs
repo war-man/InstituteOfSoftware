@@ -436,214 +436,48 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        [HttpPost]
-        public ActionResult SurveyHistoryData(string empid, string date, string classnumber,int Curriculum)
+        
+        public ActionResult SurveyHistoryData(int limit, int page)
         {
 
+            
 
-            if (string.IsNullOrEmpty(empid))
+           var configList = db_survey.satisficingConfigs();
+
+            var skiplist = configList.Skip((page - 1) * limit).Take(limit).ToList();
+            List<SatisfactionSurveyDetailView> detaillist = new List<SatisfactionSurveyDetailView>();
+
+
+            foreach (var item in skiplist)
             {
-                //判断登录的角色
+              var tempObj =  db_survey.AllsatisficingResults().Where(d => d.SatisficingConfig == item.ID).FirstOrDefault();
 
-                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-               
-
-                empid = user.EmpNumber;
-
-
-            }
-
-
-            AjaxResult result = new AjaxResult();
-
-            var ss = DateTime.Parse(date);
-
-            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
-
-
-            try
-            {
-
-
-
-                resultlist = db_survey.SurveyHistoryData(empid, date, Curriculum, classnumber);
-
-                result.ErrorCode = 200;
-                result.Data = resultlist;
-                result.Msg = "成功";
-
-            }
-            catch (Exception ex)
-            {
-
-                result.ErrorCode = 500;
-                result.Data = resultlist;
-                result.Msg = ex.Message;
-            }
-
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-
-        }
-
-
-
-        /// <summary>
-        /// 获取阶段教员
-        /// </summary>
-        /// <returns></returns>
-
-        public ActionResult selectTeacherByGrand(int page, int limit)
-        {
-            //判断条件需要改为权限
-
-
-            AjaxResult result = new AjaxResult();
-            List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
-
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
-
-
-            var emp = db_emp.GetList().Where(d => d.EmployeeId == teacher.EmployeeId).FirstOrDefault();
-
-
-
-            //S1S2教学主任
-
-            if (emp.PositionId == 3 || emp.PositionId == 2011)
-            {
-
-                var list1 = db_teacher.BrushSelectionByGrand(1);
-
-
-                var list2 = db_teacher.BrushSelectionByGrand(2);
-
-                list1.AddRange(list2);
-
-                var templist = list1.Distinct().ToList();
-
-                foreach (var item in templist)
+                if (tempObj != null)
                 {
+                  var detail =  db_survey.ConvertToViewModel(tempObj);
 
-                    var obj = db_emp.GetList().Where(d => d.IsDel == false && d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-                    resultlist.Add(obj);
+                    if (detail != null)
+                        detaillist.Add(detail);
                 }
-
             }
 
-            //S3教学主任
-
-            if (emp.PositionId == 2013 || emp.PositionId == 2014)
-            {
-
-                var list2 = db_teacher.BrushSelectionByGrand(3);
-
-
-                foreach (var item in list2)
-                {
-
-                    var obj = db_emp.GetList().Where(d => d.IsDel == false && d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-                    resultlist.Add(obj);
-                }
-
-
-
-            }
-
-            //S4教学主任
-
-            if (emp.PositionId == 2015 || emp.PositionId == 2016)
-            {
-
-                var list2 = db_teacher.BrushSelectionByGrand(3);
-
-
-                foreach (var item in list2)
-                {
-
-                    var obj = db_emp.GetList().Where(d => d.IsDel == false && d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-                    resultlist.Add(obj);
-                }
-
-
-
-            }
-
-
-            if (emp.PositionId == 2012)
-            {
-
-                EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
-
-
-                var templist = db_emp.GetList();
-
-                foreach (var item in templist)
-                {
-                    var depid = employeesInfoManage.GetDept(item.PositionId);
-
-                    if (depid.DeptId == 2)
-                    {
-                        resultlist.Add(item);
-                    }
-
-                }
-
-
-
-            }
-
-
-
-
-            var objresult = new {
-
-                code = 0,
-                msg = "",
-                count = resultlist.Count,
-                data = resultlist.Skip((page - 1) * limit).Take(limit)
+            var obj = new {
+                code=0,
+                msg="",
+                count = configList.Count,
+                data = detaillist
 
             };
 
 
 
-            return Json(objresult, JsonRequestBehavior.AllowGet);
-
-
+            return Json(obj, JsonRequestBehavior.AllowGet);
 
         }
 
 
-        /// <summary>
-        /// 获取阶段班主任
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult selectClassLaderByGrand()
-        {
-            //未完成
-
-            AjaxResult result = new AjaxResult();
-
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
 
 
-        /// <summary>
-        /// 选择员工视图
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult selectEmpView()
-        {
-
-
-            return View();
-        }
 
 
         /// <summary>
@@ -746,6 +580,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
+
+
+        /// <summary>
+        /// 对满意度调查记录进行帅选 
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SurveyData_filter(string empnumber, string date, int limit, int page)
+        {
+
+            var list = db_survey.SurveyData_filter(empnumber, date);
+
+            var skiplist = list.Skip((page - 1) * limit).Take(limit);
+
+            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
+
+            foreach (var item in skiplist)
+            {
+               var tempobj = db_survey.AllsatisficingResults().Where(d => d.SatisficingConfig == item.ID).FirstOrDefault();
+
+                if (tempobj != null)
+                {
+                   var detail = db_survey.ConvertToViewModel(tempobj);
+
+                    if (detail != null)
+                        resultlist.Add(detail);
+                }
+            }
+
+            var obj = new {
+                code = 0,
+                msg="",
+                count=list.Count,
+                data= resultlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
 
         /// <summary>
         /// 获取班级
@@ -1789,11 +1661,164 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <returns></returns>
         public ActionResult SurveyHistory()
         {
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-
-            db_survey.GetSurveyHistoryData(user);
+           
             return View();
+        }
+
+
+        /// <summary>
+        /// 获取我的部门人员
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MyDepEmplist()
+        {
+
+            //返回的结果
+            resultdtree result = new resultdtree();
+
+            //状态
+            dtreestatus dtreestatus = new dtreestatus();
+
+
+            try
+            {
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                //获取这些员工所在的部门
+
+                List<EmployeesInfo> emplist = db_survey.GetMyDepEmp(user);
+
+                //获取员工部门
+                List<dtreeview> childrendtreedata = new List<dtreeview>();
+                List<Department> deplist = new List<Department>();
+
+                foreach (var item in emplist)
+                {
+                    var dep = db_emp.GetDeptByEmpid(item.EmployeeId);
+
+                    if (!db_survey.IsContains(deplist, dep))
+                    {
+                        deplist.Add(dep);
+                    }
+                }
+
+                for (int i = 0; i < deplist.Count; i++)
+                {
+                    //第一层
+                    dtreeview seconddtree = new dtreeview();
+
+                    seconddtree.context = deplist[i].DeptName;
+                    seconddtree.last = false;
+                    seconddtree.level = 0;
+                    seconddtree.nodeId = deplist[i].DeptId.ToString();
+                    seconddtree.parentId = "0";
+                    seconddtree.spread = false;
+
+                    //第二层
+
+                    var tememplist = db_emp.GetEmpsByDeptid(deplist[i].DeptId);
+                  
+                    if (tememplist.Count >= 0)
+                    {
+
+                        List<dtreeview> Quarterlist = new List<dtreeview>();
+                        foreach (var item in tememplist)
+                        {
+                            dtreeview treeemp = new dtreeview();
+                            treeemp.nodeId = item.EmployeeId;
+                            treeemp.context = item.EmpName;
+                            treeemp.last = true;
+                            treeemp.parentId = deplist[i].DeptId.ToString();
+                            treeemp.level = 1;
+
+                            Quarterlist.Add(treeemp);
+                        }
+
+                        seconddtree.children = Quarterlist;
+
+
+                        childrendtreedata.Add(seconddtree);
+
+                       
+                    }
+                    else
+                    {
+                        seconddtree.last = true;
+                    }
+                    
+                }
+
+                result.status = dtreestatus;
+                result.data = childrendtreedata;
+
+                dtreestatus.code = "200";
+                dtreestatus.message = "操作成功";
+            }
+            catch (Exception ex)
+            {
+
+                dtreestatus.code = "1";
+                dtreestatus.message = "操作失败";
+            }
+          
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+
+        }
+
+
+
+        public ActionResult checkSurveyView(int surveyResultID)
+        {
+
+            //提供 JoinSurveyStudents
+
+           var surveyResult = db_survey.AllsatisficingResults().Where(d => d.ID == surveyResultID).FirstOrDefault();
+
+
+
+           var studentlist = db_survey.JoinSurveyStudents((int)surveyResult.SatisficingConfig);
+
+            ViewBag.SurveyConfigId = surveyResult.SatisficingConfig;
+
+            ViewBag.studentlist = studentlist;
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 获取满意度详细数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SurveyItemData(string studentnumber, int surveyConfigid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               var surveyResult = db_survey.AllsatisficingResults().Where(d => d.Answerer == studentnumber && d.SatisficingConfig == surveyConfigid).FirstOrDefault();
+
+               var res = db_survey.ConvertToViewModel(surveyResult);
+
+
+                result.Data = res;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+
+            }
+            catch (Exception ex)
+            {
+
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+           
         }
 
 

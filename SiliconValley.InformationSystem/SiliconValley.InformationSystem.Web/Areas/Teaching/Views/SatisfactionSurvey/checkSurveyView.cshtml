@@ -1,0 +1,160 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>checkSurveyView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/css/buttonStyle.css" rel="stylesheet" />
+    <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <style>
+
+        #studentlist {
+            float: left;
+            margin-top: 20px;
+            width: 16%;
+            height: 420px;
+            border: 1px solid gray;
+            overflow: scroll;
+        }
+
+        #data {
+            float:left;
+            width:83%;
+        }
+       
+    </style>
+</head>
+<body>
+    <div id="warp">
+        <input type="hidden" value="@ViewBag.SurveyConfigId" id="surveyConfigId" />
+        <div id="studentlist">
+            <hr />
+
+
+
+            <ul class="studentlist">
+
+                @{
+                    foreach (var item in ViewBag.studentlist as List<StudentInformation>)
+                    {
+                        <li class="student"><code studentnumber="@item.StudentNumber">@item.Name</code></li>
+
+                    }
+                }
+
+            </ul>
+
+
+
+        </div>
+        <div id="data">
+
+            <br />
+
+            <div style="display:inline-block; margin-left:50px;"><label>对象：</label><span>王湘</span></div>
+            <div style="display:inline-block; margin-left:50px;"><label>总分：</label><span>20</span></div>
+
+
+
+
+            <table id="table" class="table">
+                <thead>
+                    <tr>
+                        <th>项目</th>
+
+                        <th>分数</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody></tbody>
+            </table>
+
+            <div>
+                <h4 style="text-align:center;">建议</h4>
+            </div>
+
+
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script type="text/template" id="moban">
+        <tr>
+            <td>{{=ItemName}}</td>
+            <td>{{=Scores}}</td>
+        </tr>
+    </script>
+    <script>
+
+
+
+
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+
+            var configId = $("#surveyConfigId").val();
+
+            function loadSurvey(studentId, SurveyConfigid) {
+
+                $.post("/Teaching/SatisfactionSurvey/SurveyItemData", { studentnumber: studentId, surveyConfigid: SurveyConfigid }, function (result) {
+
+
+                    if (result.ErrorCode == 200) {
+
+                        console.log(result);
+
+                        for (var i = 0; i < result.Data.detailitem.length; i++) {
+                            var html = _.template($("#moban").html());
+                            var htmldate = html({ ItemName: result.Data.detailitem[i].SatisficingItem.ItemContent, Scores: result.Data.detailitem[i].Scores });
+
+                            $("#table tbody").append(htmldate);
+                        }
+
+
+
+                    }
+                    else {
+
+                        layer.msg('数据加载异常。。', { icon: 2 });
+                    }
+
+                });
+
+
+
+            }
+
+            //获取第一个学生
+            var firstli = $(".studentlist").children().get(0);
+            var studentnumber = $(firstli).find("code").attr("studentnumber");
+            //加载
+            loadSurvey(studentnumber, configId);
+
+
+            $(".student").click(function () {
+
+                alert("d");
+            });
+
+        });
+
+
+
+
+
+
+
+
+    </script>
+</body>
+</html>

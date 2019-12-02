@@ -600,21 +600,47 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return view;
         }
 
+       
+        public bool IsContains(List<EmployeesInfo> sources, EmployeesInfo employeesInfo)
+        {
+            foreach (var item in sources)
+            {
+                if (item.EmployeeId == employeesInfo.EmployeeId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool IsContains(List<Department> sources, Department department)
+        {
+            foreach (var item in sources)
+            {
+                if (item.DeptId == department.DeptId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
 
         /// <summary>
         /// 根据角色获取满意度历史记录
         /// </summary>
         /// <returns></returns>
-        public List<SatisfactionSurveyDetailView> GetSurveyHistoryData(Base_UserModel user)
+        public List<EmployeesInfo> GetMyDepEmp(Base_UserModel user)
         {
 
             //获取账号所有的角色
 
             var userRoles = user.RoleIdList;
 
-            //定义返回结果
-            List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
-
+            //当前登录人的部门下的人  (人员可能重复)
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
 
             //循环获取每个角色的权限
 
@@ -624,10 +650,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
 
                 //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
-                BaseBusiness<Base_PermissionRole> db_permissrole = new BaseBusiness<Base_PermissionRole>();
+                BaseBusiness<OtherRoleMapPermissionValue> db_permissrole = new BaseBusiness<OtherRoleMapPermissionValue>();
 
                var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
-               
 
                 foreach (var permission in permissions)
                 {
@@ -655,11 +680,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                             }
                             //获取部门人员
 
-
-                            
-
-                            
-
+                            foreach (var depItem in deplist)
+                            {
+                               emplist.AddRange(db_emp.GetEmpsByDeptid(int.Parse(depItem)));
+                            }
                         }
                     }
                    
@@ -668,10 +692,64 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             }
 
+            List<EmployeesInfo> resultEmplist  = new List<EmployeesInfo>();
+
+            foreach (var item in emplist)
+            {
+                if (!IsContains(resultEmplist, item))
+                {
+                    resultEmplist.Add(item);
+                }
+            }
 
 
-            return resultlist;
+
+
+            return resultEmplist;
         }
+
+        public List<SatisficingConfig> SurveyData_filter(string empnumber, string date)
+        {
+            DateTime surveyDate = DateTime.Parse(date);
+
+            if (empnumber == null || empnumber == "")
+            {
+
+                return this.satisficingConfigs().Where(d => ((DateTime)d.CreateTime).Year == surveyDate.Year && ((DateTime)d.CreateTime).Month == surveyDate.Month).ToList();
+            }
+            else
+            {
+                return this.satisficingConfigs().Where(d => d.EmployeeId == empnumber && ((DateTime)d.CreateTime).Year == surveyDate.Year && ((DateTime)d.CreateTime).Month == surveyDate.Month).ToList();
+            }
+
+            
+
+        }
+
+
+        /// <summary>
+        /// 获取参加满意度调查的学员
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentInformation> JoinSurveyStudents(int SurveyConfigId)
+        {
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+
+           var list = this.AllsatisficingResults().Where(d => d.SatisficingConfig == SurveyConfigId).ToList();
+
+            foreach (var item in list)
+            {
+               var tempobj = db_student.GetIQueryable().Where(d => d.StudentNumber == item.Answerer).FirstOrDefault();
+
+                if (tempobj != null)
+                    studentlist.Add(tempobj);
+            }
+
+            return studentlist;
+
+        }
+
+
 
 
     }

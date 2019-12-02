@@ -11,8 +11,6 @@
     <permission permissionid="s1s2TeacherDirector_SearchSurveyHistory" depIds="2"></permission>
     <permission permissionid="s3TeacherDirector_SearchSurveyHistory" depIds="1009"></permission>
     <permission permissionid="s3MasterDirector_SearchSurveyHistory" depIds="1008"></permission>
-
-
     <permission permissionid="s4TeacherDirector_SearchSurveyHistory" depIds="1010"></permission>
     
   </permissions>

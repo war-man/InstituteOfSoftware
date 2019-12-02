@@ -210,6 +210,8 @@
     <Compile Include="Entity\NurseTeamonDuty.cs" />
     <Compile Include="Entity\NurseTeamPosition.cs" />
     <Compile Include="Entity\Officebuildingonduty.cs" />
+    <Compile Include="Entity\OtherRoleMapPermissionValue.cs" />
+    <Compile Include="Entity\OthorPermission.cs" />
     <Compile Include="Entity\Outbreaksindormitories.cs" />
     <Compile Include="Entity\OvertimeRecord.cs" />
     <Compile Include="Entity\ParticiParticipants.cs" />
@@ -368,6 +370,7 @@
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\EmploymentYearView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\QuarterView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchRecordRegisterView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\StudentIntentionView.cs" />
@@ -404,11 +407,13 @@
     <Compile Include="ViewEntity\StudentDetailView.cs" />
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
+    <Compile Include="ViewEntity\SuccessionrecordView.cs" />
     <Compile Include="ViewEntity\SurveyCommitHelper.cs" />
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
+    <Compile Include="ViewEntity\TransactionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\TungView.cs" />
     <Compile Include="ViewEntity\T_ConsultTeacherData.cs" />

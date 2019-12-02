@@ -399,6 +399,9 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
+    <Content Include="Areas\Teaching\config\studentConfig.xml" />
+    <Content Include="Areas\Teaching\config\teacherConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -873,6 +876,7 @@
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\BorrowMoney.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
+    <Content Include="Scripts\css\buttonStyle.css" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master.zip" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\.editorconfig" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master\.eslintignore" />
@@ -1185,6 +1189,14 @@
     <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateTeacherSurveyConfig.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\HeadMasterSatisfactionQuestionnaire.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\StudentSurveyIndex.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\SurveyHistory.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\TeacherSatisfactionQuestionnaire.cshtml" />
+    <Content Include="Areas\Teaching\Views\Class\StuHomeWorkSubmission.cshtml" />
+    <Content Include="Areas\Teaching\Views\SatisfactionSurvey\checkSurveyView.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
