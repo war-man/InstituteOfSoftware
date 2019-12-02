@@ -26,10 +26,10 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="ClassNO"></param>
         /// <returns></returns>
-        public HeadClass GetClassByClassNO(string ClassID) {
+        public HeadClass GetClassByClassid(int classid) {
             //学员班级
-            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-            return  this.GetHeadClasses().Where(a => a.ClassID == classScheduleBusiness.GetEntity(ClassID).id).FirstOrDefault();
+            //ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            return  this.GetHeadClasses().Where(a => a.ClassID == classid).FirstOrDefault();
         }
 
         /// <summary>

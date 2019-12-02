@@ -26,10 +26,10 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <summary>
         /// 根据班级编号获取正在使用的班级
         /// </summary>
-        /// <param name="ClassNumber"></param>
+        /// <param name="classid"></param>
         /// <returns></returns>
-        public ClassSchedule GetNotgraduatedClassByClassNumber(string ClassNumber) {
-            return this.GetClassSchedules().Where(a => a.ClassNumber == ClassNumber).FirstOrDefault();
+        public ClassSchedule GetNotgraduatedClassByclassid(int  classid) {
+            return this.GetClassSchedules().Where(a => a.id == classid).FirstOrDefault();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 foreach (var item in querydata)
                 {
-                    if (classdata[i].ClassNumber == item.ClassNO)
+                    if (classdata[i].id == item.Classid)
                     {
                         classdata.Remove(classdata[i]);
                         break;
@@ -74,9 +74,9 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public bool isgraduationclass(string classno)
+        public bool isgraduationclass(int classid)
         {
-            var query = this.GetClassSchedulesed().Where(a => a.ClassNumber == classno).FirstOrDefault();
+            var query = this.GetClassSchedulesed().Where(a => a.id == classid).FirstOrDefault();
             if (query != null)
             {
                 return true;

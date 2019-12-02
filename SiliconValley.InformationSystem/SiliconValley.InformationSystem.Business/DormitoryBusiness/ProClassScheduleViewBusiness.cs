@@ -35,7 +35,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 ProClassScheduleView obj0 = new ProClassScheduleView();
                 obj0.ClassNumber = item.ClassNumber;
-                var obj1 = dbproHeadClass.GetClassByClassNO(item.ClassNumber);
+                var obj1 = dbproHeadClass.GetClassByClassid(item.id);
                 if (obj1 != null)
                 {
                     var obj2 = dbproheadmaster.GetEntity(obj1.LeaderID);

@@ -27,11 +27,11 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<SurveyRecords> GetSurveyRecordsByclassno(string classno) {
+        public List<SurveyRecords> GetSurveyRecordsByclassno(int  classid) {
             var list = this.GetSurveys();
             List<SurveyRecords> dd = new List<SurveyRecords>();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
-            var list1 = dbproScheduleForTrainees.GetTraineesByClassNO(classno);
+            var list1 = dbproScheduleForTrainees.GetTraineesByClassid(classid);
             foreach (var item in list)
             {
                 foreach (var item1 in list1)
@@ -58,12 +58,12 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<SurveyRecords> GetCDSurveyRecordsByclassno(string classno)
+        public List<SurveyRecords> GetCDSurveyRecordsByclassid(int classid)
         {
             var list = this.GetCDSurveyRecords();
             List<SurveyRecords> dd = new List<SurveyRecords>();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
-            var list1 = dbproScheduleForTrainees.GetTraineesByClassNO(classno);
+            var list1 = dbproScheduleForTrainees.GetTraineesByClassid(classid);
             foreach (var item in list)
             {
                 foreach (var item1 in list1)

@@ -22,15 +22,16 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
 
 
+      
+        ///   /// <summary>
+        /// 班级id
+        /// </summary>
+        [Key]
+        public int id { get; set; }
         /// <summary>
         /// 编号
         /// </summary>
-          [Key]
-        public int id { get; set; }
-        /// <summary>
-        /// 班级id
-        /// </summary>
-        public string classid { get; set; }
+        public string ClassNumber { get; set; }
         /// <summary>
         /// 班级状态 false为未毕业班 true为毕业班
         /// </summary>

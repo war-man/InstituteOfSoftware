@@ -37,6 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private EmployeesInfoManage dbemp;
         private SpecialtyBusiness dbspecialtyBusiness;
         private GrandBusiness dbgrandBusiness;
+        private ProClassSchedule dbproClassSchedule;
         /// <summary>
         /// 就业班级管理
         /// </summary>
@@ -59,20 +60,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbempclass = new EmpClassBusiness();
             dbempstaff = new EmploymentStaffBusiness();
             dbspee = new SpecialtyBusiness();
+            dbproClassSchedule = new ProClassSchedule();
             //获取了s3以s4未毕业的班级而且没分配的班级
             var NoGraduation = dbempclass.NoDistribution();
             //获取了专员带班记录表
             var empclasslist = dbempclass.GetEmpClassFormServer().OrderByDescending(a => a.EmpStaffID).ToList();
             var emplist = empclasslist.Select(a => new EmpClassView
             {
-                ClassNumber = a.ClassNO,
+                Classid=a.ClassId,
+                ClassNumber = dbproClassSchedule.GetEntity(a.ClassId).ClassNumber,
                 EmpName = dbempstaff.GetEmpInfoByEmpID(a.EmpStaffID).EmpName,
                 Phone = dbempstaff.GetEmpInfoByEmpID(a.EmpStaffID).Phone,
                 EntID = a.EmpStaffID,
-                GrandName = dbempclass.GetGrandByClassNo(a.ClassNO).GrandName,
+                GrandName = dbempclass.GetGrandByClassid(a.ClassId).GrandName,
                 empclassDate = a.dirDate,
                 Remark = a.Remark,
-                SpecialtyName = dbspee.GetSpecialtyByID((int)dbempclass.GetClassingByID(a.ClassNO).Major_Id).SpecialtyName
+                SpecialtyName = dbspee.GetSpecialtyByID((int)dbempclass.GetClassingByID(a.ClassId).Major_Id).SpecialtyName
             }).ToList();
             var noemplist = NoGraduation.Select(a => new EmpClassView
             {
@@ -161,7 +164,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproHeadmaster = new ProHeadmaster();
             var classpbj = dbempclass.GetClassingByID(classid);
             var teempobj = dbproTeacher.GetEmpInfoByClssno(classid);
-            var headempobj = dbproHeadmaster.GetEmpinfoByClassno(classid);
+            var headempobj = dbproHeadmaster.GetEmpinfoByClassid(classid);
 
             var empstaffdata = dbempstaff.GetALl();
             var resultdata = empstaffdata.Select(a => new SelectListItem
@@ -177,7 +180,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             distributionView.HeadmasterPhone = headempobj.Phone;
             distributionView.TeacherName = teempobj.EmpName;
             distributionView.TeacherPhone = teempobj.Phone;
-            distributionView.StudentCount = dbproScheduleForTrainees.GetTraineesByClassNO(id).Count;
+            distributionView.StudentCount = dbproScheduleForTrainees.GetTraineesByClassid(classid).Count;
             distributionView.SpecialtyName = dbspecialtyBusiness.GetEntity(classpbj.Major_Id).SpecialtyName;
             distributionView.GrandName = dbgrandBusiness.GetEntity(classpbj.grade_Id).GrandName;
 
@@ -198,7 +201,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         {
             dbempclass = new EmpClassBusiness();
             EmpClass empClass = new EmpClass();
-            empClass.ClassNO = ClassNO;
+            empClass.ClassId = int.Parse(ClassNO);
             empClass.dirDate = DateTime.Now;
             empClass.EmpStaffID = empstaffid;
             empClass.IsDel = false;

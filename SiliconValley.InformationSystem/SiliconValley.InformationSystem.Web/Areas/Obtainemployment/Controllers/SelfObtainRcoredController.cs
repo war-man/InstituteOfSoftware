@@ -26,6 +26,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private SelfObtainRcoredBusiness dbselfObtainRcored;
         private StudentIntentionBusiness dbstudentIntention;
         private EmploymentStaffBusiness dbemploymentStaff;
+        private ProClassSchedule dbproClassSchedule;
         // GET: Obtainemployment/SelfObtainRcored
         public ActionResult SelfObtainRcoredIndex()
         {
@@ -40,6 +41,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         {
             dbquarter = new QuarterBusiness();
             dbempQuarterClass = new EmpQuarterClassBusiness();
+            dbproClassSchedule = new ProClassSchedule();
             //第一层
             var querydata = dbquarter.yearplan();
 
@@ -100,8 +102,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                                 foreach (var item1 in empQuarterClasslist)
                                 {
                                     dtreeview dtreeview = new dtreeview();
-                                    dtreeview.nodeId = item1.ID.ToString();
-                                    dtreeview.context = item1.ClassNO;
+                                    dtreeview.nodeId = item1.Classid.ToString();
+                                    dtreeview.context = dbproClassSchedule.GetEntity(item1.Classid).ClassNumber;
                                     dtreeview.last = true;
                                     dtreeview.parentId = Quarterslist[j].ID.ToString();
                                     dtreeview.level = 2;
@@ -157,7 +159,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbselfObtainRcored = new SelfObtainRcoredBusiness();
             var quyeryempquarterclsss = dbempQuarterClass.GetEntity(param0);
 
-            List<ScheduleForTrainees> queryscheduleForTrainees = dbproScheduleForTrainees.GetTraineesByClassNO(quyeryempquarterclsss.ClassNO);
+            List<ScheduleForTrainees> queryscheduleForTrainees = dbproScheduleForTrainees.GetTraineesByClassid(quyeryempquarterclsss.Classid);
             List<StudentInformation> studentlist = new List<StudentInformation>();
             foreach (var item in queryscheduleForTrainees)
             {
@@ -182,7 +184,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }).ToList();
 
             ViewBag.studentlist = Newtonsoft.Json.JsonConvert.SerializeObject(resultStudentlist);
-            ViewBag.param0 = quyeryempquarterclsss.ClassNO;
+            ViewBag.param0 = quyeryempquarterclsss.Classid;
             ViewBag.param1 = quyeryempquarterclsss.QuarterID;
             return View();
         }
@@ -296,7 +298,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     data = dbselfObtainRcored.GetSelfObtainsByQuarterID(quarterid);
                     break;
                 case "3":
-                    data = dbselfObtainRcored.GetSelfObtainRcoredsByClassno(string2);
+                    var classid = int.Parse(string2);
+                    data = dbselfObtainRcored.GetSelfObtainRcoredsByClassid(classid);
                     break;
             }
 

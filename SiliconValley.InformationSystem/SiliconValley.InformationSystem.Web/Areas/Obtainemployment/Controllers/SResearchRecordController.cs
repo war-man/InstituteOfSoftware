@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             var list = dbempClass.GetEmpClassesByempinfoid("201908220012");
             var aa = list.Select(a => new
             {
-                ClassNumber = a.ClassNO
+                ClassNumber = a.ID
             }).ToList();
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
 
@@ -81,7 +81,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="param0"></param>
         /// <returns></returns>
-        public ActionResult getmudata(string param0)
+        public ActionResult getmudata(int param0)
         {
             AjaxResult ajaxResult = new AjaxResult();
             try
@@ -92,7 +92,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbspecialty = new SpecialtyBusiness();
                 SResearchRecordRegisterView view = new SResearchRecordRegisterView();
 
-                var querylist = dbproScheduleForTrainees.GetTraineesByClassNO(param0);
+                var querylist = dbproScheduleForTrainees.GetTraineesByClassid(param0);
                 var queryclass = dbproClassSchedule.GetEntity(param0);
 
                 List<StudentInformation> studentlist = new List<StudentInformation>();
@@ -139,7 +139,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproStudentInformation = new ProStudentInformationBusiness();
             dbemploymentStaff = new EmploymentStaffBusiness();
             dbspecialty = new SpecialtyBusiness();
-            var list= dbproScheduleForTrainees.GetTraineesByClassNO(param0);
+            var list= dbproScheduleForTrainees.GetTraineesByClassid(int.Parse(param0));
             var list1 = dbsurveyRecords.GetSurveys();
             var list2 = new List<SurveyRecords>();
 

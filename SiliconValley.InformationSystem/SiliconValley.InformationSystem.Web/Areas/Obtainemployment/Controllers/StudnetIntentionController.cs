@@ -28,7 +28,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             var list = dbempClass.GetEmpClassesByempinfoid("201908220012");
             var aa = list.Select(a => new
             {
-                ClassNumber = a.ClassNO
+                ClassNumber = a.ClassId
             }).ToList();
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
             return View();
@@ -52,7 +52,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             dbemploymentAreas = new EmploymentAreasBusiness();
             dbproStudentInformation = new ProStudentInformationBusiness();
-            var data = dbstudentIntention.GetStudnetIntentionsByclassno(param0);
+            var data = dbstudentIntention.GetStudnetIntentionsByclassid(int.Parse(param0));
             List<StudentIntentionView> Viewdata = new List<StudentIntentionView>();
 
             foreach (var item in data)

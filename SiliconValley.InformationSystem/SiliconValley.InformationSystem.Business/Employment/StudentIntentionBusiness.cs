@@ -37,10 +37,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<StudnetIntention> GetStudnetIntentionsByclassno(string classno) {
+        public List<StudnetIntention> GetStudnetIntentionsByclassid(int classid) {
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             List<StudnetIntention> result = new List<StudnetIntention>();
-            var los=  dbproScheduleForTrainees.GetTraineesByClassNO(classno);
+            var los=  dbproScheduleForTrainees.GetTraineesByClassid(classid);
             var ddd = this.GetStudentIntentions();
             foreach (var item in ddd)
             {

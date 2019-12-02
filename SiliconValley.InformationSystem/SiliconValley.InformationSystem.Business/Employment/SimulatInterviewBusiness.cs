@@ -24,10 +24,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<SimulatInterview> GetSimulatInterviewsByclassno(string classno) {
+        public List<SimulatInterview> GetSimulatInterviewsByclassid(int classid) {
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             List<SimulatInterview> list = new List<SimulatInterview>();
-            var aa= dbproScheduleForTrainees.GetTraineesByClassNO(classno);
+            var aa= dbproScheduleForTrainees.GetTraineesByClassid(classid);
             var bb = this.GetSimulatInterviews();
             foreach (var item in bb)
             {

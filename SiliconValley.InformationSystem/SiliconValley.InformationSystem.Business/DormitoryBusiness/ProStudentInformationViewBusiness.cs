@@ -111,7 +111,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 
                     var obj1 = dbproclassSchedule.GetEntity(obj0.ClassID);
                     proBedtimeStudentsView.ClassNO = obj1.ClassNumber;
-                    var obj12 = dbproHeadClass.GetClassByClassNO(obj1.ClassNumber);
+                    var obj12 = dbproHeadClass.GetClassByClassid(obj1.id);
                     if (obj12 != null)
                     {
                         var obj13 = dbproHeadmaster.GetEmployeesInfoByHeadID(obj12.LeaderID);

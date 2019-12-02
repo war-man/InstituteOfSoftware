@@ -78,10 +78,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<SelfObtainRcored> GetSelfObtainRcoredsByClassno(string classno) {
+        public List<SelfObtainRcored> GetSelfObtainRcoredsByClassid(int  classid) {
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             var data = this.GetSelfObtainRcoreds();
-            var list1 = dbproScheduleForTrainees.GetTraineesByClassNO(classno);
+            var list1 = dbproScheduleForTrainees.GetTraineesByClassid(classid);
             for (int i = data.Count - 1; i >= 0; i--)
             {
                 for (int j = 0; j < list1.Count; j++)
