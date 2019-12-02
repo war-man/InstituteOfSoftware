@@ -120,7 +120,6 @@
     <Compile Include="DormitoryBusiness\ProHeadClass.cs" />
     <Compile Include="DormitoryBusiness\ProHeadmaster.cs" />
     <Compile Include="DormitoryBusiness\ProScheduleForTrainees.cs" />
-    <Compile Include="DormitoryBusiness\ProStudentAndTeacherBussiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\ProStudentInformationViewBusiness.cs" />
     <Compile Include="DormitoryBusiness\RoomdeWithPageXmlHelp.cs" />

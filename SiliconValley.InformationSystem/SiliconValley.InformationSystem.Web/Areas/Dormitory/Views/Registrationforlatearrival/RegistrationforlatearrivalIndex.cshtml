@@ -275,9 +275,9 @@
                 , cols: [[ //标题栏
                     { field: 'StudentNmber', title: '学生编号', width: 165 }
                     , { field: 'SutdentName', title: '学生姓名', width: 90 }
-                    , { field: 'StuPhone', title: '联系方式', width: 135 }
+                    , { field: 'StuPhone', title: '联系方式', width: 125 }
                     , {
-                        field: 'Count', title: '晚归次数', width: 80, templet: function (d) { 
+                        field: 'Count', title: '晚归次数', width: 90, templet: function (d) { 
                             return "<span style=color:red;>" + d.Count + "</span>"
                         }
                     }
@@ -471,8 +471,8 @@
                     $("#protable").hide();
                     loadtable();
                 }
-                if (data.index=="1") {
-                  
+                if (data.index == "1") {
+                    loadtable1();
                 }
             });
                         //监听行单击事件

@@ -38,12 +38,13 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbemp = new EmployeesInfoManage();
             dbinstructorlist = new InstructorListBusiness();
             int studentroom= dbroomhelpxml.GetRoomType(RoomTypeEnum.RoomType.StudentRoom);
-           List<DormInformation> querydormlist= dbdorm.GetDormsByTungFloorID(tungfloorid).Where(a=>a.RoomStayTypeId== studentroom).ToList();
+           List<DormInformation> querydormlist= dbdorm.GetStudentDormsByTungfloorid(tungfloorid);
             List<HealthRegistrationtableview> result = new List<HealthRegistrationtableview>();
             foreach (var item in querydormlist)
             {
                DormInformation querydorm=  dbdorm.GetDormByDorminfoID(item.ID);
                 List<Dormitoryhygiene> queryDormitoryhygiene = dbdormhygiene.GetDormitoryhygienesByDormID(item.ID);
+              
                 queryDormitoryhygiene=queryDormitoryhygiene.Where(a => a.RegisterTime > startime && a.RegisterTime <= endtime).ToList().OrderByDescending(a=>a.Addtime).ToList();
                 foreach (var item1 in queryDormitoryhygiene)
                 {

@@ -131,6 +131,10 @@
                 elem: "#demoTree",
                 initLevel: 1,
                 url: '/Dormitory/DormitoryInfo/EstablishTree',
+                 success: function (res, $obj, first) {
+                    jstungid = res.data[0].nodeId;
+                    jsfloorid = res.data[0].children[0].nodeId;
+                },
                 formatter: {
                     title: function (data) {  // 示例给有子集的节点返回节点统计
                         var s = data.context;
@@ -146,39 +150,12 @@
                 response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
             });
 
-            $(function () {
-                loadtree();
-            });
-
-            //加载树
-            function loadtree() {
-                $.ajax({
-                    url: '/Dormitory/DormitoryInfo/EstablishTree',
-                    type: 'GET',
-                    success: function (successdata) {
-                        //console.log(successdata);
-                        jstungid = successdata.data[0].nodeId;
-                        jsfloorid = successdata.data[0].children[0].nodeId;
-                        //可以重载所有基础参数
-                        myDTree.reload(
-                            'demoTree',
-                            {
-                                data: successdata
-
-                            });
-                    },
-                    error: function (errordata) {
-                        layer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
-
-                        });
-                    }
-                });
-            }
+           
 
 
 
-            //未居住的员工请求
-            var stafftable = table.render({
+        
+          table.render({
                 elem: '#UninhabitedStaff'
                 , url: '/Dormitory/EmployeeCheckIn/UninhabitedList'
                 //, skin: 'line' //行边框风格

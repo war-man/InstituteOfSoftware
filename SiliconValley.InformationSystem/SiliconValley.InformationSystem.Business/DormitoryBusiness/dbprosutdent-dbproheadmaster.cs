@@ -42,7 +42,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbproclass = new ProClassSchedule();
             dbprotrainess = new ProScheduleForTrainees();
             var obj0 = dbprotrainess.GetTraineesByStudentNumber(StudentNumber);
-            return dbproclass.GetEntity(obj0.ClassID);
+            return dbproclass.GetEntity(obj0.ID_ClassName);
         }
 
         /// <summary>

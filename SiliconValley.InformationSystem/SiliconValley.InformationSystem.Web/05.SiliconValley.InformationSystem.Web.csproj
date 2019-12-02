@@ -1176,7 +1176,6 @@
     <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
     <Content Include="Areas\flow\Views\web.config" />
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
-    <Content Include="Areas\Dormitory\Controllers\StaffRoomDetailsController.cs~parent of cd53ee6... 123" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\Marking.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\StuPersonalScores.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />

@@ -157,7 +157,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                     {
                         foreach (var item in queryacclist)
                         {
-                            backlist.Add(dbprosutdent_Dbproheadmaster.GetHeadmasterByStudentNumber(item.Studentnumber));
+                            var header = dbprosutdent_Dbproheadmaster.GetHeadmasterByStudentNumber(item.Studentnumber);
+                            if (header != null)
+                            {
+                                backlist.Add(header);
+                            }
+                           
                         }
 
                         for (int i = 0; i < backlist.Count; i++)  //外循环是循环的次数

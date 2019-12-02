@@ -249,6 +249,18 @@
                 elem: "#demoTree",
                 initLevel: 1,
                 url: '/Dormitory/DormitoryInfo/EstablishTree',
+                success: function (res, $obj, first) {
+                    // res:当前异步加载的数据，
+                    //$obj:当前组件的根节点的JQuery对象，
+                    //first:是否首次加载。
+                    //console.log(res);
+                    //console.log($obj);
+                    //console.log(first);
+                    jstungid = res.data[0].nodeId;
+                    jsfloorid = res.data[0].children[0].nodeId;
+                    getdormdata();
+                    loadtable();
+                },
                 formatter: {
                     title: function (data) {  // 示例给有子集的节点返回节点统计
                         var s = data.context;
@@ -263,7 +275,8 @@
                 icon: ["3", "11"], // 使用
                 response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
             });
-            //未居住的员工请求
+
+
             var stafftable = table.render({
                 elem: '#demo'
                 , skin: 'line' //行边框风格
@@ -285,38 +298,8 @@
                 ]]
 
             });
-            $(function () {
-                loadtree();
-                
-                
-            });
-            
-            //加载树
-            function loadtree() {
-                $.ajax({
-                    url: '/Dormitory/DormitoryInfo/EstablishTree',
-                    type: 'GET',
-                    success: function (successdata) {
-                        //console.log(successdata);
-                        jstungid = successdata.data[0].nodeId;
-                        jsfloorid = successdata.data[0].children[0].nodeId;
-                        //可以重载所有基础参数
-                        myDTree.reload(
-                            'demoTree',
-                            {
-                                data: successdata
 
-                            });
-                        getdormdata();
-                        loadtable();
-                    },
-                    error: function (errordata) {
-                        layer.msg("网络延迟！", { icon: 6, time: 2000 }, function () {
 
-                        });
-                    }
-                });
-            }
 
             //加载表格
             function loadtable() {
@@ -566,7 +549,7 @@
                             if (SuccessData.Success) {
                                 layer.msg('卫生登记完成。');
                                 loadtable();
-
+                                $("#Reset").click();
                             } else {
                                 layer.msg("请联系开发者");
                             }

@@ -19,7 +19,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private ProScheduleForTrainees dbprotrainees;
         private AccdationinformationBusiness dbacc;
         private DormInformationBusiness dbdorm;
-        private ProStudentAndTeacherBussiness dbstudentandteach;
+        private ProStudentInformationBusiness dbproStudentInformation;
+      
         private ProStudentInformationBusiness dbproStudentInformationBusiness;
         /// <summary>
         /// 员工实体对象转化为视图对象带房间编号的 
@@ -74,13 +75,13 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             dbprotrainees = new ProScheduleForTrainees();
             dbacc = new AccdationinformationBusiness();
             dbdorm = new DormInformationBusiness();
-            dbstudentandteach = new ProStudentAndTeacherBussiness();
+            dbproStudentInformation = new ProStudentInformationBusiness();
             List<ProStudentView> result = new List<ProStudentView>();
             foreach (var item in data)
             {
                 ProStudentView proStudentView = new ProStudentView();
                 proStudentView.ClassNO = dbprotrainees.GetTraineesByStudentNumber(item.StudentNumber).ClassID;
-                proStudentView.EmpinfoName = dbstudentandteach.GetEmpinfoByStudentNumber(item.StudentNumber).EmpName;
+                proStudentView.EmpinfoName = dbproStudentInformation.GetEmpinfoByStudentNumber(item.StudentNumber).EmpName;
                 proStudentView.Name = item.Name;
                 proStudentView.Sex = item.Sex;
                 proStudentView.StudentNumber = item.StudentNumber;

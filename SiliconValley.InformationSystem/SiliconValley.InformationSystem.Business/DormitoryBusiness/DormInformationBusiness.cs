@@ -33,10 +33,19 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <returns></returns>
         public List<DormInformation> GetStudentDorms()
         {
-            return this.GetDorms().Where(a => a.RoomStayTypeId == 1).ToList();
+            dbxml = new RoomdeWithPageXmlHelp();
+            int roomtype = dbxml.GetRoomType(Entity.ViewEntity.RoomTypeEnum.RoomType.StudentRoom);
+            return this.GetDorms().Where(a => a.RoomStayTypeId == roomtype).ToList();
+        }
+        /// <summary>
+        /// 获取学生寝室
+        /// </summary>
+        /// <returns></returns>
+        public List<DormInformation> GetStudentDormsByTungfloorid(int Tungfloorid)
+        {
+           return this.GetStudentDorms().Where(a => a.TungFloorId == Tungfloorid).ToList();
         }
 
-      
         /// <summary>
         /// 根据栋楼层id返回对应房间集合 用于信息详细 显示禁用的房间都行
         /// </summary>

@@ -14,14 +14,6 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private ProScheduleForTrainees dbproScheduleForTrainees;
         private ProHeadClass dbproHeadClass;
         private ProHeadmaster dbheadmaster;
-        public EmployeesInfo GetEmpinfoByStudentNumber(string StudentNumber) {
-            dbemp = new EmployeesInfoManage();
-            dbproScheduleForTrainees = new ProScheduleForTrainees();
-            dbproHeadClass = new ProHeadClass();
-            dbheadmaster = new ProHeadmaster();
-           var obj0=  dbproScheduleForTrainees.GetTraineesByStudentNumber(StudentNumber);
-           var obj1=  dbproHeadClass.GetClassByClassid(obj0.ID_ClassName);
-           return dbheadmaster.GetEmployeesInfoByHeadID(obj1.LeaderID);
-        }
+      
     }
 }
