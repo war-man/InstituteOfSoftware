@@ -11,8 +11,8 @@
     <title>RoomdeWithPage</title>
     <link href="~/dleiicon/font_xhlb4bpyaza/iconfont.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
-    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
         * {
             margin-left: 1px;
@@ -132,10 +132,10 @@
                 </div>
             </div>
         </div>
-        <div id="rightdiv">
+        <div id="rightdiv"  style="display:none">
             <div style="margin-top:10%;">
                 <form class="layui-form" action="">
-                
+
                     <input type="hidden" value="@ViewBag.SexType" id="sextype" />
                     <fieldset>
                         <legend>
@@ -249,23 +249,23 @@
                 studentroom = $roomstaytype("StudentRoom");
                 loadbedandaccdation();
             });
-            function TimeChange(newtime) {
-                if (newtime == null)
-                    return "";
-                var date = new Date(parseInt(newtime.slice(6)));
-                var year = date.getFullYear();
-                var month = date.getMonth();
-                if (month < 10) {
-                    month =Number(month + 1);
-                }
-                var day = date.getDate();
-                if (day < 10) {
-                    day =day;
-                }
-                var result = year + '-' + month + '-' + day;
-                return result;
-            }
-   
+            //function TimeChange(newtime) {
+            //    if (newtime == null)
+            //        return "";
+            //    var date = new Date(parseInt(newtime.slice(6)));
+            //    var year = date.getFullYear();
+            //    var month = date.getMonth();
+            //    if (month < 10) {
+            //        month =Number(month + 1);
+            //    }
+            //    var day = date.getDate();
+            //    if (day < 10) {
+            //        day =day;
+            //    }
+            //    var result = year + '-' + month + '-' + day;
+            //    return result;
+            //}
+
             //请求拿床位数据
             function loadbedandaccdation() {
                 layer.msg("肉肉的提示");
@@ -277,7 +277,9 @@
                         querydata = SuccessData.Data;
                         console.log(querydata);
                         if (SuccessData.Success) {
-
+                            if (querydata.AccdationList.length > 0) {
+                                $('#rightdiv').show();
+                            }
                             //男
                             if (sextype == male.val) {
                                 bindbentostudnet(SuccessData.Data, male.icon);
@@ -286,9 +288,7 @@
                             else {
                                 bindbentostudnet(SuccessData.Data, female.icon);
                             }
-
-
-
+                           
                         } else {
                             layer.msg("error");
                         }
@@ -357,6 +357,7 @@
                     }
                 });
 
+
                 if (data.StudentNumber > 0) {
                     console.log(data.StudentNumber);
                     loadformdata(data.StudentNumber);
@@ -373,13 +374,13 @@
                 }
             }
 
- 
+
 
 
             //请求学生基本数据
             function loadformdata(studentnumber) {
                 $.ajax({
-                    url: '/Dormitory/DormitoryInfo/Loadformdata',
+                    url: '/Dormitory/StudentRoomDetails/Loadformdata',
                     type: 'GET',
                     data: { Studentnumber: studentnumber },
                     success: function (SuccessData) {
@@ -408,7 +409,7 @@
             //点击学生触发事件
             $(document).off("click", '.probtn').on('click', '.probtn', function () {
 
-    
+
                     var clickstudentnumber = $(this).attr("studentnumber");
                     console.log(clickstudentnumber);
                     if (clickstudentnumber == "") {
@@ -432,22 +433,22 @@
                         loadformdata(clickstudentnumber);
                         changecolor(clickstudentnumber);
                     }
-           
+
 
             });
 
             function changecolor(clickstudentnumber) {
                 $(".probtn").each(function () {
                     $(this).removeClass("layui-btn-danger");
-                
+
                         if ($(this).attr("studentnumber") == clickstudentnumber) {
                             $(this).addClass("layui-btn-danger");
                         }
-                    
+
 
                 });
             }
-            
+
 
             //任命为寝室长
              $(document).off("click", '#Dormitoryer').on('click', '#Dormitoryer', function () {
