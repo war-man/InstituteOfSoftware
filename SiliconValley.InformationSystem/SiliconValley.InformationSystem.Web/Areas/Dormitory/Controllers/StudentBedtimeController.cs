@@ -56,12 +56,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 param0 = param0.Where(a => a.ClassNumber == classno).ToList();
             }
             var query0 = dbproClassScheduleViewBusiness.Conversion(param0);
+            for (int i = 0; i < query0.Count; i++)  //外循环是循环的次数
+            {
+                for (int j = query0.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                {
+
+                    if (query0[i].ClassNumber == query0[j].ClassNumber)
+                    {
+                        query0.RemoveAt(j);
+                    }
+                }
+            }
             var data = query0.OrderByDescending(a => a.ClassNumber).Skip((page - 1) * limit).Take(limit).ToList();
             var returnObj = new
             {
                 code = 0,
                 msg = "",
-                count = list0.Count(),
+                count = query0.Count(),
                 data = data
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
@@ -112,7 +123,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             {
                 code = 0,
                 msg = "",
-                count = list0.Count(),
+                count = resutl0.Count(),
                 data = data
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
@@ -143,7 +154,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             {
                 code = 0,
                 msg = "",
-                count = list0.Count(),
+                count = resutl0.Count(),
                 data = data
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
