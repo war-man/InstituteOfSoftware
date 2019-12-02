@@ -397,6 +397,9 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Obtainemployment\xml\Obempstaff.xml" />
+    <Content Include="Areas\Teaching\config\studentConfig.xml" />
+    <Content Include="Areas\Teaching\config\teacherConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
