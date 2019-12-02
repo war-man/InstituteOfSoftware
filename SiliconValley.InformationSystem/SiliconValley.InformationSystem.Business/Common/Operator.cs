@@ -16,8 +16,7 @@ namespace SiliconValley.InformationSystem.Business.Common
             get
             {
                 if (GlobalSwitch.RunModel == RunModel.LocalTest)
-
-                    return "Admin";
+                    return "Obtain";
                 else
                     return SessionHelper.Session["UserId"]?.ToString();
             }

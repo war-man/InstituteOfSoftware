@@ -13,6 +13,9 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    /// <summary>
+    /// 学生第一次访谈
+    /// </summary>
     public class SResearchRecordController : Controller
     {
         private EmpClassBusiness dbempClass;
@@ -32,6 +35,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 ClassNumber = a.ID
             }).ToList();
+
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
 
             return View();

@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <root>
-  <Jurisdiction val="director">
-    
+  <Jurisdiction val="directorJurisdiction">
   </Jurisdiction>
-  <Jurisdiction val="staff">
-
+  <Jurisdiction val="staffJurisdiction">
   </Jurisdiction>
-  
 </root>

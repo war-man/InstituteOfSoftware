@@ -397,6 +397,7 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Obtainemployment\xml\Obempstaff.xml" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
     <Content Include="Areas\Teaching\config\teacherConfig.xml" />
