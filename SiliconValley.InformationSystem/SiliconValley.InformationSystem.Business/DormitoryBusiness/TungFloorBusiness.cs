@@ -1,5 +1,6 @@
 ﻿using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.Entity;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 {
    public  class TungFloorBusiness:BaseBusiness<TungFloor>
     {
+
         /// <summary>
         /// 获取全部可用的数据
         /// </summary>
@@ -76,5 +78,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 return false;
             }
         }
+
+
+     
     }
 }

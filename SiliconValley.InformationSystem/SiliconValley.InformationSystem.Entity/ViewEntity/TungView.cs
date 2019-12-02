@@ -30,6 +30,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 居住人数
         /// </summary>
-        public int personcount { get; set; }
+        public int studentcount { get; set; }
+
+        /// <summary>
+        /// 员工人数
+        /// </summary>
+        public int staffcount { get; set; }
     }
 }

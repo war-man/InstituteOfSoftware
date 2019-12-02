@@ -216,10 +216,18 @@
                         }
                     }
                     , {
-                        field: 'personcount', title: '居住人数', width: 100, templet: function (d) {
+                        field: 'studentcount', title: '学生人数', width: 100, templet: function (d) {
 
 
-                            return "<span style=color:red;>" + d.personcount + "</span>"
+                            return "<span style=color:red;>" + d.studentcount + "</span>"
+
+                        }
+                    }
+                    , {
+                        field: 'staffcount', title: '员工人数', width: 100, templet: function (d) {
+
+
+                            return "<span style=color:red;>" + d.staffcount + "</span>"
 
                         }
                     }

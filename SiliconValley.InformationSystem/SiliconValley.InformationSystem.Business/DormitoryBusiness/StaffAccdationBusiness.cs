@@ -9,6 +9,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 {
     public class StaffAccdationBusiness : BaseBusiness<StaffAccdation>
     {
+        private DormInformationBusiness dbdorm;
         /// <summary>
         /// 获取员工的现在的居住信息
         /// </summary>
@@ -54,6 +55,22 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
 
                 throw;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 根据栋楼层 返回这一层的员工居住信息
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public List<StaffAccdation> GHetstaffaccByTungfloorid(int Tungfloorid) {
+            List<StaffAccdation> result = new List<StaffAccdation>();
+            dbdorm = new DormInformationBusiness();
+            var dormlist= dbdorm.GetDormsForStaffByTungfloorid(Tungfloorid);
+            foreach (var item in dormlist)
+            {
+                result.AddRange(this.GetStaffAccdationsByDorminfoID(item.ID));
             }
             return result;
         }

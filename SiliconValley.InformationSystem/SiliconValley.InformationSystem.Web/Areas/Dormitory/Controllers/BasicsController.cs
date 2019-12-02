@@ -444,8 +444,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             dbtung = new TungBusiness();
             dbdorm = new DormInformationBusiness();
             dbtungfloor = new TungFloorBusiness();
-
+            dbacc = new AccdationinformationBusiness();
             List<TungView> list = new List<TungView>();
+            dbstaffacc = new StaffAccdationBusiness();
             var t= dbtung.GetTungs();
             
             foreach (var item in t)
@@ -455,11 +456,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 tungView.Remark = item.Remark;
                 tungView.TungAddress = item.TungAddress;
                 tungView.TungName = item.TungName;
-                tungView.personcount = 0;
+                tungView.studentcount = 0;
+                tungView.staffcount = 0;
                 var dd = dbtungfloor.GetTungFloorByTungID(item.Id);
                 foreach (var item1 in dd)
                 {
-                    tungView.personcount = tungView.personcount + dbdorm.GetDormsByTungFloorIDing(item.Id).Count;
+
+                    tungView.studentcount = tungView.studentcount + dbacc.GetAccdationinformationsByTungFloorID(item1.Id).Count;
+                    tungView.staffcount = tungView.staffcount + dbstaffacc.GHetstaffaccByTungfloorid(item1.Id).Count;
                 }
                 list.Add(tungView);
             }

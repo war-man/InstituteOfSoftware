@@ -128,5 +128,24 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             return querydorm;
         }
+
+        /// <summary>
+        /// 获取全部的员工宿舍
+        /// </summary>
+        /// <returns></returns>
+        public List<DormInformation> GetDormsForStaff() {
+            dbxml = new RoomdeWithPageXmlHelp();
+            int roomtype = dbxml.GetRoomType(Entity.ViewEntity.RoomTypeEnum.RoomType.StaffRoom);
+            return this.GetDorms().Where(a => a.RoomStayTypeId == roomtype).ToList();
+        }
+
+        /// <summary>
+        /// 根据 栋-楼层id 获取这个层的员工房间
+        /// </summary>
+        /// <param name="Tungfloorid"></param>
+        /// <returns></returns>
+        public List<DormInformation> GetDormsForStaffByTungfloorid(int Tungfloorid) {
+           return this.GetDormsForStaff().Where(a => a.TungFloorId == Tungfloorid).ToList();
+        }
     }
 }
