@@ -108,8 +108,17 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.SalaryView
         /// <summary>
         /// 现金工资
         /// </summary>
-        public Nullable<decimal> CasehSalary { get; set; }
-           
-                        
+        public Nullable<decimal> CashSalary { get; set; }
+
+        /// <summary>
+        /// 迟到扣款
+        /// </summary>
+        public Nullable<decimal> TardyWithhold { get; set; }
+
+        /// <summary>
+        /// 早退扣款
+        /// </summary>
+        public Nullable<decimal> LeaveWithhold { get; set; }
+
     }
 }
