@@ -397,7 +397,7 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
-    <Content Include="Areas\Obtainemployment\xml\Obempstaff.xml" />
+    <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
     <Content Include="Areas\Teaching\config\teacherConfig.xml" />
@@ -1194,6 +1194,7 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\TeacherSatisfactionQuestionnaire.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\StuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\checkSurveyView.cshtml" />
+    <Content Include="Config\UserMapRole.config" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

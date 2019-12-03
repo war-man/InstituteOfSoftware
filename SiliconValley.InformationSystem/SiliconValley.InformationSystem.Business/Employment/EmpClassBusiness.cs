@@ -1,5 +1,8 @@
 ﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -11,6 +14,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
     {
 
         private EmploymentStaffBusiness dbemploymentStaffBusiness;
+        private ProClassSchedule dbproClassSchedule;
         /// <summary>
         /// 获取所有的专员带班记录
         /// </summary>
@@ -127,6 +131,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 return false;
         }
 
+      
         /// <summary>
         /// 获取s3或者时s4没有毕业也还没分配专员的对象集合
         /// </summary>
@@ -220,5 +225,81 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return this.GetEmpsByEmpID(a.ID);
         }
 
+        /// <summary>
+        /// 留下未毕业的班级
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public List<EmpClass> Leavebehinding(List<EmpClass> result)
+        {
+            dbproClassSchedule = new ProClassSchedule();
+            for (int i = result.Count - 1; i >= 0; i--)
+            {
+                if (dbproClassSchedule.isgraduationclass(result[i].ClassId))
+                {
+                    result.Remove(result[i]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 留下未毕业的班级
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public List<EmpClass> Leavebehinded(List<EmpClass> result)
+        {
+            dbproClassSchedule = new ProClassSchedule();
+            for (int i = result.Count - 1; i >= 0; i--)
+            {
+                if (!dbproClassSchedule.isgraduationclass(result[i].ClassId))
+                {
+                    result.Remove(result[i]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 根据班级编号返回对应的数据
+        /// </summary>
+        /// <param name="ClassNumber"></param>
+        /// <returns></returns>
+        public List<EmpClass> CorrespondingByClassNumber(List<EmpClass> result,string ClassNumber) {
+            dbproClassSchedule = new ProClassSchedule();
+            for (int i = result.Count-1; i >=0; i--)
+            {
+                var query= dbproClassSchedule.GetEntity(result[i].ClassId);
+                if (query.ClassNumber!= ClassNumber)
+                {
+                    result.Remove(result[i]);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 转化 将就业部带班记录转为EmpClassView model
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public List<dicEmpClassView> Conversion(List<EmpClass> result) {
+            dbproClassSchedule = new ProClassSchedule();
+            List<dicEmpClassView> views = new List<dicEmpClassView>();
+            foreach (var item in result)
+            {
+             var query=  dbproClassSchedule.GetEntity(item.ClassId);
+                dicEmpClassView empClassView = new dicEmpClassView();
+                empClassView.classid = query.id;
+                empClassView.classnumber = query.ClassNumber;
+                if (query.ClassStatus == true)
+                    empClassView.isgraduation = true;
+                else
+                    empClassView.isgraduation = false;
+                views.Add(empClassView);
+            }
+            return views;
+        } 
     }
 }
