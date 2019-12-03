@@ -72,7 +72,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <summary>
         /// 传入的班级编号是否是毕业班级
         /// </summary>
-        /// <param name="classno"></param>
+        /// <param name="classid"></param>
         /// <returns></returns>
         public bool isgraduationclass(int classid)
         {

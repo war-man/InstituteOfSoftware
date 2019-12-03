@@ -37,6 +37,14 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
             教官
         }
 
-       
+        /// <summary>
+        ///就业部权限问题
+        /// </summary>
+        public enum Jurisdiction
+        {
+            directorJurisdiction,
+            staffJurisdiction
+        }
+
     }
 }
