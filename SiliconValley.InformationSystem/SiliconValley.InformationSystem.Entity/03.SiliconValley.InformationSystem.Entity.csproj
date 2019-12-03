@@ -410,6 +410,7 @@
     <Compile Include="ViewEntity\SuccessionrecordView.cs" />
     <Compile Include="ViewEntity\SurveyCommitHelper.cs" />
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
+    <Compile Include="ViewEntity\SurveyGroupByDateView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />

@@ -549,7 +549,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             if (type == "teacher")
             {
-                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id).ToList();
+                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id && d.CurriculumID !=null).ToList();
             }
 
             if (type == "jiaozhi")
@@ -658,7 +658,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 {
                     //根据权限到 配置文件中去匹配
                     XmlDocument xmlDocument = new XmlDocument();
-                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
 
                     var xmlRoot = xmlDocument.DocumentElement;
 
