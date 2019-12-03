@@ -29,7 +29,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<int> ContributionBase { get; set; }//社保缴费基数
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
-        public Nullable<decimal> PayCardSalarySum { get; set; }//工资卡总应发工资
         public Nullable<decimal> PersonalIncomeTax { get; set; }//个税
       
     }
