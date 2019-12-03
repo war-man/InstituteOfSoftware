@@ -39,7 +39,6 @@
                     , { field: 'PersonalSocialSecurity', title: '个人社保', width: 110 }
                     , { field: 'SocialSecuritySubsidy', title: '社保补贴', width: 110 }
                     , { field: 'PersonalIncomeTax', title: '个税', width: 95 }
-                    , { field: 'PayCardSalarySum', title: '工资卡应发工资', width: 130 }
                     , { field: 'Remark', title: '备注', sort: true, width: 110 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
                 ]]
@@ -55,7 +54,7 @@
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/EmplSalaryEmbody/EditESE?id=' + data.Id
-                        , area: ["1200px", "730px"]
+                        , area: ["900px", "600px"]
                         , title: '编辑员工工资体系'
                         , shade: 0.8
                         , anim: 4

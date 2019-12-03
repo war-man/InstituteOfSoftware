@@ -40,17 +40,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 view.empName = empmanage.GetEntity(item.EmployeeId).EmpName;
                 view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;
                 view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;
-                //考勤表对象
-                var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth);
-                if (attendobj == null)
-                {
-                    view.toRegularDays = null;
-                    view.leavedays = null;
-                }
-                else {
-                    view.toRegularDays = attendobj.ToRegularDays;
-                    view.leavedays = attendobj.LeaveDays;
-                }
+              
+                
                
                 //员工工资体系表
                 var eseobj= msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
@@ -80,24 +71,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
               
                 view.SalaryOne = msrmanage.GetSalaryone(one,view.PerformanceSalary,view.netbookSubsidy,view.socialSecuritySubsidy);
                 #endregion
+                //考勤表对象
+                var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth);
+                if (attendobj == null)
+                {
+                    view.toRegularDays = null;
+                    view.leavedays = null;
+                }
+                else
+                {
+                    view.toRegularDays = attendobj.ToRegularDays;
+                    view.leavedays = attendobj.LeaveDays;
+                    view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);
+                    view.TardyWithhold = attendobj.TardyWithhold;
+                    view.LeaveWithhold = attendobj.LeaveWithhold;
+                }
 
 
                 view.OvertimeCharges = item.OvertimeCharges;
                 view.Bonus = item.Bonus;
 
-                    view.LeaveDeductions = msrmanage.GetLeaveDeductions(item.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);
-                
+               
                 view.OtherDeductions = item.OtherDeductions;
-
+               
                 #region 应发工资1赋值
-                view.SalaryTwo = view.SalaryOne + view.OvertimeCharges + view.Bonus - view.LeaveDeductions + view.OtherDeductions;
+                view.SalaryTwo =msrmanage.GetSalarytwo(view.SalaryOne, view.OvertimeCharges,view.Bonus,view.LeaveDeductions,view.TardyWithhold,view.LeaveWithhold,view.OtherDeductions);
                 #endregion
-
+                item.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;
                 view.PersonalSocialSecurity = item.PersonalSocialSecurity;
                 view.PersonalIncomeTax = eseobj.PersonalIncomeTax;
+                item.Total=msrmanage.GetTotal(view.Id,view.SalaryTwo,view.PersonalSocialSecurity,view.PersonalIncomeTax);
                 view.Total = item.Total;
-                view.PayCardSalary = item.PayCardSalary;
-                view.CasehSalary = item.CasehSalary;
+                view.PayCardSalary = msrmanage.GetPaycardSalary(view.Id,view.Total,view.PersonalSocialSecurity,eseobj.ContributionBase);
+                view.CashSalary =msrmanage.GetCashSalary(view.Id,view.Total,view.PayCardSalary);
                 result.Add(view);
             }
             

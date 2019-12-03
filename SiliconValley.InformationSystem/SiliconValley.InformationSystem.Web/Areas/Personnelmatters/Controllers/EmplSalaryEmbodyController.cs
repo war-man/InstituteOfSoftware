@@ -41,7 +41,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.NetbookSubsidy,
                              e.ContributionBase,
                              e.PersonalIncomeTax,
-                             e.PayCardSalarySum,
                              e.Remark
                              #endregion
 
@@ -70,6 +69,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         [HttpPost]
         public ActionResult EditESE(EmplSalaryEmbody ese) {
+
             return View();
         }
 
@@ -92,7 +92,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 ese.SocialSecuritySubsidy,
                 ese.ContributionBase,
                 ese.PersonalIncomeTax,
-                ese.PayCardSalarySum,
                 ese.Remark,
                 ese.IsDel
             };
