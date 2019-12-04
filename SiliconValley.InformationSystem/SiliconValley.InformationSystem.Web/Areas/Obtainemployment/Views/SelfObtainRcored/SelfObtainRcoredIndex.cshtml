@@ -98,7 +98,7 @@
                     // res:当前异步加载的数据，
                     //$obj:当前组件的根节点的JQuery对象，
                     //first:是否首次加载。
-                    //console.log(res);
+                    console.log(res);
                     //console.log($obj);
                     //console.log(first);
                     empQuarterclassid = res.data[0].children[0].children[0].nodeId;
@@ -106,6 +106,7 @@
                     string2 = res.data[0].nodeId;
                     treedata = res.data;
                     loadtable();
+                    console.log(empQuarterclassid);
                 },
                 formatter: {
                     title: function (data) {  // 示例给有子集的节点返回节点统计
@@ -203,11 +204,11 @@
                     case '3':
 
                         empQuarterclassid = dtreeobj.nodeId;
-                        string2 = dtreeobj.context;
+                        string2 = dtreeobj.nodeId;
                         break;
                 }
                 loadtable00();
-                //console.log(empQuarterclassid);
+                console.log(empQuarterclassid);
             });
 
             table.on('toolbar(table00)', function (obj) {
@@ -217,7 +218,7 @@
                         layer.open({
                             type: 2,
                             content: "/Obtainemployment/SelfObtainRcored/add?param0=" + empQuarterclassid,
-                            title: "添加谈话",
+                            title: "添加自主就业",
                             area: ['730px', '830px'],
                             //area: ['850px', '760px'],
                             success: function (layero, index) {
