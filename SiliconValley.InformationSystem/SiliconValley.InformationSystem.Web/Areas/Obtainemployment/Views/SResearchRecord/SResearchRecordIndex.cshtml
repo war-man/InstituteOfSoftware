@@ -8,12 +8,12 @@
 
 <style>
     #div1 {
-    width:29%;
+    width:34%;
     float:left;
     /*border:1px solid red;*/
     }
       #div2 {
-    width:70%;
+    width:65%;
     float:right;
     /*border:1px solid red;*/
     }
@@ -87,8 +87,8 @@
 
     layui.use(['laypage', 'layedit','table','layer'], function () {
         //获取设备信息
-        var device = layui.device(), table = layui.table,form=layui.form;
-        var layer = layui.layer, type = "ing", classno, classid,studentname;
+        var device = layui.device(), table = layui.table, form = layui.form, layer = layui.layer;
+        var type = "ing", classno, classid, studentname, isadd = false;
           //时间转化
         function TimeChange(newtime) {
             if (newtime == null)
@@ -120,11 +120,11 @@
             , limit: 15
             , limits: [15, 30, 45, 60, 75]
             , cols: [[ //标题栏
-                 { field: 'classid', title: '调研记录ID', width: 80, hide: true },
-                {type:'radio'},
-                 { field: 'classnumber', title: '班级编号' },
+                 { field: 'classid', title: 'ID', width: 80, hide: true },
+                
+                 { field: 'classnumber', title: '班级',width:85 },
                  {
-                    field: 'isgraduation', title: '是否毕业', templet: function (d) {
+                    field: 'isgraduation', title: 'is毕业',width:85, templet: function (d) {
                         if (d.isgraduation) {
                             return "<span style=color:red;>已毕业</span>"
                         } else {
@@ -132,7 +132,11 @@
                         }
 
                     }
-                }
+                },
+                { field: 'interviewcount', title: '访谈次数',width:90 },
+                { field: 'totalnumber', title: '应访谈人数', width: 100 },
+                  { field: 'peoplecount', title: '实际访谈人数',width:115  },
+                 { field: 'repeatedinterviews', title: '重复次数',width:90 },
               
             ]]
 
@@ -147,7 +151,10 @@
                 }
                 , done: function (res, curr, count) {
                     console.log(res);
-                    classid = res.data[0].classid;
+                    if (!isadd) {
+                        classid = res.data[0].classid;
+                    }
+                    
                     reloadtable11();
                 }
                 , page: {
@@ -155,6 +162,7 @@
                 }
             });
         }
+
        table.render({
             elem: '#table11'
             //, url: '' //数据接口
@@ -167,7 +175,7 @@
             , cols: [[ //标题栏
                  { field: 'ID', title: '调研记录ID', width: 80, hide: true }
                 , {
-                    field: 'StudentName', title: '学生名字', width: 100, templet: function (d) {
+                    field: 'StudentName', title: '学生名字', width: 90, templet: function (d) {
                         if (d.SurRating.toLowerCase() == "c" || d.SurRating.toLowerCase() == "d") {
                             return "<span style=color:red;>" + d.StudentName + "</span>"
                         } else {
@@ -176,9 +184,9 @@
 
                     }
                 }
-                , { field: 'EmpStaffName', title: '记录人', width: 100 }
+                , { field: 'EmpStaffName', title: '记录人', width: 90 }
                 , {
-                    field: 'SelfRating', title: '自评等级', width: 100, templet: function (d) {
+                    field: 'SelfRating', title: '自评等级', width: 90, templet: function (d) {
                         if (d.SelfRating.toLowerCase()=="c"||d.SelfRating.toLowerCase()=="d") {
                             return "<span style=color:red;>" + d.SelfRating + "</span>"
                         } else {
@@ -188,7 +196,7 @@
                     }
                 }
                 , {
-                    field: 'SurRating', title: '调研评级', width: 100, templet: function (d) {
+                    field: 'SurRating', title: '调研评级', width: 90, templet: function (d) {
                         if (d.SurRating.toLowerCase() == "c" || d.SurRating.toLowerCase() == "d") {
                             return "<span style=color:red;>" + d.SurRating + "</span>"
                         } else {
@@ -197,11 +205,11 @@
 
                     }
                 }
-                , { field: 'WantSpceName', title: '想学专业', width: 178 }
-                , { field: 'EmpStaffComments', title: '就业专员评语', width: 178 }
-                , { field: 'EmpExpectations', title: '就业期望', width: 178 }
-                , { field: 'MasterTechnology', title: '掌握技术', width: 178 }
-                , { field: 'PracticalExperience', title: '实践经验', width: 178 }
+                , { field: 'WantSpceName', title: '想学专业', width: 90 }
+                , { field: 'EmpStaffComments', title: '就业专员评语', width: 150 }
+                , { field: 'EmpExpectations', title: '就业期望', width: 150 }
+                , { field: 'MasterTechnology', title: '掌握技术', width: 150 }
+                , { field: 'PracticalExperience', title: '实践经验', width: 100 }
                 , {
                     field: 'RecordsDate', title: '时间', width: 120, templet: function (d) {
                             return TimeChange(d.RecordsDate);
@@ -242,7 +250,8 @@
                             body.find("#classnumnber").val(classid);
                         },
                         end: function () {
-                            reloadtable11();
+                            isadd = true;
+                            reloadtable00();
                         }
                     });
                     break;
@@ -261,6 +270,7 @@
                     type = "ing";
                     break;
             }
+            isadd = false;
             reloadtable00();
         });
 
@@ -280,6 +290,7 @@
         form.on('submit(btn0)', function (data) {
             //console.log(data.field);
             classno = data.field.name0;
+            isadd = false;
             reloadtable00();
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
         });

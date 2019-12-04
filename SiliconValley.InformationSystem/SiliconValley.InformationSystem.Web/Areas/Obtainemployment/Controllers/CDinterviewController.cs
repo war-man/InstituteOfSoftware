@@ -129,7 +129,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <param name="limit"></param>
         /// <param name="param0">班级编号</param>
         /// <returns></returns>
-        public ActionResult SearchData(int page, int limit, string param0)
+        public ActionResult SearchData(int page, int limit, string param0,string param1)
         {
            
             dbproStudentInformation = new ProStudentInformationBusiness();
@@ -149,6 +149,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 CDIntDate=a.CDIntDate,
                 WantSpceName = dbspecialty.GetEntity(a.MajorID).SpecialtyName
             }).ToList();
+            if (!string.IsNullOrEmpty(param1))
+            {
+               aa= aa.Where(a => a.StudentName == param1).ToList();
+            }
             var resultdata1 = aa.OrderByDescending(a => a.CDIntDate).Skip((page - 1) * limit).Take(limit).ToList();
 
             var returnObj = new
