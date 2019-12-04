@@ -21,9 +21,12 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int Id { get; set; }
         public string Studentnumber { get; set; }
-        public string TrialClass { get; set; }
+        /// <summary>
+        /// 当前班级
+        /// </summary>
+        public int TrialClass { get; set; }
         public Nullable<int> Trialtime { get; set; }
-        public string Reasons_forTrialStudy { get; set; }
+        public string ReasonsforTrialStudy { get; set; }
         public Nullable<System.DateTime> TrialDate { get; set; }
         public Nullable<double> EKTachievement { get; set; }
         public Nullable<double> EKTRespondent { get; set; }

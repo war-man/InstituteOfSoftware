@@ -13,41 +13,50 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <style>
-        table{
-           margin:20px auto;
+        table {
+            margin: 20px auto;
         }
+
         #Dateofapplication {
-        border:0px;
+            border: 0px;
         }
-        .th1{
-            width:100px;
-            height:50px;
+
+        .th1 {
+            width: 100px;
+            height: 50px;
         }
+
         span {
             padding-bottom: 5px;
             border-bottom: 2px solid #f89;
         }
+
         .borid {
-            border-right:#ffffff solid 1px;
+            border-right: #ffffff solid 1px;
         }
-        .labels{
-            width:200px;
-            border:0px;
+
+        .labels {
+            width: 200px;
+            border: 0px;
         }
+
         .Nation {
             width: 99%;
             height: 100px;
-             overflow: hidden;
-             border:0px;
+            overflow: hidden;
+            border: 0px;
         }
-        #NowCLass{border:0px;}
+
+        #NowCLass {
+            border: 0px;
+        }
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">硅谷高科软件学院学员转班申请表</h2>
+    <h2 style="text-align:center;">硅谷高科软件学院学员重修申请表</h2>
     <div style="margin-top:10px;" class="layui-form" action="" lay-filter="example">
         <div>
-            <label class="layui-form-label" style="width:200px;"> 申请转班日期</label>
+            <label class="layui-form-label" style="width:200px;"> 申请重修日期</label>
             <div class="layui-input-inline">
                 @Html.TextBoxFor(a => a.Dateofapplication, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input" } })
             </div>
@@ -75,7 +84,7 @@
 
             </tr>
             <tr>
-                <th class="th1">希望转入班级</th>
+                <th class="th1">希望重修班级</th>
                 <td colspan="1">
                     @Html.DropDownListFor(a => a.NowCLass, ViewBag.List as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() { { "class", "layui-input labels" }, { "lay-verify", "required" } })
                 </td>
@@ -91,9 +100,9 @@
             </tr>
             <tr>
 
-                <th class="th1">申请转班原因</th>
+                <th class="th1">申请重修原因</th>
                 <td colspan="5" style="text-align:end;">
-                    @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入转班原因" }, { "class", "layui-textarea Nation" } })
+                    @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入重修原因" }, { "class", "layui-textarea Nation" } })
 
                     <div>
                         学员签字：
@@ -106,28 +115,31 @@
 
             </tr>
             <tr>
-                <th class="th1">原转出班级班主任意见</th>
+                <th class="th1">重修班级班主任意见</th>
                 <td colspan="5" style="text-align:end;">
                     <div style="margin-top:30px;  ">
-                        原转出班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                        班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         __________年_____月_____日 &nbsp;&nbsp;
                     </div>
                 </td>
             </tr>
-            <tr>
+            @if (Model.Stage == "S4")
+            {
+                <tr>
+                    <th class="th1">就业老师意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            就业老师签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+            }
 
-                <th class="th1">转入班级班主任意见</th>
-                <td colspan="5" style="text-align:end;">
-                    <div style="margin-top:30px;">
-                        转入班级班主签字：&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        __________年_____月_____日 &nbsp;&nbsp;
-                    </div>
-                </td>
-            </tr>
             <tr>
 
                 <th class="th1">部门主管意见</th>
@@ -158,19 +170,19 @@
             <tr>
 
                 <td class="borid" style="text-align:end"> 注：</td>
-                <td colspan="5">1.适用范围：在学期间因特殊情况必须转班的学员;</td>
+                <td colspan="5">1.适用范围：在学期间因特殊情况必须休学的学员;</td>
             </tr>
             <tr style="border-top:#ffffff solid 1px; ">
                 <td class="borid"></td>
-                <td colspan="5"> 2.上报时间：在接到学员申请的24小时内上报给部门主管并在处理完后的24小时内在系统内更新</td>
+                <td colspan="5"> 2.上报时间：班主任在接到学员申请的24小时内上报给部门主管并在处理后;24小时内在系统内更新</td>
             </tr>
             <tr style="border-top:#ffffff solid 1px; ">
                 <td class="borid"></td>
-                <td colspan="5">  3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
+                <td colspan="5">     3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
             </tr>
             <tr style="border-top:#ffffff solid 1px; ">
                 <td class="borid"></td>
-                <td colspan="5">   4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如报考，报档，升学等其它日常工作的责任班主任。</td>
+                <td colspan="5">    4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如建议重修班级及是否收费等，并写明其它日常工作的责任班主任。</td>
             </tr>
             <tr>
                 <td colspan="6" style="text-align:center;">   <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button></td>
@@ -185,7 +197,7 @@
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
-     
+
         var laydate = layui.laydate;
         //日期正则
         var curDate = new Date();
@@ -197,8 +209,8 @@
             , format: 'yyyy-MM-dd',
             done: function (value, date, endDate) {
                 var endTime = new Date(value).getTime();
-                if (endTime > curDate.getTime()) {
-                    layer.msg('结束时间不能大于当前时间');
+                if (endTime < curDate.getTime()) {
+                    layer.msg('不能小于当前日期');
                     $('#Dateofapplication').val(curYearMonthrDay);
                 }
             }
@@ -211,8 +223,8 @@
             //return false;
 
             var datas = data.field;
-            TransactionAdd("/Teachingquality/ClassSchedule/Shiftwork", datas);
-          
+            TransactionAdd("/Teachingquality/StudentTransaction/Rebuild", datas);
+
         });
     });
 

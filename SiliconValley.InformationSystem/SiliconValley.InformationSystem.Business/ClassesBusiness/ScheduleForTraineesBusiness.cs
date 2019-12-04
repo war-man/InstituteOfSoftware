@@ -25,9 +25,6 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             StudentInformationBusiness student = new StudentInformationBusiness();
 
             List<StudentInformation> resullist = new List<StudentInformation>();
-
-      
-
             foreach (var item in stuid)
             {
                var studentobj = student.GetList().Where(d => d.IsDelete == false && d.StudentNumber == item.StudentID).FirstOrDefault();

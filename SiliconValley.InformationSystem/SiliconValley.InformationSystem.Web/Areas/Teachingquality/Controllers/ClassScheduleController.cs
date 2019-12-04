@@ -35,6 +35,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             dbtext = new ClassScheduleBusiness();
 
         }
+        //升学阶段
+        BaseBusiness<GotoschoolStage> GotoschoolStageBusiness = new BaseBusiness<GotoschoolStage>();
         //拆班记录
         BaseBusiness<RemovalRecords> Dismantle = new BaseBusiness<RemovalRecords>();
         //学员信息
@@ -208,14 +210,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
 
             classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
-            var x = dbtext.ClassStudentneViewList((int)classNumberss);
+         
             ViewBag.ClassName =dbtext.GetEntity( classNumberss).ClassNumber;
             ViewBag.ClassdetailsView = dbtext.Listdatails((int)classNumberss);
             ViewBag.ClassID = classNumberss;
             ViewBag.Members = dbtext.MembersList();
             ViewBag.Stage = dbtext.GetClassGrand((int)classNumberss, 234);
             ViewBag.Status= dbtext.GetEntity(classNumberss).ClassstatusID;
-            return View(x);
+            return View();
+        }
+        /// <summary>
+        /// 获取班级学员的数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ClassStuDate()
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            var x = dbtext.ClassStudentneViewList(ClassID);
+            return Json(x, JsonRequestBehavior.AllowGet);
         }
 
         //群号操作页面
@@ -339,9 +351,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult Dismantleclasses()
         {
             string studentID = Request.QueryString["StudentID"];
-          
-          var Dismantl=  Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
-            var List = dbtext.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
+           string[] studentIDs= studentID.Split(',');
+            var Dismantl=  Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
+            //获取当前班级数据对象
+            var x = dbtext.FintClassSchedule(Stuclass.SutdentCLassName(studentIDs[0]).ID_ClassName);
+          var Grdeid=  GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == x.grade_Id).FirstOrDefault().NextStageID;
+            var List = dbtext.ListGradeidenticals(Grdeid);
             foreach (var item in Dismantl)
             {
                 List = List.Where(a => a.id != item.FormerClass).ToList();
@@ -478,18 +493,54 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.ClassEnd(ClassID), JsonRequestBehavior.AllowGet);
         }
-
+        /// <summary>
+        /// 转班申请数据表单及打印
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         public ActionResult Shiftwork()
         {
             string StudentID = Request.QueryString["StudentID"];
-
-            return View();
+            var Dismantl = Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
+            var List = dbtext.ListGradeidentical(Stuclass.SutdentCLassName(StudentID).ID_ClassName);
+            foreach (var item in Dismantl)
+            {
+                List = List.Where(a => a.id != item.FormerClass).ToList();
+            }
+            ViewBag.List = List.Where(a => a.id != classNumberss).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
+            return View(dbtext.ShiftworkFine(StudentID));
         }
+        /// <summary>
+        /// 转班申请数据提交
+        /// </summary>
+        /// <param name="transactionView">数据对象</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult Shiftwork(TransactionView transactionView)
+        {
+            return Json(dbtext.Shiftwork(transactionView), JsonRequestBehavior.AllowGet);
+        }
+    
+        /// <summary>
+        /// 通过班级获取该班级所有异动数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult TransactionDate(int page, int limit)
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+           
+            return Json(dbtext.TransactionDate(page,limit,ClassID),JsonRequestBehavior.AllowGet);
+        }
+  
         public ActionResult PhoneSMS()
         {
             string str = "<p>湖南硅谷高科软件学员逾期缴费学员通知：</p><p>{Name}家长：您好！经财务核查，您孩子{NextStageID}阶段升学费用逾期未缴，应交{ShouldJiao}元，欠费{Surplus}元。请您于本周内经财务办理缴费手续，逾期不缴教务处将根据学员管理规定予以听课处理。感谢您的配合与理解！</p><p>班主任：{HeadmasterName}&nbsp; 电话：{Phone}</p><p><br/></p>";
              dbtext.PhoneSMS("15073315702",str);
             return null;
         }
+
+
     }
 }

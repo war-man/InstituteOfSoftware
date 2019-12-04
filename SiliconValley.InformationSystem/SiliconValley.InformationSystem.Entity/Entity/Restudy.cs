@@ -19,12 +19,30 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudentNO { get; set; }
-        public Nullable<int> Reentry { get; set; }
+        /// <summary>
+        /// 复学班级
+        /// </summary>
+        public int Reentry { get; set; }
+        /// <summary>
+        /// 耽误学业原因
+        /// </summary>
         public string Reasonsfordelay { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 申请日期
+        /// </summary>
+        public Nullable<System.DateTime> Restutime { get; set; }
 
 
     }

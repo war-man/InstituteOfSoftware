@@ -293,6 +293,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
@@ -396,6 +397,8 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Teachingquality\images\db618f149fc242299c9ebac0576ca2a1_th.jpg" />
+    <Content Include="Areas\Teachingquality\images\审批.png" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -1174,6 +1177,12 @@
     <Content Include="Areas\Dormitory\Views\Basics\BasicsIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Shiftwork.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\transactionprocessing.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Transactiondetails.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuild.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuilddetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschool.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

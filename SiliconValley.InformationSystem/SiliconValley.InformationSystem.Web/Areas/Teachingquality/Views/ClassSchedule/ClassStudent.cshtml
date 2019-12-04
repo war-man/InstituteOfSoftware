@@ -16,22 +16,22 @@
         }
 
         .Mydiv {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 90px;
             border: 1px solid red;
-            padding: 10px;
-            margin-left: 80px;
+            padding: 1px;
+            margin-left: 21px;
             margin-top: 20px;
             background-color: #1cc09f;
             color: #fff;
         }
 
         .TiDIV {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 90px;
             border: 1px solid red;
-            padding: 10px;
-            margin-left: 80px;
+            padding: 1px;
+            margin-left: 21px;
             margin-top: 20px;
             background-color: #C0C0C0;
             color: #fff;
@@ -234,10 +234,13 @@
         <h2 class="layui-colla-title"> 班级异动</h2>
         <div class="layui-colla-content layui-anim">
             <div>
+                <button type="button" class="layui-btn layui-btn-fluid mybut" id="transactionprocessing">异动数据处理</button>
+            </div>
+            <div>
                 <button type="button" id="DropoutofSchool" class="layui-btn layui-btn-fluid mybut">学员退学</button>
             </div>
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">学员重修</button>
+                <button type="button" id="Rebuild" class="layui-btn layui-btn-fluid mybut">学员重修</button>
             </div>
             <div>
                 <button type="button" id="Transferoftraunees" class="layui-btn layui-btn-fluid mybut">学员转班</button>
@@ -360,43 +363,12 @@
         </form>
         <table class="layui-hide" id="test" lay-filter="test"></table>
     </div>
-    @{
+
 
         <div class="layui-row" id="MyShutdown">
-            @foreach (var item in Model as List<ClassStudentView>)
-            {
-                if (item.ClassNameView == null)
-                 {
-                    <div class="Mydiv layui-col-xs4">
-                        <div style="display:none;">@item.StuNameID</div>
-                        <div style="text-align:center;margin-top:20px;line-height:23px;">
-
-                            <div class="Name">@item.Name</div>
-
-
-                        </div>
-
-
-                    </div>
-                }
-                else
-                {
-                    <div class="TiDIV layui-col-xs4">
-                        <div style="display:none;">@item.StuNameID</div>
-                        <div style="text-align:center;margin-top:20px;line-height:23px;">
-
-                            <div class="Name">@item.Name</div>
-                        </div>
-                        <div>现班级:@item.ClassNameView</div>
-
-                    </div>
-                }
-
-
-
-            }
+       
         </div>
-    }
+    
 
 
 </div>
@@ -407,7 +379,25 @@
 <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
+    //加载学员
+    function StudentDate() {
+        $($("#MyShutdown").children()).remove();
+        $.post("/Teachingquality/ClassSchedule/ClassStuDate?ClassID=" + $("#ClassName").text(), function (data) {
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].ClassNameView == null) {
+                    $("#MyShutdown").append($('<div class="Mydiv layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div></div>'));
+ 
+                } else {
+                    $("#MyShutdown").append($('<div class="TiDIV layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">现班级:' + data[i].ClassNameView + '</div></div>'));
+                
+                }
+             //   $("#MyShutdown").innerHTML = sethtml(); 
+            }
+        })
+       
+    }
 
+    StudentDate();
     //给头部的班委赋值
     $.post("/Teachingquality/ClassSchedule/DateMembers", function (dat) {
         console.log(dat)
@@ -577,8 +567,8 @@
         }
 
         //点击事件
+        $("body").on("click", ".Mydiv", function () {
 
-        $(".Mydiv").click(function () {
             if (!$(this).is(".color")) {
                 $(this).addClass("color");
             }
@@ -586,6 +576,9 @@
                 $(this).removeClass("color");
             }
         });
+    
+
+       
 
         //双击详细
         $(".Mydiv").dblclick(function () {
@@ -641,17 +634,49 @@
             }
 
         });
-        //业务 Transferoftraunees
+        //转班业务 Transferoftraunees 
         $("#Transferoftraunees").click(function () {
             if ($(".color").length == 1) {
                 var x = $($($(".color")[0]).children()[0]).text();
-                console.log(x);
+                var url = "/Teachingquality/ClassSchedule/Shiftwork?StudentID=" + x;
+                Popup(url, "转班申请", 1000,900);
             } else {
                 layer.alert('请选择一个学员', { icon: 0 });
             }
 
         });
+        //重修
+        $("#Rebuild").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                var url = "/Teachingquality/StudentTransaction/Rebuild?StudentID=" + x + "&ClassID=" + $("#ClassName").text();
+                Popup(url, "重修申请", 1000, 900);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
 
+        });
+        //异动数据处理
+        $("#transactionprocessing").click(function () {
+      
+            var url = "/Teachingquality/StudentTransaction/transactionprocessing?ClassID=" + $("#ClassName").text();
+          //  Popup(url, "学员异动处理", 1000, 800);
+            layer.open({
+                type: 2,
+                content: url
+                , area: ['1000px', '800px']
+                , title: "学员异动处理"
+
+                , shade: 0.3
+                , cancel: function () {
+                    StudentDate();
+                }
+                , anim: 1
+
+
+            });
+         
+        });
         //升学分配班级业务
         $("#Dismantleclasses").click(function () {
             if ($(".color").length > 0) {
@@ -674,7 +699,6 @@
                 layer.alert('请选择一个学员', { icon: 0 });
             }
         });
-       
         //成考报名
         $("#AddEnroExamination").click(function () {
             if ($(".color").length>0) {
@@ -708,7 +732,6 @@
             var dbase = {
                 ClassID:@Html.Raw(ViewBag.ClassID),
             };
-
            WhateverAdd("/Teachingquality/ClassSchedule/ClassEnd", dbase);
         
         });
@@ -826,6 +849,7 @@
         return false;
         document.addEventListener('contextmenu', onContextMenu, false);
     });
+    //刷新本页面
     function GetPartsItmesMy() {
         location.reload();
     }

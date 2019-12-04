@@ -13,17 +13,41 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 重修
+    /// </summary>
     [Table("ApplicationRepair")]
     public partial class ApplicationRepair
     {
         [Key]
         public int Id { get; set; }
-        public string Rehabilit { get; set; }
+        /// <summary>
+        /// 重修班级
+        /// </summary>
+        public int Rehabilit { get; set; }
+        /// <summary>
+        /// 重修原因
+        /// </summary>
         public string Reason { get; set; }
+        /// <summary>
+        /// 学员学号
+        /// </summary>
         public string StudentID { get; set; }
+        /// <summary>
+        /// 重修时间
+        /// </summary>
         public Nullable<System.DateTime> Repairtime { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 申请时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
     
        
