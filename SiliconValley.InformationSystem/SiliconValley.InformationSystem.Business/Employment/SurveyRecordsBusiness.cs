@@ -81,8 +81,20 @@ namespace SiliconValley.InformationSystem.Business.Employment
             {
                 data.Add(item.Duplicatedata.OrderByDescending(a => a.RecordsDate).FirstOrDefault());
             }
-            
-            return data.Where(a => a.SurRating.ToUpper() == "C" || a.SurRating.ToUpper() == "D").ToList();
+       
+            data= data.Where(a => a.SurRating.ToUpper() == "C" || a.SurRating.ToUpper() == "D").ToList();
+            for (int i = 0; i < data.Count; i++)  //外循环是循环的次数
+            {
+                for (int j = data.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                {
+
+                    if (data[i].StudentNO == data[j].StudentNO)
+                    {
+                        data.RemoveAt(j);
+                    }
+                }
+            }
+            return data;
         }
 
       
@@ -109,7 +121,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                     }
                 }
             }
-
+           
             return dd;
         }
     }
