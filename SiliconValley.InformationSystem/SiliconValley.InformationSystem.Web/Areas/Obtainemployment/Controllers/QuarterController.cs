@@ -105,6 +105,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             dbquarter = new QuarterBusiness();
             dbempQuarterClass = new EmpQuarterClassBusiness();
+            dbproClassSchedule = new ProClassSchedule();
             var nowdate = DateTime.Now.Year;
             var querydata = dbquarter.GetQuartersByYear(nowdate);
             if (!string.IsNullOrEmpty(param0))
@@ -124,7 +125,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 var selectlist = querylist1.Select(a => new
                 {
                     a.ID,
-                    a.Classid
+                    a.Classid,
+                    ClassNO= dbproClassSchedule.GetEntity(a.Classid).ClassNumber
                 }).ToList();
                 view.EmpQuarterClassList = selectlist;
                 resultlist.Add(view);
@@ -156,7 +158,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproClassSchedule = new ProClassSchedule();
             var checkclasslist = new List<ClassSchedule>();
             var queryquarter = dbquarter.GetEntity(param0);
+
             var querydata = dbproClassSchedule.GetClassGraduating();
+
             var queryempQuarterclass = dbempQuarterClass.GetEmpQuartersByYearID(queryquarter.ID);
             foreach (var item in queryempQuarterclass)
             {

@@ -12,7 +12,7 @@ using System.Web.Mvc;
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
     /// <summary>
-    /// 学生谈话
+    /// 学生面试记录登记
     /// </summary>
     public class SimulatInterviewController : Controller
     {
