@@ -12,6 +12,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
    public class TransactionView
     {
         /// <summary>
+        /// 异动ID
+        /// </summary>
+        public int ID { get; set; }
+        /// <summary>
         /// 学号
         /// </summary>
         public string StudentID { get; set; }
@@ -28,13 +32,21 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public  string IDnumber { get; set; }
         /// <summary>
-        /// 原班级
+        /// 原班级id
         /// </summary>
-        public string OriginalClass { get; set; }
+        public int OriginalClass { get; set; }
         /// <summary>
-        /// 现在班级
+        /// 原班级名称
         /// </summary>
-        public string NowCLass { get; set; }
+        public string OriginalClassName { get; set; }
+        /// <summary>
+        /// 现在班级id
+        /// </summary>
+        public int NowCLass { get; set; }
+        /// <summary>
+        /// 现在班级名称
+        /// </summary>
+        public string NowCLassName { get; set; }
         /// <summary>
         /// 原班主任
         /// </summary>
@@ -51,5 +63,25 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 通讯地址
         /// </summary>
         public string Postaladdress { get; set; }
+        /// <summary>
+        /// 原因
+        /// </summary>
+        public string Reason { get; set; }
+        /// <summary>
+        /// 申请日期
+        /// </summary>
+        public DateTime Dateofapplication { get; set; }
+        /// <summary>
+        /// 类型名称
+        /// </summary>
+        public string TypeName { get; set; }
+        /// <summary>
+        /// 是否通过
+        /// </summary>
+        public bool? IsaDopt { get; set; }
+        /// <summary>
+        /// 阶段
+        /// </summary>
+        public string Stage { get; set; }
     }
 }

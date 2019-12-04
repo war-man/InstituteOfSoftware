@@ -18,7 +18,13 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
         /// <summary>
         /// 之前班级
@@ -32,9 +38,37 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 学号
         /// </summary>
         public string Studentnumber { get; set; }
-        public string Reason { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 状态
+        /// </summary>
         public Nullable<int> States { get; set; }
-    
+        /// <summary>
+        /// 转班id
+        /// </summary>
+        public Nullable<int> TransferID { get; set; }
+        /// <summary>
+        /// 试学id、
+        /// </summary>
+        public Nullable<int> TrialapplctionID { get; set; }
+        /// <summary>
+        /// 复学id
+        /// </summary>
+        public Nullable<int> RestudyID { get; set; }
+        /// <summary>
+        /// 退学id
+        /// </summary>
+        public Nullable<int> ApplicationDropoutID { get; set; }
+        /// <summary>
+        /// 重修id
+        /// </summary>
+        public Nullable<int> ApplicationRepairID { get; set; }
+        /// <summary>
+        /// 是否通过
+        /// </summary>
+        public Nullable<bool> IsaDopt { get; set; }
     }
 }

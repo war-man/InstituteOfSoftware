@@ -13,19 +13,39 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 转班
+    /// </summary>
     [Table(name: "Transfer")]
     public partial class Transfer
     {
     
         [Key]
         public int ID { get; set; }
-        public string Student_number { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
+        public string Studentnumber { get; set; }
+        /// <summary>
+        /// 转班原因
+        /// </summary>
         public string Reasonsforshifting { get; set; }
+        /// <summary>
+        /// 转班日期
+        /// </summary>
         public Nullable<System.DateTime> TransferDate { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> Dateofregistration { get; set; }
-        public string Hopetoransfer { get; set; }
+        /// <summary>
+        /// 希望转入班级
+        /// </summary>
+        public int Hopetoransfer { get; set; }
     
 
     }

@@ -23,6 +23,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
 
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 阶段名称
+        /// </summary>
         public string GrandName { get; set; }
         public Nullable<bool> IsDelete { get; set; }
         public string Reaks { get; set; }
