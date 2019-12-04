@@ -25,7 +25,7 @@
                 <form class="layui-form" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline" id="mubandiv">
-                            <label class="layui-form-label" id="querylable">搜索选择框</label>
+                            <label class="layui-form-label" id="querylable"style="width:120px;">搜索选择框</label>
                             <div class="layui-input-inline" style="width:156px">
                                 <select name="modules" id="modules" @*lay-verify="required"*@ lay-filter="select00" lay-search="">
                                     <option value="ing">未毕业</option>
@@ -156,6 +156,12 @@
                     }
                     
                     reloadtable11();
+                     for (var i = 0; i < $("tr").length; i++) {
+                        if ($($($($("tr")[i]).children()[0]).children()[0]).text() == classid) {
+                            $("tr").css("background", "");
+                            $($("tr")[i]).css("background", "pink");
+                        }
+                    }
                 }
                 , page: {
                     curr: 1 //重新从第 1 页开始

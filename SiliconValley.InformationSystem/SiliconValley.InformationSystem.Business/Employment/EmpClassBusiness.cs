@@ -17,6 +17,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         private ProClassSchedule dbproClassSchedule;
         private ProScheduleForTrainees dbproScheduleForTrainees;
         private SurveyRecordsBusiness dbsurveyRecords;
+        private CDInterviewBusiness dbCDInterview;
         /// <summary>
         /// 获取所有的专员带班记录
         /// </summary>
@@ -326,6 +327,48 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 views.Add(empClassView);
             }
             return views;
-        } 
+        }
+
+
+        /// <summary>
+        /// 转化 数据返回右侧数据 cd
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public List<SResearchEmpClassView> ConversiontoCD(List<EmpClass> result) {
+            dbproClassSchedule = new ProClassSchedule();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbCDInterview = new CDInterviewBusiness();
+            dbsurveyRecords = new SurveyRecordsBusiness();
+            List<SResearchEmpClassView> views = new List<SResearchEmpClassView>();
+            foreach (var item in result)
+            {
+                SResearchEmpClassView classView = new SResearchEmpClassView();
+                var query = dbproClassSchedule.GetEntity(item.ClassId);
+                classView.classid = query.id;
+                classView.classnumber = query.ClassNumber;
+                if (query.ClassStatus == true)
+                    classView.isgraduation = true;
+                else
+                    classView.isgraduation = false;
+                List<CDInterview> querycdlist = dbCDInterview.GetCDInterviewsByClassid(item.ClassId);
+                classView.interviewcount = querycdlist.Count;
+                classView.totalnumber = dbsurveyRecords.GetCDSurveyRecordsByclassid(item.ClassId).Count;
+                for (int i = 0; i < querycdlist.Count; i++)
+                {
+                    for (int j = querycdlist.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                    {
+                        if (querycdlist[i].StudentNO == querycdlist[j].StudentNO)
+                        {
+                            querycdlist.RemoveAt(j);
+                            classView.repeatedinterviews = classView.repeatedinterviews + 1;
+                        }
+                    }
+                }
+                classView.peoplecount = querycdlist.Count;
+                views.Add(classView);
+            }
+            return views;
+        }
     }
 }

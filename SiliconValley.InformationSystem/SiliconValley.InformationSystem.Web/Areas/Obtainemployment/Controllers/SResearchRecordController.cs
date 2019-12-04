@@ -39,9 +39,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// 访谈学生页面
         /// </summary>
         /// <returns></returns>
-        public ActionResult SResearchRecordRegister(string param0)
+        public ActionResult SResearchRecordRegister(int param0)
         {
-            ViewBag.param0 = param0;
+            dbproClassSchedule = new ProClassSchedule();
+            var query = dbproClassSchedule.GetEntity(param0);
+            ViewBag.param0 = query.ClassNumber;
+            ViewBag.param1 = param0;
             return View();
         }
 

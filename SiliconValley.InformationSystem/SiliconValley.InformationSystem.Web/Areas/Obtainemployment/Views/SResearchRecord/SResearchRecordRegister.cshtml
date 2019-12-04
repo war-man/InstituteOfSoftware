@@ -69,7 +69,7 @@
                                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                     <label class="layui-form-label lad">班级名称:</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="classnumnber" class="layui-input" readonly="readonly" style="border:none" />
+                                        <input type="text" id="classnumber" class="layui-input" readonly="readonly" style="border:none" />
 
                                     </div>
                                 </div>
@@ -188,11 +188,12 @@
 
         layui.use(['form', 'layer', 'element'], function () {
             //获取设备信息
-            var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classnumber="";
+            var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classid,classnumber;
 
             jQuery(function () {
-                classnumber = '@Html.Raw(ViewBag.param0)';
-                $("#classnumnber").val(classnumber);
+                 classnumber = '@Html.Raw(ViewBag.param0)';
+                classid = '@Html.Raw(ViewBag.param1)';
+                $("#classnumber").val(classnumber);
                 loaddata();
 
             });
@@ -202,7 +203,7 @@
                     url: '/Obtainemployment/SResearchRecord/getmudata',
                     type: 'GET',
                     async: false,//设置按钮是否禁用
-                    data: { param0: classnumber },
+                    data: { param0: classid },
                     datatype: 'json',
                     success: function (successdata) {
                         if (successdata.Success) {
