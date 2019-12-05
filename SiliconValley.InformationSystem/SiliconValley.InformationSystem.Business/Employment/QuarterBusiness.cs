@@ -61,6 +61,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
           return  this.GetQuarters().Where(a => a.RegDate.Year == year).ToList();
         }
 
+
+
        
     }
 }

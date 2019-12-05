@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     {
 
         private ProClassSchedule dbproClassSchedule;
+        private ProStudentInformationBusiness dbproStudentInformation;
         /// <summary>
         ///获取班级学生记录没毕业的
         /// </summary>
@@ -21,7 +22,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public List<ScheduleForTrainees> GetScheduleForTrainees()
         {
             return this.GetIQueryable().Where(a => a.CurrentClass == true).ToList();
-            
+
         }
 
         /// <summary>
@@ -39,7 +40,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="StudentNumber"></param>
         /// <returns></returns>
-        public ScheduleForTrainees GetTraineesByStudentNumber(string StudentNumber) {
+        public ScheduleForTrainees GetTraineesByStudentNumber(string StudentNumber)
+        {
             return this.GetScheduleForTrainees().Where(a => a.StudentID == StudentNumber).FirstOrDefault();
         }
 
@@ -48,7 +50,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <param name="ClassNO"></param>
         /// <returns></returns>
-        public List<ScheduleForTrainees> GetTraineesByClassid(int classid) {
+        public List<ScheduleForTrainees> GetTraineesByClassid(int classid)
+        {
             dbproClassSchedule = new ProClassSchedule();
             if (dbproClassSchedule.isgraduationclass(classid))
             {
@@ -58,8 +61,24 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             {
                 return this.GetScheduleForTrainees().Where(a => a.ID_ClassName == classid).ToList();
             }
-            
         }
 
+
+        /// <summary>
+        /// 根据班级编号返回学生列表集合
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public List<StudentInformation> GetStudentsByClassid(int classid)
+        {
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            var querylist = this.GetTraineesByClassid(classid);
+            List<StudentInformation> result = new List<StudentInformation>();
+            foreach (var item in querylist)
+            {
+                result.Add(dbproStudentInformation.GetEntity(item.StudentID));
+            }
+            return result;
+        }
     }
 }

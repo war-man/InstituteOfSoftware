@@ -157,8 +157,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             dbproStudentInformation = new ProStudentInformationBusiness();
             dbselfObtainRcored = new SelfObtainRcoredBusiness();
-            var quyeryempquarterclsss = dbempQuarterClass.GetEntity(param0);
-
+            dbproClassSchedule = new ProClassSchedule();
+            var quyeryempquarterclsss = dbempQuarterClass.GetQuartClassByclassid(param0);
             List<ScheduleForTrainees> queryscheduleForTrainees = dbproScheduleForTrainees.GetTraineesByClassid(quyeryempquarterclsss.Classid);
             List<StudentInformation> studentlist = new List<StudentInformation>();
             foreach (var item in queryscheduleForTrainees)
@@ -186,6 +186,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             ViewBag.studentlist = Newtonsoft.Json.JsonConvert.SerializeObject(resultStudentlist);
             ViewBag.param0 = quyeryempquarterclsss.Classid;
             ViewBag.param1 = quyeryempquarterclsss.QuarterID;
+            ViewBag.param2 = dbproClassSchedule.GetEntity(quyeryempquarterclsss.Classid).ClassNumber;
             return View();
         }
 

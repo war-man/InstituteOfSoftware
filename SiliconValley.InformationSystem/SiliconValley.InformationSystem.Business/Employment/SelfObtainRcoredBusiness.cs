@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
         private QuarterBusiness dbquarter;
         private ProScheduleForTrainees dbproScheduleForTrainees;
+        private EmpQuarterClassBusiness dbempQuarterClass;
         /// <summary>
         /// 获取全部可用的深数据
         /// </summary>
@@ -51,15 +52,23 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<SelfObtainRcored> GetSelfObtainRcoredsByYear(int Year) {
             dbquarter = new QuarterBusiness();
+            dbempQuarterClass = new EmpQuarterClassBusiness();
+            var classlist= dbempQuarterClass.GetClassesByYear(Year);
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+            foreach (var item in classlist)
+            {
+                studentlist.AddRange(dbproScheduleForTrainees.GetStudentsByClassid(item.id));
+            }
             var data = this.GetSelfObtainRcoreds();
-            var list = dbquarter.GetQuartersByYear(Year);
+        
             for (int i = data.Count - 1; i >= 0; i--)
             {
-                for (int j = 0; j < list.Count; j++)
+                for (int j = 0; j < studentlist.Count; j++)
                 {
-                    if (data[i].QuarterID != list[j].ID)
+                    if (data[i].StudentNO != studentlist[j].StudentNumber)
                     {
-                        if (j == list.Count - 1)
+                        if (j == studentlist.Count - 1)
                         {
                             data.Remove(data[i]);
                         }
@@ -75,31 +84,26 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
         /// <summary>
         /// 根据班级编号返回这个班级的自主就业记录
-        /// </summary>
+        /// </summary>dddddddd 
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<SelfObtainRcored> GetSelfObtainRcoredsByClassid(int  classid) {
+        public List<SelfObtainRcored> GetSelfObtainRcoredsByClassid(int classid) {
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             var data = this.GetSelfObtainRcoreds();
             var list1 = dbproScheduleForTrainees.GetTraineesByClassid(classid);
+            List<SelfObtainRcored> result = new List<SelfObtainRcored>();
             for (int i = data.Count - 1; i >= 0; i--)
             {
                 for (int j = 0; j < list1.Count; j++)
                 {
-                    if (data[i].StudentNO != list1[j].StudentID)
+                    if (data[i].StudentNO == list1[j].StudentID)
                     {
-                        if (j == list1.Count - 1)
-                        {
-                            data.Remove(data[i]);
-                        }
+                        result.Add(data[i]);
                     }
-                    else
-                    {
-                        break;
-                    }
+                   
                 }
             }
-            return data;
+            return result;
         }
 
 
