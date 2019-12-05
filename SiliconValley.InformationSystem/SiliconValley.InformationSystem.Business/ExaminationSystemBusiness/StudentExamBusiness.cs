@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 {
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using System.Xml;
 
 
@@ -70,6 +71,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<ChoiceQuestionTableView> ProductChoiceQuestion(Examination examination,int kecheng)
         {
+            //获取专业
+
+           var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
+           var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
+
+           var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
+
+            //获取班级专业
+           var major = dbteacheraclass.GetClass_Major(classschue.id);
 
             List<ChoiceQuestionTableView> questionlist = new List<ChoiceQuestionTableView>();
 
@@ -88,7 +99,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 //筛选出S2的课程
 
-                sourchlist = db_Course.GetList().Where(d => d.IsDelete==false == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+                sourchlist = db_Course.GetList().Where(d => d.IsDelete==false && d.Grand_Id == examview.ExamType.GrandID &&d.MajorID == major.Id).ToList();
 
             }
 
@@ -222,6 +233,18 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<AnswerQuestionView> productAnswerQuestion(Examination examination, int kecheng)
         {
+
+            //获取专业
+
+            var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
+            var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
+
+            var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
+
+            //获取班级专业
+            var major = dbteacheraclass.GetClass_Major(classschue.id);
+
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_answerQuextion.AllAnswerQuestion();
             var templist = new List<AnswerQuestionView>();
@@ -236,7 +259,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 //筛选出S2的课程
 
-                sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+                sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
 
             }
 
@@ -350,6 +373,17 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         public ComputerTestQuestionsView productComputerQuestion(Examination examination)
         {
+            //获取专业
+
+            var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
+            var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
+
+            var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
+
+            //获取班级专业
+            var major = dbteacheraclass.GetClass_Major(classschue.id);
+
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_computerQuestion.AllComputerTestQuestion();
             var templist = new List<ComputerTestQuestionsView>();
@@ -359,7 +393,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
             //筛选出S2的课程
 
-            var sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+            var sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
             List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
 
             //获取S2的题目

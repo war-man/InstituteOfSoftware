@@ -598,31 +598,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
         /// <summary>
-        /// 班主任录入参加考试的学生视图
-        /// </summary>
+        /// 班主任录入参加考试的学生视图  //教务使用
+        /// </summary> 
         /// <returns></returns>
         public ActionResult AppointmentExamination()
         {
 
-            //获取当前登陆的班主任
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-            BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
+            ////获取当前登陆的班主任
+            //Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            BaseBusiness<ClassSchedule> dbclass = new BaseBusiness<ClassSchedule>();
+            //BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
             ///获取到班主任
-            var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
+            //var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
 
             //获取班主任的班级
-            var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
+            //var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
 
+            var classs = dbclass.GetIQueryable().ToList() ;
+
+            
+           
+
+            //List<ClassSchedule> list = new List<ClassSchedule>();
+
+            //foreach (var item in classs)
+            //{
+            //   var temp = dbclass.GetIQueryable().Where(d => d.id == item.ClassID).FirstOrDefault();
+            //    if (temp != null)
+            //        list.Add(temp);
+
+            //}
             ViewBag.myClass = classs;
-
-
             return View();
         }
 
-        public ActionResult StudentData(int page, int limit)
+        public ActionResult StudentData(int page, int limit, int classid)
         {
-            var list = db_examination.GetMyStudentData();
+           // var list = db_examination.GetMyStudentData();
+
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+
+            //获取班级学员
+            var list = dbteacherclass.GetStudentByClass(classid);
+            
 
             var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
             //将学生转换为详细模型
@@ -780,11 +798,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 {
                     db_examination.subscribeExam(list, examid);
 
+                    BaseBusiness<CandidateInfo> dbcnad = new BaseBusiness<CandidateInfo>();
+
+                  var canlist =  dbcnad.GetIQueryable().Where(d => d.Examination == examid).ToList();
+
                     //初始化成绩单
 
-                    foreach (var item in list)
+
+
+                    foreach (var item in canlist)
                     {
-                        db_scores.InitExamScores(examid, item.Key);
+                        db_scores.InitExamScores(examid, item.CandidateNumber);
                     }
                     
 
@@ -834,15 +858,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 }
                 else
                 {
-                    db_examination.cancelsubscribeExam(studentlist, examid);
-
                     foreach (var item in studentlist)
                     {
-                       var candidinfo = db_examination.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
+                        var ss = db_examination.AllCandidateInfo(examid);
+                        var candidinfo = db_examination.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
 
                         db_scores.RemoveExamScores(examid, candidinfo.CandidateNumber);
 
                     }
+
+                    db_examination.cancelsubscribeExam(studentlist, examid);
+
+                    
                     
 
                     result.ErrorCode = 200;
@@ -1050,6 +1077,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     roomlist.Add(tempobj);
                 }
             }
+            BaseBusiness<ExamTypeName> dbexamtypename = new BaseBusiness<ExamTypeName>();
+            ViewBag.examtype = dbexamtypename.GetList().Where(d => d.ID == examview.ExamType.ExamTypeID).FirstOrDefault();
 
             ViewBag.IsEnd = db_examination.IsEnd(exam) ? "已结束" : "未结束";
 

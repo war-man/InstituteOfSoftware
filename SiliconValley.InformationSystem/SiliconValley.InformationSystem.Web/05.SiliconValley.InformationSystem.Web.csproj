@@ -1200,6 +1200,7 @@
     <Content Include="Areas\Teaching\Views\Class\StuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\checkSurveyView.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\EmpSurveyView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ArrangeSeatingChart.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

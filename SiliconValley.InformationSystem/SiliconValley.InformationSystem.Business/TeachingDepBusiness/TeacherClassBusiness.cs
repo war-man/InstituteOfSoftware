@@ -251,7 +251,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <summary>
         /// 获取班级
         /// </summary>
-        /// <param name="classnumber">班级编号</param>
+        /// <param name="classnumber">班级id</param>
         /// <returns></returns>
         public ClassSchedule GetClassByClassNumber(string classnumber)
         {
@@ -395,6 +395,19 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
            var tempobj = db_studentclass.GetIQueryable().Where(d => d.CurrentClass == true && d.StudentID == studentnumber).FirstOrDefault();
 
            return this.AllClassSchedule().Where(d => d.id == tempobj.ID_ClassName).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// 获取班级专业
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public Specialty GetClass_Major(int classid)
+        {
+           var classschu =  this.GetClassByClassNumber(classid.ToString());
+
+           return db_major.GetSpecialtyByID(classschu.Major_Id);
+
         }
          
 

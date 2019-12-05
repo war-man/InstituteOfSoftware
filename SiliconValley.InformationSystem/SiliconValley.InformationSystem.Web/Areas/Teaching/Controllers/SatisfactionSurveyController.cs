@@ -1387,7 +1387,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                  var date = DateTime.Now;
 
-                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmployeeId && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month).ToList();
+                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmployeeId && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month && d.ClassNumber == int.Parse(classnumber)).ToList();
 
                 if (templist.Count != 0)
                 {
@@ -1586,7 +1586,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 //设置截止时间 默认截止日期
 
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
 
                 var xmlRoot = xmlDocument.DocumentElement;
 
@@ -1702,7 +1702,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                     }
                 }
 
-                for (int i = 0; i < deplist.Count; i++)
+                for (
+                    int i = 0; i < deplist.Count; i++)
                 {
                     //第一层
                     dtreeview seconddtree = new dtreeview();
@@ -1826,6 +1827,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return View();
         }
 
+
+        //获取员工个人满意度调查
         public ActionResult EmpSurveyData(int page)
         {
             // 筛选条件员工 日期降序排序
@@ -1841,7 +1844,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 var alllist = db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmpNumber).OrderByDescending(d => d.CreateTime).ToList();
                 TotalCount = alllist.Count;
-                var templist = alllist.Skip((page - 1) * 1).Take(1).ToList();
+                var templist = alllist.Skip((page - 1) * 6).Take(6).ToList();
 
                 foreach (var item in templist)
                 {
@@ -1861,7 +1864,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 {
                     if (SurveyGroupByDateView.IsContains(resultlist, item.investigationDate))
                     {
-                        resultlist.Where(d => d.date.ToString() == item.investigationDate.ToString()).FirstOrDefault().data.Add(item);
+                        resultlist.Where(d => d.date.Year == item.investigationDate.Year && d.date.Month == item.investigationDate.Month).FirstOrDefault().data.Add(item);
                     }
 
                     else {

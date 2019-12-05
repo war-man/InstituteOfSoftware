@@ -551,11 +551,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-              bool b =  db_examScores.IsFinshMarking(user.EmpNumber, examid, examroom);
+                bool b =  db_examScores.IsFinshMarking(user.EmpNumber, examid, examroom);
 
-                result.ErrorCode = 200;
-                result.Msg = "成功";
-                result.Data = "1";
+                if (b)
+                {
+                    result.ErrorCode = 200;
+                    result.Msg = "成功";
+                    result.Data = "1";
+                }
+                else
+                {
+                    result.ErrorCode = 200;
+                    result.Msg = "成功";
+                    result.Data = "0";
+                }
+
+               
             }
             catch (Exception ex)
             {

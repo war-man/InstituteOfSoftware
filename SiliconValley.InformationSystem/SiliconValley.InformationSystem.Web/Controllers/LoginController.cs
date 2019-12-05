@@ -11,6 +11,7 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 
+using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
     //  /Login/PhoneSMS
@@ -25,33 +26,83 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             return View();
         }
         //登录方法
-        public ActionResult LoginFunction(Base_User u)
+        public ActionResult LoginFunction(Base_User u,string loginType)
         {
             ErrorResult err = new ErrorResult();
             try
             {
                 string pwd = Util.Extention.ToMD5String(u.Password);
-                Base_User findu = userinfo.GetList().Where(find => find.UserName == u.UserName && find.Password == pwd).FirstOrDefault();
-                if (findu != null)
+
+                if (loginType == "emp")
                 {
-                    SessionHelper.Session["UserId"] = findu.UserId;
-                    err.Success = true;
-                    err.Msg = "登陆成功!";
-                    err.Data = "/Base_SysManage/Base_SysMenu/Index";
 
-                    //获取权限
+                    Base_User findu = userinfo.GetList().Where(find => find.UserName == u.UserName && find.Password == pwd).FirstOrDefault();
+                    if (findu != null)
+                    {
+                        SessionHelper.Session["UserId"] = findu.UserId;
+                        err.Success = true;
+                        err.Msg = "登陆成功!";
+                        err.Data = "/Base_SysManage/Base_SysMenu/Index";
 
-                    var permisslist = PermissionManage.GetOperatorPermissionValues();
+                        //获取权限
 
-                    SessionHelper.Session["OperatorPermission"] = permisslist;
+                        var permisslist = PermissionManage.GetOperatorPermissionValues();
+
+                        SessionHelper.Session["OperatorPermission"] = permisslist;
 
 
-                    return Json(err, JsonRequestBehavior.AllowGet);
+                        return Json(err, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        err.Msg = "用户名或密码错误";
+                    }
                 }
-                else
+
+
+                if (loginType == "student")
                 {
-                    err.Msg = "用户名或密码错误";
+                    BaseBusiness<StudentInformation> db_student = new BaseBusiness<StudentInformation>();
+
+                    StudentInformation student = db_student.GetEntity(u.UserName);
+
+                    if (student == null)
+                    {
+                        err.Msg = "用户名或密码错误";
+
+                    }
+                    else
+                    {
+                        if (student.Password == u.Password)
+                        {
+                            SessionHelper.Session["studentnumber"] = student.StudentNumber;
+                            err.Success = true;
+                            err.Msg = "登陆成功!";
+                            err.Data = "/Base_SysManage/Base_SysMenu/Index";
+
+                            //获取权限
+
+                            var permisslist = PermissionManage.GetOperatorPermissionValues();
+
+                            SessionHelper.Session["OperatorPermission"] = permisslist;
+
+
+                            return Json(err, JsonRequestBehavior.AllowGet);
+                        }
+                        else {
+                            err.Msg = "用户名或密码错误";
+                        }
+                    }
+
+
+                    
+
+
+
                 }
+
+
+               
             }
             catch (Exception ex)
             {

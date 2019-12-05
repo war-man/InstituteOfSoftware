@@ -27,6 +27,10 @@
         .classNumber {
             margin-top: 50px;
         }
+
+        #list li {
+            height:500px;
+        }
     </style>
 
 }
@@ -111,10 +115,11 @@
                     $.get('/Teaching/SatisfactionSurvey/EmpSurveyData?page=' + page, function (res) {
                         //假设你的列表返回在data集合中
                         console.log(res);
+                        
                        
 
                         layui.each(res.data, function (index, item) {
-
+                            $("#save").html("");
                             console.log(item);
                             var dateutc = item.date.substr(item.date.indexOf('(') + 1, 13);
 
@@ -127,8 +132,8 @@
                             $("#save").html($(htmldate));
                             
                             //第二层 
-                            for (var i = 0; i < 1; i++) {
-
+                            for (var i = 0; i < item.data.length; i++) {
+                                
                                 var html2 = _.template($("#moban2").html());
                                 var htmldate2 = html2({ classnumber: item.data[i].investigationClass.ClassNumber, configResultId: item.data[i].SurveyResultID });
                                
@@ -145,9 +150,13 @@
                                     temp1.find(".table tbody").append(htmldate3);
                                 }
 
+                                $("#save").find(".classNumber").append(temp1.html());
+                               
                             }
 
-                           $("#save").find(".classNumber").html(temp1[0].innerHTML);
+                            
+
+                          
 
                           
                             $("#list").append($("#save").html());

@@ -587,13 +587,14 @@
                 $.post('/ExaminationSystem/ExamScores/IsFinshMake', { examid: examid, examroom: examroom }, function (data) {
 
 
-                    if (data.ErrorCode == 200) {
+                    if (data.ErrorCode == 200 && data.Data== "1") {
 
+                        alert("dd");
                         //修改 老师阅卷完成
 
                         $.post("/ExaminationSystem/ExamScores/FinshMake", { examid: examid, examroom: examroom }, function (result) {
 
-                            if (result.ErrorCode == 200) {
+                            if (result.ErrorCode == 200 ) {
 
                                 layer.confirm('阅卷完毕！', { icon: 3, title: '提示', btn: ['刷新', '还想再看看'] },
                                     function (index) {

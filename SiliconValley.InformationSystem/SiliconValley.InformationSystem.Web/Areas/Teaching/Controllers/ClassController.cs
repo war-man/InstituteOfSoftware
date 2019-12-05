@@ -60,6 +60,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                     resultlist.Add(temp);
             }
 
+            // 
+
+            List<ClassTableView> classlist = new List<ClassTableView>();
+
+            SatisfactionSurveyBusiness dd = new SatisfactionSurveyBusiness();
+
+           var emplist = dd.GetMyDepEmp(user);
+            foreach (var item in emplist)
+            {
+               var tempteacher =  db_teacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+                if (tempteacher != null)
+                {
+                   var tempteachaerclass = db_teacherclass.GetCrrentMyClass(tempteacher.TeacherID);
+
+                    foreach (var item1 in tempteachaerclass)
+                    {
+                        var temp = db_teacherclass.GetClassTableView(item1);
+
+                        if (temp != null  && resultlist.Where(d=>d.classid == temp.classid).FirstOrDefault()==null)
+                            classlist.Add(temp);
+                    }
+                    
+                }
+               
+            }
+
+            
+
+
+
+
+            ViewBag.Fclasslist = classlist;
+
+
+
+
+
 
             ViewBag.classlist = resultlist;
 
