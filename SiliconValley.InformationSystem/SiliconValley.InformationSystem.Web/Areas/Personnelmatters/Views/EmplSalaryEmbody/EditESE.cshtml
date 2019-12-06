@@ -43,24 +43,36 @@
     <div>
         <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-container" style="margin-top:20px;">
-                <input  type="hidden" value="@ViewBag.eseid" id="myeseid" name="myeseid"/> 
+                <input type="hidden" value="@ViewBag.eseid" id="Id" name="Id" />
 
-           <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">员工编号:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            <input type="text" name="EmployeeId" id="EmployeeId" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名:</label>
                         <div class="layui-input-inline" style="width:190px;">
                             <input type="text" name="empName" id="empName" readonly style="border:0px;" class="layui-input" />
-                        </div>  
+                        </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属部门:</label>
                         <div class="layui-input-inline">
                             <input type="text" name="deptName" id="deptName" readonly style="border:0px;" class="layui-input" />
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属岗位:</label>
                         <div class="layui-input-inline">
                             <input type="text" name="pName" id="pName" readonly style="border:0px;" class="layui-input" />
@@ -69,23 +81,29 @@
 
                 </div>
 
-              <div class="layui-row layui-form-item">
+                <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">基本工资:</label>
                         <div class="layui-input-inline" style="width:190px;">
                             @Html.TextBoxFor(a => a.BaseSalary, new Dictionary<string, object>() { { "lay-verify", "number" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">岗位工资:</label>
                         <div class="layui-input-block" style="width:190px;">
                             @Html.TextBoxFor(a => a.PositionSalary, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">绩效额度:</label>
                         <div class="layui-input-inline" style="width:190px;">
                             @Html.TextBoxFor(a => a.PerformancePay, new Dictionary<string, object>() { { "class", "layui-input salary" } })
@@ -93,25 +111,25 @@
 
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">笔记本补助:</label>
                         <div class="layui-input-inline" style="width:190px;">
                             @Html.TextBoxFor(a => a.NetbookSubsidy, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">个人社保:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.PersonalSocialSecurity, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">社保补贴:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.SocialSecuritySubsidy, new Dictionary<string, object>() { { "class", "layui-input " } })
@@ -120,9 +138,25 @@
 
                 </div>
 
-              
                 <div class="layui-row layui-form-item">
 
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:-120px;">社保缴费基数:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.ContributionBase, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">个税:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.PersonalIncomeTax, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">备注:</label>
@@ -135,13 +169,13 @@
 
             </div>
 
-            <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
-                <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
-                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                        <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                    </div>
                 </div>
-            </div>
-        </form>
+</form>
     </div>
 
     <script>
@@ -149,11 +183,11 @@
             loadnetinfo();// 初始化编辑数据加载
         });
         function loadnetinfo() {
-            var id = $("#myeseid").val();
+            var id = $("#Id").val();
             $.get("/Personnelmatters/EmplSalaryEmbody/GetESEById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table', 'laydate'], function () {
                     var form = layui.form;
-
+                    $("#EmployeeId").val(data.EmployeeId);
                     $("#empName").val(data.empName);
                     $("#deptName").val(data.deptName);
                     $("#pName").val(data.pName);
