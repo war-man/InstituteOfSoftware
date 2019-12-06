@@ -260,7 +260,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ExaminationStoryData(int page, int limit)
         {
 
-            var list = db_examination.AllExamination();
+            var list = db_examination.AllExamination().OrderByDescending(d=>d.BeginDate).ToList();
 
             var skplist = list.Skip((page - 1) * limit).Take(limit);
 
@@ -284,10 +284,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                var examtypeview = db_examination.ConvertToExamTypeView(item.ExamType);
 
+                var grand = db_grand.AllGrand().Where(d => d.Id == examtypeview.GrandID.Id).FirstOrDefault();
+
                 var temobj1 = new {
                     ID = item.ID,
                     Title = item.Title,
                     TypeName = examtypeview.TypeName.TypeName,
+                    grand = grand.GrandName,
                     BeginDate = item.BeginDate,
                     TimeLimit = item.TimeLimit,
                     Remark = item.Remark,
@@ -1185,6 +1188,125 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             return Json(result, JsonRequestBehavior.AllowGet);
 
 
+
+        }
+
+
+        /// <summary>
+        /// 考试阅卷安排 //教务使用
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MarkingArrangement()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 查看考试的阅卷人
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CheckMarkingArrangemtn(int examid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                //获取阅卷安排
+                List<MarkingArrangeView> viewlist = new List<MarkingArrangeView>();
+
+                ExamScoresBusiness dbexamscores = new ExamScoresBusiness();
+
+                var markingarrangelist = dbexamscores.AllMarkingArrange().Where(d => d.ExamID == examid);
+
+                foreach (var item in markingarrangelist)
+                {
+                    var temobj = dbexamscores.ConvertToMarkingArrangeView(item);
+
+                    if (temobj != null)
+                    {
+                        viewlist.Add(temobj);
+                    }
+                }
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = viewlist;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+            
+
+        }
+
+        /// <summary>
+        /// 获取阶段数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GrandData()
+        {
+            AjaxResult result = new AjaxResult();
+            try
+            {
+               var granlist = db_grand.AllGrand();
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = granlist;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetTeacher_Grand(int grand)
+        {
+            AjaxResult result = new AjaxResult();
+
+
+            try
+            {
+                TeacherBusiness dbteacher = new TeacherBusiness();
+
+               var teacherlist = dbteacher.BrushSelectionByGrand(grand);
+
+                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+                foreach (var item in teacherlist)
+                {
+                   var tempemp =  dbteacher.GetEmpByEmpNo(item.EmployeeId);
+
+                    if (tempemp != null)
+                        emplist.Add(tempemp);
+                }
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = emplist;
+            }
+            catch (Exception ex)
+            {
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+           
 
         }
     }

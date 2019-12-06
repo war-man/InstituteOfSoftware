@@ -83,13 +83,19 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public MarkingArrangeView ConvertToMarkingArrangeView(MarkingArrange markingArrange)
         {
 
+            BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
+           
             MarkingArrangeView view = new MarkingArrangeView();
+
+           var examroom = db_exam.AllExaminationRoom().Where(d => d.ID == markingArrange.ExamRoom).FirstOrDefault();
 
             view.ExamID = db_exam.AllExamination().Where(d => d.ID == markingArrange.ExamID).FirstOrDefault();
             view.ExamRoom = db_exam.AllExaminationRoom().Where(d => d.ID == markingArrange.ExamRoom).FirstOrDefault();
             view.ID = markingArrange.ID;
             view.IsFinsh = markingArrange.IsFinsh;
             view.MarkingTeacher = db_emp.GetInfoByEmpID(markingArrange.MarkingTeacher);
+            
+            view.classroom = dbclassroom.GetList().Where(d => d.Id == examroom.Classroom_Id).FirstOrDefault();
 
             return view;
 

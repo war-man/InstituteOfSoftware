@@ -78,12 +78,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     result.ErrorCode = 400;
                 }
 
-                
-               
-                   
-               
 
-               
 
             }
             catch (Exception ex)
