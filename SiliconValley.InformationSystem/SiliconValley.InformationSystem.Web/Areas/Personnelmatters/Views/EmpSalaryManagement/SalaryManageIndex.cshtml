@@ -11,6 +11,41 @@
     </div>
 </script>
 
+@*模糊查询*@
+<fieldset>
+    <legend>条件查询</legend>
+    <form class="layui-form" action="" lay-filter="formtest">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">所属部门:</label>
+                <div class="layui-input-inline">
+                    <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
+                        <option value="">请选择所属部门</option>
+                    </select>
+
+                </div>
+            </div>
+            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                <label class="layui-form-label" style="width:100px;">所属岗位:</label>
+                <div class="layui-input-inline">
+                    <select name="PositionId" id="PositionId" lay-search="" style="width:130px;">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <button class="layui-btn" type="button" id="Conditionselect">查询</button>
+
+        </div>
+
+    </form>
+</fieldset>
+
 <table id="salarytab" lay-filter="salarytab"></table>
 
 
@@ -41,21 +76,21 @@
                         , { field: 'positionSalary', title: '岗位工资', sort: true, width: 110, rowspan:2 }
                         , { field: 'finalGrade', title: '绩效分', sort: true, width: 100, rowspan:2 }
                         , { field: 'PerformanceSalary', title: '绩效工资', sort: true, width: 110, rowspan:2 }
-                        , { field: 'netbookSubsidy', title: '笔记本补助', sort: true, width: 125, rowspan:2 }
-                        , { field: 'socialSecuritySubsidy', title: '社保补贴', sort: true, width: 110, rowspan:2 }
-                        , { field: 'SalaryOne', title: '应发工资1', sort: true, width: 120, rowspan:2 }
-                        , { field: 'OvertimeCharges', title: '加班费用', sort: true, width: 110, rowspan:2 }
-                        , { field: 'Bonus', title: '奖金/元', sort: true, width: 110, rowspan:2 }
-                      
-                        , { align: 'center', title: '考勤扣款', colspan:4 }                      
-                      
-                        , { field: 'OtherDeductions', title: '其他扣款', sort: true, width: 110, rowspan:2}
-                        , { field: 'SalaryTwo', title: '应发工资2', sort: true, width: 120, rowspan:2}
+                        , { field: 'netbookSubsidy', title: '笔记本补助',  width: 125, rowspan:2 }
+                        , { field: 'socialSecuritySubsidy', title: '社保补贴', width: 110, rowspan:2 }
+                        , { field: 'SalaryOne', title: '应发工资1', width: 120, rowspan:2 }
+                        , { field: 'OvertimeCharges', title: '加班费用',  width: 110, rowspan:2 }
+                        , { field: 'Bonus', title: '奖金/元',  width: 110, rowspan:2 }
+
+                        , { align: 'center', title: '考勤扣款', colspan:4 }
+
+                        , { field: 'OtherDeductions', title: '其他扣款',  width: 110, rowspan:2}
+                        , { field: 'SalaryTwo', title: '应发工资2',  width: 120, rowspan:2}
                         , { field: 'PersonalSocialSecurity', title: '个人社保', sort: true, width: 110, rowspan:2 }
                         , { field: 'PersonalIncomeTax', title: '个税', sort: true, width: 100, rowspan:2 }
-                        , { field: 'Total', title: '合计', sort: true, width: 100, rowspan:2 }
-                        , { field: 'PayCardSalary', title: '实发工资(工资卡)', sort: true, width: 160, rowspan:2  }
-                        , { field: 'CashSalary', title: '实发工资(现金)', sort: true, width: 150, rowspan:2 }
+                        , { field: 'Total', title: '合计', width: 100, rowspan:2 }
+                        , { field: 'PayCardSalary', title: '实发工资(工资卡)',  width: 160, rowspan:2  }
+                        , { field: 'CashSalary', title: '实发工资(现金)',  width: 150, rowspan:2 }
                     ], [
                           { field: 'leavedays', title: '请假天数', width: 110 }
                         , { field: 'LeaveDeductions', title: '请假扣款/元', width: 120 }
@@ -76,7 +111,28 @@
                 };
             });
 
-          
+
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var ename = $("#EmpName").val();//员工姓名
+                var deptname = $("#deptid").val();//员工所属部门
+                var pname = $("#PositionId").val();//员工所属岗位
+
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('mySalaryStatistics', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: ename + "," + deptname + "," + pname
+                        }
+                    });
+                });
+
+
+
+            });
+
         });
         //年月份改变
         function TimeUpdate() {
@@ -96,71 +152,63 @@
         }
 
 
-        //格式化时间
-        function GetYearAndMonth(cellval) {
-            if (cellval != null) {
-                var date;
-                if (cellval.indexOf("/Date(") >= 0) {
-                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                }
-                else {
-                    date = new Date(cellval);
-                }
+    </script>
 
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
 
-                return date.getFullYear() + "-" + month;
-            } else {
-                return "";
-            }
-        }
-        //显示年月日
-        function GetYMD(cellval) {
-            if (cellval != null) {
-                var date;
-                if (cellval.indexOf("/Date(") >= 0) {
-                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#deptid").append(new Option("请选择部门", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
                 }
-                else {
-                    date = new Date(cellval);
-                }
+            });
 
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PositionId").empty();
+                            console.log(resultData.data);
+                            $("#PositionId").append(new Option("请选择岗位", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#PositionId')
+                                    .append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PositionId").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
 
-                return date.getFullYear() + "-" + month + "-" + currentDate;
-            } else {
-                return "";
-            }
-        }
-        function changeDateTimeFormat(cellval) {
-            if (cellval != null) {
-                var date;
-                if (cellval.indexOf("/Date(") >= 0) {
-                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                }
-                else {
-                    date = new Date(cellval);
-                }
-
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
-            } else {
-                return "";
-            }
-        }
+        });
     </script>
 
 

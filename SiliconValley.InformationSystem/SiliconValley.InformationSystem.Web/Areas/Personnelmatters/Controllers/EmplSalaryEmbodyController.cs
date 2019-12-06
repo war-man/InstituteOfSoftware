@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
+
 namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class EmplSalaryEmbodyController : Controller//员工工资体系
@@ -69,8 +71,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         [HttpPost]
         public ActionResult EditESE(EmplSalaryEmbody ese) {
-
-            return View();
+            var AjaxResultxx = new AjaxResult();
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            try
+            {
+                var myese = esemanage.GetEntity(ese.Id);
+                ese.IsDel = myese.IsDel;
+                esemanage.Update(ese);
+                AjaxResultxx= esemanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = esemanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetESEById(int id)

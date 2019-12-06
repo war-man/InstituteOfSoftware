@@ -83,9 +83,9 @@
                     <label class="layui-form-label">图片:</label>
                     <div class="layui-input-block">
                         <input type="file" id="Image" name="Image" />
-                       <div style="border:1px solid #808080;width:400px;height:200px;">
-                          <img id="showimg" style="width:400px;height:200px;" />
-                       </div>
+                        <div style="border:1px solid #808080;width:400px;height:200px;">
+                            <img id="showimg" style="width:400px;height:200px;" />
+                        </div>
                     </div>
                 </div>
 
@@ -140,7 +140,7 @@
         }
 
 
-        layui.use(['form', 'layedit', 'laydate','upload'], function () {
+        layui.use(['form', 'layedit', 'laydate', 'upload'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
@@ -157,146 +157,111 @@
                 var day1 = date1.getDate();
                 var day2 = date2.getDate();
 
-                if (day2 - day1 == 0) {
-                    var hours1 = date1.getHours();
-                    var hours2 = date2.getHours();
-                    var minuts1 = date1.getMinutes();
-                    var minuts2 = date2.getMinutes();
-                    var result = hours2 - hours1;
-                    if (minuts2 - minuts1 >= 30 && minuts2 - minuts1 < 60) {
-                        result = result + 0.5;
-                    } else if (minuts1 - minuts2 > 0 && minuts1 - minuts2 <= 30) {
-                        result = result - 0.5;
-                    } else if (minuts1 - minuts2 > 30 && minuts1 - minuts2 < 60) {
-                        result = result - 1;
-                    }
-                }
-                return result;
-            }
+                var hours1 = date1.getHours();
+                var hours2 = date2.getHours();
+                var minuts1 = date1.getMinutes();
+                var minuts2 = date2.getMinutes();
+                var result = null;
+                var daylead = day2 - day1;
+                var hourleadone = 0;
+                var hourleadtwo = 0;
+                //if (day2 - day1 == 0) {
+                //     result = date2.getHours() - date1.getHours();
+                //    if (minuts2 - minuts1 >= 30 && minuts2 - minuts1 < 60) {
+                //        result = result + 0.5;
+                //    } else if (minuts1 - minuts2 > 0 && minuts1 - minuts2 <= 30) {
+                //        result = result - 0.5;
+                //    } else if (minuts1 - minuts2 > 30 && minuts1 - minuts2 < 60) {
+                //        result = result - 1;
 
-            //注：结束时间不能小于开始时间，开始时间不能大于结束时间，加班的时间只能每天申请
-            var startTime = laydate.render({
-                elem: '#StartTime',
-                type: 'datetime',
-                format: 'yyyy-MM-dd HH:mm:ss',
-                done: function (value, date) {
-                    endTime.config.min = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
-                    },
-                        endTime.config.max = {
+                //}
+                if (minuts1) {
+
+                }
+                    return result;
+                }
+
+                //注：结束时间不能小于开始时间，开始时间不能大于结束时间
+                var startTime = laydate.render({
+                    elem: '#StartTime',
+                    type: 'datetime',
+                    format: 'yyyy-MM-dd HH:mm:ss',
+                    done: function (value, date) {
+                        endTime.config.min = {
                             year: date.year,
                             month: date.month - 1,//关键
                             date: date.date,
-                            hours: '23',
-                            minutes: '59',
-                            seconds: '59'
+                            hours: date.hours,
+                            minutes: date.minutes,
+                            seconds: date.seconds
                         }
-                    var myendtime = $("#EndTime").val();;
-                    if (myendtime != "") {
-                        var time;
-                        //var stime = new Date(myendtime);
-                        //if (stime.getHours() < 17 || (stime.getHours()== 17 && stime.getMinutes() < 30)) {
-                        //    time = 0;
-                        //} else if (date.hours > 17 || (date.hours == 17 && date.minutes >= 30)) {
-                        //    time = getInervalHour(value,myendtime);
-                        //} else {
-                        //    var start = new Date(value);
-                        //    start.setHours(17);
-                        //    start.setMinutes(30);
-                        //    time = getInervalHour(start, myendtime);
-                        //}
+                        var myendtime = $("#EndTime").val();
                         time = getInervalHour(value, myendtime);
                         $("#Duration").val(time);
                     }
-
-                }
-            });//开始时间
-            var endTime = laydate.render({
-                elem: '#EndTime',
-                type: 'datetime',
-                format: 'yyyy-MM-dd HH:mm:ss',
-                done: function (value, date) {
-                    startTime.config.max = {
-                        year: date.year,
-                        month: date.month - 1,//关键
-                        date: date.date,
-                        hours: date.hours,
-                        minutes: date.minutes,
-                        seconds: date.seconds
-                    },
-                        startTime.config.min = {
+                });//开始时间
+                var endTime = laydate.render({
+                    elem: '#EndTime',
+                    type: 'datetime',
+                    format: 'yyyy-MM-dd HH:mm:ss',
+                    done: function (value, date) {
+                        startTime.config.max = {
                             year: date.year,
                             month: date.month - 1,//关键
                             date: date.date,
-                            hours: '0',
-                            minutes: '0',
-                            seconds: '0'
+                            hours: date.hours,
+                            minutes: date.minutes,
+                            seconds: date.seconds
                         }
-                    var mystarttime = $("#StartTime").val();
-                    var time;
-                    if (mystarttime != "") {
-                        //var stime = new Date(mystarttime);
-                        //if (date.hours < 17 || (date.hours == 17 && date.minutes < 30)) {
-                        //    time = 0;
-                        //} else if (stime.getHours() > 17 || (stime.getHours() == 17 && stime.getMinutes() >= 30)) {
-                        //    time = getInervalHour(mystarttime, value);
-                        //} else {
-                        //    stime.setHours(17);
-                        //    stime.setMinutes(30);
-                        //    time = getInervalHour(stime, value);
-                        //}
-                        time = getInervalHour(mystarttime, value);
+                        var mystartime = $("#StartTime").val();
+                        console.log(time);
+                        time = getInervalHour(mystartime, value);
+
                         $("#Duration").val(time);
                     }
-                }
-            });//结束时间
+                });//结束时间
 
-            //添加提交
-            form.on('submit(demo1)', function (data) {
-                var fd = new FormData();
-                var myimg = document.querySelector("#Image").files[0];
-                fd.append('Image', myimg);
-                for (var item in data.field) {
-                    fd.append(item, data.field[item]);
-                }
-                console.log(fd);
-
-                $.ajax({
-                    type: "post",
-                    url: "/Personnelmatters/ApprovalManagement/DaysOffApply",
-                    data: fd,
-                    dataType: "json",
-
-                    //报错请加入以下三行，则ajax提交无问题
-                    cache: false,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        if (data.Success) {
-                            layer.alert("申请成功!", { icon: 1 }, function () {
-                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layer.close(index);
-
-                            });
-                        } else {
-                            layer.alert("申请失败!");
-                        }
+                //添加提交
+                form.on('submit(demo1)', function (data) {
+                    var fd = new FormData();
+                    var myimg = document.querySelector("#Image").files[0];
+                    fd.append('Image', myimg);
+                    for (var item in data.field) {
+                        fd.append(item, data.field[item]);
                     }
+                    console.log(fd);
+
+                    $.ajax({
+                        type: "post",
+                        url: "/Personnelmatters/ApprovalManagement/DaysOffApply",
+                        data: fd,
+                        dataType: "json",
+
+                        //报错请加入以下三行，则ajax提交无问题
+                        cache: false,
+                        processData: false,
+                        contentType: false,
+                        success: function (data) {
+                            if (data.Success) {
+                                layer.alert("申请成功!", { icon: 1 }, function () {
+                                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                    parent.layer.close(index);
+
+                                });
+                            } else {
+                                layer.alert("申请失败!");
+                            }
+                        }
+                    });
+
                 });
 
+                //关闭添加页面
+                $("#btnclose1").click(function () {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.layer.close(index);
+                });
             });
-
-            //关闭添加页面
-            $("#btnclose1").click(function () {
-                var index = parent.layer.getFrameIndex(window.name);
-                parent.layer.close(index);
-            });
-        });
         function changeDateTimeFormat(cellval) {
             if (cellval != null) {
                 var date;
@@ -320,7 +285,7 @@
         }
 
 
-     
+
     </script>
 </body>
 </html>

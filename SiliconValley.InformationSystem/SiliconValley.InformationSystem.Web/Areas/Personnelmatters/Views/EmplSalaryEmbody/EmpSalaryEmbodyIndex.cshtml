@@ -35,10 +35,10 @@
                     , { field: 'PositionSalary', title: '岗位工资', sort: true, width: 110 }
                     , { field: 'PerformancePay', title: '绩效额度', sort: true, width: 120 }
                     , { field: 'NetbookSubsidy', title: '笔记本补助', width: 110 }
-                    , { field: 'ContributionBase', title: '社保缴费基数', width: 120 }
+                    , { field: 'ContributionBase', title: '社保缴费基数', width: 130 }
                     , { field: 'PersonalSocialSecurity', title: '个人社保', width: 110 }
                     , { field: 'SocialSecuritySubsidy', title: '社保补贴', width: 110 }
-                    , { field: 'PersonalIncomeTax', title: '个税', width: 95 }
+                    , { field: 'PersonalIncomeTax', title: '个税', width: 100 }
                     , { field: 'Remark', title: '备注', sort: true, width: 110 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
                 ]]
@@ -54,7 +54,7 @@
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/EmplSalaryEmbody/EditESE?id=' + data.Id
-                        , area: ["900px", "600px"]
+                        , area: ["800px", "600px"]
                         , title: '编辑员工工资体系'
                         , shade: 0.8
                         , anim: 4
