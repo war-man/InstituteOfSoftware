@@ -183,20 +183,54 @@
                             seconds: '59'
                         }
                     var myendtime = $("#EndTime").val();
-
+                    if (myendtime != "") {
                     //如果是6-9月（即招生旺季）,则只有周日休息，加班申请时间任意,其余工作日加班两个时间点（早上0点到8.30，晚上18点开始）
                     if (date.month >= 6 && date.month < 10) {
                         if (myweekday == "日") {
                             time = getInervalHour(value, myendtime);
                         } else {
-                            if (myendtime != "") {
                                 var time;
                                 var stime = new Date(myendtime);
                                 if ((stime.getHours() < 18 || (stime.getHours() == 18 && stime.getMinutes() == 0)) && (date.hours > 8 || (date.hours == 8 && date.minutes >= 30))) {
                                     time = 0;
                                 } else if ((date.hours > 18 || (date.hours == 18 && date.minutes >= 0)) || (stime.getHours() < 8 || (stime.getHours() == 8 && stime.getMinutes() < 30))) {
                                     time = getInervalHour(value, myendtime);
-                                } else if ((date.hours < 8 || (date.hours == 8 && date.minutes == 30)) && (stime.getHours() > 8 || stime.getHours() == 8 && stime.getMinutes() >= 30)) {
+                                } else if ((date.hours < 8 || (date.hours == 8 && date.minutes <= 30)) && (stime.getHours() > 8 || stime.getHours() == 8 && stime.getMinutes() >= 30)) {
+                                    if ((stime.getHours() < 18) || stime.getHours() == 18 && stime.getMinutes() == 0) {
+                                        stime.setHours(8);
+                                        stime.setMinutes(30);
+                                        time = getInervalHour(start, stime);
+                                    } else {
+                                        var mydate = new Date(value);
+                                        mydate.setHours(18);
+                                        mydate.setMinutes(0);
+                                        time = getInervalHour(mydate, stime);
+                                        stime.setHours(8);
+                                        stime.setMinutes(30);
+                                        time = time + getInervalHour(value, stime);
+                                    }
+                                }
+
+                                else {
+                                    var start = new Date(value);
+                                    start.setHours(18);
+                                    start.setMinutes(0);
+                                    time = getInervalHour(start, myendtime);
+                                }
+
+                        }
+                    }
+                    else {//如果是非招生旺季）,则有周六周日休息时间，加班申请时间任意，其余工作日加班两个时间点（早上0点到8.30，晚上18点开始）
+                        if (myweekday == "六" || myweekday == "日") {
+                         time = getInervalHour(value, myendtime);
+                        } else {
+                                var time;
+                                var stime = new Date(myendtime);
+                                if ((stime.getHours() < 18 || (stime.getHours() == 18 && stime.getMinutes() == 0)) && (date.hours > 8 || (date.hours == 8 && date.minutes >= 30))) {
+                                    time = 0;
+                                } else if ((date.hours > 18 || (date.hours == 18 && date.minutes >= 0)) || (stime.getHours() < 8 || (stime.getHours() == 8 && stime.getMinutes() < 30))) {
+                                    time = getInervalHour(value, myendtime);
+                                } else if ((date.hours < 8 || (date.hours == 8 && date.minutes <= 30)) && (stime.getHours() > 8 || stime.getHours() == 8 && stime.getMinutes() >= 30)) {
                                     if ((stime.getHours() < 18) || stime.getHours() == 18 && stime.getMinutes() == 0) {
                                         stime.setHours(8);
                                         stime.setMinutes(30);
@@ -221,46 +255,10 @@
 
                             }
                         }
-                    }
-                    else {//如果是非招生旺季）,则有周六周日休息时间，加班申请时间任意，其余工作日加班两个时间点（早上0点到8.30，晚上18点开始）
-                        if (myweekday == "六" || myweekday == "日") {
-                         time = getInervalHour(value, myendtime);
-                        } else {
-                            if (myendtime != "") {
-                                var time;
-                                var stime = new Date(myendtime);
-                                if ((stime.getHours() < 18 || (stime.getHours() == 18 && stime.getMinutes() == 0)) && (date.hours > 8 || (date.hours == 8 && date.minutes >= 30))) {
-                                    time = 0;
-                                } else if ((date.hours > 18 || (date.hours == 18 && date.minutes >= 0)) || (stime.getHours() < 8 || (stime.getHours() == 8 && stime.getMinutes() < 30))) {
-                                    time = getInervalHour(value, myendtime);
-                                } else if ((date.hours < 8 || (date.hours == 8 && date.minutes == 30)) && (stime.getHours() > 8 || stime.getHours() == 8 && stime.getMinutes() >= 30)) {
-                                    if ((stime.getHours() < 18) || stime.getHours() == 18 && stime.getMinutes() == 0) {
-                                        stime.setHours(8);
-                                        stime.setMinutes(30);
-                                        time = getInervalHour(value, stime);
-                                    } else {
-                                        var mydate = new Date(value);
-                                        mydate.setHours(18);
-                                        mydate.setMinutes(0);
-                                        time = getInervalHour(mydate, stime);
-                                        stime.setHours(8);
-                                        stime.setMinutes(30);
-                                        time = time + getInervalHour(value, stime);
-                                    }
-                                }
-
-                                else {
-                                    var start = new Date(value);
-                                    start.setHours(18);
-                                    start.setMinutes(0);
-                                    time = getInervalHour(start, myendtime);
-                                }
-
-                            }
-                        }
+                        $("#Duration").val(time);
                     }
 
-                    $("#Duration").val(time);
+                   
                 }
             });//开始时间
 
@@ -290,19 +288,19 @@
                         }
                     var mystarttime = $("#StartTime").val();
                     var time;
-
+                    if (mystarttime != "") {
                     //如果是6-9月（即招生旺季）,则只有周日休息，加班申请时间任意,其余工作日加班两个时间点（早上0点到8.30，晚上18点开始）
                     if (date.month >= 6 && date.month < 10) {
                         if (myweekday == "日") {
                             time = getInervalHour(mystarttime, value);
                         } else {
-                            if (mystarttime != "") {
+                           
                                 var stime = new Date(mystarttime);
                                 //开始时间和结束时间处于工作时间（8：30-18：00）
                                 if ((date.hours < 18 || (date.hours == 18 && date.minutes == 0)) && (date.hour > 8 || (date.hours == 8 && date.minute >= 30))) {
                                     time = 0;
                                 }  //正常可加班时间（开始时间大于18：00，结束时间小于8：30）
-                                else if (date.hours < 8 || (date.hours == 8 && date.minutes < 30) || stime.getHours() > 18 || (stime.getHours() == 18 && stime.getMinutes >= 30)) {
+                                else if (date.hours < 8 || (date.hours == 8 && date.minutes <= 30) || stime.getHours() > 18 || (stime.getHours() == 18 && stime.getMinutes >= 30)) {
                                     time = getInervalHour(mystarttime, value);
                                 } //开始时间小于8：30，结束时间大于八点半
                                 else if ((date.hours > 8 || (date.hours == 8 && date.minutes >= 30)) && (stime.getHours() < 8 || (stime.getHours() == 8 && stime.getMinutes <= 30))) {
@@ -333,18 +331,17 @@
 
                             }
                         }
-                    }
+                  
                     else {//如果是非招生旺季）,则有周六周日休息时间，加班申请时间任意，其余工作日加班两个时间点（早上0点到8.30，晚上18点开始）
                         if (myweekday == "六" || myweekday == "日") {
                             time = getInervalHour(mystarttime, value);
                         } else {
-                            if (mystarttime != "") {
                                 var stime = new Date(mystarttime);
                                 //开始时间和结束时间处于工作时间（8：30-18：00）
                                 if ((date.hours < 18 || (date.hours == 18 && date.minutes == 0)) && (date.hour > 8 || (date.hours == 8 && date.minute >= 30))) {
                                     time = 0;
                                 }  //正常可加班时间（开始时间大于18：00，结束时间小于8：30）
-                                else if (date.hours < 8 || (date.hours == 8 && date.minutes < 30) || stime.getHours() > 18 || (stime.getHours() == 18 && stime.getMinutes >= 30)) {
+                                else if (date.hours < 8 || (date.hours == 8 && date.minutes <= 30) || stime.getHours() > 18 || (stime.getHours() == 18 && stime.getMinutes >= 30)) {
                                     time = getInervalHour(mystarttime, value);
                                 } //开始时间小于8：30，结束时间大于八点半
                                 else if ((date.hours > 8 || (date.hours == 8 && date.minutes >= 30)) && (stime.getHours() < 8 || (stime.getHours() == 8 && stime.getMinutes <= 30))) {
@@ -373,12 +370,11 @@
                                     time = getInervalHour(stime, value);
                                 }
 
-                            }
+                         
                         }
                     }
-                  
-
-                    $("#Duration").val(time);
+                        $("#Duration").val(time);
+                    }
                 }
             });//结束时间
 

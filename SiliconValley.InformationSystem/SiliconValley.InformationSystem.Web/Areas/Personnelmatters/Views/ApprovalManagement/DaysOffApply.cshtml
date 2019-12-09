@@ -139,6 +139,10 @@
             })
         }
 
+        $("#Duration").change(function () {
+            console.log("改变");
+        });
+
 
         layui.use(['form', 'layedit', 'laydate', 'upload'], function () {
             var form = layui.form
@@ -147,7 +151,18 @@
                 , laydate = layui.laydate
                 , upload = layui.upload;
 
-
+            //计算时间分钟差
+            function GetInervalMin(minuts1, minuts2) {
+                    var result =0;
+                if (minuts2 - minuts1 >= 30 && minuts2 - minuts1 < 60) {
+                    result = result + 0.5;
+                } else if (minuts1 - minuts2 > 0 && minuts1 - minuts2 <= 30) {
+                    result = result - 0.5;
+                } else if (minuts1 - minuts2 > 30 && minuts1 - minuts2 < 60) {
+                    result = result - 1;
+                }
+                return result;
+            }
 
             //计算两个时间的小时差
             function getInervalHour(startDate, endDate) {
@@ -161,31 +176,143 @@
                 var hours2 = date2.getHours();
                 var minuts1 = date1.getMinutes();
                 var minuts2 = date2.getMinutes();
-                var result = null;
+               
                 var daylead = day2 - day1;
                 var hourleadone = 0;
                 var hourleadtwo = 0;
-                //if (day2 - day1 == 0) {
-                //     result = date2.getHours() - date1.getHours();
-                //    if (minuts2 - minuts1 >= 30 && minuts2 - minuts1 < 60) {
-                //        result = result + 0.5;
-                //    } else if (minuts1 - minuts2 > 0 && minuts1 - minuts2 <= 30) {
-                //        result = result - 0.5;
-                //    } else if (minuts1 - minuts2 > 30 && minuts1 - minuts2 < 60) {
-                //        result = result - 1;
+                var result;
 
-                //}
-                if (minuts1) {
+                if (daylead == 0) {
+                    //1.开始时间大于等于17.30，或结束时间小于等于8.30
+                    if (hours1 > 17 || (hours1 == 17 && minuts1 >= 30) || hours2 < 8 || (hours2 == 8 && minuts2 <= 30)) {
+                        hourleadone = 0;
+                        console.log("开始时间大于等于17.30，或结束时间小于等于8.30");
+                    }
+                    //开始时间<=8.30,结束时间>8.30
+                    else if ((hours1 < 8 || (hours1 == 8 && minuts1 <= 30)) && (hours2 > 8 || hours2 == 8 && minuts2 >= 30)) {
+                                    hours1 = 8;
+                                    minuts1 = 30;
+                        if (hours2 < 12 || (hours2 == 12 && minuts2 == 0)) { //1.结束时间小于12点
+                            hourleadone = (hours2 - hours1) + GetInervalMin(minuts1, minuts2);
+                        } else if ((hours2 > 14 || (hours2 == 14 && minuts2 == 0)) && (hours2 < 17 || (hours2 == 17 && minuts2 <= 30))) {//2.结束时间>=14点<=17.30
+                            hourleadone = (hours2 - hours1 - 2) + GetInervalMin(minuts1, minuts2);
+                        } else if (hours2 > 17 || (hours2 == 17 && minuts2 >=30)) {
+                            hourleadone =7;
+                        } else {
+                            hourleadone = 3.5;
+                        }
+                       
+                    }
+                    //开始时间>=8.30,结束时间>17.30
+                    else if ((hours1 >8 || (hours1 == 8 && minuts1 >=30))) {
+                         
+                        if (hours1 < 12 || (hours1 == 12 && minuts1 == 0)) { //1.开始时间小于12点
+                            if (hours2 > 17 || (hours2 == 17 && minuts2 >= 30)) {
+                                hours2 = 17;
+                                minuts2 = 30;
+                                hourleadone = (hours2 - hours1 - 2) + GetInervalMin(minuts1, minuts2);
+                            } else if (hours2 < 12 || (hours2 == 12 && minuts2 ==0)) {
+                                hourleadone = (hours2 - hours1) + GetInervalMin(minuts1, minuts2);
+                            } else if ((hours2 < 14 || (hours2 == 14 && minuts2 == 0)) && (hours2 > 12 || (hours2 == 12 && minuts2 == 0))) {
+                                hours2 = 12;
+                                minuts2 = 0;
+                                hourleadone = (hours2 - hours1) + GetInervalMin(minuts1, minuts2);
+                            } else  {
+                                console.log("结束时间大于14点 小于17.30");
+                                hourleadone = (hours2 - hours1 - 2) + GetInervalMin(minuts1, minuts2);
+                            }
+                           
+                        }
 
+                        else if (hours1 > 14 || (hours1 == 14 && minuts1 == 0)) {
+                            if (hours2 > 17 || (hours2 == 17 && minuts2 >= 30)) {
+                                hours2 = 17;
+                                minuts2 = 30;
+                                hourleadone = (hours2 - hours1) + GetInervalMin(minuts1, minuts2);
+                            } else {
+                                hourleadone = (hours2 - hours1) + GetInervalMin(minuts1, minuts2);
+                            }
+                        } else {
+                            if (hours2 > 17 || (hours2 == 17 && minuts2 >= 30)) {
+                                hourleadone = 3.5;
+                            } else {
+                                hours1 = 14;
+                                minuts1 = 0;
+                                hourleadone = (hours2 - hours1) + GetInervalMin(minuts1, minuts2);
+                            }
+                        }
+
+                    }
+                    //开始时间>=8.30,结束时间<=17.30
+                   
+                    //else {
+                    //    hourleadone = 3.5;
+                    //}
+                    result = hourleadone ;
+                } else {
+                    //开始时间判断：
+                    //1.大于等于14点，且小于17.30的情况下，
+                    if ((hours1 > 14 || (hours1 == 14 && minuts1==0)) && (hours1 < 17 || (hours1 == 17 && minuts1 <= 30))) {
+                        hourleadone = 17 - hours1;
+                        hourleadone = hourleadone + GetInervalMin(minuts1, 30);
+                        console.log("大于等于14，且小于17.30的情况下，");
+                    }
+                    //小于等于12.00，且大于等于8.30的情况下，
+                    else if ((hours1 < 12 || (hours1 == 12 && minuts1 == 0)) && (hours1 > 8 || hours1 == 8 && minuts1 >= 30)) {
+                        hourleadone = 17 - hours1 - 2;
+                        hourleadone = hourleadone + GetInervalMin(minuts1, 30);
+                        console.log("小于等于12.00，且大于等于8.30的情况下");
+                    }
+                    //大于等于17.30的情况下
+                    else if (hours1 > 17 || (hours1 == 17 && minuts1 >= 30)) {
+                        hourleadone = 0;
+                        console.log("大于等于17.30的情况下");
+                    }
+                    //小于等于8.30的情况下
+                    else if (hours1 < 8 || (hours1 == 8 && minuts1 <= 30)) {
+                        hourleadone = 7;
+                        console.log("小于等于8.30的情况下");
+                    } else {
+                        hourleadone = 3.5;
+                    }
+
+                    //结束时间判断：
+                    //1.大于14点，且小于17.30的情况下，
+                    if ((hours2 > 14 || (hours2 == 14 && minuts2 > 0)) && (hours2 < 17 || (hours2 == 17 && minuts2 <= 30))) {
+                        hourleadtwo = hours2 - 8-2;
+                        hourleadtwo = hourleadtwo + GetInervalMin(30, minuts2);
+                    }
+                    //小于等于12.00，且大于等于8.30的情况下，
+                    else if ((hours2 < 12 || (hours2 == 12 && minuts2 == 0)) && (hours2 > 8 || hours2 == 8 && minuts2 >= 30)) {
+                        hourleadtwo = hours2 - 8;
+                        hourleadtwo = hourleadtwo + GetInervalMin(30, minuts2);
+                    }
+                    //大于等于17.30的情况下
+                    else if (hours2 > 17 || (hours2 == 17 && minuts2 >= 30)) {
+                        hourleadtwo = 7;
+                    }
+                    //小于等于8.30的情况下
+                    else if (hours2 < 8 || (hours2 == 8 && minuts2 <= 30)) {
+                        hourleadtwo = 0;
+                    } else {
+                        hourleadtwo = 3.5;
+                    }
+                    result = hourleadone + hourleadtwo + (daylead - 1) * 7;
                 }
+               
+               
+                console.log("开始时间差：" + hourleadone);
+                console.log("结束时间差：" + hourleadtwo);
+             
                     return result;
                 }
-
+ 
                 //注：结束时间不能小于开始时间，开始时间不能大于结束时间
                 var startTime = laydate.render({
                     elem: '#StartTime',
                     type: 'datetime',
                     format: 'yyyy-MM-dd HH:mm:ss',
+                    btns: ['now', 'confirm'],
                     done: function (value, date) {
                         endTime.config.min = {
                             year: date.year,
@@ -196,14 +323,37 @@
                             seconds: date.seconds
                         }
                         var myendtime = $("#EndTime").val();
-                        time = getInervalHour(value, myendtime);
-                        $("#Duration").val(time);
+                        if (myendtime != "") {
+                            var time = getInervalHour(value, myendtime);
+                            console.log(time);
+
+                            $.post("/Personnelmatters/ApprovalManagement/DurationCheck", { time: time,empid: $("#EmployeeId").val() } , function (data) {
+                                if (data.Msg == "No") {
+                                    layer.alert("时间不足，该员工还剩" + data.Data + "小时可调休时间!", { icon: 1 }, function (index) {
+                                        $("#Duration").val(0);
+                                       layer.close(index);
+
+                                    });
+                                } else if (data.Msg == "Ok") {
+                                    $("#Duration").val(time);
+                                } else {
+                                    layer.alert("调休时间查询出错！", { icon: 1 }, function (index) {
+                                        $("#Duration").val(0);
+                                       layer.close(index);
+
+                                    });
+                                }
+                            });
+                           
+                        }
+                       
                     }
                 });//开始时间
                 var endTime = laydate.render({
                     elem: '#EndTime',
                     type: 'datetime',
                     format: 'yyyy-MM-dd HH:mm:ss',
+                    btns: ['now', 'confirm'],
                     done: function (value, date) {
                         startTime.config.max = {
                             year: date.year,
@@ -214,10 +364,28 @@
                             seconds: date.seconds
                         }
                         var mystartime = $("#StartTime").val();
-                        console.log(time);
-                        time = getInervalHour(mystartime, value);
+                        if (mystartime != null) {
+                           var time = getInervalHour(mystartime, value);
+                            $.post("/Personnelmatters/ApprovalManagement/DurationCheck", { time: time, empid: $("#EmployeeId").val() }, function (data) {
+                                if (data.Msg == "No") {
+                                    layer.alert("时间不足，该员工还剩" + data.Data + "小时可调休时间!", { icon: 1 }, function (index) {
+                                        $("#Duration").val(0);
+                                        layer.close(index);
 
-                        $("#Duration").val(time);
+                                    });
+                                } else if (data.Msg == "Ok") {
+                                    $("#Duration").val(time);
+                                } else {
+                                    layer.alert("调休时间查询出错！", { icon: 1 }, function (index) {
+                                        $("#Duration").val(0);
+                                       layer.close(index);
+
+                                    });
+                                }
+                            });
+
+                        }
+                     
                     }
                 });//结束时间
 
@@ -261,31 +429,9 @@
                     var index = parent.layer.getFrameIndex(window.name);
                     parent.layer.close(index);
                 });
-            });
-        function changeDateTimeFormat(cellval) {
-            if (cellval != null) {
-                var date;
-                if (cellval.indexOf("/Date(") >= 0) {
-                    date = new Date(parseInt(cellval.replace("/Date(", "").replace(")/", ""), 10));
-                }
-                else {
-                    date = new Date(cellval);
-                }
+        });
 
-                var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
-                var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
-                var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
-                var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
-                var ss = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-
-                return date.getFullYear() + "-" + month + "-" + currentDate + " " + hour + ":" + minute + ":" + ss;
-            } else {
-                return "";
-            }
-        }
-
-
-
+       
     </script>
 </body>
 </html>

@@ -28,6 +28,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
     using System.Text;
     using System.IO;
+    using System.Globalization;
 
     public class EmployeesInfoController : Controller
     {
@@ -962,13 +963,51 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 生日提醒
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Birthdayremind() {
+            var ajaxresult = new AjaxResult();
 
+            return View();
+        }
+       /// <summary>
+       /// 获取所有当天生日的员工
+       /// </summary>
+       /// <returns></returns>
+        public List<EmployeesInfo> GetTheGodOfLongevity() {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            List<EmployeesInfo> luckdog = new List<EmployeesInfo>();
+            var myemplist = empmanage.GetList();
+            for (int i = 0; i < myemplist.Count(); i++)
+            {
 
+            }
+            return luckdog;
+        } 
+    
+        public string GetLunarCalendar() {
+            ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
+            int year = ChineseCalendar.GetYear(DateTime.Now);
+            int day = ChineseCalendar.GetDayOfMonth(DateTime.Now);
+            int month = ChineseCalendar.GetMonth(DateTime.Now);
+            int leapMonth = ChineseCalendar.GetLeapMonth(year);
+            string date = string.Format("农历{0}{1}（{2}）年{3}{4}月{5}{6}"
+     , "甲乙丙丁戊己庚辛壬癸"[(year - 4) % 10]
+     , "子丑寅卯辰巳午未申酉戌亥"[(year - 4) % 12]
+     , "鼠牛虎兔龙蛇马羊猴鸡狗猪"[(year - 4) % 12]
+     , month == leapMonth ? "闰" : ""
+     , "无正二三四五六七八九十冬腊"[leapMonth > 0 && leapMonth <= month ? month - 1 : month]
+     , "初十廿三"[day / 10]
+     , "十一二三四五六七八九"[day % 10]
+     );
+            return date;
+        }
 
         // 图片上传
         public string ImageUpload()
         {
-
             StringBuilder ProName = new StringBuilder();
             HttpPostedFileBase file = Request.Files["Image"];
             string fname = file.FileName; //获取上传文件名称（包含扩展名）

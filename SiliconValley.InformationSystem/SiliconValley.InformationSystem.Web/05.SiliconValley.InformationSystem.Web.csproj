@@ -264,7 +264,6 @@
     <Compile Include="Areas\MyEducation\MyEducationAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\BusinessManagementController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\CDinterviewController.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\DistributionController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
@@ -272,6 +271,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\SelfObtainRcoredController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\StudentIntentionViewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\StudnetIntentionController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
@@ -1183,6 +1183,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuild.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuilddetailed.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschool.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

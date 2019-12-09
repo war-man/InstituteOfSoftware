@@ -233,6 +233,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var resttime = (decimal)sumdaysofftime - (decimal)sumdaysoff;
             return resttime;
         }
+        /// <summary>
+        /// 验证调休时间够不够
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult DurationCheck(string time,string empid)
+        {
+            var AjaxResultxx = new AjaxResult();
+            var CanRestTime = GetResidueTime(empid);
+            try
+            {
+                if (Convert.ToDecimal(time) > CanRestTime)
+                {
+                    AjaxResultxx.Msg = "No";
+                }
+                else {
+                    AjaxResultxx.Msg = "Ok";
+                }
+                AjaxResultxx.Data = CanRestTime;
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx.Msg = ex.Message;
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+           
+        }
+
         //调休申请
         public ActionResult DaysOffApply() {
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
@@ -254,7 +283,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 else {
                     leave.Image = null;
                 }
-
+                if (leave.StartTime==null || leave.EndTime==null) {
+                    leave.Duration = 0;
+                }
                 leave.IsApproval = false;
                 leave.IsPass = false;
                 leave.IsPassYear = false;

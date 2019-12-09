@@ -155,6 +155,24 @@
             var laydate = layui.laydate;
             var element = layui.element;
 
+            $(function () {
+                BirthdayRemind();// 生日提醒
+            });
+
+            function BirthdayRemind() {
+                layer.open({
+                    type: 2,
+                    content: '/Personnelmatters/EmployeesInfo/Birthdayremind' 
+                    , area: ["400px", "400px"]
+                    , title: '员工生日提醒'
+                    //, shade: 0.8
+                    , anim: 2
+                    , offset: 'rb'
+                    , skin: 'demo-class'
+                });
+            }
+
+
             table.render({
                 elem: '#emptab'
                 , url: '/Personnelmatters/EmployeesInfo/GetData'
