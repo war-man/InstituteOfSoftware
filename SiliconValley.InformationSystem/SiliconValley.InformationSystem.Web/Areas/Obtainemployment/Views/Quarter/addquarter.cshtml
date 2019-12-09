@@ -75,7 +75,7 @@
         </form>
     </div>
     <script type="text/template" id="muban0">
-        <input type="checkbox" lay-filter="vvv" name="ClassNO"lay-skin="primary" value="{{=ClassNO}}" title="{{=ClassNO}}" {{=checked}}>
+        <input type="checkbox" lay-filter="vvv" name="ClassNO"lay-skin="primary" value="{{=classid}}" title="{{=ClassNO}}" {{=checked}}>
     </script>
     <script src="~/Scripts/underscore.js"></script>
     <script>
@@ -98,8 +98,12 @@
                     if (/(^\_)|(\__)|(\_+$)/.test(value)) {
                         return '首尾不能出现下划线\'_\'';
                     }
-                    if (!/^\d+\d+\d$/.test(value)) {
-                        return '只能全为数字';
+                    //if (!/^\d+\d+\d$/.test(value)) {
+                    //    return '只能全为数字';
+                    //}
+                    var r = /^\+?[1-9][0-9]*$/;　　//正整数
+                    if (!r.test(value)) {
+                          return '只能全为数字';
                     }
                 }
             }); 
@@ -110,10 +114,10 @@
                     var obj = _.template($("#muban0").html());
                     var html = '';
                     if (i == 0) {
-                        html = obj({ ClassNO: data[i].ClassNumber, checked: "checked" });
-                        jsclasslist.push( data[i].ClassNumber);
+                        html = obj({ ClassNO: data[i].ClassNumber, classid:data[i].id, checked: "checked" });
+                        jsclasslist.push( data[i].id);
                     } else {
-                        html = obj({ ClassNO: data[i].ClassNumber, checked: "" });
+                        html = obj({ ClassNO: data[i].ClassNumber, classid:data[i].id, checked: "" });
                     }
 
                     $("#classlist").append($(html));

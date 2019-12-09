@@ -15,6 +15,9 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
         private EmploymentStaffBusiness dbemploymentStaffBusiness;
         private ProClassSchedule dbproClassSchedule;
+        private ProScheduleForTrainees dbproScheduleForTrainees;
+        private SurveyRecordsBusiness dbsurveyRecords;
+        private CDInterviewBusiness dbCDInterview;
         /// <summary>
         /// 获取所有的专员带班记录
         /// </summary>
@@ -284,15 +287,39 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>
-        public List<dicEmpClassView> Conversion(List<EmpClass> result) {
+        public List<SResearchEmpClassView> Conversion(List<EmpClass> result) {
             dbproClassSchedule = new ProClassSchedule();
-            List<dicEmpClassView> views = new List<dicEmpClassView>();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbsurveyRecords = new SurveyRecordsBusiness();
+            List<SResearchEmpClassView> views = new List<SResearchEmpClassView>();
             foreach (var item in result)
             {
-             var query=  dbproClassSchedule.GetEntity(item.ClassId);
-                dicEmpClassView empClassView = new dicEmpClassView();
+                var query = dbproClassSchedule.GetEntity(item.ClassId);
+                //该班级的访谈记录
+                var surveylist = dbsurveyRecords.GetSurveyRecordsByclassno(item.ClassId);
+                //班级学生记录
+                var trainesslist = dbproScheduleForTrainees.GetTraineesByClassid(item.ClassId);
+
+                SResearchEmpClassView empClassView = new SResearchEmpClassView();
+
                 empClassView.classid = query.id;
                 empClassView.classnumber = query.ClassNumber;
+                empClassView.interviewcount = surveylist.Count;
+                empClassView.totalnumber = trainesslist.Count;
+                empClassView.repeatedinterviews = 0;
+                for (int i = 0; i < surveylist.Count; i++)
+                {
+                    for (int j = surveylist.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                    {
+                        if (surveylist[i].StudentNO == surveylist[j].StudentNO)
+                        {
+                            surveylist.RemoveAt(j);
+                            empClassView.repeatedinterviews = empClassView.repeatedinterviews + 1;
+                        }
+                    }
+                }
+                empClassView.peoplecount= surveylist.Count;
+
                 if (query.ClassStatus == true)
                     empClassView.isgraduation = true;
                 else
@@ -300,6 +327,57 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 views.Add(empClassView);
             }
             return views;
-        } 
+        }
+
+
+        /// <summary>
+        /// 转化 数据返回右侧数据 cd
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public List<SResearchEmpClassView> ConversiontoCD(List<EmpClass> result) {
+            dbproClassSchedule = new ProClassSchedule();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbCDInterview = new CDInterviewBusiness();
+            dbsurveyRecords = new SurveyRecordsBusiness();
+            List<SResearchEmpClassView> views = new List<SResearchEmpClassView>();
+            foreach (var item in result)
+            {
+                SResearchEmpClassView classView = new SResearchEmpClassView();
+                var query = dbproClassSchedule.GetEntity(item.ClassId);
+                classView.classid = query.id;
+                classView.classnumber = query.ClassNumber;
+                if (query.ClassStatus == true)
+                    classView.isgraduation = true;
+                else
+                    classView.isgraduation = false;
+                List<CDInterview> querycdlist = dbCDInterview.GetCDInterviewsByClassid(item.ClassId);
+                classView.interviewcount = querycdlist.Count;
+                classView.totalnumber = dbsurveyRecords.GetCDSurveyRecordsByclassid(item.ClassId).Count;
+                for (int i = 0; i < querycdlist.Count; i++)
+                {
+                    for (int j = querycdlist.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                    {
+                        if (querycdlist[i].StudentNO == querycdlist[j].StudentNO)
+                        {
+                            querycdlist.RemoveAt(j);
+                            classView.repeatedinterviews = classView.repeatedinterviews + 1;
+                        }
+                    }
+                }
+                classView.peoplecount = querycdlist.Count;
+                views.Add(classView);
+            }
+            return views;
+        }
+
+        /// <summary>
+        /// 跟班级id返回员工带班记录
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public EmpClass GetEmpClassByclassid(int classid) {
+          return  this.GetIQueryable().Where(a => a.IsDel == false).Where(a => a.ClassId == classid).FirstOrDefault();
+        }
     }
 }

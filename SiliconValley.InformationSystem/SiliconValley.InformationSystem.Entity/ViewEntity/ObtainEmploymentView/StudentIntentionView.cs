@@ -19,6 +19,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         /// 班级名称
         /// </summary>
         public string classnumnber { get; set; }
+        /// <summary>
+        /// 班级id
+        /// </summary>
+        public int classid { get; set; }
 
         /// <summary>
         /// 学生姓名
@@ -83,5 +87,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         /// </summary>
         public string identitydocument { get; set; }
 
+        public Nullable<System.DateTime> Date { get; set; }
+
+        public string Remark { get; set; }
     }
 }

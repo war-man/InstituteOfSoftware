@@ -1,0 +1,293 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model SurveyRecords
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>123</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .lad {
+            width: 60px;
+        }
+
+        .mytext {
+            min-height: 55px;
+            width: 464px;
+        }
+
+        .radiodiv {
+            width: 584px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+
+        
+                <form class="layui-form">
+                    <div class="layui-container">
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                <div class="layui-input-inline" style="margin-left:43px">
+
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <label class="layui-form-label lad">学生姓名:</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="StudentName" class="layui-input" readonly="readonly" style="border:none" />
+                                    <input type="text" id="ID" name="ID" class="layui-input" readonly="readonly" style="border:none" />
+                                </div>
+                            </div>
+
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <label class="layui-form-label lad">班级名称:</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" id="classnumber" class="layui-input" readonly="readonly" style="border:none" />
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="layui-form-label lad">自评等级:</label>
+                                <div class=" radiodiv">
+                                    <input type="radio" name="SelfRating" value="A" title="A">
+                                    <input type="radio" name="SelfRating" value="B" title="B">
+                                    <input type="radio" name="SelfRating" value="C" title="C">
+                                    <input type="radio" name="SelfRating" value="D" title="D">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="layui-form-label lad">调研等级:</label>
+                                <div class=" radiodiv">
+                                    <input type="radio" name="SurRating" value="A" title="A">
+                                    <input type="radio" name="SurRating" value="B" title="B">
+                                    <input type="radio" name="SurRating" value="C" title="C">
+                                    <input type="radio" name="SurRating" value="D" title="D">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="layui-form-label lad">选择专业:</label>
+                                <div class=" radiodiv" id="radiodivlist">
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="layui-form-label lad">老师评语:</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" lay-verify="required" id="EmpStaffComments" name="EmpStaffComments" class="layui-textarea mytext"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="layui-form-label lad">就业期望:</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" lay-verify="required" id="EmpExpectations" name="EmpExpectations" class="layui-textarea mytext"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                <label class="layui-form-label lad"> 掌握技术:</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" lay-verify="required" id="MasterTechnology" name="MasterTechnology" class="layui-textarea mytext"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                <label class="layui-form-label lad"> 实践经验:</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" lay-verify="required" id="PracticalExperience" name="PracticalExperience" class="layui-textarea mytext"></textarea>
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                <label class="layui-form-label lad"> 备注:</label>
+                                <div class="layui-input-inline">
+                                    <textarea placeholder="请输入内容" name="Remark" id="Remark" class="layui-textarea mytext"></textarea>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="layui-row layui-form-item">
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
+                                </div>
+                            </div>
+                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                <div class="layui-input-block">
+                                    <button type="button" class="layui-btn layui-btn-radius" id="signout">退出</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+     
+    </div>
+
+
+
+    <script type="text/template" id="muban1">
+        <input type="radio" name="WantSpceID" value="{{=Id}}" title="{{=SpecialtyName}}" {{=checked}}>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        layui.use(['form', 'layer', 'element'], function () {
+            //获取设备信息
+            var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classid,classnumber,studentname,classno,data,WantSpceID;
+
+            jQuery(function () {
+                
+                loadform();
+                
+
+            });
+            function loadform() {
+                data = JSON.parse('@Html.Raw(ViewBag.data)');
+                 studentname= '@Html.Raw(ViewBag.data1)';
+                classno = '@Html.Raw(ViewBag.data2)';
+                console.log(data);
+                console.log(studentname);
+                console.log(classno);
+                WantSpceID=data.WantSpceID;
+                $('#StudentName').val(studentname);
+                $('#ID').val(data.ID);
+                $('#classnumber').val(classno);
+                $('#EmpStaffComments').val(data.EmpStaffComments);
+                $('#EmpExpectations').val(data.EmpExpectations);
+                $('#MasterTechnology').val(data.MasterTechnology);
+                $('#PracticalExperience').val(data.PracticalExperience);
+                $('#Remark').val(data.Remark);
+                SelfRatingbind();
+                SurRatingbind();
+                loaddata();
+                form.render();
+            }
+            function SelfRatingbind() {
+                $("input[name='SelfRating']").each(function (index) {
+                    if ($(this).val()==data.SelfRating) {
+                        $(this).attr('checked','checked');
+                    }
+                });
+            }
+            function SurRatingbind() {
+                $("input[name='SurRating']").each(function (index) {
+                    if ($(this).val()==data.SurRating) {
+                        $(this).attr('checked','checked');
+                    }
+                });
+            }
+            function loaddata() {
+
+                $.ajax({
+                    url: '/Obtainemployment/SResearchRecord/getWantSpce',
+                    type: 'GET',
+                    async: false,//设置按钮是否禁用
+                    datatype: 'json',
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            loadwantspce(successdata.Data);
+
+                        } else {
+                            layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+            }
+            function loadwantspce(data) {
+
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban1").html());
+                    var html = '';
+                    if (data[i].Id == WantSpceID) {
+                        html = obj({ Id: data[i].Id, SpecialtyName: data[i].SpecialtyName, checked: "checked" });
+                    } else {
+                        html = obj({ Id: data[i].Id, SpecialtyName: data[i].SpecialtyName, checked: "" });
+                    }
+                    $("#radiodivlist").append($(html));
+                    form.render();
+                }
+
+            }
+            form.on('submit(demo1)', function (data) {
+                data.field.StudentNO = StudentNO;
+                var param0 = data.field;
+                console.log(param0);
+                $.ajax({
+                    url: '/Obtainemployment/SResearchRecord/edit',
+                    type: 'POST',
+                    data: {param0:param0},
+                    success: function (successdata) {
+                         if (successdata.Success) {
+                            layer.msg('操作成功!', { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+                        } else {
+                            layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+                return false;
+            });
+            $('#signout').click(function () {
+                close();
+            });
+            function close() {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+    </script>
+</body>
+</html>

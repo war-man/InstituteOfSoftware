@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Business.Common
 
 
                     return "039e40811175f-dbed6ef5-f06a-2804-9b40-ecfa2c7925f9"; //为主任或者主任级别以上
-                                                                                 //return "039e40811175f-dbed6ef5-f06a-5702-9b40-ecfa2c7925f9"; //为普通员工
+                //return "039e40811175f-dbed6ef5-f06a-5702-9b40-ecfa2c7925f9"; //为普通员工
 
                 else
                     return SessionHelper.Session["UserId"]?.ToString();

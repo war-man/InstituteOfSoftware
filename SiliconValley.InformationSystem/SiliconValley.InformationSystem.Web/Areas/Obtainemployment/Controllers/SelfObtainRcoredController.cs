@@ -1,7 +1,9 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -27,31 +29,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private StudentIntentionBusiness dbstudentIntention;
         private EmploymentStaffBusiness dbemploymentStaff;
         private ProClassSchedule dbproClassSchedule;
+        private EmploymentJurisdictionBusiness dbemploymentJurisdiction;
         // GET: Obtainemployment/SelfObtainRcored
         public ActionResult SelfObtainRcoredIndex()
         {
             return View();
         }
 
+        #region /*于2019-12-9放弃这段代码 是以树形菜单显示年度 季度  班级，但是由于学生异动情况。数据显示效果不是特别佳 */
         /// <summary>
         /// 加载左侧的树形
         /// </summary>
         /// <returns></returns>
         public ActionResult EstablishTree()
         {
+
             dbquarter = new QuarterBusiness();
             dbempQuarterClass = new EmpQuarterClassBusiness();
             dbproClassSchedule = new ProClassSchedule();
+            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
             //第一层
-            var querydata = dbquarter.yearplan();
+            var querydata = new List<EmploymentYearView>();
+            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
+            if (!isJurisdiction)
+            {
+                var data = dbquarter.GetQuartersByempid(queryempstaff.ID);
+                querydata = dbquarter.yearplan(data);
+            }
+            else
+            {
+                var data = dbquarter.GetQuarters();
+                querydata = dbquarter.yearplan(data);
+            }
+
+
 
             //返回的结果
             resultdtree result = new resultdtree();
 
             //状态
             dtreestatus dtreestatus = new dtreestatus();
-
-
 
             //最外层的儿子数据
             List<dtreeview> childrendtreedata = new List<dtreeview>();
@@ -72,8 +92,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     seconddtree.parentId = "0";
                     seconddtree.level = 0;
 
+
+
+                    List<Quarter> Quarterslist = new List<Quarter>();
                     //这是第二层数据
-                    var Quarterslist = dbquarter.GetQuartersByYear(querydata[i].Year);
+                    if (!isJurisdiction)
+                    {
+                        Quarterslist = dbquarter.GetQuartersByYearandempid(querydata[i].Year, queryempstaff.ID);
+                    }
+                    else
+                    {
+                        Quarterslist = dbquarter.GetQuartersByYear(querydata[i].Year);
+                    }
+
+
+
                     if (Quarterslist.Count > 0)
                     {
 
@@ -89,8 +122,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                             Quarters.last = false;
                             Quarters.parentId = querydata[i].Year.ToString();
                             Quarters.level = 1;
+
+
                             //第三层数据
-                            var empQuarterClasslist = dbempQuarterClass.GetEmpQuartersByYearID(Quarterslist[j].ID);
+                            var empQuarterClasslist = dbempQuarterClass.GetEmpQuartersByQuarterID(Quarterslist[j].ID);
+
+                            if (!isJurisdiction)
+                            {
+                                var empquarterclasslist = dbquarter.GetEmpQuartersByempid(queryempstaff.ID);
+                                for (int p = empQuarterClasslist.Count - 1; p >= 0; p--)
+                                {
+                                    for (int l = 0; l < empquarterclasslist.Count; l++)
+                                    {
+                                        if (empQuarterClasslist[p].ID != empquarterclasslist[l].ID)
+                                        {
+                                            if (l == empquarterclasslist.Count - 1)
+                                            {
+                                                empQuarterClasslist.RemoveAt(i);
+
+                                            }
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
                             if (empQuarterClasslist.Count > 0)
                             {
                                 //if (j == 0)
@@ -142,131 +200,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             result.status = dtreestatus;
             result.data = childrendtreedata;
-
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// 添加自主就业
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        public ActionResult add(int param0)
-        {
-            dbempQuarterClass = new EmpQuarterClassBusiness();
-            dbproScheduleForTrainees = new ProScheduleForTrainees();
-            dbproStudentInformation = new ProStudentInformationBusiness();
-            dbselfObtainRcored = new SelfObtainRcoredBusiness();
-            var quyeryempquarterclsss = dbempQuarterClass.GetEntity(param0);
-
-            List<ScheduleForTrainees> queryscheduleForTrainees = dbproScheduleForTrainees.GetTraineesByClassid(quyeryempquarterclsss.Classid);
-            List<StudentInformation> studentlist = new List<StudentInformation>();
-            foreach (var item in queryscheduleForTrainees)
-            {
-                studentlist.Add(dbproStudentInformation.GetEntity(item.StudentID));
-            }
-            var query = dbselfObtainRcored.GetSelfObtainsByQuarterID(quyeryempquarterclsss.QuarterID);
-            for (int i = studentlist.Count - 1; i >= 0; i--)
-            {
-                foreach (var item in query)
-                {
-                    if (studentlist[i].StudentNumber == item.StudentNO)
-                    {
-                        studentlist.Remove(studentlist[i]);
-                        break;
-                    }
-                }
-            }
-            var resultStudentlist = studentlist.Select(aa => new
-            {
-                StudentNumber = aa.StudentNumber,
-                Name = aa.Name
-            }).ToList();
-
-            ViewBag.studentlist = Newtonsoft.Json.JsonConvert.SerializeObject(resultStudentlist);
-            ViewBag.param0 = quyeryempquarterclsss.Classid;
-            ViewBag.param1 = quyeryempquarterclsss.QuarterID;
-            return View();
-        }
-
-        /// <summary>
-        /// 添加自主就业
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        public ActionResult add(SelfObtainRcored param0)
-        {
-            AjaxResult ajaxResult = new AjaxResult();
-            try
-            {
-
-                dbselfObtainRcored = new SelfObtainRcoredBusiness();
-                var name = ImageUpload(param0.StudentNO);
-                if (string.IsNullOrEmpty(name))
-                {
-                    ajaxResult.Success = false;
-                    ajaxResult.Msg = "莫乱搞！";
-                }
-                else
-                {
-                    dbstudentIntention = new StudentIntentionBusiness();
-                    var query = dbstudentIntention.GetIntention(param0.QuarterID, param0.StudentNO);
-                    if (query != null)
-                    {
-                        query.IsDel = false;
-                        dbstudentIntention.Update(query);
-                    }
-                    param0.ImgUrl = name;
-                    param0.Date = DateTime.Now;
-                    param0.EmpStaffID = 1007;
-                    param0.IsDel = false;
-
-                    dbselfObtainRcored.Insert(param0);
-                    ajaxResult.Success = true;
-                }
-
-            }
-            catch (Exception)
-            {
-                ajaxResult.Success = false;
-                ajaxResult.Msg = "请联系信息部成员！";
-            }
-
-
-            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
-        }
-
-   
-
-        /// <summary>
-        /// 图片上传
-        /// </summary>
-        /// <param name="studentno"></param>
-        /// <returns></returns>
-        public string ImageUpload(string studentno)
-        {
-            dbproStudentInformation = new ProStudentInformationBusiness();
-            var student = dbproStudentInformation.GetEntity(studentno);
-            dbproScheduleForTrainees = new ProScheduleForTrainees();
-            var query = dbproScheduleForTrainees.GetTraineesByStudentNumber(studentno);
-            StringBuilder ProName = new StringBuilder();
-            HttpPostedFileBase file = Request.Files["Image"];
-            if (file != null)
-            {
-                string fname = file.FileName; //获取上传文件名称（包含扩展名）
-                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
-                string name = Path.GetExtension(fname);//获取扩展名
-                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/";//获取当前程序集下面的uploads文件夹中的文件夹目录
-                string completefilePath = query.ClassID + student.Name + name;//将上传的文件名称转变为当前项目名称
-                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
-                file.SaveAs(ProName.ToString());//上传文件
-                return completefilePath;
-            }
-
-            else
-            {
-                return null;
-            }
         }
 
         /// <summary>
@@ -285,17 +219,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbemploymentStaff = new EmploymentStaffBusiness();
             dbproStudentInformation = new ProStudentInformationBusiness();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
+            dbempQuarterClass = new EmpQuarterClassBusiness();
             var data = new List<SelfObtainRcored>();
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
 
             switch (leave)
             {
                 case "1":
                     var year = int.Parse(string2);
-                    data = dbselfObtainRcored.GetSelfObtainRcoredsByYear(year);
+                    if (!isJurisdiction)
+                    {
+                        var querylist1 = dbempQuarterClass.GetClassesByYearandempid(year, queryempstaff.ID);
+                        data = dbselfObtainRcored.GetSelfObtainRcoredsBy_classlist(querylist1);
+                    }
+                    else
+                    {
+                        var querylist1 = dbempQuarterClass.GetClassesByYear(year);
+                        data = dbselfObtainRcored.GetSelfObtainRcoredsBy_classlist(querylist1);
+                    }
+
                     break;
                 case "2":
                     var quarterid = int.Parse(string2);
-                    data = dbselfObtainRcored.GetSelfObtainsByQuarterID(quarterid);
+                    data = dbselfObtainRcored.GetSelfObtainsByQuarterIDi(quarterid);
                     break;
                 case "3":
                     var classid = int.Parse(string2);
@@ -348,6 +297,118 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
         }
+        #endregion
+
+
+
+        /// <summary>
+        /// 添加自主就业
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult add(int param0)
+        {
+            dbempQuarterClass = new EmpQuarterClassBusiness();
+            dbproClassSchedule = new ProClassSchedule();
+            var quyeryempquarterclsss = dbempQuarterClass.GetQuartClassByclassid(param0);
+            var studentlist = dbempQuarterClass.GetSurplusStubyClassid(param0);
+            var resultStudentlist = studentlist.Select(aa => new
+            {
+                StudentNumber = aa.StudentNumber,
+                Name = aa.Name
+            }).ToList();
+
+            ViewBag.studentlist = Newtonsoft.Json.JsonConvert.SerializeObject(resultStudentlist);
+            ViewBag.param0 = quyeryempquarterclsss.Classid;
+            ViewBag.param1 = quyeryempquarterclsss.QuarterID;
+            ViewBag.param2 = dbproClassSchedule.GetEntity(quyeryempquarterclsss.Classid).ClassNumber;
+            return View();
+        }
+
+        /// <summary>
+        /// 添加自主就业
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult add(SelfObtainRcored param0)
+        {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+
+                dbselfObtainRcored = new SelfObtainRcoredBusiness();
+                var name = ImageUpload(param0.StudentNO);
+                if (string.IsNullOrEmpty(name))
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "莫乱搞！";
+                }
+                else
+                {
+                    dbemploymentStaff = new EmploymentStaffBusiness();
+                    Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                    var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+                    dbstudentIntention = new StudentIntentionBusiness();
+                    var query = dbstudentIntention.GetIntention(param0.QuarterID, param0.StudentNO);
+                    if (query != null)
+                    {
+                        query.IsDel = false;
+                        dbstudentIntention.Update(query);
+                    }
+                    param0.ImgUrl = name;
+                    param0.Date = DateTime.Now;
+                    param0.EmpStaffID = queryempstaff.ID;
+                    param0.IsDel = false;
+
+                    dbselfObtainRcored.Insert(param0);
+                    ajaxResult.Success = true;
+                }
+
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+
+
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+   
+
+        /// <summary>
+        /// 图片上传
+        /// </summary>
+        /// <param name="studentno"></param>
+        /// <returns></returns>
+        public string ImageUpload(string studentno)
+        {
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            var student = dbproStudentInformation.GetEntity(studentno);
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            var query = dbproScheduleForTrainees.GetTraineesByStudentNumber(studentno);
+            StringBuilder ProName = new StringBuilder();
+            HttpPostedFileBase file = Request.Files["Image"];
+            if (file != null)
+            {
+                string fname = file.FileName; //获取上传文件名称（包含扩展名）
+                string f = Path.GetFileNameWithoutExtension(fname);//获取文件名称
+                string name = Path.GetExtension(fname);//获取扩展名
+                string pfilename = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/";//获取当前程序集下面的uploads文件夹中的文件夹目录
+                string completefilePath = query.ClassID + student.Name + name;//将上传的文件名称转变为当前项目名称
+                ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
+                file.SaveAs(ProName.ToString());//上传文件
+                return completefilePath;
+            }
+
+            else
+            {
+                return null;
+            }
+        }
+
+   
 
 
         /// <summary>
@@ -375,7 +436,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbselfObtainRcored = new SelfObtainRcoredBusiness();
                 var query = dbselfObtainRcored.GetEntity(param0.ID);
                 var oldname = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/" + query.ImgUrl;
-                if (this.DeleteImgFile(oldname))
+                if (dbselfObtainRcored.DeleteImgFile(oldname))
                 {
                     var name = ImageUpload(query.StudentNO);
                     if (string.IsNullOrEmpty(name))
@@ -408,24 +469,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
 
-        public bool DeleteImgFile(string fileUrl)
-        {
-            try
-            {
-               
-                if (System.IO.File.Exists(fileUrl))
-                {
-                    System.IO.File.Delete(fileUrl);
-                }
-                return true;
-            }
-            catch (Exception ex)
-            {
 
-                return false;
-            }
-
-        }
 
         /// <summary>
         /// 删除
@@ -437,16 +481,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
+
                 dbselfObtainRcored = new SelfObtainRcoredBusiness();
-                var query = dbselfObtainRcored.GetEntity(param0);
-                var oldname = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/" + query.ImgUrl;
-                if (this.DeleteImgFile(oldname))
+                var data= dbselfObtainRcored.GetEntity(param0);
+                if (dbselfObtainRcored.del(data.StudentNO))
                 {
-                   
-                        query.IsDel = true;
-                        dbselfObtainRcored.Update(query);
-                        ajaxResult.Success = true;
-                    
+                    ajaxResult.Success = true;
                 }
                 else
                 {

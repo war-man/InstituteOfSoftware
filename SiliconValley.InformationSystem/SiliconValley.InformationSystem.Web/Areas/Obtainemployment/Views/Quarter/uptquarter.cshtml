@@ -76,7 +76,7 @@
         </form>
     </div>
     <script type="text/template" id="muban0">
-        <input type="checkbox" class="mycheckbox" lay-filter="vvv" name="ClassNO" lay-skin="primary" value="{{=ClassNO}}" title="{{=ClassNO}}" {{=checked}}>
+        <input type="checkbox" class="mycheckbox" lay-filter="vvv" name="ClassNO" lay-skin="primary" value="{{=classid}}" title="{{=ClassNO}}" {{=checked}}>
     </script>
     <script src="~/Scripts/underscore.js"></script>
     <script>
@@ -93,7 +93,7 @@
                     if (/(^\_)|(\__)|(\_+$)/.test(value)) {
                         return '首尾不能出现下划线\'_\'';
                     }
-                    if (!/^[0-9]*[1-9][0-9]*$/.test(value)) {
+                    if (!/^\+?[1-9][0-9]*$/.test(value)) {
                         return '只能全为数字';
                     }
                 }
@@ -116,7 +116,7 @@
                 //console.log(data);
                 for (var i = 0; i < data.length; i++) {
                     var obj = _.template($("#muban0").html());
-                    var html = obj({ ClassNO: data[i].ClassNumber, checked: "" });
+                    var html = obj({ ClassNO: data[i].ClassNumber, checked: "",classid:data[i].id });
                     $("#classlist").append($(html));
                     form.render();
                 }
@@ -126,9 +126,9 @@
                 var checkclasslist = JSON.parse('@Html.Raw(ViewBag.checkclasslist)');
                 $(".mycheckbox").each(function (index) {
                     for (var i = 0; i < checkclasslist.length; i++) {
-                        if ($(this).val() == checkclasslist[i].ClassNumber) {
+                        if ($(this).val() == checkclasslist[i].id) {
                             $(this).attr('checked', 'checked');
-                            jsclasslist.push( checkclasslist[i].ClassNumber);
+                            jsclasslist.push( checkclasslist[i].id);
                         }
                     }
                     form.render();

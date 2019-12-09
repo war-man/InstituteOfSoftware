@@ -40,5 +40,45 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return dd;
         }
+
+        /// <summary>
+        /// 根据学生编号返回这个CD类
+        /// </summary>
+        /// <param name="Studentnumber"></param>
+        /// <returns></returns>
+        public List<CDInterview> GetCDsByStudentnumber(string Studentnumber) {
+          return   this.GetCDInterviews().Where(a => a.StudentNO == Studentnumber).ToList();
+        }
+
+        /// <summary>
+        /// 删除传入过来的集合数据
+        /// </summary>
+        /// <param name=""></param>
+        /// <returns></returns>
+        public bool Dellist(List<CDInterview> data) {
+            bool result = true;
+            try
+            {
+                foreach (var item in data)
+                {
+                    item.IsDel = true;
+                    this.Update(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
+
+        public void back(List<CDInterview> data) {
+            foreach (var item in data)
+            {
+                item.IsDel = false;
+                this.Update(item);
+            }
+        }
     }
 }

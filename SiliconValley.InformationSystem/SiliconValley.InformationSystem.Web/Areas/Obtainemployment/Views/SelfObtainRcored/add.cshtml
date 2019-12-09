@@ -137,7 +137,9 @@
 
             });
             function loadform() {
-                var classnumber = '@Html.Raw(ViewBag.param0)';
+                var classid = '@Html.Raw(ViewBag.param0)';
+                var classnumber = '@Html.Raw(ViewBag.param2)';
+                
                 $("#classnumnber").val(classnumber);
                 quarterid = @Html.Raw(ViewBag.param1);
                 console.log(quarterid);
