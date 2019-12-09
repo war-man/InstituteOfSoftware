@@ -24,7 +24,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult QuarterIndex()
         {
             dbquarter = new QuarterBusiness();
-            var querydata = dbquarter.yearplan();
+            var data= dbquarter.GetQuarters();
+            var querydata = dbquarter.yearplan(data);
             ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(querydata);
             return View();
         }

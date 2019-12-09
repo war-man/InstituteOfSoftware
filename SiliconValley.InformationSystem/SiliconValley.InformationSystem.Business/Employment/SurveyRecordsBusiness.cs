@@ -47,31 +47,42 @@ namespace SiliconValley.InformationSystem.Business.Employment
         }
 
         /// <summary>
-        ///获取cd类学生记录  如果第一次调研时C 或者时D  第二次调研却时A 或者B 的话 就不算 反之
+        ///获取cd类学生记录  如果第一次调研时C 或者时D  第二次调研却时A 或 者B 的话 就不算 反之
         /// </summary>
         /// <returns></returns>
         public List<SurveyRecords> GetCDSurveyRecords(List<SurveyRecords> data) {
 
             List<DuplicateSurveyRecords> Duplicatedata = new List<DuplicateSurveyRecords>();
-            for (int i = data.Count; i < 0; i++)
+            for (int i = 0; i < data.Count; i++)
             {
                 for (int j = data.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
                 {
                     if (data[i].StudentNO==data[j].StudentNO)
                     {
-                        foreach (var item in Duplicatedata)
+                        if (Duplicatedata.Count!=0)
                         {
-                            if (data[j].StudentNO==item.StudentNumber)
+                            foreach (var item in Duplicatedata)
                             {
-                                item.Duplicatedata.Add(data[j]);
+                                if (data[j].StudentNO == item.StudentNumber)
+                                {
+                                    item.Duplicatedata.Add(data[j]);
+                                }
+                                else
+                                {
+                                    DuplicateSurveyRecords view = new DuplicateSurveyRecords();
+                                    view.StudentNumber = data[j].StudentNO;
+                                    view.Duplicatedata.Add(data[j]);
+                                    Duplicatedata.Add(view);
+                                }
                             }
-                            else
-                            {
-                                DuplicateSurveyRecords view = new DuplicateSurveyRecords();
-                                view.StudentNumber = data[j].StudentNO;
-                                view.Duplicatedata.Add(data[j]);
-                                Duplicatedata.Add(view);
-                            }
+                        }
+                        else
+                        {
+                            DuplicateSurveyRecords view = new DuplicateSurveyRecords();
+                            var da = data[j];
+                            view.StudentNumber = data[j].StudentNO;
+                            view.Duplicatedata.Add(da);
+                            Duplicatedata.Add(view);
                         }
                         data.Remove(data[j]);
                     }
@@ -97,7 +108,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return data;
         }
 
-      
         /// <summary>
         /// 根据班级获取CD类学生
         /// </summary>
@@ -123,6 +133,31 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
            
             return dd;
+        }
+
+        /// <summary>
+        /// 根据学生编号返回该对应的访谈记录
+        /// </summary>
+        /// <returns></returns>
+        public  List<SurveyRecords> GetSurveysByStudentNumber(string StudentNumber) {
+           return this.GetSurveys().Where(a => a.StudentNO == StudentNumber).ToList();
+        }
+
+        /// <summary>
+        /// 判断这个学生是否是cd
+        /// </summary>
+        /// <returns></returns>
+        public bool judgeStuisCD(string StudentNumber) {
+            bool result = false;
+            SurveyRecords survey = this.GetSurveysByStudentNumber(StudentNumber).OrderByDescending(a => a.RecordsDate).FirstOrDefault();
+            if (survey != null)
+            {
+                if (survey.SurRating.ToUpper() == "C" || survey.SurRating.ToUpper() == "D")
+                {
+                    result = true;
+                }
+            }
+            return result;
         }
     }
 }

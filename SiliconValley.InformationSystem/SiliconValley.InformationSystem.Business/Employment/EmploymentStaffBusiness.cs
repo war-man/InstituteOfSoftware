@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.Common;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -48,7 +49,15 @@ namespace SiliconValley.InformationSystem.Business.Employment
             var cc = NomyEmp.GetIQueryable().Where(a => a.EmployeeId == EmployeeId && a.IsDel == false).FirstOrDefault();
             return cc;
         }
-
+        /// <summary>
+        /// 根据员工编号查找i员工对象
+        /// </summary>
+        /// <param name="EmployeeId"></param>
+        /// <returns></returns>
+        public EmploymentStaff GetEmploymentStaffByempid(string EmployeeId)
+        {
+          return  this.GetALl().Where(a => a.EmployeesInfo_Id == EmployeeId).FirstOrDefault();
+        }
         /// <summary>
         /// 用于详细页面
         /// </summary>
@@ -214,6 +223,15 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑失败。", EnumType.LogType.编辑数据);
             }
             return result;
+        }
+
+        /// <summary>
+        /// 获取当前登陆的就业员工
+        /// </summary>
+        /// <returns></returns>
+        public EmploymentStaff Getloginuser() {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            return this.GetEmploymentByEmpInfoID(user.EmpNumber);
         }
     }
 }

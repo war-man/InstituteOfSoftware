@@ -397,6 +397,8 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -1136,7 +1138,7 @@
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\CDinterview\SResearchRecordRegister.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\CDSResearchRecordRegister.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploymentAreas\EmploymentAreasAdd.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploymentAreas\EmploymentAreasIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SimulatInterviewIndex.cshtml" />

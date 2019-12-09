@@ -42,7 +42,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// 访谈学生页面
         /// </summary>
         /// <returns></returns>
-        public ActionResult SResearchRecordRegister(int param0)
+        public ActionResult CDSResearchRecordRegister(int param0)
         {
             dbproClassSchedule = new ProClassSchedule();
            var query= dbproClassSchedule.GetEntity(param0);
@@ -62,9 +62,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
+                dbemploymentStaff = new EmploymentStaffBusiness();
+                var query = dbemploymentStaff.Getloginuser();
                 dbcDInterview = new CDInterviewBusiness();
                 param0.CDIntDate = DateTime.Now;
-                param0.EmpStaffID = 1007;
+                param0.EmpStaffID = query.ID;
                 param0.IsDel = false;
                 dbcDInterview.Insert(param0);
                 ajaxResult.Success = true;
@@ -159,7 +161,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 case "ed":
                     result = dbempClass.Leavebehinded(result);
                     break;
-
                 default:
                     result = dbempClass.Leavebehinding(result);
                     break;
@@ -197,8 +198,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbemploymentStaff = new EmploymentStaffBusiness();
             dbspecialty = new SpecialtyBusiness();
             dbcDInterview = new CDInterviewBusiness();
-           
-            var list1 = dbcDInterview.GetCDInterviewsByClassid(int.Parse(param0));
+
+            var list1 =new List<CDInterview>();
+            if (!string.IsNullOrEmpty(param0))
+            {
+                list1= dbcDInterview.GetCDInterviewsByClassid(int.Parse(param0));
+            }
+          
 
             var aa = list1.Select(a => new
             {
@@ -224,6 +230,78 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 data = resultdata1
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <param name="param0">cd访谈记录id</param>
+        /// <returns></returns>
+        public ActionResult del(int param0) {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                dbcDInterview = new CDInterviewBusiness();
+                CDInterview cDInterview = dbcDInterview.GetEntity(param0);
+                cDInterview.IsDel = true;
+                dbcDInterview.Update(cDInterview);
+                ajaxResult.Success = true;
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+  
+        }
+
+
+        /// <summary>
+        /// 修改cd 访谈记录
+        /// </summary>
+        /// <param name="param0">cd 访谈记录id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult edit(int param0) {
+            dbcDInterview = new CDInterviewBusiness();
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            CDInterview cDInterview = dbcDInterview.GetEntity(param0);
+            ViewBag.data = Newtonsoft.Json.JsonConvert.SerializeObject(cDInterview);
+            ViewBag.data1 = dbproStudentInformation.GetEntity(cDInterview.StudentNO).Name;
+            ViewBag.data2 = dbproScheduleForTrainees.GetTraineesByStudentNumber(cDInterview.StudentNO).ClassID;
+            return View();
+        }
+
+        /// <summary>
+        /// 修改提交
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult edit(CDInterview param0) {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                dbcDInterview = new CDInterviewBusiness();
+               CDInterview cD= dbcDInterview.GetEntity(param0.ID);
+                dbemploymentStaff = new EmploymentStaffBusiness();
+                var query = dbemploymentStaff.Getloginuser();
+                cD.CDIntContent = param0.CDIntContent;
+                cD.EmpStaffID = query.ID;
+                cD.MajorID = param0.MajorID;
+                cD.Remark = param0.Remark;
+                dbcDInterview.Update(cD);
+                ajaxResult.Success = true;
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
     }
 }

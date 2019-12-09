@@ -80,7 +80,10 @@
         <button class="layui-btn layui-btn-sm" lay-event="add">添加谈话</button>
     </div>
 </script>
-
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <script src="~/Scripts/underscore.js"></script>
 
 <script>
@@ -136,7 +139,7 @@
                 { field: 'interviewcount', title: '访谈次数',width:90 },
                 { field: 'totalnumber', title: '应访谈人数', width: 100 },
                   { field: 'peoplecount', title: '实际访谈人数',width:115  },
-                 { field: 'repeatedinterviews', title: '重复次数',width:90 },
+                { field: 'repeatedinterviews', title: '重复次数', width: 90 }
               
             ]]
 
@@ -152,16 +155,22 @@
                 , done: function (res, curr, count) {
                     console.log(res);
                     if (!isadd) {
-                        classid = res.data[0].classid;
-                    }
-                    
-                    reloadtable11();
-                     for (var i = 0; i < $("tr").length; i++) {
-                        if ($($($($("tr")[i]).children()[0]).children()[0]).text() == classid) {
-                            $("tr").css("background", "");
-                            $($("tr")[i]).css("background", "pink");
+                        if (res.data.length>0) {
+                            classid = res.data[0].classid;
+                            for (var i = 0; i < $("tr").length; i++) {
+                                if ($($($($("tr")[i]).children()[0]).children()[0]).text() == classid) {
+                                    $("tr").css("background", "");
+                                    $($("tr")[i]).css("background", "pink");
+                                }
+                            }
+                        } else {
+                            classid = "";
                         }
+                       
                     }
+                    reloadtable11();
+                    
+                     
                 }
                 , page: {
                     curr: 1 //重新从第 1 页开始
@@ -223,6 +232,7 @@
                 }
                 
                 , { field: 'Remark', title: '备注', width: 165 }
+                , {fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
             ]]
 
        });
@@ -243,25 +253,91 @@
    
          //头工具栏事件
         table.on('toolbar(table11)', function (obj) {
-            switch (obj.event) {
-                case 'add':
-                    layer.open({
-                        type: 2,
-                        content: "/Obtainemployment/SResearchRecord/SResearchRecordRegister?param0="+classid,
-                        title: "添加谈话",
-                        area: ['690px', '830px'],
-                        //area: ['850px', '760px'],
-                        success: function (layero, index) {
-                            let body = layui.layer.getChildFrame('body', index);
-                            body.find("#classnumnber").val(classid);
-                        },
-                        end: function () {
-                            isadd = true;
-                            reloadtable00();
-                        }
+            switch (type) {
+                case 'ed':
+                    layer.msg('不可操作已毕业班级!', { icon: 6, time: 1000 }, function () {
                     });
                     break;
-            };
+                case 'ing':
+                    switch (obj.event) {
+                        case 'add':
+                            layer.open({
+                                type: 2,
+                                content: "/Obtainemployment/SResearchRecord/SResearchRecordRegister?param0=" + classid,
+                                title: "添加谈话",
+                                area: ['690px', '830px'],
+                                //area: ['850px', '760px'],
+                                success: function (layero, index) {
+                                    let body = layui.layer.getChildFrame('body', index);
+                                    body.find("#classnumnber").val(classid);
+                                },
+                                end: function () {
+                                    isadd = true;
+                                    reloadtable00();
+                                }
+                            });
+                            break;
+                    };
+                    break;
+            }
+           
+        });
+
+        //监听行工具事件
+        table.on('tool(table11)', function (obj) {
+            isadd = true;
+            var data = obj.data;
+            //console.log(obj)
+            switch (type) {
+                case 'ed':
+                    layer.msg('不可操作已毕业班级!', { icon: 6, time: 1000 }, function () {
+                    });
+                    break;
+                case 'ing':
+                    if (obj.event == 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $.ajax({
+                                url: '/Obtainemployment/SResearchRecord/del',
+                                //async: false,
+                                data: { param0: data.ID },
+                                success: function (successdata) {
+                                    if (successdata.Success) {
+                                        layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
+
+                                        });
+                                    } else {
+                                        layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                                        });
+                                    }
+                                    reloadtable00();
+                                },
+                                error: function (errordata) {
+                                    layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            });
+                        });
+                    } else if (obj.event == 'edit') {
+                        layer.open({
+                            type: 2,
+                            content: "/Obtainemployment/SResearchRecord/edit?param0=" + data.ID,
+                            title: "修改谈话",
+                            area: ['690px', '830px'],
+                            //area: ['850px', '760px'],
+                            success: function (layero, index) {
+                                //let body = layui.layer.getChildFrame('body', index);
+                                //body.find("#classnumnber").val(classid);
+                            },
+                            end: function () {
+                                isadd = true;
+                                reloadtable00();
+                            }
+                        });
+                    }
+                    break;
+            }
         });
 
         form.on('select(select00)', function (data) {

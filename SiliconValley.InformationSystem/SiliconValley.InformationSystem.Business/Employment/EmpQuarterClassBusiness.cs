@@ -15,6 +15,11 @@ namespace SiliconValley.InformationSystem.Business.Employment
     {
         private QuarterBusiness dbquarter;
         private ProClassSchedule dbproClassSchedule;
+        private EmpClassBusiness dbempClass;
+        private ProScheduleForTrainees dbproScheduleForTrainees;
+        private ProStudentInformationBusiness dbproStudentInformation;
+        private SelfObtainRcoredBusiness dbselfObtainRcored;
+
         /// <summary>
         ///获取可用的数据
         /// </summary>
@@ -64,5 +69,69 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return result;
         }
 
+        /// <summary>
+        /// 根据年份,员工id 获取这一年毕业的班级
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public List<ClassSchedule> GetClassesByYearandempid(int year, int empid)
+        {
+            dbempClass = new EmpClassBusiness();
+            var data = this.GetClassesByYear(year);
+            var empclasslist = dbempClass.GetEmpsByEmpID(empid);
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                for (int j = 0; j < empclasslist.Count; j++)
+                {
+                    if (data[i].id != empclasslist[j].ClassId)
+                    {
+                        if (j == empclasslist.Count - 1)
+                        {
+                            data.RemoveAt(i);
+                        }
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return data;
+        }
+
+
+        /// <summary>
+        /// 用于自主就业学生填写的，根据班级id。要删选出已经填写过的学生就不用提取出来。
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public List<StudentInformation> GetSurplusStubyClassid(int classid)
+        {
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            dbselfObtainRcored = new SelfObtainRcoredBusiness();
+            dbproClassSchedule = new ProClassSchedule();
+            var quyeryempquarterclsss = this.GetQuartClassByclassid(classid);
+            List<ScheduleForTrainees> queryscheduleForTrainees = dbproScheduleForTrainees.GetTraineesByClassid(quyeryempquarterclsss.Classid);
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+            foreach (var item in queryscheduleForTrainees)
+            {
+                studentlist.Add(dbproStudentInformation.GetEntity(item.StudentID));
+            }
+            var query = dbselfObtainRcored.GetSelfObtainRcoreds();
+            for (int i = studentlist.Count - 1; i >= 0; i--)
+            {
+                foreach (var item in query)
+                {
+                    if (studentlist[i].StudentNumber == item.StudentNO)
+                    {
+                        studentlist.Remove(studentlist[i]);
+                        break;
+                    }
+                }
+            }
+            return studentlist;
+        }
     }
 }

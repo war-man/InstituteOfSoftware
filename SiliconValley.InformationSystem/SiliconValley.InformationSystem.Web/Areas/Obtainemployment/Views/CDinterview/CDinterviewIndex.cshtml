@@ -51,7 +51,7 @@
                     <div class="layui-inline" id="mubandiv">
                         <label class="layui-form-label" id="querylable">搜索：</label>
                         <div class="layui-input-inline" style="width:156px">
-                            <input type="text"  id="name1" name="name1" @*lay-verify="required"*@ placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                            <input type="text" id="name1" name="name1" @*lay-verify="required"*@ placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
                         </div>
 
                         <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn1">搜索</button>
@@ -77,7 +77,10 @@
     </div>
 </script>
 
-
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
 <script src="~/Scripts/underscore.js"></script>
 
 <script>
@@ -101,7 +104,7 @@
             , limits: [15, 30, 45, 60, 75]
             , cols: [[ //标题栏
                 { field: 'classid', title: 'ID', width: 80, hide: true },
-                
+
                 { field: 'classnumber', title: '班级编号' },
                 {
                     field: 'isgraduation', title: 'Is毕业', templet: function (d) {
@@ -131,20 +134,28 @@
                 }
                 , done: function (res, curr, count) {
                     console.log(res);
+
                     if (!isadd) {
-                        classid = res.data[0].classid;
+                        if (res.data.length > 0) {
+                            classid = res.data[0].classid;
+                            //console.log($("tr"));
+                            //console.log($($("tr")[0]).children());
+                            //console.log($($($("tr")[1]).children()[0]).children());
+                            //console.log($($($($("tr")[1]).children()[0]).children()[0]).text());
+                            for (var i = 0; i < $("tr").length; i++) {
+                                if ($($($($("tr")[i]).children()[0]).children()[0]).text() == classid) {
+                                    $("tr").css("background", "");
+                                    $($("tr")[i]).css("background", "pink");
+                                }
+                            }
+                        } else {
+
+                            classid = "";
+                        }
+
                     }
                     reloadtable11();
-                    //console.log($("tr"));
-                    //console.log($($("tr")[0]).children());
-                    //console.log($($($("tr")[1]).children()[0]).children());
-                    //console.log($($($($("tr")[1]).children()[0]).children()[0]).text());
-                    for (var i = 0; i < $("tr").length; i++) {
-                        if ($($($($("tr")[i]).children()[0]).children()[0]).text() == classid) {
-                            $("tr").css("background", "");
-                            $($("tr")[i]).css("background", "pink");
-                        }
-                    }
+
                 }
                 , page: {
                     curr: 1 //重新从第 1 页开始
@@ -192,6 +203,7 @@
                 }
 
                 , { field: 'Remark', title: '备注', width: 165 }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
             ]]
 
         });
@@ -210,25 +222,34 @@
 
         //头工具栏事件
         table.on('toolbar(table11)', function (obj) {
-            switch (obj.event) {
-                case 'add':
-                    layer.open({
-                        type: 2,
-                        content: "/Obtainemployment/CDinterview/SResearchRecordRegister?param0=" + classid,
-                        title: "添加谈话",
-                        area: ['690px', '530px'],
-                        //area: ['850px', '760px'],
-                        success: function (layero, index) {
-                            let body = layui.layer.getChildFrame('body', index);
-                            body.find("#classnumnber").val(classid);
-                        },
-                        end: function () {
-                            isadd = true;
-                            reloadtable00();
-                        }
+            switch (type) {
+                case 'ed':
+                    layer.msg('不可操作已毕业班级!', { icon: 6, time: 1000 }, function () {
                     });
                     break;
-            };
+                case 'ing':
+                    switch (obj.event) {
+                        case 'add':
+                            layer.open({
+                                type: 2,
+                                content: "/Obtainemployment/CDinterview/CDSResearchRecordRegister?param0=" + classid,
+                                title: "添加谈话",
+                                area: ['690px', '530px'],
+                                //area: ['850px', '760px'],
+                                success: function (layero, index) {
+                                    let body = layui.layer.getChildFrame('body', index);
+                                    body.find("#classnumnber").val(classid);
+                                },
+                                end: function () {
+                                    isadd = true;
+                                    reloadtable00();
+                                }
+                            });
+                            break;
+                    };
+                    break;
+            }
+
         });
         form.on('select(select00)', function (data) {
             console.log(data.elem); //得到select原始DOM对象
@@ -254,7 +275,7 @@
             //obj.update(fields) //修改当前行数据
             classid = obj.data.classid;
             var mytr = obj.tr[0];
-            console.log( $("tr"));
+            console.log($("tr"));
             $("tr").css("background", "");
             $(mytr).css("background", "pink");
             $("#name1").val("");
@@ -272,6 +293,63 @@
             studentname = data.field.name1;
             reloadtable11();
             return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+        //监听行工具事件
+        table.on('tool(table11)', function (obj) {
+            isadd = true;
+            var data = obj.data;
+            //console.log(obj)
+            switch (type) {
+                case 'ed':
+                    layer.msg('不可操作已毕业班级!', { icon: 6, time: 1000 }, function () {
+                    });
+                    break;
+                case 'ing':
+                    if (obj.event == 'del') {
+                        layer.confirm('真的删除行么', function (index) {
+                            $.ajax({
+                                url: '/Obtainemployment/CDinterview/del',
+                                //async: false,
+                                data: { param0: data.ID },
+                                success: function (successdata) {
+                                    if (successdata.Success) {
+                                        layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
+
+                                        });
+                                    } else {
+                                        layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                                        });
+                                    }
+                                    reloadtable00();
+                                },
+                                error: function (errordata) {
+                                    layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            });
+                        });
+                    } else if (obj.event == 'edit') {
+                        layer.open({
+                            type: 2,
+                            content: "/Obtainemployment/CDinterview/edit?param0=" + data.ID,
+                            title: "修改谈话",
+                            area: ['690px', '420px'],
+                            //area: ['850px', '560px'],
+                            success: function (layero, index) {
+                                //let body = layui.layer.getChildFrame('body', index);
+                                //body.find("#classnumnber").val(classid);
+                            },
+                            end: function () {
+                                isadd = true;
+                                reloadtable00();
+                            }
+                        });
+                    }
+                    break;
+            }
         });
     });
 </script>

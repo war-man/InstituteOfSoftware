@@ -48,15 +48,14 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <summary>
         ///根据年度获取这个年度所有的自主就业的数据
         /// </summary>
-        /// <param name="Year"></param>
+        /// <param name="paramdata"></param>
         /// <returns></returns>
-        public List<SelfObtainRcored> GetSelfObtainRcoredsByYear(int Year) {
-            dbquarter = new QuarterBusiness();
-            dbempQuarterClass = new EmpQuarterClassBusiness();
-            var classlist= dbempQuarterClass.GetClassesByYear(Year);
+        public List<SelfObtainRcored> GetSelfObtainRcoredsBy_classlist(List<ClassSchedule> paramdata)
+        {
+            
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             List<StudentInformation> studentlist = new List<StudentInformation>();
-            foreach (var item in classlist)
+            foreach (var item in paramdata)
             {
                 studentlist.AddRange(dbproScheduleForTrainees.GetStudentsByClassid(item.id));
             }
@@ -66,6 +65,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             {
                 for (int j = 0; j < studentlist.Count; j++)
                 {
+
                     if (data[i].StudentNO != studentlist[j].StudentNumber)
                     {
                         if (j == studentlist.Count - 1)
@@ -106,7 +106,58 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return result;
         }
 
+        /// <summary>
+        /// 删除自主就业记录
+        /// </summary>
+        /// <param name="studentnumber">学生编号</param>
+        /// <returns></returns>
+        public bool del(string studentnumber) {
+           var  aa= this.GetSelfObtainRcoreds().Where(a => a.StudentNO == studentnumber).FirstOrDefault();
+            if (aa!=null)
+            {
+                var oldname = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/" + aa.ImgUrl;
+                if (this.DeleteImgFile(oldname))
+                {
 
+                    aa.IsDel = true;
+                    this.Update(aa);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+
+        /// <summary>
+        /// 删除文件
+        /// </summary>
+        /// <param name="fileUrl"></param>
+        /// <returns></returns>
+        public bool DeleteImgFile(string fileUrl)
+        {
+            try
+            {
+
+                if (System.IO.File.Exists(fileUrl))
+                {
+                    System.IO.File.Delete(fileUrl);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                return false;
+            }
+
+        }
 
     }
 }

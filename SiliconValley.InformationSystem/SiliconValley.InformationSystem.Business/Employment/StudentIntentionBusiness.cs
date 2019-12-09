@@ -65,5 +65,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
            return this.GetStudentIntentions().Where(a => a.QuarterID == quarterid && a.StudentNO == studentno).FirstOrDefault();
         }
+
+
     }
 }

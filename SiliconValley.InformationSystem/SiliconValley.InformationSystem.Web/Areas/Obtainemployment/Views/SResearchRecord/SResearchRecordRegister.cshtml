@@ -207,6 +207,7 @@
                     datatype: 'json',
                     success: function (successdata) {
                         if (successdata.Success) {
+
                             loadstudent(successdata.Data.Studentlist);
                             loadwantspce(successdata.Data.Specialtylist);
 
@@ -225,7 +226,8 @@
             }
             function loadstudent(data) {
                 console.log(data);
-                for (var i = 0; i < data.length; i++) {
+                if (data.length>0) {
+                    for (var i = 0; i < data.length; i++) {
                     var obj = _.template($("#muban0").html());
                     var html = '';
                     if (i == 0) {
@@ -239,6 +241,12 @@
                     $("#studentlistdiv").append($(html));
                     //form.render();
                 }
+                } else {
+                    layer.msg('该班级无可操作的学生!', { icon: 6, time: 1000 }, function () {
+                        close();
+                    });  
+                }
+                
             }
 
             function loadwantspce(data) {
@@ -248,7 +256,7 @@
                     var html = '';
                     if (i == 0) {
                         html = obj({ Id: data[i].Id, SpecialtyName: data[i].SpecialtyName, checked: "checked" });
-                    } else {
+                    } else { 
                         html = obj({ Id: data[i].Id, SpecialtyName: data[i].SpecialtyName, checked: "" });
                     }
                     $("#radiodivlist").append($(html));

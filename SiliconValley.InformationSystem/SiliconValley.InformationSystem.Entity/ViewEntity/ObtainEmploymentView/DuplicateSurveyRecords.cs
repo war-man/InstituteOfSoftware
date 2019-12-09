@@ -14,5 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
     {
         public string StudentNumber { get; set; }
         public List<SurveyRecords> Duplicatedata { get; set; }
+
+        public DuplicateSurveyRecords() {
+            Duplicatedata = new List<SurveyRecords>();
+        }
     }
 }
