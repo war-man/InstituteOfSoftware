@@ -399,6 +399,7 @@
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -1185,7 +1186,6 @@
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\Marking.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\StuPersonalScores.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />

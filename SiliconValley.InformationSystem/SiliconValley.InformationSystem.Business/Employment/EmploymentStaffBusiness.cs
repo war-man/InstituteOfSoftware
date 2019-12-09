@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
     public class EmploymentStaffBusiness : BaseBusiness<EmploymentStaff>
     {
 
-
+        private EmpClassBusiness dbempClass;
         /// <summary>
         /// 获取没离职的就业专员列表
         /// </summary>
@@ -232,6 +232,25 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public EmploymentStaff Getloginuser() {
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             return this.GetEmploymentByEmpInfoID(user.EmpNumber);
+        }
+
+
+        /// <summary>
+        /// 根据班级id返回带班老师的员工编号
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public EmploymentStaff GetStaffByclassid(int classid) {
+            dbempClass = new EmpClassBusiness();
+          EmpClass empClass=  dbempClass.GetEmpClassByclassid(classid);
+            if (empClass==null)
+            {
+                return null;
+            }
+            else
+            {
+               return this.GetEntity(empClass.EmpStaffID);
+            }
         }
     }
 }

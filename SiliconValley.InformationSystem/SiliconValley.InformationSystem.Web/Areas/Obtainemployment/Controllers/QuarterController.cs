@@ -122,7 +122,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 view.RegDate = item.RegDate;
                 view.Remark = item.Remark;
                 view.peoplenumber = item.peoplenumber;
-                var querylist1 = dbempQuarterClass.GetEmpQuartersByYearID(item.ID);
+                var querylist1 = dbempQuarterClass.GetEmpQuartersByQuarterID(item.ID);
                 var selectlist = querylist1.Select(a => new
                 {
                     a.ID,
@@ -162,7 +162,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             var querydata = dbproClassSchedule.GetClassGraduating();
 
-            var queryempQuarterclass = dbempQuarterClass.GetEmpQuartersByYearID(queryquarter.ID);
+            var queryempQuarterclass = dbempQuarterClass.GetEmpQuartersByQuarterID(queryquarter.ID);
             foreach (var item in queryempQuarterclass)
             {
                 var queryclass = dbproClassSchedule.GetEntity(item.Classid);
@@ -190,7 +190,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbquarter = new QuarterBusiness();
                 dbempQuarterClass = new EmpQuarterClassBusiness();
                 var queryquarter = dbquarter.GetEntity(param0.ID);
-                var quarterclasslist = dbempQuarterClass.GetEmpQuartersByYearID(param0.ID);
+                var quarterclasslist = dbempQuarterClass.GetEmpQuartersByQuarterID(param0.ID);
                 List<string> classlist = param1.Split(',').ToList();
 
                 if (classlist.Count != 0)

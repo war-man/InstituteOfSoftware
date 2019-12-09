@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
     /// <summary>
     /// 自主就业业务类
     /// </summary>
-   public class SelfObtainRcoredBusiness:BaseBusiness<SelfObtainRcored>
+    public class SelfObtainRcoredBusiness : BaseBusiness<SelfObtainRcored>
     {
 
         private QuarterBusiness dbquarter;
@@ -21,7 +21,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// 获取全部可用的深数据
         /// </summary>
         /// <returns></returns>
-        public List<SelfObtainRcored> GetSelfObtainRcoreds() {
+        public List<SelfObtainRcored> GetSelfObtainRcoreds()
+        {
             return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
@@ -32,18 +33,36 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public SelfObtainRcored GetSelfObtainByStudentno(string Studentno)
         {
-           return this.GetSelfObtainRcoreds().Where(a => a.StudentNO == Studentno).FirstOrDefault();
+            return this.GetSelfObtainRcoreds().Where(a => a.StudentNO == Studentno).FirstOrDefault();
         }
 
         /// <summary>
-        ///根据这个计划id 获取这个计划中自主就业的对象
+        ///根据这个计划id 获取这个计划中自主就业的对象 采用的是从全部数据中拿取
         /// </summary>
         /// <param name="QuarterID"></param>
         /// <returns></returns>
-        public List<SelfObtainRcored> GetSelfObtainsByQuarterID(int QuarterID) {
+        public List<SelfObtainRcored> GetSelfObtainsByQuarterID(int QuarterID)
+        {
             return this.GetSelfObtainRcoreds().Where(a => a.QuarterID == QuarterID).ToList();
         }
 
+
+        /// <summary>
+        /// 根据这个计划id 获取这个计划中自主就业的对象 采用的是从班级中数据一起拼接起来
+        /// </summary>
+        /// <param name="QuarterID"></param>
+        /// <returns></returns>
+        public List<SelfObtainRcored> GetSelfObtainsByQuarterIDi(int QuarterID)
+        {
+            dbempQuarterClass = new EmpQuarterClassBusiness();
+            List<EmpQuarterClass> list= dbempQuarterClass.GetEmpQuartersByQuarterID(QuarterID);
+            List<SelfObtainRcored> result = new List<SelfObtainRcored>();
+            foreach (var item in list)
+            {
+                result.AddRange(this.GetSelfObtainRcoredsByClassid(item.Classid));
+            }
+            return result;
+        }
 
         /// <summary>
         ///根据年度获取这个年度所有的自主就业的数据
@@ -52,7 +71,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<SelfObtainRcored> GetSelfObtainRcoredsBy_classlist(List<ClassSchedule> paramdata)
         {
-            
+
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             List<StudentInformation> studentlist = new List<StudentInformation>();
             foreach (var item in paramdata)
@@ -60,7 +79,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 studentlist.AddRange(dbproScheduleForTrainees.GetStudentsByClassid(item.id));
             }
             var data = this.GetSelfObtainRcoreds();
-        
+
             for (int i = data.Count - 1; i >= 0; i--)
             {
                 for (int j = 0; j < studentlist.Count; j++)
@@ -87,7 +106,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>dddddddd 
         /// <param name="classno"></param>
         /// <returns></returns>
-        public List<SelfObtainRcored> GetSelfObtainRcoredsByClassid(int classid) {
+        public List<SelfObtainRcored> GetSelfObtainRcoredsByClassid(int classid)
+        {
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             var data = this.GetSelfObtainRcoreds();
             var list1 = dbproScheduleForTrainees.GetTraineesByClassid(classid);
@@ -100,7 +120,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                     {
                         result.Add(data[i]);
                     }
-                   
+
                 }
             }
             return result;
@@ -111,9 +131,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="studentnumber">学生编号</param>
         /// <returns></returns>
-        public bool del(string studentnumber) {
-           var  aa= this.GetSelfObtainRcoreds().Where(a => a.StudentNO == studentnumber).FirstOrDefault();
-            if (aa!=null)
+        public bool del(string studentnumber)
+        {
+            var aa = this.GetSelfObtainRcoreds().Where(a => a.StudentNO == studentnumber).FirstOrDefault();
+            if (aa != null)
             {
                 var oldname = AppDomain.CurrentDomain.BaseDirectory + "uploadXLSXfile/SelfObtainRcoredImg/" + aa.ImgUrl;
                 if (this.DeleteImgFile(oldname))

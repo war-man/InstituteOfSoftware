@@ -41,7 +41,6 @@
                     <div class="layui-form-item">
                         <div class="layui-inline" id="mubandiv">
                             <label class="layui-form-label" id="querylable" style="width:100px">搜索选择框</label>
-
                             <div class="layui-input-inline" style="width:156px">
                                 <input type="text" name="name0" id="name0" lay-verify="required" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
                             </div>
@@ -139,7 +138,7 @@
             function loadtable() {
                 table00 = table.render({
                     elem: '#table00'
-                    , url: '/Obtainemployment/SelfObtainRcored/table00?leave=' + myleave + '&string2=' + string2
+                    , url: '/Obtainemployment/StudnetIntention/table00?leave=' + myleave + '&string2=' + string2
                     , skin: 'line' //行边框风格
                     , even: true //开启隔行背景
                     , limit: 20
@@ -151,19 +150,21 @@
                     }
                     , cols: [[ //标题栏
                         { type: 'radio' }
-                        , { field: 'ID', title: 'id'/*, width: 180*/, hide: true }
-                        , { field: 'studnetname', title: '学生姓名', width: 117 }
-                        , { field: 'empname', title: '审批人', width: 117 }
-                        , { field: 'classno', title: '班级', width: 117 }
-                        , { field: 'title', title: '毕业计划标题', width: 217 }
+                        , { field: 'ID', title: '意向id'/*, width: 180*/, hide: true }
+                        , { field: 'classnumnber', title: '班级编号', width: 117 }
+                        , { field: 'StudentName', title: '学生姓名', width: 117 }
+                        , { field: 'sex', title: '性别', width: 117 }
+                        , { field: 'Telephone', title: '联系方式', width: 117 }
+                        , { field: 'Relationship', title: '亲属关系', width: 217 }
+                        , { field: 'RelativesName', title: '亲属名字', width: 217 }
+                        , { field: 'Familyphone', title: '亲属电话', width: 217 }
+                        , { field: 'Nation', title: '籍贯', width: 217 }
+                        , { field: 'StuSchoolName', title: '毕业学校', width: 217 }
+                        , { field: 'AreaName', title: '意向城市', width: 217 }
+                        , { field: 'Salary', title: '意向薪资', width: 245 }
+                        , { field: 'identitydocument', title: '身份证', width: 245 }
                         , {
-                            field: 'ImgUrl', title: '图片', width: 145, templet: function (d) {
-                                return "<button class='layui-btn myimgbtn layui-btn-xs layui-btn-radius layui-btn-danger' myvalue='" + d.ImgUrl + "'>查看图片</button>"
-                            }
-                        }
-                        , { field: 'Remark', title: '备注', width: 245 }
-                        , {
-                            field: 'Date', title: '时间', width: 145, templet: function (d) {
+                            field: 'Date', title: '记录时间', width: 145, templet: function (d) {
                                 return TimeChange(d.Date);
                             }
                         }
@@ -214,9 +215,9 @@
                     case 'add':
                         layer.open({
                             type: 2,
-                            content: "/Obtainemployment/SelfObtainRcored/add?param0=" + empQuarterclassid,
+                            content: "/Obtainemployment/StudnetIntention/add?param0=" + empQuarterclassid,
                             title: "添加谈话",
-                            area: ['730px', '830px'],
+                            area: ['730px', '530px'],
                             //area: ['850px', '760px'],
                             success: function (layero, index) {
                             },
@@ -251,7 +252,7 @@
             //重新加载表格数据 url
             function loadtable00() {
                 table00.reload({
-                    url: '/Obtainemployment/SelfObtainRcored/table00'
+                    url: '/Obtainemployment/StudnetIntention/table00'
                     , done: function (res, curr, count) {
                         studentdata = res.data;
                     }
@@ -281,7 +282,6 @@
                 loadtable00();
                 return false;
             });
-
 
         });
 

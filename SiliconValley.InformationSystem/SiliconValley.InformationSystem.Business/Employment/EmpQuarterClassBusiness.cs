@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// 根据季度id返回参与季度的班级中间表对象
         /// </summary>
         /// <returns></returns>
-        public List<EmpQuarterClass> GetEmpQuartersByYearID(int QuarterID) {
+        public List<EmpQuarterClass> GetEmpQuartersByQuarterID(int QuarterID) {
           return  this.GetEmpQuarters().Where(a => a.QuarterID == QuarterID).ToList();
         }
 
@@ -60,7 +60,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             List<EmpQuarterClass> list = new List<EmpQuarterClass>();
             foreach (var item in query)
             {
-                list.AddRange(this.GetEmpQuartersByYearID(item.ID));
+                list.AddRange(this.GetEmpQuartersByQuarterID(item.ID));
             }
             foreach (var item in list)
             {

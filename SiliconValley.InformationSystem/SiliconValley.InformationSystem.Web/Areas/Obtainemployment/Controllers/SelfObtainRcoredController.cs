@@ -36,6 +36,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return View();
         }
 
+        #region /*于2019-12-9放弃这段代码 是以树形菜单显示年度 季度  班级，但是由于学生异动情况。数据显示效果不是特别佳 */
         /// <summary>
         /// 加载左侧的树形
         /// </summary>
@@ -124,7 +125,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
 
                             //第三层数据
-                            var empQuarterClasslist = dbempQuarterClass.GetEmpQuartersByYearID(Quarterslist[j].ID);
+                            var empQuarterClasslist = dbempQuarterClass.GetEmpQuartersByQuarterID(Quarterslist[j].ID);
 
                             if (!isJurisdiction)
                             {
@@ -138,7 +139,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                                             if (l == empquarterclasslist.Count - 1)
                                             {
                                                 empQuarterClasslist.RemoveAt(i);
-                                               
+
                                             }
                                         }
                                         else
@@ -203,6 +204,104 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         }
 
         /// <summary>
+        /// 数据表格
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="leave">1为年度，2为计划，3为班级</param>
+        /// <param name="string1">学生编号</param>
+        /// <param name="string2">eg:年度是2019  计划7  班级1801TA</param>
+        /// <returns></returns>
+        public ActionResult table00(int page, int limit, string leave, string string1, string string2)
+        {
+            dbselfObtainRcored = new SelfObtainRcoredBusiness();
+            dbquarter = new QuarterBusiness();
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
+            dbempQuarterClass = new EmpQuarterClassBusiness();
+            var data = new List<SelfObtainRcored>();
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
+
+            switch (leave)
+            {
+                case "1":
+                    var year = int.Parse(string2);
+                    if (!isJurisdiction)
+                    {
+                        var querylist1 = dbempQuarterClass.GetClassesByYearandempid(year, queryempstaff.ID);
+                        data = dbselfObtainRcored.GetSelfObtainRcoredsBy_classlist(querylist1);
+                    }
+                    else
+                    {
+                        var querylist1 = dbempQuarterClass.GetClassesByYear(year);
+                        data = dbselfObtainRcored.GetSelfObtainRcoredsBy_classlist(querylist1);
+                    }
+
+                    break;
+                case "2":
+                    var quarterid = int.Parse(string2);
+                    data = dbselfObtainRcored.GetSelfObtainsByQuarterIDi(quarterid);
+                    break;
+                case "3":
+                    var classid = int.Parse(string2);
+                    data = dbselfObtainRcored.GetSelfObtainRcoredsByClassid(classid);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(string1))
+            {
+                List<string> selfobtainid = string1.Split('-').ToList();
+                for (int i = data.Count - 1; i >= 0; i--)
+                {
+                    for (int j = 0; j < selfobtainid.Count; j++)
+                    {
+                        if (data[i].ID.ToString() != selfobtainid[j])
+                        {
+                            if (j == selfobtainid.Count - 1)
+                            {
+                                data.Remove(data[i]);
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            var resultdata = data.Select(a => new
+            {
+                a.ID,
+                a.Date,
+                a.ImgUrl,
+                a.Remark,
+                studnetname = dbproStudentInformation.GetEntity(a.StudentNO).Name,
+                empname = dbemploymentStaff.GetEmpInfoByEmpID(a.EmpStaffID).EmpName,
+                title = dbquarter.GetEntity(a.QuarterID).QuaTitle,
+                classno = dbproScheduleForTrainees.GetTraineesByStudentNumber(a.StudentNO).ClassID
+            }).ToList();
+
+            var data1 = resultdata.OrderByDescending(a => a.Date).Skip((page - 1) * limit).Take(limit).ToList();
+
+            var returnObj = new
+            {
+                code = 0,
+                msg = "",
+                count = resultdata.Count(),
+                data = data1
+            };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+
+
+        /// <summary>
         /// 添加自主就业
         /// </summary>
         /// <returns></returns>
@@ -246,6 +345,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 }
                 else
                 {
+                    dbemploymentStaff = new EmploymentStaffBusiness();
                     Base_UserModel user = Base_UserBusiness.GetCurrentUser();
                     var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
                     dbstudentIntention = new StudentIntentionBusiness();
@@ -308,100 +408,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
         }
 
-        /// <summary>
-        /// 数据表格
-        /// </summary>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
-        /// <param name="leave">1为年度，2为计划，3为班级</param>
-        /// <param name="string1">学生编号</param>
-        /// <param name="string2">eg:年度是2019  计划7  班级1801TA</param>
-        /// <returns></returns>
-        public ActionResult table00(int page, int limit, string leave, string string1, string string2)
-        {
-            dbselfObtainRcored = new SelfObtainRcoredBusiness();
-            dbquarter = new QuarterBusiness();
-            dbemploymentStaff = new EmploymentStaffBusiness();
-            dbproStudentInformation = new ProStudentInformationBusiness();
-            dbproScheduleForTrainees = new ProScheduleForTrainees();
-            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
-            dbempQuarterClass = new EmpQuarterClassBusiness();
-            var data = new List<SelfObtainRcored>();
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-            var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
-            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
-            
-            switch (leave)
-            {
-                case "1":
-                    var year = int.Parse(string2);
-                    if (!isJurisdiction)
-                    {
-                        var querylist1 = dbempQuarterClass.GetClassesByYearandempid(year, queryempstaff.ID);
-                        data = dbselfObtainRcored.GetSelfObtainRcoredsBy_classlist(querylist1);
-                    }
-                    else
-                    {
-                        var querylist1 = dbempQuarterClass.GetClassesByYear(year);
-                     data= dbselfObtainRcored.GetSelfObtainRcoredsBy_classlist(querylist1);
-                    }
-                   
-                    break;
-                case "2":
-                    var quarterid = int.Parse(string2);
-                    data = dbselfObtainRcored.GetSelfObtainsByQuarterID(quarterid);
-                    break;
-                case "3":
-                    var classid = int.Parse(string2);
-                    data = dbselfObtainRcored.GetSelfObtainRcoredsByClassid(classid);
-                    break;
-            }
-
-            if (!string.IsNullOrEmpty(string1))
-            {
-                List<string> selfobtainid = string1.Split('-').ToList();
-                for (int i = data.Count - 1; i >= 0; i--)
-                {
-                    for (int j = 0; j < selfobtainid.Count; j++)
-                    {
-                        if (data[i].ID.ToString() != selfobtainid[j])
-                        {
-                            if (j == selfobtainid.Count - 1)
-                            {
-                                data.Remove(data[i]);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            var resultdata = data.Select(a => new
-            {
-                a.ID,
-                a.Date,
-                a.ImgUrl,
-                a.Remark,
-                studnetname = dbproStudentInformation.GetEntity(a.StudentNO).Name,
-                empname = dbemploymentStaff.GetEmpInfoByEmpID(a.EmpStaffID).EmpName,
-                title = dbquarter.GetEntity(a.QuarterID).QuaTitle,
-                classno = dbproScheduleForTrainees.GetTraineesByStudentNumber(a.StudentNO).ClassID
-            }).ToList();
-
-            var data1 = resultdata.OrderByDescending(a => a.Date).Skip((page - 1) * limit).Take(limit).ToList();
-
-            var returnObj = new
-            {
-                code = 0,
-                msg = "",
-                count = resultdata.Count(),
-                data = data1
-            };
-            return Json(returnObj, JsonRequestBehavior.AllowGet);
-        }
+   
 
 
         /// <summary>

@@ -1,0 +1,261 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model StudnetIntention
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    @*<title>SResearchRecordRegister</title>*@
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .lad {
+            width: 60px;
+        }
+
+        .mytext {
+            min-height: 55px;
+            width: 464px;
+        }
+
+        .radiodiv {
+            width: 584px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="layui-collapse" lay-filter="collapse0" lay-accordion style="width:96%;margin-left:10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">学生列表</h2>
+                <div id="contentdiv" class="layui-colla-content layui-show">
+                    <form class="layui-form">
+                        <div id="studentlistdiv">
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="layui-collapse" lay-filter="collapse1" lay-accordion style="width:96%;margin-left:10px;">
+            <div class="layui-colla-item">
+                <h2 class="layui-colla-title">调研填写</h2>
+                <div id="contentdiv1" class="layui-colla-content ">
+                    <form class="layui-form">
+                        <div class="layui-container">
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+
+                                    <div class="layui-input-inline" style="margin-left:43px">
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <label class="layui-form-label lad">学生姓名:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="StudentName" class="layui-input" readonly="readonly" style="border:none" />
+                                        <input type="text" id="StudentNO" class="layui-input" readonly="readonly" style="display:none" />
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <label class="layui-form-label lad">班级名称:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="classnumber" class="layui-input" readonly="readonly" style="border:none" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <label class="layui-form-label lad">意向薪资:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="Salary" class="layui-input" />
+                                    </div>
+                                </div>
+
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <label class="layui-form-label lad">联系电话:</label>
+                                    <div class="layui-input-inline">
+                                        <input type="text" id="Telephone" class="layui-input" />
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label lad">意向城市:</label>
+                                    <div class=" radiodiv" id="city">
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                    <label class="layui-form-label lad"> 备注:</label>
+                                    <div class="layui-input-inline">
+                                        <textarea placeholder="请输入内容" name="Remark" class="layui-textarea mytext"></textarea>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="layui-row layui-form-item">
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
+                                    </div>
+                                </div>
+                                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                                    <div class="layui-input-block">
+                                        <button type="button" class="layui-btn layui-btn-radius" id="signout">退出</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/template" id="muban0">
+        <input type="radio" lay-filter="vvv" name="StudentNumber" value="{{=StudentNumber}}" title="{{=Name}}" {{=checked}}>
+    </script>
+    <script type="text/template" id="muban3">
+        <input type="radio" name="AreaID" lay-filter="myradio" value="{{=AreaID}}" title="{{=cityname}}" {{=checked}}>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        layui.use(['form', 'layer', 'element'], function () {
+            //获取设备信息
+            var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classid,classnumber;
+
+            jQuery(function () {
+                $("#classnumber").val('@Html.Raw(ViewBag.param0)');
+                loadstudent();
+                loadcity();
+                form.render();
+            });
+            function loadstudent() {
+                $('#studentlistdiv').children().remove();
+                var data = JSON.parse('@Html.Raw(ViewBag.list1)');
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var obj = _.template($("#muban0").html());
+                        var html = '';
+                        if (i == 0) {
+                            html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "checked" });
+                            StudentNO = data[i].StudentNumber;
+                            $('#StudentName').val(data[i].Name);
+                        } else {
+                            html = obj({ StudentNumber: data[i].StudentNumber, Name: data[i].Name, checked: "" });
+                        }
+
+                        $("#studentlistdiv").append($(html));
+                        //form.render();
+                    }
+                } else {
+                    layer.msg('该班级无可操作的学生!', { icon: 6, time: 1000 }, function () {
+                        close();
+                    });
+                }
+
+            }
+
+            function loadcity() {
+                var data = JSON.parse('@Html.Raw(ViewBag.list2)');
+                 $('#city').children().remove();
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban3").html());
+                    var html = '';
+                    if (i == 0) {
+                        html = obj({ AreaID: data[i].ID, cityname: data[i].AreaName, checked: "checked" });
+                        AreaID = data[i].ID;
+                    } else {
+                        html = obj({ AreaID: data[i].ID, cityname: data[i].AreaName, checked: "" });
+                    }
+
+                    $("#city").append($(html));
+                }
+
+            }
+            form.on('radio(vvv)', function (data) {
+                //console.log(data.elem); //得到radio原始DOM对象
+                //console.log(data.value); //被点击的radio的value值
+                $('#contentdiv').removeClass('layui-show');
+                $('#contentdiv1').addClass('layui-show');
+                $('#StudentName').val($(this).attr('title'));
+                StudentNO = data.value;
+            });
+            element.on('collapse(collapse0)', function (data) {
+                //console.log(data.show); //得到当前面板的展开状态，true或者false
+                //console.log(data.title); //得到当前点击面板的标题区域DOM对象
+                //console.log(data.content); //得到当  前点击面板的内容区域DOM对象
+                if (data.show) {
+                    $('#contentdiv1').removeClass('layui-show');
+                } else {
+                    $('#contentdiv1').addClass('layui-show');
+                }
+            });
+            element.on('collapse(collapse1)', function (data) {
+                if (data.show) {
+                    $('#contentdiv').removeClass('layui-show');
+                } else {
+                    $('#contentdiv').addClass('layui-show');
+                }
+            });
+
+            form.on('submit(demo1)', function (data) {
+                data.field.StudentNO = StudentNO;
+                var param0 = data.field;
+                console.log(param0);
+                $.ajax({
+                    url: '/Obtainemployment/StudnetIntention/add',
+                    type: 'POST',
+                    data: {param0:param0},
+                    success: function (successdata) {
+                         if (successdata.Success) {
+                            layer.msg('操作成功!', { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+                        } else {
+                            layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+                return false;
+            });
+            $('#signout').click(function () {
+                close();
+            });
+            function close() {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+    </script>
+</body>
+</html>

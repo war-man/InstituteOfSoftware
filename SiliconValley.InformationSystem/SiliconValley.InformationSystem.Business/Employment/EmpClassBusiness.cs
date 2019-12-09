@@ -370,5 +370,14 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return views;
         }
+
+        /// <summary>
+        /// 跟班级id返回员工带班记录
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public EmpClass GetEmpClassByclassid(int classid) {
+          return  this.GetIQueryable().Where(a => a.IsDel == false).Where(a => a.ClassId == classid).FirstOrDefault();
+        }
     }
 }

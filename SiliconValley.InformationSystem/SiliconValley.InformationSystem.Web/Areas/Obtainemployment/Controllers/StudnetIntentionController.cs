@@ -1,6 +1,8 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using SiliconValley.InformationSystem.Util;
 using System;
@@ -19,7 +21,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private StudentIntentionBusiness dbstudentIntention;
         private EmploymentAreasBusiness dbemploymentAreas;
         private ProScheduleForTrainees dbproScheduleForTrainees;
+        private EmploymentJurisdictionBusiness dbemploymentJurisdiction;
+        private EmploymentStaffBusiness dbemploymentStaff;
         private StudentDataKeepAndRecordBusiness dbstudentDataKeepAndRecord;
+        private ProClassSchedule dbproClassSchedule;
+        private EmploymentAreasBusiness dbarea;
+        private EmpQuarterClassBusiness dbempQuarterClass;
         // GET: Obtainemployment/StudnetIntention
         public ActionResult StudnetIntentionIndex()
         {
@@ -34,45 +41,98 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return View();
         }
 
-     
 
 
 
         /// <summary>
-        /// 
+        /// 数据表格
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
+        /// <param name="leave">1为年度，2为计划，3为班级</param>
+        /// <param name="string1">学生编号</param>
+        /// <param name="string2">eg:年度是2019  计划7  班级1001</param>
         /// <returns></returns>
-        public ActionResult SearchData(int page, int limit, string param0)
+        public ActionResult table00(int page, int limit, string leave, string string1, string string2)
         {
+          
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
             dbstudentIntention = new StudentIntentionBusiness();
-
             dbstudentDataKeepAndRecord = new StudentDataKeepAndRecordBusiness();
-            dbproScheduleForTrainees = new ProScheduleForTrainees();
-            dbemploymentAreas = new EmploymentAreasBusiness();
-            dbproStudentInformation = new ProStudentInformationBusiness();
-            var data = dbstudentIntention.GetStudnetIntentionsByclassid(int.Parse(param0));
+            var data = new List<StudnetIntention>();
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            EmploymentStaff queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
+
+            switch (leave)
+            {
+                case "1":
+                    var year = int.Parse(string2);
+                    if (!isJurisdiction)
+                    {
+                        //专员 自己带班的数据
+                      data=  dbstudentIntention.GetStudnetIntentionsByYearAndEmpid(year, queryempstaff.ID);
+                    }
+                    else
+                    {
+                        //主任 全部班级带班记录
+                        data = dbstudentIntention.GetStudnetIntentionsByYear(year);
+                    }
+
+                    break;
+                case "2":
+                    var quarterid = int.Parse(string2);
+                    if (!isJurisdiction)
+                    {
+                        //专员 自己带班的数据
+                        data = dbstudentIntention.GetIntentionsByEmpidAndQuarterid(quarterid, queryempstaff.ID);
+                    }
+                    else
+                    {
+                        //主任 全部班级带班记录
+                        data = dbstudentIntention.GetIntentionsByQuarterid(quarterid);
+                    }
+                    
+                    break;
+                case "3":
+                    var classid = int.Parse(string2);
+                    data = dbstudentIntention.GetStudnetIntentionsByclassid(classid);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(string1))
+            {
+                List<string> selfobtainid = string1.Split('-').ToList();
+                for (int i = data.Count - 1; i >= 0; i--)
+                {
+                    for (int j = 0; j < selfobtainid.Count; j++)
+                    {
+                        if (data[i].ID.ToString() != selfobtainid[j])
+                        {
+                            if (j == selfobtainid.Count - 1)
+                            {
+                                data.Remove(data[i]);
+                            }
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
             List<StudentIntentionView> Viewdata = new List<StudentIntentionView>();
 
             foreach (var item in data)
             {
                 StudentIntentionView view = new StudentIntentionView();
                 view.ID = item.ID;
-                if (item.AreaID == null)
-                {
-                    view.AreaName = "其他城市";
-                }
-                else
-                {
-                    view.AreaName = dbemploymentAreas.GetEntity(item.AreaID).AreaName;
-                }
-                
-                var tradata = dbproScheduleForTrainees.GetTraineesByStudentNumber(item.StudentNO);
-                view.classnumnber = tradata.ClassID;
+                view.AreaName = dbemploymentAreas.GetEntity(item.AreaID).AreaName;
                 var studentobj = dbproStudentInformation.GetEntity(item.StudentNO);
                 view.Familyphone = studentobj.Familyphone;
-                view.StudentNO = item.StudentNO;
                 var stringlist = studentobj.Guardian.Split(',');
                 view.RelativesName = stringlist[0].Replace(" ", "");
                 view.Relationship = stringlist[1].Replace(" ", "");
@@ -85,9 +145,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 view.Nation = studentobj.Nation;
                 view.Familyphone = studentobj.Familyphone;
                 view.identitydocument = studentobj.identitydocument;
+                view.Date = item.Date;
                 Viewdata.Add(view);
             }
-            var resultdata1 = Viewdata.OrderByDescending(a => a.StudentNO).Skip((page - 1) * limit).Take(limit).ToList();
+            var resultdata1 = Viewdata.OrderByDescending(a => a.Date).Skip((page - 1) * limit).Take(limit).ToList();
 
             var returnObj = new
             {
@@ -98,6 +159,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
         }
+
 
         /// <summary>
         /// 修改传入过来的意向id
@@ -114,17 +176,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             var querydata = dbstudentIntention.GetEntity(param0);
             var stuobj = dbproStudentInformation.GetEntity(querydata.StudentNO);
             StudentIntentionView view = new StudentIntentionView();
-            var undres = dbproScheduleForTrainees.GetTraineesByStudentNumber(querydata.StudentNO);
-            view.classnumnber = undres.ClassID;
+            //var undres = dbproScheduleForTrainees.GetTraineesByStudentNumber(querydata.StudentNO);
+            //view.classnumnber = undres.ClassID;
             var studentobj = dbproStudentInformation.GetEntity(querydata.StudentNO);
-            view.StudentNO = stuobj.StudentNumber;
+            //view.StudentNO = stuobj.StudentNumber;
             view.StudentName = studentobj.Name;
             view.Telephone = studentobj.Telephone;
             view.Salary = querydata.Salary;
 
             
 
-            view.AreaID = querydata.AreaID;
+            //view.AreaID = querydata.AreaID;
             view.ID = param0;
             ViewBag.querydata = Newtonsoft.Json.JsonConvert.SerializeObject(view);
 
@@ -185,6 +247,62 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
 
+        }
+
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="param0">班级id</param>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult add(int param0) { 
+            dbproClassSchedule=new ProClassSchedule();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbarea = new EmploymentAreasBusiness();
+            var classobj= dbproClassSchedule.GetEntity(param0);
+            List<StudentInformation> list1 = dbproScheduleForTrainees.GetStudentsByClassid(param0);
+            List<EmploymentAreas> list2 = dbarea.GetAll();
+            ViewBag.list1 = Newtonsoft.Json.JsonConvert.SerializeObject(list1);
+            ViewBag.list2 = Newtonsoft.Json.JsonConvert.SerializeObject(list2);
+            ViewBag.param0 = classobj.ClassNumber;
+            return View();
+        }
+        
+        [HttpPost]
+        /// <summary>
+        /// 添加
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public ActionResult add(StudentIntentionView param0) {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                dbempQuarterClass = new EmpQuarterClassBusiness();
+                dbemploymentStaff = new EmploymentStaffBusiness();
+                dbstudentIntention = new StudentIntentionBusiness();
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+               var qmpquarter= dbempQuarterClass.GetEmpQuarters().Where(a => a.Classid == param0.classid).FirstOrDefault();
+                dbstudentIntention = new StudentIntentionBusiness();
+                StudnetIntention intention = new StudnetIntention();
+                intention.AreaID = param0.AreaID;
+                intention.Date = DateTime.Now;
+                intention.IsDel = false;
+                intention.Remark = param0.Remark;
+                intention.Salary = param0.Salary;
+                intention.StudentNO = param0.StudentNO;
+                intention.Empinfoid = queryempstaff.ID;
+                intention.QuarterID = qmpquarter.QuarterID;
+                dbstudentIntention.Insert(intention);
+                ajaxResult.Success = true;
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
     }
 }
