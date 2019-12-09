@@ -11,6 +11,7 @@ using System.Xml;
 
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Entity.MyEntity;
    
     public class StudentExamSysController : Controller
@@ -103,8 +104,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
             var EXAMVIEW = db_exam.ConvertToExaminationView(exam);
             ViewBag.EXAMVIEW = EXAMVIEW;
-            
-            //学员进入答题
+
+            //~获取答卷信息.
+
+            //获取当前登录学员
+           var answerSheetInfo = db_stuExam.AnswerSheetInfos(examid, "19082001033000001");
+
+            ViewBag.AnswerSheetInfo = answerSheetInfo;
 
             return View();
         }
@@ -120,7 +126,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 //获取考试的类型
-
+                
 
                 var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
 

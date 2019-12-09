@@ -1309,5 +1309,87 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
            
 
         }
+
+        /// <summary>
+        /// 设置阅卷老师
+        /// </summary>
+        /// <param name="examid">考试id</param>
+        /// <param name="classroomid">教室id</param>
+        /// <param name="teacher">阅卷老师编号</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SetMarkingTeacher(int examid, int classroomid, string teacher)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                //根据classroomid 获取考场id
+               var examroom = db_examination.AllExaminationRoom().Where(d => d.Classroom_Id == classroomid && d.Examination == examid).FirstOrDefault();
+
+                //获取当前的阅卷老师
+                var markingteacher = db_scores.AllMarkingArrange().Where(d => d.ExamID == examid && d.ExamRoom == examroom.ID).FirstOrDefault();
+
+                if (markingteacher == null)
+                {
+
+                    db_scores.SetMarkingTeacher(examid, examroom.ID, teacher);
+
+                    result.ErrorCode = 200;
+                    result.Msg = "设置成功";
+                    result.Data = null;
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+                TeacherBusiness dbteacher = new TeacherBusiness();
+                 var teacherobj = dbteacher.GetTeachers().Where(d => d.EmployeeId == markingteacher.MarkingTeacher).FirstOrDefault();
+
+
+                var isBiginMarking = false;
+
+                //获取考场学员
+                var stulist = db_scores.CandidateinfosByExamroom(examid, classroomid);
+
+                foreach (var item in stulist)
+                {
+                   var temp = db_scores.AllExamScores().Where(d => d.Examination == examid && d.CandidateInfo == item.CandidateNumber && d.Reviewer == teacherobj.TeacherID).FirstOrDefault();
+
+                    if (temp != null)
+                    {
+                        isBiginMarking = true;
+                        break;
+                    }
+                }
+
+                if (markingteacher != null && isBiginMarking)
+                {
+                    result.ErrorCode = 502;
+                    result.Msg = "阅卷人修改失败!  原因:当前阅卷人已经开始阅卷";
+                    result.Data = null;
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    db_scores.SetMarkingTeacher(examid, examroom.ID, teacher);
+
+                    result.ErrorCode = 200;
+                    result.Msg = "设置成功";
+                    result.Data = null;
+                }
+  
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "服务器错误";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
     }
 }

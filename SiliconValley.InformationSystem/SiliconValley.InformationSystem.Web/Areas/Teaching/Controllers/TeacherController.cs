@@ -15,6 +15,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business;
 
     [CheckLogin]
     public class TeacherController : Controller
@@ -742,14 +743,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult goodmajor(int id)
         {
+            var empposi =db_emp.GetPositionByEmpid( db_teacher.GetTeacherByID(id).EmployeeId);
+
+            if (empposi.Pid == 4025)
+            {
+             
+
+                ViewBag.isMajorTeacher = 0; ViewBag.teacher = db_teacher.GetTeacherByID(id);
+                return View("EngsilshTeacherGood");
+            }
+           
             //提供专业
 
-           ViewBag.majors = db_teacher.GetMajorByTeacherID(id);
+            ViewBag.majors = db_teacher.GetMajorByTeacherID(id);
 
 
             ViewBag.Teacher = db_teacher.GetTeacherByID(id);
             return View();
 
+        }
+
+
+        /// <summary>
+        /// 设置英语老师课上那个阶段英语课
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EngsilshTeacherGood()
+        {
+           
+            return View();
         }
 
         /// <summary>
@@ -1281,6 +1303,70 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult AllGrandData()
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var grands = db_grand.AllGrand();
+
+                result.Msg = "成功";
+                result.Data = grands;
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Msg = "失败";
+                result.Data = null;
+                result.ErrorCode = 500;
+            }
+
+            return Json(result,JsonRequestBehavior.AllowGet);
+            
+        }
+
+
+        /// <summary>
+        /// 获取英语课程
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EngelishCourseData()
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                CourseBusiness dbcourse = new CourseBusiness();
+
+                var courselist = dbcourse.GetIQueryable().Where(d => d.CourseType_Id == 13).ToList();
+
+                List<CourseView> viewlist = new List<CourseView>();
+
+                foreach (var item in courselist)
+                {
+                   var tempobj = dbcourse.ToCourseView(item);
+
+                    if (tempobj != null)
+                        viewlist.Add(tempobj);
+                }
+
+                result.Data = viewlist;
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+            
         }
 
     }

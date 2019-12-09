@@ -330,10 +330,10 @@
     <Content Include="Areas\ExaminationSystem\css\style1.css" />
     <Content Include="Areas\ExaminationSystem\css\textareafullscreen.css" />
     <Content Include="Areas\ExaminationSystem\Files\AnswerSheet\19081997072400002_5\AnswerSheet.txt" />
-    <Content Include="Areas\ExaminationSystem\Images\已完.jpg" />
     <Content Include="Areas\ExaminationSystem\Images\img1.png" />
     <Content Include="Areas\ExaminationSystem\Images\已完成.jpg" />
     <Content Include="Areas\ExaminationSystem\Images\商务科技.png" />
+    <Content Include="Areas\ExaminationSystem\Images\未完成.jpg" />
     <Content Include="Areas\ExaminationSystem\Images\考场.jpg" />
     <Content Include="Areas\ExaminationSystem\js\index.js" />
     <Content Include="Areas\ExaminationSystem\js\jiami.js" />
@@ -1204,6 +1204,8 @@
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\EmpSurveyView.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ArrangeSeatingChart.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\MarkingArrangement.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\ClassCourseArrangement.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\EngsilshTeacherGood.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

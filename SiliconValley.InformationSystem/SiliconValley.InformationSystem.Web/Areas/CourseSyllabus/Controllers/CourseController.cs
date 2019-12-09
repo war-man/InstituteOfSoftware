@@ -15,6 +15,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     using SiliconValley.InformationSystem.Business.Common;
 
     using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
+    using SiliconValley.InformationSystem.Business;
 
     [CheckLogin]
     public class CourseController : Controller
@@ -23,13 +24,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         private readonly SpecialtyBusiness db_major;
         private readonly GrandBusiness db_grand;
         private readonly CourseTypeBusiness db_coursetype;
+        private readonly BaseBusiness<ClassSchedule> db_class;
         public CourseController()
         {
             this.db_course = new CourseBusiness();
             this.db_major = new SpecialtyBusiness();
             this.db_grand = new GrandBusiness();
             this.db_coursetype = new CourseTypeBusiness();
-
+            db_class = new BaseBusiness<ClassSchedule>();
         }
 
 
@@ -294,5 +296,51 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
                 return Json(ex.Message, JsonRequestBehavior.AllowGet);
             }            
         }
+
+
+        /// <summary>
+        /// 班级课程安排
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ClassCourseArrangement()
+        {
+            return View();
+        }
+
+        public ActionResult ClassCourseArrangementData(int page)
+        {
+            
+
+            var allclasslist = db_class.GetIQueryable().OrderBy(d => d.id).ToList();
+            var totalCount = allclasslist.Count;
+
+            var skiplist = allclasslist.Skip((page-1)*8).Take(8).ToList();
+
+
+            List<ClassCourseView> resultlist = new List<ClassCourseView>();
+            foreach (var item in skiplist)
+            {
+               var teacherclass= db_course.CurrentClassCourse(item.id);
+                if (teacherclass != null)
+                {
+                    resultlist.Add(teacherclass);
+                }
+            }
+
+            var objresult = new
+            {
+
+                status = 0,
+                message = "成功",
+                total = totalCount,
+                data = resultlist
+
+            };
+
+            return Json(objresult, JsonRequestBehavior.AllowGet);
+
+        }
+
+
     }
 }

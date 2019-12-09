@@ -314,6 +314,7 @@
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
     <Compile Include="ViewEntity\ChannelSortView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
+    <Compile Include="ViewEntity\ClassCourseView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassSchedltData.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
@@ -342,6 +343,7 @@
     <Compile Include="ViewEntity\ExaminationRoomView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\AnswerQuestionView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetHelp.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetInfosView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ChoiceQuestionTableView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ComputerTestQuestionsView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeEnum.cs" />

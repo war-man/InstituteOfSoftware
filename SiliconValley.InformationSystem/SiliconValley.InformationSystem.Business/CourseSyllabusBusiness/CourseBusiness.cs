@@ -14,8 +14,15 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
     /// <summary>
     /// 课程业务类
     /// </summary>
-    public class CourseBusiness:BaseBusiness<Curriculum>
+    public class CourseBusiness : BaseBusiness<Curriculum>
     {
+
+        private BaseBusiness<ClassTeacher> db_classteacher;
+
+        public CourseBusiness()
+        {
+            db_classteacher = new BaseBusiness<ClassTeacher>();
+        }
 
 
         /// <summary>
@@ -128,6 +135,47 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         public List<Curriculum> GetRelevantCurricul(int grand_id, int? marjon_id)
         {
            return this.GetCurriculas().OrderBy(d=>d.Sort).Where(d => d.Grand_Id == grand_id && d.MajorID == marjon_id && d.IsDelete==false).ToList();
+
+        }
+
+
+        public ClassCourseView ConvertToView(ClassTeacher classTeacher)
+        {
+
+            if (classTeacher == null)
+                return null;
+
+            ClassCourseView view = new ClassCourseView();
+
+            view.BeginDate = classTeacher.BeginDate;
+
+            BaseBusiness<ClassSchedule> dbclass = new BaseBusiness<ClassSchedule>();
+
+            view.ClassNumber = dbclass.GetList().Where(d => d.id == classTeacher.ClassNumber).FirstOrDefault();
+            view.EndDate = classTeacher.EndDate;
+            view.ID = classTeacher.ID;
+            view.IsDel = classTeacher.IsDel;
+            view.Skill = this.GetCurriculas().Where(d => d.CurriculumID == classTeacher.Skill).FirstOrDefault();
+
+            TeacherBusiness dbteacher = new TeacherBusiness();
+            view.Teacher = dbteacher.GetEmpByEmpNo(dbteacher.GetTeacherByID(classTeacher.TeacherID).EmployeeId);
+
+            return view;
+        }
+
+
+
+        /// <summary>
+        /// 班级课程
+        /// </summary>
+        /// <returns></returns>
+        public ClassCourseView CurrentClassCourse(int classSchedule)
+        {
+
+           var obj = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classSchedule && d.IsDel==false).FirstOrDefault();
+
+            return this.ConvertToView(obj);
+            
 
         }
     }

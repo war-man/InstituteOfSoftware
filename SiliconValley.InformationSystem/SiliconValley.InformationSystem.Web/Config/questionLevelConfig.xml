@@ -72,6 +72,10 @@
       <questionLevel levelid="2" Percentage="30"></questionLevel>
       <questionLevel levelid="3" Percentage="20"></questionLevel>
     </anwserQuestionScores>
+
+    <computerQuestionScores>
+      <total>60</total>
+    </computerQuestionScores>
   </scores>
 
 </root>

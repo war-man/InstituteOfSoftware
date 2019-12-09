@@ -1,0 +1,140 @@
+﻿
+@{
+    ViewBag.Title = "ClassCourseArrangement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+ 
+    <style>
+        #mywarp {
+            width: 99%;
+            margin: 0 auto;
+            border: 1px solid gray;
+        }
+
+        #mycontent {
+            float:left;
+            width:90%;
+            height:400px;
+            
+        }
+
+        #left {
+            float: left;
+            width: 10%;
+            height: 400px;
+            
+        }
+
+        .courseItem {
+            margin-top: 5px;
+            border-bottom:1px solid gray;
+            
+        }
+
+        .class_name {
+            margin:10px auto;
+        }
+
+        .courseItem div {
+            display:inline-block;
+            margin-left:50px;
+        }
+
+        .courseItem div label {
+            font-size:18px;
+        }
+
+        .item {
+            margin-top:50px;
+        }
+
+        .checkMore {
+            cursor:pointer;
+        }
+
+    </style>
+    
+ }
+
+<div id="mywarp">
+
+    <div id="left">
+
+    </div>
+    <div id="mycontent">
+        
+
+       
+    </div>
+
+</div>
+
+<script type="text/template" id="muban">
+
+    <div class="item" classid="{{=classid}}">
+        <div class="class_name">
+            <h3>{{=className}}</h3>
+        </div>
+
+        <div class="courseItem">
+            <div><label>课程：</label><span></span>{{=CourseName}}</div>
+            <div><label>上课老师：</label><span></span>{{=TeacherName}}</div>
+            <div><label>开始时间：</label><span></span>{{=BeginDate}}</div>
+            <div><label>状态：</label><span></span>{{=status}}</div>
+
+            <div class="checkMore" style="margin-left:90%;"><span class="layui-badge layui-bg-blue">查看更多</span></div>
+        </div>
+    </div>
+
+</script>
+@section script{
+<script src="~/Areas/Teaching/Scripts/util.js"></script>
+
+<script src="~/Scripts/underscore.js"></script>
+    <script>
+        layui.use(['layer', 'flow'], function () {
+
+            var layer = layui.layer;
+            var flow = layui.flow;
+
+            flow.load({
+                elem: '#mycontent' //指定列表容器
+                , isAuto: true
+                , done: function (page, next) { 
+                    var lis = [];
+                    
+                    $.get('/CourseSyllabus/Course/ClassCourseArrangementData?page=' + page, function (res) {
+                       
+                        layui.each(res.data, function (index, item) {
+                            console.log(item);
+                            var status; var beginDate;
+
+                            if (item.IsDel == false) {
+                                status = "正常";
+                            }
+                            else {
+                                status: "过去式";
+                            }
+
+                            var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
+                            beginDate = formaDateUtc(dateutc);
+
+                            
+                            var template = _.template($("#muban").html());
+                            var templateData = template({ classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status });
+                            $("#mycontent").append(templateData);
+
+                        });
+
+                        
+                        next(lis.join(''), page < res.total);
+                    });
+                }
+            });
+
+        });
+    </script>    
+}
+

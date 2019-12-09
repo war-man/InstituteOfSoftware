@@ -257,6 +257,34 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             this.Delete(score);
         }
+
+
+        /// <summary>
+        /// 设置阅卷老师
+        /// </summary>
+        public void SetMarkingTeacher(int examid, int examroomid, string empid)
+        {
+            var temp = this.AllMarkingArrange().Where(d => d.ExamID == examid && d.ExamRoom == examroomid &&d.MarkingTeacher == empid).FirstOrDefault();
+
+            if (temp == null)
+            {
+                MarkingArrange markingArrange = new MarkingArrange();
+                markingArrange.ExamID = examid;
+                markingArrange.ExamRoom = examroomid;
+                markingArrange.IsFinsh = false;
+                markingArrange.MarkingTeacher = empid;
+
+                db_markingArrange.Insert(markingArrange);
+
+                return;
+            }
+
+            temp.MarkingTeacher = empid;
+            db_markingArrange.Update(temp);
+
+           
+             
+        }
         
 
     }

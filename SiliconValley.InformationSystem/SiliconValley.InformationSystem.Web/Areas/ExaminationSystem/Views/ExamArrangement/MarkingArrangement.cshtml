@@ -177,7 +177,7 @@
                                 status = "已完成";
                             }
                             else {
-                                img = '/Areas/ExaminationSystem/Images/完成.jpg'
+                                img = '/Areas/ExaminationSystem/Images/未完成.jpg'
                                 status = "未完成";
                             }
 
@@ -298,6 +298,7 @@
 
 
                         $("#teacherlist").slideDown();
+
                         loadTeacher();
 
                         //添加一个控件
@@ -312,6 +313,8 @@
             $(document).off("dblclick", ".teacherItem .teacheritemlist button").on("dblclick", ".teacherItem .teacheritemlist button", function () {
 
                 //首先判断是否选中了考场
+
+                var teacher = $(this).parent().attr("empid");
 
                 var classroom;
 
@@ -332,12 +335,42 @@
                     return;
 
                 }
+                //获取考试ID  教室ID 教员
 
-                layer.confirm('is not?', { icon: 3, title: '提示' }, function (index) {
-
+                var examid = table.checkStatus('ExamTory').data[0].ID;
+                var title = table.checkStatus('ExamTory').data[0].Title;
+                
+                layer.confirm('考试：' + title + '  教室:' + classroom + "  阅卷老师：" + $(this).text(), { icon: 3, title: '提示' }, function (index) {
+                    var layindex = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
                    //发送请求  设置阅卷人
 
                     layer.msg("正在发送请求。。。。。。。");
+
+                    
+
+                    $.post("/ExaminationSystem/ExamArrangement/SetMarkingTeacher", { examid: examid, classroomid: classroom, teacher: teacher }, function (result) {
+
+                        console.log(result);
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.msg('设置成功', { icon: 1 }, function () {
+
+                                window.location.reload();
+                            });
+
+                            layer.close(layindex);
+                        }
+                        else {
+                            layer.close(layindex);
+
+                            layer.msg(result.Msg, { icon: 2 }, function () {
+                                $("#markingArrangementdiv").hide();
+                                $("#teacherlist").hide();
+                                
+                            });
+                        }
+                    });
 
                     layer.close(index);
                 });
