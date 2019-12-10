@@ -1,0 +1,152 @@
+﻿
+@{
+    ViewBag.Title = "AnpaiNotMarginView";
+    Layout = null;
+}
+
+<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+<style>
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
+    #but1
+    {
+        position: absolute;
+        top: 13%;
+        left: 35%;
+        width: 36px;
+        height: 36px;
+        text-align: center;
+        line-height: 36px;
+    }
+
+        #but1:hover
+        {
+            background-color: aqua;
+        }
+
+    #Nation
+    {
+        width: 100px;
+    }
+
+    .linu
+    {
+        width: 200px;
+    }
+
+    .mm
+    {
+        border: 1px solid black;
+    }
+
+    .LableCss1
+    {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right
+    }
+
+    .layButCss1
+    {
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        background-color: #009688;
+        color: #fff;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        border: 0px solid #C9C9C9;
+        background-color: #fff;
+        color: #555;
+        height: 18px;
+        line-height: 18px
+    }
+
+    .layui-unselect
+    {
+        width: 130px;
+        border-radius: 5px;
+    }
+</style>
+
+<div id="system_div" style="margin:180px auto;" >
+    <form class="layui-form" id="system_form">        
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                    <label class="LableCss1">排课日期:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="anpaitime" name="anpaitime" class="layui-input" placeholder="排课日期" />
+                    </div>
+                </div>
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                    <label class="LableCss1">课程类型:</label>
+                    <div id="myclass" class="layui-input-block">                        
+                        @Html.DropDownList("currtype", ViewBag.select as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }})                         
+                    </div>
+                </div>
+                <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                    <div class="layui-input-block">
+                        <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpinomargin" value="确定排课" />
+                    </div>
+                </div>
+
+            </div>         
+    </form>
+</div>
+
+<script src="~/Scripts/jquery-3.3.1.min.js"></script>
+<script src="~/Scripts/layui/layui.js"></script>
+<script>
+    layui.use(['form', 'laydate'], function () {
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        laydate.render({
+            elem: '#anpaitime'
+            , type: 'date'
+            , range: '到'
+            , format: 'yyyy-MM-dd'
+            , theme: 'grid'
+        });
+
+        //监听提交
+        form.on('submit(Anpinomargin)', function (data) {
+            console.log(data.field);
+            $.ajax({
+                url: '/Educational/Reconcile/AnpaiNotMarginFunction',
+                data: data.field,
+                type: 'POST',
+                success: function (sucdata) {
+                    if (sucdata.Success == false) {
+                        layer.msg('系统错误，请重试!!!', { icon: 2 });
+                    } else {
+                        layer.msg('操作成功！', { icon: 1, shade: 0.8 }, function () {
+                            //当你在iframe页面关闭自身时
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); //再执行关闭
+                        });
+                    }
+                }
+            });
+            return false;
+        });
+    });
+
+</script>
+

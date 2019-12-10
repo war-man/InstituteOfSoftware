@@ -178,6 +178,20 @@
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
         //加载上午下午1234节
+        function My_sametime2(num) {
+            if (num == 1) {
+                $("#childview_timetype option").each(function (index, ele) {
+                    $(ele).remove();
+                });
+            }
+            var timetype = $("#childview_timetype");
+            $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
+            $('<option value="下午12节">上午1/2节</option>').appendTo(timetype);             
+            $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);   
+            $('<option value="下午34节">上午3/4节</option>').appendTo(timetype);
+            $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
+             
+        }
         function My_sametime(num) {   
             if (num==1) {
                 $("#childview_timetype option").each(function (index, ele) {
@@ -185,11 +199,16 @@
                 });
             }               
                 var timetype = $("#childview_timetype");
-                $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
-                $('<option value="上午12节">上午1/2节</option>').appendTo(timetype);
-                $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);
-                $('<option value="上午34节">上午3/4节</option>').appendTo(timetype);
-                $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
+            $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
+            if (mytimename.length>0) {
+                if (mytimename == "上午") {
+                    $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
+                    $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);
+                } else {
+                    $('<option value="上午12节">上午1/2节</option>').appendTo(timetype);
+                    $('<option value="上午34节">上午3/4节</option>').appendTo(timetype);
+                }
+            }                                
         }
         //加载上午，下午
         function My_times(num) {
@@ -203,16 +222,34 @@
             $('<option value="上午">上午</option>').appendTo(timetype);
             $('<option value="下午">下午</option>').appendTo(timetype);   
         }
+        //指定时间段
+        function PostTimesName(name) {
+            $("#childview_timetype")[0].innerHTML = "";
+            if (mytimename.length>0) {
+                $('<option value=' + name + '>' + name + '</option>').appendTo($("#childview_timetype"));
+            }             
+        }
         //加载整天
         function My_zhengtian() {
             var timetype = $("#childview_timetype");
             $('<option value="整天">整天</option>').appendTo(timetype);
         }
+        var mytimename = "";
         layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             laydate.render({
-                elem: '#childview_AnpiDate'
+                elem: '#childview_AnpiDate',
+                done: function (value) {
+                    //清空教室跟任课老师
+                    $("#childvieroom_div")[0].innerHTML = "";
+                    $("#childvieroom_div")[0].innerHTML = "";
+                    form.val("manual_form", {  
+                        "childview_timetype": "0"  
+                         
+                    });
+                    form.render();
+                }
             });
             var classnumber = 0;
             //阶段点击事件(获取班级)
@@ -271,7 +308,7 @@
                         //清空老师
                         $("#childteacher_div")[0].innerHTML = "";
                     } else {
-                        var mydata = { "Time": anpaiTime, "timeName": data.value }
+                        var mydata = { "Time": anpaiTime, "timeName": data.value, "curname": $("#childview_currname").val() }
                         //获取教室
                         $.ajax({
                             url: '/Educational/Reconcile/GetEmptyRoom',
@@ -291,7 +328,7 @@
                         var type = $("#childview_Currtype").val();//获取上课类型
                         var tt = type.substr(0,2);
                         var curr = $("#childview_currname").val();
-                        var mydata2 = { "Time": anpaiTime, "timeName": data.value, "Curr": curr }
+                        var mydata2 = { "Time": anpaiTime, "timeName": data.value, "Curr": curr, "class_id": classnumber}
                         if (type != "0") {
                             if (type == "专业课") {
                                 $.ajax({
@@ -310,7 +347,7 @@
                                 });
                             } else if (tt != "0" && tt != "专业") {                                
                                 //根据其他课程（职素，英语，数学，语文）获取任课老师
-                                var Getdata = { "Curr": tt, "Time": anpaiTime, "timeName": data.value };
+                                var Getdata = { "Curr": tt, "Time": anpaiTime, "timeName": data.value, "class_id": classnumber };
                                 $.ajax({
                                     url: '/Educational/Reconcile/GetNoMajoiThercher',
                                     type: 'POST',
@@ -334,8 +371,15 @@
             form.on('select(class_child)', function (data) {
                 //获取班级
                 classnumber = data.value;
+                //获取这个班级上专业课的时间段
+                $.ajax({
+                    url: '/Educational/Reconcile/TimeName/' + data.value,
+                    success: function (sucdd) {
+                        mytimename = sucdd;
+                    }
+                });
             });
-            //获取课程和任课老师
+            //获取课程
             form.on('select(childview_Currtype)', function (data) {
                 form.val("manual_form", {
                     "childview_timetype": "0"   //给课程类型设为初始值(其他)          
@@ -353,7 +397,7 @@
                 } else {
                     //如果类型选择的是其他
                     if (data.value == "0") {
-                        My_sametime(1);
+                        My_sametime2(1);
                         My_times(2);
                         My_zhengtian();
                         form.render(); //更新全部
@@ -367,7 +411,7 @@
                         var type = data.value;
                         if (type.indexOf("专业") != -1) {
                             //上课时间段只能是上午或下午
-                            My_times(1);
+                            PostTimesName(mytimename);
                             $("#childviewcurr_div")[0].innerHTML = "";
                             //添加专业课程
                             $.ajax({
