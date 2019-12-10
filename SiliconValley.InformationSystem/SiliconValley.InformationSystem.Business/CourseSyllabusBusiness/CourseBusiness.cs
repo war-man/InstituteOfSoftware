@@ -178,5 +178,85 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             
 
         }
+
+        /// <summary>
+        /// 获取班级下一门课程
+        /// </summary>
+        /// <returns></returns>
+        public Curriculum GetClassNextCourse(int classid)
+        {
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+
+            var courseid = dbteacherclass.GetClassTeachers().Where(d => d.ClassNumber == classid && d.IsDel == false).FirstOrDefault().Skill;
+            var course = this.GetCurriculas().Where(d => d.CurriculumID == courseid).FirstOrDefault();
+
+             return  this.GetCurriculas().Where(d => d.Grand_Id == course.Grand_Id && d.MajorID == course.MajorID && d.Sort == course.Sort+1).FirstOrDefault();
+
+        }
+
+
+        /// <summary>
+        /// 给班级安排课程和教学老师
+        /// </summary>
+        /// <param name="classTeacher"></param>
+        public void EditClassCourseArrangment(ClassTeacher classTeacher)
+        {
+           var classteacherlist = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classTeacher.ClassNumber && d.IsDel == false).ToList();
+
+            if (classteacherlist != null)
+            {
+                foreach (var item in classteacherlist)
+                {
+                    item.IsDel = true;
+                    item.EndDate = DateTime.Now;
+
+                    db_classteacher.Update(item);
+                }
+            }
+
+            
+            classTeacher.EndDate = null;
+            classTeacher.IsDel = false;
+
+            db_classteacher.Insert(classTeacher);
+
+
+        }
+
+        public void UsingOrProhibit(string status, int classteacherid)
+        {
+           var classteacher =  db_classteacher.GetIQueryable().Where(d => d.ID == classteacherid).FirstOrDefault();
+
+            //如果为启用  则要禁用掉其他的 
+
+            if (status == "true")
+            {
+                var templist = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classteacher.ClassNumber && d.IsDel == false).ToList();
+
+                if (templist != null)
+                {
+                    foreach (var item in templist)
+                    {
+                        item.IsDel = true;
+                        db_classteacher.Update(item);
+                    }
+                }
+
+
+                classteacher.IsDel = false;
+
+                db_classteacher.Update(classteacher);
+            }
+
+            else
+            {
+                //禁用
+                classteacher.IsDel = true;
+
+                db_classteacher.Update(classteacher);
+
+            }
+
+        }
     }
 }

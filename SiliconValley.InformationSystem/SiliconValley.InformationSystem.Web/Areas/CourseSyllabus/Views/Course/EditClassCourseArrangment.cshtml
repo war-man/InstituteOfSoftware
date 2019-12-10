@@ -1,0 +1,189 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditClassCourseArrangment</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #warp {
+            width: 100%;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div id="warp">
+
+        <form class="layui-form" lay-filter="myform">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级:</label>
+                    <div class="layui-input-inline">
+                        <select lay-filter="classnumber" name="classnumber">
+                            @{
+                                foreach (var item in ViewBag.classlist as List<ClassSchedule>)
+                                {
+                                    <option value="@item.id">@item.ClassNumber</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程:</label>
+                    <div class="layui-input-inline">
+                        <select id="course" name="course" lay-filter="course">
+                            @{
+                                foreach (var item in ViewBag.courselist as List<Curriculum>)
+                                {
+                                    <option value="@item.CurriculumID">@item.CourseName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+               
+            </div>
+
+
+            <div class="layui-form-item" >
+                <div class="layui-inline">
+                    <label class="layui-form-label">上课老师:</label>
+                    <div class="layui-input-inline">
+                        <select lay-verify="required" id="teacher" name="teacher" lay-filter="teacher"></select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">上课时间:</label>
+                    <div class="layui-input-inline">
+                        <input name="BeginDate" type="text" class="layui-input" id="begindate">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item" style="text-align:center;margin-top:150px;">
+
+                <button type="button" style="width:200px;" lay-submit lay-filter="commit" class="layui-btn layui-btn-primary">确定</button>
+
+                <button type="button" style="width:200px;" id="close" class="layui-btn layui-btn-primary">关闭</button>
+
+
+            </div>
+        </form>
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'layer','laydate'], function () {
+
+            var laydate = layui.laydate;
+            var form = layui.form;
+            var layer = layui.layer;
+
+            laydate.render({
+                elem: '#begindate' //指定元素
+            });
+
+            form.on('select(classnumber)', function (data) {
+               
+              
+
+                $.post("/CourseSyllabus/Course/GetClassNextCourse", { classid: data.value }, function (result) {
+
+                    $("#course").val(result.CurriculumID);
+
+                    form.val("myform", { //formTest 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+                        course: result.CurriculumID
+                    });
+
+
+                });
+               
+            });
+
+            form.on('select(course)', function (data) {
+                $("#teacher option").remove();
+                $.post("/CourseSyllabus/Course/goodSkillTeacher", { courseid: data.value  }, function (result) {
+
+                    console.log(result);
+
+                    if (result.ErrorCode == 200) {
+
+                        for (var i = 0; i < result.Data.length; i++) {
+
+                            var option = $("<option></option>");
+                            option.text(result.Data[i].EmpName);
+                            option.val(result.Data[i].EmployeeId);
+
+                            $("#teacher").append(option);
+
+
+
+                        }
+
+                        form.render();
+
+
+                    }
+
+
+                });
+
+            });
+
+            form.on('submit(commit)', function (data) {
+              
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
+
+                var obj = {
+
+                    empnumber: data.field.teacher,
+                    Skill: data.field.course,
+                    ClassNumber: data.field.classnumber,
+                    BeginDate: data.field.BeginDate
+
+                };
+
+                $.post("/CourseSyllabus/Course/EditClassCourseArrangment", obj, function (result) {
+
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.close(index);
+
+                        layer.msg('设置成功', { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            parent.layer.close(index); 
+                        });
+
+                    }
+                    else {
+                        layer.msg('服务器错误。。', { icon: 2 }, function () {
+                            layer.close(index);
+                        });
+                    }
+
+                });
+
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+        });
+    </script>
+</body>
+</html>

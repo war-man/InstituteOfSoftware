@@ -3,77 +3,127 @@
     ViewBag.Title = "ClassCourseArrangement";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
+@using SiliconValley.InformationSystem.Entity.MyEntity
 @section style{
- 
+
     <style>
         #mywarp {
+            position: relative;
             width: 99%;
             margin: 0 auto;
-            border: 1px solid gray;
         }
 
         #mycontent {
-            float:left;
-            width:90%;
-            height:400px;
-            
+            float: left;
+            width: 90%;
+            margin-top: 100px;
         }
 
         #left {
             float: left;
             width: 10%;
             height: 400px;
-            
         }
 
         .courseItem {
             margin-top: 5px;
-            border-bottom:1px solid gray;
-            
+            border-bottom: 1px solid gray;
         }
 
         .class_name {
-            margin:10px auto;
+            margin: 10px auto;
         }
 
         .courseItem div {
-            display:inline-block;
-            margin-left:50px;
+            display: inline-block;
+            margin-left: 50px;
         }
 
-        .courseItem div label {
-            font-size:18px;
-        }
+            .courseItem div label {
+                font-size: 18px;
+            }
 
         .item {
-            margin-top:50px;
+            margin-top: 50px;
+        }
+         
+        .checkMore #flush {
+            cursor: pointer;
         }
 
-        .checkMore {
-            cursor:pointer;
+
+        #addBtnDiv {
+            position: absolute;
+            top: 60px;
+            left: 60px;
         }
 
+        #toor {
+            position: absolute;
+            top: 60px;
+            left: 70%;
+        }
     </style>
-    
- }
+
+}
 
 <div id="mywarp">
+
+    <div id="addBtnDiv">
+        <button id="addBtn" type="button" style="width:100px; height:50px;" class="layui-btn layui-btn-primary"><i style="font-size:30px;" class="layui-icon layui-icon-add-1"></i></button>
+    </div>
+
+    <div id="toor">
+        <form class="layui-form">
+
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                   
+                    <span id="flush">刷新<i  style="font-size:20px;" class="layui-icon layui-icon-refresh"></i></span>
+
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-input-inline">
+                        <select name="classnumber">
+                            @{
+                                foreach (var item in ViewBag.classlist as List<ClassSchedule>)
+                                {
+                                    <option selected value="@item.id">@item.ClassNumber</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <input type="checkbox" name="open" lay-filter="status" lay-skin="switch" lay-text="禁用|启用">
+                </div>
+
+                <div class="layui-inline">
+                    <button id="search" class="layui-btn layui-btn-primary" lay-submit lay-filter="search" type="button">搜索 </button>
+
+                </div>
+            </div>
+
+        </form>
+    </div>
 
     <div id="left">
 
     </div>
     <div id="mycontent">
-        
+        <form class="layui-form"></form>
 
-       
+
     </div>
 
 </div>
 
 <script type="text/template" id="muban">
 
-    <div class="item" classid="{{=classid}}">
+    <div class="item" classteacherid="{{=classteacherid}}" classid="{{=classid}}">
         <div class="class_name">
             <h3>{{=className}}</h3>
         </div>
@@ -84,35 +134,40 @@
             <div><label>开始时间：</label><span></span>{{=BeginDate}}</div>
             <div><label>状态：</label><span></span>{{=status}}</div>
 
+            <div>
+                <input type="checkbox" id="status" name="open" lay-filter="IsUsing" {{=checked}} lay-skin="switch" lay-text="禁用|启用">
+            </div>
+
             <div class="checkMore" style="margin-left:90%;"><span class="layui-badge layui-bg-blue">查看更多</span></div>
         </div>
     </div>
 
 </script>
 @section script{
-<script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
 
-<script src="~/Scripts/underscore.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
     <script>
-        layui.use(['layer', 'flow'], function () {
-
+        layui.use(['layer', 'flow', 'form'], function () {
+            var form = layui.form;
             var layer = layui.layer;
             var flow = layui.flow;
 
             flow.load({
                 elem: '#mycontent' //指定列表容器
                 , isAuto: true
-                , done: function (page, next) { 
+                , done: function (page, next) {
                     var lis = [];
-                    
+
                     $.get('/CourseSyllabus/Course/ClassCourseArrangementData?page=' + page, function (res) {
-                       
+
                         layui.each(res.data, function (index, item) {
                             console.log(item);
-                            var status; var beginDate;
+                            var status; var beginDate; var checked = "";
 
                             if (item.IsDel == false) {
                                 status = "正常";
+                                checked = "checked";
                             }
                             else {
                                 status: "过去式";
@@ -121,20 +176,170 @@
                             var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
                             beginDate = formaDateUtc(dateutc);
 
-                            
+
                             var template = _.template($("#muban").html());
-                            var templateData = template({ classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status });
-                            $("#mycontent").append(templateData);
+                            var templateData = template({ classteacherid: item.ID, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
+                            $("#mycontent form").append(templateData);
 
                         });
+                        form.render();
 
-                        
                         next(lis.join(''), page < res.total);
                     });
                 }
             });
 
+
+            //$(document).off("mouseover", '.item').on('mouseover', '.item', function () {
+
+            //    $(this).find(".courseItem").css("background-color", 'gray');
+            //});
+
+            $(document).off("mouseout", '.item').on('mouseout', '.item', function () {
+
+                $(this).find(".courseItem").css("background-color", '');
+            });
+
+            $(document).off("click", '.item').on('click', '.item', function () {
+
+                $(this).find(".courseItem").attr("style", 'border-bottom:2px solid green');
+
+                (this).attr("selected", 'selected');
+
+                $(this).siblings().find(".courseItem").attr("style", '');
+                $(this).siblings().attr("selected", '');
+
+
+            });
+
+            $("#addBtn").click(function () {
+
+                var classid = 0;
+
+                $(".item").each(function (index, elem) {
+
+                    var select = $(this).attr("selected");
+
+                    if (select == "selected") {
+                        classid = $(elem).attr("classid");
+                    }
+
+                });
+
+
+
+                layer.open({
+                    type: 2,
+                    area: ['800px', '500px'],
+                    content: "/CourseSyllabus/Course/EditClassCourseArrangment?classid=" + classid,
+                    end: function () {
+                        window.location.reload();
+                    }
+                });
+
+            });
+
+            //监听指定开关
+            form.on('switch(IsUsing)', function (data) {
+                var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒
+                var IsUsing = this.checked ? "true" : "false";
+
+
+
+                var classteacherid = $(data.elem).parent().parent().parent().attr("classteacherid");
+                $.post("/CourseSyllabus/Course/UsingOrProhibit", { status: IsUsing, classteacherid: classteacherid }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+                        layer.msg('操作成功', { icon: 1 }, function () {
+                            layer.close(index);
+
+                            window.location.reload();
+
+                        });
+
+
+                    }
+                    else {
+                        layer.msg('服务器错误', { icon: 2 }, function () {
+                            layer.close(index);
+                        });
+                    }
+                });
+
+
+            });
+
+            form.on('submit(search)', function (data) {
+
+                
+                
+                var field = data.field;
+
+                var status = false;
+
+                if (field.open == "on") {
+                    status = true;
+                }
+                $("#mycontent form").html("");
+
+                flow.load({
+                    elem: '#mycontent' //指定列表容器
+                    , isAuto: true
+                    , done: function (page, next) {
+                        var lis = [];
+
+                        $.get('/CourseSyllabus/Course/SearchClassCourseArrangementData?page=' + page + "&classid=" + field.classnumber + "&status=" + status, function (res) {
+
+                            layui.each(res.data, function (index, item) {
+                                console.log(item);
+                                var status; var beginDate; var checked = "";
+
+                                if (item.IsDel == false) {
+                                    status = "正常";
+                                    checked = "checked";
+                                }
+                                else {
+                                    status: "过去式";
+                                }
+
+                                var dateutc = item.BeginDate.substr(item.BeginDate.indexOf('(') + 1, 13);
+                                beginDate = formaDateUtc(dateutc);
+
+
+                                var template = _.template($("#muban").html());
+                                var templateData = template({ classteacherid: item.ID, classid: item.ClassNumber.id, className: item.ClassNumber.ClassNumber, CourseName: item.Skill.CourseName, TeacherName: item.Teacher.EmpName, BeginDate: beginDate, status: status, checked: checked });
+                                $("#mycontent form").append(templateData);
+
+                            });
+                            form.render();
+
+                            next(lis.join(''), page < res.total);
+                        });
+                    }
+                });
+
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            $("#flush").click(function () {
+                var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒
+                window.location.reload();
+
+            });
+
+            $(document).off("mouseover", '#flush').on('mouseover', '#flush', function () {
+                
+                $(this).attr("style", 'color:blue');
+            });
+
+       
+            $(document).off("mouseout", '#flush').on('mouseout', '#flush', function () {
+
+                $(this).attr("style", '');
+            });
+
         });
-    </script>    
+    </script>
 }
 

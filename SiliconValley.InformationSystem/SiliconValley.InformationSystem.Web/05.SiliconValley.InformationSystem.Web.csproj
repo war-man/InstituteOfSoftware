@@ -1206,6 +1206,7 @@
     <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\MarkingArrangement.cshtml" />
     <Content Include="Areas\CourseSyllabus\Views\Course\ClassCourseArrangement.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\EngsilshTeacherGood.cshtml" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\EditClassCourseArrangment.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
