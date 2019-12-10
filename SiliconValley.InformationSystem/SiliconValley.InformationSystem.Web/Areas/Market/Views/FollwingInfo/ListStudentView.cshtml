@@ -349,9 +349,13 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
+        var tabindex = -1;
         layui.use('element', function () {
             var element = layui.element;
-        });
+            element.on('tab(demo)', function (data) {
+                tabindex=data.index; //得到当前Tab的所在下标                
+            });            
+        });     
         function biangbi(stuId) {            
             //打开添加跟踪页面             
             var myurl = '/Market/FollwingInfo/AddFollwingInfo/' + stuId;
@@ -360,8 +364,8 @@
         }      
 
         function Edit(id) {
-            var myurl = '/Market/FollwingInfo/EditView/' + id;
-            window.parent.StudentShow(myurl, false, "demo-class", 0);
+            var myurl = '/Market/FollwingInfo/EditView/' + id;            
+            window.parent.StudentShow(myurl,'编辑信息', "demo-class", 1);            
         }
 
         function Sreach(id) {

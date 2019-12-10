@@ -245,6 +245,7 @@
     <Compile Include="Areas\ExaminationSystem\ExaminationSystemAreaRegistration.cs" />
     <Compile Include="Areas\Finance\Controllers\PricedetailsController.cs" />
     <Compile Include="Areas\Finance\FinanceAreaRegistration.cs" />
+    <Compile Include="Areas\flow\flowAreaRegistration.cs" />
     <Compile Include="Areas\Logistics\LogisticsAreaRegistration.cs" />
     <Compile Include="Areas\Market\Controllers\BiddingRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\ChannelStaffController.cs" />
@@ -1117,6 +1118,7 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
     <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
@@ -1124,6 +1126,7 @@
     <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
+    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
@@ -1149,7 +1152,6 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
@@ -1159,6 +1161,10 @@
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\AnpaiNotMarginView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\SerachReconcile_Index.cshtml" />
+    <Content Include="Areas\Market\Views\FollwingInfo\ListStudentView.cshtml" />
+    <Content Include="Areas\flow\Views\web.config" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

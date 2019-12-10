@@ -144,7 +144,8 @@
     <div class="layui-row layui-form-item" style="text-align:right">
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:right">
             <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="系统排课" />
-            <input id="Anan" type="button" class="layui-btn" value="手动排课" onclick="OpenNanualView()" />
+            <input id="Anan1" type="button" class="layui-btn" value="手动排课" onclick="OpenNanualView()" />
+            <input id="Anan2" type="button" class="layui-btn" value="其他课程排课" onclick="OrtherView()"/>
         </div>
     </div>
     <fieldset>
@@ -181,23 +182,30 @@
             var table = layui.table;
             //获取班级
             form.on('select(grandselect)', function (data) {
-                if (data.value == "0") {
-                    $("#myclass")[0].innerHTML = "";
-                } else {
+                //清空班级DIV
+                $("#myclass")[0].innerHTML = "";
+                //清空课程DIV
+                $("#currr_div")[0].innerHTML = "";
+                //清空专业DIV
+                $("#marjon")[0].innerHTML = "";
+                //清空教室DIV
+                $("#classroom_div")[0].innerHTML = "";
+                //清空教员DIV
+                $("#teacher_div")[0].innerHTML = "";
+                if (data.value != "0") {                    
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
                         success: function (sudata) {
                             //获取班级slect
                             var classselect = $('<select id="class_select" name="class_select" class="layui-select" lay-filter="bianji"><option value="0" selected>--请选择--</select>');
                             for (var i = 0; i < sudata.length; i++) {
-                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber+ '<option>').appendTo(classselect);
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
                             }
-                            $("#myclass")[0].innerHTML = "";
-                            $("#myclass").append(classselect);   
+                            $("#myclass").append(classselect);
                             form.render(); //更新全部
                         }
                     });
-                }
+                }  
                 
             });      
             //获取课程
@@ -323,18 +331,18 @@
                         type: 'POST',
                         data: mydata,
                         success: function (Sucdata) {
-                            if (Sucdata == "ok") {
-                                layer.msg("生成成功！！！", { icon: 1,shade:0.8 }, function () {
+                            if (Sucdata.Success == true) {
+                                layer.msg(Sucdata.Msg, { icon: 1,shade:0.8 }, function () {
                                     table.reload('Reconcile_table', {
                                         url: '/Educational/Reconcile/GetTableData',
-                                        where: { "classname": mydata.class_select } //设定异步数据接口的额外参数
+                                        where: { "classname": mydata.class_select }  
                                     });
                                 });
                             } else {
-                                layer.msg(Sucdata, { icon: 2 }, function () {
+                                layer.msg(Sucdata.Msg, { icon: 2 }, function () {
                                     table.reload('Reconcile_table', {
                                         url: '/Educational/Reconcile/GetTableData',
-                                        where: { "classname": mydata.class_select } //设定异步数据接口的额外参数
+                                        where: { "classname": mydata.class_select }  
                                     });
                                 });
                             }
@@ -352,6 +360,19 @@
                 content: '/Educational/Reconcile/ManualReconcileView'  
                 , area: ['1000px', '500px'],
                 title: '手动排课'
+                , shade: 0.8
+                , anim: 4
+                , skin: 'demo-class'
+            });
+        }
+        //打开非专业课排课页面
+        function OrtherView() {
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: '/Educational/Reconcile/AnpaiNotMarginView'
+                , area: ['800px', '500px'],
+                title: '其他课程排课页面'
                 , shade: 0.8
                 , anim: 4
                 , skin: 'demo-class'

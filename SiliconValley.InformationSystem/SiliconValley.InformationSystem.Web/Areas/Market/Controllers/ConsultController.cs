@@ -175,7 +175,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 if (className != null)
                 {
                     mystudentdata.ClassName = className.ClassID;//获取班级名称
-                    mystudentdata.Teacher = TB_Entity.ClassTeacher(className.ClassID).EmpName;//获取任课老师
+                    mystudentdata.Teacher = TB_Entity.ClassTeacher(className.ID_ClassName.ToString()).EmpName;//获取任课老师
                     mystudentdata.Grand = CB_Entity.GetClassGrand(className.ID_ClassName, 2);//阶段
                     mystudentdata.ZhuanyeName = CB_Entity.GetClassGrand(className.ID_ClassName, 1);//专业
                 }                
