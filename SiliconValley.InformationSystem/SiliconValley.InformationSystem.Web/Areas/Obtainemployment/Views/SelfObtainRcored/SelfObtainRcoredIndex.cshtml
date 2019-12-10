@@ -88,7 +88,7 @@
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
 
-            var empQuarterclassid, treedata, myleave, string1="", string2, table00,studentdata,studentname;
+            var empQuarterclassid, treedata, myleave, string1 = "", string2, table00, studentdata, studentname, isbtn = false;
             //初始化树
             var myDTree = dtree.render({
                 elem: "#demoTree",
@@ -177,6 +177,7 @@
 
             //绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
+                isbtn = false;
                 string1 = "";
                 studentname = "";
                 $("#name0").val("");
@@ -280,7 +281,10 @@
                 table00.reload({
                     url: '/Obtainemployment/SelfObtainRcored/table00'
                     , done: function (res, curr, count) {
-                        studentdata = res.data;
+                        if (!isbtn) {
+                            console.log('join');
+                            studentdata = res.data;
+                        }
                     }
                     , where: {
                         leave: myleave,
@@ -310,17 +314,33 @@
 
             //名字查询
             form.on('submit(btn0)', function (data) {
+                var iscun = false;
+                isbtn = true;
                 studentname = data.field.name0;
-                for (var i = studentdata.length - 1; i >= 0; i--) {
-                 
-                    if (studentdata[i].studnetname == studentname) {
-                     
-                        string1 =   studentdata[i].ID+ "-" +string1
+                string1 = "";
+                if (studentname == "") {
+                    isbtn = false;
+                    loadtable00();
+                } else {
+                    for (var i = studentdata.length - 1; i >= 0; i--) {
+
+                        if (studentdata[i].studnetname == studentname) {
+
+                            string1 = studentdata[i].ID + "-" + string1
+                            iscun = true;
+                        }
+                    }
+                    if (iscun) {
+                        string1 = string1.substring(0, string1.length - 1);
+                        loadtable00();
+                    } else {
+                        layer.msg('暂无该学生信息!', { icon: 6, time: 2000 }, function () {
+
+                        });
+
                     }
                 }
-                string1=string1.substring(0, string1.length - 1);
-                //console.log(string1);
-                loadtable00();
+               
                 return false;
             });
 

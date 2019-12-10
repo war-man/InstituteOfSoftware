@@ -11,7 +11,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
     [Table("OtherRoleMapPermissionValue")]
     public class OtherRoleMapPermissionValue
     {
-        [Key]
+        [Key]    
         public int Id { get; set; }
 
         public string RoleId { get; set; }

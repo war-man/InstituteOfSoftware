@@ -17,6 +17,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         private EmpClassBusiness dbempClass;
         private EmpQuarterClassBusiness dbempQuarterClass;
         private QuarterBusiness dbquarter;
+        private SelfObtainRcoredBusiness dbselfObtainRcored;
         /// <summary>
         /// 获取现在正在使用的就业意向的全部由数据
         /// </summary>
@@ -196,5 +197,74 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return result;
         }
 
+        /// <summary>
+        /// 根据班级id获取没有填写意向的学生 (排除的是已经填写过的和已经填写自主就业的学生)
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentInformation> GetSurplusStudent(int classid) {
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbselfObtainRcored = new SelfObtainRcoredBusiness();
+            List<StudentInformation> data=   dbproScheduleForTrainees.GetStudentsByClassid(classid);
+            List<StudnetIntention> list = this.GetStudnetIntentionsByclassid(classid);
+            List<SelfObtainRcored> list2 = dbselfObtainRcored.GetSelfObtainRcoredsByClassid(classid);
+            for (int i = data.Count-1; i>=0 ; i--)
+            {
+                foreach (var item in list)
+                {
+                    if (data[i].StudentNumber==item.StudentNO)
+                    {
+                        data.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                foreach (var item in list2)
+                {
+                    if (data[i].StudentNumber == item.StudentNO)
+                    {
+                        data.RemoveAt(i);
+                        break;
+                    }
+                }
+            }
+            return data;
+
+        }
+
+        /// <summary>
+        /// 删除穿入过来的学生对象数据
+        /// </summary>
+        /// <param name="studentno"></param>
+        /// <returns></returns>
+        public bool del(string studentno) {
+            bool result = true;
+            try
+            {
+                StudnetIntention intention=  this.GetInformationBystudentno(studentno);
+                if (intention!=null)
+                {
+                    intention.IsDel = true;
+                    this.Update(intention);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result=false;
+            }
+            return result;
+           
+        }
+
+        /// <summary>
+        /// 根据学生编号查询填写的就业意向
+        /// </summary>
+        /// <param name="studentno"></param>
+        /// <returns></returns>
+        public StudnetIntention GetInformationBystudentno(string studentno) {
+           return this.GetStudentIntentions().Where(a => a.StudentNO == studentno).FirstOrDefault();
+        }
     }
 }

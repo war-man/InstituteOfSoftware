@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 学生id
         /// </summary>
-        public Nullable<int> StuIntID { get; set; }
+        public string  Studentno { get; set; }
         public string Remark { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public Nullable<bool> IsDel { get; set; }

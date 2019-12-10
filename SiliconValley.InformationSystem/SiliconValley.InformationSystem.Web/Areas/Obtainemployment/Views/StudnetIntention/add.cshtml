@@ -79,14 +79,14 @@
                                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                     <label class="layui-form-label lad">意向薪资:</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="Salary" class="layui-input" />
+                                        <input type="text" id="Salary" name="Salary" class="layui-input" />
                                     </div>
                                 </div>
 
                                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                     <label class="layui-form-label lad">联系电话:</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="Telephone" class="layui-input" />
+                                        <input type="text" id="Telephone" name="Telephone" class="layui-input" lay-verify="required|phone"/>
 
                                     </div>
                                 </div>
@@ -143,10 +143,11 @@
 
         layui.use(['form', 'layer', 'element'], function () {
             //获取设备信息
-            var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classid,classnumber;
+            var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classid;
 
             jQuery(function () {
                 $("#classnumber").val('@Html.Raw(ViewBag.param0)');
+                classid='@Html.Raw(ViewBag.param1)';
                 loadstudent();
                 loadcity();
                 form.render();
@@ -222,6 +223,7 @@
 
             form.on('submit(demo1)', function (data) {
                 data.field.StudentNO = StudentNO;
+                data.field.classid = classid;
                 var param0 = data.field;
                 console.log(param0);
                 $.ajax({
