@@ -35,6 +35,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         // GET: Personnelmatters/EmployeesInfo
         public ActionResult Index()
         {
+            ViewBag.birth = GetTheGodOfLongevity().Count();
             return View();
         }
 
@@ -968,8 +969,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult Birthdayremind() {
-            var ajaxresult = new AjaxResult();
-
+            //var ajaxresult = new AjaxResult();
+            ViewBag.birthemps = GetTheGodOfLongevity();
             return View();
         }
        /// <summary>
@@ -980,29 +981,64 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             List<EmployeesInfo> luckdog = new List<EmployeesInfo>();
             var myemplist = empmanage.GetList();
+
+            string lunardate = GetLunarCalendar();
+            string[] lunar = lunardate.Split('/');//分割获取到的当前日期的农历日期
+            var lunarmonth = lunar[0];//获取当前农历月份
+            var lunarday = lunar[1];//获取当前农历日期
+
+            var month = DateTime.Now.Month;//获取当前阳历月份
+            var day = DateTime.Now.Day;//获取当前阳历日期
+
             for (int i = 0; i < myemplist.Count(); i++)
             {
+                string birth = myemplist[i].Birthday;//获取该员工的生日属性
+                if (!string.IsNullOrEmpty(birth)) {
+                    var birthmon = birth.Split('月', '日');
+                    var mymonth = birthmon[0];//月份          
+                    var myday = birthmon[1];//日期
+                    var myyinyang = birthmon[2];//阴阳历
 
+                    if (myyinyang == "农历")
+                    {
+                        if (mymonth == lunarmonth)
+                        {
+                            luckdog.Add(myemplist[i]);
+                        }
+                    }
+                    if (myyinyang == "阳历")
+                    {
+                        if (int.Parse(mymonth) == month)
+                        {
+                            luckdog.Add(myemplist[i]);
+                        }
+                    }
+                }
+               
             }
             return luckdog;
         } 
-    
+    /// <summary>
+    /// 获取当前农历的年月日
+    /// </summary>
+    /// <returns></returns>
         public string GetLunarCalendar() {
             ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
             int year = ChineseCalendar.GetYear(DateTime.Now);
             int day = ChineseCalendar.GetDayOfMonth(DateTime.Now);
             int month = ChineseCalendar.GetMonth(DateTime.Now);
-            int leapMonth = ChineseCalendar.GetLeapMonth(year);
-            string date = string.Format("农历{0}{1}（{2}）年{3}{4}月{5}{6}"
-     , "甲乙丙丁戊己庚辛壬癸"[(year - 4) % 10]
-     , "子丑寅卯辰巳午未申酉戌亥"[(year - 4) % 12]
-     , "鼠牛虎兔龙蛇马羊猴鸡狗猪"[(year - 4) % 12]
-     , month == leapMonth ? "闰" : ""
-     , "无正二三四五六七八九十冬腊"[leapMonth > 0 && leapMonth <= month ? month - 1 : month]
-     , "初十廿三"[day / 10]
-     , "十一二三四五六七八九"[day % 10]
-     );
+            //int leapMonth = ChineseCalendar.GetLeapMonth(year);
+
+            string date = string.Format("{0}/{1}", month , day);
             return date;
+        }
+
+       /// <summary>
+       /// 合同到期提醒
+       /// </summary>
+       /// <returns></returns>
+        public ActionResult ContractEndRemind() {
+
         }
 
         // 图片上传

@@ -2,7 +2,8 @@
 @{
     Layout = null;
 }
-
+@model SiliconValley.InformationSystem.Entity.MyEntity.EmployeesInfo
+@using SiliconValley.InformationSystem.Entity.MyEntity;
 <!DOCTYPE html>
 
 <html>
@@ -11,7 +12,31 @@
     <title>Birthdayremind</title>
 </head>
 <body>
-    <div> 
+    <div >
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div style="font-size:24px;height:20%;">
+                <label class="layui-form-label">今天是:</label>
+                @{
+                    var emp = ViewBag.birthemps as List<EmployeesInfo>;
+                    foreach (var item in emp)
+                    {                       
+                <span style="color:#eb3f3f;">
+                    @Html.Label(item.EmpName)
+                </span>
+                       
+                    }
+
+
+                }
+
+               <label class="layui-form-label">老师的生日,记得送上生日祝福哦！</label>
+            </div>
+           
+            <div>
+                <img style="width:100%;height:80%;" src="~/uploadXLSXfile/EmpImage/bir4.jpg" />
+            </div>
+        </form>
+
     </div>
 </body>
 </html>
