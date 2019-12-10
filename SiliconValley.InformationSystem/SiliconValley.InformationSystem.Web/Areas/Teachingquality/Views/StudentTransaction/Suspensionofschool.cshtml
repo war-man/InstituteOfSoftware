@@ -2,16 +2,383 @@
 @{
     Layout = null;
 }
-
+@model  SiliconValley.InformationSystem.Entity.ViewEntity.TransactionView
 <!DOCTYPE html>
 
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Suspensionofschool</title>
+    <title>Shiftwork</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        table {
+            margin: 20px auto;
+        }
+
+        #Dateofapplication {
+            border: 0px;
+        }
+
+        .th1 {
+            width: 100px;
+            height: 50px;
+        }
+
+        span {
+            padding-bottom: 5px;
+            border-bottom: 2px solid #f89;
+        }
+
+        .borid {
+            border-right: #ffffff solid 1px;
+        }
+
+        .labels {
+            width: 200px;
+            border: 0px;
+        }
+
+        .Nation {
+            width: 99%;
+            height: 100px;
+            overflow: hidden;
+            border: 0px;
+        }
+
+        #NowCLass {
+            border: 0px;
+        }
+
+        .DateWID {
+            width: 100PX;
+            border: 1px solid red;
+        }
+    </style>
 </head>
 <body>
-    <div> 
+    <div id="text">
+
+
+        <h2 style="text-align:center;">硅谷高科软件学院学员休学申请表</h2>
+        <div style="margin-top:10px;" class="layui-form" action="" lay-filter="example">
+            <div>
+                <label class="layui-form-label" style="width:200px;"> 申请休学日期</label>
+                <div class="layui-input-inline">
+                    @if (ViewBag.Types == "1")
+                    {
+                        <div style="margin-top:10px;width:200px;">
+                            @Model.Dateofapplication.ToString().Substring(0, Model.Dateofapplication.ToString().Length - 7)
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(a => a.Dateofapplication, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input" } })
+                    }
+                </div>
+            </div>
+            @Html.HiddenFor(a => a.StudentID)
+            @Html.HiddenFor(a => a.OriginalClass)
+            <table border="1">
+
+                <tr>
+                    <th class="th1">学员学号</th>
+                    <td>@Model.StudentID</td>
+                    <th class="th1">学员姓名</th>
+                    <td>@Model.Name</td>
+                    <th class="th1">性   别</th>
+                    <td>@Model.Sex</td>
+
+                </tr>
+                <tr>
+                    <th class="th1">身份证号</th>
+                    <td>@Model.IDnumber</td>
+                    <th class="th1">原所班级名称</th>
+                    <td>@Model.OriginalClassName</td>
+                    <th class="th1">原班级班主任姓名</th>
+                    <td>@Model.NowHeadmaster</td>
+
+                </tr>
+                <tr>
+                    <th class="th1">宿舍地址</th>
+                    <td>@Model.Dormitoryaddress</td>
+                    <th class="th1">联系电话</th>
+                    <td colspan="3">@Model.Telephone</td>
+
+                </tr>
+                <tr>
+
+                    <th class="th1">通讯地址</th>
+                    <td colspan="5">@Model.Postaladdress</td>
+                </tr>
+                <tr>
+                    <th class="th1">休学期限</th>
+                    <td colspan="5">
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">从</label>
+                         
+
+                            @if (ViewBag.Types == "1")
+                            {
+                                <div class="layui-input-inline startTime">
+                                    <div style="margin-top:10px;width:200px;">
+                                        @Model.qBeginTime.ToString().Substring(0, Model.qBeginTime.ToString().Length - 7)
+                                        至
+                                        @Model.qEndTime.ToString().Substring(0, Model.qEndTime.ToString().Length - 7)
+                                        休学
+                                    </div>
+                                </div>
+                               
+                            }
+                            else
+                            {
+                                <div class="layui-input-inline startTime">
+                                    @Html.TextBoxFor(a => a.qBeginTime, new Dictionary<string, object>() { { "readonly", "readonly" }, { "placeholder", "yyyy-MM-dd" }, { "autocomplete", "off" }, { "class", "layui-input" } })
+                                </div>
+                                string s = "至";
+                                @s;
+                                <div class="layui-input-inline endTime">
+                                    @Html.TextBoxFor(a => a.qEndTime, new Dictionary<string, object>() { { "readonly", "readonly" }, { "placeholder", "yyyy-MM-dd" }, { "autocomplete", "off" }, { "class", "layui-input" } })
+                                    </div>
+                                
+                                string  z= "休学";
+                                @z;
+                            }
+
+                                   
+
+                                    
+                                </div>
+                    </td>
+
+                </tr>
+                <tr>
+
+                    <th class="th1">申请休学原因</th>
+                    <td colspan="5" style="text-align:end;">
+                        @if (ViewBag.Types == "1")
+                        {
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "重修原因" }, { "readonly", "readonly" }, { "class", "layui-textarea Nation" } })
+                        }
+                        else
+                        {
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入重修原因" }, { "class", "layui-textarea Nation" } })
+                        }
+                        <div>
+                            学员签字：
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <th class="th1">班主任意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;  ">
+                            班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th class="th1">家长是否同意</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            家长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+
+
+                <tr>
+
+                    <th class="th1">部门主管意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            部门主签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">教学校长意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            教学校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">常务副校长意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            常务副校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">校长意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">备     注</th>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+
+                    <td class="borid" style="text-align:end"> 注：</td>
+                    <td colspan="5">1.适用范围：在学期间因特殊情况必须休学的学员;</td>
+                </tr>
+                <tr style="border-top:#ffffff solid 1px; ">
+                    <td class="borid"></td>
+                    <td colspan="5">     2.上报时间：班主任在接到学员申请的24小时内上报给部门主管并在处理后的24小时内在系统内更新;</td>
+                </tr>
+                <tr style="border-top:#ffffff solid 1px; ">
+                    <td class="borid"></td>
+                    <td colspan="5">
+                        3.此申请表最终交由内审部存档，由相关班主任更新系统信息;
+                    </td>
+                </tr>
+                <tr style="border-top:#ffffff solid 1px; ">
+                    <td class="borid"></td>
+                    <td colspan="5">
+                        4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如报考，报档
+                        ，升学等其它日常工作的责任班主任。
+                    </td>
+                </tr>
+                @if (ViewBag.Types != "1")
+                {
+                    <tr>
+                        <td colspan="6" style="text-align:center;">   <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button></td>
+                    </tr>
+                }
+            </table>
+        </div>
     </div>
+    @if (ViewBag.Types == "1")
+    {
+        <div style="text-align:center;">
+            <button class="layui-btn" id="btn">打印</button>
+        </div>
+    }
 </body>
 </html>
+<script src="~/Areas/Teachingquality/js/Print.js"></script>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form', 'laydate'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        var laydate = layui.laydate;
+        //日期正则
+        var curDate = new Date();
+        var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+
+        $("#Dateofapplication").val(curYearMonthrDay);
+        laydate.render({
+            elem: '#Dateofapplication'
+            , format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var endTime = new Date(value).getTime();
+                if (endTime < curDate.getTime()) {
+                    layer.msg('不能小于当前日期');
+                    $('#Dateofapplication').val(curYearMonthrDay);
+                }
+            }
+        });
+
+        // 时间选择器初始化 开始时间
+        laydate.render({
+            elem: '#qBeginTime',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+
+                var startDate = new Date(value).getTime();
+                var endTime = new Date($('#qEndTime').val()).getTime();
+
+                // console.log(ri);
+                if (endTime < startDate) {
+                    layer.msg('开始时间不能大于结束时间');
+                    $('#qBeginTime').val($('#qEndTime').val());
+                }
+                if (startDate < curDate.getTime()) {
+                    layer.msg('开始时间不能小于当前时间');
+                    $('#qBeginTime').val(curYearMonthrDay);
+                }
+            }
+        })
+        // 时间选择器初始化 结束时间
+        laydate.render({ //结束时间
+            elem: '#qEndTime',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date($('#qBeginTime').val()).getTime();
+                var endTime = new Date(value).getTime();
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#qEndTime').val($('#qBeginTime').val());
+                }
+                if (endTime < curDate.getTime()) {
+                    layer.msg('结束时间不能小于当前时间');
+                    $('#qEndTime').val($('#qBeginTime').val());
+                }
+            }
+        })
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            //layer.alert(JSON.stringify(data.field), {
+            //    title: '最终的提交信息'
+            //})
+            //return false;
+
+            var datas = data.field;
+            TransactionAdd("/Teachingquality/StudentTransaction/Suspensionofschool", datas);
+
+        });
+    });
+
+</script>
+@*打印*@
+<script>
+    document.getElementById('btn').onclick = function () {
+
+        Print('#text', {
+            onStart: function () {
+                console.log('onStart', new Date())
+            },
+            onEnd: function () {
+                console.log('onEnd', new Date())
+            }
+        })
+
+    }
+</script>

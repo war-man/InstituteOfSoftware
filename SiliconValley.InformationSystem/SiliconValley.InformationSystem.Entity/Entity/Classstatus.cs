@@ -13,7 +13,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
     [Table(name: "Classstatus")]
     public class Classstatus
     {
-        public int id { get; set; }
+        public Nullable<int> id { get; set; }
         /// <summary>
         /// 类型名称
         /// </summary>

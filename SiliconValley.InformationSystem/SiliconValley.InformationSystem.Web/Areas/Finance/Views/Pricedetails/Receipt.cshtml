@@ -87,7 +87,7 @@
 
         <tbody>
 
-            <tr style="text-align:center;border-top:1px solid #808080;">
+            <tr style="text-align:center;border-top:1px solid #808080;border-left:#ffffff;">
                 <td colspan="6">合计金额:(大写):<label id="DaXie">壹万伍仟肆佰元整</label></td>
 
                 <td colspan="4" id="pricent"></td>
@@ -145,10 +145,10 @@
         }
         if (Receiptdata[i].Rategory == "阶段费用缴纳" || Receiptdata[i].Rategory == "学费" || Receiptdata[i].Rategory == "食宿费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+            $("#text thead").append($('<tr style="text-align:center;border-left:#ffffff;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         } else if ( Receiptdata[i].Rategory == "自考本科费用") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
-            $("#text thead").append($('<tr style="text-align:center;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
+            $("#text thead").append($('<tr style="text-align:center;border-left:#ffffff;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         }
         if (Receiptdata[i].Rategory == "学杂费") {
             count++;
@@ -157,7 +157,7 @@
             if (count > 2) {
                 count = 0;
                 //  console.log(Amountofmoney)
-                $("#text tbody").prepend($('<tr style="text-align:center;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
+                $("#text tbody").prepend($('<tr style="text-align:center;border-left:#ffffff;"><td colspan="6">' + ostitemsName.substring(0, ostitemsName.length - 1) + '</td><td colspan="4">' + Amountofmoneys + ".00" + '</td></tr>'));
                 ostitemsName = "";
                 Amountofmoneys = 0;
             }

@@ -37,6 +37,17 @@
             color: #fff;
         }
 
+        .Transaction, .Scrap {
+            width: 100px;
+            height: 90px;
+            border: 1px solid red;
+            padding: 1px;
+            margin-left: 21px;
+            margin-top: 20px;
+            background-color: #C0C0C0;
+            color: #fff;
+        }
+
         .Mydiv:hover {
             background-color: burlywood;
         }
@@ -83,6 +94,9 @@
 
         .Lcc {
             background-color: #1cc09f;
+        }
+        .TransactionColor {
+            background-color: aqua;
         }
     </style>
 
@@ -189,7 +203,7 @@
             </table>
         </div>
         <div style="position:absolute;left:50%;top:7%;">
-            <h1 >@ViewBag.ClassName</h1>
+            <h1 >@ViewBag.ClassName<lable style="font-size:15pt;color:#1cc09f;">(@ViewBag.GrandName)</lable></h1>
             <h4 id="ClassName" style="display:none;">@ViewBag.ClassID</h4>
         </div>
 
@@ -246,10 +260,13 @@
                 <button type="button" id="Transferoftraunees" class="layui-btn layui-btn-fluid mybut">学员转班</button>
             </div>
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">学员复学</button>
+                <button type="button" id="Resumptionofstudy" class="layui-btn layui-btn-fluid mybut">学员复学</button>
             </div>
             <div>
-                <button type="button" class="layui-btn layui-btn-fluid mybut">学员修学</button>
+                <button type="button" id="Suspensionofschool" class="layui-btn layui-btn-fluid mybut">学员休学</button>
+            </div>
+            <div>
+                <button type="button" id="Expel" class="layui-btn layui-btn-fluid mybut">学员开除</button>
             </div>
         </div>
     </div>
@@ -385,8 +402,16 @@
         $.post("/Teachingquality/ClassSchedule/ClassStuDate?ClassID=" + $("#ClassName").text(), function (data) {
             for (var i = 0; i < data.length; i++) {
                 if (data[i].ClassNameView == null) {
-                    $("#MyShutdown").append($('<div class="Mydiv layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div></div>'));
- 
+                    if (data[i].Statusname == null) {
+                        $("#MyShutdown").append($('<div class="Mydiv layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div></div>'));
+                    } else {
+                        if (data[i].Statusname == "休学") {
+                            $("#MyShutdown").append($('<div class="Transaction layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
+                        } else {
+                            $("#MyShutdown").append($('<div class="Scrap layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div>  <div style="display:none;">' + data[i].ClassID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">状态:' + data[i].Statusname + '</div></div>'));
+
+                        }
+                      }
                 } else {
                     $("#MyShutdown").append($('<div class="TiDIV layui-col-xs2">  <div style="display:none;">' + data[i].StuNameID + '</div> <div style="text-align:center;margin-top:20px;line-height:23px;"><div class="Name">' + data[i].Name + '</div></div>  <div style="font-size:9pt;text-align:center;">现班级:' + data[i].ClassNameView + '</div></div>'));
                 
@@ -578,10 +603,21 @@
         });
     
 
-       
+        //异动人员点击
+        $("body").on("click", ".Transaction", function () {
 
+            if (!$(this).is(".TransactionColor")) {
+                $(".Transaction").removeClass("TransactionColor");
+                $(this).addClass("TransactionColor");
+            }
+            else {
+                $(this).removeClass("TransactionColor");
+            }
+        });
+        
         //双击详细
-        $(".Mydiv").dblclick(function () {
+        $("body").on("dblclick", ".Mydiv,.TiDIV,.Transaction", function () {
+
             var stuid = $($(this).children()[0]).text();
             layer.open({
                 title: name,
@@ -595,7 +631,7 @@
         //群号设置
         $("#but1").click(function () {
 
-            console.log($("#ClassName").text());
+           
             layer.open({
                 title: name,
                 type: 2,
@@ -626,9 +662,12 @@
         });
         //退学业务
         $("#DropoutofSchool").click(function () {
+            //
             if ($(".color").length == 1) {
                 var x = $($($(".color")[0]).children()[0]).text();
-                console.log(x);
+                var url = "/Teachingquality/StudentTransaction/Dropoutofschools?StudentID=" + x;
+                Popup(url, "退学申请", 1000, 900);
+          
             } else {
                 layer.alert('请选择一个学员', { icon: 0 });
             }
@@ -656,16 +695,55 @@
             }
 
         });
+        //休学业务
+        $("#Suspensionofschool").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                var url = "/Teachingquality/StudentTransaction/Suspensionofschool?StudentID=" + x + "&ClassID=" + $("#ClassName").text();
+                Popup(url, "休学申请", 1000, 900);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+
+        });
+        //复学申请
+        $("#Resumptionofstudy").click(function () {
+            if ($(".TransactionColor").length == 1) {
+                var x = $($($(".TransactionColor")[0]).children()[0]).text();
+                if ($($($(".TransactionColor")[0]).children()[1]).text() == $("#ClassName").text()) {
+                    var url = "/Teachingquality/StudentTransaction/Resumptionofstudy?StudentID=" + x;
+                    Popup(url, "复学申请", 1000, 900);
+                } else {
+                    layer.alert('该学员不是本班学员', { icon: 0 });
+                }
+               
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+
+        });
+        //休学
+        $("#Expel").click(function () {
+            if ($(".color").length == 1) {
+                var x = $($($(".color")[0]).children()[0]).text();
+                var url = "/Teachingquality/StudentTransaction/Expel?StudentID=" + x + "&ClassID=" + $("#ClassName").text();
+                Popup(url, "休学申请", 1000, 700);
+            } else {
+                layer.alert('请选择一个学员', { icon: 0 });
+            }
+
+        });
         //异动数据处理
         $("#transactionprocessing").click(function () {
       
             var url = "/Teachingquality/StudentTransaction/transactionprocessing?ClassID=" + $("#ClassName").text();
           //  Popup(url, "学员异动处理", 1000, 800);
+            
             layer.open({
                 type: 2,
                 content: url
                 , area: ['1000px', '800px']
-                , title: "学员异动处理"
+                , title: ""
 
                 , shade: 0.3
                 , cancel: function () {
@@ -841,16 +919,31 @@
         }
     }//attr("value") originalTarget
     //右击取消选中
-    $(".Mydiv").bind("contextmenu", function (e) {
-        //$(this).removeClass("backRed");
+    $("body").on("contextmenu", ".Mydiv", function (e) {
         onContextMenu(e);
         stuid = $($(this).children()[0]).text();
         Name = $($($(this).children()[1]).children()[0]).text();
         return false;
         document.addEventListener('contextmenu', onContextMenu, false);
     });
+  
     //刷新本页面
     function GetPartsItmesMy() {
         location.reload();
+    }
+    //辅助打印弹出层
+    function StudentShow(url, mytitle, mycloseBtn, width, hegin) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: url
+                , area: [width + 'px', hegin + 'px'],
+                title: mytitle
+                , shade: 0.3
+                , anim: 1
+                , closeBtn: mycloseBtn
+            });
+        });
     }
 </script>

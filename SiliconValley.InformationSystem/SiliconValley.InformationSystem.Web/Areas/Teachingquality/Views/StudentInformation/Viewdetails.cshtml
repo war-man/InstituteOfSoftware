@@ -53,7 +53,7 @@
             </div>
 
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                <label class="layui-form-label">班级</label>
+                <label class="layui-form-label" id="ClassNames">班级</label>
                 <div class="layui-input-inline">
                     <input type="text" id="classa" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
                 </div>
@@ -226,7 +226,16 @@
             $("#Traine").val(data.Traine)//学员性格
             $("#Hobby").val(data.Hobby)//兴趣爱好
             $("#Nation").val(data.Nation)//民族
-            $("#classa").val(data.classa)//班级号
+
+            var ClassS = data.classa.split(',');
+            console.log(ClassS);
+            if (ClassS[1] == 2) {
+                $("#classa").val(ClassS[0])//班级号
+            } else {
+                $("#ClassNames").text("状态");
+                $("#classa").val(ClassS[0])//班级号
+            }
+           
             $("#AddDate").val(TimeChange(data.InsitDate))//入班日期
             //Education
             $("#Education").val(data.Education)//学历

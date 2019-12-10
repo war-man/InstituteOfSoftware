@@ -67,6 +67,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<int> ApplicationRepairID { get; set; }
         /// <summary>
+        /// 休学id
+        /// </summary>
+        public Nullable<int> SuspensionofschoolID { get; set; }
+        /// <summary>
+        /// 开除id
+        /// </summary>
+        public Nullable<int> ExpelsID { get; set; }
+        /// <summary>
         /// 是否通过
         /// </summary>
         public Nullable<bool> IsaDopt { get; set; }

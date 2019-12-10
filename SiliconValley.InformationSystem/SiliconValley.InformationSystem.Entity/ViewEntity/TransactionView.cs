@@ -83,5 +83,21 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 阶段
         /// </summary>
         public string Stage { get; set; }
+        /// <summary>
+        /// 开始时间
+        /// </summary>
+        public DateTime qBeginTime { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
+        public DateTime qEndTime { get; set; }
+        /// <summary>
+        /// 是否需要领书
+        /// </summary>
+        public bool IsBookcollection { get; set; }
+        /// <summary>
+        /// 耽误学业原因
+        /// </summary>
+        public string Reasonsfordelay { get; set; }
     }
 }

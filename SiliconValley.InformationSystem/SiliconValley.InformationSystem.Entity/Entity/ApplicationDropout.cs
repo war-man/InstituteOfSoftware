@@ -13,16 +13,34 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 退学表
+    /// </summary>
     [Table("ApplicationDropout")]
     public partial class ApplicationDropout
     {
       
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 退学原因
+        /// </summary>
         public string Reasonofdropout { get; set; }
+        /// <summary>
+        /// 申请时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string Studentnumber { get; set; }
     
 

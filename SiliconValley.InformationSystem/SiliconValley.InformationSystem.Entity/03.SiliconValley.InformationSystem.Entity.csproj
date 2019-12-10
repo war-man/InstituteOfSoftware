@@ -163,6 +163,7 @@
     <Compile Include="Entity\ExamRoomDistributed.cs" />
     <Compile Include="Entity\ExamType.cs" />
     <Compile Include="Entity\ExamTypeName.cs" />
+    <Compile Include="Entity\Expels.cs" />
     <Compile Include="Entity\FinanceModel.cs" />
     <Compile Include="Entity\Fiveroutines.cs" />
     <Compile Include="Entity\FollwingInfo.cs" />
@@ -282,6 +283,7 @@
     <Compile Include="Entity\SubjectAchieve.cs" />
     <Compile Include="Entity\SubstituteTeachCourse.cs" />
     <Compile Include="Entity\SurveyRecords.cs" />
+    <Compile Include="Entity\Suspensionofschool.cs" />
     <Compile Include="Entity\TalentDemandPlan.cs" />
     <Compile Include="Entity\TeacheMitoryonduty.cs" />
     <Compile Include="Entity\Teacher.cs" />

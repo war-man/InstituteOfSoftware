@@ -295,7 +295,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         {
       
           var a=  studentInformationBusiness.GetEntity(studentid);
-          var ClassID=  scheduleForTraineesBusiness.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == true).First().ID_ClassName;
+          var ClassID= scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ID_ClassName;
             var x = new
             {
                 StudentNumber = a.StudentNumber,//学号

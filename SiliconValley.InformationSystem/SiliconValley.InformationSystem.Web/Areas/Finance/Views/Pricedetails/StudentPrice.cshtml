@@ -20,6 +20,7 @@
         .textar {
             width: 80%;
             height: 80px;
+            border-left:#ffffff
         }
     </style>
 </head>
@@ -194,6 +195,7 @@
                             Totalsum = Totalsum + item.Amountofmoney;
                             $("#Amountofmoney1").val(item.id);
                         } else if (item.Name == "食宿费") {
+                            console.log("伙食费")
                             $("#Amountofmoneys1").val(item.id);
                             $("#Amountofmoneys").val(item.Amountofmoney);
                             Totalsum = Totalsum + item.Amountofmoney;
