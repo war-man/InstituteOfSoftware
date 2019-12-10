@@ -8,7 +8,7 @@
         <li class="layui-this">在职员工信息</li>
         <li>离职员工信息</li>
     </ul>
-    <div class="layui-tab-content" >
+    <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
             @*模糊查询*@
             <fieldset>
@@ -110,6 +110,12 @@
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="AddEmps">添加员工</button>
                     <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>
+                    <div id="myCountDown" style="display:none">
+                        @foreach (var item in collection)
+                        {
+                            <span></span>
+                        }
+                    </div>
                 </div>
             </script>
             @*操作栏*@
@@ -144,11 +150,10 @@
     {{# } }}
 </script>
 
-
 @section script{
     <script>
         //在职员工加载
-        layui.use(['table', 'layer', 'form', 'laydate','element'], function () {
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
@@ -156,23 +161,44 @@
             var element = layui.element;
 
             $(function () {
-                BirthdayRemind();// 生日提醒
+                var birthnum =@ViewBag.birth;
+                if (birthnum!=0) {
+                    BirthdayRemind();// 生日提醒
+                }
+             
             });
 
+            //倒计时
+            layui.use('util', function () {
+                var util = layui.util;
+
+                //示例
+                var endTime = new Date(2099, 1, 1).getTime() //假设为结束日期
+                    , serverTime = new Date().getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
+
+                util.countdown(endTime, serverTime, function (date, serverTime, timer) {
+                    var str = date[0] + '天' + date[1] + '时' + date[2] + '分' + date[3] + '秒';
+                    layui.$('#test').html('距离2099年1月1日还有：' + str);
+                });
+            });
+
+
+
+            //生日提醒
             function BirthdayRemind() {
                 layer.open({
                     type: 2,
-                    content: '/Personnelmatters/EmployeesInfo/Birthdayremind' 
-                    , area: ["400px", "400px"]
+                    content: '/Personnelmatters/EmployeesInfo/Birthdayremind'
+                    , area: ["450px", "400px"]
                     , title: '员工生日提醒'
                     //, shade: 0.8
                     , anim: 2
                     , offset: 'rb'
-                    , skin: 'demo-class'
+                    , skin: 'demo-class .layui-layer-title{background:#f35757; }'
+                    , time: 20000
                 });
             }
-
-
+           
             table.render({
                 elem: '#emptab'
                 , url: '/Personnelmatters/EmployeesInfo/GetData'
@@ -289,8 +315,8 @@
 
             });
 
-          
-           
+
+
             //监听婚姻状态和性别操作
             form.on('switch(hunyinDemo)', function (obj) {
 
@@ -329,7 +355,7 @@
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }, where: {
-                            AppCondition: ename + "," + deptname + "," + pname + "," + Education + "," + sex + "," + PoliticsStatus + ","  + start_time + "," + end_time
+                            AppCondition: ename + "," + deptname + "," + pname + "," + Education + "," + sex + "," + PoliticsStatus + "," + start_time + "," + end_time
                         }
                     });
                 });
@@ -371,12 +397,12 @@
         });
 
         //离职人员加载
-        layui.use(['table', 'layer', 'form', 'laydate','element'], function () {
+        layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
             var form = layui.form;
             var laydate = layui.laydate;
-            var element = layui.element; 
+            var element = layui.element;
 
             table.render({
                 elem: '#emptab2'
@@ -390,12 +416,12 @@
                     , { field: 'EmpName', title: '姓名', width: 110, sort: true }
                     , { field: 'Depart', title: '所属部门', width: 110, sort: true }
                     , { field: 'Position', title: '所属岗位', width: 110, sort: true }
-                    , { field: 'Phone', title: '电话号码', sort: true, width: 130}
+                    , { field: 'Phone', title: '电话号码', sort: true, width: 130 }
                     , { field: 'Sex', title: '性别', sort: true, width: 100, templet: '#switchTp2', unresize: true }
                     , { field: 'EntryTime', title: '入职时间', sort: true, width: 120, templet: function (d) { return GetYMD(d.EntryTime) } }
                     , { field: 'PositiveDate', title: '转正日期', sort: true, width: 120, templet: function (d) { return GetYMD(d.PositiveDate) } }
                     , { field: 'deltime', title: '离职日期', sort: true, width: 120, templet: function (d) { return GetYMD(d.deltime) } }
-                    , { field: 'delreason', title: '离职原因', sort: true}
+                    , { field: 'delreason', title: '离职原因', sort: true }
 
                 ]]
                 , page: true
@@ -441,8 +467,8 @@
             })
 
         };
-  
-       
+
+
         //格式化时间
         function GetYearAndMonth(cellval) {
             if (cellval != null) {

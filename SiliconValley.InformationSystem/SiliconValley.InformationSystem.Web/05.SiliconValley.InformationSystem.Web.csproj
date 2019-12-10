@@ -1132,6 +1132,16 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120033610.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191127043148.jpg" />
+    <Content Include="uploadXLSXfile\EmpImage\bir4.jpg" />
+    <Content Include="uploadXLSXfile\EmpImage\birth3.gif" />
+    <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA舒克.png" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1801TA刘雨欣.jpg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
@@ -2846,7 +2856,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
-    <Folder Include="uploadXLSXfile\EmpImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
