@@ -13,7 +13,9 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
-
+    <style>
+   
+    </style>
 </head>
 <body>
     <form class="layui-form" action="" style="margin-top:20px;" id="form">
@@ -67,7 +69,7 @@
                         </div>
                         <div id="CostitemsX" style="position:relative;left:320px;bottom:60px;width:100px;"><a href="javascript:void(0);" style="text-decoration:underline;color:mediumblue;">新增类别？</a></div>
                     </div>
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql" id="disp">
                         <label class="layui-form-label">名称</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input" } })
@@ -116,7 +118,8 @@
 <script>
     layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
         //   $('select').attr('disabled', 'disabled');
-
+        $("#Name").val("学费");
+        $("#disp").css("display", "none");
         var form = layui.form
             , layer = layui.layer
             , layedit = layui.layedit
@@ -192,6 +195,13 @@
 
             if (data.elem.title == "学费" || data.elem.title == "学杂费" || data.elem.title == "食宿费") {
                 Tuition();
+                if (data.elem.title == "学费" || data.elem.title == "食宿费") {
+                    $("#Name").val(data.elem.title);
+                    $("#disp").css("display", "none");
+                } else {
+                    $("#Name").val("");
+                    $("#disp").css("display", "block");
+                }
             } else {
                 $($("#domes").children()).remove();
                 $("#lab1").css("display", "none");

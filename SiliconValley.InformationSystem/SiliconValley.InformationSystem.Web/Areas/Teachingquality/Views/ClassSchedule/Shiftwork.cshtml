@@ -13,179 +13,224 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <style>
-        table{
-           margin:20px auto;
+        table {
+            margin: 20px auto;
         }
+
         #Dateofapplication {
-        border:0px;
+            border: 0px;
         }
-        .th1{
-            width:100px;
-            height:50px;
+
+        .th1 {
+            width: 100px;
+            height: 50px;
         }
+
         span {
             padding-bottom: 5px;
             border-bottom: 2px solid #f89;
         }
+
         .borid {
-            border-right:#ffffff solid 1px;
+            border-right: #ffffff solid 1px;
         }
-        .labels{
-            width:200px;
-            border:0px;
+
+        .labels {
+            width: 200px;
+            border: 0px;
         }
+
         .Nation {
             width: 99%;
             height: 100px;
-             overflow: hidden;
-             border:0px;
+            overflow: hidden;
+            border: 0px;
         }
-        #NowCLass{border:0px;}
+
+        #NowCLass {
+            border: 0px;
+        }
     </style>
 </head>
 <body>
-    <h2 style="text-align:center;">硅谷高科软件学院学员转班申请表</h2>
-    <div style="margin-top:10px;" class="layui-form" action="" lay-filter="example">
-        <div>
-            <label class="layui-form-label" style="width:200px;"> 申请转班日期</label>
-            <div class="layui-input-inline">
-                @Html.TextBoxFor(a => a.Dateofapplication, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input" } })
+    <div id="text">
+        <h2 style="text-align:center;">硅谷高科软件学院学员转班申请表</h2>
+        <div style="margin-top:10px;" class="layui-form" action="" lay-filter="example">
+            <div>
+                <label class="layui-form-label" style="width:200px;"> 申请转班日期</label>
+                <div class="layui-input-inline">
+                    @if (ViewBag.Types == "1")
+                    {
+                        <div style="margin-top:10px;width:200px;">
+                            @Model.Dateofapplication.ToString().Substring(0, Model.Dateofapplication.ToString().Length - 7)
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.TextBoxFor(a => a.Dateofapplication, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input" } })
+                    }
+                </div>
             </div>
+            @Html.HiddenFor(a => a.StudentID)
+            @Html.HiddenFor(a => a.OriginalClass)
+            <table border="1">
+
+                <tr>
+                    <th class="th1">学员学号</th>
+                    <td>@Model.StudentID</td>
+                    <th class="th1">学员姓名</th>
+                    <td>@Model.Name</td>
+                    <th class="th1">性   别</th>
+                    <td>@Model.Sex</td>
+
+                </tr>
+                <tr>
+                    <th class="th1">身份证号</th>
+                    <td>@Model.IDnumber</td>
+                    <th class="th1">原所班级名称</th>
+                    <td>@Model.OriginalClassName</td>
+                    <th class="th1">原班级班主任姓名</th>
+                    <td>@Model.NowHeadmaster</td>
+
+                </tr>
+                <tr>
+                    <th class="th1">希望转入班级<input type="text" style="display:none;" name="NowCLass" id="NowCLass" /></th>
+                    <td colspan="1" id="CLassNames">
+                        @if (ViewBag.Types == "1")
+                        {
+                            @Model.NowCLassName
+                        }
+                        else
+                        {
+                            <button type="button" id="ClassName" style="margin-left:10px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                <i class="layui-icon">&#xe615;</i>
+                            </button>
+                        }
+                    </td>
+                    <th class="th1">联系电话</th>
+                    <td colspan="3">@Model.Telephone</td>
+
+                </tr>
+                <tr>
+                    <th class="th1">宿舍地址</th>
+                    <td>@Model.Dormitoryaddress</td>
+                    <th class="th1">通讯地址</th>
+                    <td colspan="3">@Model.Postaladdress</td>
+                </tr>
+                <tr>
+
+                    <th class="th1">申请转班原因</th>
+                    <td colspan="5" style="text-align:end;">
+                        @if (ViewBag.Types == "1")
+                        {
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "转班原因" }, { "readonly", "readonly" }, { "class", "layui-textarea Nation" } })
+                        }
+                        else
+                        {
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入转班原因" }, { "class", "layui-textarea Nation" } })
+                        }
+                        <div>
+                            学员签字：
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+
+                </tr>
+                <tr>
+                    <th class="th1">原转出班级班主任意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;  ">
+                            原转出班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+
+                    <th class="th1">转入班级班主任意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            转入班级班主签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+
+                    <th class="th1">部门主管意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            部门主签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">教学校长意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            教学校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">备     注</th>
+                    <td colspan="5"></td>
+                </tr>
+                <tr>
+
+                    <td class="borid" style="text-align:end"> 注：</td>
+                    <td colspan="5">1.适用范围：在学期间因特殊情况必须转班的学员;</td>
+                </tr>
+                <tr style="border-top:#ffffff solid 1px; ">
+                    <td class="borid"></td>
+                    <td colspan="5"> 2.上报时间：在接到学员申请的24小时内上报给部门主管并在处理完后的24小时内在系统内更新</td>
+                </tr>
+                <tr style="border-top:#ffffff solid 1px; ">
+                    <td class="borid"></td>
+                    <td colspan="5">  3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
+                </tr>
+                <tr style="border-top:#ffffff solid 1px; ">
+                    <td class="borid"></td>
+                    <td colspan="5">   4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如报考，报档，升学等其它日常工作的责任班主任。</td>
+                </tr>
+                @if (ViewBag.Types != "1")
+                {
+                    <tr>
+                        <td colspan="6" style="text-align:center;">   <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button></td>
+                    </tr>
+                }
+            </table>
         </div>
-        @Html.HiddenFor(a => a.StudentID)
-        @Html.HiddenFor(a => a.OriginalClass)
-        <table border="1">
-
-            <tr>
-                <th class="th1">学员学号</th>
-                <td>@Model.StudentID</td>
-                <th class="th1">学员姓名</th>
-                <td>@Model.Name</td>
-                <th class="th1">性   别</th>
-                <td>@Model.Sex</td>
-
-            </tr>
-            <tr>
-                <th class="th1">身份证号</th>
-                <td>@Model.IDnumber</td>
-                <th class="th1">原所班级名称</th>
-                <td>@Model.OriginalClassName</td>
-                <th class="th1">原班级班主任姓名</th>
-                <td>@Model.NowHeadmaster</td>
-
-            </tr>
-            <tr>
-                <th class="th1">希望转入班级</th>
-                <td colspan="1">
-                    @Html.DropDownListFor(a => a.NowCLass, ViewBag.List as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() { { "class", "layui-input labels" }, { "lay-verify", "required" } })
-                </td>
-                <th class="th1">联系电话</th>
-                <td colspan="3">@Model.Telephone</td>
-
-            </tr>
-            <tr>
-                <th class="th1">宿舍地址</th>
-                <td>@Model.Dormitoryaddress</td>
-                <th class="th1">通讯地址</th>
-                <td colspan="3">@Model.Postaladdress</td>
-            </tr>
-            <tr>
-
-                <th class="th1">申请转班原因</th>
-                <td colspan="5" style="text-align:end;">
-                    @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入转班原因" }, { "class", "layui-textarea Nation" } })
-
-                    <div>
-                        学员签字：
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        __________年_____月_____日 &nbsp;&nbsp;
-                    </div>
-                </td>
-
-            </tr>
-            <tr>
-                <th class="th1">原转出班级班主任意见</th>
-                <td colspan="5" style="text-align:end;">
-                    <div style="margin-top:30px;  ">
-                        原转出班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        __________年_____月_____日 &nbsp;&nbsp;
-                    </div>
-                </td>
-            </tr>
-            <tr>
-
-                <th class="th1">转入班级班主任意见</th>
-                <td colspan="5" style="text-align:end;">
-                    <div style="margin-top:30px;">
-                        转入班级班主签字：&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        __________年_____月_____日 &nbsp;&nbsp;
-                    </div>
-                </td>
-            </tr>
-            <tr>
-
-                <th class="th1">部门主管意见</th>
-                <td colspan="5" style="text-align:end;">
-                    <div style="margin-top:30px;">
-                        部门主签字：&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        __________年_____月_____日 &nbsp;&nbsp;
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <th class="th1">教学校长意见</th>
-                <td colspan="5" style="text-align:end;">
-                    <div style="margin-top:30px;">
-                        教学校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        __________年_____月_____日 &nbsp;&nbsp;
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <th class="th1">备     注</th>
-                <td colspan="5"></td>
-            </tr>
-            <tr>
-
-                <td class="borid" style="text-align:end"> 注：</td>
-                <td colspan="5">1.适用范围：在学期间因特殊情况必须转班的学员;</td>
-            </tr>
-            <tr style="border-top:#ffffff solid 1px; ">
-                <td class="borid"></td>
-                <td colspan="5"> 2.上报时间：在接到学员申请的24小时内上报给部门主管并在处理完后的24小时内在系统内更新</td>
-            </tr>
-            <tr style="border-top:#ffffff solid 1px; ">
-                <td class="borid"></td>
-                <td colspan="5">  3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
-            </tr>
-            <tr style="border-top:#ffffff solid 1px; ">
-                <td class="borid"></td>
-                <td colspan="5">   4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如报考，报档，升学等其它日常工作的责任班主任。</td>
-            </tr>
-            <tr>
-                <td colspan="6" style="text-align:center;">   <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button></td>
-            </tr>
-        </table>
     </div>
+    @if (ViewBag.Types == "1")
+    {
+        <div style="text-align:center;">
+            <button class="layui-btn" id="btn">打印</button>
+        </div>
+    }
 </body>
 </html>
+<script src="~/Areas/Teachingquality/js/Print.js"></script>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
-    layui.use(['table', 'layer', 'tree', 'form','laydate'], function () {
+    layui.use(['table', 'layer', 'tree', 'form', 'laydate'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
-     
+
         var laydate = layui.laydate;
         //日期正则
         var curDate = new Date();
@@ -209,11 +254,42 @@
             //    title: '最终的提交信息'
             //})
             //return false;
+            if ($("#NowCLass").val() != "") {
+                var datas = data.field;
+                TransactionAdd("/Teachingquality/ClassSchedule/Shiftwork", datas);
+            } else {
+                layer.msg('请选择需要转入的班级');
+            }
+         
 
-            var datas = data.field;
-            TransactionAdd("/Teachingquality/ClassSchedule/Shiftwork", datas);
-          
         });
     });
+    //拿到班级号
+    $("#ClassName").click(function () {
+        Popup("/Teachingquality/StudentTransaction/Classinquiry?ClassID=" + $("#OriginalClass").val(), "获取需要转入班级", 800, 500);
 
+    });
+
+    function GetPartsItme(data) {
+        console.log(data);
+        $("#NowCLass").val(data.id);
+        $("#ClassName").css("display", "none");
+        $("#CLassNames").text(data.ClassNumber);
+    }
+
+</script>
+@*打印*@
+<script>
+    document.getElementById('btn').onclick = function () {
+
+        Print('#text', {
+            onStart: function () {
+                console.log('onStart', new Date())
+            },
+            onEnd: function () {
+                console.log('onEnd', new Date())
+            }
+        })
+
+    }
 </script>

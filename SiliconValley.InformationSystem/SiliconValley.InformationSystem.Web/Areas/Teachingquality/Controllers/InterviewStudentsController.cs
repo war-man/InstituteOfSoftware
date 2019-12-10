@@ -145,7 +145,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult StudIenterEntiy(InterviewStudents interviewStudents)
         {
-            Base_UserModel user = new Base_UserModel();
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             string EmpNumber = user.EmpNumber;
             AjaxResult result = null;
             //多个学号组成后面截取逗号

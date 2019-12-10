@@ -445,7 +445,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //按学号查询单个学员 find
         public StudentInformation Finds(string id)
         {
-            var x = dbtext.Mylist("StudentInformation").Where(a => a.StudentNumber == id&& a.IsDelete != true).FirstOrDefault();
+            var x = dbtext.GetList().Where(a => a.StudentNumber == id&& a.IsDelete != true).FirstOrDefault();
             return x;
         }
         //按学号查询单个学员返回json格式
@@ -474,8 +474,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Sex = a.Sex,//性别,
                 Guardian=a.Guardian,//亲属Mylist("ScheduleForTrainees").
                 AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber ).First().AddDate,//入班时间
-               classa = classschedu.GetList().Where(q=> q.IsDelete == false && q.ClassStatus == false&&q.ClassNumber== ClassID).FirstOrDefault().ClassNumber//班级号
-                                  //a => a.IsDelete == false && a.ClassStatus == false
+               classa = Stuclass.ClassNames(stuid)//班级号
+                                                                                                                                                                                                                                                                                                                 //a => a.IsDelete == false && a.ClassStatus == false
             };
             
                 //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称

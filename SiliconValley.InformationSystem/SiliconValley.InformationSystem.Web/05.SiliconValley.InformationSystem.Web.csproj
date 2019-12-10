@@ -264,7 +264,6 @@
     <Compile Include="Areas\MyEducation\MyEducationAreaRegistration.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\BusinessManagementController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\CDinterviewController.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\DistributionController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
@@ -399,6 +398,7 @@
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Teachingquality\images\db618f149fc242299c9ebac0576ca2a1_th.jpg" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
+    <Content Include="Areas\Teachingquality\js\Print.js" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -1183,6 +1183,16 @@
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuild.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuilddetailed.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschool.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschooldetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Resumptionodetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Resumptionofstudy.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Expel.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Exoeldetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Dropoutofschools.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Classinquiry.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Dropoutofschoolsdetailed.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

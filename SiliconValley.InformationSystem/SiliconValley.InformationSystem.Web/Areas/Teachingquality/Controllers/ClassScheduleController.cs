@@ -52,6 +52,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         EnroExaminationBusiness enroExaminationBusiness = new EnroExaminationBusiness();
         //短信模板
         ShortmessageBusiness shortmessageBusiness = new ShortmessageBusiness();
+        //班级状态表
+        BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
         // GET: Teachingquality/ClassSchedule
         //主页面
         public ActionResult Index()
@@ -62,6 +64,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.Major_Id = Techarcontext.GetList().Select(a => new SelectListItem { Text = a.SpecialtyName, Value = a.Id.ToString() });
             //阶段
             ViewBag.grade_Id = Grandcontext.GetList().Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
+            
+            var States = classtatus.GetList().Where(a => a.IsDelete == false).ToList();
+
+            Classstatus classstatus = new Classstatus();
+            classstatus.TypeName = "正常";
+            classstatus.id = null;
+            States.Add(classstatus);
+            //班级状态
+            ViewBag.ClassState = States.Select(a => new SelectListItem { Text = a.TypeName, Value = a.id==null? "null":a.id.ToString() });
             return View();
         }
         //基础数据枚举数据
@@ -73,7 +84,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //阶段
         GrandBusiness Grandcontext = new GrandBusiness();
         //获取数据
-        public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id)
+        public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id,string ClassstatusID)
         {
             try
             {
@@ -100,7 +111,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
             }
-            if (!string.IsNullOrEmpty(Major_Id))
+            if (!string.IsNullOrEmpty(ClassstatusID))
+            {
+                    int? ClassState = null;
+                    if (ClassstatusID!="null")
+                    {
+                        ClassState = int.Parse(ClassstatusID);
+                    }
+                   
+                list = list.Where(a => a.ClassstatusID== ClassState).ToList();
+             }
+                if (!string.IsNullOrEmpty(Major_Id))
             {
                 int maid = int.Parse(Major_Id);
                 list = list.Where(a => a.Major_Id== maid).ToList();
@@ -115,8 +136,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 int maid = int.Parse(BaseDataEnum_Id);
                 list = list.Where(a => a.BaseDataEnum_Id == maid).ToList();
             }
-            //班级状态表
-                BaseBusiness<Classstatus> classtatus = new BaseBusiness<Classstatus>();
+            
               var dataList = list.Select(a => new
             {
                 //  a.BaseDataEnum_Id,
@@ -212,6 +232,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
          
             ViewBag.ClassName =dbtext.GetEntity( classNumberss).ClassNumber;
+            ViewBag.GrandName= Grandcontext.GetEntity(dbtext.GetEntity(classNumberss).grade_Id).GrandName;
             ViewBag.ClassdetailsView = dbtext.Listdatails((int)classNumberss);
             ViewBag.ClassID = classNumberss;
             ViewBag.Members = dbtext.MembersList();
@@ -385,7 +406,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            return Json(dbtext. Dismantleclasses(Addtime, FormerClass, List, Reasong, Remarks, StudentID),JsonRequestBehavior.AllowGet);
 
         }
- 
+
+       /// <summary>
+       /// 验证当前班级是否有下一个阶段
+       /// </summary>
+       /// <param name="ClassID">班级编号</param>
+       /// <returns></returns>
+        public ActionResult PayMones(int ClassID)
+        {
+            return Json(dbtext.PayMones(ClassID), JsonRequestBehavior.AllowGet);
+        }
         /// <summary>
         /// 验证成考学员是否重复
         /// </summary>
@@ -500,9 +530,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult Shiftwork()
         {
+            //是否打印
+            string Types = Request.QueryString["Types"];
+            if (Types == "1")
+            {
+                ViewBag.Types = Types;
+                int ID = int.Parse(Request.QueryString["ID"]);
+                var Classview = dbtext.Transactiondetails(ID);
+                Classview.NowCLassName = dbtext.GetEntity(Classview.NowCLass).ClassNumber;
+                return View(Classview);
+            }
             string StudentID = Request.QueryString["StudentID"];
             var Dismantl = Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
             var List = dbtext.ListGradeidentical(Stuclass.SutdentCLassName(StudentID).ID_ClassName);
+         
             foreach (var item in Dismantl)
             {
                 List = List.Where(a => a.id != item.FormerClass).ToList();
@@ -527,11 +568,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult TransactionDate(int page, int limit)
+        public ActionResult TransactionDate(int page, int limit, string TypeName, string StudentID, string Name,string IsaDopt)
         {
             int ClassID = int.Parse(Request.QueryString["ClassID"]);
            
-            return Json(dbtext.TransactionDate(page,limit,ClassID),JsonRequestBehavior.AllowGet);
+            return Json(dbtext.TransactionDate(page,limit,ClassID,TypeName,StudentID,Name, IsaDopt),JsonRequestBehavior.AllowGet);
         }
   
         public ActionResult PhoneSMS()

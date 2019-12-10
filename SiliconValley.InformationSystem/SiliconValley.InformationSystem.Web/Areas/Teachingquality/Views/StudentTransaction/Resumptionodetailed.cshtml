@@ -1,0 +1,194 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.ViewEntity.TransactionView
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Transactiondetails</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        table {
+            padding: 0px;
+            width: 98%;
+            margin: 20px auto;
+        }
+
+        #No {
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            background-image: url('/Areas/Teachingquality/images/审批.png');
+            width: 140px;
+            height: 120px;
+            background-position-x: -80px;
+            background-position-y: -60px;
+            /*filter: alpha(opacity:30);*/
+        }
+
+        #Yes {
+            position: absolute;
+            right: 30px;
+            top: 20px;
+            background-image: url('/Areas/Teachingquality/images/审批.png');
+            width: 140px;
+            height: 120px;
+            background-position-x: -260px;
+            background-position-y: -60px;
+        }
+
+        .widhe {
+            width: 100px;
+            height: 40px;
+        }
+    </style>
+</head>
+<body>
+    @if (Model.IsaDopt == true)
+    {
+        <div id="Yes"></div>
+    }
+    else if (Model.IsaDopt == false)
+    {
+        <div id="No"></div>
+    }
+
+    <h2 style="text-align:center;">硅谷高科软件学院学员复学详细</h2>
+    <div style="margin-top:30px;position:relative;z-index:1;" class="layui-form" action="" lay-filter="example">
+
+        @Html.HiddenFor(a => a.ID)
+        <table border="1">
+            <tr>
+                <th class="widhe">申请复学日期</th>
+                <td colspan="5" id="date1">
+                    @{
+                        DateTime da = Model.Dateofapplication;
+                        string strda = da.ToString().Substring(0, da.ToString().Length - 7);
+                    }
+                    @strda
+                </td>
+            </tr>
+            <tr>
+                <th class="th1 widhe">学员学号</th>
+                <td>@Model.StudentID</td>
+                <th class="th1">学员姓名</th>
+                <td>@Model.Name</td>
+                <th class="th1">性   别</th>
+                <td>@Model.Sex</td>
+
+            </tr>
+            <tr>
+                <th class="th1 widhe">身份证号</th>
+                <td>@Model.IDnumber</td>
+                <th class="th1">原所班级名称</th>
+                <td>@Model.OriginalClassName</td>
+                <th class="th1">原班级班主任姓名</th>
+                <td>@Model.NowHeadmaster</td>
+
+            </tr>
+            <tr>
+                <th class="th1 widhe">复学班级</th>
+                <td colspan="1">
+                    @Model.NowCLassName
+
+                </td>
+                <th class="th1">联系电话</th>
+                <td colspan="3">@Model.Telephone</td>
+
+            </tr>
+            <tr>
+                <th class="th1 widhe">宿舍地址</th>
+                <td>@Model.Dormitoryaddress</td>
+                <th class="th1">通讯地址</th>
+                <td colspan="3">@Model.Postaladdress</td>
+            </tr>
+            <tr>
+                <th class="th1" style="height:60px;">耽误学业原因</th>
+                <td colspan="5">
+                    @Model.Reasonsfordelay
+                   
+                </td>
+
+            </tr>
+            <tr>
+
+                <th class="th1" style="height:50px;">申请复学原因</th>
+                <td colspan="5">
+                    @Model.Reason
+                </td>
+
+            </tr>
+
+            <tr>
+
+                <td class="borid" style="text-align:end"> 注：</td>
+                <td colspan="5">1.适用范围：在学期间因特殊情况必须转班的学员;</td>
+            </tr>
+            <tr style="border-top:#ffffff solid 1px; ">
+                <td class="borid"></td>
+                <td colspan="5"> 2.上报时间：在接到学员申请的24小时内上报给部门主管并在处理完后的24小时内在系统内更新</td>
+            </tr>
+            <tr style="border-top:#ffffff solid 1px; ">
+                <td class="borid"></td>
+                <td colspan="5">  3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
+            </tr>
+            <tr style="border-top:#ffffff solid 1px; ">
+                <td class="borid"></td>
+                <td colspan="5">   4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如报考，报档，升学等其它日常工作的责任班主任。</td>
+            </tr>
+            <tr style="border-bottom:#ffffff solid 1px;border-left:#ffffff solid 1px;border-right:#ffffff solid 1px; height:60px;">
+                <td colspan="6" style="text-align:center;border-top:0px;">
+                    @if (Model.IsaDopt == null)
+                    {
+                        <button class="layui-btn layui-btn-radius" type="button" id="Yess"><i class="layui-icon">&#xe605;</i>通过</button>
+                        <button class="layui-btn layui-btn-radius layui-btn-danger" type="button" id="Nos"> <i class="layui-icon">&#x1006;</i>拒绝</button>
+                    }
+                    else
+                    {
+                        <button class="layui-btn layui-btn-radius layui-btn-danger" id="Ceno" type="button"><i class="layui-icon">&#x1007;</i>关闭</button>
+                    }
+                </td>
+
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['element', 'form', 'table', 'laydate', 'layer'], function () {
+        var element = layui.element;
+        var layer = layui.layer;
+        var table = layui.table;
+        var laydate = layui.laydate;
+        var form = layui.form;
+
+
+        //同意
+        $("#Yess").click(function () {
+            var Dabse = {
+                ID: $("#ID").val(),
+                Secss: "Yes"
+            }
+            TransactionAdd("/Teachingquality/StudentTransaction/Resumptionoperation", Dabse);
+        });
+        //拒绝
+        $("#Nos").click(function () {
+            var Dabse = {
+                ID: $("#ID").val(),
+                Secss: "No"
+            }
+            TransactionAdd("/Teachingquality/StudentTransaction/Resumptionoperation", Dabse);
+        });
+        //关闭
+        $("#Ceno").click(function () {
+            closeopen();
+        });
+    });
+
+</script>

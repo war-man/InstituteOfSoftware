@@ -72,6 +72,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         BaseBusiness<ApplicationDropout> ApplicationDropoutBusiness = new BaseBusiness<ApplicationDropout>();
         //重修业务类
         BaseBusiness<ApplicationRepair> ApplicationRepairBusiness = new BaseBusiness<ApplicationRepair>();
+        //休学业务类
+        BaseBusiness<Suspensionofschool> SuspensionofschoolBusiness = new BaseBusiness<Suspensionofschool>();
+        //开除业务类
+        BaseBusiness<Expels> ExpelsBusiness = new BaseBusiness<Expels>();
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -185,7 +189,17 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 if (item.CurrentClass == false)
                 {
                     var z = scheduleForTraineesBusiness.GetList().Where(a => a.StudentID == item.StudentID&&a.CurrentClass==true).FirstOrDefault();
-                    classStudentView.ClassNameView = z.ClassID;
+                    
+                    if (z!=null)
+                    {
+                        classStudentView.ClassNameView = z.ClassID;
+                    }
+                    else
+                    {
+                      var Dyan=  classDynamicsBusiness.GetList().Where(a => a.Studentnumber == classStudentView.StuNameID && a.IsaDopt == true).ToList().OrderByDescending(a=>a.ID).FirstOrDefault();
+                        classStudentView.Statusname = BasicdatBusiness.GetEntity(Dyan.States).Name;
+                        classStudentView.ClassID = Dyan.FormerClass;
+                    }
                 }
                 listview.Add(classStudentView);
             }
@@ -524,6 +538,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     scheduleForTrainees.StudentID = item;
                     scheduleForTrainees.CurrentClass = true;
                     scheduleForTrainees.AddDate = Convert.ToDateTime(Addtime);
+                    scheduleForTrainees.ClassID = this.GetEntity(List).ClassNumber;
                     AddScheduleFor.Add(scheduleForTrainees);
                 }
                 ss.Update(UpdateScheduleFor);
@@ -657,6 +672,22 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             detailedcostView.NextStageID = Grandcontext.GetEntity(x.NextStageID).GrandName;
             detailedcostView.CurrentStageID = Grandcontext.GetEntity(Grand).GrandName;
             return detailedcostView;
+        }
+        /// <summary>
+        /// 验证当前班级是否有下一个阶段
+        /// </summary>
+        /// <param name="ClassID">班级编号</param>
+        /// <returns></returns>
+        public bool PayMones(int ClassID)
+        {
+         var x=   this.GetEntity(ClassID);
+            //拿到下一个阶段
+            var z = GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == x.grade_Id).Count();
+            if (z>0)
+            {
+                return true;
+            }
+            return false;
         }
         /// <summary>
         /// 通过班级名称查询是否有重复名称
@@ -891,36 +922,43 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             AjaxResult result = null;
             try
             {
-                Transfer transfer = new Transfer();
-                transfer.Dateofregistration = false;
-                transfer.Reasonsforshifting = transactionView.Reason;
-                transfer.TransferDate = transactionView.Dateofapplication;
-                transfer.Studentnumber = transactionView.StudentID;
-                transfer.Hopetoransfer = transactionView.NowCLass;
-                var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt==null && a.Studentnumber == transfer.Studentnumber&&a.TransferID!=null).ToList();
-                result = new SuccessResult();
-                result.Success = true;
-                if (boolTransfer.Count()<1)
+                if (this.Changeprocessing(transactionView.StudentID) < 1)
                 {
-                    TransferBusiness.Insert(transfer);
-                    ClassDynamics classDynamics = new ClassDynamics();
-                    classDynamics.IsaDopt = null;
-                    classDynamics.Addtime = DateTime.Now;
-                    classDynamics.CurrentClass = transactionView.NowCLass;
-                    classDynamics.FormerClass = transactionView.OriginalClass;
-                    classDynamics.Studentnumber = transactionView.StudentID;
-                    var tranID = TransferBusiness.GetList().Where(a => a.Dateofregistration == false && a.Studentnumber == transactionView.StudentID && a.Hopetoransfer == transactionView.NowCLass).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
-                    classDynamics.TransferID = tranID.ID;
-                    classDynamics.States = this.FineBasicdat("转班").ID;
-                    classDynamicsBusiness.Insert(classDynamics);
-                  
-                    BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
-                    result.Msg = "申请成功";
+                    Transfer transfer = new Transfer();
+                    transfer.Dateofregistration = false;
+                    transfer.Reasonsforshifting = transactionView.Reason;
+                    transfer.TransferDate = transactionView.Dateofapplication;
+                    transfer.Studentnumber = transactionView.StudentID;
+                    transfer.Hopetoransfer = transactionView.NowCLass;
+                    var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.Studentnumber && a.TransferID != null).ToList();
+                    result = new SuccessResult();
+                    result.Success = true;
+                    if (boolTransfer.Count() < 1)
+                    {
+                        TransferBusiness.Insert(transfer);
+                        ClassDynamics classDynamics = new ClassDynamics();
+                        classDynamics.IsaDopt = null;
+                        classDynamics.Addtime = DateTime.Now;
+                        classDynamics.CurrentClass = transactionView.NowCLass;
+                        classDynamics.FormerClass = transactionView.OriginalClass;
+                        classDynamics.Studentnumber = transactionView.StudentID;
+                        var tranID = TransferBusiness.GetList().Where(a => a.Dateofregistration == false && a.Studentnumber == transactionView.StudentID && a.Hopetoransfer == transactionView.NowCLass).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
+                        classDynamics.TransferID = tranID.ID;
+                        classDynamics.States = this.FineBasicdat("转班").ID;
+                        classDynamicsBusiness.Insert(classDynamics);
+
+                        BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
+                        result.Msg = "申请成功";
+                    }
+                    else
+                    {
+
+                        result.Msg = "请勿重复申请";
+                    }
                 }
                 else
                 {
-                
-                    result.Msg = "请勿重复申请";
+                    result.Msg = "有异动数据未处理";
                 }
             
             }
@@ -950,7 +988,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <param name="limit"></param>
         /// <param name="ClassID"></param>
         /// <returns></returns>
-        public object TransactionDate(int page, int limit, int ClassID)
+        public object TransactionDate(int page, int limit, int ClassID, string TypeName, string StudentID, string Name,string IsaDopt)
         {
             var classDyan = classDynamicsBusiness.GetList();
             List<ClassDynamics> listDyanmics = new List<ClassDynamics>();
@@ -966,21 +1004,50 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 }
               
             }
-          var x= listDyanmics.Select(a=>new {
+            var x = listDyanmics.Select(a => new
+            {
                 a.ID,
-               StatesName= BasicdatBusiness.GetEntity(a.States).Name,//类型
-               a.Studentnumber,
-               Name= studentInformationBusiness.GetEntity(a.Studentnumber).Name,
-                Sex = studentInformationBusiness.GetEntity(a.Studentnumber).Sex==false?"女":"男",
+                a.States,
+                StatesName = BasicdatBusiness.GetEntity(a.States).Name,//类型
+                a.Studentnumber,
+                Name = studentInformationBusiness.GetEntity(a.Studentnumber).Name,
+                Sex = studentInformationBusiness.GetEntity(a.Studentnumber).Sex == false ? "女" : "男",
                 Telephone = studentInformationBusiness.GetEntity(a.Studentnumber).Telephone,
                 a.IsaDopt
-            }).OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            }).ToList();
+            if (!string.IsNullOrEmpty(TypeName))
+            {
+                var sta = int.Parse(TypeName);
+                x= x.Where(a => a.States == sta).ToList();
+            }
+            if (!string.IsNullOrEmpty(StudentID))
+            {
+              
+                x = x.Where(a => a.Studentnumber == StudentID).ToList();
+            }
+            if (!string.IsNullOrEmpty(Name))
+            {
+               
+                x = x.Where(a => a.Name.Contains(Name)).ToList();
+            }
+            if (!string.IsNullOrEmpty(IsaDopt))
+            {
+                if (IsaDopt=="null")
+                {
+                    x = x.Where(a => a.IsaDopt == null).ToList();
+                }
+                else
+                {
+                    x = x.Where(a => a.IsaDopt == Convert.ToBoolean(IsaDopt)).ToList();
+                }
+            }
+            var Myx=x.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
                 code = "",
                 msg = "",
-                count = listDyanmics.Count,
-                data = x
+                count = x.Count,
+                data = Myx
             };
             return data;
         }
@@ -1021,11 +1088,30 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             var x = RestudyBusines.GetEntity(ID);
             TransactionView transactionView = new TransactionView();
-            transactionView.Dateofapplication = (DateTime)x.Restutime;
-            transactionView.Reason = x.Reasonsfordelay;
-            transactionView.NowCLassName = this.GetEntity(x.Reentry).ClassNumber;
+            transactionView.Dateofapplication = (DateTime)x.Applicationtime;
+            transactionView.Reason = x.Reason;
+            transactionView.NowCLassName = this.GetEntity(x.ClassID).ClassNumber;
+            transactionView.IsBookcollection = x.IsBookcollection;
+            transactionView.Reasonsfordelay = x.Reasonsfordelay;
             return transactionView;
         }
+
+        /// <summary>
+        /// 休学申请表单数据
+        /// </summary>
+        /// <param name="ID">休学id</param>
+        /// <returns></returns>
+        public TransactionView SuspensionofschoolFine(int ID)
+        {
+            var x = SuspensionofschoolBusiness.GetEntity(ID);
+            TransactionView transactionView = new TransactionView();
+            transactionView.Dateofapplication = (DateTime)x.Dateofapplication;
+            transactionView.Reason = x.Reason;
+            transactionView.qBeginTime = x.Startingperiod;
+            transactionView.qEndTime = x.Deadline;
+            return transactionView;
+        }
+
         /// <summary>
         /// 退学申请表单数据
         /// </summary>
@@ -1056,6 +1142,19 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             return transactionView;
         }
         /// <summary>
+        /// 获取开除表单数据
+        /// </summary>
+        /// <param name="ID"></param>
+        /// <returns></returns>
+        public TransactionView ExoeldetaFine(int ID)
+        {
+            var x = ExpelsBusiness.GetEntity(ID);
+            TransactionView transactionView = new TransactionView();
+            transactionView.Dateofapplication = (DateTime)x.Applicationtime;
+            transactionView.Reason = x.Reason;
+            return transactionView;
+        }
+        /// <summary>
         /// 异动数据
         /// </summary>
         /// <param name="ID">异动id</param>
@@ -1065,7 +1164,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             TransactionView transactionView = new TransactionView();
             var x = classDynamicsBusiness.GetEntity(ID);
             if (x.ApplicationDropoutID != null){
-              
+                
+             transactionView = this.ApplicationDropoutFine((int)x.ApplicationDropoutID);
             }
             else if (x.ApplicationRepairID!=null)
             {
@@ -1079,6 +1179,21 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             {
 
             }
+            else if (x.SuspensionofschoolID!=null)
+            {
+                
+              transactionView = this.SuspensionofschoolFine((int)x.SuspensionofschoolID);
+              
+            }
+            else if (x.RestudyID!=null)
+            {
+              transactionView = this.RestudyFine((int)x.RestudyID);
+            }
+            else if (x.ExpelsID!=null)
+            {
+                transactionView.NowCLassName = this.GetEntity(x.FormerClass).ClassNumber;
+                transactionView = this.ExoeldetaFine((int)x.ExpelsID);
+            }
            var Student= studentInformationBusiness.GetEntity(x.Studentnumber);
             transactionView.IsaDopt = x.IsaDopt;
             transactionView.Name = Student.Name;
@@ -1090,7 +1205,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             transactionView.Postaladdress = Student.Familyaddress;//家庭住址
             transactionView.NowHeadmaster = Hadmst.ClassHeadmaster(this.GetEntity(x.FormerClass).id).EmpName;//班主任姓名
             transactionView.OriginalClassName = this.GetEntity(x.FormerClass).ClassNumber;
-
+            transactionView.NowCLass = x.CurrentClass;
+         
             return transactionView;
         }
         /// <summary>
@@ -1224,13 +1340,30 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public List<ClassSchedule> RebuildStage(int Stage)
         {
             List<ClassSchedule> ListClass = new List<ClassSchedule>();
-            ListClass.AddRange(this.GetList().Where(a => a.grade_Id == Stage).ToList());
+            ListClass.AddRange(this.GetList().Where(a => a.grade_Id == Stage && a.ClassstatusID == null).ToList());
             var ListStage = this.RecursionStage(Stage);
             foreach (var item in ListStage)
             {
-                ListClass.AddRange(this.GetList().Where(a => a.grade_Id == item.CurrentStageID).ToList());
+                ListClass.AddRange(this.GetList().Where(a => a.grade_Id == item.CurrentStageID&&a.ClassstatusID==null).ToList());
             }
             return ListClass;
+        }
+        /// <summary>
+        /// 根据阶段获取前面阶段
+        /// </summary>
+        /// <param name="Stage">阶段id</param>
+        /// <returns></returns>
+        public List<Grand> Grandbehind(int Stage)
+        {
+            List<Grand> grands = new List<Grand>();
+           
+              var ListStage = this.RecursionStage(Stage);
+            foreach (var item in ListStage)
+            {
+                grands.Add(Grandcontext.GetEntity(item.CurrentStageID));
+            }
+            grands.Add(Grandcontext.GetEntity(Stage));
+            return grands;
         }
         /// <summary>
         /// 重修数据申请提交
@@ -1242,28 +1375,303 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             AjaxResult result = null;
             try
             {
-                ApplicationRepair transfer = new ApplicationRepair();
-                transfer.IsDelete = false;
-                transfer.Reason = transactionView.Reason;
-                transfer.Repairtime = transactionView.Dateofapplication;
-                transfer.StudentID = transactionView.StudentID;
-                transfer.Rehabilit = transactionView.NowCLass;
-                transfer.Addtime = DateTime.Now;
-                var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.StudentID && a.ApplicationRepairID != null).ToList();
                 result = new SuccessResult();
                 result.Success = true;
+                if (this.Changeprocessing(transactionView.StudentID) < 1)
+                {
+                    ApplicationRepair transfer = new ApplicationRepair();
+                    transfer.IsDelete = false;
+                    transfer.Reason = transactionView.Reason;
+                    transfer.Repairtime = transactionView.Dateofapplication;
+                    transfer.StudentID = transactionView.StudentID;
+                    transfer.Rehabilit = transactionView.NowCLass;
+                    transfer.Addtime = DateTime.Now;
+                    var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.StudentID && a.ApplicationRepairID != null).ToList();
+                    if (boolTransfer.Count() < 1)
+                    {
+                        ApplicationRepairBusiness.Insert(transfer);
+                        ClassDynamics classDynamics = new ClassDynamics();
+                        classDynamics.IsaDopt = null;
+                        classDynamics.Addtime = DateTime.Now;
+                        classDynamics.CurrentClass = transactionView.NowCLass;
+                        classDynamics.FormerClass = transactionView.OriginalClass;
+                        classDynamics.Studentnumber = transactionView.StudentID;
+                        var tranID = ApplicationRepairBusiness.GetList().Where(a => a.IsDelete == false && a.StudentID == transactionView.StudentID && a.Rehabilit == transactionView.NowCLass).ToList().OrderByDescending(a => a.Id).FirstOrDefault();
+                        classDynamics.ApplicationRepairID = tranID.Id;
+                        classDynamics.States = this.FineBasicdat("重修").ID;
+                        classDynamicsBusiness.Insert(classDynamics);
+
+                        BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
+                        result.Msg = "申请成功";
+                    }
+                    else
+                    {
+
+                        result.Msg = "请勿重复申请";
+                    }
+                }
+                else
+                {
+                    result.Msg = "有异动数据未处理";
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 休学数据操作
+        /// </summary>
+        /// <param name="ID">异动id</param>
+        /// <param name="Secss">同意或者拒绝</param>
+        /// <returns></returns>
+        public AjaxResult SuspensionofschoolAdd(int ID, string Secss)
+        {
+            var x = classDynamicsBusiness.GetEntity(ID);
+
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                retus.Success = true;
+                if (Secss == "Yes")
+                {
+                    x.IsaDopt = true;
+                    var StudenClass = ss.GetList().Where(a => a.StudentID == x.Studentnumber && a.CurrentClass == true).FirstOrDefault();
+                    StudenClass.CurrentClass = false;
+                    ss.Update(StudenClass);
+                    CLassdynamic.Update(x);
+                    BusHelper.WriteSysLog("异动数据修改", EnumType.LogType.添加数据);
+                    retus.Msg = "操作成功";
+                }
+                else
+                {
+                    x.IsaDopt = false;
+                    CLassdynamic.Update(x);
+                    BusHelper.WriteSysLog("修改异动数据", EnumType.LogType.编辑数据);
+                    retus.Msg = "审批失败";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
+        /// <summary>
+        /// 休学申请表单数据提交
+        /// </summary>
+        /// <param name="transactionView">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult SuspensionofschoolAdd(TransactionView transactionView)
+        {
+            AjaxResult result = null;
+            try
+            {
+                result = new SuccessResult();
+                result.Success = true;
+                if (this.Changeprocessing(transactionView.StudentID) < 1)
+                {
+                    Suspensionofschool transfer = new Suspensionofschool();
+                    transfer.IsDelete = false;//是否删除
+                    transfer.Reason = transactionView.Reason;//原因
+                    transfer.Dateofapplication = transactionView.Dateofapplication;//申请日期
+                    transfer.Studentnumber = transactionView.StudentID;//学号
+                    transfer.Startingperiod = transactionView.qBeginTime;//开始时间
+                    transfer.Deadline = transactionView.qEndTime;//结束时间
+
+                    var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.Studentnumber && a.SuspensionofschoolID != null).ToList();
+                   
+                    if (boolTransfer.Count() < 1)
+                    {
+                        SuspensionofschoolBusiness.Insert(transfer);
+                        ClassDynamics classDynamics = new ClassDynamics();
+                        classDynamics.IsaDopt = null;
+                        classDynamics.Addtime = DateTime.Now;
+                        classDynamics.FormerClass = transactionView.OriginalClass;
+                        classDynamics.Studentnumber = transactionView.StudentID;
+                        var tranID = SuspensionofschoolBusiness.GetList().Where(a => a.IsDelete == false && a.Studentnumber == transactionView.StudentID && a.Dateofapplication == transactionView.Dateofapplication && a.Startingperiod == transactionView.qBeginTime && a.Deadline == transactionView.qEndTime).ToList().OrderByDescending(a => a.id).FirstOrDefault();
+                        classDynamics.SuspensionofschoolID = tranID.id;
+                        classDynamics.States = this.FineBasicdat("休学").ID;
+                        classDynamicsBusiness.Insert(classDynamics);
+
+                        BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
+                        result.Msg = "申请成功";
+                    }
+                    else
+                    {
+
+                        result.Msg = "请勿重复申请";
+                    }
+                }
+                else
+                {
+                    result.Msg = "有异动申请未处理";
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 复学页面表单提交
+        /// </summary>
+        /// <param name="transactionView">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult ResumptionofstudyAdd(TransactionView transactionView)
+        {
+            AjaxResult result = null;
+            try
+            {
+                result = new SuccessResult();
+                result.Success = true;
+                if (this.Changeprocessing(transactionView.StudentID) < 1)
+                {
+                    Restudy transfer = new Restudy();
+                    transfer.IsDelete = false;//是否删除
+                    transfer.Reason = transactionView.Reason;//原因
+                    transfer.Applicationtime = transactionView.Dateofapplication;//申请日期
+                    transfer.StudentID = transactionView.StudentID;//学号
+                    transfer.IsBookcollection = transactionView.IsBookcollection;//是否领书
+                    transfer.ClassID = transactionView.NowCLass;//复学班级
+                    transfer.Reasonsfordelay = transactionView.Reasonsfordelay;//耽误学业原因
+                    var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.StudentID && a.SuspensionofschoolID != null).ToList();
+                  
+                    if (boolTransfer.Count() < 1)
+                    {
+                        RestudyBusines.Insert(transfer);
+                        ClassDynamics classDynamics = new ClassDynamics();
+                        classDynamics.IsaDopt = null;
+                        classDynamics.Addtime = DateTime.Now;
+                        classDynamics.FormerClass = transactionView.OriginalClass;
+                        classDynamics.CurrentClass = classDynamicsBusiness.GetList().Where(a => a.Studentnumber == transactionView.StudentID && a.IsaDopt != false).OrderByDescending(a => a.ID).FirstOrDefault().FormerClass;
+                        classDynamics.Studentnumber = transactionView.StudentID;
+                        var tranID = RestudyBusines.GetList().Where(a => a.IsDelete == false && a.StudentID == transactionView.StudentID && a.Applicationtime == transactionView.Dateofapplication && a.IsBookcollection == transactionView.IsBookcollection).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
+                        classDynamics.RestudyID = tranID.ID;
+                        classDynamics.States = this.FineBasicdat("复学").ID;
+                        classDynamicsBusiness.Insert(classDynamics);
+
+                        BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
+                        result.Msg = "申请成功";
+                    }
+                    else
+                    {
+
+                        result.Msg = "请勿重复申请";
+                    }
+                }
+                else
+                {
+                    result.Msg = "有异动申请未处理";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 复学数据操作
+        /// </summary>
+        /// <param name="ID">异动id</param>
+        /// <param name="Secss">同意或者拒绝</param>
+        /// <returns></returns>
+        public AjaxResult Resumptionoperation(int ID, string Secss) {
+            var x = classDynamicsBusiness.GetEntity(ID);
+
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                retus.Success = true;
+                if (Secss == "Yes")
+                {
+                    x.IsaDopt = true;
+                    CLassdynamic.Update(x);
+                    ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
+                    scheduleForTrainees.ID_ClassName = RestudyBusines.GetEntity(x.RestudyID).ClassID;
+                    scheduleForTrainees.ClassID = this.GetEntity(RestudyBusines.GetEntity(x.RestudyID).ClassID).ClassNumber;
+                    scheduleForTrainees.StudentID = x.Studentnumber;
+                    scheduleForTrainees.CurrentClass = true;
+                    scheduleForTrainees.AddDate = DateTime.Now;
+                    ss.Insert(scheduleForTrainees);
+                    BusHelper.WriteSysLog("异动数据修改", EnumType.LogType.添加数据);
+                    retus.Msg = "操作成功";
+                }
+                else
+                {
+                    x.IsaDopt = false;
+                    CLassdynamic.Update(x);
+                    BusHelper.WriteSysLog("修改异动数据", EnumType.LogType.编辑数据);
+                    retus.Msg = "审批失败";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
+        /// <summary>
+        /// 开除学员数据申请
+        /// </summary>
+        /// <param name="transactionView">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult ExpelAdd(TransactionView transactionView)
+        {
+            AjaxResult result = null;
+            try
+            {
+                result = new SuccessResult();
+                result.Success = true;
+                if (this.Changeprocessing(transactionView.StudentID) < 1) { 
+                Expels transfer = new Expels();
+                transfer.IsDelete = false;//是否删除
+                transfer.Reason = transactionView.Reason;//原因
+                transfer.Applicationtime = transactionView.Dateofapplication;//申请日期
+                transfer.Studentnumber = transactionView.StudentID;//学号
+               
+                var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.Studentnumber && a.ExpelsID != null).ToList();
+          
                 if (boolTransfer.Count() < 1)
                 {
-                    ApplicationRepairBusiness.Insert(transfer);
+                    ExpelsBusiness.Insert(transfer);
                     ClassDynamics classDynamics = new ClassDynamics();
                     classDynamics.IsaDopt = null;
                     classDynamics.Addtime = DateTime.Now;
-                    classDynamics.CurrentClass = transactionView.NowCLass;
                     classDynamics.FormerClass = transactionView.OriginalClass;
                     classDynamics.Studentnumber = transactionView.StudentID;
-                    var tranID = ApplicationRepairBusiness.GetList().Where(a => a.IsDelete == false && a.StudentID == transactionView.StudentID && a.Rehabilit == transactionView.NowCLass).ToList().OrderByDescending(a => a.Id).FirstOrDefault();
-                    classDynamics.ApplicationRepairID = tranID.Id;
-                    classDynamics.States = this.FineBasicdat("重修").ID;
+                    var tranID = ExpelsBusiness.GetList().Where(a => a.IsDelete == false && a.Studentnumber == transactionView.StudentID && a.Applicationtime == transactionView.Dateofapplication).ToList().OrderByDescending(a => a.id).FirstOrDefault();
+                    classDynamics.ExpelsID = tranID.id;
+                    classDynamics.States = this.FineBasicdat("开除").ID;
                     classDynamicsBusiness.Insert(classDynamics);
 
                     BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
@@ -1273,6 +1681,126 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 {
 
                     result.Msg = "请勿重复申请";
+                }
+                }
+                else
+                {
+                    result.Msg = "有异动申请未处理";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result = new ErrorResult();
+                result.Msg = "服务器错误";
+                result.Success = false;
+                result.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return result;
+        }
+        /// <summary>
+        /// 开除数据操作
+        /// </summary>
+        /// <param name="ID">异动id</param>Expelperation
+        /// <param name="Secss">同意或者拒绝</param>
+        /// <returns></returns>
+        public AjaxResult Expelperation(int ID, string Secss,string State)
+        {
+            var x = classDynamicsBusiness.GetEntity(ID);
+            AjaxResult retus = null;
+            try
+            {
+                retus = new SuccessResult();
+                retus.Success = true;
+                if (Secss == "Yes")
+                {
+                    x.IsaDopt = true;
+                    var StudenClass = ss.GetList().Where(a => a.StudentID == x.Studentnumber && a.CurrentClass == true).FirstOrDefault();
+                    StudenClass.CurrentClass = false;
+                    ss.Update(StudenClass);
+                    var Student = studentInformationBusiness.GetEntity(x.Studentnumber);
+                    Student.State= this.FineBasicdat(State).ID;
+                    studentInformationBusiness.Update(Student);
+                    CLassdynamic.Update(x);
+                    BusHelper.WriteSysLog("异动数据修改", EnumType.LogType.添加数据);
+                    retus.Msg = "操作成功";
+                }
+                else
+                {
+                    x.IsaDopt = false;
+                    CLassdynamic.Update(x);
+                    BusHelper.WriteSysLog("修改异动数据", EnumType.LogType.编辑数据);
+                    retus.Msg = "审批失败";
+                }
+
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
+        /// <summary>
+        /// 根据学号拿到正在处理的申请
+        /// </summary>
+        /// <param name="StudentID"></param>
+        /// <returns></returns>
+        public int Changeprocessing(string StudentID)
+        {
+           return classDynamicsBusiness.GetList().Where(a => a.Studentnumber == StudentID && a.IsaDopt == null).Count();
+        }
+        /// <summary>
+        /// 退学表单数据提交
+        /// </summary>
+        /// <param name="transactionView">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult DropoutofschoolsAdd(TransactionView transactionView)
+        {
+            AjaxResult result = null;
+            try
+            {
+                result = new SuccessResult();
+                result.Success = true;
+                if (this.Changeprocessing(transactionView.StudentID) < 1)
+                {
+                    ApplicationDropout transfer = new ApplicationDropout();
+                    transfer.IsDelete = false;//是否删除
+                    transfer.Reasonofdropout = transactionView.Reason;//原因
+                    transfer.Addtime = transactionView.Dateofapplication;//申请日期
+                    transfer.Studentnumber = transactionView.StudentID;//学号
+
+                    var boolTransfer = classDynamicsBusiness.GetList().Where(a => a.IsaDopt == null && a.Studentnumber == transfer.Studentnumber && a.ExpelsID != null).ToList();
+
+                    if (boolTransfer.Count() < 1)
+                    {
+                        ApplicationDropoutBusiness.Insert(transfer);
+                        ClassDynamics classDynamics = new ClassDynamics();
+                        classDynamics.IsaDopt = null;
+                        classDynamics.Addtime = DateTime.Now;
+                        classDynamics.FormerClass = transactionView.OriginalClass;
+                        classDynamics.Studentnumber = transactionView.StudentID;
+                        var tranID = ApplicationDropoutBusiness.GetList().Where(a => a.IsDelete == false && a.Studentnumber == transactionView.StudentID && a.Addtime == transactionView.Dateofapplication).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
+                        classDynamics.ApplicationDropoutID = tranID.ID;
+                        classDynamics.States = this.FineBasicdat("退学").ID;
+                        classDynamicsBusiness.Insert(classDynamics);
+
+                        BusHelper.WriteSysLog("添加异动数据", EnumType.LogType.添加数据);
+                        result.Msg = "申请成功";
+                    }
+                    else
+                    {
+
+                        result.Msg = "请勿重复申请";
+                    }
+                }
+                else
+                {
+                    result.Msg = "有异动申请未处理";
                 }
 
             }

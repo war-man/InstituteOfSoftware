@@ -15,7 +15,6 @@
     <style>
         table {
             margin: 20px auto;
-
         }
 
         #Dateofapplication {
@@ -34,7 +33,6 @@
 
         .borid {
             border-right: #ffffff solid 1px;
-      
         }
 
         .labels {
@@ -52,10 +50,10 @@
         #NowCLass {
             border: 0px;
         }
-        #text {
-            
-            margin-top: 40px;
-            
+
+        .DateWID {
+            width: 100PX;
+            border: 1px solid red;
         }
     </style>
 </head>
@@ -63,10 +61,10 @@
     <div id="text">
 
 
-        <h2 style="text-align:center">硅谷高科软件学院学员重修申请表</h2>
-        <div style="margin-top:10px; " class="layui-form" action="" lay-filter="example">
+        <h2 style="text-align:center;">硅谷高科软件学院学员退学申请表</h2>
+        <div style="margin-top:10px;" class="layui-form" action="" lay-filter="example">
             <div>
-                <label class="layui-form-label" style="width:200px;"> 申请重修日期</label>
+                <label class="layui-form-label" style="width:200px;"> 申请退学日期</label>
                 <div class="layui-input-inline">
                     @if (ViewBag.Types == "1")
                     {
@@ -96,54 +94,40 @@
                 <tr>
                     <th class="th1">身份证号</th>
                     <td>@Model.IDnumber</td>
-                    <th class="th1">原所班级名称</th>
+                    <th class="th1">所在班级名称</th>
                     <td>@Model.OriginalClassName</td>
-                    <th class="th1">原班级班主任姓名</th>
-                    <td style="width:100px;">@Model.NowHeadmaster</td>
-
-                </tr>
-                <tr>
-                    <th class="th1">希望重修班级  <input type="text" style="display:none;" name="NowCLass" id="NowCLass" /></th>
-                    <td colspan="1" id="CLassNames">
-                        @if (ViewBag.Types == "1")
-                        {
-                            @Model.NowCLassName
-                        }
-                        else
-                        {
-
-                            <button type="button" id="ClassName" style="margin-left:10px;" class="layui-btn layui-btn-sm layui-btn-primary">
-                                <i class="layui-icon">&#xe615;</i>
-                            </button>
-                           
-                        }
-
-
-                    </td>
-
-                    <th class="th1">联系电话</th>
-                    <td colspan="3">@Model.Telephone</td>
+                    <th class="th1">班级班主任姓名</th>
+                    <td>@Model.NowHeadmaster</td>
 
                 </tr>
                 <tr>
                     <th class="th1">宿舍地址</th>
                     <td>@Model.Dormitoryaddress</td>
-                    <th class="th1">通讯地址</th>
-                    <td colspan="3">@Model.Postaladdress</td>
+                    <th class="th1">联系电话</th>
+                    <td colspan="3">@Model.Telephone</td>
+
                 </tr>
                 <tr>
 
-                    <th class="th1">申请重修原因</th>
-                    <td colspan="5" style="text-align:end;">
+                    <th class="th1">通讯地址</th>
+                    <td>@Model.Postaladdress</td>
+                    <th class="th1">是否领书</th>
+                    <td  colspan="3"></td>
+                </tr>
 
+                <tr>
+
+                    <th class="th1">退学原因</th>
+                    <td colspan="5" style="text-align:end;">
                         @if (ViewBag.Types == "1")
                         {
-                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "重修原因" }, { "readonly", "readonly" }, { "class", "layui-textarea Nation" } })
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "退学原因" }, { "readonly", "readonly" }, { "class", "layui-textarea Nation" } })
                         }
                         else
                         {
-                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入重修原因" },{ "class", "layui-textarea Nation" } })
-                        }<div>
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "placeholder", "请输入退学原因" }, { "class", "layui-textarea Nation" } })
+                        }
+                        <div>
                             学员签字：
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;
@@ -154,7 +138,7 @@
 
                 </tr>
                 <tr>
-                    <th class="th1">重修班级班主任意见</th>
+                    <th class="th1">班主任意见</th>
                     <td colspan="5" style="text-align:end;">
                         <div style="margin-top:30px;  ">
                             班主任签字：&nbsp;&nbsp;&nbsp;&nbsp;
@@ -164,20 +148,26 @@
                         </div>
                     </td>
                 </tr>
-                @if (Model.Stage == "S4")
-                {
-                    <tr>
-                        <th class="th1">就业老师意见</th>
-                        <td colspan="5" style="text-align:end;">
-                            <div style="margin-top:30px;">
-                                就业老师签字：&nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                &nbsp;&nbsp;&nbsp;&nbsp;
-                                __________年_____月_____日 &nbsp;&nbsp;
-                            </div>
-                        </td>
-                    </tr>
-                }
+                <tr>
+                    <th class="th1" >咨询师意见</th>
+                    <td colspan="1"></td>
+                    <th class="th1">综合部意见</th>
+                    <td colspan="3" ></td>
+                </tr>
+
+
+                <tr>
+                    <th class="th1">家长是否同意</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            家长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+
 
                 <tr>
 
@@ -185,6 +175,18 @@
                     <td colspan="5" style="text-align:end;">
                         <div style="margin-top:30px;">
                             部门主签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+
+                    <th class="th1">市场意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            市场签字：&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;
                             __________年_____月_____日 &nbsp;&nbsp;
@@ -203,25 +205,62 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="th1" style="height:100px;">备     注</th>
+                    <th class="th1">常务副校长意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            常务副校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">校长意见</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            校长签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">财务审计</th>
+                    <td colspan="5" style="text-align:end;">
+                        <div style="margin-top:30px;">
+                            财务签字：&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            __________年_____月_____日 &nbsp;&nbsp;
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="th1">备     注</th>
                     <td colspan="5"></td>
                 </tr>
                 <tr>
 
                     <td class="borid" style="text-align:end"> 注：</td>
-                    <td colspan="5">1.适用范围：在学期间因特殊情况必须休学的学员;</td>
+                    <td colspan="5">1.适用范围：在学期间因特殊情况必须退学的学员;</td>
                 </tr>
                 <tr style="border-top:#ffffff solid 1px; ">
                     <td class="borid"></td>
-                    <td colspan="5"> 2.上报时间：班主任在接到学员申请的24小时内上报给部门主管并在处理后;24小时内在系统内更新</td>
+                    <td colspan="5">      2.上报时间：接到学员申请的24小时内上报给部门主管并在处理完后的24小时内在系统内更新;</td>
                 </tr>
                 <tr style="border-top:#ffffff solid 1px; ">
                     <td class="borid"></td>
-                    <td colspan="5">     3.此申请表最终交由内审部存档，由相关班主任更新系统信息;</td>
+                    <td colspan="5">
+                        3.此申请表最终交由内审部存档，由相关班主任更新系统信息;
+                    </td>
                 </tr>
                 <tr style="border-top:#ffffff solid 1px; ">
                     <td class="borid"></td>
-                    <td colspan="5">    4.该生的考核以本表备注中的部门主管意见为准。但备注中须写明如建议重修班级及是否收费等，并写明其它日常工作的责任班主任。</td>
+                    <td colspan="5">
+                        4.未在学校住宿学员由班主任在“住宿地址”栏写明：未住宿;“是否领书”栏写明：已领书全套或领书数量，或未领书;
+                    </td>
                 </tr>
                 @if (ViewBag.Types != "1")
                 {
@@ -229,7 +268,6 @@
                         <td colspan="6" style="text-align:center;">   <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button></td>
                     </tr>
                 }
-
             </table>
         </div>
     </div>
@@ -239,14 +277,12 @@
             <button class="layui-btn" id="btn">打印</button>
         </div>
     }
-
-
 </body>
 </html>
 <script src="~/Areas/Teachingquality/js/Print.js"></script>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
-    layui.use(['table', 'layer', 'tree', 'form','laydate'], function () {
+    layui.use(['table', 'layer', 'tree', 'form', 'laydate'], function () {
         var table = layui.table;
         var layer = layui.layer;
         var form = layui.form;
@@ -268,35 +304,21 @@
                 }
             }
         });
+
+    
         //监听提交
         form.on('submit(demo1)', function (data) {
             //layer.alert(JSON.stringify(data.field), {
             //    title: '最终的提交信息'
             //})
             //return false;
-            if ($("#NowCLass").val() != "") {
-                var datas = data.field;
-                TransactionAdd("/Teachingquality/StudentTransaction/Rebuild", datas);
-            } else {
-                layer.msg('请选择需要重修班级');
-            }
-         
+
+            var datas = data.field;
+            TransactionAdd("/Teachingquality/StudentTransaction/Dropoutofschools", datas);
 
         });
     });
 
-    //拿到班级号
-    $("#ClassName").click(function () {
-        Popup("/Teachingquality/StudentTransaction/Classinquiry?ClassID=" + $("#OriginalClass").val(), "获取需要重修班级", 800, 500);
-
-    });
-
-    function GetPartsItme(data) {
-      
-        $("#NowCLass").val(data.id);
-        $("#ClassName").css("display", "none");
-        $("#CLassNames").text(data.ClassNumber);
-    }
 </script>
 @*打印*@
 <script>

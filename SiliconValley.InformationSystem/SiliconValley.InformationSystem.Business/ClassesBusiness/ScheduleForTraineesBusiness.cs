@@ -6,12 +6,18 @@ using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.StudentBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Business.ClassDynamics_Business;
 
 namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 {
 
   public  class ScheduleForTraineesBusiness:BaseBusiness<ScheduleForTrainees>
-    {       
+    {
+        //学员异动类
+        ClassDynamicsBusiness classDynamicsBusiness = new ClassDynamicsBusiness();
+        //学员状态基础数据
+        BaseBusiness<Basicdat> BasicdatBusiness = new BaseBusiness<Basicdat>();
+
         /// <summary>
         /// 通过班级名称获取学员
         /// </summary>
@@ -47,11 +53,31 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             var x= this.GetList().Where(q => q.CurrentClass == true && q.StudentID == Sutdentid).FirstOrDefault();
             if (x==null)
             {
-              return  this.GetList().Where(a => a.StudentID == Sutdentid).OrderByDescending(a => a.ID).FirstOrDefault();
+                var z = classDynamicsBusiness.GetList().Where(a => a.Studentnumber == Sutdentid).OrderByDescending(a => a.ID).FirstOrDefault();
+                return this.GetList().Where(q =>  q.StudentID == Sutdentid&&q.ID_ClassName==z.FormerClass).FirstOrDefault();
             }
             else
             {
                 return x;
+            }
+        }
+        /// <summary>
+        /// 获取学生班级或者状态
+        /// </summary>
+        /// <param name="Sutdentid"></param>
+        /// <returns></returns>
+        public string ClassNames(string Sutdentid)
+        {
+            var x = this.GetList().Where(q => q.CurrentClass == true && q.StudentID == Sutdentid).FirstOrDefault();
+            if (x==null)
+            {
+           
+              var z=  classDynamicsBusiness.GetList().Where(a => a.Studentnumber == Sutdentid && a.IsaDopt == true).OrderByDescending(a => a.ID).FirstOrDefault();
+                return BasicdatBusiness.GetEntity(z.States).Name+",1";
+            }
+            else
+            {
+                return x.ClassID+",2";
             }
         }
     }

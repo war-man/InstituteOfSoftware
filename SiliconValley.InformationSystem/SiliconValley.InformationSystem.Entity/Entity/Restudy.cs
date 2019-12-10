@@ -22,19 +22,19 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 学号
         /// </summary>
-        public string StudentNO { get; set; }
+        public string StudentID { get; set; }
         /// <summary>
         /// 复学班级
         /// </summary>
-        public int Reentry { get; set; }
+        public int ClassID { get; set; }
         /// <summary>
         /// 耽误学业原因
         /// </summary>
         public string Reasonsfordelay { get; set; }
         /// <summary>
-        /// 备注
+        /// 申请原因
         /// </summary>
-        public string Remarks { get; set; }
+        public string Reason { get; set; }
         /// <summary>
         /// 是否删除
         /// </summary>
@@ -42,8 +42,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 申请日期
         /// </summary>
-        public Nullable<System.DateTime> Restutime { get; set; }
-
+        public Nullable<System.DateTime> Applicationtime { get; set; }
+        /// <summary>
+        /// 是否需要领书
+        /// </summary>
+        public bool IsBookcollection { get; set; }
 
     }
 }
