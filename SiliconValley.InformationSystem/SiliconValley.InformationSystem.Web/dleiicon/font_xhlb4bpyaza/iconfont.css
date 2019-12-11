@@ -15,7 +15,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-shuzi8:before {
+.icon-shuzi-8:before {
   content: "\e69e";
 }
 
@@ -23,11 +23,11 @@
   content: "\e6be";
 }
 
-.icon-shuzi4:before {
+.icon-shuzi-4:before {
   content: "\e629";
 }
 
-.icon-shuzi5:before {
+.icon-shuzi-5:before {
   content: "\e70d";
 }
 
@@ -35,11 +35,11 @@
   content: "\e605";
 }
 
-.icon-shuzi6:before {
+.icon-shuzi-6:before {
   content: "\e504";
 }
 
-.icon-shuzi7:before {
+.icon-shuzi-7:before {
   content: "\e507";
 }
 
@@ -47,7 +47,7 @@
   content: "\e653";
 }
 
-.icon-shuzi3:before {
+.icon-shuzi-3:before {
   content: "\e508";
 }
 
@@ -55,7 +55,7 @@
   content: "\e606";
 }
 
-.icon-shuzi:before {
+.icon-shuzi-2:before {
   content: "\e60e";
 }
 
