@@ -76,6 +76,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         BaseBusiness<Suspensionofschool> SuspensionofschoolBusiness = new BaseBusiness<Suspensionofschool>();
         //开除业务类
         BaseBusiness<Expels> ExpelsBusiness = new BaseBusiness<Expels>();
+        //学生居住信息
+        private AccdationinformationBusiness Accdation;
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -888,7 +890,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             //获取班级对象
             var Stage = this.GetEntity(scheduleForTraineesBusiness.SutdentCLassName(StudentID).ID_ClassName);
             transactionView.Stage =Grandcontext.GetEntity(Stage.grade_Id).GrandName;//阶段
-          // transactionView.Dormitoryaddress = accdationinformationBusiness.GetDormBystudentno(StudentID)==null?"该学员暂无宿舍地址": accdationinformationBusiness.GetDormBystudentno(StudentID).DormInfoName;//宿舍地址
+          transactionView.Dormitoryaddress = accdationinformationBusiness.GetDormBystudentno(StudentID)==null?"该学员暂无宿舍地址": accdationinformationBusiness.GetDormBystudentno(StudentID).DormInfoName;//宿舍地址
 
             return transactionView;
            
@@ -1095,7 +1097,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             transactionView.Reasonsfordelay = x.Reasonsfordelay;
             return transactionView;
         }
-
         /// <summary>
         /// 休学申请表单数据
         /// </summary>
@@ -1111,7 +1112,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             transactionView.qEndTime = x.Deadline;
             return transactionView;
         }
-
         /// <summary>
         /// 退学申请表单数据
         /// </summary>
@@ -1206,6 +1206,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             transactionView.NowHeadmaster = Hadmst.ClassHeadmaster(this.GetEntity(x.FormerClass).id).EmpName;//班主任姓名
             transactionView.OriginalClassName = this.GetEntity(x.FormerClass).ClassNumber;
             transactionView.NowCLass = x.CurrentClass;
+            
          
             return transactionView;
         }
@@ -1699,6 +1700,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return result;
         }
+     
         /// <summary>
         /// 开除数据操作
         /// </summary>
@@ -1719,6 +1721,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     var StudenClass = ss.GetList().Where(a => a.StudentID == x.Studentnumber && a.CurrentClass == true).FirstOrDefault();
                     StudenClass.CurrentClass = false;
                     ss.Update(StudenClass);
+                    Accdation = new AccdationinformationBusiness();
+                    Accdation.delacc(x.Studentnumber);
                     var Student = studentInformationBusiness.GetEntity(x.Studentnumber);
                     Student.State= this.FineBasicdat(State).ID;
                     studentInformationBusiness.Update(Student);

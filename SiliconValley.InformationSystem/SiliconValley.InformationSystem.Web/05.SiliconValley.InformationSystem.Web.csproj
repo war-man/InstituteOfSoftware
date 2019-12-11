@@ -295,6 +295,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
