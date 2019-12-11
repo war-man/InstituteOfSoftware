@@ -75,7 +75,15 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public DormInformation GetDormBystudentno(string StudentNumber)
         {
             var query = this.GetAccdationByStudentNumber(StudentNumber);
-            return dbdorm.GetEntity(query.DormId);
+            if (query!=null)
+            {
+                return dbdorm.GetEntity(query.DormId);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         /// <summary>
