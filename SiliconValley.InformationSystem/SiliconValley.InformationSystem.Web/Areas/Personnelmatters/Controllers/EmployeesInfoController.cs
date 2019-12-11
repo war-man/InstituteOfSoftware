@@ -1038,7 +1038,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
        /// </summary>
        /// <returns></returns>
         public ActionResult ContractEndRemind() {
-
+            return View();
         }
 
         // 图片上传
