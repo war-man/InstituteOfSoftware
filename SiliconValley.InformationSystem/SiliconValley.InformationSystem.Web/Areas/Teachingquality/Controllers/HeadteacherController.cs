@@ -201,6 +201,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                Sex= employees.Sex,//性别
                Phone= employees.Phone,//电话
                DeptName= department.DeptName,//部门
+                Images=  employees.Image//图片
             };
             return View(Headyees);
         }

@@ -14,7 +14,7 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="AddHeadClass"><i class="layui-icon">&#xe654;</i>添加带班</button>
-
+            <button class="layui-btn layui-btn-sm" lay-event="Teamleaderdistribution"><i class="layui-icon">&#xe654;</i>带班分布图</button>
         </div>
       
     </script>
@@ -78,10 +78,8 @@
                         }
 
                         break;
-                    case 'getUpdate':
-
-
-
+                    case 'Teamleaderdistribution':
+                        window.location = "/Teachingquality/Headteacher/Teamleaderdistribution";
                         break;
                 };
             });

@@ -294,6 +294,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
@@ -400,6 +401,8 @@
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />

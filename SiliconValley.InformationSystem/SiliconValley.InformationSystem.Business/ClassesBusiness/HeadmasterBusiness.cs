@@ -327,7 +327,8 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
                 ClassName = classScheduleBusiness.GetEntity(a.ClassID).ClassNumber,
                 ClassID=(int)a.ClassID,
                  Stage= classScheduleBusiness.GetClassGrand((int)a.ClassID, 222),
-                 Major= classScheduleBusiness.GetClassGrand((int)a.ClassID, 1)
+                 Major= classScheduleBusiness.GetClassGrand((int)a.ClassID, 1),
+                 HeadmasterImages= employeesInfoManage.GetEntity(this.GetEntity(a.LeaderID).informatiees_Id).Image
             }).ToList();
         }
         /// <summary>
