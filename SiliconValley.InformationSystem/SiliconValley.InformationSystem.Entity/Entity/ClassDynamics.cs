@@ -78,5 +78,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 是否通过
         /// </summary>
         public Nullable<bool> IsaDopt { get; set; }
+        /// <summary>
+        /// 宿舍地址
+        /// </summary>
+        public string Dormitoryaddress { get; set; }
     }
 }
