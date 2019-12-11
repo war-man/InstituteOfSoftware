@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "EmpStaffAndStuIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>EmpStaffAndStuIndex</h2>*@
+<style>
+    #div1 {
+        width: 39%;
+        height: 900px;
+        border: 1px solid red;
+        float: left;
+    }
+
+    #div2 {
+        width: 22%;
+        height: 900px;
+        border: 1px solid red;
+        float: left;
+    }
+
+    #div3 {
+        width: 39%;
+        height: 900px;
+        border: 1px solid red;
+        float: left;
+    }
+
+    .btnDiv {
+        display: inline-block;
+        position: relative;
+    }
+
+        .btnDiv .delete {
+            position: absolute;
+            top: 0px;
+            right: 0px;
+            width: 50px;
+            height: 50px;
+            display: none;
+        }
+</style>
+<div id="div1">
+    <div id="topdiv">
+        <div id="mystudentwhytop">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-inline" id="mubandiv">
+                        <label class="layui-form-label" id="querylable" style="width:120px;">搜索选择框</label>
+                        <div class="layui-input-inline" style="width:156px">
+                            <select name="modules" id="modules" @*lay-verify="required"*@ lay-filter="select00" lay-search="">
+                                <option value="ing">株洲</option>
+                                <option value="ed">上海</option>
+                                <option value="ed">深圳</option>
+                            </select>
+                        </div>
+                        <div class="layui-input-inline" style="width:156px">
+                            <input type="text" name="name0" @*lay-verify="required"*@ placeholder="请输入学生名字" autocomplete="off" class="layui-input">
+                        </div>
+
+                        <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn0">搜索</button>
+
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="tablediv">
+        <table class="layui-hide" id="table00" lay-filter="table00"></table>
+    </div>
+
+</div>
+<div id="div2">
+    <input type="checkbox" />
+</div>
+<div id="div3">
+    <div id="toplist">
+        <div class="btnDiv">
+            <button class="layui-btn layui-btn-lg layui-btn-radius">李四</button>
+            <a href="javascript:void(0);">
+                <img src="~/Images/del.png" height="6" width="6" distributionid="123" class="delete" />
+            </a>
+        </div>
+    </div>
+    <div id="detailed">
+
+    </div>
+</div>
+@section script{
+
+    <script src="~/Scripts/underscore.js"></script>
+
+    <script>
+        layui.use(['laypage', 'form', 'table', 'layer'], function () {
+            var table = layui.table, form = layui.form, layer = layui.layer;
+            var table00;
+            $(document).ready(init);
+            function init() {
+                $(".btnDiv").mouseenter(function () {
+                    $(this).find(".delete").show();
+
+                });
+                $(".btnDiv").mouseleave(function () {
+                    $(this).find(".delete").hide();
+                });
+
+            }
+            $(document).off("click", '.delete').on('click', '.delete', function () {
+                console.log($(this).attr('distributionid'));
+                $(this).parent().parent().remove();
+            });
+            table00 = table.render({
+                elem: '#table00'
+                , url: '/Obtainemployment/EmpStaffAndStu/table00'
+                , skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 20
+                , limits: [10, 20, 30, 45, 60, 75]
+                , page: true
+                //, toolbar: '#toolbarDemo'
+                , done: function (res, curr, count) {
+
+                }
+                , cols: [[ //标题栏
+                    { type: 'checkbox' }
+                    , { field: 'studentno', title: '学生编号', hide: true }
+                    , { field: 'studnetname', title: '学生姓名', width: 90 }
+                    , { field: 'empname', title: '预想城市', width: 90 }
+                    , { field: 'classno', title: '预想薪资', width: 90 }
+                    , { field: 'title', title: '季度', width: 117 }
+                    , { field: 'title', title: '班级', width: 90 }
+                    , { field: 'title', title: '就业状态', width: 117 }
+                ]]
+            });
+        });
+    </script>
+}

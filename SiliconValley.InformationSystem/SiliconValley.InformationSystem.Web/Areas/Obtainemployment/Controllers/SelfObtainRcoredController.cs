@@ -337,6 +337,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
 
                 dbselfObtainRcored = new SelfObtainRcoredBusiness();
+                dbstudentIntention = new StudentIntentionBusiness();
                 var name = ImageUpload(param0.StudentNO);
                 if (string.IsNullOrEmpty(name))
                 {
@@ -359,9 +360,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     param0.Date = DateTime.Now;
                     param0.EmpStaffID = queryempstaff.ID;
                     param0.IsDel = false;
-
                     dbselfObtainRcored.Insert(param0);
-                    ajaxResult.Success = true;
+
+
+                    //如果有意向数据，将会被删除掉
+                    if (dbstudentIntention.del(param0.StudentNO))
+                    {
+                        ajaxResult.Success = true;
+                    }
+                    else
+                    {
+                        ajaxResult.Success = false;
+                    }
+                    
                 }
 
             }

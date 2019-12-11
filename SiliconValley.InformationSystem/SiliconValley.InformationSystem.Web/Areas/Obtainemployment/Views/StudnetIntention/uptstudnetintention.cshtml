@@ -66,14 +66,16 @@
 
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-
-
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <div class="layui-input-block" id="btn0">
                             <button type="button" class="layui-btn layui-btn-radius" lay-submit="" lay-filter="demo1">确定</button>
                         </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <div class="layui-input-block" id="btn1">
+                            <button type="button" class="layui-btn layui-btn-radius" id="qite">退出</button>
 
-
+                        </div>
                     </div>
                 </div>
             </div>
@@ -81,10 +83,10 @@
     </div>
     <script>
         layui.use(['table', 'layer', 'form'], function () {
-            var table = layui.table, layer = layui.layer, AreaID = "", form = layui.form,myobj;
+            var table = layui.table, layer = layui.layer, AreaID = "", form = layui.form, myobj;
 
             jQuery(function () {
-                 myobj = JSON.parse('@Html.Raw(ViewBag.querydata)');
+                myobj = JSON.parse('@Html.Raw(ViewBag.querydata)');
                 var city = JSON.parse('@Html.Raw(ViewBag.city)');
                 loadform(myobj);
                 loadmuban3(city);
@@ -105,9 +107,6 @@
 
                     $("#city").append($(html));
                 }
-                var obj = _.template($("#muban3").html());
-                var html = obj({ AreaID: "", cityname: "其他城市", checked: "" });
-                $("#city").append($(html));
             }
             function loadform(data) {
                 $("#StudentName").val(data.StudentName);
@@ -122,14 +121,14 @@
             form.on('submit(demo1)', function (data) {
                 data.field.ID = myobj.ID;
                 console.log(data.field);
-                 $.ajax({
-                     url: '/Obtainemployment/StudnetIntention/upttyping',
+                $.ajax({
+                    url: '/Obtainemployment/StudnetIntention/upttyping',
                     type: "POST",
                     data: { param0: data.field },
                     success: function (successdata) {
                         if (successdata.Success) {
                             layer.msg('录入成功!', { icon: 6, time: 2000 }, function () {
-                               close();
+                                close();
                             });
 
                         } else {
@@ -140,17 +139,20 @@
                     },
                     error: function (errordata) {
                         layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
-                             close();
+                            close();
                         });
                     }
                 });
             });
 
-                   function close() {
+            function close() {
                 //当你在iframe页面关闭自身时
                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                 parent.layer.close(index); //再执行关闭
             }
+            $("#qite").click(function () {
+                close();
+            });
         });
     </script>
 </body>

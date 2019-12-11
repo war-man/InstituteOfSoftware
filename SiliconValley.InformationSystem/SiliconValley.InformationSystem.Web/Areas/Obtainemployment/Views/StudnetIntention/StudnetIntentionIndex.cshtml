@@ -42,7 +42,7 @@
                         <div class="layui-inline" id="mubandiv">
                             <label class="layui-form-label" id="querylable" style="width:100px">搜索选择框</label>
                             <div class="layui-input-inline" style="width:156px">
-                                <input type="text" name="name0" id="name0" lay-verify="required" placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                                <input type="text" name="name0" id="name0"  placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
                             </div>
 
                             <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn0">搜索</button>
@@ -70,6 +70,7 @@
     @*右侧按钮*@
     <script type="text/html" id="barDemo">
         <a class="layui-btn layui-btn-warm layui-btn-radius layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-radius layui-btn-xs" lay-event="del">删除</a>
     </script>
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
@@ -84,7 +85,7 @@
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, layer = layui.layer, $ = layui.jquery, form = layui.form, table = layui.table;
 
-            var empQuarterclassid, treedata, myleave, string1 = "", string2, table00, studentdata, studentname;
+            var empQuarterclassid, treedata, myleave, string1 = "", string2, table00, studentdata, studentname, isbtn = false;
             //初始化树
             var myDTree = dtree.render({
                 elem: "#demoTree",
@@ -149,32 +150,31 @@
                         studentdata = res.data;
                     }
                     , cols: [[ //标题栏
-                        { type: 'radio' }
-                        , { field: 'ID', title: '意向id'/*, width: 180*/, hide: true }
-                        , { field: 'classnumnber', title: '班级编号', width: 117 }
-                        , { field: 'StudentName', title: '学生姓名', width: 117 }
-                        , { field: 'sex', title: '性别', width: 117 }
+                        { field: 'ID', title: '意向id'/*, width: 180*/, hide: true }
+                        , { field: 'StudentName', title: '学生姓名', width: 90 }
+                        , { field: 'sex', title: '性别', width: 70 }
                         , { field: 'Telephone', title: '联系方式', width: 117 }
-                        , { field: 'Relationship', title: '亲属关系', width: 217 }
-                        , { field: 'RelativesName', title: '亲属名字', width: 217 }
-                        , { field: 'Familyphone', title: '亲属电话', width: 217 }
-                        , { field: 'Nation', title: '籍贯', width: 217 }
-                        , { field: 'StuSchoolName', title: '毕业学校', width: 217 }
-                        , { field: 'AreaName', title: '意向城市', width: 217 }
-                        , { field: 'Salary', title: '意向薪资', width: 245 }
-                        , { field: 'identitydocument', title: '身份证', width: 245 }
+                        , { field: 'Relationship', title: '亲属关系', width: 90 }
+                        , { field: 'RelativesName', title: '亲属名字', width: 90 }
+                        , { field: 'Familyphone', title: '亲属电话', width: 117 }
+                        , { field: 'Nation', title: '籍贯', width: 80 }
+                        , { field: 'StuSchoolName', title: '毕业学校', width: 156 }
+                        , { field: 'AreaName', title: '意向城市', width: 90 }
+                        , { field: 'Salary', title: '意向薪资', width: 90 }
+                        , { field: 'identitydocument', title: '身份证', width: 175 }
                         , {
-                            field: 'Date', title: '记录时间', width: 145, templet: function (d) {
+                            field: 'Date', title: '记录时间', width: 115, templet: function (d) {
                                 return TimeChange(d.Date);
                             }
                         }
-                        , { fixed: 'right', title: '操作', toolbar: '#barDemo'/*, width: 80*/ }
+                        , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 120 }
                     ]]
                 });
             }
 
             //绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
+                isbtn = false;
                 string1 = "";
                 studentname = "";
                 $("#name0").val("");
@@ -202,7 +202,7 @@
                     case '3':
 
                         empQuarterclassid = dtreeobj.nodeId;
-                        string2 = dtreeobj.context;
+                        string2 = dtreeobj.nodeId;
                         break;
                 }
                 loadtable00();
@@ -235,9 +235,9 @@
                 if (obj.event == 'edit') {
                     layer.open({
                         type: 2,
-                        content: "/Obtainemployment/SelfObtainRcored/edit?param0=" + data.ID,
-                        title: "修改学生申请书",
-                        area: ['1200px', '830px'],
+                        content: "/Obtainemployment/StudnetIntention/uptstudnetintention?param0=" + data.ID,
+                        title: "修改学生意向",
+                        area: ['680px', '330px'],
                         success: function (layero, index) {
                             //let body = layui.layer.getChildFrame('body', index);
                             //body.find("#classnumnber").val(clickclassnumber);
@@ -245,6 +245,31 @@
                         end: function () {
                             loadtable00();
                         }
+                    });
+                } else if(obj.event == 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            url: '/Obtainemployment/StudnetIntention/del',
+                            //async: false,
+                            data: { param0: data.ID },
+                            success: function (successdata) {
+                                if (successdata.Success) {
+                                    layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                } else {
+                                    layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                                loadtable00();
+                            },
+                            error: function (errordata) {
+                                layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        });
                     });
                 }
             });
@@ -254,7 +279,10 @@
                 table00.reload({
                     url: '/Obtainemployment/StudnetIntention/table00'
                     , done: function (res, curr, count) {
-                        studentdata = res.data;
+                         if (!isbtn) {
+                            console.log('join');
+                            studentdata = res.data;
+                        }
                     }
                     , where: {
                         leave: myleave,
@@ -269,17 +297,33 @@
 
             //名字查询
             form.on('submit(btn0)', function (data) {
+                var iscun = false;
+                isbtn = true;
                 studentname = data.field.name0;
-                for (var i = studentdata.length - 1; i >= 0; i--) {
+                string1 = "";
+                if (studentname == "") {
+                    isbtn = false;
+                    loadtable00();
+                } else {
+                    for (var i = studentdata.length - 1; i >= 0; i--) {
 
-                    if (studentdata[i].studnetname == studentname) {
+                        if (studentdata[i].StudentName == studentname) {
 
-                        string1 = studentdata[i].ID + "-" + string1
+                            string1 = studentdata[i].ID + "-" + string1
+                            iscun = true;
+                        }
+                    }
+                    if (iscun) {
+                        string1 = string1.substring(0, string1.length - 1);
+                        loadtable00();
+                    } else {
+                        layer.msg('暂无该学生信息!', { icon: 6, time: 2000 }, function () {
+
+                        });
+
                     }
                 }
-                string1 = string1.substring(0, string1.length - 1);
-                //console.log(string1);
-                loadtable00();
+               
                 return false;
             });
 

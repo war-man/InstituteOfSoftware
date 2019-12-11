@@ -16,6 +16,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private DormInformationBusiness dbdorm;
         private StaffAccdationBusiness dbstaffacc;
         private RoomdeWithPageXmlHelp dbroomxml;
+        private DormitoryLeaderBusiness dbleader;
+
         /// <summary>
         /// 返回正在居住的入住信息
         /// </summary>
@@ -126,6 +128,38 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 }
             }
             return Candelete;
+        }
+
+        /// <summary>
+        /// 删除学生入住信息
+        /// </summary>
+        /// <param name="studetno"></param>
+        /// <returns></returns>
+        public bool delacc(string studetno) {
+            bool result = true;
+            try
+            {
+                Accdationinformation accobj = this.GetAccdationinformations().Where(a => a.Studentnumber == studetno).FirstOrDefault();
+                if (accobj != null)
+                {
+                    accobj.IsDel = true;
+                    accobj.EndDate = DateTime.Now;
+                    this.Update(accobj);
+                    //如果是寝室长。将职位去除掉
+                    dbleader = new DormitoryLeaderBusiness();
+                    var obj1 = dbleader.GetLeaderByStudentNumber(obj.Studentnumber);
+                    if (obj1 != null)
+                    {
+                        dbleader.Cancellation(obj1);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+            return result;
+           
         }
     }
 }

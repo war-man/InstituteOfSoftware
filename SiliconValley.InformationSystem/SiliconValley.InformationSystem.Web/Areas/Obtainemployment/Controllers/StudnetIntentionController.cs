@@ -27,6 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private ProClassSchedule dbproClassSchedule;
         private EmploymentAreasBusiness dbarea;
         private EmpQuarterClassBusiness dbempQuarterClass;
+        private EmpStaffAndStuBusiness dbempStaffAndStu;
         // GET: Obtainemployment/StudnetIntention
         public ActionResult StudnetIntentionIndex()
         {
@@ -60,7 +61,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
             dbstudentIntention = new StudentIntentionBusiness();
             dbstudentDataKeepAndRecord = new StudentDataKeepAndRecordBusiness();
-            var data = new List<StudnetIntention>();
+            dbemploymentAreas = new EmploymentAreasBusiness();
+            dbproStudentInformation = new ProStudentInformationBusiness();
+             var data = new List<StudnetIntention>();
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
             EmploymentStaff queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
@@ -173,20 +176,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             dbproStudentInformation = new ProStudentInformationBusiness();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             dbemploymentAreas = new EmploymentAreasBusiness();
+            dbproClassSchedule = new ProClassSchedule();
             var querydata = dbstudentIntention.GetEntity(param0);
             var stuobj = dbproStudentInformation.GetEntity(querydata.StudentNO);
             StudentIntentionView view = new StudentIntentionView();
-            //var undres = dbproScheduleForTrainees.GetTraineesByStudentNumber(querydata.StudentNO);
-            //view.classnumnber = undres.ClassID;
+            var undres = dbproScheduleForTrainees.GetTraineesByStudentNumber(querydata.StudentNO);
+            view.classnumnber = dbproClassSchedule.GetEntity(undres.ID_ClassName).ClassNumber;
             var studentobj = dbproStudentInformation.GetEntity(querydata.StudentNO);
-            //view.StudentNO = stuobj.StudentNumber;
+            view.StudentNO = stuobj.StudentNumber;
             view.StudentName = studentobj.Name;
             view.Telephone = studentobj.Telephone;
             view.Salary = querydata.Salary;
-
-            
-
-            //view.AreaID = querydata.AreaID;
+            view.AreaID = querydata.AreaID;
             view.ID = param0;
             ViewBag.querydata = Newtonsoft.Json.JsonConvert.SerializeObject(view);
 
@@ -258,13 +259,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult add(int param0) { 
             dbproClassSchedule=new ProClassSchedule();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbstudentIntention = new StudentIntentionBusiness();
             dbarea = new EmploymentAreasBusiness();
             var classobj= dbproClassSchedule.GetEntity(param0);
-            List<StudentInformation> list1 = dbproScheduleForTrainees.GetStudentsByClassid(param0);
+            List<StudentInformation> list1 = dbstudentIntention.GetSurplusStudent(param0);
             List<EmploymentAreas> list2 = dbarea.GetAll();
             ViewBag.list1 = Newtonsoft.Json.JsonConvert.SerializeObject(list1);
             ViewBag.list2 = Newtonsoft.Json.JsonConvert.SerializeObject(list2);
             ViewBag.param0 = classobj.ClassNumber;
+            ViewBag.param1 = param0;
             return View();
         }
         
@@ -281,6 +284,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbempQuarterClass = new EmpQuarterClassBusiness();
                 dbemploymentStaff = new EmploymentStaffBusiness();
                 dbstudentIntention = new StudentIntentionBusiness();
+                dbproStudentInformation = new ProStudentInformationBusiness();
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
                 var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
                var qmpquarter= dbempQuarterClass.GetEmpQuarters().Where(a => a.Classid == param0.classid).FirstOrDefault();
@@ -295,6 +299,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 intention.Empinfoid = queryempstaff.ID;
                 intention.QuarterID = qmpquarter.QuarterID;
                 dbstudentIntention.Insert(intention);
+                StudentInformation student= dbproStudentInformation.GetEntity(param0.StudentNO);
+                student.Telephone = param0.Telephone;
+                dbproStudentInformation.Update(student);
                 ajaxResult.Success = true;
             }
             catch (Exception)
@@ -304,5 +311,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 根据传入过来的意向id删除 如果这个学生已经分配了就不能进行删除
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public ActionResult del(int param0) {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                dbstudentIntention = new StudentIntentionBusiness();
+                StudnetIntention intention = dbstudentIntention.GetEntity(param0);
+                if (dbempStaffAndStu.isdistribution(intention.StudentNO))
+                {
+                    ajaxResult.Success = false;
+                    ajaxResult.Msg = "该学生已经被安排就业！";
+                }
+                else
+                {
+                    intention.IsDel = true;
+                    dbstudentIntention.Update(intention);
+                    ajaxResult.Success = true;
+                }
+                
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+      
     }
 }
