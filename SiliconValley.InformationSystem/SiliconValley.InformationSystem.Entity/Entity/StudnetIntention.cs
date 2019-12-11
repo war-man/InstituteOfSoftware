@@ -28,6 +28,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Salary { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+        public Nullable<bool> isdistribution { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
        public int QuarterID { get; set; }
         public int Empinfoid { get; set; }

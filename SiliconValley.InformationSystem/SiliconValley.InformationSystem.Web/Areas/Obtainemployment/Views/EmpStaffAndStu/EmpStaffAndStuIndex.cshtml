@@ -5,23 +5,24 @@
 }
 
 @*<h2>EmpStaffAndStuIndex</h2>*@
+    <link href="~/dleiicon/font_xhlb4bpyaza/iconfont.css" rel="stylesheet" />
 <style>
     #div1 {
-        width: 39%;
+        width: 45%;
         height: 900px;
         border: 1px solid red;
         float: left;
     }
 
     #div2 {
-        width: 22%;
+        width: 20%;
         height: 900px;
         border: 1px solid red;
         float: left;
     }
 
     #div3 {
-        width: 39%;
+        width: 34%;
         height: 900px;
         border: 1px solid red;
         float: left;
@@ -35,11 +36,25 @@
         .btnDiv .delete {
             position: absolute;
             top: 0px;
-            right: 0px;
+            /*right: 0px;*/
+            right: -23px;
             width: 50px;
             height: 50px;
             display: none;
         }
+    #toplist {
+    height:30%;
+     border: 1px solid red;
+    }
+     #detailed {
+       height:70%;
+     border: 1px solid red;
+    }
+    .lad {
+    width:90px;
+    }
+
+
 </style>
 <div id="div1">
     <div id="topdiv">
@@ -50,9 +65,10 @@
                         <label class="layui-form-label" id="querylable" style="width:120px;">搜索选择框</label>
                         <div class="layui-input-inline" style="width:156px">
                             <select name="modules" id="modules" @*lay-verify="required"*@ lay-filter="select00" lay-search="">
-                                <option value="ing">株洲</option>
-                                <option value="ed">上海</option>
-                                <option value="ed">深圳</option>
+                                @foreach (var item in ViewBag.arealist)
+                                {
+                                    <option value="@item.ID">@item.AreaName</option>
+                                }
                             </select>
                         </div>
                         <div class="layui-input-inline" style="width:156px">
@@ -73,19 +89,62 @@
 
 </div>
 <div id="div2">
-    <input type="checkbox" />
+    <form class="layui-form" action="">
+        <input type="radio" name="sex" value="nan" title="周囧吧">
+        <input type="radio" name="sex" value="nv" title="杨雪吧" checked>
+        <input type="radio" name="sex" value="" title="周尚丰" >
+        <input type="radio" name="sex" value="nan" title="石一磊">
+        <input type="radio" name="sex" value="nv" title="妹子1" checked>
+    </form>
 </div>
 <div id="div3">
     <div id="toplist">
         <div class="btnDiv">
-            <button class="layui-btn layui-btn-lg layui-btn-radius">李四</button>
+            <button class="layui-btn layui-btn-lg layui-btn-primary layui-btn-radius">李四</button>
             <a href="javascript:void(0);">
-                <img src="~/Images/del.png" height="6" width="6" distributionid="123" class="delete" />
+                <span class="iconfont icon-shanchu delete"distributionid="1" ></span>
             </a>
         </div>
     </div>
     <div id="detailed">
+        <form class="layui-form" action="">
+          
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label lad">学生姓名:</label>
+                        <div class="layui-input-inline indiv" style="width: 154px;">
+                            <input type="text" id="StudentName" style="border:none;background-color:transparent;" value="陈云霞" class="layui-input" readonly="readonly" style="border:none" />
+                        </div>
+                    </div>
 
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label lad">班级名称:</label>
+                        <div class="layui-input-inline indiv" style="width: 154px;">
+                            <input type="text" id="classnumnber" style="border:none;background-color:transparent;" value="1702TA" class="layui-input" readonly="readonly" style="border:none" />
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label lad">预想薪资:</label>
+                        <div class="layui-input-inline indiv" style="width: 154px;">
+                            <input type="text" id="StudentName" style="border:none;background-color:transparent;" value="6.5K" class="layui-input" readonly="readonly" style="border:none" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label lad">预想城市:</label>
+                        <div class="layui-input-inline" style="width: 154px;">
+                            <input type="text" id="classnumnber" style="border:none;background-color:transparent;" value="上海" class="layui-input" readonly="readonly" style="border:none" />
+
+                        </div>
+                    </div>
+                </div>
+
+
+         
+        </form>
     </div>
 </div>
 @section script{
@@ -95,8 +154,14 @@
     <script>
         layui.use(['laypage', 'form', 'table', 'layer'], function () {
             var table = layui.table, form = layui.form, layer = layui.layer;
-            var table00;
-            $(document).ready(init);
+            var table00, areaid,data;
+             $(document).ready(init);
+            jQuery(function () {
+                areaid = '@Html.Raw(ViewBag.firstid)';
+                loadtable();
+            });
+           
+           
             function init() {
                 $(".btnDiv").mouseenter(function () {
                     $(this).find(".delete").show();
@@ -111,9 +176,10 @@
                 console.log($(this).attr('distributionid'));
                 $(this).parent().parent().remove();
             });
-            table00 = table.render({
+            function loadtable() {
+                table00 = table.render({
                 elem: '#table00'
-                , url: '/Obtainemployment/EmpStaffAndStu/table00'
+                , url: '/Obtainemployment/EmpStaffAndStu/table00?string0=' + areaid
                 , skin: 'line' //行边框风格
                 , even: true //开启隔行背景
                 , limit: 20
@@ -121,19 +187,21 @@
                 , page: true
                 //, toolbar: '#toolbarDemo'
                 , done: function (res, curr, count) {
-
+                    data = res.data;
                 }
                 , cols: [[ //标题栏
                     { type: 'checkbox' }
-                    , { field: 'studentno', title: '学生编号', hide: true }
-                    , { field: 'studnetname', title: '学生姓名', width: 90 }
-                    , { field: 'empname', title: '预想城市', width: 90 }
-                    , { field: 'classno', title: '预想薪资', width: 90 }
-                    , { field: 'title', title: '季度', width: 117 }
-                    , { field: 'title', title: '班级', width: 90 }
-                    , { field: 'title', title: '就业状态', width: 117 }
+                    , { field: 'ID', title: 'ID', hide: true }
+                    , { field: 'StudentName', title: '学生姓名', width: 90 }
+                    , { field: 'QuarterID', title: '季度id', width: 90,hide: true }
+                    , { field: 'Areaname', title: '预想城市', width: 90 }
+                    , { field: 'Salary', title: '预想薪资', width: 90 }
+                    , { field: 'Quartertitle', title: '季度'/*, width: 117*/ }
+                    , { field: 'classno', title: '班级', width: 90 }
+                    , { field: 'EmploymentStage', title: '就业状态'/*, width: 117 */}
                 ]]
             });
+            }
         });
     </script>
 }

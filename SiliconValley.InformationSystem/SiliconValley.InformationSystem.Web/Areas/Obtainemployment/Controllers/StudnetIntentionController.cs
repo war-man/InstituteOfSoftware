@@ -293,6 +293,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 intention.AreaID = param0.AreaID;
                 intention.Date = DateTime.Now;
                 intention.IsDel = false;
+                intention.isdistribution = false;
                 intention.Remark = param0.Remark;
                 intention.Salary = param0.Salary;
                 intention.StudentNO = param0.StudentNO;
