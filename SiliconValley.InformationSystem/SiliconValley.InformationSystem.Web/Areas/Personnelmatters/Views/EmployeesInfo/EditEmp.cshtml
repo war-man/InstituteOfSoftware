@@ -43,12 +43,11 @@
 </head>
 <body>
     <div>
+        <input type="hidden" id="mypname" value="@ViewBag.pname" />
+        <input type="hidden" id="mypid" value="@ViewBag.pid" />
         <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-container" style="margin-top:20px;">
-                <input type="hidden" id="mydname" value="@ViewBag.dname" />
-                <input type="hidden" id="mypname" value="@ViewBag.pname" />
-                <input type="hidden" id="mydid" value="@ViewBag.deptid" />
-                <input type="hidden" id="mypid" value="@ViewBag.pid" />
+
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
@@ -323,7 +322,7 @@
                             <input type="file" id="MyImage" name="MyImage" />
                             <div style="border:0px solid #808080;width:400px;height:200px;">
                                 <img id="showImage" style="width:400px;height:200px;" />
-                               
+
                             </div>
                         </div>
                     </div>
@@ -350,7 +349,7 @@
             $.get("/Personnelmatters/EmployeesInfo/GetempById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table','laydate'], function () {
                     var form = layui.form;
-                      var laydate = layui.laydate;
+                    var laydate = layui.laydate;
                     data.Sex = data.Sex.toString();
                     data.MaritalStatus = data.MaritalStatus.toString();
                     data.EntryTime = GetYMD(data.EntryTime);
@@ -526,9 +525,7 @@
                 } else {
                     data.field.Birthday = data.field.month + "月" + data.field.day + "日" + data.field.yinyang;
                 }
-              //  data.field.Image = $("#Image").val();
-
-
+             
                 console.log(data.field.MyImage);
                 var fd = new FormData();
                 var myimg = document.querySelector("#MyImage").files[0];
@@ -561,13 +558,9 @@
                         }
                     }
                 });
-
-
-               
+             
             });
-
           
-
         });
 
         //关闭添加页面
@@ -625,7 +618,7 @@
      @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
     <script>
         layui.use(['form', 'upload', 'layer'], function () {
-
+            console.log("开始加载的岗位编号：" + $("#mypid").val());
             var form = layui.form;
             $.ajax({
                 url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
@@ -634,16 +627,13 @@
                 success: function (resultData) {
                     $("#deptid").empty();
                     if (resultData.code == 0) {
-
-                        $("#deptid").append(new Option($("#mydname").val(), $("#mydid").val()));
                         $("#PositionId").append(new Option($("#mypname").val(), $("#mypid").val()));
                         $.each(resultData.data, function (index, item) {
-                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                            $("#deptid").append(new Option(item.DeptName, item.DeptId));
                         });
                     } else {
                         $("#deptid").append(new Option("暂无数据", ""));
                     }
-
                     layui.form.render("select");
                 }
             });
@@ -652,7 +642,6 @@
             //select 监听
             form.on('select(deptidfilter)', function (data) {
                 var value = data.value;  //select选中的值
-                console.log("选中值" + value);
                 $.ajax({
                     url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
                     data: { deptid: value },
@@ -661,11 +650,11 @@
                         if (resultData.code == 0) {
                             //清空赋值
                             $("#PositionId").empty();
-                            console.log(resultData.data);
                             $("#PositionId").append(new Option("请选择岗位", ""));
+                           
                             $.each(resultData.data, function (index, item) {
                                 //赋值
-                                $('#PositionId').append(new Option(item.PositionName, item.Pid));
+                                $("#PositionId").append(new Option(item.PositionName, item.Pid));
                             });
                         } else {
                             $("#PositionId").append(new Option("暂无数据", ""));
