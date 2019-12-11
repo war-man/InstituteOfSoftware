@@ -269,6 +269,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\EmpStaffAndStuController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\QuarterController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SelfObtainRcoredController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
@@ -400,6 +401,8 @@
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmpStaffAndStu\EmpStaffAndStuIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\edit.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -409,6 +412,7 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.js" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
+    <Content Include="Images\del.png" />
     <Content Include="Images\班级.jpg" />
     <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />

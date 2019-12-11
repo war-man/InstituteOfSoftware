@@ -81,6 +81,13 @@
       "font_class": "shuzi",
       "unicode": "e60e",
       "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "9718004",
+      "name": "删  除",
+      "font_class": "shanchu",
+      "unicode": "e620",
+      "unicode_decimal": 58912
     }
   ]
 }
