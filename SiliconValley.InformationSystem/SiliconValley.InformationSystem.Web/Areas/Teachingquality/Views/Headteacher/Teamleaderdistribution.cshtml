@@ -113,14 +113,15 @@
                         var div2 = $(' <div class="Title hover">  <input type="text" style="display:none" value=' + Team[A].ClassID + ' /> <div style="font-size:22pt;text-align:center;margin-top:10px;">' + Team[A].ClassName + '</div></div>');
                         console.log(Type);
                         if (Type == "Stage") {
-                            
-                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Major + '</div><div style="font-size:14pt;margin-top:1px;text-align:center;"><div style="position:relative;left:20px;"><img src="/Images/562108.jpg" class="round_icon" /></div> <label style="position:relative;top:-35px;left:3px;">' + Team[A].HeadmasterName + '</label></div>'));
+                          
+
+                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Major + '</div><div style="font-size:14pt;margin-top:1px;text-align:center;"><div style="position:relative;left:20px;"><img src="/uploadXLSXfile/EmpImage/' + Team[A].HeadmasterImages + '" class="round_icon" /></div> <label style="position:relative;top:-35px;left:3px;">' + Team[A].HeadmasterName + '</label></div>'));
                         } else if (Type == "HeadmasterName") {
 
-                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Stage + '</div><div style="font-size:14pt;margin-top:5px;text-align:center;"><div style="position:relative;left:20px;"><img src="/Images/562108.jpg" class="round_icon" /></div> <label style="position:relative;top:-30px;left:10px;">' + Team[A].Major + '</label></div>'));
+                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Stage + '</div><div style="font-size:14pt;margin-top:5px;text-align:center;"><div style="position:relative;left:20px;"><img src="/uploadXLSXfile/EmpImage/' + Team[A].HeadmasterImages + '" class="round_icon" /></div> <label style="position:relative;top:-30px;left:10px;">' + Team[A].Major + '</label></div>'));
                         } else {
                          
-                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Stage + '</div><div style="font-size:14pt;margin-top:5px;text-align:center;"><div style="position:relative;left:20px;"><img src="/Images/562108.jpg" class="round_icon" /></div> <label style="position:relative;top:-30px;left:10px;">' + Team[A].HeadmasterName + '</label></div>'));
+                            div2.append($('<div style="font-size:17pt;text-align:center;margin-top:3px;">' + Team[A].Stage + '</div><div style="font-size:14pt;margin-top:5px;text-align:center;"><div style="position:relative;left:20px;"><img src="/uploadXLSXfile/EmpImage/' + Team[A].HeadmasterImages + '" class="round_icon" /></div> <label style="position:relative;top:-30px;left:10px;">' + Team[A].HeadmasterName + '</label></div>'));
                         }
                      
                         dome.append(div2);

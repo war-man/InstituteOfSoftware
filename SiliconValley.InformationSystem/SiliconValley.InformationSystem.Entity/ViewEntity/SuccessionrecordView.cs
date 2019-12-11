@@ -14,5 +14,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
       public string Sex { get; set; }//性别
       public string Phone { get; set; }//电话
        public string DeptName { get; set; }//部门
+        public string Images { get; set; }//图片
     }
 }
