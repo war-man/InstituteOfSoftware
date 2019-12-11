@@ -36,6 +36,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult Index()
         {
             ViewBag.birth = GetTheGodOfLongevity().Count();
+            ViewBag.contractEnd = ContractEndRemind().Count();
+            ViewBag.contractendData = ContractEndRemind();
             return View();
         }
 
@@ -884,8 +886,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.DDAppId,
                 e.EmpName,
                 e.PositionId,
-                pname = emanage.GetPosition((int)e.PositionId).PositionName,
                 dname = emanage.GetDept((int)e.PositionId).DeptName,
+                pname = emanage.GetPosition((int)e.PositionId).PositionName,               
+               deptid = emanage.GetDept((int)e.PositionId).DeptId,
                 e.Sex,
                 e.Age,
                 e.Nation,
@@ -925,11 +928,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditEmp(string id)
         {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp = empmanage.GetInfoByEmpID(id);
-            ViewBag.dname = empmanage.GetDept(emp.PositionId).DeptName;
-            ViewBag.deptid = empmanage.GetDept(emp.PositionId).DeptId;
-            ViewBag.pname = empmanage.GetPosition(emp.PositionId).PositionName;
-            ViewBag.pid = empmanage.GetPosition(emp.PositionId).Pid;
+            var emp =empmanage.GetInfoByEmpID(id);
+            ViewBag.pid = emp.PositionId;
+            ViewBag.pname = empmanage.GetPobjById(emp.PositionId).PositionName;
             return View(emp);
         }
         [HttpPost]
@@ -982,7 +983,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             List<EmployeesInfo> luckdog = new List<EmployeesInfo>();
             var myemplist = empmanage.GetList();
 
-            string lunardate = GetLunarCalendar();
+           string lunardate = GetLunarCalendar();
             string[] lunar = lunardate.Split('/');//分割获取到的当前日期的农历日期
             var lunarmonth = lunar[0];//获取当前农历月份
             var lunarday = lunar[1];//获取当前农历日期
@@ -1001,14 +1002,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
                     if (myyinyang == "农历")
                     {
-                        if (mymonth == lunarmonth)
+                        if (mymonth == lunarmonth && myday == lunarday)
                         {
                             luckdog.Add(myemplist[i]);
                         }
                     }
                     if (myyinyang == "阳历")
                     {
-                        if (int.Parse(mymonth) == month)
+                        if (int.Parse(mymonth) == month && int.Parse(myday)==day)
                         {
                             luckdog.Add(myemplist[i]);
                         }
@@ -1034,12 +1035,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
        /// <summary>
-       /// 合同到期提醒
+       /// "合同到期提醒",获取一个月内（小于等于30天）合同将过期的员工
        /// </summary>
        /// <returns></returns>
-        public ActionResult ContractEndRemind() {
-            return View();
+        public List<EmployeesInfo> ContractEndRemind()
+
+        {
+            //找到所有一个月内即将过期的员工，返回员工集合
+            List<EmployeesInfo> ContractendingEmp = new List<EmployeesInfo>();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var empsum = empmanage.GetList();
+            var nowtime = DateTime.Now;
+            for (int i = 0; i < empsum.Count(); i++)
+            {
+                DateTime endtime =Convert.ToDateTime(empsum[i].ContractEndTime);
+                TimeSpan ts = endtime - nowtime;
+                //相差的天数 
+                var diffday = ts.Days;
+                if (diffday<=30 && diffday>=0) {
+                    ContractendingEmp.Add(empsum[i]);
+                }
+            }
+            return ContractendingEmp;
         }
+     
 
         // 图片上传
         public string ImageUpload()

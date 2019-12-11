@@ -400,6 +400,7 @@
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
