@@ -147,7 +147,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                     this.Update(accobj);
                     //如果是寝室长。将职位去除掉
                     dbleader = new DormitoryLeaderBusiness();
-                    var obj1 = dbleader.GetLeaderByStudentNumber(obj.Studentnumber);
+                    var obj1 = dbleader.GetLeaderByStudentNumber(studetno);
                     if (obj1 != null)
                     {
                         dbleader.Cancellation(obj1);
