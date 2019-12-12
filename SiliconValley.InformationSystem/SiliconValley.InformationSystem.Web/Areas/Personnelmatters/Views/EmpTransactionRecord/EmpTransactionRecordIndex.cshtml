@@ -11,6 +11,14 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">异动详情查看</a>
 </script>
 
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="addTransactionInfo">添加异动信息</button>
+       
+    </div>
+</script>
+
 <table id="etrTab" lay-filter="etrTab"></table>
 
 
@@ -29,15 +37,17 @@
                 elem: '#etrTab'
                 , url: '/Personnelmatters/EmpTransactionRecord/GetEtrData'
                 , id: "myETR"
+                , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                    , { field: 'TransactionId', width: 38 }
-                    , { field: 'empName', title: '姓名', width: 160, sort: true }
-                    , { field: 'type', title: '异动类型', width: 120, sort: true }
-                    , { field: 'TransactionTime', title: '异动确认时间', sort: true, width: 140, templet: function (d) { return GetYMD(d.TransactionTime) } }
-                    , { field: 'Remark', title: '备注', width: 315, sort: true }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 220 }
+                    { field: 'TransactionId', width: 90 }
+                    , { field: 'empName', title: '姓名', width: 150, sort: true }
+                    , { field: 'type', title: '异动类型', width: 150, sort: true }
+                    , { field: 'TransactionTime', title: '异动确认时间', sort: true, width: 150, templet: function (d) { return GetYMD(d.TransactionTime) } }
+                    , { field: 'Reason', title: '异动原因', width: 200, sort: true }
+                    , { field: 'Remark', title: '备注', width: 340, sort: true }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
                 ]]
                 , page: true
             });
@@ -67,12 +77,36 @@
                         , skin: 'demo-class'
                     });
                 }
-               
+
             });
 
-
+            //头工具栏事件
+            table.on('toolbar(etrTab)', function (obj) {
+                //var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'addTransactionInfo':
+                        AddTransactionInfo();
+                        break;
+                };
+            });
         });
 
+        //添加异动信息的方法
+        function AddTransactionInfo() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+
+                layer.open({
+                    type: 2
+                    , area: ["800px", "430px"]
+                    , title: "添加员工异动信息"
+                    , content: '/Personnelmatters/EmpTransactionRecord/AddTransactionInfo'
+                    , anim: 2
+                });
+
+            })
+
+        }
 
         //显示年月日
         function GetYMD(cellval) {

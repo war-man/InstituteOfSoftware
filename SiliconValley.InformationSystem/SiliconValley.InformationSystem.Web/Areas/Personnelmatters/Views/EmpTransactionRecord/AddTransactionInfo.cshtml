@@ -1,0 +1,178 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.EmpTransaction
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddTransactionInfo</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" lay-filter="">
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item" style="margin-top:20px;">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">员工姓名:</label>
+                        <div class="layui-input-block" style="width:200px;">
+                            <input type="text" id="EmpName" name="EmpName" class="layui-input" />
+                            <i class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 210px;"></i>
+                        </div>
+
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">异动类型:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownListFor(a => a.TransactionType,ViewBag.etrType as SelectList, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">异动时间:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.TransactionTime, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">原因:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "class", "layui-input" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <label class="layui-form-label">备注:</label>
+                    <div class="layui-input-block">
+                        @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item" id="transferPosition" style="border:0px;display:none">
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">现部门:</label>
+                            <div class="layui-input-block">
+                                @Html.TextAreaFor(a => a.PreviousDept, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">现岗位:</label>
+                            <div class="layui-input-block">
+                                @Html.TextAreaFor(a => a.PreviousPosition, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">现工资标准:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.PreviousSalary, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">拟转部门:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.PresentDept, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">拟转岗位:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.PresentPosition, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">转岗后工资:</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.PresentSalary, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item" id="Raises" style="border:0px;display:none">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">现工资标准:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.PreviousSalary, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">加薪额度:</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="Raiselimit" name="Raiselimit" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="layui-form-item" style="margin-left:200px;margin-top:30px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+            //form.render();
+
+        });
+    </script>
+</body>
+</html>

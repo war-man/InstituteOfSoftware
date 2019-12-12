@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ContractEnd</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div id="myCountDown" >
+        @foreach (var item in ViewBag.contractendData as List<EmployeesInfo>)
+        {
+            <div id="@item.EmpName" mytime="@item.ContractEndTime" ></div>
+        }
+    </div>
+
+    <script>
+        //倒计时
+        layui.use('util', function () {
+            var util = layui.util;
+            var divs = document.getElementById('myCountDown').getElementsByTagName('div');//找到所有的div子标签
+            for (var i = 0; i < divs.length; i++) {
+                var divsonid = $(divs[i]).attr('id');//获取这些div的id属性值
+                var time = $(divs[i]).attr('mytime');
+                console.log("divsonid:" + divsonid);
+                console.log("time:" + time);
+                var endTime = time  //假设为结束日期
+                    , serverTime = new Date().getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
+                util.countdown(endTime, serverTime, function (date, serverTime, timer) {
+                    layui.$('#' + divsonid + '').html('<span style="font-size:18pt;color:red;height:120px;">' + divsonid + '</span>老师的合同还有<span style="font-size:18pt;color:red;"> ' + date[0] + '</span>天到期');
+                });
+            }
+
+        });
+
+    </script>
+</body>
+</html>

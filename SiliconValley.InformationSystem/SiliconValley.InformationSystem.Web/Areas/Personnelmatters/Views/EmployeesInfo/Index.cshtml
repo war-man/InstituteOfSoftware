@@ -2,7 +2,7 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@using SiliconValley.InformationSystem.Entity.MyEntity;
+
 <div class="layui-tab layui-tab-card">
     <ul class="layui-tab-title">
         <li class="layui-this">在职员工信息</li>
@@ -118,12 +118,8 @@
                 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">员工详情</a>
             </script>
-            <div id="myCountDown" style="height:30px;border:0px solid;display:none;">
-                @foreach (var item in ViewBag.contractendData as List<EmployeesInfo>)
-                {
-                    <span id="@item.EmpName"  mytime="@item.ContractEndTime" ></span><span style="width:20px;">,</span>
-                }
-            </div>
+            <button class="layui-btn layui-btn-warm" style="display:none;" id="contractEndbtn" >合同到期人员</button>
+
             <table id="emptab" lay-filter="emptab"></table>
         </div>
 
@@ -163,30 +159,13 @@
              var contractend =@ViewBag.contractEnd;
              if (contractend != 0) {
                  console.log("到期人数：" + contractend);
-                 $("#myCountDown").css("display", "block");
+                 document.getElementById('contractEndbtn').style.display= "block";
              } else {
-                 $("#myCountDown").css("display", "none");
+                 document.getElementById('contractEndbtn').style.display = "none";
              }
+             console.log($("#contractEndbtn").css("display"));
         });
-        //倒计时
-        layui.use('util', function () {
-            var util = layui.util;
-            var span = document.getElementById('myCountDown').getElementsByTagName('span');//找到所有的span标签
-           // var spanid = $(span).attr('id');//获取这些span的id属性值
-            for (var i = 0; i < span.length; i++) {
-               var spanid=$(span[i]).attr('id');
-                var time = $(span[i]).attr('mytime');
-
-                var endTime = time  //假设为结束日期
-                    , serverTime = new Date().getTime(); //假设为当前服务器时间，这里采用的是本地时间，实际使用一般是取服务端的
-                util.countdown(endTime, serverTime, function (date, serverTime, timer) {
-                    var str = date[0] + '天' + date[1] + '时' + date[2] + '分' + date[3] + '秒';
-                    layui.$('#' + spanid + '').html('<span style="font-size:18pt;color:red;height:120px;">' + spanid + '</span>老师的合同还有<span style="font-size:18pt;color:red;"> ' + date[0] + '</span>天到期');
-                });
-            }
-           
-        });
-
+      
       //在职员工加载
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
@@ -195,21 +174,7 @@
             var laydate = layui.laydate;
             var element = layui.element;
 
-            //生日提醒
-            function BirthdayRemind() {
-                layer.open({
-                    type: 2,
-                    content: '/Personnelmatters/EmployeesInfo/Birthdayremind'
-                    , area: ["450px", "400px"]
-                    , title: '员工生日提醒'
-                    //, shade: 0.8
-                    , anim: 2
-                    , offset: 'rb'
-                    , skin: 'demo-class .layui-layer-title{background:#f35757; }'
-                    , time: 20000
-                });
-            }
-
+          
             
             table.render({
                 elem: '#emptab'
@@ -431,12 +396,50 @@
                     , { field: 'EntryTime', title: '入职时间', sort: true, width: 120, templet: function (d) { return GetYMD(d.EntryTime) } }
                     , { field: 'PositiveDate', title: '转正日期', sort: true, width: 120, templet: function (d) { return GetYMD(d.PositiveDate) } }
                     , { field: 'deltime', title: '离职日期', sort: true, width: 120, templet: function (d) { return GetYMD(d.deltime) } }
-                    , { field: 'delreason', title: '离职原因', sort: true }
+                    , { field: 'delreason', title: '离职原因', width: 150,sort: true }
+                    , { field: 'Remark', title: '备注', sort: true }
 
                 ]]
                 , page: true
             });
 
+
+        });
+
+        //生日提醒
+        function BirthdayRemind() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2,
+                    content: '/Personnelmatters/EmployeesInfo/Birthdayremind'
+                    , area: ["450px", "400px"]
+                    , title: '员工生日提醒'
+                    //, shade: 0.8
+                    , anim: 2
+                    , offset: 'rb'
+                    , skin: 'demo-class .layui-layer-title{background:#f35757; }'
+                    , time: 20000
+                });
+            });
+           
+        }
+
+        //合同到期提醒
+        $("#contractEndbtn").click(function () {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2,
+                    content: '/Personnelmatters/EmployeesInfo/ContractEnd'
+                    , area: ["400px", "280px"]
+                    , title: '员工合同到期提醒'
+                    //, shade: 0.8
+                    , anim: 2
+                   // , skin: 'demo-class'
+                    , time: 20000
+                });
+            });
 
         });
 

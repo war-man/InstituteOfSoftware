@@ -186,7 +186,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View(et);
         }
 
-
+        //异动信息添加
+        public ActionResult AddTransactionInfo() {
+            MoveTypeManage mt = new MoveTypeManage();
+            var mtlist = mt.GetList().Where(s=>s.IsDel==false).ToList();
+            ViewBag.etrType = new SelectList(mtlist, "ID","MoveTypeName");
+            return View();
+        }
 
     }
 }

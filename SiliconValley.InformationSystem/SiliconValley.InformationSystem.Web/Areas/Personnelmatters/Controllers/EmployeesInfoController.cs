@@ -26,6 +26,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
+    using SiliconValley.InformationSystem.Business.DormitoryBusiness;
     using System.Text;
     using System.IO;
     using System.Globalization;
@@ -36,8 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult Index()
         {
             ViewBag.birth = GetTheGodOfLongevity().Count();
-            ViewBag.contractEnd = ContractEndRemind().Count();
-            ViewBag.contractendData = ContractEndRemind();
+            ViewBag.contractEnd = ContractEndRemind().Count();          
             return View();
         }
 
@@ -273,6 +273,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
             AttendanceInfoManage attinfomanage = new AttendanceInfoManage();
             MeritsCheckManage mcmanage = new MeritsCheckManage();
+            InstructorListBusiness itmanage = new InstructorListBusiness();
             try
             {
                 emp.EmployeeId = EmpId();
@@ -299,45 +300,54 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 empinfo.Insert(emp);
                 AjaxResultxx = empinfo.Success();
                 if (AjaxResultxx.Success) {
-                if (empinfo.GetDept(emp.PositionId).DeptName == "就业部")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("就业部"))
                 {
                     bool s = esmanage.AddEmploystaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "市场部")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("市场部"))
                 {
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "s1、s2教质部")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s1、s2教质部") && !empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官"))
                 {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                     }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "s3教质部") {
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s3教质部") && !empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官")) {
                         bool s = hm.AddHeadmaster(emp.EmployeeId);
                         AjaxResultxx.Success = s;
                     }
-                if (empinfo.GetPosition(emp.PositionId).PositionName == "咨询师" || empinfo.GetPosition(emp.PositionId).PositionName == "咨询主任")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s1、s2教质部") && empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官"))
+                    {
+                        bool s = itmanage.AddInstructorList(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
+                    }
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s3教质部") && empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官")) {
+                        bool s = itmanage.AddInstructorList(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
+                    }
+                if (empinfo.GetPosition(emp.PositionId).PositionName.Equals("咨询师") || empinfo.GetPosition(emp.PositionId).PositionName.Equals("咨询主任"))
                 {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "s1、s2教学部")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s1、s2教学部"))
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
                     bool s = teamanage.AddTeacher(tea);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "s3教学部")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s3教学部"))
                     {
                         Teacher tea = new Teacher();
                         tea.EmployeeId = emp.EmployeeId;
                         bool s = teamanage.AddTeacher(tea);
                         AjaxResultxx.Success = s;
                     }
-                if (empinfo.GetDept(emp.PositionId).DeptName == "财务部")
+                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("财务部"))
                 {
                     bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
@@ -970,7 +980,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// </summary>
         /// <returns></returns>
         public ActionResult Birthdayremind() {
-            //var ajaxresult = new AjaxResult();
             ViewBag.birthemps = GetTheGodOfLongevity();
             return View();
         }
@@ -981,7 +990,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public List<EmployeesInfo> GetTheGodOfLongevity() {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             List<EmployeesInfo> luckdog = new List<EmployeesInfo>();
-            var myemplist = empmanage.GetList();
+            var myemplist = empmanage.GetList().Where(s=>s.IsDel==false).ToList();
 
            string lunardate = GetLunarCalendar();
             string[] lunar = lunardate.Split('/');//分割获取到的当前日期的农历日期
@@ -1034,6 +1043,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return date;
         }
 
+        public ActionResult ContractEnd() {
+            ViewBag.contractendData = ContractEndRemind();
+            return View();
+        }
+
        /// <summary>
        /// "合同到期提醒",获取一个月内（小于等于30天）合同将过期的员工
        /// </summary>
@@ -1044,7 +1058,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             //找到所有一个月内即将过期的员工，返回员工集合
             List<EmployeesInfo> ContractendingEmp = new List<EmployeesInfo>();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var empsum = empmanage.GetList();
+            var empsum = empmanage.GetList().Where(s=>s.IsDel==false).ToList();
             var nowtime = DateTime.Now;
             for (int i = 0; i < empsum.Count(); i++)
             {
@@ -1058,7 +1072,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return ContractendingEmp;
         }
-     
+    
 
         // 图片上传
         public string ImageUpload()

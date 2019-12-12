@@ -484,6 +484,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             DaysOffManage dfmanage = new DaysOffManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             List<MyStaticsData> Statisticslist = new List<MyStaticsData>();
+            //获取可调休的总时长（已审批通过的作为调休的加班总时间）
             var otrlist = otrmanage.GetList().Where(s => s.IsNoDaysOff == false && s.IsPassYear == false && s.IsPass == true).ToList();
             var dflist = dfmanage.GetList().Where(s => s.IsPassYear == false && s.IsPass == true).ToList();
             foreach (var item in otrlist)

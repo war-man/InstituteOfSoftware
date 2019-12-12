@@ -404,6 +404,9 @@
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmpStaffAndStu\EmpStaffAndStuIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\edit.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\ContractEnd.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -1144,6 +1147,7 @@
     <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191127043148.jpg" />
+    <Content Include="uploadXLSXfile\EmpImage\20191211102732.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\bir4.jpg" />
     <Content Include="uploadXLSXfile\EmpImage\birth3.gif" />
     <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
