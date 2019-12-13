@@ -223,7 +223,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult MonthStudentData(int id)
         {
-            List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != SM_Entity.GetStu("已报名").Id).ToList();
+            List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != (SM_Entity.GetStu("已报名").Data as StuStatus).Id).ToList();
             var data = list_stu.Select(s => new {
                 Id = s.Id,
                 StuName=s.StuName,

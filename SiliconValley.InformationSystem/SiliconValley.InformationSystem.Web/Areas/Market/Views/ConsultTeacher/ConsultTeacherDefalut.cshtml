@@ -72,8 +72,7 @@
             </div>
 
             <div class="layui-col-sm5" style="text-align:center">
-                <div class="layui-upload">
-                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                <div class="layui-upload">                  
                     <div class="layui-upload-list">
                         <p id="demoText"></p>
                     </div>
@@ -126,6 +125,7 @@
             <button class="layui-btn" lay-submit="" lay-filter="IsOk">修改</button>
             <button type="button" id="No" class="layui-btn">取消</button>
             <input type="hidden"id="Id" name="Id"/>
+            <input type="hidden" name="dd" />
         </div>
     </form>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -137,35 +137,6 @@
         layui.use(['form', 'upload'], function () {             
             var form = layui.form;
              var upload = layui.upload;
-
-            //普通图片上传
-            var uploadInst = upload.render({
-                elem: '#test1'
-                , url: '/Market/ConsultTeacher/UploadImage/'
-                , before: function (obj) {
-                    //预读本地文件示例，不支持ie8
-                    obj.preview(function (index, file, result) {
-                        $('#Myimg').attr('src', result); //图片链接（base64）
-                    });
-                }
-                , done: function (res) {
-                    //如果上传失败
-                    if (res.msg != "ok") {
-                        return layer.msg('上传失败');
-                    } else {
-                        return layer.msg('成功');
-                    }
-                    //上传成功
-                }
-                , error: function () {
-                    //演示失败状态，并实现重传
-                    var demoText = $('#demoText');
-                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                    demoText.find('.demo-reload').on('click', function () {
-                        uploadInst.upload();
-                    });
-                }
-            });
             //修改
             form.on('submit(IsOk)', function (data) {
                 //console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
@@ -210,8 +181,9 @@
             });  
         });
         $(function () {
+           
             $.ajax({
-                url: "/Market/ConsultTeacher/GetFormData/" +@ViewBag.id,
+                url: "/Market/ConsultTeacher/GetFormData/" + @ViewBag.id,
                 success: function (SucData) {
                     if (typeof (SucData) == 'String') {
                         layui.use('layer', function () {
@@ -228,7 +200,7 @@
                             SucData.IsZhangzhe = SucData.IsZhangzhe.toString();
                             chang2 = SucData.IsZhangzhe.toString();
                             if (SucData.BrainImage != null) {
-                                $("#Myimg")[0].src = "/uploadXLSXfile/ConsultTeacherImage/" + SucData.BrainImage;
+                                $("#Myimg")[0].src = "/uploadXLSXfile/EmpImage/" + SucData.BrainImage;
                             }
                            
                             rate.render({
@@ -257,13 +229,12 @@
                     }
                   }
             });
-
-            $("#No").click(function () {
+        });
+        $("#No").click(function () {
                 //关闭弹出层
                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                 parent.layer.close(index); //再执行关闭
-            });
-        });
+            });    
     </script>
 </body>
 </html>

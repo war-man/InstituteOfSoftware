@@ -124,8 +124,8 @@
         </div>
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
             <label class="LableCss1">开始日期:</label>
-            <div class="layui-input-block">
-                <input type="text" name="startTime" id="startTime" class="layui-input linu" />
+            <div class="layui-input-block" id="div_time">
+                
             </div>
         </div>
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
@@ -156,32 +156,15 @@
     </fieldset>
 </form>
 @section script{
+<script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
     <script>       
-        //转换时间的方法
-        function TimeChange(newtime) {
-            if (newtime == null)
-                return "";
-            var date = new Date(parseInt(newtime.slice(6)));
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            if ((month + 1) < 10) {
-                month = "0" + Number(month + 1);
-            } else {
-                month = Number(month + 1);
-            }
-            var day = date.getDate();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            var result = year + '-' + month + '-' + day;
-            return result;
-        }
+ 
         layui.use(['form','laydate','table'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             var table = layui.table;
             //获取班级
-            form.on('select(grandselect)', function (data) {
+            form.on('select(grandselect)', function (data) {              
                 //清空班级DIV
                 $("#myclass")[0].innerHTML = "";
                 //清空课程DIV
@@ -192,7 +175,7 @@
                 $("#classroom_div")[0].innerHTML = "";
                 //清空教员DIV
                 $("#teacher_div")[0].innerHTML = "";
-                if (data.value != "0") {                    
+                if (data.value != "0") {
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
                         success: function (sudata) {
@@ -205,15 +188,82 @@
                             form.render(); //更新全部
                         }
                     });
-                }  
-                
+                }                 
             });      
             //获取课程
             form.on('select(bianji)', function (data) {
-                // alert(data.value);
                 $("#currr_div")[0].innerHTML = "";
                 $("#marjon")[0].innerHTML = "";
-                if (data.value != "0") {                     
+                //清空日期
+                $("#div_time")[0].innerHTML = "";  
+                $('<input type="text" name="startTime" id="startTime" class="layui-input linu" />').appendTo($("#div_time"));
+                //日期
+                laydate.render({
+                    elem: '#startTime',
+                    done: function (value) {
+                        var dd = new Date(value);
+                        if (dd.getMonth() >= 6 && dd.getMonth() <= 9 && judgeDate(value) == "周日") {
+                            layer.msg('排课日期不能是周日', { icon: 2 }, function () {
+                                  //清空教师跟任课老师
+                                $("#classroom_div")[0].innerHTML = "";
+                                $("#teacher_div")[0].innerHTML = "";
+                            });
+                           
+                        } else {
+                            if (judgeDate(value) == "周日" || judgeDate(value) == "周六") {
+                                layer.msg('排课日期不能是周日或周六', { icon: 2 }, function () {
+                                    $("#classroom_div")[0].innerHTML = "";
+                                    $("#teacher_div")[0].innerHTML = "";
+                                });
+                            } else {
+                                //获取上课时间段
+                                var timeName = $($("#ClssTime :checked")[0]).val();
+                                var Time = value;
+                                var mydata = { "timeName": timeName, "Time": Time };
+                                var Getdata = { "Time": Time, "Curr": $("#kecheng").val(), "timeName": timeName };
+                                $("#classroom_div")[0].innerHTML = "";
+                                $("#teacher_div")[0].innerHTML = "";
+                                if (value.length > 0) {
+                                    //获取教室
+                                    $.ajax({
+                                        url: '/Educational/Reconcile/GetEmptyRoom',
+                                        type: 'POST',
+                                        data: mydata,
+                                        success: function (suc) {
+                                            var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
+                                            for (var i = 0; i < suc.length; i++) {
+                                                $('<option value=' + suc[i].Id + '>' + suc[i].ClassroomName + '</option>').appendTo(classroom);
+                                            }
+                                            $("#classroom_div").append(classroom);
+                                            form.render(); //更新全部
+                                        }
+                                    });
+                                    //获取任课老师
+                                    $.ajax({
+                                        url: '/Educational/Reconcile/GetTeacher',
+                                        type: 'POST',
+                                        data: Getdata,
+                                        success: function (suc) {
+                                            var teachersele = $('<select id="teachersele" name="teachersele"><option value="0">--请选择--</select>');
+                                            for (var i = 0; i < suc.length; i++) {
+                                                $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teachersele);
+                                            }
+                                            $("#teacher_div").append(teachersele);
+                                            form.render(); //更新全部
+                                        }
+                                    });
+                                } else {
+                                    $("#classroom_div")[0].innerHTML = "";
+                                    $("#teacher_div")[0].innerHTML = "";
+                                }
+
+                            }
+                             
+                        }
+                         
+                    }
+                });
+                if (data.value != "0") {
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassDate/' + data.value,
                         success: function (sucdata) {
@@ -230,7 +280,7 @@
                                         ele.checked = "checked";
                                         $(ele).removeAttr("disabled");
                                     } else {
-                                        $(ele).attr("disabled","disabled");
+                                        $(ele).attr("disabled", "disabled");
                                     }
                                 });
                                 form.render(); //更新全部
@@ -239,12 +289,23 @@
                             }
 
                         }
-                    });  
+                    });
                     //表格重载
                     table.reload('Reconcile_table', {
                         url: '/Educational/Reconcile/GetTableData',
-                        where: { "classname": data.value} //设定异步数据接口的额外参数
+                        where: { "classname": data.value } //设定异步数据接口的额外参数
                     });
+                } else {
+                    //清空日期
+                    $("#div_time")[0].innerHTML = "";
+                    //清空课程DIV
+                    $("#currr_div")[0].innerHTML = "";
+                    //清空专业DIV
+                    $("#marjon")[0].innerHTML = "";
+                    //清空教室DIV
+                    $("#classroom_div")[0].innerHTML = "";
+                    //清空教员DIV
+                    $("#teacher_div")[0].innerHTML = "";
                 }                  
             });
             //table加载
@@ -266,57 +327,10 @@
                 ]]
                 , page: true
             });
-            //日期
-            laydate.render({
-                elem: '#startTime',
-                done: function (value) {
-                     //获取上课时间段
-                    var timeName = $("#time").val();
-                    var Time = value;
-                    var mydata = { "timeName": timeName, "Time": Time };
-                    var Getdata = { "Time": Time, "Curr": $("#kecheng").val(), "timeName": timeName };
-                    $("#classroom_div")[0].innerHTML = "";
-                    $("#teacher_div")[0].innerHTML = "";
-                    if (value.length > 0) {
-                        //获取教室
-                        $.ajax({
-                            url: '/Educational/Reconcile/GetEmptyRoom',
-                            type: 'POST',
-                            data: mydata,
-                            success: function (suc) {
-                                var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
-                                for (var i = 0; i < suc.length; i++) {
-                                    $('<option value=' + suc[i].Id + '>' + suc[i].ClassroomName + '</option>').appendTo(classroom);
-                                }
-                                $("#classroom_div").append(classroom);
-                                form.render(); //更新全部
-                            }
-                        });
-                        //获取任课老师
-                        $.ajax({
-                            url: '/Educational/Reconcile/GetTeacher',
-                            type: 'POST',
-                            data: Getdata,
-                            success: function (suc) {
-                                var teachersele = $('<select id="teachersele" name="teachersele"><option value="0">--请选择--</select>');
-                                for (var i = 0; i < suc.length; i++) {
-                                    $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teachersele);
-                                }
-                                $("#teacher_div").append(teachersele);
-                                form.render(); //更新全部
-                            }
-                        });
-                    } else {
-                        $("#classroom_div")[0].innerHTML = "";
-                        $("#teacher_div")[0].innerHTML = "";
-                    }
-                     
-                }
-            });
+             
              //排课
             form.on('submit(Anpai)', function (data) {
                 var mydata = data.field;
-                console.log(mydata);
                 if (mydata.class_select == "0") {
                     layer.msg('请选择有效的班级！！！', { icon: 2 });
                 } else if (mydata.startTime == "") {
@@ -325,13 +339,16 @@
                     layer.msg('请选择教室！！！', { icon: 2 });
                 } else if (mydata.teachersele == "0" || mydata.teachersele == undefined) {
                     layer.msg('请选择任课老师！！！', { icon: 2 });
-                }else {
+                } else {
+                    var myindexof = layer.load(1);
                     $.ajax({
                         url: '/Educational/Reconcile/PaikeFunction',
                         type: 'POST',
                         data: mydata,
                         success: function (Sucdata) {
+                            console.log(Sucdata);
                             if (Sucdata.Success == true) {
+                                layer.close(myindexof); 
                                 layer.msg(Sucdata.Msg, { icon: 1,shade:0.8 }, function () {
                                     table.reload('Reconcile_table', {
                                         url: '/Educational/Reconcile/GetTableData',
@@ -339,6 +356,7 @@
                                     });
                                 });
                             } else {
+                                layer.close(myindexof); 
                                 layer.msg(Sucdata.Msg, { icon: 2 }, function () {
                                     table.reload('Reconcile_table', {
                                         url: '/Educational/Reconcile/GetTableData',

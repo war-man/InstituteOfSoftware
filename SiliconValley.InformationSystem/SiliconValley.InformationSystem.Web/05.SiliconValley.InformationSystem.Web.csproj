@@ -400,6 +400,10 @@
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\AnpaiNotMarginView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\SerachReconcile_Index.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\Edit_rView.cshtml" />
+    <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherDefalut.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -409,6 +413,7 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.js" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
+    <Content Include="Images\2019090308462490.gif" />
     <Content Include="Images\班级.jpg" />
     <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />
@@ -745,12 +750,6 @@
     <Content Include="Images\3382.jpg" />
     <Content Include="Images\562108.jpg" />
     <Content Include="Images\58c84f57.jpg" />
-    <Content Include="Images\onepgscr-3.jpg" />
-    <Content Include="Images\onepgscr-4.jpg" />
-    <Content Include="Images\onepgscr-5.jpg" />
-    <Content Include="Images\onepgscr-6.jpg" />
-    <Content Include="Images\onepgscr-7.jpg" />
-    <Content Include="Images\redLove.jpg.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -1132,6 +1131,8 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
+    <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA舒克.png" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1801TA刘雨欣.jpg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
@@ -2733,20 +2734,7 @@
     <Content Include="Scripts\vendor\util\util.js" />
     <Content Include="Scripts\vendor\vue\vue.js" />
     <Content Include="uploadXLSXfile\ComputerTestQuestionsWord2019年10月9日.png" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\1.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190904052834Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092555Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092957Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093344Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093931Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094235Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094606Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094823Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095037Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095258Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095330Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100014Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100125Admin.jpg" />
+    <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
     <Content Include="uploadXLSXfile\DaysOffImage\20191014030555.jpeg" />
     <Content Include="uploadXLSXfile\DaysOffImage\20191014030701.jpeg" />
     <Content Include="uploadXLSXfile\DaysOffImage\20191014031141.jpeg" />
@@ -2846,7 +2834,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
-    <Folder Include="uploadXLSXfile\EmpImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -9,6 +9,12 @@ namespace SiliconValley.InformationSystem.Business.RegionManage
 {
     public class RegionManeges:BaseBusiness<Region>
     {  
+        /// <summary>
+        /// 查找单条数据
+        /// </summary>
+        /// <param name="id">值</param>
+        /// <param name="isKey">true--根据主键查询，false--根据name查询</param>
+        /// <returns></returns>
         public Region SerchRegionName(string id,bool isKey)
         {
             Region R = new Region();
@@ -36,33 +42,15 @@ namespace SiliconValley.InformationSystem.Business.RegionManage
         /// <param name="Id">Id或者名称</param>
         /// <param name="IsKey">false:根据名称找Id,true:根据ID找Name</param>
         /// <returns></returns>
-        public string GetAreValue(string Id, bool IsKey)
+        public Region GetAreValue(string Id, bool IsKey)
         {
             if (IsKey && !string.IsNullOrEmpty(Id))
-            {
-                Region region = this.GetEntity(Convert.ToInt32(Id));
-                if (region==null)
-                {
-                    //没有找到
-                    return "区域外";
-                }
-                else
-                {
-                    return region.RegionName;//通过主键找值
-                }
-                 
+            {                
+                return  this.GetEntity(Convert.ToInt32(Id));                
             }
             else
             {
-                Region regin = this.GetList().Where(r => r.RegionName == Id).FirstOrDefault();//通过名称找主键
-                if (regin != null)
-                {
-                    return regin.ID.ToString();
-                }
-                else
-                {                    
-                    return null;
-                }
+               return this.GetList().Where(r => r.RegionName == Id).FirstOrDefault();//通过名称找主键                 
             }
         }
     }

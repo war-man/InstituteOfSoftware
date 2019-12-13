@@ -134,6 +134,7 @@
     <Compile Include="EducationalBusiness\BreakManeger.cs" />
     <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
     <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
+    <Compile Include="EducationalBusiness\EvningSelfStudyManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />

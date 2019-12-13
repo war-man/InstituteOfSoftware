@@ -15,6 +15,7 @@
         #mytable{
         z-index:3;
         }
+ 
     </style>
     }
     <div id="time_div" style="margin-bottom:20px;">
@@ -213,7 +214,12 @@
                     $('<th rowspan="2">晚自习</th ><th>晚一</th>').appendTo(tr10);
 
                     for (var i = 0; i < sucdata.MyngintOne.length; i++) {
-                        $('<th>' + sucdata.MyngintOne[i].ClassName + '</th>').appendTo(tr10);
+                        if (sucdata.MyngintOne[i].ClassName != null) {
+                            $('<th>' + sucdata.MyngintOne[i].ClassName + '</th>').appendTo(tr10);
+                        } else {
+                            $('<th></th>').appendTo(tr10);
+                        }
+                        
                     }
 
                     tr10.appendTo(recon_table);
@@ -222,7 +228,12 @@
                     $(' <th>晚二</th >').appendTo(tr11);
 
                     for (var i = 0; i < sucdata.MyngintTwo.length; i++) {
-                        $('<th>' + sucdata.MyngintTwo[i].ClassName+'</th>').appendTo(tr11);
+                        if (sucdata.MyngintTwo[i].ClassName != null) {
+                            $('<th>' + sucdata.MyngintTwo[i].ClassName + '</th>').appendTo(tr11);
+                        } else {
+                            $('<th></th>').appendTo(tr11);
+                        }
+                        
                     }
 
                     tr11.appendTo(recon_table);

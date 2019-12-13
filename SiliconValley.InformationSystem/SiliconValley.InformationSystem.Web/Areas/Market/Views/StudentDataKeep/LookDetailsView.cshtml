@@ -325,11 +325,20 @@
                 </div>
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
                         <label class="layui-form-label">备注</label>
                         <div class="layui-input-block">
                             <span name="Reak" id="Reak" class="LableCss1">
+
+                            </span>
+                        </div>
+                    </div>  
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <label class="layui-form-label">区域</label>
+                        <div class="layui-input-block">
+                            <span name="reginname" id="reginname" class="LableCss1">
 
                             </span>
                         </div>
@@ -339,7 +348,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">                  
-                    <button class="layui-btn butCss1" id="quxiao">关闭</button>
+                    <button type="button" class="layui-btn butCss1" id="quxiao">关闭</button>
                 </div>
             </div>
         </form>
@@ -421,7 +430,7 @@
                         var date1 = new Date(parseInt(successdata.StuDateTime.slice(6)));
                         successdata.StuBirthy = TimeChange(successdata.StuBirthy);
                         $("#StuName")[0].innerText = successdata.StuName;
-                        $("#StuSex")[0].innerText = successdata.StuSex.toString() == "true" ? "女" : "男";
+                        $("#StuSex")[0].innerText = successdata.StuSex.toString() == "true" ? "男" : "女";
                         $("#StuPhone")[0].innerText = successdata.StuPhone;
                         $("#StuBirthy")[0].innerText = successdata.StuBirthy;
                         $("#StuSchoolName")[0].innerText = successdata.StuSchoolName;
@@ -437,6 +446,7 @@
                         $("#StatusName")[0].innerText = successdata.StatusName;
                         $("#e_Name")[0].innerText = successdata.e_Name;
                         $("#Reak")[0].innerText = successdata.Reak;
+                        $("#reginname")[0].innerText = successdata.ReginName
                     } else {
                         layui.use(['layer'], function () {
                             var layer = layui.layer;

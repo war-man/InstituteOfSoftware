@@ -17,3 +17,41 @@ function TimeChange(newtime) {
     var result = year + '-' + month + '-' + day;
     return result;
 }
+//判断星期几
+function judgeDate(date) {
+    // 标准时间 Wed Jul 31 2019 00:00:00 GMT+0800 (中国标准时间)
+    var _date = new Date(date);
+    // getDay() 返回表示星期的某一天
+    var num = _date.getDay(_date);
+    var week;
+    switch (num) {
+        case 0:
+            week = "周日";
+            break;
+        case 1:
+            week = "周一";
+            break;
+        case 2:
+            week = "周二"
+            break;
+        case 3:
+            week = "周三"
+            break;
+        case 4:
+            week = "周四"
+            break;
+        case 5:
+            week = "周五"
+            break;
+        case 6:
+            week = "周六"
+            break;
+        default:
+            break;
+    };
+    return week;
+}
+//关闭弹出层
+function MycloseEject(layer,index) {
+    parent.layer.close(index); //再执行关闭   
+}

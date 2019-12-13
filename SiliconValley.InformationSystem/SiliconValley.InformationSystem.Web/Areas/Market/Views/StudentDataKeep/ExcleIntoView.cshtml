@@ -52,7 +52,9 @@
                 border: 1px solid red;
                 color: #fff;
             }
-        
+        .textColorCss1{
+        color:red
+        }
     </style>
 </head>
 <body>
@@ -69,7 +71,7 @@
             </fieldset>
             <div id="InputDiv" class="divCssTwo1">
                 <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入" > 
-                <button class="layui-btn" id="No" name="No" onclick="myclose()">取消</button>
+                <button type="button" class="layui-btn" id="No" name="No" onclick="myclose()">取消</button>
             </div>
         </form>
     </div>
@@ -105,10 +107,14 @@
         }
         //导入Excel
         $("#Yes").click(function () {
+            var layer = layui.layer;
+            var indexlayer = layer.load();
             $.ajax({
                 url: '/Market/StudentDataKeep/IntoServer',
                 dataType: 'json',
-                success: function (successData) {                   
+                success: function (successData) {     
+                    //关闭
+                    layer.close(indexlayer);     
                     if (successData.resut == "okk") {                         
                         layui.use(['layer', 'table'], function () {
                             var table = layui.table;
@@ -121,13 +127,13 @@
                                 $("#InputDiv")[0].innerHTML = "";
                                 $("#InputDiv").removeClass("divCssTwo1");
                                 $("#InputDiv").addClass("BtnCssthree");
-                                $('<button class="layui-btn" id="No" name="No" onclick="myclose()">关闭</button>').appendTo($("#InputDiv"));
+                                $('<button type="button" class="layui-btn" id="No" name="No" onclick="myclose()">关闭</button>').appendTo($("#InputDiv"));
                                 $("#fielsone")[0].innerHTML = "";
                                 $('<legend id="contentone" class="legendCssTwo1">疑似数据对比区</legend>').appendTo($("#fielsone"));
-                                $('<h3>系统已有数据</h3>').appendTo($("#fielsone"));
+                                $('<h3 class="textColorCss1">系统已有数据</h3>').appendTo($("#fielsone"));
                                 var table1 = $('<table id="mytableone"></table>');
                                 table1.appendTo($("#fielsone"));
-                                $('<h3>疑似数据</h3>').appendTo($("#fielsone"));
+                                $('<h3 class="textColorCss1">疑似数据</h3>').appendTo($("#fielsone"));
                                 var table2 = $('<table id="mytabletwo"></table>');
                                 table2.appendTo($("#fielsone"));
                                 //展示已知数据
@@ -190,9 +196,11 @@
             });
         });
         //取消
-        function myclose() {             
+        function myclose() {     
+            window.parent.LoadTable();
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            parent.layer.close(index); //再执行关闭            
+            parent.layer.close(index); //再执行关闭 
+            
         };
        
         layui.use(['upload','table'], function () {
