@@ -8,6 +8,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -427,6 +428,185 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 教员带班记录
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TeacherArrangementRecord()
+        {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            db_teacher.GetMyGrandTeacher(user);
+
+            //提供班级
+             ViewBag.classlist = db_teacherclass.GrandClassByUser(user);
+
+
+            return View();
+        }
+
+        public ActionResult TeacherArrangementTeacherData()
+        {
+
+            //返回的结果
+            resultdtree result = new resultdtree();
+
+            //状态
+            dtreestatus dtreestatus = new dtreestatus();
+
+
+            try
+            {
+
+                List<dtreeview> childrendtreedata = new List<dtreeview>();
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                var emplist = db_teacher.GetMyGrandTeacher(user);
+
+                List<Grand> grandlist = new List<Grand>();
+                GrandBusiness dbgrand = new GrandBusiness();
+                foreach (var item in emplist)
+                {
+                  var teacher =  db_teacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+                    var grand = db_teacher.GetGrandByTeacherID(teacher.TeacherID);
+
+                    foreach (var item1 in grand)
+                    {
+                        if (!dbgrand.IsContains(grandlist, item1))
+                        {
+                            grandlist.Add(item1);
+                        }
+                    }
+
+                   
+                }
+
+
+                for (int i = 0; i < grandlist.Count; i++)
+                {
+                    //第一层
+                    dtreeview seconddtree = new dtreeview();
+
+                    seconddtree.context = grandlist[i].GrandName;
+                    seconddtree.last = false;
+                    seconddtree.level = 0;
+                    seconddtree.nodeId = grandlist[i].Id.ToString();
+                    seconddtree.parentId = "0";
+                    seconddtree.spread = false;
+
+                    //第二层
+
+                    var tememplist1 = db_teacher.BrushSelectionByGrand(grandlist[i].Id);
+
+                    List<EmployeesInfo> tememplist = new List<EmployeesInfo>();
+
+                    foreach (var item in tememplist1)
+                    {
+                        var temp = db_teacher.GetEmpByEmpNo(item.EmployeeId);
+
+                        if (temp != null)
+                        {
+                            tememplist.Add(temp);
+                        }
+                    }
+
+                    if (tememplist.Count >= 0)
+                    {
+
+                        List<dtreeview> Quarterlist = new List<dtreeview>();
+                        foreach (var item in tememplist)
+                        {
+                            dtreeview treeemp = new dtreeview();
+                            treeemp.nodeId = item.EmployeeId;
+                            treeemp.context = item.EmpName;
+                            treeemp.last = true;
+                            treeemp.parentId = grandlist[i].Id.ToString();
+                            treeemp.level = 1;
+
+                            Quarterlist.Add(treeemp);
+                        }
+
+                        seconddtree.children = Quarterlist;
+
+
+                        childrendtreedata.Add(seconddtree);
+
+
+                    }
+                    else
+                    {
+                        seconddtree.last = true;
+                    }
+
+                }
+
+                result.status = dtreestatus;
+                result.data = childrendtreedata;
+
+                dtreestatus.code = "200";
+                dtreestatus.message = "操作成功";
+
+
+
+            }
+            catch (Exception ex)
+            {
+
+
+                dtreestatus.code = "1";
+                dtreestatus.message = "操作失败";
+            }
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult TeacherArrangementData(int page, string empnumber, string classnumber)
+        {
+
+
+            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == empnumber).FirstOrDefault();
+
+            List<ClassTeacher> list = new List<ClassTeacher>();
+
+            if (classnumber != null)
+            {
+                list = db_teacherclass.TeacherArrangementRecord(classnumber);
+                
+            }
+            else
+            {
+                list = db_teacherclass.TeacherArrangementRecord(teacher.TeacherID);
+            }
+
+
+            var skplist = list.Skip((page - 1) * 8).Take(8).ToList();
+
+            List<ClassCourseView> viewlist = new List<ClassCourseView>();
+            CourseBusiness dbcourse = new CourseBusiness();
+            foreach (var item in skplist)
+            {
+               var temp = dbcourse.ConvertToView(item);
+
+                if (temp != null)
+                    viewlist.Add(temp);
+            }
+
+            var objresult = new
+            {
+
+                status = 0,
+                message = "成功",
+                total = list.Count,
+                data = viewlist.OrderByDescending(d=>d.BeginDate).ToList()
+
+            };
+
+            return Json(objresult, JsonRequestBehavior.AllowGet);
+
         }
 
 

@@ -324,8 +324,18 @@
   <ItemGroup>
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
+    <Content Include="Areas\ExaminationSystem\config\InvigilatorConfig.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\ExaminationSystem\css\jquery-ui.js" />
+    <Content Include="Areas\ExaminationSystem\css\jquery.gridly.css" />
+    <Content Include="Areas\ExaminationSystem\css\jquery.gridly.js" />
+    <Content Include="Areas\ExaminationSystem\css\jquery.js" />
     <Content Include="Areas\ExaminationSystem\css\normalize.css" />
+    <Content Include="Areas\ExaminationSystem\css\rainbow.js" />
     <Content Include="Areas\ExaminationSystem\css\reset.min.css" />
+    <Content Include="Areas\ExaminationSystem\css\sample.css" />
+    <Content Include="Areas\ExaminationSystem\css\sample.js" />
     <Content Include="Areas\ExaminationSystem\css\style.css" />
     <Content Include="Areas\ExaminationSystem\css\style1.css" />
     <Content Include="Areas\ExaminationSystem\css\textareafullscreen.css" />
@@ -1207,6 +1217,8 @@
     <Content Include="Areas\CourseSyllabus\Views\Course\ClassCourseArrangement.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\EngsilshTeacherGood.cshtml" />
     <Content Include="Areas\CourseSyllabus\Views\Course\EditClassCourseArrangment.cshtml" />
+    <Content Include="Areas\Teaching\Views\Class\TeacherArrangementRecord.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\SetInvigilator.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

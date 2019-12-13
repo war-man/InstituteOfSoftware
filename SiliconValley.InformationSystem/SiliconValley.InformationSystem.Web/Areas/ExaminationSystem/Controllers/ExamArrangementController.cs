@@ -954,37 +954,88 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         }
 
 
-        /// <summary>
-        /// 获取教员
-        /// </summary>
-        /// <param name="grandid"></param>
-        /// <returns></returns>
-        public ActionResult GetTeacherByGrand(int grandid)
+
+        public ActionResult SetInvigilator(int examroom, int examid)
         {
+            BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
+                 
+            ViewBag.examid = examid;
+            ViewBag.classroom = dbclassroom.GetIQueryable().ToList().Where(d => d.Id == examroom).FirstOrDefault();
 
+
+            //提供部门数据
+           List<Department> deplist = db_examination.GetSureInvigilatorDep();
+
+            ViewBag.Deplist = deplist;
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 获取监考员
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExamInvigilator(int examid, int classroomid)
+        {
             AjaxResult result = new AjaxResult();
-
 
             try
             {
-                var resultlist = db_examination.GetHeadmastersByGrand(grandid);
-
-                result.Data = resultlist;
-
+                var emplist = db_examination.GetProtorData(examid, classroomid);
                 result.ErrorCode = 200;
                 result.Msg = "成功";
+                result.Data = emplist;
             }
             catch (Exception ex)
             {
-
-                result.Data = null;
                 result.ErrorCode = 500;
                 result.Msg = "失败";
+                result.Data = null; 
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
+
+            
+        }
 
 
+        /// <summary>
+        /// 员工数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EmpData(int page, int limit)
+        {
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+            TeacherBusiness dbteacher = new TeacherBusiness();
+
+
+            var emplist = db_examination.GetSureInvigilator();
+            var skiplist = emplist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            List<EmpDetailView> viewlist = new List<EmpDetailView>();
+
+            foreach (var item in skiplist)
+            {
+              var temp =   dbteacher.ConvertToEmpDetailView(item);
+
+                if (temp != null)
+                {
+                    viewlist.Add(temp);
+                }
+            }
+
+            var obj = new {
+
+                code = 0,
+                msg="",
+                count = emplist.Count,
+                data=viewlist
+
+            };
+
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
 
 
         }
@@ -1218,17 +1269,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 ExamScoresBusiness dbexamscores = new ExamScoresBusiness();
 
-                var markingarrangelist = dbexamscores.AllMarkingArrange().Where(d => d.ExamID == examid);
+                BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
 
-                foreach (var item in markingarrangelist)
+                var markingarrangelist = dbexamscores.AllMarkingArrange().Where(d => d.ExamID == examid).ToList();
+
+                if (markingarrangelist == null || markingarrangelist.Count ==0)
                 {
-                    var temobj = dbexamscores.ConvertToMarkingArrangeView(item);
+                    var examroomlist = db_examination.AllExaminationRoom().Where(d => d.Examination == examid).ToList();
 
-                    if (temobj != null)
+                    if (examroomlist != null)
                     {
-                        viewlist.Add(temobj);
+                        foreach (var item in examroomlist)
+                        {
+                            MarkingArrangeView view = new MarkingArrangeView();
+                            view.classroom = dbclassroom.GetIQueryable().ToList().Where(d => d.Id == item.Classroom_Id).FirstOrDefault();
+                            view.ExamID = db_examination.AllExamination().Where(d => d.ID == item.Examination).FirstOrDefault();
+                            view.IsFinsh = false;
+                            view.MarkingTeacher = null;
+
+
+                            viewlist.Add(view);
+                        }
                     }
                 }
+                else
+                {
+                    foreach (var item in markingarrangelist)
+                    {
+                        var temobj = dbexamscores.ConvertToMarkingArrangeView(item);
+
+                        if (temobj != null)
+                        {
+                            viewlist.Add(temobj);
+                        }
+                    }
+                }
+
+
+               
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
@@ -1390,6 +1468,71 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        /// <summary>
+        /// 部门人员查询
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DepEmpData(string depid, string empname, int page, int limit)
+        {
+
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+            if (depid == null)
+            {
+                //根据名字查询
+               var templist = dbemp.GetAll().Where(d=>d.EmpName.Contains(empname)).ToList();
+
+                emplist.AddRange(templist);
+            }
+
+            if (empname == "" && depid!=null)
+            {
+                //获取部门所有人员
+
+               var templist = dbemp.GetEmpsByDeptid(int.Parse(depid));
+
+                emplist.AddRange(templist);
+            }
+
+            if (empname != "" && depid != null)
+            {
+                var templist = dbemp.GetEmpsByDeptid(int.Parse(depid)).Where(d=>d.EmpName.Contains(empname));
+
+                emplist.AddRange(templist);
+            }
+
+            var skplist = emplist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            List<EmpDetailView> viewlist = new List<EmpDetailView>();
+
+            TeacherBusiness dbteacher = new TeacherBusiness();
+            foreach (var item in skplist)
+            {
+               var temp = dbteacher.ConvertToEmpDetailView(item);
+
+                if (temp != null)
+                {
+                    viewlist.Add(temp);
+                }
+            } 
+
+
+            var obj = new {
+
+                code = 0,
+                msg = "",
+                count = emplist.Count,
+                data = viewlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
         }
     }
 }

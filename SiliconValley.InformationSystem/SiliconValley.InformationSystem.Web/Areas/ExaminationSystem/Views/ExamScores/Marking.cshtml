@@ -101,6 +101,7 @@
             background-color:white;
             
             
+            
         }
         .LableCss1 {
             text-overflow: ellipsis;
@@ -165,14 +166,9 @@
 
                 <div class="infoitem totalPaper">试卷总数量--<span></span></div>
                 <div class="infoitem filshPaper">已阅卷数量--<span></span></div>
-                
 
             </div>
-
         </div>
-
-        
-
     </div>
 
     <div id="paper">
@@ -279,7 +275,7 @@
         var Sheetindex = 0;
         var StuExamNumber; //学员考号
         var Examid; //考试ID
-        var ExamRoom; // 考是（教室ID）
+        var ExamRoom; // 考是（教室ID）StuExamNumberStuExamNumber
         var IsEndSheet = false; //是否为最后一个答卷
         layui.use(['layer'], function () {
 
@@ -352,12 +348,12 @@
 
             });
 
-
+                
             //加载学生名单
 
             function loadStuData(examid, examroom) {
 
-
+                $("#Stulist").html("");
                 $.post('/ExaminationSystem/ExamScores/MakeStuData', { examid: examid, examroom: examroom }, function (data) {
 
                     console.log("......");
@@ -457,19 +453,39 @@
 
             });
 
+            function checkHaveComputerPaper(examid,kaohao,callback, errorcallback) {
+
+                $.post('/ExaminationSystem/ExamScores/checkHaveComputerPaper', { examid: examid, kaohao: kaohao }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+                        callback(result.Data)
+                    }
+                    else {
+
+                        errorcallback();
+                    }
+
+                });
+
+            }
+
             //加载答卷
 
             function loadAnswerSheet(examid, examroom,index,studentnumber) {
 
+                var lodindex = layer.load(1); //换了种风格
+
                 $.post("/ExaminationSystem/ExamScores/MarkeAnswerSheetData", { examid: examid, examroom: examroom, index: index, StudentNumber: studentnumber }, function (result) {
 
-                    console.log(result);
-
-                    $("#itemlist .answerSheetItem").remove();
+                   
+                    $("#itemlist").html("");
 
                     $("#download").remove();
 
                     if (result.Data.length > 0) {
+
+                        
                         StuExamNumber = result.Data[0].candidinfo.CandidateNumber;
 
                         if (result.Data[0].isEnd == true) {
@@ -478,25 +494,62 @@
 
                         }
                     }
+
+                   
                     
                     for (var i = 0; i < result.Data.length; i++) {
 
-                        var layerthtml = _.template($("#moban2").html());
+                        if (result.Data[0].question != "") {
+                            var layerthtml = _.template($("#moban2").html());
 
-                        var layerdata = layerthtml({ index: i+1, question: result.Data[i].questionTitle.Title, scores: result.Data[i].question.questionScores, answer: result.Data[i].question.answer });
-                        $("#itemlist").append(layerdata);
+                            var layerdata = layerthtml({ index: i + 1, question: result.Data[i].questionTitle.Title, scores: result.Data[i].question.questionScores, answer: result.Data[i].question.answer });
+                            $("#itemlist").append(layerdata);
+                        } 
+
+                        if (result.Data[0].question == "") {
+
+                            $("#itemlist").append("<h2 style='text-align:center;'>空</h2>");
+
+                        }
+
+
+                      
                     }
 
-                    var button = $('<a id="download" class="layui-btn layui-btn-fluid layui-btn-primary">机试题下载</a>');
-                    button[0].href = "/ExaminationSystem/ExamScores/DownloadComputerSheet?examid=" + Examid + "&kaohao=" + StuExamNumber;
+                    var button = $('<a id="download" class="layui-btn layui-btn-fluid layui-btn-primary"></a>');
 
-                    $("#computerBtn").append(button);
+                    //首先发送请求 查看是否有机试题
+
+                    checkHaveComputerPaper(Examid, StuExamNumber, function (data) {
+                        if (data == "1") {
+                            button[0].href = "/ExaminationSystem/ExamScores/DownloadComputerSheet?examid=" + Examid + "&kaohao=" + StuExamNumber;
+                            button.text("机试题下载");
+                            $("#computerBtn").append(button);
+                        }
+                        else {
+                            button[0].href ="javascript:void(0);";
+                            button.text("该考生无机试题答卷");
+                            button.attr("Nohave","Nohave");
+                            $("#computerBtn").append(button);
+                        }
+
+                    }, function () {
+
+
+                        });
+
+
+
+                    layer.close(lodindex);
+                    
 
                 });
 
 
 
             }
+
+
 
             ///下一个 
             $("#nextBtn").click(function () {
@@ -523,8 +576,10 @@
 
                 if (Sheetindex == 1) {
 
-                    layer.msg("当前是第一份哦");
-
+                    
+                    layer.msg('当前是第一份哦。。', { icon: 2 }, function () {
+                        layer.close(index);
+                    });
                     return;
                 }
 
@@ -589,7 +644,7 @@
 
                     if (data.ErrorCode == 200 && data.Data== "1") {
 
-                        alert("dd");
+                        
                         //修改 老师阅卷完成
 
                         $.post("/ExaminationSystem/ExamScores/FinshMake", { examid: examid, examroom: examroom }, function (result) {
@@ -634,8 +689,10 @@
 
                     if (result.ErrorCode == 200) {
 
-                        layer.msg("记录成功");
-
+                       
+                        layer.msg('记录成功', { icon: 1 }, function () {
+                            layer.close(index);
+                        });
                         //下一个
                         $("#nextBtn").click();
 
@@ -662,6 +719,24 @@
                 var studetnnumber = $(this).attr("stuNumber");
 
                 loadAnswerSheet(Examid, ExamRoom, Sheetindex, studetnnumber);
+
+            });
+
+
+
+            $(document).off("click", "#download").on("click", "#download", function () {
+
+                var status = $(this).attr("Nohave");
+
+                if (status != undefined) {
+                    layer.msg('该考生并未提交机试题答卷', { icon: 2 }, function () {
+                        layer.close(index);
+                    });
+
+                }
+
+               
+
 
             });
         });

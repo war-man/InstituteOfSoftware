@@ -1702,8 +1702,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                     }
                 }
 
-                for (
-                    int i = 0; i < deplist.Count; i++)
+                for (int i = 0; i < deplist.Count; i++)
                 {
                     //第一层
                     dtreeview seconddtree = new dtreeview();

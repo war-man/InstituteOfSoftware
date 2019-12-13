@@ -17,6 +17,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
     using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
     [CheckLogin]
     public class CourseController : Controller
@@ -26,7 +27,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         private readonly GrandBusiness db_grand;
         private readonly CourseTypeBusiness db_coursetype;
         private readonly BaseBusiness<ClassSchedule> db_class;
-        
+        private readonly EmployeesInfoManage db_emp;
+
+
         public CourseController()
         {
             this.db_course = new CourseBusiness();
@@ -34,6 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             this.db_grand = new GrandBusiness();
             this.db_coursetype = new CourseTypeBusiness();
             db_class = new BaseBusiness<ClassSchedule>();
+            db_emp = new EmployeesInfoManage();
         }
 
 
@@ -308,29 +312,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         {
             var allclasslist = new List<ClassSchedule>();
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-            List<ClassCourseView> resultlist = new List<ClassCourseView>();
+            //List<ClassCourseView> resultlist = new List<ClassCourseView>();
 
 
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            //Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-            SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
+            //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
 
-            var emplist = dbsatis.GetMyDepEmp(user);
+            //var emplist = dbsatis.GetMyDepEmp(user);
 
-            TeacherBusiness dbteacher = new TeacherBusiness();
+            //TeacherBusiness dbteacher = new TeacherBusiness();
 
-            foreach (var item in emplist)
-            {
-                var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+            //foreach (var item in emplist)
+            //{
+            //    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
 
-                if (teacher != null)
-                {
-                    var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
+            //    if (teacher != null)
+            //    {
+            //        var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
 
-                    allclasslist.AddRange(tempclasslist);
-                }
+            //        allclasslist.AddRange(tempclasslist);
+            //    }
 
-            }
+            //}
+
+            allclasslist = dbteacherclass.AllClassSchedule();
 
             ViewBag.classlist = allclasslist;
 
@@ -348,26 +354,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             List<ClassCourseView> resultlist = new List<ClassCourseView>();
 
           
-                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-                SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
-
-                var emplist = dbsatis.GetMyDepEmp(user);
-
-                TeacherBusiness dbteacher = new TeacherBusiness();
-
-                foreach (var item in emplist)
-                {
-                    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-                    if (teacher != null)
-                    {
-                        var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
-
-                        allclasslist.AddRange(tempclasslist);
-                    }
-
-                }
+            allclasslist = dbteacherclass.AllClassSchedule();
 
             
 
@@ -450,25 +438,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             //提供所有班级
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-            SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
-            var emplist = dbsatis.GetMyDepEmp(user);
+           
 
             List<ClassSchedule> classlist = new List<ClassSchedule>();
 
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
-            TeacherBusiness dbteacher = new TeacherBusiness();
-            foreach (var item in emplist)
-            {
-               var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
 
-                if (teacher != null)
-                {
-                    var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
-
-                    classlist.AddRange(tempclasslist);
-                }
-              
-            }
+            classlist = dbteacherclass.AllClassSchedule();
 
             ViewBag.classlist = classlist;
 
@@ -505,13 +481,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             try
             {
-                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                // Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-                SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
-                var emplist = dbsatis.GetMyDepEmp(user);
+                //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
+                TeacherBusiness dbteacher = new TeacherBusiness();
+                 var list = dbteacher.GetTeachers();
+
+                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+                foreach (var item in list)
+                {
+                   var temp = db_emp.GetInfoByEmpID(item.EmployeeId);
+
+                    if (temp != null)
+                    {
+                        emplist.Add(temp);
+                    }
+
+                }
+                
 
                 BaseBusiness<GoodSkill> dbgoodskell = new BaseBusiness<GoodSkill>();
-                TeacherBusiness dbteacher = new TeacherBusiness();
+                
+
+                
 
                 List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
                 foreach (var item in emplist)
@@ -604,6 +596,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
+
+
+
         }
     }
 }

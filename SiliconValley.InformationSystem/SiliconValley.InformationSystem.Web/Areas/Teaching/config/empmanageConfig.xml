@@ -14,6 +14,10 @@
     <permission permissionid="s4TeacherDirector_SearchSurveyHistory" depIds="1010"></permission>
     
   </permissions>
+
+  <grandteacherPermissions>
+    <permission permissionid="GetAllGrandTeacher" grand="1,2,3,4"></permission>
+  </grandteacherPermissions>
  
   
 </root>

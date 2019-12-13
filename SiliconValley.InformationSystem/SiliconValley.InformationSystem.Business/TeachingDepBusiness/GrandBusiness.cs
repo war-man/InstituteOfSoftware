@@ -36,5 +36,18 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             return this.GetList();
         }
+
+        public bool IsContains(List<Grand> souces, Grand grand)
+        {
+            foreach (var item in souces)
+            {
+                if (item.Id == grand.Id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 }

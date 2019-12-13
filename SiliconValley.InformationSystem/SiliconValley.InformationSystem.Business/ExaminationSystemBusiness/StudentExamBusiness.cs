@@ -375,7 +375,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         }
 
 
-        public ComputerTestQuestionsView productComputerQuestion(Examination examination)
+        public ComputerTestQuestionsView productComputerQuestion(Examination examination,int kecheng)
         {
             //获取专业
 
@@ -391,13 +391,37 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_computerQuestion.AllComputerTestQuestion();
             var templist = new List<ComputerTestQuestionsView>();
+
+            List<Curriculum> sourchlist = new List<Curriculum>();
+
             foreach (var item in list)
             {
                 templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item));
             }
-            //筛选出S2的课程
 
-            var sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+
+            if (examview.ExamType.ExamTypeID == 1)
+            {
+                //筛选出S2的课程
+
+                //筛选出S2的课程
+
+                 sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+
+            }
+
+            if (examview.ExamType.ExamTypeID == 2)
+            {
+
+                var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
+
+                if (course != null)
+
+                    sourchlist.Add(course);
+
+
+            }
+           
             List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
 
             //获取S2的题目
@@ -407,7 +431,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 {
                     if (!IsContain(questionlist, item))
                     {
-                        if (item.Course.CurriculumID == item1.Grand_Id) 
+                        if (item.Course.CurriculumID == item1.CurriculumID) 
                         {
                             questionlist.Add(item);
                         }

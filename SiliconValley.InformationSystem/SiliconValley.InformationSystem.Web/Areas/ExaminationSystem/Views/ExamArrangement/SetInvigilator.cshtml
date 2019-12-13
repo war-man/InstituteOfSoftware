@@ -1,0 +1,328 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SetInvigilator</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Droid+Sans|Droid+Serif' rel='stylesheet' type='text/css'>
+
+    <link href="~/Areas/ExaminationSystem/css/jquery.gridly.css" rel="stylesheet" />
+
+    <link href="~/Areas/ExaminationSystem/css/sample.css" rel="stylesheet" />
+
+
+
+
+
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+
+        #table {
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .brick {
+            margin: 0 auto;
+        }
+
+        #toor {
+            margin-top:10px;
+        }
+    </style>
+
+</head>
+<body>
+    <div id="mywarp">
+        <input type="hidden" id="examid" value="@ViewBag.examid" />
+        <hr />
+        <div id="toor">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门：</label>
+                        <div class="layui-input-inline">
+                            <select name="depid">
+                                @{
+                                    foreach (var item in ViewBag.Deplist as List<Department>)
+                                    {
+                                        <option value="@item.DeptId">@item.DeptName</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">名字：</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="empname" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label"></label>
+                        <div class="layui-input-inline">
+                            <button type="button" class="layui-btn" lay-submit="" lay-filter="search">查询</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="table">
+            <table class="layui-hide" id="emplist"></table>
+        </div>
+        <div id="Invigilator">
+
+            <button classroomid="@ViewBag.classroom.Id" style="width:100%;" id="set" class="layui-btn layui-btn-primary" type="button"><span class="classroom">@ViewBag.classroom.ClassroomName</span><span style="margin-left:50px;">设置为监考员</span></button>
+
+
+            <section style="width:80%; margin:50px auto;" class='example'>
+                <div id="invigilatorDiv" class='gridly' style="text-align:center;">
+
+                </div>
+            </section>
+
+            <button style="width:100%; margin-top:150px;" id="commit" class="layui-btn layui-btn-primary" type="button">确定提交</button>
+        </div>
+    </div>
+
+    <script type="text/template" id="muban">
+        <div class='brick small' empid="{{=empid}}" style="display:inline-block; line-height:140px;">
+            <a class='delete' href='#'>&times;</a>
+            <span class="invigilator">{{=empname}}</span>
+        </div>
+    </script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/ExaminationSystem/css/jquery-ui.js"></script>
+    <script src="~/Areas/ExaminationSystem/css/jquery.gridly.js"></script>
+    <script src="~/Areas/ExaminationSystem/css/sample.js"></script>
+    <script src="~/Areas/ExaminationSystem/css/rainbow.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        var total = 2;
+
+        ///ExaminationSystem/ExamArrangementController
+        layui.use(['table', 'layer','form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            table.render({
+                elem: '#emplist'
+                , url: '/ExaminationSystem/ExamArrangement/EmpData'
+                ,id:'emplist'
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'EmployeeId', title: 'ID', hide:true, width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'EmpName', title: '名称', width: 230,  }
+                    , { field: 'Phone', title: '电话', width: 220, }
+                    , { field: 'DeptName', title: '部门', width: 220, templet: '<div>{{d.DDAppId.DeptName}}</div>' }
+
+                ]]
+                , page: true
+            });
+
+            //加载监考员
+
+            function GetExamInvigilator(examid, classroomid) {
+
+                $.post("/ExaminationSystem/ExamArrangement/GetExamInvigilator", { examid: examid, classroomid: classroomid }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+                        ///最多只需要2位监考员
+                        for (var i = 0; i < result.Data.length; i++) {
+
+
+                            var html = _.template($("#muban").html());
+                            var htmldate = html({ empid: result.Data[i].EmployeeId, empname: result.Data[i].EmpName });
+
+
+                            $("#invigilatorDiv").append(htmldate);
+
+                        }
+                    }
+                    else {
+                        layer.msg('监考员加载失败', { icon: 2 }, function () {
+                           
+                        });
+                    }
+
+
+                });
+
+
+
+            }
+
+
+            //获取已经设置的人数
+            function getInvigilatorCount() {
+
+                var index = 0;
+                $("#invigilatorDiv .brick").each(function () {
+
+                    index++;
+
+                });
+
+                return index;
+
+            }
+
+            var examid = $("#examid").val();
+            var classroom = $("#set").attr("classroomid");
+           
+            GetExamInvigilator(examid, classroom);
+
+            $("#set").click(function () {
+
+
+
+                var checdrow = table.checkStatus('emplist');
+
+                if (checdrow.data.length == 0) {
+
+                    layer.msg('请选择监考员', { icon: 2 }, function () {
+                        layer.close(index);
+                    });
+
+                    return;
+                }
+
+                var currentInvigilatorCount = total - getInvigilatorCount();
+
+                if (currentInvigilatorCount == 0) {
+                    layer.msg('监考员已满', { icon: 2 }, function () {
+                        
+                    });
+
+                    return;
+                }
+
+                ///最多只需要2位监考员
+                for (var i = 0; i < currentInvigilatorCount; i++) {
+
+                    var isHave = false;
+
+                    $("#invigilatorDiv .brick").each(function (index, elem) {
+
+                        var elemEmpid = $(elem).attr("empid");
+
+                        if (elemEmpid == checdrow.data[i].EmployeeId) {
+                            isHave = true;
+                        }
+
+                    });
+
+                    if (isHave) {
+
+                        layer.msg('监考员选择重复', { icon: 2 }, function () {
+                            
+                        });
+
+                        return;
+
+                    }
+
+                    var html = _.template($("#muban").html());
+                    var htmldate = html({ empid: checdrow.data[i].EmployeeId, empname: checdrow.data[i].EmpName });
+
+
+                    $("#invigilatorDiv").append(htmldate);
+
+                }
+
+            });
+
+            $(document).off("click", '.delete').on("click", '.delete', function () {
+
+                $(this).parent().remove();
+            });
+
+            //提交
+
+            $("#commit").click(function () {
+
+                layer.confirm('确认?', { icon: 3, title: '提示' }, function (index) {
+                    //do something
+                    layer.close(index);
+                    var loadindex = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
+                    var examid = $("#examid").val();
+                    var classroom = $("#set").attr("classroomid");
+
+                    var Invigilatorids="";
+                    $("#invigilatorDiv .brick").each(function (index, elem) {
+
+                        Invigilatorids = Invigilatorids + $(elem).attr("empid")+',';
+
+                    });
+
+                    //发送请求
+                    $.post("/ExaminationSystem/ExamArrangement/ArrangeTheInvigilator", { examid: examid, examroomid: classroom, Invigilatorids: Invigilatorids }, function (result) {
+
+                        if (result.ErrorCode == 200) {
+                            layer.msg('设置成功', { icon: 1 }, function () {
+
+                                layer.close(loadindex);
+
+                            });
+
+                        }
+                        else {
+                            layer.msg('设置失败', { icon: 2 }, function () {
+
+                                layer.close(loadindex);
+
+                            });
+
+                        }
+
+
+
+                    });
+
+
+
+                   
+                });
+            });
+
+            form.on('submit(search)', function (data) {
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                table.reload("emplist", {
+
+                    url: '/ExaminationSystem/ExamArrangement/DepEmpData'
+                    , where: {
+                        depid: data.field.depid,
+                        empname: data.field.empname
+
+
+                    } //设定异步数据接口的额外参数
+ 
+                });
+
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+        });
+    </script>
+</body>
+</html>
