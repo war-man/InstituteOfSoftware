@@ -407,6 +407,7 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\ContractEnd.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />

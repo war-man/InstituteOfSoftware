@@ -41,15 +41,15 @@
 </head>
 <body>
     <div>
-        <form class="layui-form" action="" lay-filter="">
+        <form class="layui-form" action="" lay-filter="" >
             <div class="layui-container">
-
+                <input type="hidden" id="EmployeeId" name="EmployeeId" class="layui-input" />
                 <div class="layui-row layui-form-item" style="margin-top:20px;">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">员工姓名:</label>
                         <div class="layui-input-block" style="width:200px;">
                             <input type="text" id="EmpName" name="EmpName" class="layui-input" />
-                            <i class="layui-icon layui-icon-search" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 210px;"></i>
+                            <i class="layui-icon layui-icon-search" id="iconbtn" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 210px;"></i>
                         </div>
 
                     </div>
@@ -57,8 +57,14 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">异动类型:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(a => a.TransactionType,ViewBag.etrType as SelectList, new Dictionary<string, object>() { { "class", "layui-input" } })
-                        </div>
+                            <select id="typeSelect" name="typeSelect" lay-filter="myform"  >
+                                <option value="-1">请选择类型</option>
+                                @foreach (var item in ViewBag.etrType as List<MoveType>)
+                                {
+                                    <option value="@item.ID" mytxt="">@item.MoveTypeName</option>
+                                }
+                            </select>
+                            </div>
                     </div>
                 </div>
 
@@ -73,7 +79,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">原因:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.Reason, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.Reason, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
                 </div>
@@ -91,14 +97,14 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">现部门:</label>
                             <div class="layui-input-block">
-                                @Html.TextAreaFor(a => a.PreviousDept, new Dictionary<string, object>() { { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.PreviousDept, new Dictionary<string, object>() { { "class", "layui-input" } })
                             </div>
                         </div>
 
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">现岗位:</label>
                             <div class="layui-input-block">
-                                @Html.TextAreaFor(a => a.PreviousPosition, new Dictionary<string, object>() { { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.PreviousPosition, new Dictionary<string, object>() { { "class", "layui-input" } })
                             </div>
                         </div>
                     </div>
@@ -141,7 +147,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">现工资标准:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.PreviousSalary, new Dictionary<string, object>() { { "class", "layui-input " } })
+                            <input type="text" id="salaryBefore" name="salaryBefore" class="layui-input" />
                         </div>
                     </div>
 
@@ -165,6 +171,23 @@
     </div>
 
     <script>
+        //将选择的员工信息从弹出层获取，并赋值给相应的属性
+        function GetEmpData(Itemnames) {
+            // return Itemnames;
+            console.log(Itemnames);
+            $("#EmployeeId").val(Itemnames.EmployeeId);
+            $("#EmpName").val(Itemnames.EmpName);
+            $("#PreviousDept").val(Itemnames.Depart);
+            $("#PreviousPosition").val(Itemnames.Position);
+            if (Itemnames.PositiveDate == null) {
+                $("#PreviousSalary").val(Itemnames.ProbationSalary);
+                $("#salaryBefore").val(Itemnames.ProbationSalary);
+            } else {
+                $("#PreviousSalary").val(Itemnames.Salary);
+                $("#salaryBefore").val(Itemnames.Salary);
+            }
+        }
+      
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
@@ -172,6 +195,66 @@
                 , laydate = layui.laydate;
             //form.render();
 
+            $("#iconbtn").click(function () {
+                layer.open({
+                    type: 2
+                    , area: ["700px", "360px"]
+                    , title: "选择员工"
+                    , content: '/Personnelmatters/EmpTransactionRecord/SelectEmp'
+                    , anim: 2
+                });
+            });
+
+            //异动类型下拉框监听事件
+            form.on('select(myform)', function (data) {
+                var s = data.value;
+                console.log(data);
+
+                $(data.elem).children().each(function (index, elem) {
+                    var currentValue = $(elem).val();
+
+                    if (currentValue == s) {
+                        if ($(elem).text() =="调岗") {
+                            document.getElementById('transferPosition').style.display = "block";
+                            document.getElementById('Raises').style.display = "none";
+                        } else if ($(elem).text() == "加薪") {
+                            document.getElementById('Raises').style.display = "block";
+                            document.getElementById('transferPosition').style.display = "none";
+                        }
+                    }
+
+                });
+
+               //else {
+                //    document.getElementById('transferPosition').style.display = "none";
+                //}
+                    
+            });
+         
+            //添加异动信息提交
+            form.on('submit(demo1)', function (data) {
+
+                $.post("/Personnelmatters/EmpTransactionRecord/AddEtrInfo", data.field, function (data) {
+                    console.log("岗位：" + data);
+                    if (data.Success) {
+                        layer.alert("添加成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            // parent.layui.table.reload('myPosition');
+                            parent.layer.close(index);
+
+                        });
+                    } else {
+                        layer.alert("添加失败!");
+                    }
+                });
+                return false;
+            });
+
+            //关闭部门添加页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index);
+            });
         });
     </script>
 </body>

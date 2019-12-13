@@ -190,9 +190,75 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult AddTransactionInfo() {
             MoveTypeManage mt = new MoveTypeManage();
             var mtlist = mt.GetList().Where(s=>s.IsDel==false).ToList();
-            ViewBag.etrType = new SelectList(mtlist, "ID","MoveTypeName");
+            ViewBag.etrType = mtlist;
             return View();
         }
+       
+        /// <summary>
+        ///  异动信息添加时选择员工
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SelectEmp() {
+            return View();
+        }
+        public ActionResult GetEmpData(int page, int limit)
+        {
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var list = empinfo.GetList().Where(e => e.IsDel == false).ToList();
+           
+            var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = from e in mylist
+                          select new
+                          {
+                              #region 获取属性值 
+                              e.EmployeeId,
+                              e.DDAppId,
+                              e.EmpName,
+                              Position = empinfo.GetPosition((int)e.PositionId).PositionName,
+                              Depart = empinfo.GetDept((int)e.PositionId).DeptName,
+                              e.Sex,
+                              e.Age,
+                              e.Nation,
+                              e.Phone,
+                              e.IdCardNum,
+                              e.ContractStartTime,
+                              e.ContractEndTime,
+                              e.EntryTime,
+                              e.Birthdate,
+                              e.Birthday,
+                              e.PositiveDate,
+                              e.UrgentPhone,
+                              e.DomicileAddress,
+                              e.Address,
+                              e.Education,
+                              e.MaritalStatus,
+                              e.IdCardIndate,
+                              e.PoliticsStatus,
+                              e.WorkExperience,
+                              e.ProbationSalary,
+                              e.Salary,
+                              e.SSStartMonth,
+                              e.BCNum,
+                              e.Material,
+                              e.Remark,
+                              e.IsDel
+                              #endregion
 
+                          };
+            var newobj = new
+            {
+                code = 0,
+                msg = "",
+                count = list.Count(),
+                data = newlist
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult AddEtrInfo(EmpTransaction etr)
+        {
+            var ajaxresult = new AjaxResult();
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
     }
 }
