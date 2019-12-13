@@ -26,5 +26,12 @@ namespace SiliconValley.InformationSystem.Business.StuInfomationType_Maneger
             }           
             return s;
         }
+
+        //这个方法是用于通过名字来查询信息来源Id的
+        public StuInfomationType GetNameSearchId(string name)
+        {
+           return this.GetList().Where(i => i.Name == name).FirstOrDefault();
+            
+        }
     }
 }

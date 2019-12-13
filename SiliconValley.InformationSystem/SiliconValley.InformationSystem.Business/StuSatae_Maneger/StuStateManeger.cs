@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
 {
@@ -15,46 +16,60 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public StuStatus GetStu(string name)
+        public AjaxResult GetStu(string name)
         {
-           StuStatus find_s= this.GetList().Where(s => s.StatusName == name).FirstOrDefault();
-            return find_s;
-        }
-        /// <summary>
-        /// 模糊查询
-        /// </summary>
-        /// <param name="name">状态名称</param>
-        /// <returns></returns>
-        public StuStatus GetId(string name)
-        {
-           return this.GetList().Where(s => s.StatusName.Contains(name)).FirstOrDefault();
-        }
+            AjaxResult a = new AjaxResult();
+            StuStatus find_s= this.GetList().Where(s => s.StatusName == name).FirstOrDefault();
+            if (find_s!=null)
+            {
+                a.Data = find_s;
+                a.Success = true;
+            }
+            else
+            {
+                a.Success = false;
+            }
+            return a;
+        }        
         /// <summary>
         /// 通过主键找值
         /// </summary>
         /// <param name="id">主键</param>
         /// <returns></returns>
-        public StuStatus GetIdGiveName(string id,bool IsKey)
+        public AjaxResult GetIdGiveName(string id,bool IsKey)
         {
-            StuStatus finds = new StuStatus();
+            AjaxResult new_a = new AjaxResult();           
             if (IsKey)
             {
                 //主键
                 int Id = Convert.ToInt32(id);
-                 finds = this.GetEntity(Id);
+                StuStatus s= this.GetEntity(Id);
+                if (s!=null)
+                {
+                    new_a.Success = true;
+                    new_a.Data = s;
+                }
+                else
+                {
+                    new_a.Success = false;
+                }
+                
             }
             else
             {
                 //通过名称查询
-                finds= this.GetList().Where(s => s.StatusName == id).FirstOrDefault();
-            }
-
-            if (string.IsNullOrEmpty(finds.StatusName))
-            {
-                finds.Id = -1;
-                finds.StatusName = "无效状态";
-            }             
-                return finds;            
+                 StuStatus s1= this.GetList().Where(s => s.StatusName == id).FirstOrDefault();
+                if (s1!=null)
+                {
+                    new_a.Data = s1;
+                    new_a.Success = true;
+                }
+                else
+                {
+                    new_a.Success = false;
+                }
+            }                       
+                return new_a;            
         }
     }
 }

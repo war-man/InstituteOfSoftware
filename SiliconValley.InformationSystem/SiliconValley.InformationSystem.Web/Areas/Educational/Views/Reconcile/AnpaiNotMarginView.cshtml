@@ -123,27 +123,38 @@
             , range: '到'
             , format: 'yyyy-MM-dd'
             , theme: 'grid'
-        });
+        });         
 
         //监听提交
         form.on('submit(Anpinomargin)', function (data) {
-            console.log(data.field);
-            $.ajax({
-                url: '/Educational/Reconcile/AnpaiNotMarginFunction',
-                data: data.field,
-                type: 'POST',
-                success: function (sucdata) {
-                    if (sucdata.Success == false) {
-                        layer.msg('系统错误，请重试!!!', { icon: 2 });
-                    } else {
-                        layer.msg('操作成功！', { icon: 1, shade: 0.8 }, function () {
-                            //当你在iframe页面关闭自身时
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            parent.layer.close(index); //再执行关闭
-                        });
+            var selecvalue = data.field.currtype;
+            if (data.field.anpaitime.length <= 0) {
+                layer.msg('请选择排课时间！', { icon: 2 });
+            } else if (selecvalue == "0") {
+             layer.msg('请选择课程类型！', { icon: 2 });
+            }
+            else {
+                var loadindex = layer.load(1);
+                $.ajax({
+                    url: '/Educational/Reconcile/AnpaiNotMarginFunction',
+                    data: data.field,
+                    type: 'POST',
+                    success: function (sucdata) {
+                        if (sucdata.Success == false) {
+                            layer.close(loadindex);
+                            layer.msg('系统错误，请重试!!!', { icon: 2 });
+                        } else {
+                            layer.close(loadindex);
+                            layer.msg('操作成功！', { icon: 1, shade: 0.8 }, function () {
+                                //当你在iframe页面关闭自身时
+                                var index = parent.layer.getFrameIndex(window.name);
+                                parent.layer.close(index);
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
+             
             return false;
         });
     });

@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 排课时间
         /// </summary>
-        public Nullable<System.DateTime> AnPaiDate { get; set; }
+        public DateTime AnPaiDate { get; set; }
         /// <summary>
         /// 老师编号
         /// </summary>

@@ -227,7 +227,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         {
             //未完成的条件是:状态不能是已完成，如果状态已完成还要看报名时间是不是当前年份，月份是不是当前月份，如果不是就是---未完成
             //获取已报名的Id
-            int satateid = SSta_Entity.GetStu("已报名").Id;
+            int satateid = SSta_Entity.GetStu("已报名").Success==true? (SSta_Entity.GetStu("已报名").Data as StuStatus).Id:0;
             //获取当前的年份
             int year = DateTime.Now.Year;
             int list_count = 0;

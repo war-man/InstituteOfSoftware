@@ -176,6 +176,7 @@
     </form>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
     <script>
         //加载上午下午1234节
         function My_sametime2(num) {
@@ -245,15 +246,14 @@
                     $("#childvieroom_div")[0].innerHTML = "";
                     $("#childvieroom_div")[0].innerHTML = "";
                     form.val("manual_form", {  
-                        "childview_timetype": "0"  
-                         
+                        "childview_timetype": "0"                           
                     });
                     form.render();
                 }
             });
             var classnumber = 0;
             //阶段点击事件(获取班级)
-            form.on('select(childview_grand)', function (data) {
+            form.on('select(childview_grand)',function (data) {
                 //每当重新选择阶段时，类型，课程名称，任课老师重新设定
                 form.val("manual_form", {
                     "childview_Currtype": "0"   //给课程类型设为初始值(其他)          
@@ -261,6 +261,7 @@
                 $("#childviewcurr_div")[0].innerHTML = "";//将课程div清空
                 $("#childteacher_div")[0].innerHTML = "";//将任课老师div清空
                 $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname" />').appendTo($("#childviewcurr_div"));//将输入框添加到课程div中
+                $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));
                 //如果阶段为“--请选择--”，则清空班级下拉框
                 if (data.value == "0") {
                     $("#class_childdiv")[0].innerHTML = "";
@@ -284,7 +285,7 @@
 
             });
             //上课时间点击事件(获取教室跟任课老师)
-            form.on('select(childview_timetype)', function (data) {
+            form.on('select(childview_timetype)',function (data) {
                 $("#childvieroom_div")[0].innerHTML = "";//教室更新
                 var anpaiTime = $("#childview_AnpiDate").val();
                 var kengcheng = $("#childview_currname").val();
@@ -308,7 +309,7 @@
                         //清空老师
                         $("#childteacher_div")[0].innerHTML = "";
                     } else {
-                        var mydata = { "Time": anpaiTime, "timeName": data.value, "curname": $("#childview_currname").val() }
+                        var mydata = { "Time": anpaiTime, "timeName": data.value, "curname": $("#childview_currname").val(), "typecurr": $("#childview_Currtype").val() }
                         //获取教室
                         $.ajax({
                             url: '/Educational/Reconcile/GetEmptyRoom',
@@ -372,12 +373,33 @@
                 //获取班级
                 classnumber = data.value;
                 //获取这个班级上专业课的时间段
-                $.ajax({
-                    url: '/Educational/Reconcile/TimeName/' + data.value,
-                    success: function (sucdd) {
-                        mytimename = sucdd;
-                    }
-                });
+                if (data.value != 0) {
+                    $.ajax({
+                        url: '/Educational/Reconcile/TimeName/' + data.value,
+                        success: function (sucdd) {
+                            mytimename = sucdd;
+                        }
+                    });
+                } else {
+                    //类型=其他
+                    form.val("manual_form", {
+                        "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                    });
+                    //课程清空
+                    $("#childviewcurr_div")[0].innerHTML = "";
+                    //添加input
+                    $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));
+                    //时间段清空
+                    My_sametime2(1);
+                    My_times(2);
+                    My_zhengtian();
+                    form.render(); //更新全部
+                    //任课老师清空
+                    $("#childteacher_div")[0].innerHTML = "";
+                    $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));
+                    //清空教室
+                    $("#childvieroom_div")[0].innerHTML = "";
+                }              
             });
             //获取课程
             form.on('select(childview_Currtype)', function (data) {
@@ -452,37 +474,50 @@
             })
             //监听提交
             form.on('submit(childview_add)', function (data) {
-
-                if (data.field.child_class == undefined) {
-                    layer.msg("请选择班级!!!");
-                } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
-                    layer.msg("请选择或填写课程!!!");
-                } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
-                    layer.msg("请选择任课老师!!!");
-                } else if (data.field.childview_AnpiDate == "") {
-                    layer.msg("请选择上课日期!!!");
-                } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
-                    layer.msg("请选择上课时间段!!!");
-                } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
-                    layer.msg("请选择教室!!!");
+                var dd = new Date(data.field.childview_AnpiDate);
+                if (dd.getMonth() >= 6 && dd.getMonth <= 9 && judgeDate(data.field.childview_AnpiDate) == "周日") {
+                    layer.msg('周日不能安排');
                 } else {
-                    //提交数据
-                    $.ajax({
-                        url: '/Educational/Reconcile/AddHandDataFunction',
-                        type: 'POST',
-                        data: data.field,
-                        success: function (suc) {
-                            if (suc == "ok") {
-                                layer.msg('操作成功！！！', { icon: 1, shade: 0.8 }, function () {
-                                    //关闭弹出层
-                                    Myclose();
-                                });
-                            } else {
-                                layer.msg(suc, { icon: 2 });
-                            }
+                    if (judgeDate(data.field.childview_AnpiDate) == "周日" || judgeDate(data.field.childview_AnpiDate) == "周六" ) {
+                        layer.msg('周日或周六不能安排');
+                    } else {
+                        if (data.field.child_class == undefined) {
+                            layer.msg("请选择班级!!!");
+                        } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
+                            layer.msg("请选择或填写课程!!!");
+                        } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
+                            layer.msg("请选择任课老师!!!");
+                        } else if (data.field.childview_AnpiDate == "") {
+                            layer.msg("请选择上课日期!!!");
+                        } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
+                            layer.msg("请选择上课时间段!!!");
+                        } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
+                            layer.msg("请选择教室!!!");
+                        } else {
+                            var indexof = layer.load(1);
+                            //提交数据
+                            $.ajax({
+                                url: '/Educational/Reconcile/AddHandDataFunction',
+                                type: 'POST',
+                                data: data.field,
+                                success: function (suc) {
+                                    if (suc == "ok") {
+                                        layer.close(indexof);
+                                        layer.msg('操作成功！！！', { icon: 1, shade: 0.8 }, function () {
+                                            //关闭弹出层
+                                            Myclose();
+                                        });
+                                    } else {
+                                        layer.close(indexof);
+                                        layer.msg(suc, { icon: 2 });
+                                    }
+                                }
+                            });
                         }
-                    });
+                    }
                 }
+                  
+                
                 return false;
             });
            

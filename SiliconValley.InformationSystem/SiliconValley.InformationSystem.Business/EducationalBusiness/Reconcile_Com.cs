@@ -46,6 +46,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         //就业部老师
         public static readonly EmploymentStaffBusiness EmploymentStaff_Entity = new EmploymentStaffBusiness();
 
+        public static readonly BaseBusiness<Position> PositionBusiness = new BaseBusiness<Position>();
+
+        public static readonly BaseBusiness<Department> DeparmentBusiness = new BaseBusiness<Department>();
+
         /// <summary>
         /// 根据阶段名称获取阶段Id
         /// </summary>
@@ -96,7 +100,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     EmployeesInfo find_e= Employees_Entity.GetEntity(heasmaster.informatiees_Id);
                     if (find_e!=null)
                     {
-                        result.Data = find_e.EmployeeId;
+                        result.Data = find_e;
                         result.Success = true;
                     }
                 }
@@ -198,9 +202,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="name">部门名称</param>
         /// <returns></returns>
         public static Department GetDempt(string name)
-        {
-            BaseBusiness<Department> baseBusiness = new BaseBusiness<Department>();
-            return  baseBusiness.GetList().Where(d=>d.DeptName.Equals(name,StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        {           
+            return GetAll_Department().Where(d=>d.DeptName.Equals(name,StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
         }
         /// <summary>
         /// 根据部门获取某个岗位
@@ -208,9 +211,54 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="d_id"></param>
         /// <returns></returns>
         public static Position GetPsit(Department d_id,string name)
+        {            
+            return GetAll_Postion().Where(p => p.DeptId == d_id.DeptId && p.PositionName.Equals(name, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+        }        
+        /// <summary>
+        /// 获取未辞职的所有员工
+        /// </summary>
+        /// <returns></returns>
+        public static List<EmployeesInfo> GetAllNoGoingEMP()
         {
-            BaseBusiness<Position> baseBusiness = new BaseBusiness<Position>();
-            return baseBusiness.GetList().Where(p => p.DeptId == d_id.DeptId && p.PositionName.Equals(name, StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
+           return Employees_Entity.GetList().Where(e => e.IsDel == false).ToList();
         }
+        /// <summary>
+        /// 获取就业部未辞职的老师
+        /// </summary>
+        /// <returns></returns>
+        public static List<EmployeesInfo> GetObtainTeacher()
+        {
+            List<EmployeesInfo> e_list = GetAllNoGoingEMP();
+            List<EmploymentStaff> f_list = EmploymentStaff_Entity.GetALl();
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
+            foreach (EmployeesInfo item1 in e_list)
+            {
+                foreach (EmploymentStaff item2 in f_list)
+                {
+                    if (item1.EmployeeId == item2.EmployeesInfo_Id)
+                    {
+                        list.Add(item1);
+                    }
+                }
+            }
+            return list;
+        }
+        /// <summary>
+        /// 获取所有有效的部门
+        /// </summary>
+        /// <returns></returns>
+        public static List<Department> GetAll_Department()
+        {
+           return DeparmentBusiness.GetList().Where(d => d.IsDel == false).ToList();
+        }
+        /// <summary>
+        /// 获取所有有效的岗位
+        /// </summary>
+        /// <returns></returns>
+        public static List<Position> GetAll_Postion()
+        {
+           return  PositionBusiness.GetList().Where(p => p.IsDel == false).ToList();
+        }
+      
     }
 }

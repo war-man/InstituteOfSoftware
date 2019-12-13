@@ -17,260 +17,274 @@
             line-height: 20px;
             text-align: right
         }
+
         .linu
         {
             width: 150px;
-        }     
+        }
+
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
     </style>
 }
-    <div class="layui-collapse" lay-filter="test">
-        <div class="layui-colla-item">
-            <h2 class="layui-colla-title">查询班级排课数据</h2>
-            <div class="layui-colla-content">
-                <form class="layui-form">
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="layui-form-label">阶段:</label>
-                            <div class="layui-input-block">
-                                @Html.DropDownList("Re_grand", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu layui-input" }, { "lay-filter", "Re_grand" } })
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="layui-form-label">班级:</label>
-                            <div id="Re_class" class="layui-input-block">
-                                <select>
-                                    <option value="0">--请选择--</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="LableCss1">开始时间:</label>
-                            <div class="layui-input-block">
-                                <input type="text" placeholder="开始时间" class="layui-input" name="starTime" id="starTime" />
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="LableCss1">结束时间:</label>
-                            <div id="ClssTime" class="layui-input-block">
-                                <input type="text" placeholder="结束时间" class="layui-input" name="endTime" id="endTime" />
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
-                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="serch1">查询</button>
+<div class="layui-collapse" lay-filter="test">
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">查询班级排课数据</h2>
+        <div class="layui-colla-content">
+            <form class="layui-form">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="layui-form-label">阶段:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("Re_grand", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu layui-input" }, { "lay-filter", "Re_grand" } })
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="layui-colla-item">
-            <h2 class="layui-colla-title">查询某个课程有哪些班级正在上</h2>
-            <div class="layui-colla-content">
-                <form class="layui-form">
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="LableCss1">阶段:</label>
-                            <div class="layui-input-block">
-                                @Html.DropDownList("Re_grand2", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu layui-input" }, { "lay-filter", "Re_grand2" } })
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="LableCss1">课程:</label>
-                            <div class="layui-input-block" id="Re_curr_div1">
-                                
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
-                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="serch2">查询</button>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="layui-form-label">班级:</label>
+                        <div id="Re_class" class="layui-input-block">
+                            <select>
+                                <option value="0">--请选择--</option>
+                            </select>
                         </div>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="layui-colla-item">
-            <h2 class="layui-colla-title">查询某个老师在某天上课的地点</h2>
-            <div class="layui-colla-content">
-                <form class="layui-form">
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="LableCss1">老师名称:</label>
-                            <div class="layui-input-block">
-                                <input type="text" class="layui-input" name="teachername" dirname="teachername" />
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="LableCss1">日期:</label>
-                            <div class="layui-input-block">
-                                <input type="text" placeholder="日期" class="layui-input" name="Time2" id="Time2" />
-                            </div>
-                        </div>
-                        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
-                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="serch3">查询</button>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">开始时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" placeholder="开始时间" class="layui-input" name="starTime" id="starTime" />
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">结束时间:</label>
+                        <div id="ClssTime" class="layui-input-block">
+                            <input type="text" placeholder="结束时间" class="layui-input" name="endTime" id="endTime" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="serch1">查询</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-    <script type="text/html" id="Recon_barDemo">
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>    
-    <div>
-        <table id="Recon_table" lay-filter="Recon_table"></table>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">查询某个课程有哪些班级正在上</h2>
+        <div class="layui-colla-content">
+            <form class="layui-form">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">阶段:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("Re_grand2", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu layui-input" }, { "lay-filter", "Re_grand2" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">课程:</label>
+                        <div class="layui-input-block" id="Re_curr_div1">
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="serch2">查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">查询某个老师在某天上课的地点</h2>
+        <div class="layui-colla-content">
+            <form class="layui-form">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">老师名称:</label>
+                        <div class="layui-input-block">
+                            <input type="text" class="layui-input" name="teachername" dirname="teachername" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">日期:</label>
+                        <div class="layui-input-block">
+                            <input type="text" placeholder="日期" class="layui-input" name="Time2" id="Time2" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
+                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="serch3">查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/html" id="Recon_barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<div>
+    <table id="Recon_table" lay-filter="Recon_table"></table>
+</div>
 <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
-    @section script{
-        <script>
-            //table刷新
-            function TableFulsh() {
-                layui.use('table', function () {
-                    var table = layui.table;
-                    table.reload('Recon_table');
-                });
-            }
-            layui.use(['element', 'layer','form','laydate','table'], function () {
-                var element = layui.element;
-                var layer = layui.layer;
-                var form = layui.form;
-                var laydate = layui.laydate;
+@section script{
+    <script>
+        //table刷新
+        function TableFulsh() {
+            layui.use('table', function () {
                 var table = layui.table;
-                //监听折叠
-                //element.on('collapse(test)', function (data) {
-                //    layer.msg('展开状态：' + data.show);
-                //});
-                 //获取班级
-                form.on('select(Re_grand)', function (data) {
-                    $("#Re_class")[0].innerHTML = "";
-                        $.ajax({
-                            url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
-                            success: function (sudata) {
-                                //获取班级slect
-                                var classselect = $('<select id="class_select" name="class_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
-                                for (var i = 0; i < sudata.length; i++) {
-                                    $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
-                                }
-                                $("#Re_class")[0].innerHTML = "";
-                                $("#Re_class").append(classselect);
-                                form.render(); //更新全部
-                            }
-                        });                   
-                });     
-                //获取专业课程
-                form.on('select(Re_grand2)', function (data) {
-                    $("#Re_curr_div1")[0].innerHTML = "";
-                    if (data.value != 0) {
-                        $.ajax({
-                            url: '/Educational/Reconcile/GetCurrrlistdata/' + data.value,
-                            success: function (sudata) {
-                                var classselect = $('<select id="curr_select1" name="curr_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
-                                for (var i = 0; i < sudata.length; i++) {
-                                    $('<option value=' + sudata[i].Value + '>' + sudata[i].Text + '<option>').appendTo(classselect);
-                                }
-                                $("#Re_curr_div1").append(classselect);
-                                form.render(); //更新全部
-                            }
-                        });
-                    }
-                    
-                });     
-                //时间初始化
-                laydate.render({
-                    elem: '#starTime'
-                    , theme: 'molv'                    
-                });
-                 
-                laydate.render({
-                    elem: '#endTime'
-                    , theme: 'molv'
-                });
-
-                laydate.render({
-                    elem: "#Time"
-                    , theme: 'molv'
-                });
-
-                laydate.render({
-                    elem: "#Time2"
-                    , theme: 'molv'
-                });
-
-                //table初始化
-                table.render({
-                    elem: '#Recon_table'
-                    , url: '/Educational/Reconcile/GetReconAllData'
-                    , cols: [[
-                        { type: 'radio', fixed: 'left' }
-                        , { field: 'class_name', title: '班级', fixed: 'left' }
-                        , { field: 'classroom_name', title: '教室', }
-                        , { field: 'currname', title: '课程' }
-                        , { field: 'timeName', title: '上课时间段' }
-                        , { field: 'teacher_name', title: '任课老师' }
-                        , {
-                            field: 'time', title: '日期', templet: function (res) {
-                                return TimeChange(res.time);
-                            }
+                table.reload('Recon_table');
+            });
+        }
+        layui.use(['element', 'layer', 'form', 'laydate', 'table'], function () {
+            var element = layui.element;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var table = layui.table;
+            //获取班级
+            form.on('select(Re_grand)', function (data) {
+                $("#Re_class")[0].innerHTML = "";
+                $.ajax({
+                    url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                    success: function (sudata) {
+                        //获取班级slect
+                        var classselect = $('<select id="class_select" name="class_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
+                        for (var i = 0; i < sudata.length; i++) {
+                            $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
                         }
-                        , { fixed: 'right', title: '操作', toolbar: '#Recon_barDemo', width: 150 }
-                    ]]
-                    , page: true
-                });
-
-                //监听行工具事件
-                table.on('tool(Recon_table)', function (obj) {
-                    var data = obj.data;
-                    //console.log(data)
-                    if (obj.event === 'del') {
-                        layer.confirm('真的删除吗？', function (index) {
-                            $.ajax({
-                                url: '/Educational/Reconcile/Delete/' + data.Id,
-                                success: function (sucdata) {
-                                    if (sucdata.Success == false) {
-                                        //失败
-                                        layer.msg('操作失败!!', { icon: 2 });
-                                    } else {
-                                        //成功
-                                        layer.msg(sucdata.Msg, { icon: 1,shade: 0.8 }, function () {
-                                            TableFulsh();
-                                        });
-                                    }
-                                }
-                            });
-                            layer.close(index);
-                        });
-                    
+                        $("#Re_class")[0].innerHTML = "";
+                        $("#Re_class").append(classselect);
+                        form.render(); //更新全部
                     }
-                });
-
-                //查询1 
-                //监听提交
-                form.on('submit(serch1)', function (data) {
-                    var class_select1 = data.field.class_select1;
-                    var starTime = data.field.starTime;
-                    var endTime = data.field.endTime;
-                    table.reload('Recon_table', {
-                          url: '/Educational/Reconcile/GetReconAllData'
-                        , where: { "class_select1": class_select1, "starTime": starTime, "endTime": endTime, "teachername": "", "Time2": "", "curr_select1":""}  
-                    });                   
-                    return false;
-                });
-                form.on('submit(serch3)', function (data) {
-                    var teachername = data.field.teachername;
-                    var Time2 = data.field.Time2;
-
-                    table.reload('Recon_table', {
-                        url: '/Educational/Reconcile/GetReconAllData'
-                        , where: { "teachername": teachername, "Time2": Time2, "class_select1": "", "starTime": "", "endTime": "", "curr_select1": ""}
-                    });
-                    return false;
-                });
-                form.on('submit(serch2)', function (data) {
-                    var curr_select1 = data.field.curr_select1;
-                    table.reload('Recon_table', {
-                        url: '/Educational/Reconcile/GetReconAllData'
-                        , where: { "curr_select1": curr_select1, "class_select1": "", "starTime": "", "endTime": "", "teachername": "", "Time2": ""}
-                    });
-                    return false;
                 });
             });
-        </script>
-    }
+            //获取专业课程
+            form.on('select(Re_grand2)', function (data) {
+                $("#Re_curr_div1")[0].innerHTML = "";
+                if (data.value != 0) {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetCurrrlistdata/' + data.value,
+                        success: function (sudata) {
+                            var classselect = $('<select id="curr_select1" name="curr_select1" class="layui-select"><option value="0" selected>--请选择--</select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].Value + '>' + sudata[i].Text + '<option>').appendTo(classselect);
+                            }
+                            $("#Re_curr_div1").append(classselect);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
+
+            });
+            //时间初始化
+            laydate.render({
+                elem: '#starTime'
+                , theme: 'molv'
+            });
+
+            laydate.render({
+                elem: '#endTime'
+                , theme: 'molv'
+            });
+
+            laydate.render({
+                elem: "#Time"
+                , theme: 'molv'
+            });
+
+            laydate.render({
+                elem: "#Time2"
+                , theme: 'molv'
+            });
+
+            //table初始化
+            table.render({
+                elem: '#Recon_table'
+                , url: '/Educational/Reconcile/GetReconAllData'
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'class_name', title: '班级', fixed: 'left' }
+                    , { field: 'classroom_name', title: '教室', }
+                    , { field: 'currname', title: '课程' }
+                    , { field: 'timeName', title: '上课时间段' }
+                    , { field: 'teacher_name', title: '任课老师' }
+                    , {
+                        field: 'time', title: '日期', templet: function (res) {
+                            return TimeChange(res.time);
+                        }
+                    }
+                    , { fixed: 'right', title: '操作', toolbar: '#Recon_barDemo', width: 150 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(Recon_table)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除吗？', function (index) {
+                        $.ajax({
+                            url: '/Educational/Reconcile/Delete/' + data.Id,
+                            success: function (sucdata) {
+                                if (sucdata.Success == false) {
+                                    //失败
+                                    layer.msg('操作失败!!', { icon: 2 });
+                                } else {
+                                    //成功
+                                    layer.msg(sucdata.Msg, { icon: 1, shade: 0.8 }, function () {
+                                        TableFulsh();
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+
+                } else if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/Reconcile/Edit_rView/' + data.Id,
+                        area: ['1300px', '600px'],
+                        title: '编辑数据'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+
+            //查询1
+            //监听提交
+            form.on('submit(serch1)', function (data) {
+                var class_select1 = data.field.class_select1;
+                var starTime = data.field.starTime;
+                var endTime = data.field.endTime;
+                table.reload('Recon_table', {
+                    url: '/Educational/Reconcile/GetReconAllData'
+                    , where: { "class_select1": class_select1, "starTime": starTime, "endTime": endTime, "teachername": "", "Time2": "", "curr_select1": "" }
+                });
+                return false;
+            });
+            form.on('submit(serch3)', function (data) {
+                var teachername = data.field.teachername;
+                var Time2 = data.field.Time2;
+
+                table.reload('Recon_table', {
+                    url: '/Educational/Reconcile/GetReconAllData'
+                    , where: { "teachername": teachername, "Time2": Time2, "class_select1": "", "starTime": "", "endTime": "", "curr_select1": "" }
+                });
+                return false;
+            });
+            form.on('submit(serch2)', function (data) {
+                var curr_select1 = data.field.curr_select1;
+                table.reload('Recon_table', {
+                    url: '/Educational/Reconcile/GetReconAllData'
+                    , where: { "curr_select1": curr_select1, "class_select1": "", "starTime": "", "endTime": "", "teachername": "", "Time2": "" }
+                });
+                return false;
+            });
+        });
+    </script>
+}
 
