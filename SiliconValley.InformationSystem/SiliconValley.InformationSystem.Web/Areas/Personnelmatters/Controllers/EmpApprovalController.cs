@@ -1,6 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Business.Channel;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.Consult_Business;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
@@ -230,46 +231,53 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             ajaxresult = empmanage.Success();
                             if (ajaxresult.Success)
                             {
-                                switch (empmanage.GetDept(emp.PositionId).DeptName)
+                                var dname = empmanage.GetDept(emp.PositionId).DeptName;
+                                var pname = empmanage.GetPosition(emp.PositionId).PositionName;
+                                if (dname.Equals("就业部"))
                                 {
-                                    case "财务部":
-                                        FinanceModelBusiness fmmanage = new FinanceModelBusiness();
-                                        bool fm = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
-                                        ajaxresult = empmanage.Success();
-                                        ajaxresult.Success = fm;
-                                        break;
-                                    case "市场部":
-                                        ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
-                                        bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
-                                        ajaxresult = empmanage.Success();
-                                        ajaxresult.Success = cs;
-                                        break;
-                                    case "就业部":
-                                        EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
-                                        bool es = esmanage.DelEmploystaff(emp.EmployeeId);
-                                        ajaxresult = empmanage.Success();
-                                        ajaxresult.Success = es;
-                                        break;
-                                    case "咨询部":
-                                        ConsultTeacherManeger ctmanage = new ConsultTeacherManeger();
-                                        bool ct = ctmanage.DeltConsultTeacher(emp.EmployeeId);
-                                        ajaxresult = empmanage.Success();
-                                        ajaxresult.Success = ct;
-                                        break;
-                                    case "教质部":
-                                        HeadmasterBusiness hmmanage = new HeadmasterBusiness();
-                                        bool hm = hmmanage.QuitEntity(emp.EmployeeId);
-                                        ajaxresult = empmanage.Success();
-                                        ajaxresult.Success = hm;
-                                        break;
-                                    case "教学部":
-                                        TeacherBusiness tmanage = new TeacherBusiness();
-                                        bool t = tmanage.dimission(emp.EmployeeId);
-                                        ajaxresult = empmanage.Success();
-                                        ajaxresult.Success = t;
-                                        break;
+                                    EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+                                    bool es = esmanage.DelEmploystaff(emp.EmployeeId);
+                                    ajaxresult.Success = es;
+                                }
+                                if (dname.Equals("市场部"))
+                                {
+                                    ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+                                    bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
+                                    ajaxresult.Success = cs;
+                                }
+                                if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
+                                {
+                                    HeadmasterBusiness hmmanage = new HeadmasterBusiness();
+                                    bool hm = hmmanage.QuitEntity(emp.EmployeeId);
+                                    ajaxresult.Success = hm;
                                 }
 
+                                if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && pname.Equals("教官"))
+                                {
+                                    InstructorListBusiness itmanage = new InstructorListBusiness();
+                                    bool hm = itmanage.RemoveInstructorList(emp.EmployeeId);
+                                    ajaxresult.Success = hm;
+                                }
+                                if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
+                                {
+                                    ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
+                                    bool s = cmanage.DeltConsultTeacher(emp.EmployeeId);
+                                    ajaxresult.Success = s;
+                                }
+                                if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))
+                                {
+                                    TeacherBusiness teamanage = new TeacherBusiness();
+                                    bool s = teamanage.dimission(emp.EmployeeId);
+                                    ajaxresult.Success = s;
+                                }                            
+                                if (dname.Equals("财务部"))
+                                {
+                                    FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+                                    bool s = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
+                                    ajaxresult.Success = s;
+                                }
+                               
+                              
                                 //EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();//员工工资体系中员工离职改变
                                 //bool s;
                                 //s = esemanage.EditEmpSalaryState(emp.EmployeeId);
@@ -392,13 +400,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                 if (emp.PositiveDate == null)
                                 {
                                     emp.ProbationSalary = et.PresentSalary;
-                                    emanage.Update(emp);
                                 }
                                 else
                                 {
                                     emp.Salary = et.PresentSalary;
-                                    emanage.Update(emp);
                                 }
+                                emanage.Update(emp);
                                 ajaxresult = emanage.Success();
                                 if (ajaxresult.Success) {
                                     EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();

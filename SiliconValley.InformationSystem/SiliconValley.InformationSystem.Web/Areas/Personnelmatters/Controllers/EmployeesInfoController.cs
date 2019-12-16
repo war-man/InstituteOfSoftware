@@ -300,54 +300,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 empinfo.Insert(emp);
                 AjaxResultxx = empinfo.Success();
                 if (AjaxResultxx.Success) {
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("就业部"))
+                    var dname = empinfo.GetDept(emp.PositionId).DeptName;
+                    var pname = empinfo.GetPosition(emp.PositionId).PositionName;
+                if (dname.Equals("就业部"))
                 {
                     bool s = esmanage.AddEmploystaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("市场部"))
+                if (dname.Equals("市场部"))
                 {
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s1、s2教质部") && !empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官"))
+                if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && !pname.Equals("教官"))
                 {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                     }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s3教质部") && !empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官")) {
-                        bool s = hm.AddHeadmaster(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s1、s2教质部") && empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官"))
+                if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && pname.Equals("教官"))
                     {
                         bool s = itmanage.AddInstructorList(emp.EmployeeId);
                         AjaxResultxx.Success = s;
                     }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s3教质部") && empinfo.GetPosition(emp.PositionId).PositionName.Equals("教官")) {
-                        bool s = itmanage.AddInstructorList(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }
-                if (empinfo.GetPosition(emp.PositionId).PositionName.Equals("咨询师") || empinfo.GetPosition(emp.PositionId).PositionName.Equals("咨询主任"))
+                if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
                 {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s1、s2教学部"))
+                if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部")|| dname.Equals("s4教学部"))
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
                     bool s = teamanage.AddTeacher(tea);
                     AjaxResultxx.Success = s;
                 }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("s3教学部"))
-                    {
-                        Teacher tea = new Teacher();
-                        tea.EmployeeId = emp.EmployeeId;
-                        bool s = teamanage.AddTeacher(tea);
-                        AjaxResultxx.Success = s;
-                    }
-                if (empinfo.GetDept(emp.PositionId).DeptName.Equals("财务部"))
+                if (dname.Equals("财务部"))
                 {
                     bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
@@ -359,11 +346,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         AjaxResultxx.Success = monthss;
                     }
                     if (AjaxResultxx.Success) {
-                        bool att = attinfomanage.AddEmpToAttendanceInfo(emp.EmployeeId);
+                        bool att = attinfomanage.AddEmpToAttendanceInfo(emp.EmployeeId);//往考勤表添加员工
                         AjaxResultxx.Success = att;
                     }
                     if (AjaxResultxx.Success) {
-                        bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);
+                        bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
                         AjaxResultxx.Success = mc;
                     }
                    
@@ -373,7 +360,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 AjaxResultxx = empinfo.Error(ex.Message);
             }
-
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
         //获取时间（网络时间/当前计算机时间）
@@ -542,8 +528,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return result;
         }
 
-
-
+        #region 部门及岗位相关业务
         //部门及岗位管理页面显示
         [HttpGet]
         public ActionResult DeptOperation()
@@ -760,8 +745,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+        #endregion
 
-
+        #region 员工信息列表的单元格修改
         //员工婚姻状态和性别的修改 
         public ActionResult EditEmphunyin(string id, string name, bool ismarry)
         {
@@ -866,7 +852,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion
 
         /// <summary>
         /// 员工信息详情页面
@@ -930,6 +916,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(empobj, JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// 编辑员工信息
         /// </summary>

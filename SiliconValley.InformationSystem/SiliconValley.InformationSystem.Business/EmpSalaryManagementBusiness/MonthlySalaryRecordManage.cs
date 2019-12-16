@@ -38,6 +38,11 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
         }
 
+        /// <summary>
+        /// 去除该员工
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
         public bool EditEmpMS(string empid)
         {
             var ems = this.GetEntity(empid);

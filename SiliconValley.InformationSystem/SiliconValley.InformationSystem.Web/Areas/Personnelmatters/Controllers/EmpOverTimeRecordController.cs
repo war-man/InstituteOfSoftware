@@ -33,9 +33,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             OvertimeRecordManage otrmanage = new OvertimeRecordManage();
             BeOnDutyManeger bodmanage = new BeOnDutyManeger();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var list = otrmanage.GetList();
+            var list = otrmanage.GetList().Where(s => s.IsApproval == false).ToList();
 
-            var newlist = list.Where(s => s.IsApproval == false).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
@@ -244,9 +244,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             DaysOffManage dfmanage = new DaysOffManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var list = dfmanage.GetList();
-
-            var newlist = list.Where(s => s.IsApproval == false).OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            var list = dfmanage.GetList().Where(s => s.IsApproval == false).ToList();
+            var newlist = list.OrderByDescending(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
                          {
