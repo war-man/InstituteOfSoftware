@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewBag.Title = "StatusIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+
+}
+<table id="mytabletwo" class="layui-table" lay-filter="mytabletwo"></table>
+<script type="text/html" id="MytoolbarDemoSix2">
+    <div class="layui-btn-container">
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="MygetCheckDataOne2">
+            <i class="layui-icon">&#xe608;</i> 添加
+        </button>
+    </div>
+</script>
+@section script{
+    <script>
+         //table2刷新数据
+        function Flush2() {
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.reload('mytabletwo');
+            })
+        }
+        layui.use(['element', 'table', 'form', 'layer'], function () {
+            var element = layui.element;
+            var table = layui.table;
+            var form = layui.form;
+            var layer = layui.layer;           
+            table.render({
+                elem: '#mytabletwo'
+                , url: '/Market/Status/GetStatusData'
+                , toolbar: '#MytoolbarDemoSix2'
+                , cols: [[
+                    {
+                        field: 'StatusName', title: '名称', edit: 'text'
+                    }
+                    , {
+                        field: 'IsDelete', title: '状态', templet: function (res) {
+                            if (res.IsDelete == true) {
+                                return '已禁用'
+                            } else {
+                                return '在使用'
+                            }
+                        }
+                    }
+                    , {
+                        field: 'sex2', title: '修改状态', templet: function (res) {
+                            if (res.IsDelete == true) {
+                                return '<input type="checkbox" name="MyIsDeltes" myid2=' + res.Id + ' lay-skin="switch" lay-text="启用|禁用" lay-filter="sexDemo2" value=' + res.IsDelete + '>'
+                            } else {
+                                return '<input type="checkbox" name="MyIsDeltes" myid2=' + res.Id + ' lay-skin="switch" lay-text="启用|禁用" checked lay-filter="sexDemo2" value=' + res.IsDelete + '>'
+                            }
+
+                        }, unresize: true
+                    }
+                ]]
+                , page: true
+            });
+
+            //table2监听单元格编辑
+            table.on('edit(mytabletwo)', function (obj) {
+                var value = obj.value; //得到修改后的值
+                if (value == null || value.length == 0) {
+                    layer.msg('文本框不能为空!', {
+                        icon: 2,
+                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                    });
+                } else {
+                    $.ajax({
+                        url: '/Market/Status/EditStates',
+                        data: { 'name': value, 'id': obj.data.Id }
+                        , dataType: 'json'
+                        , type: 'post'
+                        , success: function (SucData) {
+                            if (SucData != 'ok') {
+                                layer.msg(SucData, {
+                                    icon: 2,
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                            Flush2()
+                        }
+                    });
+                }
+            });
+
+            //table2监听修改操作
+            form.on('switch(sexDemo2)', function (obj) {
+                var mystate = obj.value;
+                var id = $(obj.elem).attr("myid2");
+                if (mystate == "false") {
+                    layer.confirm('<h2 class=h2CsOne>禁用了就不能使用了！！！请三思</h2>', { title: '系统温馨提示', skin: 'demo-classOne' }, function (index) {
+                        $.ajax({
+                            url: '/Market/Status/EditStates',
+                            data: { 'state': mystate, 'id': id }
+                            , dataType: 'json'
+                            , type: 'post'
+                            , success: function (SucData) {
+                                if (SucData != 'ok') {
+                                    layer.msg(SucData, {
+                                        icon: 2,
+                                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                    });
+                                } else {
+                                    Flush2();
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                    Flush2();
+                } else {
+                    $.ajax({
+                        url: '/Market/Status/EditStates',
+                        data: { 'state': mystate, 'id': id }
+                        , dataType: 'json'
+                        , type: 'post'
+                        , success: function (SucData) {
+                            if (SucData != 'ok') {
+                                layer.msg(SucData, {
+                                    icon: 2,
+                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                });
+                            }
+                        }
+                    });
+                }
+
+            });
+
+            //table1头工具栏事件
+            table.on('toolbar(mytabletwo)', function (obj) {
+                switch (obj.event) {
+                    case 'MygetCheckDataOne2':
+                        $.ajax({
+                            url: '/Market/Status/AddStates'
+                            , success: function (SucData) {
+                                if (SucData != "ok") {
+                                    layer.msg(SucData, {
+                                        icon: 2,
+                                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                    });
+                                } else {
+                                    Flush2();
+                                }
+                            }
+                        });
+                        break;
+                };
+            });
+        });
+    </script>
+}
+

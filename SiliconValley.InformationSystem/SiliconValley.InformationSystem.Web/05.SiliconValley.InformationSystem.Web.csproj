@@ -257,9 +257,11 @@
     <Compile Include="Areas\Market\Controllers\ConsultController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultTeacherController.cs" />
     <Compile Include="Areas\Market\Controllers\FollwingInfoController.cs" />
+    <Compile Include="Areas\Market\Controllers\InfomationController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
+    <Compile Include="Areas\Market\Controllers\StatusController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\MyEducation\Controllers\EducationController.cs" />
@@ -408,6 +410,8 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
+    <Content Include="Areas\Market\Views\Infomation\InfomationIndexView.cshtml" />
+    <Content Include="Areas\Market\Views\Status\StatusIndexView.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
