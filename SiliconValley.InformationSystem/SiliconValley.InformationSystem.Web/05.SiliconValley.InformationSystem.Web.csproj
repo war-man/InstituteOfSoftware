@@ -199,6 +199,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\BaseSysManage\BaseSysManageAreaRegistration.cs" />
+    <Compile Include="Areas\BaseSysManage\Controllers\Base_UserRoleController.cs" />
     <Compile Include="Areas\Base_SysManage\Base_SysManageAreaRegistration.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\Base_AppSecretController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\Base_DatabaseLinkController.cs" />
@@ -1219,6 +1221,11 @@
     <Content Include="Areas\CourseSyllabus\Views\Course\EditClassCourseArrangment.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\TeacherArrangementRecord.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\SetInvigilator.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\web.config" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\RoleIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\AccountIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\createAccount.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\selectEmp.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2830,6 +2837,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\BaseSysManage\Models\" />
+    <Folder Include="Areas\BaseSysManage\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Educational\Models\" />

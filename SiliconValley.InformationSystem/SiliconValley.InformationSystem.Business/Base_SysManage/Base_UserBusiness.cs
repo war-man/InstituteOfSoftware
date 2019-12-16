@@ -1,6 +1,8 @@
 using SiliconValley.InformationSystem.Business.Cache;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
+using SiliconValley.InformationSystem.Entity.Base_SysManage.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -216,6 +218,58 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
         #region 数据模型
 
         #endregion
+
+        public AccountView ConvetToView(Base_User user)
+        {
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+
+            AccountView view = new AccountView();
+            view.Birthday = user.Birthday;
+            view.Emp = dbemp.GetInfoByEmpID(user.EmpNumber);
+
+            view.Id = user.Id;
+            view.Password = user.Password;
+            view.RealName = user.RealName;
+            view.Sex = user.Sex;
+            view.UserId = user.UserId;
+            view.UserName = user.UserName;
+            
+
+            return view;
+        }
+
+
+        /// <summary>
+        /// 创建账号
+        /// </summary>
+        public void createAccount(string userName, string empNumber)
+        {
+            
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+            //获取员工
+           var emp = dbemp.GetInfoByEmpID(empNumber);
+
+            //获取身份证后6位
+
+            var password = emp.IdCardNum.Substring(12);
+
+            //进行MD5加密
+            string password_md5 = Extention.ToMD5String(password);
+
+            //*******************************************************************************************//
+
+            Base_User user = new Base_User();
+            user.Birthday = null;
+            user.EmpNumber = empNumber;
+            user.Password = password_md5;
+            user.UserName = userName;
+            user.UserId = Guid.NewGuid().ToString();
+            user.Id = Guid.NewGuid().ToString();
+
+            this.AddData(user);
+
+
+        }
     }
 
     public class Base_UserModel : Base_User
@@ -243,4 +297,7 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
             }
         }
     }
+
+   
+
 }
