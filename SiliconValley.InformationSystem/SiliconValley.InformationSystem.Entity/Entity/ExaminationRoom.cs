@@ -20,8 +20,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int ID { get; set; }
         public Nullable<int> Classroom_Id { get; set; }
-        public Nullable<int> Invigilator1 { get; set; }
-        public Nullable<int> Invigilator2 { get; set; }
+        public string  Invigilator1 { get; set; }
+        public string Invigilator2 { get; set; }
         public string Remark { get; set; }
         public Nullable<int> Examination { get; set; }
 

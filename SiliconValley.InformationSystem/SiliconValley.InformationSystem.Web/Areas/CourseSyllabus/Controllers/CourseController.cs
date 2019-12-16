@@ -15,6 +15,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
     using SiliconValley.InformationSystem.Business.Common;
 
     using SiliconValley.InformationSystem.Business.CourseSchedulingSysBusiness;
+    using SiliconValley.InformationSystem.Business;
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
     [CheckLogin]
     public class CourseController : Controller
@@ -23,13 +26,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         private readonly SpecialtyBusiness db_major;
         private readonly GrandBusiness db_grand;
         private readonly CourseTypeBusiness db_coursetype;
+        private readonly BaseBusiness<ClassSchedule> db_class;
+        private readonly EmployeesInfoManage db_emp;
+
+
         public CourseController()
         {
             this.db_course = new CourseBusiness();
             this.db_major = new SpecialtyBusiness();
             this.db_grand = new GrandBusiness();
             this.db_coursetype = new CourseTypeBusiness();
-
+            db_class = new BaseBusiness<ClassSchedule>();
+            db_emp = new EmployeesInfoManage();
         }
 
 
@@ -293,6 +301,304 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
                 return Json(ex.Message, JsonRequestBehavior.AllowGet);
             }            
+        }
+
+
+        /// <summary>
+        /// 班级课程安排
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ClassCourseArrangement()
+        {
+            var allclasslist = new List<ClassSchedule>();
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+            //List<ClassCourseView> resultlist = new List<ClassCourseView>();
+
+
+            //Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
+
+            //var emplist = dbsatis.GetMyDepEmp(user);
+
+            //TeacherBusiness dbteacher = new TeacherBusiness();
+
+            //foreach (var item in emplist)
+            //{
+            //    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+            //    if (teacher != null)
+            //    {
+            //        var tempclasslist = dbteacherclass.GetCrrentMyClass(teacher.TeacherID);
+
+            //        allclasslist.AddRange(tempclasslist);
+            //    }
+
+            //}
+
+            allclasslist = dbteacherclass.AllClassSchedule();
+
+            ViewBag.classlist = allclasslist;
+
+
+
+
+            return View();
+        }
+
+        public ActionResult ClassCourseArrangementData(int page)
+        {
+          
+            var allclasslist = new List<ClassSchedule>();
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+            List<ClassCourseView> resultlist = new List<ClassCourseView>();
+
+          
+
+            allclasslist = dbteacherclass.AllClassSchedule();
+
+            
+
+            var totalCount = allclasslist.Count;
+
+            var skiplist = allclasslist.Skip((page - 1) * 8).Take(8).ToList();
+
+            foreach (var item in skiplist)
+            {
+                var teacherclass = db_course.CurrentClassCourse(item.id);
+                if (teacherclass != null)
+                {
+                    resultlist.Add(teacherclass);
+                }
+            }
+
+            var objresult = new
+            {
+
+                status = 0,
+                message = "成功",
+                total = totalCount,
+                data = resultlist
+
+            };
+
+            return Json(objresult, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult SearchClassCourseArrangementData(int page, string classid, bool status)
+        {
+
+           
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+
+            List<ClassCourseView> resultlist = new List<ClassCourseView>();
+
+           
+
+
+           var classsc = dbteacherclass.AllClassSchedule().Where(d => d.id == int.Parse(classid)).FirstOrDefault();
+
+           var list = dbteacherclass.GetIQueryable().Where(d => d.ClassNumber == classsc.id && d.IsDel == status).ToList();
+            var skiplist = list.Skip((page - 1) * 8).Take(8).ToList();
+
+            foreach (var item in skiplist)
+            {
+                var teacherclass = db_course.ConvertToView(item);
+
+                if (teacherclass != null)
+                {
+                    resultlist.Add(teacherclass);
+                }
+            }
+
+
+            var objresult = new
+            {
+
+                status = 0,
+                message = "成功",
+                total = resultlist.Count,
+                data = resultlist
+
+            };
+
+            return Json(objresult, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        /// <summary>
+        /// 编辑班级课程安排
+        /// </summary>
+        /// <param name="classid">班级id 否则传入0</param>
+        /// <returns></returns>
+        public ActionResult EditClassCourseArrangment()
+        {
+            //提供所有班级
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+           
+
+            List<ClassSchedule> classlist = new List<ClassSchedule>();
+
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+
+            classlist = dbteacherclass.AllClassSchedule();
+
+            ViewBag.classlist = classlist;
+
+
+            //提供所有课程
+           ViewBag.courselist = db_course.GetCurriculas();
+
+            return View();
+        }
+
+        /// <summary>
+        /// 获取班级下一门课程
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetClassNextCourse(int classid)
+        {
+          var course =  db_course.GetClassNextCourse(classid);
+
+            return Json(course, JsonRequestBehavior.AllowGet);
+
+            
+        }
+
+
+        /// <summary>
+        /// 获取删除课程的教员
+        /// </summary>
+        /// <param name="courseid"></param>
+        /// <returns></returns>
+        public ActionResult goodSkillTeacher(int courseid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                // Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
+                TeacherBusiness dbteacher = new TeacherBusiness();
+                 var list = dbteacher.GetTeachers();
+
+                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+                foreach (var item in list)
+                {
+                   var temp = db_emp.GetInfoByEmpID(item.EmployeeId);
+
+                    if (temp != null)
+                    {
+                        emplist.Add(temp);
+                    }
+
+                }
+                
+
+                BaseBusiness<GoodSkill> dbgoodskell = new BaseBusiness<GoodSkill>();
+                
+
+                
+
+                List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
+                foreach (var item in emplist)
+                {
+                    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+                    if (teacher != null)
+                    {
+                        var templist = dbgoodskell.GetList().Where(d => d.TearchID == teacher.TeacherID && d.Curriculum == courseid).FirstOrDefault();
+
+                        if (templist != null)
+                        {
+
+                            resultlist.Add(item);
+                        }
+                    }
+                }
+
+                result.Msg = "成功";
+                result.Data = resultlist;
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+                result.Msg = "失败";
+                result.Data = null;
+                result.ErrorCode = 500;
+            }
+
+           
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult EditClassCourseArrangment(ClassTeacher classTeacher, string empnumber)
+        {
+            AjaxResult result = new AjaxResult();
+            try
+            {
+                TeacherBusiness dbteacher = new TeacherBusiness();
+                var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == empnumber).FirstOrDefault();
+
+                classTeacher.TeacherID = teacher.TeacherID;
+                db_course.EditClassCourseArrangment(classTeacher);
+
+                result.Data = null;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                result.Data = null;
+                result.Msg = "失败";
+                result.ErrorCode = 500;
+            }
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 启用/禁用
+        /// </summary>
+        /// <param name="status">状态 true：启用  false：禁用</param>
+        /// <param name="classteacherid"></param>
+        /// <returns></returns>
+        public ActionResult UsingOrProhibit(string status, int classteacherid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                db_course.UsingOrProhibit(status, classteacherid);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+
         }
     }
 }

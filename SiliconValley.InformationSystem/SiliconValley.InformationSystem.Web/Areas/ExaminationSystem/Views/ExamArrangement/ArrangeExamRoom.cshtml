@@ -132,11 +132,6 @@
             <form class="layui-form">
                 <div id="selectClassroom">
 
-                    
-
-
-
-
                 </div>
             </form>
             <hr />
@@ -173,50 +168,7 @@
 
     <script>
 
-        //加载监考员
-        function loadproctor() {
-            var examintionID = $("#ExamintionID").val();
-            var examroom = "";
-            $("#selectClassroom .classroomitem .layui-form-radio").each(function (index, elem) {
-
-                var ischecked = $(elem).hasClass("layui-form-radioed");
-
-                console.log(elem);
-
-                if (ischecked) {
-
-                    examroom = $(elem).parent().find("input").val();
-                }
-
-            });
-            
-            $.post("/ExaminationSystem/ExamArrangement/GetProtorData", { examid: examintionID, examroom: examroom }, function (result) {
-
-                if (result.ErrorCode == 200) {
-                    
-                    $("#selectedTeacher form button").remove();
-
-                    if (result.Data.length == 0) {
-
-                        
-
-                        return;
-
-                    }
-                    for (var i = 0; i < result.Data.length; i++) {
-
-                        //selectedTeacher
-                        var button = $('<button type="button" class="layui-btn layui-btn-primary" ><i class="layui-icon layui-icon-rate-solid"></i>' + result.Data[i].EmpName + '</button>');
-                        button.attr("empid", result.Data[i].EmployeeId);
-
-                        $("#selectedTeacher form").append(button);
-                    }
-
-                }
-
-
-            });
-        }
+        
         var form ;
 
         layui.use(['form', 'layer'], function () {
@@ -236,6 +188,29 @@
                 });
 
             });
+
+
+            //加载监考员
+            function loadproctor() {
+                var examintionID = $("#ExamintionID").val();
+
+                var examroom = "";
+                $("#selectClassroom .classroomitem .layui-form-radio").each(function (index, elem) {
+
+                    var ischecked = $(elem).hasClass("layui-form-radioed");
+
+                    if (ischecked) {
+
+                        examroom = $(elem).parent().find("input").val();
+                    }
+
+                });
+
+                window.parent.windowOpen(examintionID, examroom);
+
+
+            }
+
 
             function loadExaminRoom() {
 
@@ -351,9 +326,7 @@
             $("#arrangeproctor").click(function () {
 
 
-                // $("#myfloat").slideUp();
-                $("#myfloat").show();
-                $("#teacherdiv form button").remove();
+              
                 loadproctor();
 
 

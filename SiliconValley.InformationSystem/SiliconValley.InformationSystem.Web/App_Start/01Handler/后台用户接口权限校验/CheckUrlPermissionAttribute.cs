@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Web
         public void OnActionExecuting(ActionExecutingContext filterContext)
         {
             //若为本地测试，则不需要校验
-            if (GlobalSwitch.RunModel == RunModel.LocalTest)
+            if (GlobalSwitch.RunModel != RunModel.LocalTest)
             {
                 return;
             }

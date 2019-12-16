@@ -63,7 +63,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         public List<Examination> AllExamination()
         {
-           return  this.GetList().ToList();
+            return this.GetList().ToList();
         }
 
 
@@ -74,6 +74,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public ExaminationView ConvertToExaminationView(Examination examination)
         {
             ExaminationView view = new ExaminationView();
+
+
 
             view.ID = examination.ID;
             view.BeginDate = examination.BeginDate;
@@ -89,7 +91,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         public List<QuestionLevel> AllQuestionLevel()
         {
-           return db_questionlevel.GetList();
+            return db_questionlevel.GetList();
         }
         /// <summary>
         /// 生成考试编号
@@ -99,7 +101,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         {
             string defaultstr = "guigu";
 
-            
+
             string year = examination.BeginDate.Year.ToString();
 
 
@@ -121,7 +123,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             string suijishu = value.ToString();
 
             return defaultstr + year + mouth + day + suijishu;
-            
+
         }
 
 
@@ -136,11 +138,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             DateTime nowdate = DateTime.Now;
 
-            var d = (float)(nowdate -datetime1).TotalHours;
+            var d = (float)(nowdate - datetime1).TotalHours;
 
 
 
-            if (d>examination.TimeLimit)
+            if (d > examination.TimeLimit)
             {
                 return true;
             }
@@ -162,17 +164,17 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
             ///获取到班主任
-           var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
+            var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
 
             //获取班主任的班级
-           var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
+            var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
 
             List<StudentInformation> studentlist = new List<StudentInformation>();
             ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
 
             foreach (var item in classs)
             {
-               var templist = scheduleForTraineesBusiness.ClassStudent((int)item.ClassID);
+                var templist = scheduleForTraineesBusiness.ClassStudent((int)item.ClassID);
 
                 if (templist != null)
                 {
@@ -250,8 +252,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (examinationRoom.Invigilator1 != null)
             {
-                string empid1 = db_headmaster.GetList().Where(d => d.IsDelete == false && d.ID == examinationRoom.Invigilator1).FirstOrDefault().informatiees_Id;
-                view.Invigilator1 = db_emp.GetInfoByEmpID(empid1);
+              
+                view.Invigilator1 = db_emp.GetInfoByEmpID(examinationRoom.Invigilator1);
             }
             else
             {
@@ -261,15 +263,15 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (examinationRoom.Invigilator2 != null)
             {
-                string empid2 = db_headmaster.GetList().Where(d => d.IsDelete == false && d.ID == examinationRoom.Invigilator2).FirstOrDefault().informatiees_Id;
-                view.Invigilator2 = db_emp.GetInfoByEmpID(empid2);
+               
+                view.Invigilator2 = db_emp.GetInfoByEmpID(examinationRoom.Invigilator2);
             }
             else
             {
                 view.Invigilator2 = null;
             }
 
-          
+
 
             view.Remark = examinationRoom.Remark;
 
@@ -292,7 +294,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<Examination> NoEndExamination()
         {
-           var list =  this.AllExamination();
+            var list = this.AllExamination();
 
             List<Examination> resultlist = new List<Examination>();
 
@@ -330,16 +332,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <param name="studentlist"></param>
         /// <param name="examid"></param>
 
-        public void subscribeExam(Dictionary<string,bool> studentlist, int examid)
+        public void subscribeExam(Dictionary<string, bool> studentlist, int examid)
         {
-          
 
-            Examination examination = this.AllExamination().Where(d=>d.ID==examid).FirstOrDefault();
+
+            Examination examination = this.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
 
             foreach (var item in studentlist)
             {
 
-               var tempstu = AllCandidateInfo(examid).Where(d => d.StudentID == item.Key).FirstOrDefault();
+                var tempstu = AllCandidateInfo(examid).Where(d => d.StudentID == item.Key).FirstOrDefault();
 
                 if (tempstu == null)
                 {
@@ -356,14 +358,14 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             }
 
-          
 
-           
+
+
 
 
         }
 
-        public void UpdateCandidateInfo(CandidateInfo candidateInfo )
+        public void UpdateCandidateInfo(CandidateInfo candidateInfo)
         {
             db_candidateinfo.Update(candidateInfo);
         }
@@ -379,7 +381,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             foreach (var item in students)
             {
-               var tempexamobj = this.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
+                var tempexamobj = this.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
 
                 if (tempexamobj != null)
                 {
@@ -387,7 +389,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
                     //删除成绩单
 
-                    
+
                 }
 
             }
@@ -403,7 +405,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <param name="proctorList">监考员</param>
         public void ArrangeTheInvigilator(int examid, int examroomid, List<string> proctorList)
         {
-           var exammroom =  this.ExaminationRoomByExamID(examid).Where(d=>d.Classroom_Id == examroomid).FirstOrDefault();
+            var exammroom = this.ExaminationRoomByExamID(examid).Where(d => d.Classroom_Id == examroomid).FirstOrDefault();
             BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
 
             //首先先删除
@@ -416,26 +418,36 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 return;
             }
 
-           
 
-            var headmaster =  dbheadmaster.GetList().Where(d => d.IsDelete == false && d.informatiees_Id == proctorList[0]).FirstOrDefault();
 
-            exammroom.Invigilator1 = headmaster.ID;
+            if (proctorList[0] != null)
+            {
+                var headmaster = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[0]).FirstOrDefault();
 
-            var headmaster1 = dbheadmaster.GetList().Where(d => d.IsDelete == false && d.informatiees_Id == proctorList[1]).FirstOrDefault();
+                exammroom.Invigilator1 = headmaster.EmployeeId;
+            }
 
-            exammroom.Invigilator2 = headmaster1.ID;
+            if (proctorList[1] != null)
+            {
+                var headmaster1 = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[1]).FirstOrDefault();
+                exammroom.Invigilator2 = headmaster1.EmployeeId;
 
+               
+            }
             db_examroom.Update(exammroom);
-
-
-
 
         }
 
+
+        /// <summary>
+        /// 获取监考员
+        /// </summary>
+        /// <param name="examid"></param>
+        /// <param name="examroomid"></param>
+        /// <returns></returns>
         public List<EmployeesInfo> GetProtorData(int examid, int examroomid)
         {
-           var examroom = this.ExaminationRoomByExamID(examid).Where(d => d.Classroom_Id == examroomid).FirstOrDefault();
+            var examroom = this.ExaminationRoomByExamID(examid).Where(d => d.Classroom_Id == examroomid).FirstOrDefault();
 
             List<EmployeesInfo> list = new List<EmployeesInfo>();
 
@@ -443,9 +455,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (examroom.Invigilator1 != null)
             {
-                var headmaster1 = dbheadmaster.GetList().Where(d => d.IsDelete == false && d.ID == examroom.Invigilator1).FirstOrDefault();
+              
 
-                var emp1 = db_emp.GetInfoByEmpID(headmaster1.informatiees_Id);
+                var emp1 = db_emp.GetInfoByEmpID(examroom.Invigilator1);
 
                 if (emp1 != null)
                 {
@@ -455,92 +467,91 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (examroom.Invigilator2 != null)
             {
-                var headmaster2 = dbheadmaster.GetList().Where(d => d.IsDelete == false && d.ID == examroom.Invigilator2).FirstOrDefault();
-
-                var emp2 = db_emp.GetInfoByEmpID(headmaster2.informatiees_Id);
+              
+                var emp2 = db_emp.GetInfoByEmpID(examroom.Invigilator2);
 
                 if (emp2 != null)
                 {
                     list.Add(emp2);
                 }
             }
-          
-         
+
+
 
             return list;
         }
 
-        public List<HeadMasterSortView> GetHeadmastersByGrand(int grandid)
-        {
-            BaseBusiness<HeadMasterGrand> db_headmastergrand = new BaseBusiness<HeadMasterGrand>();
+        //public List<HeadMasterSortView> GetHeadmastersByGrand(int grandid)
+        //{
+        //    BaseBusiness<HeadMasterGrand> db_headmastergrand = new BaseBusiness<HeadMasterGrand>();
 
-            //获取所有考试
-           var examlist = this.AllExamination();
+        //    //获取所有考试
+        //    var examlist = this.AllExamination();
 
-            //获取未开始的考试
-            List<Examination> noendexamlist = new List<Examination>();
-            foreach (var item in examlist)
-            {
-                if (!this.IsEnd(item))
-                {
-                    noendexamlist.Add(item);
-                }
-            }
+        //    //获取未开始的考试
+        //    List<Examination> noendexamlist = new List<Examination>();
+        //    foreach (var item in examlist)
+        //    {
+        //        if (!this.IsEnd(item))
+        //        {
+        //            noendexamlist.Add(item);
+        //        }
+        //    }
 
-            List<int> headmasterlist = new List<int>();
+        //    List<int> headmasterlist = new List<int>();
 
-            foreach (var item in noendexamlist)
-            {
-               var templist = this.ExaminationRoomByExamID(item.ID).ToList();
+        //    foreach (var item in noendexamlist)
+        //    {
+        //        var templist = this.ExaminationRoomByExamID(item.ID).ToList();
 
-                foreach (var item1 in templist)
-                {
-                    if (item1.Invigilator1 != null)
-                    {
-                        headmasterlist.Add((int)item1.Invigilator1);
-                    }
+        //        foreach (var item1 in templist)
+        //        {
+        //            if (item1.Invigilator1 != null)
+        //            {
+        //                headmasterlist.Add(item1.Invigilator1);
+        //            }
 
-                    if (item1.Invigilator2 != null)
-                    {
-                        headmasterlist.Add((int)item1.Invigilator2);
-                    }
-                }
-            }
-
-
-            var list1 = db_headmastergrand.GetList().Where(d => d.GrandID == grandid).ToList();
-
-            //排除 
+        //            if (item1.Invigilator2 != null)
+        //            {
+        //                headmasterlist.Add(item1.Invigilator2);
+        //            }
+        //        }
+        //    }
 
 
-            var list = new List<HeadMasterGrand>();
+        //    var list1 = db_headmastergrand.GetList().Where(d => d.GrandID == grandid).ToList();
 
-            foreach (var item in list1)
-            {
-                if (!IsCoaint(headmasterlist, item))
-                {
-                    list.Add(item);
-                }
-            }
+        //    //排除 
 
 
+        //    var list = new List<HeadMasterGrand>();
 
-            EmployeesInfoManage empdb = new EmployeesInfoManage();
-            BaseBusiness<Headmaster> db_headmaster = new BaseBusiness<Headmaster>();
-            //转型
-            List<HeadMasterSortView> resultlist = new List<HeadMasterSortView>();
-            foreach (var item in list)
-            {
-                HeadMasterSortView headMasterSortView = new HeadMasterSortView();
-                var headmaster = db_headmaster.GetList().Where(d => d.IsDelete == false && d.ID == item.HeadMasterID).FirstOrDefault();
-                headMasterSortView.emp = empdb.GetInfoByEmpID(headmaster.informatiees_Id);
-                headMasterSortView.ID = item.ID;
-                resultlist.Add(headMasterSortView);
-            }
+        //    foreach (var item in list1)
+        //    {
+        //        if (!IsCoaint(headmasterlist, item))
+        //        {
+        //            list.Add(item);
+        //        }
+        //    }
 
-            return resultlist;
 
-        }
+
+        //    EmployeesInfoManage empdb = new EmployeesInfoManage();
+        //    BaseBusiness<Headmaster> db_headmaster = new BaseBusiness<Headmaster>();
+        //    //转型
+        //    List<HeadMasterSortView> resultlist = new List<HeadMasterSortView>();
+        //    foreach (var item in list)
+        //    {
+        //        HeadMasterSortView headMasterSortView = new HeadMasterSortView();
+        //        var headmaster = db_headmaster.GetList().Where(d => d.IsDelete == false && d.ID == item.HeadMasterID).FirstOrDefault();
+        //        headMasterSortView.emp = empdb.GetInfoByEmpID(headmaster.informatiees_Id);
+        //        headMasterSortView.ID = item.ID;
+        //        resultlist.Add(headMasterSortView);
+        //    }
+
+        //    return resultlist;
+
+        //}
 
         public bool IsCoaint(List<int> sources, HeadMasterGrand headMasterGrand)
         {
@@ -564,7 +575,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<ExamRoomDistributed> AllExamroomDistributed(int examid)
         {
-           List<ExamRoomDistributed> list = db_examroomDistributed.GetList().Where(d=>d.ExamID == examid).ToList();
+            List<ExamRoomDistributed> list = db_examroomDistributed.GetList().Where(d => d.ExamID == examid).ToList();
 
             return list;
         }
@@ -572,10 +583,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public List<ComputerTestQuestionsView> AllComputerTestQuestion()
         {
             List<ComputerTestQuestionsView> resutlist = new List<ComputerTestQuestionsView>();
-           var list = db_computerQuestion.AllComputerTestQuestion();
+            var list = db_computerQuestion.AllComputerTestQuestion();
             foreach (var item in list)
             {
-               var obj = db_computerQuestion.ConvertToComputerTestQuestionsView(item);
+                var obj = db_computerQuestion.ConvertToComputerTestQuestionsView(item);
 
                 if (obj != null)
                 {
@@ -628,7 +639,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             xmlDocument.Save(System.Web.HttpContext.Current.Server.MapPath("/Config/ExamCourseconfig.xml"));
 
             return examElemet;
-            
+
         }
 
         public XmlElement ExamCourseConfigRead(int examid)
@@ -701,10 +712,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             //获取这次考试的考场
 
-           List<ExaminationRoom> examroomlist = this.AllExaminationRoom().Where(d => d.Examination == exam).ToList();
+            List<ExaminationRoom> examroomlist = this.AllExaminationRoom().Where(d => d.Examination == exam).ToList();
 
             //获取参加考试的人数  
-            var candidateinfolist = this.AllCandidateInfo(exam).OrderBy(d => d.CandidateNumber).ToList() ;
+            var candidateinfolist = this.AllCandidateInfo(exam).OrderBy(d => d.CandidateNumber).ToList();
 
 
             foreach (var item in examroomlist)
@@ -712,14 +723,14 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 //座位表
                 List<string> seatlist = new List<string>();
 
-               var classroom = db_classRoom.GetList().Where(d => d.Id == item.Classroom_Id).FirstOrDefault();
+                var classroom = db_classRoom.GetList().Where(d => d.Id == item.Classroom_Id).FirstOrDefault();
 
 
                 //班级能容纳的人数
                 var classroomcount = (int)classroom.Count;
 
 
-               var stulist = candidateinfolist.Take(classroomcount).ToList();
+                var stulist = candidateinfolist.Take(classroomcount).ToList();
 
 
                 //将这些考生分配到教室
@@ -752,7 +763,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 for (int i = 0; i < stulist.Count; i++)
                 {
                     //生成随机数
-                    int randomNum = r.Next(1, stulist.Count+1);
+                    int randomNum = r.Next(1, stulist.Count + 1);
 
 
                     string Snum = seatlist.Where(d => d == randomNum.ToString()).FirstOrDefault();
@@ -768,24 +779,24 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                         i--;
                     }
 
-                    
+
                 }
 
-                List<object> seat =  new List<object>();
+                List<object> seat = new List<object>();
 
                 for (int i = 0; i < seatlist.Count; i++)
                 {
 
                     BaseBusiness<StudentInformation> db_student = new BaseBusiness<StudentInformation>();
 
-                   var stu = db_student.GetList().Where(d => d.StudentNumber == stulist[i].StudentID).FirstOrDefault();
-                   var stuView = teacherClass.GetStudetentDetailView(stu);
+                    var stu = db_student.GetList().Where(d => d.StudentNumber == stulist[i].StudentID).FirstOrDefault();
+                    var stuView = teacherClass.GetStudetentDetailView(stu);
 
                     if (stu != null)
                     {
-                       var seatd = new
+                        var seatd = new
                         {
-                            student= stuView,
+                            student = stuView,
                             seat = seatlist[i]
 
 
@@ -795,14 +806,15 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
 
                     }
-                    
+
 
                 }
 
                 //组装
-                 var obj = new {
+                var obj = new
+                {
 
-                    classroom= classroom,
+                    classroom = classroom,
                     seat = seat
                 };
                 resultlist.Add(obj);
@@ -816,5 +828,74 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         }
 
+
+        /// <summary>
+        /// 获取可以监考的人员
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetSureInvigilator()
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/ExaminationSystem/config/InvigilatorConfig.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            var depNodelist = xmlRoot.GetElementsByTagName("dep");
+
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+            foreach (XmlElement item in depNodelist)
+            {
+                //获取部门ID
+                var depid = item.Attributes["depid"].Value;
+
+                var tempemplist = db_emp.GetEmpsByDeptid(int.Parse(depid));
+
+                emplist.AddRange(tempemplist);
+            }
+
+            return emplist;
+
+
+        }
+
+
+        /// <summary>
+        /// 获取可以成为监考员的部门
+        /// </summary>
+        /// <returns></returns>
+        public List<Department> GetSureInvigilatorDep()
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/ExaminationSystem/config/InvigilatorConfig.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            var depNodelist = xmlRoot.GetElementsByTagName("dep");
+
+            List<Department> Deplist = new List<Department>();
+
+            foreach (XmlElement item in depNodelist)
+            {
+                //获取部门ID
+                var depid = item.Attributes["depid"].Value;
+
+                var dep = db_emp.GetDeptById(int.Parse(depid));
+
+                if (dep != null)
+                {
+                    Deplist.Add(dep);
+                }
+            }
+
+            return Deplist;
+        }
+
+
+       
     }
 }

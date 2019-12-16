@@ -171,7 +171,28 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 redisCache.SetCache("TeacherList", resultlist);
             }
 
-            return resultlist.OrderByDescending(d=>d.TeacherID) .ToList();
+            //排除掉教务
+
+            List<Teacher> returnlist = new List<Teacher>();
+
+            foreach (var item in resultlist)
+            {
+               var emp = this.GetEmpByEmpNo(item.EmployeeId);
+
+                var empview = this.ConvertToEmpDetailView(emp);
+
+                if (empview != null)
+                {
+                    if (!empview.PositionId.PositionName.Contains("教务"))
+                    {
+                        returnlist.Add(item);
+                    }
+                }
+
+            }
+
+            
+            return returnlist.OrderByDescending(d=>d.TeacherID) .ToList();
 
         }
 
@@ -969,6 +990,89 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
 
             return teachers;
+        }
+
+
+
+        /// <summary>
+        /// 获取阶段教员
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetMyGrandTeacher(Base_UserModel user)
+        {
+            //获取账号所有的角色
+
+            var userRoles = user.RoleIdList;
+
+            //当前登录人的部门下的人  (人员可能重复)
+            List<Teacher> emplist = new List<Teacher>();
+
+            //循环获取每个角色的权限
+
+            foreach (var role in userRoles)
+            {
+                // 权限id 权限名称 ,可查看的部门 
+
+
+                //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
+                BaseBusiness<OtherRoleMapPermissionValue> db_permissrole = new BaseBusiness<OtherRoleMapPermissionValue>();
+
+                var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
+
+                foreach (var permission in permissions)
+                {
+                    //根据权限到 配置文件中去匹配
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
+
+                    var xmlRoot = xmlDocument.DocumentElement;
+
+                    var permissionConfig = (XmlElement)xmlRoot.GetElementsByTagName("grandteacherPermissions")[0];
+
+                    //获取配置文件中的权限
+                    XmlNodeList permissNmaes = permissionConfig.ChildNodes;
+
+                    foreach (XmlElement item in permissNmaes)
+                    {
+                        if (item.Attributes["permissionid"].Value == permission.PermissionValue)
+                        {
+                            //获取部门
+                            var grandStr = item.Attributes["grand"].Value.Split(',');
+                            List<string> deplist = grandStr.ToList();
+                            if (grandStr[grandStr.Length - 1] == "")
+                            {
+                                deplist.RemoveAt(grandStr.Length - 1);
+                            }
+                            //阶段教员
+
+                            foreach (var depItem in deplist)
+                            {
+                                emplist.AddRange( BrushSelectionByGrand(int.Parse(depItem)));
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
+
+            foreach (var item in emplist)
+            {
+                var temp = db_emp.GetInfoByEmpID(item.EmployeeId);
+
+                if (temp != null)
+                {
+                    resultlist.Add(temp);
+                }
+            }
+
+
+
+            return resultlist;
+
+
+
         }
 
 

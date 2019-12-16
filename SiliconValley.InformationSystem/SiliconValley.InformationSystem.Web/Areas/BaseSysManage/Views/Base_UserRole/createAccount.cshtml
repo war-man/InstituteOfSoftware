@@ -1,0 +1,190 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>createAccount</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/css/buttonStyle.css" rel="stylesheet" />
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+
+        form {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mywarp">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">用户名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" width="300" lay-verify="required" value="" name="UserName" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">初始密码：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" width="300" value="初始密码为身份证后 6 位" name="Password" style="border:0px solid white; color:blue;" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <hr />
+            <div style="text-align:center;">
+                <button type="button" id="selectEmpBtn" style="width:400px; border:0px solid white;" class="layui-btn layui-btn-primary"><i class="icon layui-icon-username"></i>选择员工</button>
+            </div>
+
+            <div id="selectEmp"></div>
+
+
+            <div id="btns" style="text-align:center; margin-bottom:100px;">
+                <button style="width:150px;" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="commit" id="commit" type="button">创建</button>
+
+                <button style="width:150px;" class="layui-btn layui-btn-primary" id="close" type="button">关闭</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script type="text/template" id="muban">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">名字：</label>
+                <div class="layui-input-inline">
+                    <input style="border-width:0px; border-bottom:1px solid gray;" id="emp" empnumber="{{=empnumber}}" readonly type="text" value="{{=empname}}" width="300" name="EmpName" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">部门：</label>
+                <div class="layui-input-inline">
+                    <input style="border-width:0px; border-bottom:1px solid gray;" readonly type="text" value="{{=depname}}" width="300" name="depname" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">岗位：</label>
+                <div class="layui-input-inline">
+                    <input style="border-width:0px; border-bottom:1px solid gray;" readonly type="text" value="{{=posiname}}" width="300" name="posiName" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+    </script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            $("#selectEmpBtn").click(function () {
+
+                window.parent.selectEmp(function () {
+
+                    var empData = window.parent.getEmpData();
+
+                    if (empData == undefined) {
+                        return;
+                    }
+
+                    $("#selectEmp").html("");
+
+                    //渲染模板
+                    var templateHtml = _.template($("#muban").html());
+                    var templageData = templateHtml({ empnumber: empData.EmployeeId, empname: empData.EmpName, depname: empData.DDAppId.DeptName, posiname: empData.PositionId.PositionName});
+
+                    $("#selectEmp").append(templageData);
+
+
+                });
+
+            });
+
+
+           
+          
+
+            //监听提交   //创建账号
+            form.on('submit(commit)', function (data) {
+
+
+                //获取用户名称
+                var username = document.getElementsByName("UserName")[0].value;
+                //获取员工编号
+                var empnumber = $("#emp").attr("empnumber");
+
+                console.log(username);
+
+                if (username == undefined || username.length > 0) {
+
+                    layer.msg('请输入用户名！', { icon: 2 });
+
+                    return;
+                }
+
+                if (empnumber == undefined) {
+
+                    layer.msg('请选择账号所属员工！', { icon: 2 });
+
+                    return;
+                }
+                layer.confirm('确定创建?', { icon: 3, title: '提示' }, function (index) {
+
+                    layer.close(index);
+
+                    var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+
+                    //发送请求
+                    $.post('/BaseSysManage/Base_UserRole/createAccount', { username: username, empnumber: empnumber }, function (result) {
+
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.close(loadIndex);
+
+                            layer.msg('创建成功！', { icon: 1 }, function () {
+
+                                //关闭页面
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
+                            });
+
+                        }
+                        else {
+                            layer.close(loadIndex);
+                            layer.msg(result.Msg, { icon: 2 }, function () {
+
+                            });
+
+
+                        }
+
+                    });
+
+
+                });
+                return false;
+            });
+
+        });
+    </script>
+</body>
+</html>

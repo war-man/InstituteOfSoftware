@@ -19,13 +19,17 @@
             margin-top: 20px;
             width: 16%;
             height: 420px;
-            border: 1px solid gray;
+            
             overflow: scroll;
         }
 
         #data {
             float:left;
             width:83%;
+        }
+
+        .studentlist li {
+             cursor:pointer;
         }
        
     </style>
@@ -43,7 +47,7 @@
                 @{
                     foreach (var item in ViewBag.studentlist as List<StudentInformation>)
                     {
-                        <li class="student"><code studentnumber="@item.StudentNumber">@item.Name</code></li>
+                        <li class="student"><code style="letter-spacing:8px; font-size:20px; color:black; background-color:white;" studentnumber="@item.StudentNumber">@item.Name</code></li>
 
                     }
                 }
@@ -57,8 +61,8 @@
 
             <br />
 
-            <div style="display:inline-block; margin-left:50px;"><label>对象：</label><span>王湘</span></div>
-            <div style="display:inline-block; margin-left:50px;"><label>总分：</label><span>20</span></div>
+            <div id="Emp" style="display:inline-block; margin-left:50px;"><label>对象：</label><span>王湘</span></div>
+            <div id="totalScores" style="display:inline-block; margin-left:50px;"><label>总分：</label><span>20</span></div>
 
 
 
@@ -79,6 +83,10 @@
 
             <div>
                 <h4 style="text-align:center;">建议</h4>
+
+                <div id="sug">
+                    <code style="letter-spacing:3px;"></code>
+                </div>
             </div>
 
 
@@ -102,15 +110,17 @@
         layui.use(['layer'], function () {
             var layer = layui.layer;
 
-            var configId = $("#surveyConfigId").val();
+           
 
             function loadSurvey(studentId, SurveyConfigid) {
+
+                var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
 
                 $.post("/Teaching/SatisfactionSurvey/SurveyItemData", { studentnumber: studentId, surveyConfigid: SurveyConfigid }, function (result) {
 
 
                     if (result.ErrorCode == 200) {
-
+                        $("#table tbody tr").remove();
                         console.log(result);
 
                         for (var i = 0; i < result.Data.detailitem.length; i++) {
@@ -118,14 +128,26 @@
                             var htmldate = html({ ItemName: result.Data.detailitem[i].SatisficingItem.ItemContent, Scores: result.Data.detailitem[i].Scores });
 
                             $("#table tbody").append(htmldate);
+                        } 
+
+                        if (result.Data.Proposal == null || result.Data.Proposal == "") {
+
+                            $("#sug code").text("无");
+                        } else {
+                            $("#sug code").text(result.Data.Proposal);
                         }
 
+                        //总分
+                        $("#totalScores span").text(result.Data.TotalScore);
+                        $("#Emp span").text(result.Data.Emp.EmpName);
 
+                        layer.close(index);
 
                     }
                     else {
 
                         layer.msg('数据加载异常。。', { icon: 2 });
+                        layer.close(index);
                     }
 
                 });
@@ -133,7 +155,7 @@
 
 
             }
-
+            var configId = $("#surveyConfigId").val();
             //获取第一个学生
             var firstli = $(".studentlist").children().get(0);
             var studentnumber = $(firstli).find("code").attr("studentnumber");
@@ -141,9 +163,19 @@
             loadSurvey(studentnumber, configId);
 
 
+            //学生点击事件
             $(".student").click(function () {
 
-                alert("d");
+
+                $(this).css("text-decoration", "underline");
+
+                $(this).siblings().css("text-decoration","");
+
+                var studentnumber = $(this).find("code").attr("studentnumber");
+                var configId = $("#surveyConfigId").val();
+
+                loadSurvey(studentnumber, configId);
+
             });
 
         });

@@ -260,7 +260,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ExaminationStoryData(int page, int limit)
         {
 
-            var list = db_examination.AllExamination();
+            var list = db_examination.AllExamination().OrderByDescending(d=>d.BeginDate).ToList();
 
             var skplist = list.Skip((page - 1) * limit).Take(limit);
 
@@ -284,10 +284,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                var examtypeview = db_examination.ConvertToExamTypeView(item.ExamType);
 
+                var grand = db_grand.AllGrand().Where(d => d.Id == examtypeview.GrandID.Id).FirstOrDefault();
+
                 var temobj1 = new {
                     ID = item.ID,
                     Title = item.Title,
                     TypeName = examtypeview.TypeName.TypeName,
+                    grand = grand.GrandName,
                     BeginDate = item.BeginDate,
                     TimeLimit = item.TimeLimit,
                     Remark = item.Remark,
@@ -598,31 +601,49 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
         /// <summary>
-        /// 班主任录入参加考试的学生视图
-        /// </summary>
+        /// 班主任录入参加考试的学生视图  //教务使用
+        /// </summary> 
         /// <returns></returns>
         public ActionResult AppointmentExamination()
         {
 
-            //获取当前登陆的班主任
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-            BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
+            ////获取当前登陆的班主任
+            //Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            BaseBusiness<ClassSchedule> dbclass = new BaseBusiness<ClassSchedule>();
+            //BaseBusiness<Headmaster> dbheadmaster = new BaseBusiness<Headmaster>();
             ///获取到班主任
-            var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
+            //var headmaster = dbheadmaster.GetList().Where(d => d.IsDelete == false).Where(d => d.informatiees_Id == user.EmpNumber).FirstOrDefault();
 
             //获取班主任的班级
-            var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
+            //var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
 
+            var classs = dbclass.GetIQueryable().ToList() ;
+
+            
+           
+
+            //List<ClassSchedule> list = new List<ClassSchedule>();
+
+            //foreach (var item in classs)
+            //{
+            //   var temp = dbclass.GetIQueryable().Where(d => d.id == item.ClassID).FirstOrDefault();
+            //    if (temp != null)
+            //        list.Add(temp);
+
+            //}
             ViewBag.myClass = classs;
-
-
             return View();
         }
 
-        public ActionResult StudentData(int page, int limit)
+        public ActionResult StudentData(int page, int limit, int classid)
         {
-            var list = db_examination.GetMyStudentData();
+           // var list = db_examination.GetMyStudentData();
+
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+
+            //获取班级学员
+            var list = dbteacherclass.GetStudentByClass(classid);
+            
 
             var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
             //将学生转换为详细模型
@@ -780,11 +801,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 {
                     db_examination.subscribeExam(list, examid);
 
+                    BaseBusiness<CandidateInfo> dbcnad = new BaseBusiness<CandidateInfo>();
+
+                  var canlist =  dbcnad.GetIQueryable().Where(d => d.Examination == examid).ToList();
+
                     //初始化成绩单
 
-                    foreach (var item in list)
+
+
+                    foreach (var item in canlist)
                     {
-                        db_scores.InitExamScores(examid, item.Key);
+                        db_scores.InitExamScores(examid, item.CandidateNumber);
                     }
                     
 
@@ -834,15 +861,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 }
                 else
                 {
-                    db_examination.cancelsubscribeExam(studentlist, examid);
-
                     foreach (var item in studentlist)
                     {
-                       var candidinfo = db_examination.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
+                        var ss = db_examination.AllCandidateInfo(examid);
+                        var candidinfo = db_examination.AllCandidateInfo(examid).Where(d => d.StudentID == item).FirstOrDefault();
 
                         db_scores.RemoveExamScores(examid, candidinfo.CandidateNumber);
 
                     }
+
+                    db_examination.cancelsubscribeExam(studentlist, examid);
+
+                    
                     
 
                     result.ErrorCode = 200;
@@ -924,37 +954,88 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         }
 
 
-        /// <summary>
-        /// 获取教员
-        /// </summary>
-        /// <param name="grandid"></param>
-        /// <returns></returns>
-        public ActionResult GetTeacherByGrand(int grandid)
+
+        public ActionResult SetInvigilator(int examroom, int examid)
         {
+            BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
+                 
+            ViewBag.examid = examid;
+            ViewBag.classroom = dbclassroom.GetIQueryable().ToList().Where(d => d.Id == examroom).FirstOrDefault();
 
+
+            //提供部门数据
+           List<Department> deplist = db_examination.GetSureInvigilatorDep();
+
+            ViewBag.Deplist = deplist;
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 获取监考员
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExamInvigilator(int examid, int classroomid)
+        {
             AjaxResult result = new AjaxResult();
-
 
             try
             {
-                var resultlist = db_examination.GetHeadmastersByGrand(grandid);
-
-                result.Data = resultlist;
-
+                var emplist = db_examination.GetProtorData(examid, classroomid);
                 result.ErrorCode = 200;
                 result.Msg = "成功";
+                result.Data = emplist;
             }
             catch (Exception ex)
             {
-
-                result.Data = null;
                 result.ErrorCode = 500;
                 result.Msg = "失败";
+                result.Data = null; 
             }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result);
+
+            
+        }
 
 
+        /// <summary>
+        /// 员工数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EmpData(int page, int limit)
+        {
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+            TeacherBusiness dbteacher = new TeacherBusiness();
+
+
+            var emplist = db_examination.GetSureInvigilator();
+            var skiplist = emplist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            List<EmpDetailView> viewlist = new List<EmpDetailView>();
+
+            foreach (var item in skiplist)
+            {
+              var temp =   dbteacher.ConvertToEmpDetailView(item);
+
+                if (temp != null)
+                {
+                    viewlist.Add(temp);
+                }
+            }
+
+            var obj = new {
+
+                code = 0,
+                msg="",
+                count = emplist.Count,
+                data=viewlist
+
+            };
+
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
 
 
         }
@@ -1050,6 +1131,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     roomlist.Add(tempobj);
                 }
             }
+            BaseBusiness<ExamTypeName> dbexamtypename = new BaseBusiness<ExamTypeName>();
+            ViewBag.examtype = dbexamtypename.GetList().Where(d => d.ID == examview.ExamType.ExamTypeID).FirstOrDefault();
 
             ViewBag.IsEnd = db_examination.IsEnd(exam) ? "已结束" : "未结束";
 
@@ -1103,7 +1186,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
             };
-
+            
             return Json(obj, JsonRequestBehavior.AllowGet);
 
 
@@ -1156,6 +1239,299 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             return Json(result, JsonRequestBehavior.AllowGet);
 
 
+
+        }
+
+
+        /// <summary>
+        /// 考试阅卷安排 //教务使用
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MarkingArrangement()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 查看考试的阅卷人
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult CheckMarkingArrangemtn(int examid)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                //获取阅卷安排
+                List<MarkingArrangeView> viewlist = new List<MarkingArrangeView>();
+
+                ExamScoresBusiness dbexamscores = new ExamScoresBusiness();
+
+                BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
+
+                var markingarrangelist = dbexamscores.AllMarkingArrange().Where(d => d.ExamID == examid).ToList();
+
+                if (markingarrangelist == null || markingarrangelist.Count ==0)
+                {
+                    var examroomlist = db_examination.AllExaminationRoom().Where(d => d.Examination == examid).ToList();
+
+                    if (examroomlist != null)
+                    {
+                        foreach (var item in examroomlist)
+                        {
+                            MarkingArrangeView view = new MarkingArrangeView();
+                            view.classroom = dbclassroom.GetIQueryable().ToList().Where(d => d.Id == item.Classroom_Id).FirstOrDefault();
+                            view.ExamID = db_examination.AllExamination().Where(d => d.ID == item.Examination).FirstOrDefault();
+                            view.IsFinsh = false;
+                            view.MarkingTeacher = null;
+
+
+                            viewlist.Add(view);
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var item in markingarrangelist)
+                    {
+                        var temobj = dbexamscores.ConvertToMarkingArrangeView(item);
+
+                        if (temobj != null)
+                        {
+                            viewlist.Add(temobj);
+                        }
+                    }
+                }
+
+
+               
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = viewlist;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+            
+
+        }
+
+        /// <summary>
+        /// 获取阶段数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GrandData()
+        {
+            AjaxResult result = new AjaxResult();
+            try
+            {
+               var granlist = db_grand.AllGrand();
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = granlist;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetTeacher_Grand(int grand)
+        {
+            AjaxResult result = new AjaxResult();
+
+
+            try
+            {
+                TeacherBusiness dbteacher = new TeacherBusiness();
+
+               var teacherlist = dbteacher.BrushSelectionByGrand(grand);
+
+                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+                foreach (var item in teacherlist)
+                {
+                   var tempemp =  dbteacher.GetEmpByEmpNo(item.EmployeeId);
+
+                    if (tempemp != null)
+                        emplist.Add(tempemp);
+                }
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = emplist;
+            }
+            catch (Exception ex)
+            {
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+           
+
+        }
+
+        /// <summary>
+        /// 设置阅卷老师
+        /// </summary>
+        /// <param name="examid">考试id</param>
+        /// <param name="classroomid">教室id</param>
+        /// <param name="teacher">阅卷老师编号</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult SetMarkingTeacher(int examid, int classroomid, string teacher)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                //根据classroomid 获取考场id
+               var examroom = db_examination.AllExaminationRoom().Where(d => d.Classroom_Id == classroomid && d.Examination == examid).FirstOrDefault();
+
+                //获取当前的阅卷老师
+                var markingteacher = db_scores.AllMarkingArrange().Where(d => d.ExamID == examid && d.ExamRoom == examroom.ID).FirstOrDefault();
+
+                if (markingteacher == null)
+                {
+
+                    db_scores.SetMarkingTeacher(examid, examroom.ID, teacher);
+
+                    result.ErrorCode = 200;
+                    result.Msg = "设置成功";
+                    result.Data = null;
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+                TeacherBusiness dbteacher = new TeacherBusiness();
+                 var teacherobj = dbteacher.GetTeachers().Where(d => d.EmployeeId == markingteacher.MarkingTeacher).FirstOrDefault();
+
+
+                var isBiginMarking = false;
+
+                //获取考场学员
+                var stulist = db_scores.CandidateinfosByExamroom(examid, classroomid);
+
+                foreach (var item in stulist)
+                {
+                   var temp = db_scores.AllExamScores().Where(d => d.Examination == examid && d.CandidateInfo == item.CandidateNumber && d.Reviewer == teacherobj.TeacherID).FirstOrDefault();
+
+                    if (temp != null)
+                    {
+                        isBiginMarking = true;
+                        break;
+                    }
+                }
+
+                if (markingteacher != null && isBiginMarking)
+                {
+                    result.ErrorCode = 502;
+                    result.Msg = "阅卷人修改失败!  原因:当前阅卷人已经开始阅卷";
+                    result.Data = null;
+
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    db_scores.SetMarkingTeacher(examid, examroom.ID, teacher);
+
+                    result.ErrorCode = 200;
+                    result.Msg = "设置成功";
+                    result.Data = null;
+                }
+  
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "服务器错误";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        /// <summary>
+        /// 部门人员查询
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DepEmpData(string depid, string empname, int page, int limit)
+        {
+
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+            if (depid == null)
+            {
+                //根据名字查询
+               var templist = dbemp.GetAll().Where(d=>d.EmpName.Contains(empname)).ToList();
+
+                emplist.AddRange(templist);
+            }
+
+            if (empname == "" && depid!=null)
+            {
+                //获取部门所有人员
+
+               var templist = dbemp.GetEmpsByDeptid(int.Parse(depid));
+
+                emplist.AddRange(templist);
+            }
+
+            if (empname != "" && depid != null)
+            {
+                var templist = dbemp.GetEmpsByDeptid(int.Parse(depid)).Where(d=>d.EmpName.Contains(empname));
+
+                emplist.AddRange(templist);
+            }
+
+            var skplist = emplist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            List<EmpDetailView> viewlist = new List<EmpDetailView>();
+
+            TeacherBusiness dbteacher = new TeacherBusiness();
+            foreach (var item in skplist)
+            {
+               var temp = dbteacher.ConvertToEmpDetailView(item);
+
+                if (temp != null)
+                {
+                    viewlist.Add(temp);
+                }
+            } 
+
+
+            var obj = new {
+
+                code = 0,
+                msg = "",
+                count = emplist.Count,
+                data = viewlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
 
         }
     }

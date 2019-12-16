@@ -34,6 +34,10 @@
 
         .eject {
         }
+
+        #studentLoginbtn {
+            cursor:grab;
+        }
     </style>
 </head>
 <body>
@@ -50,7 +54,11 @@
                             <label>密　码</label><input type="password" class="text" id="Password" placeholder="密码" name="Password" tabindex="2" lay-verify="required">
                         </div>
                         <div>
-                            <input type="button" class="submit" tabindex="3" value="登录" lay-submit lay-filter="subone">
+
+                           
+                            <input type="button" class="submit" loginType="emp" tabindex="3" value="登录" lay-submit lay-filter="subone">
+
+                            <span style="margin-left:20px;" id="studentLoginbtn">学员登录>></span>
                             @*<input type="button" class="bntCss" tabindex="3" value="注册">*@
                         </div>
                     </div>
@@ -95,6 +103,10 @@
             var layer = layui.layer;
             form.on('submit(subone)', function (data) {
                 var myformdata = data.field;//当前容器的全部表单字段，名值对形式：{name: value}
+
+                var loginType = $(".submit").attr("loginType");
+                data.field.loginType = loginType
+
                 $.ajax({
                     url: "/Login/LoginFunction",
                     data: myformdata,
@@ -112,6 +124,38 @@
                     }
                 });
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+
+            //学员登录设置
+            $("#studentLoginbtn").mouseover(function () {
+
+                $(this).css("color","red");
+            });
+
+            $("#studentLoginbtn").mouseleave(function () {
+
+                $(this).css("color", "");
+            });
+
+            $("#studentLoginbtn").click(function () {
+                var index = layer.load(3, { time: 2000 }); //又换了种风格，并且设定最长等待10秒 
+
+                var loginType = $(".submit").attr("loginType");
+
+                if (loginType == "emp") {
+
+                    $(".submit").attr("loginType", 'student');
+                    $(this).text("员工登录>>");
+
+
+                }
+
+                if (loginType == "student") {
+                    $(".submit").attr("loginType", 'emp');
+                    $(this).text("学员登录>>");
+                }
             });
         });
 

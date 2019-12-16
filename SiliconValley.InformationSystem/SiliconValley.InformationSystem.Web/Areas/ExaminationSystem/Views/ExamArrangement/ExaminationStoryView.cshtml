@@ -9,14 +9,16 @@
         var table = layui.table;
 
         table.render({
-                elem: '#ExamTory'
+             elem: '#ExamTory'
             , url: '/ExamArrangement/ExaminationStoryData'
+            , id:'ExamTory'
             , toolbar: '#toolbarDemo'
             , cols: [[
                 { type: 'checkbox' },
                 { field: 'ID', width: 150, hide: true, title: 'id', sort: true },
                     { field: 'Title', width: 150, title: '标题', sort: true },
-                 { field: 'TypeName', width: 150, title: '考试类型', sort: true }
+                { field: 'TypeName', width: 120, title: '考试类型', sort: true }
+                  ,{ field: 'grand', width: 80, title: '阶段', sort: true }
                 , {
                     field: 'BeginDate', width: 150, title: '考试时间', templet: function (res) {
 

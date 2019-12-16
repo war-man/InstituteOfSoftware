@@ -1,0 +1,192 @@
+﻿
+@{
+    ViewBag.Title = "EmpSurveyView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style {
+
+    <style>
+
+        #mywarp {
+            width: 1000px;
+            margin: 0 auto;
+        }
+
+        .item_title {
+            position: relative;
+            height: 40px;
+        }
+
+        .pos {
+            position: absolute;
+            left: 45%;
+            top: -13px;
+            font-size: 20px;
+        }
+
+        .classNumber {
+            margin-top: 50px;
+        }
+
+        #list li {
+            height:500px;
+        }
+    </style>
+
+}
+
+<div id="mywarp">
+
+    <ul id="list">
+        
+    </ul>
+
+
+</div>
+
+@section script{
+<script src="~/Scripts/underscore.js"></script>
+<script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <!--模板1-->
+    <script type="text/template" id="moban1">
+        <li>
+            <div class="item">
+                <div class="item_title">
+                    <div class="pos">{{=date}}</div>
+                    <hr class="layui-bg-black">
+
+                    <div class="classNumber">
+
+                    </div>
+                </div>
+            </div>
+        </li>
+    </script>
+    <!--模板2-->
+    <script type="text/template" id="moban2">
+        <h3 style="text-align:center;"><i style="font-size:25px;" class="layui-icon layui-icon-chart"></i>{{=classnumber}}<span class="layui-btn layui-btn-primary checkMore" style="font-size:13px; border:0px solid white; margin-left:100px;" configResultId="{{=configResultId}}">查看更多</span></h3>
+
+        <div class="table">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>项目</th>
+
+                        <th>分数</th>
+
+
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    
+                </tbody>
+            </table>
+
+           
+        </div>
+    </script>
+    <!--模板3-->
+    <script type="text/template" id="moban3">
+        <tr>
+            <td>{{=ItemName}}</td>
+            <td>{{=Scores}}</td>
+        </tr>
+    </script>
+
+
+    <script id="save">
+
+    </script>
+
+    <script>
+        layui.use(['layer', 'flow'], function () {
+
+            var layer = layui.layer;
+            var flow = layui.flow;
+
+            flow.load({
+                elem: '#list' //指定列表容器
+                , done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                    var lis = [];
+                    //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                    $.get('/Teaching/SatisfactionSurvey/EmpSurveyData?page=' + page, function (res) {
+                        //假设你的列表返回在data集合中
+                        console.log(res);
+                        
+                       
+
+                        layui.each(res.data, function (index, item) {
+                            $("#save").html("");
+                            console.log(item);
+                            var dateutc = item.date.substr(item.date.indexOf('(') + 1, 13);
+
+                            var dated = new Date(parseInt(dateutc));
+
+                            //第一层
+                            var html = _.template($("#moban1").html());
+                            var htmldate = html({ date: dated.getFullYear() + '年' + dated.getMonth()+'月' });
+
+                            $("#save").html($(htmldate));
+                            
+                            //第二层 
+                            for (var i = 0; i < item.data.length; i++) {
+                                
+                                var html2 = _.template($("#moban2").html());
+                                var htmldate2 = html2({ classnumber: item.data[i].investigationClass.ClassNumber, configResultId: item.data[i].SurveyResultID });
+                               
+                                //追加到第一层
+                                var temp1 =  $(htmldate).find(".classNumber").append(htmldate2);
+
+                                //组装第三次
+                                for (var j = 0; j < item.data[i].detailitem.length; j++) {
+
+                                    var html3 = _.template($("#moban3").html());
+                                    var htmldate3 = html3({ ItemName: item.data[i].detailitem[j].SatisficingItem.ItemContent, Scores: item.data[i].detailitem[j].Scores });
+
+                                    //追加到第二层
+                                    temp1.find(".table tbody").append(htmldate3);
+                                }
+
+                                $("#save").find(".classNumber").append(temp1.html());
+                               
+                            }
+
+                            
+
+                          
+
+                          
+                            $("#list").append($("#save").html());
+
+
+                        });
+
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.total);
+                       
+                    });
+                }
+            });
+
+            $(document).off("click", ".checkMore").on("click", ".checkMore", function () {
+
+                var resultid = $(this).attr('configResultId');
+
+                layer.open({
+                    type: 2,
+                    title: "详细",
+                    area: [window.innerWidth / 2 + 'px', window.innerHeight / 2 + 'px'],
+                    content: "/Teaching/SatisfactionSurvey/checkSurveyView?surveyResultID=" + resultid
+                });
+
+            });
+
+        });
+    </script>
+
+}
+

@@ -11,6 +11,7 @@ using System.Xml;
 
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Entity.MyEntity;
    
     public class StudentExamSysController : Controller
@@ -49,12 +50,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
-                var exam = db_stuExam.StudetnSoonExam("19081997072400002").OrderByDescending(d => d.BeginDate).FirstOrDefault();
+                var exam = db_stuExam.StudetnSoonExam("19081997072400004").OrderByDescending(d => d.BeginDate).FirstOrDefault();
                 var examview = db_exam.ConvertToExaminationView(exam);
 
-                result.Data = examview;
-                result.Msg = "成功";
-                result.ErrorCode = 200;
+                //在判断是否考完了
+
+                if (examview != null)
+                {
+                    var scores = db_examScores.StuExamScores(examview.ID, "19081997072400004");
+
+                    if (scores.ChooseScore != null)
+                    {
+                        result.Data = "0";
+                        result.Msg = "成功";
+                        result.ErrorCode = 400;
+                    }
+                    else
+                    {
+                        result.Data = examview;
+                        result.Msg = "成功";
+                        result.ErrorCode = 200;
+                    }
+                }
+                else
+                {
+                    result.Data = "0";
+                    result.Msg = "成功";
+                    result.ErrorCode = 400;
+                }
+
+
 
             }
             catch (Exception ex)
@@ -79,8 +104,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
             var EXAMVIEW = db_exam.ConvertToExaminationView(exam);
             ViewBag.EXAMVIEW = EXAMVIEW;
-            
-            //学员进入答题
+
+            //~获取答卷信息.
+
+            //获取当前登录学员
+           var answerSheetInfo = db_stuExam.AnswerSheetInfos(examid, "19081997072400004");
+
+            ViewBag.AnswerSheetInfo = answerSheetInfo;
 
             return View();
         }
@@ -96,7 +126,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 //获取考试的类型
-
+                
 
                 var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
 
@@ -213,15 +243,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             //首先查看是否已经随机获取到了一个
             
-            var candidateInfo =  db_exam.AllCandidateInfo(examid).Where(d=>d.StudentID == "19081997072400002").FirstOrDefault();
+            var candidateInfo =  db_exam.AllCandidateInfo(examid).Where(d=>d.StudentID == "19081997072400004").FirstOrDefault();
             ComputerTestQuestionsView computer = null;
             if (candidateInfo.ComputerPaper == null)
             {
                 //第一次
 
-                computer = db_stuExam.productComputerQuestion(exam);
-                candidateInfo.ComputerPaper = computer.ID.ToString()+",";
-                db_exam.UpdateCandidateInfo(candidateInfo);
+                //判断考试类型
+                if (exam.ExamType == 1)
+                {
+                    computer = db_stuExam.productComputerQuestion(exam,0);
+                }
+
+                if (exam.ExamType == 2)
+                {
+
+                    //需要获取课程
+
+                    XmlElement xmlelm = db_exam.ExamCourseConfigRead(examid);
+
+                    int courseid = int.Parse(xmlelm.FirstChild.Attributes["id"].Value);
+                    computer = db_stuExam.productComputerQuestion(exam, courseid);
+                    candidateInfo.ComputerPaper = computer.ID.ToString() + ",";
+                    db_exam.UpdateCandidateInfo(candidateInfo);
+                }
+
+                
+               
 
             }
 
@@ -335,7 +383,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 //1 将解答题答案存入文件 首先新建学生答卷文件夹
                 //名称规则 学号加上考试ID
-                string direName = "19081997072400002_" + examid;
+                string direName = "19081997072400004" + examid;
                 DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName));
                 directoryInfo.Create();
 
@@ -364,7 +412,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 //3.修改数据库值（选择题分数，解答题答案路径，机试题路径）
                 db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
-                var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.Examination == examid && d.StudentID == "19081997072400002").FirstOrDefault();
+                var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.Examination == examid && d.StudentID == "19081997072400004").FirstOrDefault();
                 Candidateinfo.Paper = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename);
 
                 //获取需要替换的字符串路径
@@ -385,7 +433,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 //获取考生
 
-               var stuScores = db_examScores.StuExamScores(examid, "19081997072400002");
+               var stuScores = db_examScores.StuExamScores(examid, "19081997072400004");
 
                 if (stuScores == null)
                 {

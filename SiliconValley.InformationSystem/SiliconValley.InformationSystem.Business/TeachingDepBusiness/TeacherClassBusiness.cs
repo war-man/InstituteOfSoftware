@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+    using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System.Xml;
@@ -94,7 +96,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public List<ClassSchedule> AllClassSchedule()
         {
-            return db_class.GetIQueryable().ToList() ;
+            return db_class.GetIQueryable().ToList().Where(d=>d.IsDelete ==false).ToList() ;
         }
         public StudentDetailView GetStudetentDetailView(StudentInformation student)
         {
@@ -251,7 +253,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <summary>
         /// 获取班级
         /// </summary>
-        /// <param name="classnumber">班级编号</param>
+        /// <param name="classnumber">班级id</param>
         /// <returns></returns>
         public ClassSchedule GetClassByClassNumber(string classnumber)
         {
@@ -396,7 +398,125 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
            return this.AllClassSchedule().Where(d => d.id == tempobj.ID_ClassName).FirstOrDefault();
         }
-         
+
+        /// <summary>
+        /// 获取班级专业
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public Specialty GetClass_Major(int classid)
+        {
+           var classschu =  this.GetClassByClassNumber(classid.ToString());
+
+           return db_major.GetSpecialtyByID(classschu.Major_Id);
+
+        }
+
+
+
+        /// <summary>
+        /// 获取教员带班记录
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassTeacher> TeacherArrangementRecord(int teacherid)
+        {
+           return  this.GetIQueryable().Where(d => d.TeacherID == teacherid).ToList();
+
+        }
+
+        public List<ClassSchedule> GrandClassByUser(Base_UserModel user)
+        {
+            //获取账号所有的角色
+
+            var userRoles = user.RoleIdList;
+
+            
+            List<ClassSchedule> emplist = new List<ClassSchedule>();
+
+            //循环获取每个角色的权限
+
+            foreach (var role in userRoles)
+            {
+                // 权限id 权限名称 ,可查看的部门 
+
+
+                //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
+                BaseBusiness<OtherRoleMapPermissionValue> db_permissrole = new BaseBusiness<OtherRoleMapPermissionValue>();
+
+                var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
+
+                foreach (var permission in permissions)
+                {
+                    //根据权限到 配置文件中去匹配
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
+
+                    var xmlRoot = xmlDocument.DocumentElement;
+
+                    var permissionConfig = (XmlElement)xmlRoot.GetElementsByTagName("grandteacherPermissions")[0];
+
+                    //获取配置文件中的权限
+                    XmlNodeList permissNmaes = permissionConfig.ChildNodes;
+
+                    foreach (XmlElement item in permissNmaes)
+                    {
+                        if (item.Attributes["permissionid"].Value == permission.PermissionValue)
+                        {
+                            //获取部门
+                            var grandStr = item.Attributes["grand"].Value.Split(',');
+                            List<string> deplist = grandStr.ToList();
+                            if (grandStr[grandStr.Length - 1] == "")
+                            {
+                                deplist.RemoveAt(grandStr.Length - 1);
+                            }
+                            //阶段教员
+
+                            foreach (var depItem in deplist)
+                            {
+                                emplist.AddRange(GetClassScheduleByGrand(int.Parse(depItem)));
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            List<ClassSchedule> resultlist = new List<ClassSchedule>();
+
+            foreach (var item in emplist)
+            {
+                if (!IsContains(resultlist, item))
+                {
+                    resultlist.Add(item);
+                }
+            }
+            return resultlist;
+
+        }
+
+        public List<ClassSchedule> GetClassScheduleByGrand(int grandid)
+        {
+           return db_class.GetIQueryable().Where(d => d.grade_Id == grandid && d.IsDelete == false).ToList();
+        }
+
+        public bool IsContains(List<ClassSchedule> scours, ClassSchedule classSchedule)
+        {
+            foreach (var item in scours)
+            {
+                if (item.id == classSchedule.id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public List<ClassTeacher> TeacherArrangementRecord(string classid)
+        {
+           return  this.GetIQueryable().ToList().Where(d => d.ClassNumber == int.Parse(classid)).ToList();
+        }
 
     }
 }

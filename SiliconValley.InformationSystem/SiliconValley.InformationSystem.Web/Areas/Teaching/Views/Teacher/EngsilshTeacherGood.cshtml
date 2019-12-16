@@ -1,0 +1,126 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EngsilshTeacherGood</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+        <input type="hidden" id="isMajorTeacher" value="@ViewBag.isMajorTeacher" />
+        <input type="hidden" id="teacherid" value="@ViewBag.teacher.TeacherID" />
+        <div style="margin:100px auto;">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">课程：</label>
+                        <div class="layui-input-inline">
+                            <select id="couser" name="couser"></select>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="commit" id="commit">提交</button>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['layer', 'form'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            var IsMajorTeacher = $("#isMajorTeacher").val();
+            
+            if (IsMajorTeacher == "0") {
+               
+                $(".layui-layer-btn .layui-layer-btn1").remove();
+            }
+
+
+            ///加载阶段
+            function loadGrand() {
+                $.post('/teaching/teacher/EngelishCourseData', {}, function (result) {
+
+                    if (result.ErrorCode == 200) {
+                        console.log(result);
+
+                        for (var i = 0; i < result.Data.length; i++) {
+
+                            var option = $("<option></option>");;
+                            
+                            option.text(result.Data[i].CourseName + "(" + result.Data[i].Grand.GrandName+')');
+                            option.val(result.Data[i].CurriculumID);
+                            console.log(option);
+                            $("#couser").append(option);
+
+                        }
+
+                        form.render();
+                    }
+                    else {
+                        layer.msg('数据加载失败。。', { icon: 2 });
+                    }
+
+                });
+            }
+            loadGrand();
+
+            form.on('submit(commit)', function (data) {
+                
+
+                
+                
+                if (data.field.couser == "") {
+                    layer.msg('请选择课程', { icon: 2 });
+                    return;
+                }
+
+                var teacherid = $("#teacherid").val();
+            
+             
+
+                $.post("/teaching/teacher/SetNewSkillToTeacher", { ids: data.field.couser + ",", teacherid: teacherid },function (result) {
+
+
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.msg('设置成功', { icon: 1 });
+
+                    }
+
+                    else {
+                        layer.msg('服务器错误', { icon: 2 });
+                    }
+
+
+
+                });
+
+
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+        });
+    </script>
+</body>
+</html>

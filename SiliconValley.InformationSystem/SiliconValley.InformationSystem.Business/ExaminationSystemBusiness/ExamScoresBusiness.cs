@@ -83,13 +83,19 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public MarkingArrangeView ConvertToMarkingArrangeView(MarkingArrange markingArrange)
         {
 
+            BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
+           
             MarkingArrangeView view = new MarkingArrangeView();
+
+           var examroom = db_exam.AllExaminationRoom().Where(d => d.ID == markingArrange.ExamRoom).FirstOrDefault();
 
             view.ExamID = db_exam.AllExamination().Where(d => d.ID == markingArrange.ExamID).FirstOrDefault();
             view.ExamRoom = db_exam.AllExaminationRoom().Where(d => d.ID == markingArrange.ExamRoom).FirstOrDefault();
             view.ID = markingArrange.ID;
             view.IsFinsh = markingArrange.IsFinsh;
             view.MarkingTeacher = db_emp.GetInfoByEmpID(markingArrange.MarkingTeacher);
+            
+            view.classroom = dbclassroom.GetList().Where(d => d.Id == examroom.Classroom_Id).FirstOrDefault();
 
             return view;
 
@@ -250,6 +256,34 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var score = this.ExamScores(examid).Where(d => d.CandidateInfo == StuExamNumber).FirstOrDefault();
 
             this.Delete(score);
+        }
+
+
+        /// <summary>
+        /// 设置阅卷老师
+        /// </summary>
+        public void SetMarkingTeacher(int examid, int examroomid, string empid)
+        {
+            var temp = this.AllMarkingArrange().Where(d => d.ExamID == examid && d.ExamRoom == examroomid &&d.MarkingTeacher == empid).FirstOrDefault();
+
+            if (temp == null)
+            {
+                MarkingArrange markingArrange = new MarkingArrange();
+                markingArrange.ExamID = examid;
+                markingArrange.ExamRoom = examroomid;
+                markingArrange.IsFinsh = false;
+                markingArrange.MarkingTeacher = empid;
+
+                db_markingArrange.Insert(markingArrange);
+
+                return;
+            }
+
+            temp.MarkingTeacher = empid;
+            db_markingArrange.Update(temp);
+
+           
+             
         }
         
 

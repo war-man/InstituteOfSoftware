@@ -20,6 +20,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
 
         public ExaminationRoom ExamRoom { get; set; }
 
+        public Classroom classroom { get; set; }
+
         public bool IsFinsh { get; set; }
     }
 }

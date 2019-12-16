@@ -291,6 +291,17 @@
 
                 </div>
             }
+
+                <h4 style="text-align:center;">其他班级</h4>
+            foreach (var item in ViewBag.Fclasslist as List<ClassTableView>)
+            {
+                <div style="height:50px;">
+                    <button type="button" classnumber="@item.classid" style="margin-top:0px !important;" class="layui-btn classbtn">@item.ClassNumber <span style="padding:0px;  margin-left:5px;height:40px; font-size:18px;">@item.GradeName 阶段</span></button>
+                </div>
+                <div style="margin:0 auto; height:30px; border:1px solid #6579ee;width:1px;">
+
+                </div>
+            }
         }
 
     </div>
@@ -349,7 +360,7 @@
         </div>
 
         
-            <div class="demo" style="width:150px; height:150px; margin:0 auto;" id="myMenuss">
+            <div class="demo" style="width:150px; height:150px; margin-left:25%;" id="myMenuss">
                
                             <div class="navbarTews">
                                 <label  style="font-size:18px; width:100%; position:absolute; left:0px;" id="navbarTewsText">主菜单</label>

@@ -79,7 +79,7 @@
                 @{
                     foreach (var item in ViewBag.ExamList as List<Examination>)
                     {
-                        <li><button type="button" examid="@item.ID" class="layui-btn layui-btn-fluid examitem">@item.Title（<span class="examdate">@item.BeginDate</span>）</button></li>
+                        <li style="margin-top:10px;"><button type="button" examid="@item.ID" class="layui-btn layui-btn-fluid examitem">@item.Title（<span class="examdate">@item.BeginDate</span>）</button></li>
                     }
                 }
             </ul>

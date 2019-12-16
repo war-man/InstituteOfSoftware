@@ -68,8 +68,6 @@
 
                 <div class="layui-tab-content">
 
-
-
                 </div>
 
 
@@ -102,7 +100,9 @@
                     <th class="col-lg-3">身份证</th>
                 </tr>
             </thead>
-            <tbody></tbody>
+            <tbody>
+               
+            </tbody>
         </table>
 
     </div>
@@ -170,7 +170,7 @@
 
                 if (examid != undefined) {
 
-                    $.post('/ExaminationSystem/ExamArrangement/ArrangeSeatingChartData', { examid: "8" }, function (result) {
+                    $.post('/ExaminationSystem/ExamArrangement/ArrangeSeatingChartData', { examid: examid }, function (result) {
 
                         console.log(result);
 
@@ -204,12 +204,6 @@
                                     div.find("tbody").append(layerdata);
 
                                 }
-
-
-
-
-
-
 
                                 $(".layui-tab .layui-tab-title").append(li);
 

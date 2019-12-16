@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+<!--监考员配置-->
+
+  <dep depid="7">信息部</dep>
+  <dep depid="1">S1S2教质部</dep>
+  <dep depid="2">S1S2教学部</dep>
+  <dep depid="1008">S3教质部</dep>
+  <dep depid="1009">S3教学部</dep>
+  
+</root>

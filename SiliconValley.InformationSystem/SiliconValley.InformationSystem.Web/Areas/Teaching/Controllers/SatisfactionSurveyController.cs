@@ -1210,7 +1210,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 //1. 添加结果表  2.添加详细表 
 
                 SatisficingResult Surveyresult = new SatisficingResult();
-                Surveyresult.Answerer = "19081997072400005";
+                Surveyresult.Answerer = "19081997072400004";
 
                 var date = DateTime.Now;
 
@@ -1280,7 +1280,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 //1. 添加结果表  2.添加详细表 
 
                 SatisficingResult Surveyresult = new SatisficingResult();
-                Surveyresult.Answerer = "19081997072400005";
+                Surveyresult.Answerer = "19081997072400004";
 
                 var date = DateTime.Now;
 
@@ -1387,7 +1387,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                  var date = DateTime.Now;
 
-                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmployeeId && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month).ToList();
+                var templist =  db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmployeeId && DateTime.Parse(d.CreateTime.ToString()).Year == date.Year && DateTime.Parse(d.CreateTime.ToString()).Month == date.Month && d.ClassNumber == int.Parse(classnumber)).ToList();
 
                 if (templist.Count != 0)
                 {
@@ -1411,7 +1411,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 satisficingConfig.IsPastDue = false;
 
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
 
                 var xmlRoot = xmlDocument.DocumentElement;
 
@@ -1586,7 +1586,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 //设置截止时间 默认截止日期
 
                 XmlDocument xmlDocument = new XmlDocument();
-                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/SatisfactionSurveyConfig.xml"));
+                xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
 
                 var xmlRoot = xmlDocument.DocumentElement;
 
@@ -1636,7 +1636,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             try
             {
-                var data = db_survey.GetSatisficingConfigsByStudent("19081997072400005", type);
+                var data = db_survey.GetSatisficingConfigsByStudent("19081997072400004", type);
                 result.Data = data;
                 result.Msg = "成功";
                 result.ErrorCode = 200;
@@ -1819,6 +1819,85 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
 
            
+        }
+
+        public ActionResult EmpSurveyView()
+        {
+            return View();
+        }
+
+
+        //获取员工个人满意度调查
+        public ActionResult EmpSurveyData(int page)
+        {
+            // 筛选条件员工 日期降序排序
+
+            List<SatisfactionSurveyDetailView> configlist = new List<SatisfactionSurveyDetailView>();
+            List<SurveyGroupByDateView> resultlist = new List<SurveyGroupByDateView>();
+            int TotalCount = 0;
+            try
+            {
+                //获取当前账号
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                var alllist = db_survey.satisficingConfigs().Where(d => d.EmployeeId == user.EmpNumber).OrderByDescending(d => d.CreateTime).ToList();
+                TotalCount = alllist.Count;
+                var templist = alllist.Skip((page - 1) * 6).Take(6).ToList();
+
+                foreach (var item in templist)
+                {
+                   var tempResult = db_survey.AllsatisficingResults().Where(d => d.SatisficingConfig == item.ID).FirstOrDefault();
+
+                   var temobj = db_survey.ConvertToViewModel(tempResult);
+
+                    if (temobj != null)
+                    {
+                        configlist.Add(temobj);
+
+                    }
+                }
+
+
+                foreach (var item in configlist)
+                {
+                    if (SurveyGroupByDateView.IsContains(resultlist, item.investigationDate))
+                    {
+                        resultlist.Where(d => d.date.Year == item.investigationDate.Year && d.date.Month == item.investigationDate.Month).FirstOrDefault().data.Add(item);
+                    }
+
+                    else {
+                        SurveyGroupByDateView surveyGroupByDateView = new SurveyGroupByDateView();
+                        surveyGroupByDateView.date = item.investigationDate;
+                        surveyGroupByDateView.data.Add(item);
+                        resultlist.Add(surveyGroupByDateView);
+
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+
+            var objresult = new
+            {
+
+                status = 0,
+                message = "成功",
+                total = TotalCount,
+                data = resultlist
+
+            };
+
+            return Json(objresult, JsonRequestBehavior.AllowGet);
+
+
+
         }
 
 

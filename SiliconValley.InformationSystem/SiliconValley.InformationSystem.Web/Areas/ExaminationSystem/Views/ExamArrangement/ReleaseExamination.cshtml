@@ -22,6 +22,16 @@
     <script src="~/Areas/Teaching/Scripts/util.js"></script>
     <script>
 
+        //监考员设置页面
+        function windowOpen(examintionID, examroom) {
+            layer.open({
+                type: 2,
+                area: ["1300px", '1000px'],
+                content: "/ExaminationSystem/ExamArrangement/SetInvigilator?examid=" + examintionID + "&examroom=" + examroom
+            });
+        }
+      
+
         layui.use(['table', 'layer'], function () {
 
             var table = layui.table;

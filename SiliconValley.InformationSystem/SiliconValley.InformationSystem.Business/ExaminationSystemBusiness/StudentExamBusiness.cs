@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 {
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.StudentBusiness;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using System.Xml;
 
 
@@ -28,6 +30,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         private readonly AnswerQuestionBusiness db_answerQuextion;
 
         private readonly ComputerTestQuestionsBusiness db_computerQuestion;
+
+        private readonly StudentInformationBusiness db_student;
         public StudentExamBusiness()
         {
             db_exam = new ExaminationBusiness();
@@ -36,6 +40,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             db_Course = new CourseBusiness();
             db_answerQuextion = new AnswerQuestionBusiness();
             db_computerQuestion = new ComputerTestQuestionsBusiness();
+            db_student = new StudentInformationBusiness();
         }
         /// <summary>
         /// 获取学员即将开始的考试
@@ -70,6 +75,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<ChoiceQuestionTableView> ProductChoiceQuestion(Examination examination,int kecheng)
         {
+            //获取专业
+
+           var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
+           var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
+
+           var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
+
+            //获取班级专业
+           var major = dbteacheraclass.GetClass_Major(classschue.id);
 
             List<ChoiceQuestionTableView> questionlist = new List<ChoiceQuestionTableView>();
 
@@ -88,7 +103,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 //筛选出S2的课程
 
-                sourchlist = db_Course.GetList().Where(d => d.IsDelete==false == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+                sourchlist = db_Course.GetList().Where(d => d.IsDelete==false && d.Grand_Id == examview.ExamType.GrandID &&d.MajorID == major.Id).ToList();
 
             }
 
@@ -222,6 +237,18 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<AnswerQuestionView> productAnswerQuestion(Examination examination, int kecheng)
         {
+
+            //获取专业
+
+            var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
+            var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
+
+            var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
+
+            //获取班级专业
+            var major = dbteacheraclass.GetClass_Major(classschue.id);
+
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_answerQuextion.AllAnswerQuestion();
             var templist = new List<AnswerQuestionView>();
@@ -236,7 +263,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 //筛选出S2的课程
 
-                sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+                sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
 
             }
 
@@ -348,18 +375,53 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         }
 
 
-        public ComputerTestQuestionsView productComputerQuestion(Examination examination)
+        public ComputerTestQuestionsView productComputerQuestion(Examination examination,int kecheng)
         {
+            //获取专业
+
+            var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
+            var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
+
+            var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
+
+            //获取班级专业
+            var major = dbteacheraclass.GetClass_Major(classschue.id);
+
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_computerQuestion.AllComputerTestQuestion();
             var templist = new List<ComputerTestQuestionsView>();
+
+            List<Curriculum> sourchlist = new List<Curriculum>();
+
             foreach (var item in list)
             {
                 templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item));
             }
-            //筛选出S2的课程
 
-            var sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+
+            if (examview.ExamType.ExamTypeID == 1)
+            {
+                //筛选出S2的课程
+
+                //筛选出S2的课程
+
+                 sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+
+            }
+
+            if (examview.ExamType.ExamTypeID == 2)
+            {
+
+                var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
+
+                if (course != null)
+
+                    sourchlist.Add(course);
+
+
+            }
+           
             List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
 
             //获取S2的题目
@@ -369,7 +431,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 {
                     if (!IsContain(questionlist, item))
                     {
-                        if (item.Course.CurriculumID == item1.Grand_Id) 
+                        if (item.Course.CurriculumID == item1.CurriculumID) 
                         {
                             questionlist.Add(item);
                         }
@@ -789,13 +851,13 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<Examination> StuExaminationEnd(string studentNo)
         {
-           var candlist = db_exam.AllCandidateInfo().Where(d => d.StudentID == studentNo).ToList();
+            var candlist = db_exam.AllCandidateInfo().Where(d => d.StudentID == studentNo).ToList();
 
             List<Examination> resultlist = new List<Examination>();
 
             foreach (var item in candlist)
             {
-               var exam = db_exam.AllExamination().Where(d => d.ID == item.Examination).FirstOrDefault();
+                var exam = db_exam.AllExamination().Where(d => d.ID == item.Examination).FirstOrDefault();
 
                 if (exam != null)
                     resultlist.Add(exam);
@@ -804,6 +866,59 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return resultlist;
 
 
+        }
+
+
+        /// <summary>
+        /// 答题卡信息
+        /// </summary>
+        /// <returns></returns>
+        public AnswerSheetInfosView AnswerSheetInfos(int examid, string studentnumber)
+        {
+            AnswerSheetInfosView infosView = new AnswerSheetInfosView();
+
+            //获取考生
+            var candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.StudentID == studentnumber).FirstOrDefault();
+
+           var student = db_student.StudentList().Where(d => d.StudentNumber == studentnumber).FirstOrDefault();
+            infosView.AnswerPerson = student;
+            var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
+            infosView.BeginDate = exam.BeginDate;
+
+            var examroomdistri = db_exam.AllExamroomDistributed(examid).Where(d => d.CandidateNumber == candidateinfo.CandidateNumber).FirstOrDefault();
+           var examroom = db_exam.AllExaminationRoom().Where(d => d.Examination == examid && d.ID == examroomdistri.ExaminationRoom).FirstOrDefault();
+            BaseBusiness<Classroom> dbclassroom = new BaseBusiness<Classroom>();
+            infosView.Classroom = dbclassroom.GetIQueryable().Where(d => d.Id == examroom.Classroom_Id).FirstOrDefault();
+
+
+            ///读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/questionLevelConfig.xml"));
+
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            //读取分数设置
+            var scoresXml = (XmlElement)xmlRoot.GetElementsByTagName("scores")[0];
+
+            var computerSetxml = (XmlElement)scoresXml.GetElementsByTagName("computerQuestionScores")[0];
+
+            var Computertotal = (float) (int.Parse( computerSetxml.GetElementsByTagName("total")[0].InnerText));
+
+
+            infosView.ComputerQuestionScores = Computertotal;
+
+            //获取选择题总分
+            var choiceXmlset = (XmlElement)scoresXml.GetElementsByTagName("choiceQuestionScores")[0];
+            var choicetotal = (float)(int.Parse(choiceXmlset.GetElementsByTagName("total")[0].InnerText));
+
+            //获取解答题总分
+
+            var answerXmlset = (XmlElement)scoresXml.GetElementsByTagName("anwserQuestionScores")[0];
+            var answertotal = (float)(int.Parse(answerXmlset.GetElementsByTagName("total")[0].InnerText));
+
+            infosView.WrittenQuestionScores = choicetotal + answertotal;
+
+            return infosView;
         }
 
     }

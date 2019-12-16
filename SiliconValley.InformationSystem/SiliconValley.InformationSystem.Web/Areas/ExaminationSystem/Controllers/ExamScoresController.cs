@@ -292,42 +292,66 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 //解答题答卷路径
                 var answerSheet = candidateInfo.Paper;
-                //Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + stuDirName + "AnswerSheet.txt");
-
-                FileStream fileStream = new FileStream(answerSheet, FileMode.Open, FileAccess.Read);
-
-
-                //解答题答卷
-                string SheetStr = fileStream.ReadToString(Encoding.UTF8);
-
-
-               var list = JsonConvert.DeserializeObject<List<AnswerSheetHelp>>(SheetStr);
 
                 List<object> objlist = new List<object>();
-
-
-                //判断是否为最后一个 
-                var IsEnd = index == candidinfolist.Count() ? true : false;
-
-
-                foreach (var item in list)
+                if (answerSheet == null)
                 {
-                    //根据问题ID 获取题目
-                   var question = db_answerQuestion.AllAnswerQuestion().Where(d => d.ID == item.questionid).FirstOrDefault();
+                    var obj = new
+                    {
 
-                    var obj = new {
-
-                        question=item,
-                        questionTitle= question,
-                        candidinfo= candidateInfo,
-                        isEnd= IsEnd
+                        question = "",
+                        questionTitle = "",
+                        candidinfo = candidateInfo,
+                        isEnd = ""
 
 
                     };
 
                     objlist.Add(obj);
-
                 }
+                else
+                {
+
+                    //Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + stuDirName + "AnswerSheet.txt");
+
+                    FileStream fileStream = new FileStream(answerSheet, FileMode.Open, FileAccess.Read);
+
+
+                    //解答题答卷
+                    string SheetStr = fileStream.ReadToString(Encoding.UTF8);
+
+
+                    var list = JsonConvert.DeserializeObject<List<AnswerSheetHelp>>(SheetStr);
+
+
+
+
+                    //判断是否为最后一个 
+                    var IsEnd = index == candidinfolist.Count() ? true : false;
+
+
+                    foreach (var item in list)
+                    {
+                        //根据问题ID 获取题目
+                        var question = db_answerQuestion.AllAnswerQuestion().Where(d => d.ID == item.questionid).FirstOrDefault();
+
+                        var obj = new
+                        {
+
+                            question = item,
+                            questionTitle = question,
+                            candidinfo = candidateInfo,
+                            isEnd = IsEnd
+
+
+                        };
+
+                        objlist.Add(obj);
+
+                    }
+                }
+
+
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
@@ -365,6 +389,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             //获取答卷路径
 
+            if (candidateinfo.ComputerPaper == null)
+            {
+                return Json("404", JsonRequestBehavior.AllowGet);
+            }
+
             var computerPath = candidateinfo.ComputerPaper.Split(',')[1];
 
             //var filename = Path.GetFileName(computerPath.SaveURL);
@@ -374,6 +403,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             FileStream fileStream = new FileStream(computerPath, FileMode.Open);
 
             return File(fileStream, "application/octet-stream", Server.UrlEncode("机试题"));
+
+        }
+
+        public ActionResult checkHaveComputerPaper(string kaohao, int examid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                var candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.CandidateNumber == kaohao).FirstOrDefault();
+
+                //获取答卷路径
+
+                if (candidateinfo.ComputerPaper == null)
+                {
+                    result.ErrorCode = 200;
+                    result.Data = "0";
+                    result.Msg = "成功";
+                }
+                else
+                {
+                    result.ErrorCode = 200;
+                    result.Data = "1";
+                    result.Msg = "成功";
+                }
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = "0";
+                result.Msg = "失败";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -551,11 +616,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-              bool b =  db_examScores.IsFinshMarking(user.EmpNumber, examid, examroom);
+                bool b =  db_examScores.IsFinshMarking(user.EmpNumber, examid, examroom);
 
-                result.ErrorCode = 200;
-                result.Msg = "成功";
-                result.Data = "1";
+                if (b)
+                {
+                    result.ErrorCode = 200;
+                    result.Msg = "成功";
+                    result.Data = "1";
+                }
+                else
+                {
+                    result.ErrorCode = 200;
+                    result.Msg = "成功";
+                    result.Data = "0";
+                }
+
+               
             }
             catch (Exception ex)
             {

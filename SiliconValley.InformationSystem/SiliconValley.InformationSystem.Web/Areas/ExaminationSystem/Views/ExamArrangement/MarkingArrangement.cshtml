@@ -1,0 +1,399 @@
+﻿
+@{
+    ViewBag.Title = "MarkingArrangement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    
+    <style>
+        #maywarp {
+            width:100%;
+
+        }
+        #table {
+            float:left;
+            width:70%;
+            margin-top:50px;
+        }
+
+        #markingArrangementdiv {
+            float: left;
+            width: 30%;
+        }
+        #detail {
+            
+            width:100%;
+            margin-top:10px;
+         
+            height:200px;
+
+        }
+
+        .detailTitle {
+            font-size:16px;
+        }
+
+        .detailItem {
+            display:inline-block;
+            width:49%;
+            margin-top:30px;
+        }
+
+            .detailItem span {
+                color: gray;
+                font-size: 15px;
+                
+            }
+        .classroom {
+            margin-top:50px;
+
+            height:200px;
+            
+        }
+        h4 {
+            font-size:17px;
+        }
+        #teacherlist {
+            width:80%;
+            position:fixed;
+            height:300px;
+            bottom:50px;
+            margin:0 auto;
+            display:none;
+           
+
+
+        }
+    </style>    
+}
+
+<div id="maywarp">
+
+    <div id="table">
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="setMarkingTeacher"><i class="layui-icon layui-icon-set"></i>设置阅卷老师</button>
+            </div>
+        </script>
+        <h3>考试数据</h3>
+        @Html.Partial("ExaminationStoryView")
+    </div>
+
+    <div id="markingArrangementdiv">
+
+        <div id="detail">
+            <form class="layui-form">
+
+            </form>
+
+           
+
+        </div>
+
+    </div>
+
+    <div id="teacherlist">
+        <hr />
+        
+
+    </div>
+
+</div>
+<script type="text/template" id="muban">
+    <div class="classroom" classroomid="{{=classroomid}}">
+
+        <h4 style="text-align:center;">{{=classroom}} &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h4>
+
+        <hr />
+        
+        <div class="detailItem"><label class="detailTitle">阅卷人：</label><span>{{=empname}}</span></div>
+        <div class="detailItem"><label class="detailTitle">阅卷状态：</label>
+            <span>
+            <img width="60" height="60" src="{{=img}}" alt="{{=status}}" />
+            </span>
+
+        </div>
+
+
+    </div>
+</script>
+
+<script type="text/template" id="muban1">
+    <div style="margin-top:20px;" class="teacherItem">
+        <div style="display:inline-block;" grandid="{{=grandid}}" class="grand"><button type="button" class="layui-btn layui-btn-normal grandbtn">{{=grandName}}</button></div>
+        
+    </div>
+</script>
+
+<script type="text/template" id="muban2">
+    
+        <div style="display:inline-block;" class="teacheritemlist" empid="{{=empid}}"><button type="button" class="layui-btn layui-btn-warm">{{=empname}}</button></div>
+
+</script>
+
+@section script{
+<script src="~/Scripts/underscore.js"></script>
+    <script>
+        layui.use(['table','layer','form'], function(){
+        
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+            function checkMarkingArrangment(examid) {
+
+                $("#detail form").html("");
+                var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
+                $.post('/ExaminationSystem/ExamArrangement/CheckMarkingArrangemtn', { examid: examid }, function (result) {
+
+                    
+
+                    if (result.ErrorCode == 200) {
+                        layer.msg('数据加载正常。。', { icon: 1 });
+
+
+                        if (result.Data.length == 0) {
+
+                            $("#detail form").append("<h3 style='margin-top:100px; text-align:center;'>没有阅卷人</h3>");
+
+                            return;
+                        }
+
+                        for (var i = 0; i < result.Data.length; i++) {
+
+                            var temphtml = _.template($("#muban").html());
+
+                            var img; var status; var empname;
+
+                            if (result.Data[i].MarkingTeacher == null) {
+                                empname = "<span style='color:red;'>没有阅卷人</span>";
+                            }
+                            else {
+                                empname = result.Data[i].MarkingTeacher.EmpName
+                            }
+
+                            if (result.Data[i].IsFinsh) {
+                                img = '/Areas/ExaminationSystem/Images/已完成.jpg'
+                                status = "已完成";
+                            }
+                            else {
+                                img = '/Areas/ExaminationSystem/Images/未完成.jpg'
+                                status = "未完成";
+                            }
+
+                           
+
+                            var tempdata = temphtml({ classroomid: result.Data[i].classroom.Id, classroom: result.Data[i].classroom.ClassroomName, empname: empname , status: status, img: img});
+
+
+                            $("#detail form").append(tempdata);
+
+                            form.render();
+
+                        }
+
+
+                        layer.close(index);
+                    }
+
+                    if (result.ErrorCode == 500) {
+                        layer.msg('数据加载异常。。', { icon: 2 });
+                        layer.close(index);
+                    }
+
+
+                });
+
+
+            }
+
+            function loadTeacher() {
+
+                $("#teacherlist .teacherItem .teacheritemlist").remove();
+                //循环阶段
+
+                $("#teacherlist .teacherItem").each(function (index, elem) {
+
+                    var grand = $(elem).find(".grand").attr('grandid');
+
+                    if (grand != undefined) {
+                        $.post('/ExaminationSystem/ExamArrangement/GetTeacher_Grand', { grand: grand }, function (result) {
+
+                            console.log(result);
+
+                            if (result.ErrorCode == 200) {
+
+                                for (var i = 0; i < result.Data.length; i++) {
+
+                                    var temphtml = _.template($("#muban2").html());
+                                    var tempdata = temphtml({ empid: result.Data[i].EmployeeId, empname: result.Data[i].EmpName });
+
+                                    $(elem).append(tempdata);
+
+                                }
+                            }
+
+                            if (result.ErrorCode == 500) {
+                                layer.msg('数据加载失败 (教员)', { icon: 2 });
+                            }
+                          });
+                    }
+
+                });
+
+            }
+
+            ///加载阶段
+
+            $.post('/ExaminationSystem/ExamArrangement/GrandData', {}, function (result) {
+
+                if (result.ErrorCode == 200) {
+
+                    for (var i = 0; i < result.Data.length; i++) {
+                        var temphtml = _.template($("#muban1").html());
+                        var tempdata = temphtml({ grandid: result.Data[i].Id, grandName: result.Data[i].GrandName });
+
+                        $("#teacherlist").append(tempdata);
+                    }
+
+                   
+
+                }
+                else {
+
+                    layer.msg('数据加载异常  (阶段)', { icon: 2 });
+
+                }
+
+            });
+
+
+            //监听行单击事件
+            table.on('row(ExamTory)', function (obj) {
+
+                $("#markingArrangementdiv").fadeIn();
+                checkMarkingArrangment(obj.data.ID);
+
+
+            });
+
+
+            
+
+
+            //头工具栏事件
+            table.on('toolbar(ExamTory)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'setMarkingTeacher':
+
+                        //1 判断考试是否意见结束
+
+                        if (checkStatus.data.length == 0) {
+                            layer.msg('请选择考试数据', { icon: 2 });
+
+                            return;
+                        }
+
+
+
+                        $("#teacherlist").slideDown();
+
+                        loadTeacher();
+
+                        //添加一个控件
+
+                        break;
+                   
+                };
+            });
+
+
+            //双击设置阅卷人
+            $(document).off("dblclick", ".teacherItem .teacheritemlist button").on("dblclick", ".teacherItem .teacheritemlist button", function () {
+
+                //首先判断是否选中了考场
+
+                var teacher = $(this).parent().attr("empid");
+
+                var classroom;
+
+                $(".classroom").each(function (index, elem) {
+
+                    var select = $(elem).attr("selected");
+
+                    if (select == "selected") {
+                        classroom = $(elem).attr("classroomid");
+                    }
+
+                });
+
+                if (classroom == undefined) {
+
+                    layer.msg('请先选择考场', { icon: 2 });
+
+                    return;
+
+                }
+                //获取考试ID  教室ID 教员
+
+                var examid = table.checkStatus('ExamTory').data[0].ID;
+                var title = table.checkStatus('ExamTory').data[0].Title;
+                
+                layer.confirm('考试：' + title + '  教室:' + classroom + "  阅卷老师：" + $(this).text(), { icon: 3, title: '提示' }, function (index) {
+                    var layindex = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
+                   //发送请求  设置阅卷人
+
+                    layer.msg("正在发送请求。。。。。。。");
+
+                    
+
+                    $.post("/ExaminationSystem/ExamArrangement/SetMarkingTeacher", { examid: examid, classroomid: classroom, teacher: teacher }, function (result) {
+
+                        console.log(result);
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.msg('设置成功', { icon: 1 }, function () {
+
+                                window.location.reload();
+                            });
+
+                            layer.close(layindex);
+                        }
+                        else {
+                            layer.close(layindex);
+
+                            layer.msg(result.Msg, { icon: 2 }, function () {
+                                $("#markingArrangementdiv").hide();
+                                $("#teacherlist").hide();
+                                
+                            });
+                        }
+                    });
+
+                    layer.close(index);
+                });
+
+            });
+
+            //教室点击事件
+            $(document).off("click", ".classroom").on("click", ".classroom", function () {
+
+                $(this).siblings().css("border", "");
+
+                $(this).siblings().attr("selected", "");
+
+                $(this).attr("selected","selected");
+
+                $(this).css("border-bottom","1px solid green");
+
+
+            });
+
+
+        
+        });
+    </script>    
+}
+

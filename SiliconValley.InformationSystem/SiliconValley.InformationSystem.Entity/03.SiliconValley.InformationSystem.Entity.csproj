@@ -69,6 +69,7 @@
     <Compile Include="Base_SysManage\Base_User.cs" />
     <Compile Include="Base_SysManage\Base_UserRoleMap.cs" />
     <Compile Include="Base_SysManage\EnumType.cs" />
+    <Compile Include="Base_SysManage\ViewEntity\AccountView.cs" />
     <Compile Include="Entity\Accdationinformation.cs" />
     <Compile Include="Entity\AddCourse.cs" />
     <Compile Include="Entity\AdmissArrangement.cs" />
@@ -317,6 +318,7 @@
     <Compile Include="ViewEntity\ChannelReportFormView.cs" />
     <Compile Include="ViewEntity\ChannelSortView.cs" />
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
+    <Compile Include="ViewEntity\ClassCourseView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
     <Compile Include="ViewEntity\ClassSchedltData.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
@@ -345,6 +347,7 @@
     <Compile Include="ViewEntity\ExaminationRoomView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\AnswerQuestionView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetHelp.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\AnswerSheetInfosView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ChoiceQuestionTableView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ComputerTestQuestionsView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeEnum.cs" />
@@ -416,6 +419,7 @@
     <Compile Include="ViewEntity\SuccessionrecordView.cs" />
     <Compile Include="ViewEntity\SurveyCommitHelper.cs" />
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
+    <Compile Include="ViewEntity\SurveyGroupByDateView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />

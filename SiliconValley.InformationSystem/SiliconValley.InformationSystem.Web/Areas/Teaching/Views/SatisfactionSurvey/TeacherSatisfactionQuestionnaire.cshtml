@@ -72,7 +72,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">您的意见：</label>
             <div class="layui-input-block">
-                <textarea placeholder="请输入内容" class="layui-textarea"></textarea>
+                <textarea id="sug" placeholder="请输入内容" class="layui-textarea"></textarea>
             </div>
         </div>
 
@@ -180,8 +180,9 @@
 
 
                 var configId = $("#configId").val();
+                var sug = $("#sug").val();
                 //发送请求
-                $.post("/Teaching/SatisfactionSurvey/commitTeacherSurvey", { list: resultArry, configId: configId }, function (result) {
+                $.post("/Teaching/SatisfactionSurvey/commitTeacherSurvey", { list: resultArry, configId: configId, suggest: sug }, function (result) {
 
 
                     if (result.ErrorCode == 200) {

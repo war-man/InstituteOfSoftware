@@ -70,6 +70,7 @@
     <Compile Include="00Cache\Base_UserModelCache.cs" />
     <Compile Include="BaseBusiness\BaseBusiness.T.cs" />
     <Compile Include="BaseDataEnum_Business\BaseDataEnumBusiness.cs" />
+    <Compile Include="BaseSysManage\Base_UserBusiness.cs" />
     <Compile Include="Base_SysManage\Base_AppSecretBusiness.cs" />
     <Compile Include="Base_SysManage\Base_DatabaseLinkBusiness.cs" />
     <Compile Include="Base_SysManage\Base_SysLogBusiness.cs" />

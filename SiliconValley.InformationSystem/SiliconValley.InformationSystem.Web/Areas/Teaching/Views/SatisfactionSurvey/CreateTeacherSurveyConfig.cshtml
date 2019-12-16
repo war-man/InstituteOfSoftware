@@ -15,6 +15,8 @@
     <div>
         <h3 style="text-align:center;">创建教员满意度调查单</h3>
 
+        <hr />
+
         <form class="layui-form">
 
             <div class="layui-form-item">
@@ -81,7 +83,7 @@
                             $("#skill").append(new Option("请选择课程", ""));
                             $.each(resultData.Data, function (index, item) {
                                 //赋值
-                                alert("dd");
+                                
                                 $('#skill').append(new Option(item.CourseName, item.CurriculumID));
                             });
                         } else {
