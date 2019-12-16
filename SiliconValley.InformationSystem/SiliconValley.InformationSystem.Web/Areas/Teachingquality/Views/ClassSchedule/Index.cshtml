@@ -87,7 +87,7 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>开设班级</button>
-            <button class="layui-btn layui-btn-sm" lay-event="get"><i class="layui-icon">&#xe654;</i>班级交接</button>
+         
             <button class="layui-btn layui-btn-sm" lay-event="FindTuition"><i class="layui-icon">&#xe654;</i>升学缴费情况</button>
         </div>
     </script>
@@ -211,10 +211,10 @@
 
                 };
             });
+           
             
             //查询功能
             form.on('submit(demo2)', function (data) {
-
                 var x = data.field;
                 console.log(x);
                 //if (x.ClassNumber == "" && x.Major_Id == "" && x.grade_Id == "" && x.BaseDataEnum_Id == "" && x.ClassstatusID=="") {
@@ -223,7 +223,7 @@
                 //        btn: ['确定']
                 //    });
                 //} else {
-                    table.reload('idTest', {
+                table.reload('idTest', {
                     where: {
                         ClassNumber: x.ClassNumber,
                         Major_Id: x.Major_Id,
@@ -234,6 +234,7 @@
                         curr: 1
                     }
                 });
+               
               //  }
               
                

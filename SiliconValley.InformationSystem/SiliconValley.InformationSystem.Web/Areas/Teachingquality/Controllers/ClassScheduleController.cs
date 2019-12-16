@@ -25,10 +25,12 @@ using SiliconValley.InformationSystem.Entity.Entity;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
-    
+   
+
     public class ClassScheduleController : Controller
     {
         private static int? classNumberss = null;
+        public static int counts = 0;
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
         {
@@ -66,13 +68,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.grade_Id = Grandcontext.GetList().Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
             
             var States = classtatus.GetList().Where(a => a.IsDelete == false).ToList();
-
+          
             Classstatus classstatus = new Classstatus();
             classstatus.TypeName = "正常";
             classstatus.id = null;
             States.Add(classstatus);
             //班级状态
-            ViewBag.ClassState = States.Select(a => new SelectListItem { Text = a.TypeName, Value = a.id==null? "null":a.id.ToString() });
+            ViewBag.ClassState = States.Select(a => new SelectListItem { Text = a.TypeName, Value = a.id==null? "null":a.id.ToString(),Selected=(a.id==null) });
             return View();
         }
         //基础数据枚举数据
@@ -83,11 +85,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
         //阶段
         GrandBusiness Grandcontext = new GrandBusiness();
+    
         //获取数据
         public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id,string ClassstatusID)
         {
             try
             {
+                counts++;
                 List<ClassSchedule> list = new List<ClassSchedule>();
                 if (user.UserName=="Admin")
                 {
@@ -107,6 +111,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
 
                 }
+            if (counts == 1)
+            {
+              list = list.Where(a => a.ClassstatusID==null).ToList();
+            }
             if (!string.IsNullOrEmpty(ClassNumber))
             {
                 list = list.Where(a => a.ClassNumber.Contains(ClassNumber)).ToList();
@@ -228,6 +236,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //查看班级的学员
         public ActionResult ClassStudent()
         {
+
 
             classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
          
@@ -574,7 +583,97 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            
             return Json(dbtext.TransactionDate(page,limit,ClassID,TypeName,StudentID,Name, IsaDopt),JsonRequestBehavior.AllowGet);
         }
-  
+       /// <summary>
+       /// 学员保险
+       /// </summary>
+       /// <returns></returns>
+        public ActionResult Insurance()
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            ViewBag.ClassID = ClassID;
+            return View();
+        }
+        /// <summary>
+        /// 获取保险数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult premiumGetdate(int page, int limit)
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            var list = dbtext.premiumGetdate(ClassID).Select(a => new InsuranceView
+            {
+                 ID=a.ID,
+                ClassNumber = dbtext.GetEntity(ClassID).ClassNumber,
+                Dateofbirth = (DateTime)student.GetEntity(a.StudentID).BirthDate,
+                Duedate = a.Endtime,
+                Guardiansphone = student.GetEntity(a.StudentID).Familyphone,
+                IDcardNo = student.GetEntity(a.StudentID).identitydocument,
+                NameofGuardian = student.GetEntity(a.StudentID).Guardian.Split(',')[0],
+                Nameofinsurer = student.GetEntity(a.StudentID).Name,
+                premium = a.InsurancePremium,
+                Sex = student.GetEntity(a.StudentID).Sex,
+                Startdate = a.Starttime,
+                Telephonenumber = student.GetEntity(a.StudentID).Telephone
+            }).ToList();
+                
+            var Mylist=  list .OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = list.Count,
+                data = Mylist
+            }; return Json(data, JsonRequestBehavior.AllowGet);
+        
+         
+       }
+        /// <summary>
+        /// 获取保险及班级所以学员
+        /// </summary>
+        /// <param name="ClassID">班级id</param>
+        /// <returns></returns>
+        public ActionResult InsuranceStudent(int ClassID)
+        {
+            return Json(dbtext.InsuranceStudent(ClassID), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 添加保险页面
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult InsuranceAdd()
+        {
+
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+           string Students= Request.QueryString["StudentID"];
+            
+            string StuID = Students.Substring(0, Students.Length - 1);
+            ViewBag.Student = StuID;
+           
+          string [] stu= StuID.Split(',');
+            InsuranceView insuranceView = new InsuranceView();
+            insuranceView.ClassNumber = Stuclass.SutdentCLassName(stu[0]).ClassID;
+            foreach (var item in stu)
+            {
+                StudentInformation information = new StudentInformation();
+                information.Name = student.GetEntity(item).Name;
+                studentlist.Add(information);
+            }
+            ViewBag.StudentList = studentlist;
+            return View(insuranceView);
+        }
+        /// <summary>
+        /// 保险数据添加
+        /// </summary>
+        /// <param name="insuranceView">数据对象</param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult InsuranceAdd(InsuranceView insuranceView)
+        {
+            return Json(dbtext.InsuranceAdd(insuranceView), JsonRequestBehavior.AllowGet);
+        }
         public ActionResult PhoneSMS()
         {
             string str = "<p>湖南硅谷高科软件学员逾期缴费学员通知：</p><p>{Name}家长：您好！经财务核查，您孩子{NextStageID}阶段升学费用逾期未缴，应交{ShouldJiao}元，欠费{Surplus}元。请您于本周内经财务办理缴费手续，逾期不缴教务处将根据学员管理规定予以听课处理。感谢您的配合与理解！</p><p>班主任：{HeadmasterName}&nbsp; 电话：{Phone}</p><p><br/></p>";

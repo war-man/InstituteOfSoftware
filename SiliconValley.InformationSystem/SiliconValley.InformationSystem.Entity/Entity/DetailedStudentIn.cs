@@ -13,17 +13,40 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 学员保险表
+    /// </summary>
     [Table(name: "DetailedStudentIn")]
     public partial class DetailedStudentIn
     {
+        /// <summary>
+        /// 保险id
+        /// </summary>
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 保额（费用）
+        /// </summary>
         public Nullable<double> InsurancePremium { get; set; }
-        public Nullable<System.DateTime> Payment_time { get; set; }
+        /// <summary>
+        /// 开始保期
+        /// </summary>
+        public Nullable<System.DateTime> Starttime { get; set; }
+        /// <summary>
+        /// 到期保期
+        /// </summary>
+        public Nullable<System.DateTime> Endtime { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
-        public Nullable<bool> Dateofregistration { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudentID { get; set; }
     
     }
