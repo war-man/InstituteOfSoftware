@@ -1,0 +1,269 @@
+﻿
+@{
+    ViewBag.Title = "Insurance";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style>
+        .Stundet {
+            width: 120px;
+            height: 120px;
+            border: 1px solid red;
+            float: left;
+            margin-left: 5px;
+            margin-top: 5px;
+            background-color: #1cc09f;
+        }
+        .FlatStundet {
+            width: 120px;
+            height: 120px;
+            border: 1px solid red;
+            float: left;
+            margin-left: 5px;
+            margin-top: 5px;
+            background-color: #1cc09f;
+        }
+
+            .Stundet:hover {
+                background-color: cornflowerblue;
+            }
+
+        .yess:hover {
+            background-color: cornflowerblue;
+        }
+
+        .color {
+            background-color: #ff0000;
+        }
+
+        .yess {
+            width: 120px;
+            height: 120px;
+            border: 1px solid red;
+            float: left;
+            margin-left: 5px;
+            margin-top: 5px;
+            background-color: yellow;
+        }
+    </style>
+}
+<h2>Insurance</h2>
+<div class="layui-collapse" lay-filter="test">
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">保险报入</h2>
+        <div class="layui-colla-content" id="Stu">
+
+
+        </div>
+    </div>
+</div>
+<input type="text" style="display:none;" id="ClassID" value="@ViewBag.ClassID" />
+<div style="float:left;width:100%;">
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+
+</div>
+
+
+@section script{
+    @*头部工具栏*@
+    <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
+    <script type="text/html" id="toolbarDemo">
+
+        <div class="layui-btn-container">
+
+            <button class="layui-btn layui-btn-sm" lay-event="InsuranceAdd"><i class="layui-icon">&#xe654;</i>加入保险</button>
+
+        </div>
+
+    </script>
+    <script>
+        function GetData() {
+            var db = {
+                ClassID: $("#ClassID").val()
+            };
+            $.post("/Teachingquality/ClassSchedule/InsuranceStudent", db, function (dbase) {
+                for (var i = 0; i < dbase.length; i++) {
+                    if (dbase[i].Count == 1) {
+                        $("#Stu").append($('<div class="FlatStundet"><input type="text" style="display:none;" value=' + dbase[i].StudentID + ' /><div style="margin-top:10px;text-align:center;">学号:<label>' + dbase[i].StuID + '</label></div><div style="margin-top:5px;text-align:center;">姓名:<label>' + dbase[i].Name + '</label></div> <div style="margin-top:5px;text-align:center;">到期:<label >' + TimeChange( dbase[i].Context) + '</label></div> </div>'));
+                    } else if (dbase[i].Count == 2) {
+                        $("#Stu").append($('<div class="Stundet"><input type="text" style="display:none;" value=' + dbase[i].StudentID + ' /><div style="margin-top:10px;text-align:center;">学号:<label>' + dbase[i].StuID + '</label></div><div style="margin-top:5px;text-align:center;">姓名:<label>' + dbase[i].Name + '</label></div> <div style="margin-top:5px;text-align:center;">到期:<label style="color:red;">' + TimeChange(dbase[i].Context) + '</label></div> </div>'));
+                    } else if (dbase[i].Count == 3) {
+                        $("#Stu").append($('<div class="Stundet"><input type="text" style="display:none;" value=' + dbase[i].StudentID + ' /><div style="margin-top:10px;text-align:center;">学号:<label>' + dbase[i].StuID + '</label></div><div style="margin-top:5px;text-align:center;">姓名:<label>' + dbase[i].Name + '</label></div> <div style="margin-top:5px;text-align:center;"><label style="color:yellow;">' + dbase[i].Context + '</label></div> </div>'));
+
+                    } else if (dbase[i].Count == 4) {
+                        $("#Stu").append($('<div class="FlatStundet"><input type="text" style="display:none;" value=' + dbase[i].StudentID + ' /><div style="margin-top:10px;text-align:center;">学号:<label>' + dbase[i].StuID + '</label></div><div style="margin-top:5px;text-align:center;">姓名:<label>' + dbase[i].Name + '</label></div> <div style="margin-top:5px;text-align:center;">到期:<label >' + dbase[i].Context + '</label></div> </div>'));
+
+                    }
+
+                }
+            })
+        }
+        GetData();
+        layui.use(['table', 'layer', 'tree', 'form', 'element'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var element = layui.element;
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/Teachingquality/ClassSchedule/premiumGetdate?ClassID=' + $("#ClassID").val()
+                , toolbar: '#toolbarDemo'
+                , id: 'idTest'
+                , page: true
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' }
+                    , { field: 'ClassNumber', title: '班级', sort: true }
+                    , { field: 'Nameofinsurer', title: '被保险人姓名' }
+                    , { field: 'Telephonenumber', title: '被保险人电话 ' }
+                    , {
+                        field: 'Sex', title: '性别', templet: function (c) {
+                            if (c.Sex == false) {
+                                return "女";
+                            } else { return "男"; }
+                        }
+                    }
+                    , {
+                        field: 'Dateofbirth', title: '出生日期', templet: function (c) {
+                            return TimeChange(c.Dateofbirth)
+                        }
+                    }
+                 
+                    , { field: 'IDcardNo', title: '身份证号码 ' }
+                    , { field: 'NameofGuardian', title: '监护人姓名 ' }
+                    , { field: 'Guardiansphone', title: '监护人电话 ' }
+                    , {
+                        field: 'Startdate', title: '开始日期', templet: function (c) {
+                            if (c.Startdate != null) {
+                                return TimeChange(c.Startdate)
+                            }
+                            return "数据未更新";
+                           
+                        }
+                    }
+                    , {
+                        field: 'Duedate', title: '到期日期', templet: function (c) {
+                            if (c.Duedate != null) {
+                                return TimeChange(c.Duedate)
+                            }
+                            return "数据未更新";
+
+                        }
+                    }
+                    , {
+                        field: 'premium', title: '保费', templet: function (c) {
+                            if (c.premium != null) {
+                                return c.premium;
+                            }
+                            return "数据未更新";
+
+                        }
+                    }
+                 
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+                ]]
+                , page: true
+                , limit: 8
+                , limits: [8, 10, 15]
+            });
+            //查看班级学员
+            table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+                var data = obj.data; //获得当前行数据
+                var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+                var tr = obj.tr; //获得当前行 tr 的DOM对象
+                console.log(data);
+                if (layEvent === 'select') { //查看
+                    window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + data.id;
+                    console.log(data);
+                }
+
+            });
+
+            //监听头部工具栏
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+
+                    case 'InsuranceAdd':
+
+                        if ($(".color").length > 0) {
+                            var x = "";
+                            var list = $(".color");
+                            for (var i = 0; i < list.length; i++) {
+                                x += $($(list[i]).children()[0]).val() + ",";
+                            }
+
+                            layer.open({
+                                title: "学员保险添加",
+                                type: 2,
+                                area: ['615px', '650px']
+                                , content: "/Teachingquality/ClassSchedule/InsuranceAdd?StudentID=" + x
+                                , end: function () { table.reload('idTest'); }
+                                , anim: 1,
+
+                                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                            });
+                        } else {
+                            layer.alert('请选择一个学员', { icon: 0 });
+                        }
+                        break;
+
+
+
+                };
+            });
+
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+
+                var x = data.field;
+                console.log(x);
+                //if (x.ClassNumber == "" && x.Major_Id == "" && x.grade_Id == "" && x.BaseDataEnum_Id == "" && x.ClassstatusID=="") {
+                //    layer.msg("至少选择一个查询", {
+                //        time: 5000, //20s后自动关闭
+                //        btn: ['确定']
+                //    });
+                //} else {
+                table.reload('idTest', {
+                    where: {
+                        ClassNumber: x.ClassNumber,
+                        Major_Id: x.Major_Id,
+                        grade_Id: x.grade_Id,
+                        BaseDataEnum_Id: x.BaseDataEnum_Id,
+                        ClassstatusID: x.ClassstatusID
+                    }, page: {
+                        curr: 1
+                    }
+                });
+                //  }
+
+
+                return false;
+            });
+
+
+
+        });
+        //点击事件
+        $("body").on("click", ".Stundet", function () {
+
+            if (!$(this).is(".color")) {
+                $(this).addClass("color");
+            }
+            else {
+                $(this).removeClass("color");
+            }
+        });
+        //点击事件
+        $("body").on("click", ".yess", function () {
+            console.log("aaa");
+            if (!$(this).is(".color")) {
+                $(this).addClass("color");
+            }
+            else {
+                $(this).removeClass("color");
+            }
+        });
+    </script>
+}

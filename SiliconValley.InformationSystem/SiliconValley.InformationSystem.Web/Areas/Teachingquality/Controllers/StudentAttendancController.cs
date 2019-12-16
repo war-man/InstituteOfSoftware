@@ -13,6 +13,7 @@ using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -107,7 +108,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 AttendanceTitle=a.AttendanceTitle,
                 StudentID=a.StudentID,
                 Remarks=a.Remarks,
-                Stuclass= Stuclass.GetList().Where(q=>q.StudentID==a.StudentID&&q.CurrentClass==true).FirstOrDefault().ClassID,  //班级
+                Stuclass= classSchedule.GetEntity(a.ClassID).ClassNumber, //班级
                 Name = student.GetEntity(a.StudentID).Name,   //姓名
                 RegistrarName= infoBusiness.GetEntity(a.Registrar).EmpName //登记人姓名
             }).ToList();
@@ -210,6 +211,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return View();
         }
+        //当前登陆人
+        Base_UserModel user = Base_UserBusiness.GetCurrentUser();
         [HttpPost]
         //登记出勤更新数据
         public ActionResult Registerattendance(StudentAttendance studentAttendanc)
@@ -218,16 +221,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            string tu= studentAttendanc.StudentID.Substring(0, studentAttendanc.StudentID.Length - 1);
             //转成数组
             // Session["EmpNumber"].ToString();
-            string EmpNumber = "201908150001";
+            string EmpNumber = user.EmpNumber;
             string[] stu= tu.Split(',');
             AjaxResult result = null;
             try
             {
-                //if (string.IsNullOrEmpty(EmpNumber))
-                //{
-                //    EmpNumber = "201908150001";
-                //}
-                //
+            
                 List< StudentAttendance> list = new List<StudentAttendance>();
                 for (int i = 0; i < stu.Length; i++)
                 {
@@ -237,16 +236,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     student.Attendancestatus = studentAttendanc.Attendancestatus;
                     student.InspectionDate = studentAttendanc.InspectionDate;
                     student.StudentID = stu[i];
+                    student.ClassID =Convert.ToInt32( Stuclass.SutdentCLassName(stu[i]).ID_ClassName);
                     student.Addtime = DateTime.Now;
                     student.IsDelete = false;
                     student.Registrar = EmpNumber;
                     list.Add(student);
-                }
-
-              
-                    
                 
-                dbtext.BulkInsert(list);
+              }
+              
+                dbtext.Insert(list);
                 result = new SuccessResult();
                 result.Msg = "记录成功";
                 result.Success = true;

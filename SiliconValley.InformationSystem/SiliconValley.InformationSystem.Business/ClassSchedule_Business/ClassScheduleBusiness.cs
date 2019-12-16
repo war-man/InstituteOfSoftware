@@ -144,6 +144,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             return false;
           
         }
+        /// <summary>
+        /// 获取班级学员数据+异动学员
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
         public List<ClassStudentView> ClassStudentneViewList(int classid)
         {
             //学员班级
@@ -198,9 +203,20 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     }
                     else
                     {
-                      var Dyan=  classDynamicsBusiness.GetList().Where(a => a.Studentnumber == classStudentView.StuNameID && a.IsaDopt == true).ToList().OrderByDescending(a=>a.ID).FirstOrDefault();
-                        classStudentView.Statusname = BasicdatBusiness.GetEntity(Dyan.States).Name;
-                        classStudentView.ClassID = Dyan.FormerClass;
+                     var ClaStudent=  scheduleForTraineesBusiness.GetList().Where(a => a.CurrentClass == false && a.IsGraduating == true&&a.StudentID==item.StudentID).FirstOrDefault();
+                        if (ClaStudent!=null)
+                        {
+                            classStudentView.Statusname = "毕业";
+                            classStudentView.ClassID = ClaStudent.ID_ClassName;
+                        }
+                        else
+                        {
+                            var Dyan = classDynamicsBusiness.GetList().Where(a => a.Studentnumber == classStudentView.StuNameID && a.IsaDopt == true).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
+                            classStudentView.Statusname = BasicdatBusiness.GetEntity(Dyan.States).Name;
+                            classStudentView.ClassID = Dyan.FormerClass;
+                        }
+                       
+                  
                     }
                 }
                 listview.Add(classStudentView);
@@ -840,6 +856,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     {
                         UpdateSche.CurrentClass = false;
                         UpdateSche.IsGraduating = true;
+                        //删除宿舍
+                        Accdation = new AccdationinformationBusiness();
+                        Accdation.delacc(UpdateSche.StudentID);
                         UpdateScheduleFor.Add(UpdateSche);
                     }
                 
@@ -1206,8 +1225,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             transactionView.NowHeadmaster = Hadmst.ClassHeadmaster(this.GetEntity(x.FormerClass).id).EmpName;//班主任姓名
             transactionView.OriginalClassName = this.GetEntity(x.FormerClass).ClassNumber;
             transactionView.NowCLass = x.CurrentClass;
-            
-         
+            transactionView.Dormitoryaddress = x.Dormitoryaddress;
+
             return transactionView;
         }
         /// <summary>
@@ -1397,6 +1416,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                         classDynamics.CurrentClass = transactionView.NowCLass;
                         classDynamics.FormerClass = transactionView.OriginalClass;
                         classDynamics.Studentnumber = transactionView.StudentID;
+                        classDynamics.Dormitoryaddress = transactionView.Dormitoryaddress;
                         var tranID = ApplicationRepairBusiness.GetList().Where(a => a.IsDelete == false && a.StudentID == transactionView.StudentID && a.Rehabilit == transactionView.NowCLass).ToList().OrderByDescending(a => a.Id).FirstOrDefault();
                         classDynamics.ApplicationRepairID = tranID.Id;
                         classDynamics.States = this.FineBasicdat("重修").ID;
@@ -1502,6 +1522,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                         classDynamics.Addtime = DateTime.Now;
                         classDynamics.FormerClass = transactionView.OriginalClass;
                         classDynamics.Studentnumber = transactionView.StudentID;
+                        classDynamics.Dormitoryaddress = transactionView.Dormitoryaddress;
                         var tranID = SuspensionofschoolBusiness.GetList().Where(a => a.IsDelete == false && a.Studentnumber == transactionView.StudentID && a.Dateofapplication == transactionView.Dateofapplication && a.Startingperiod == transactionView.qBeginTime && a.Deadline == transactionView.qEndTime).ToList().OrderByDescending(a => a.id).FirstOrDefault();
                         classDynamics.SuspensionofschoolID = tranID.id;
                         classDynamics.States = this.FineBasicdat("休学").ID;
@@ -1564,6 +1585,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                         classDynamics.FormerClass = transactionView.OriginalClass;
                         classDynamics.CurrentClass = classDynamicsBusiness.GetList().Where(a => a.Studentnumber == transactionView.StudentID && a.IsaDopt != false).OrderByDescending(a => a.ID).FirstOrDefault().FormerClass;
                         classDynamics.Studentnumber = transactionView.StudentID;
+                        classDynamics.Dormitoryaddress = transactionView.Dormitoryaddress;
                         var tranID = RestudyBusines.GetList().Where(a => a.IsDelete == false && a.StudentID == transactionView.StudentID && a.Applicationtime == transactionView.Dateofapplication && a.IsBookcollection == transactionView.IsBookcollection).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
                         classDynamics.RestudyID = tranID.ID;
                         classDynamics.States = this.FineBasicdat("复学").ID;
@@ -1670,6 +1692,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     classDynamics.Addtime = DateTime.Now;
                     classDynamics.FormerClass = transactionView.OriginalClass;
                     classDynamics.Studentnumber = transactionView.StudentID;
+                    classDynamics.Dormitoryaddress = transactionView.Dormitoryaddress;
                     var tranID = ExpelsBusiness.GetList().Where(a => a.IsDelete == false && a.Studentnumber == transactionView.StudentID && a.Applicationtime == transactionView.Dateofapplication).ToList().OrderByDescending(a => a.id).FirstOrDefault();
                     classDynamics.ExpelsID = tranID.id;
                     classDynamics.States = this.FineBasicdat("开除").ID;
@@ -1700,7 +1723,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return result;
         }
-     
         /// <summary>
         /// 开除数据操作
         /// </summary>
@@ -1721,6 +1743,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     var StudenClass = ss.GetList().Where(a => a.StudentID == x.Studentnumber && a.CurrentClass == true).FirstOrDefault();
                     StudenClass.CurrentClass = false;
                     ss.Update(StudenClass);
+                    //删除宿舍
                     Accdation = new AccdationinformationBusiness();
                     Accdation.delacc(x.Studentnumber);
                     var Student = studentInformationBusiness.GetEntity(x.Studentnumber);
@@ -1788,6 +1811,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                         classDynamics.Addtime = DateTime.Now;
                         classDynamics.FormerClass = transactionView.OriginalClass;
                         classDynamics.Studentnumber = transactionView.StudentID;
+                        classDynamics.Dormitoryaddress = transactionView.Dormitoryaddress;
                         var tranID = ApplicationDropoutBusiness.GetList().Where(a => a.IsDelete == false && a.Studentnumber == transactionView.StudentID && a.Addtime == transactionView.Dateofapplication).ToList().OrderByDescending(a => a.ID).FirstOrDefault();
                         classDynamics.ApplicationDropoutID = tranID.ID;
                         classDynamics.States = this.FineBasicdat("退学").ID;
@@ -1817,6 +1841,186 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
             }
             return result;
+        }
+        //学员保险业务
+        private BaseBusiness<DetailedStudentIn> detailedstudentinBusiness;
+        /// <summary>
+        /// 保险名单去重复
+        /// </summary>
+        /// <param name="scheduleForTrainees">集合对象</param>
+        /// <param name="schedule">数据对象</param>
+        /// <returns></returns>
+        public bool Insurancerepetition(List<DetailedStudentIn> scheduleForTrainees, DetailedStudentIn schedule)
+        {
+            foreach (var item in scheduleForTrainees)
+            {
+                if (item.StudentID == schedule.StudentID)
+                {
+                    return true;
+                }
+            }
+            return false;
+
+        }
+        /// <summary>
+        /// 根据班级号获取保险学员
+        /// </summary>
+        /// <param name="ClassID"></param>
+        /// <returns></returns>
+        public List<DetailedStudentIn> premiumGetdate(int ClassID)
+        {
+            //学员班级
+            ScheduleForTraineesBusiness scheduleForTraineesBusiness = new ScheduleForTraineesBusiness();
+            var x = scheduleForTraineesBusiness.GetList().Where(a => a.ID_ClassName == ClassID && a.CurrentClass == true).ToList();
+
+            List<DetailedStudentIn> detailedStudentIns = new List<DetailedStudentIn>();
+
+            List<DetailedStudentIn> ins = new List<DetailedStudentIn>();
+
+             List<DetailedStudentIn> detailedList = new List<DetailedStudentIn>();
+            detailedstudentinBusiness = new BaseBusiness<DetailedStudentIn>();
+            DateTime date = DateTime.Now;
+            foreach (var item in x)
+            {
+             var xm= detailedstudentinBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.Endtime ==null).FirstOrDefault();
+                if (xm!=null)
+                {
+                    detailedStudentIns.Add(xm);
+                }
+                else
+                {
+                    var mydeta = detailedstudentinBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.Endtime > date).FirstOrDefault();
+                    if (mydeta != null)
+                    {
+                        detailedStudentIns.Add(mydeta);
+                    }
+                    else
+                    {
+                        detailedList.AddRange(detailedstudentinBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.Endtime <= date).ToList());
+                    }
+                }
+             
+              
+                
+            }
+
+            foreach (var item in detailedList.OrderByDescending(a=>a.ID))
+            {
+                if (!this.Insurancerepetition(ins, item))
+                {
+                    ins.Add(item);
+                }
+            }
+            detailedList = ins;
+
+            for (int i = detailedList.Count - 1; i >= 0; i--)
+            {
+                if (detailedList.Count > 0)
+                {
+                    foreach (var item1 in detailedStudentIns)
+                    {
+                        if (item1.StudentID == detailedList[i].StudentID)
+                        {
+                            detailedList.Remove(detailedList[i]);
+                            break;
+                        }
+                    }
+                }
+            }
+            detailedStudentIns.AddRange(detailedList);
+            return detailedStudentIns;
+        }
+        /// <summary>
+        /// 获取保险及班级所有学员
+        /// </summary>
+        /// <param name="ClassID">班级id</param>
+        /// <returns></returns>
+        public List<InsuranceStudentView> InsuranceStudent(int ClassID)
+        {
+            var student = ss.ClassStudent(ClassID);
+            List<InsuranceStudentView> insuranceStudentViews = new List<InsuranceStudentView>();
+
+            detailedstudentinBusiness = new BaseBusiness<DetailedStudentIn>();
+            foreach (var item in student)
+            {
+               var x= detailedstudentinBusiness.GetList().Where(a => a.StudentID == item.StudentNumber).OrderByDescending(a => a.ID).FirstOrDefault();
+                if (x!=null)
+                {
+                    InsuranceStudentView view = new InsuranceStudentView();
+                    view.StudentID = item.StudentNumber;
+                    view.StuID= item.StudentNumber.Substring(item.StudentNumber.Length - 5);
+                    view.Name = item.Name;
+                    if (x.Endtime==null)
+                    {
+                        view.Count = 4;
+                        view.Context = "数据未更新";
+                    }else if(x.Endtime<=DateTime.Now){
+                        view.Count = 2;
+                        view.Context = x.Endtime.ToString();
+                    }
+                    else if (x.Endtime>DateTime.Now)
+                    {
+                        view.Count = 1;
+                        view.Context = x.Endtime.ToString();
+                    }
+                    insuranceStudentViews.Add(view);
+                }
+                else
+                {
+                    InsuranceStudentView view = new InsuranceStudentView();
+                    view.StudentID = item.StudentNumber;
+                    view.StuID = item.StudentNumber.Substring(item.StudentNumber.Length - 5);
+                    view.Name = item.Name;
+                    view.Count = 3;
+                    view.Context = "未购买";
+                    insuranceStudentViews.Add(view);
+                }
+               
+            }
+            return insuranceStudentViews;
+        }
+        /// <summary>
+        /// 学员保险数据添加
+        /// </summary>
+        /// <param name="insuranceStudentView">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult InsuranceAdd(InsuranceView insuranceStudentView)
+        {
+        
+            AjaxResult retus = null;
+            try
+            {
+                List<DetailedStudentIn> detaileds = new List<DetailedStudentIn>();
+                detailedstudentinBusiness = new BaseBusiness<DetailedStudentIn>();
+                string[] Student = insuranceStudentView.StudentID.Split(',');
+                foreach (var item in Student)
+                {
+                    DetailedStudentIn studentIn = new DetailedStudentIn();
+                    studentIn.StudentID = item;
+                    studentIn.Endtime = insuranceStudentView.Duedate;
+                    studentIn.Starttime = insuranceStudentView.Startdate;
+                    studentIn.Addtime = DateTime.Now;
+                    studentIn.InsurancePremium = insuranceStudentView.premium;
+                    studentIn.Remarks = insuranceStudentView.Remarks;
+                    detaileds.Add(studentIn);
+                }
+                detailedstudentinBusiness.Insert(detaileds);
+                retus = new SuccessResult();
+                retus.Success = true;
+        
+                BusHelper.WriteSysLog("保险数据添加", EnumType.LogType.添加数据);
+                retus.Msg = "操作成功";
+
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
         }
     }
 }
