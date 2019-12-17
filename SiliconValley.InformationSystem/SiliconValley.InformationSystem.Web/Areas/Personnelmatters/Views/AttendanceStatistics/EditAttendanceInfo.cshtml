@@ -172,7 +172,7 @@
 
             </div>
 
-            <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
+            <div class="layui-form-item" style="margin-left:200px;margin-top:20px;">
                 <div class="layui-input-block">
                     <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
                     <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
@@ -272,9 +272,7 @@
             //提交
             form.on('submit(demo1)', function (data) {
                 data.field.AttendanceId = $("#AttendanceId").val();
-                console.log("考勤编号1：" + $("#AttendanceId").val());
-                console.log("考勤编号2：" + data.field.AttendanceId);
-                console.log(data);
+
                 $.post("/Personnelmatters/AttendanceStatistics/EditAttendanceInfo", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
