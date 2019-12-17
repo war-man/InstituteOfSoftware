@@ -23,6 +23,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
         public string StudentNO { get; set; }
+
+        /// <summary>
+        /// 未就业原因
+        /// </summary>
         public string NoReasons { get; set; }
         public Nullable<int> EntinfoID { get; set; }
         /// <summary>

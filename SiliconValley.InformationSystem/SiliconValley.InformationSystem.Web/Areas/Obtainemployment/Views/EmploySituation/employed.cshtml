@@ -34,6 +34,7 @@
                         <label class="layui-form-label lad">学生姓名:</label>
                         <div class="layui-input-inline">
                             <input type="text" id="StudentName" class="layui-input" readonly="readonly" style="border:none" />
+                            <input type="text" name="StudentNO" id="StudentNO" class="layui-input"  style="display:none" />
                         </div>
                     </div>
 
@@ -56,7 +57,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label lad">实际薪资:</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="RealWages" class="layui-input" />
+                            <input type="text" name="RealWages" id="RealWages" class="layui-input"  lay-verify="required" autofocus="autofocus"/>
                         </div>
                     </div>
                 </div>
@@ -65,15 +66,15 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label lad">公司名称:</label>
                         <div class="layui-input-inline">
-                            <input type="text" id="EntName" class="layui-input" />
+                            <input type="text" name="EntName" id="EntName" class="layui-input" lay-verify="required|EntNameZz|EntNameOnly" @*onblur="onblurfun()"*@ />
                             <span class="iconfont icon-search search"></span>
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 disappear">
                         <label class="layui-form-label lad">公司地址:</label>
-                        <div class="layui-input-inline">
-                            <input type="text" id="EntAddress" class="layui-input" />
+                        <div class="layui-input-inline" id="EntAddressDiv">
+
                         </div>
                     </div>
                 </div>
@@ -126,25 +127,42 @@
         <input type="radio" class="raddiolala" name="EntNature" value="{{=text}}" title="{{=text}}" {{=checked}} {{=disabled}}>
     </script>
     <script type="text/template" id="muban3">
-
+        <input type="checkbox" class="duoduo" name="EntSpee" lay-filter="mycheckbox" value="{{=Id}}" title="{{=text}}" lay-skin="primary" {{=checked}} {{=disabled}}>
+    </script>
+    <script type="text/template" id="muban4">
+        <input type="text" id="EntAddress" name="EntAddress" value="{{=text}}" class="layui-input" style="border:none" readonly="readonly" />
+    </script>
+    <script type="text/template" id="muban5">
+        <input type="text" id="EntAddress" name="EntAddress" lay-verify="required" value="{{=text}}" class="layui-input" />
     </script>
     <script>
         var objdata;
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form, layer = layui.layer;
-            var info,EntScalearray,EntNaturearray,sepclist;
+            var info, EntScalearray, EntNaturearray, sepclist, entid = "", yes = false, jsenplist = new Array();
             jQuery(function () {
                 info = JSON.parse('@Html.Raw(ViewBag.obj)');
-                sepclist
-
-                    = JSON.parse('@Html.Raw(ViewBag.Sepclist)');
+                sepclist = JSON.parse('@Html.Raw(ViewBag.Sepclist)');
                 $("#StudentName").val(info.StudentName);
                 $("#classno").val(info.classno);
                 $("#Salary").val(info.Salary);
+                $("#StudentNO").val(info.StudentNO);
                 EntScalearray = $getEntScales();
                 EntNaturearray = $getEntNatures();
             });
-            $(document).off("click", '.search').on('click', '.search', function () {
+
+            //$(document).off("click", '.search').on('click', '.search', function () {
+            //    console.log('11');
+            //    loadentlist();
+            //});
+
+            //失去焦点事件
+            $(document).off("focusout", '#EntName').on('focusout', '#EntName', function () {
+                //console.log('22');
+                loadentlist();
+            });
+
+            function loadentlist(value) {
                 var value = $("#EntName").val();
                 value = value.replace(/\s*/g, '');
                 if (value.length > 0) {
@@ -165,18 +183,27 @@
                                             body.find(".filename").val(JSON.stringify(successdata.Data));
                                         },
                                         end: function () {
-                                           
-                                            loadEntScale(true)
+                                            yes = true;
+                                            entid = objdata.ID;
+                                            loadEntAddress(true);
+                                            loadEntScale(true);
                                             loadEntNature(true);
+                                            loadsepclist(true);
+
                                         }
                                     });
                                 } else {
                                     layer.msg('该公司无记录！', { icon: 6, time: 2000 }, function () {
+                                        entid = "";
+                                        yes = false;
+                                        loadEntAddress(false);
                                         loadEntScale(false);
                                         loadEntNature(false);
+                                        loadsepclist(false);
+
                                     });
                                 }
-                                 form.render();
+                                form.render();
 
                             } else {
                                 layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
@@ -195,8 +222,33 @@
                     });
                 }
 
-            });
+            }
+            //自定义验证规则
+            form.verify({
+                EntNameZz: [/^[\u4E00-\u9FA5A-Za-z]+$/, "不得输入数字，空格等特殊符号"]
+                , EntNameOnly: function (value) {
+                    var resultobj = new Object();
+                    $.ajax({
+                        type: "get",
+                        url: "/Obtainemployment/EmploySituation/isonleyname",
+                        async: false,
+                        data: { param0: value, param1: entid },
+                        success: function (data) {
+                            console.log(data);
+                            resultobj.isno = data.Success;
+                            resultobj.mes = data.Msg;
+                        },
+                        error: function () {
+                        }
+                    });
 
+                    if (!resultobj.isno) {
+                        return resultobj.mes;
+                    }
+
+                }
+
+            });
             ///加载公司规模
             function loadEntScale(iscun) {
                 $("#EntScalediv").children().remove();
@@ -205,19 +257,19 @@
                     var obj = _.template($("#muban1").html());
                     var html = "";
                     if (iscun) {
-                        if (EntScalearray[i].val ==objdata.EntScale) {
-                            html = obj({ text:  EntScalearray[i].val,checked:"checked" ,disabled:''});
+                        if (EntScalearray[i].val == objdata.EntScale) {
+                            html = obj({ text: EntScalearray[i].val, checked: "checked", disabled: '' });
                         } else {
                             html = obj({ text: EntScalearray[i].val, disabled: "disabled", checked: '' });
                         }
                     } else {
-                        if (i==0) {
-                             html = obj({ text: EntScalearray[i].val,checked:"checked" ,disabled:'' });
+                        if (i == 0) {
+                            html = obj({ text: EntScalearray[i].val, checked: "checked", disabled: '' });
                         } else {
-                             html = obj({ text: EntScalearray[i].val,checked:"" ,disabled:'' });
+                            html = obj({ text: EntScalearray[i].val, checked: "", disabled: '' });
                         }
                     }
-                   
+
                     $("#EntScalediv").append($(html));
                 }
                 form.render();
@@ -229,22 +281,137 @@
                     var obj = _.template($("#muban2").html());
                     var html = "";
                     if (iscun) {
-                        if (EntNaturearray[i].val ==objdata.EntNature) {
-                            html = obj({ text:  EntNaturearray[i].val,checked:"checked" ,disabled:''});
+                        if (EntNaturearray[i].val == objdata.EntNature) {
+                            html = obj({ text: EntNaturearray[i].val, checked: "checked", disabled: '' });
                         } else {
                             html = obj({ text: EntNaturearray[i].val, disabled: "disabled", checked: '' });
                         }
                     } else {
-                        if (i==0) {
-                             html = obj({ text: EntNaturearray[i].val,checked:"checked" ,disabled:'' });
+                        if (i == 0) {
+                            html = obj({ text: EntNaturearray[i].val, checked: "checked", disabled: '' });
                         } else {
-                             html = obj({ text: EntNaturearray[i].val,checked:"" ,disabled:'' });
+                            html = obj({ text: EntNaturearray[i].val, checked: "", disabled: '' });
                         }
                     }
-                   
+
                     $("#EntNaturediv").append($(html));
                 }
                 form.render();
+            }
+            ///加载专业
+            function loadsepclist(iscun) {
+                console.log(sepclist);
+                $("#Specialtydiv").children().remove();
+                for (var i = 0; i < sepclist.length; i++) {
+                    var obj = _.template($("#muban3").html());
+                    var html = "";
+                    if (iscun) {
+                        html = obj({ text: sepclist[i].SpecialtyName, Id: sepclist[i].Id, disabled: "disabled", checked: '' });
+                    } else {
+                        if (i == 0) {
+                            html = obj({ text: sepclist[i].SpecialtyName, Id: sepclist[i].Id, checked: "checked", disabled: '' });
+                            jsenplist.push(sepclist[i].Id);
+                        } else {
+                            html = obj({ text: sepclist[i].SpecialtyName, Id: sepclist[i].Id, checked: "", disabled: '' });
+                        }
+                    }
+
+                    $("#Specialtydiv").append($(html));
+                }
+                $('.duoduo').each(function (index) {
+                    
+                    if (yes) {
+                        var entlist = objdata.entspee.split("-");
+                        //console.log(entlist);
+                        for (var i = 0; i < entlist.length; i++) {
+                            //console.log($(this).val());
+                            //console.log(entlist[i]);
+                            if ($(this).val() == entlist[i]) {
+                                console.log('join');
+                                jsenplist.push($(this).val());
+                                $(this).attr('checked', 'checked');
+                            }
+                        }
+                    }
+
+                });
+                form.render();
+
+
+            }
+            ///加载公司地址
+            function loadEntAddress(iscun) {
+                $('#EntAddressDiv').children().remove();
+                var obj = "";
+                var html = "";
+                if (iscun) {
+                    obj = _.template($("#muban4").html());
+                    html = obj({ text: objdata.EntAddress });
+                } else {
+                    obj = _.template($("#muban5").html());
+                    html = obj({ text: "" });
+                }
+                $("#EntAddressDiv").append($(html));
+                form.render();
+            }
+            form.on('checkbox(mycheckbox)', function (data) {
+                if (data.elem.checked) {
+                   jsenplist.push(data.value);
+                } else {
+                    for (var i = jsenplist.length - 1; i >= 0; i--) {
+                        if (jsenplist[i] == data.value) {
+                            jsenplist.splice(i,1);
+                        }
+                    }
+                }
+            }); 
+            //提交
+            form.on('submit(demo1)', function (data) {
+                data.field.EntinfoID = entid;
+               
+                if (yes) {
+                    data.field.EntSpee = objdata.entspee;
+                } else {
+                    var entspee="";
+                    for (var i = 0; i < jsenplist.length; i++) {
+                        entspee = entspee + jsenplist[i] + "-";
+                    }
+                    entspee = entspee.substring(0, entspee.length - 1);
+                    data.field.EntSpee = entspee;
+                }
+                 console.log(data.field);
+                $.ajax({
+                    url: '/Obtainemployment/EmploySituation/employed',
+                    //async: false,
+                    type:'POST',
+                    data: { param0: data.field },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('录入成功！', { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+                return false;
+            });
+            $('#signout').click(function () {
+                close();
+            });
+            function close() {
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
             }
         });
     </script>

@@ -408,6 +408,7 @@
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\EmploySituationIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\employed.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\entlist.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploySituation\unemployed.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />

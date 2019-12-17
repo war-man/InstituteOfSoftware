@@ -30,7 +30,7 @@
     <div id="div1">
         <div id="topdiv">
             <div id="mystudentwhytop">
-                <form class="layui-form" action="">
+                <form class="layui-form">
                     <div class="layui-form-item">
                         <div class="layui-inline" id="mubandiv">
                             <label class="layui-form-label" id="querylable" style="width:100px">搜索选择框</label>
@@ -39,7 +39,7 @@
                                 <input type="text" name="name0" id="name0" @*lay-verify="required"*@ placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
                             </div>
 
-                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn0">搜索</button>
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn"  id="btn0" type="button" lay-filter="btn0">搜索</button>
 
                         </div>
 
@@ -66,7 +66,7 @@
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, table = layui.table;
-            var myleave,string2;
+            var string1="";
             ////初始化树
             //var myDTree = dtree.render({
             //    elem: "#demoTree",
@@ -140,14 +140,13 @@
             
             table00 = table.render({
                 elem: '#table00'
-                , url: '/Obtainemployment/EmploySituation/table00?'
+                , url: '/Obtainemployment/EmploySituation/table00'
                 , skin: 'line' //行边框风格
                 , even: true //开启隔行背景
                 , limit: 20
                 , limits: [10, 20, 30, 45, 60, 75]
                 , page: true
                 , done: function (res, curr, count) {
-                    studentdata = res.data;
                 }
                 , cols: [[ //标题栏
                     { type: 'radio' }
@@ -168,7 +167,7 @@
             //重新加载表格数据 url
             function loadtable00() {
                 table00.reload({
-                    url: '/Obtainemployment/SelfObtainRcored/table00'
+                    url: '/Obtainemployment/EmploySituation/table00'
                     , done: function (res, curr, count) {
                         //if (!isbtn) {
                         //    console.log('join');
@@ -176,7 +175,7 @@
                         //}
                     }
                     , where: {
-                        string2: string2
+                        string1: string1
                     }
                     , page: {
                         curr: 1 //重新从第 1 页开始
@@ -189,7 +188,7 @@
                 if (obj.event == 'employed') {
                     layer.open({
                         type: 2,
-                        content: "/Obtainemployment/EmploySituation/employed?param0="+data.StudentNO,
+                        content: "/Obtainemployment/EmploySituation/employed?param0=" + data.StudentNO,
                         title: "就业登记",
                         area: ['800px', '500px'],
                         success: function (layero, index) {
@@ -201,30 +200,25 @@
                         }
                     });
                 } else if (obj.event == 'unemployed') {
-                    layer.confirm('真的删除行么', function (index) {
-                        $.ajax({
-                            url: '/Obtainemployment/SelfObtainRcored/del',
-                            async: false,
-                            data: { param0: data.ID },
-                            success: function (successdata) {
-                                if (successdata.Success) {
-                                    layer.close(index);
-                                    loadtable00();
-                                } else {
-                                    layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
-
-                                    });
-                                }
-                            },
-                            error: function (errordata) {
-                                layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
-
-                                });
-                            }
-                        });
-
+                    layer.open({
+                        type: 2,
+                        content: "/Obtainemployment/EmploySituation/unemployed?param0=" + data.StudentNO,
+                        title: "未就业登记",
+                        area: ['800px', '300px'],
+                        success: function (layero, index) {
+                            //let body = layui.layer.getChildFrame('body', index);
+                            //body.find("#classnumnber").val(clickclassnumber);
+                        },
+                        end: function () {
+                            loadtable00();
+                        }
                     });
                 }
+            });
+                //提交
+            $("#btn0").click(function () {
+                string1 = $("#name0").val();
+                loadtable00();
             });
         });
     </script>

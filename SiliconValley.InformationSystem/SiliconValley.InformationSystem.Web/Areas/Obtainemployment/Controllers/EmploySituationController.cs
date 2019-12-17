@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult EstablishTree()
         {
             dbemploySituation = new EmploySituationBusiness();
-            var result=dbemploySituation.loadtree();
+            var result = dbemploySituation.loadtree();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
@@ -46,11 +46,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="page"></param>
         /// <param name="limit"></param>
-        /// <param name="leave">1为年度，2为计划</param>
         /// <param name="string1">学生编号</param>
-        /// <param name="int">eg: 2019 或者是计划id 7</param>
         /// <returns></returns>
-        public ActionResult table00(int page, int limit,  string string1)
+        public ActionResult table00(int page, int limit, string string1)
         {
             dbemploySituation = new EmploySituationBusiness();
             dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
@@ -61,28 +59,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
 
             List<EmpStaffAndStuView> data = dbempStaffAndStu.Conversioned(isJurisdiction, queryempstaff.ID);
+
             if (!string.IsNullOrEmpty(string1))
             {
-                List<string> selfobtainid = string1.Split('-').ToList();
-                for (int i = data.Count - 1; i >= 0; i--)
-                {
-                    for (int j = 0; j < selfobtainid.Count; j++)
-
-                    {
-                        if (data[i].StudentNO.ToString() != selfobtainid[j])
-                        {
-                            if (j == selfobtainid.Count - 1)
-                            {
-                                data.Remove(data[i]);
-                            }
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
+                data= data.Where(a => a.StudentName.Contains(string1)).ToList();
             }
+
             var data1 = data.OrderByDescending(a => a.Salary).Skip((page - 1) * limit).Take(limit).ToList();
             var returnObj = new
             {
@@ -100,29 +82,134 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// </summary>
         /// <param name="param0">学生编号</param>
         /// <returns></returns>
-        public ActionResult employed(string param0) {
+        public ActionResult employed(string param0)
+        {
             dbempStaffAndStu = new EmpStaffAndStuBusiness();
             dbspecialty = new SpecialtyBusiness();
-            ViewBag.Sepclist= Newtonsoft.Json.JsonConvert.SerializeObject(dbspecialty.GetSpecialties());
+            ViewBag.Sepclist = Newtonsoft.Json.JsonConvert.SerializeObject(dbspecialty.GetSpecialties());
             ViewBag.obj = Newtonsoft.Json.JsonConvert.SerializeObject(dbempStaffAndStu.studentnoconversionempstaffandstubiew(param0));
             return View();
+        }
+
+        /// <summary>
+        /// 名字是否存在
+        /// </summary>
+        /// <param name="param0">公司名字</param>
+        /// <param name="param1">公司id</param>
+        /// <returns></returns>
+        public ActionResult isonleyname(string param0, string param1)
+        {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+
+                dbenterpriseInfo = new EnterpriseInfoBusiness();
+                ajaxResult.Data = dbenterpriseInfo.isonlyname(param0, param1);
+                ajaxResult.Success = true;
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         /// <summary>
         /// 就业登记
         /// </summary>
+        /// <param name="param0"></param>
         /// <returns></returns>
-        public ActionResult employed()
+        public ActionResult employed(employed_entView param0)
         {
-            return View();
-        }
 
+
+
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                ///首先判断的是这个gongsi id 是否是有值
+                ///如果存在值，那就证明这个公司是已经有数据了，不需要进行添加，如果没有值，需要进行添加操作
+                dbemploySituation = new EmploySituationBusiness();
+                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                if (param0.EntinfoID == null)
+                {
+                    dbenterpriseInfo = new EnterpriseInfoBusiness();
+                    dbemploymentStaff = new EmploymentStaffBusiness();
+                    dbentSpee = new EntSpeeBusiness();
+                    Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                    var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+                    ///添加公司
+                    EnterpriseInfo enterprise = new EnterpriseInfo();
+                    enterprise.EmpStaffID = queryempstaff.ID;
+                    enterprise.IsCooper = false;
+                    enterprise.IsDel = false;
+                    enterprise.Remark = string.Empty;
+                    enterprise.EntAddress = param0.EntAddress;
+                    enterprise.EntContacts = string.Empty;
+                    var now = DateTime.Now;
+                    enterprise.EntDate = now;
+                    enterprise.EntName = param0.EntName;
+                    enterprise.EntNature = param0.EntNature;
+                    enterprise.EntPhone = string.Empty;
+                    enterprise.EntScale = param0.EntScale;
+                    enterprise.EntWelfare = string.Empty;
+                    dbenterpriseInfo.Insert(enterprise);
+
+
+                    ///查询刚刚添加的数据
+                    dbenterpriseInfo = new EnterpriseInfoBusiness();
+                    EnterpriseInfo queryobj = dbenterpriseInfo.GetNoCooAll().Where(a => a.EntDate.ToString() == now.ToString()).FirstOrDefault();
+
+                    ///修改参数param0 的公司id
+                    param0.EntinfoID = queryobj.ID;
+
+                    ///添加该公司的专业
+                    List<string> list = param0.EntSpee.Split('-').ToList();
+                    foreach (var item in list)
+                    {
+                        EntSpee entSpee = new EntSpee();
+                        entSpee.EntID = queryobj.ID;
+                        entSpee.IsDel = false;
+                        entSpee.SpeeDate = DateTime.Now;
+                        entSpee.SpeID = int.Parse(item);
+                        dbentSpee.Insert(entSpee);
+                    }
+                }
+
+                ///添加就业情况
+                EmploySituation employSituation = new EmploySituation();
+                employSituation.EntinfoID = param0.EntinfoID;
+                employSituation.Date = DateTime.Now;
+                employSituation.IsDel = false;
+                employSituation.RealWages = param0.RealWages;
+                employSituation.Remark = string.Empty;
+                employSituation.StudentNO = param0.StudentNO;
+                dbemploySituation.Insert(employSituation);
+
+                ///修改这个专员带学生记录 改为已就业
+                var query = dbempStaffAndStu.GetIsingBystudentno(param0.StudentNO);
+                query.EmploymentState = 2;
+                dbempStaffAndStu.Update(query);
+                ajaxResult.Success = true;
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+
+
+
+        }
         /// <summary>
         /// 搜索公司
         /// </summary>
         /// <param name="param0">公司名称</param>
         /// <returns></returns>
-        public ActionResult getentlist(string param0) {
+        public ActionResult getentlist(string param0)
+        {
             AjaxResult ajaxResult = new AjaxResult();
             try
             {
@@ -149,26 +236,68 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
         }
 
-        public ActionResult entlist() {
+        public ActionResult entlist()
+        {
             return View();
         }
         [HttpGet]
         /// <summary>
-        /// 就业登记
+        /// 未就业登记
         /// </summary>
         /// <returns></returns>
-        public ActionResult unemployed(int param0)
+        public ActionResult unemployed(string param0)
         {
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+            ViewBag.obj = Newtonsoft.Json.JsonConvert.SerializeObject(dbempStaffAndStu.studentnoconversionempstaffandstubiew(param0));
             return View();
         }
         [HttpPost]
         /// <summary>
-        /// 就业登记
+        ///未 就业登记
         /// </summary>
         /// <returns></returns>
-        public ActionResult unemployed()
+        public ActionResult unemployed(EmploySituation param0)
         {
-            return View();
+
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                ///添加未就业情况
+                
+                dbemploySituation = new EmploySituationBusiness();
+                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                param0.Date = DateTime.Now;
+                param0.IsDel = false;
+                dbemploySituation.Insert(param0);
+
+                ///修改分配记录 这个学生没人带了
+               var query=  dbempStaffAndStu.GetIsingBystudentno(param0.StudentNO);
+                query.Ising = false;
+                dbempStaffAndStu.Update(query);
+
+                ///添加一个数据 变成第二次就业数据
+                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                EmpStaffAndStu empStaffAndStu = new EmpStaffAndStu();
+                empStaffAndStu.Date = DateTime.Now;
+                empStaffAndStu.EmploymentStage = 2;
+                empStaffAndStu.EmploymentState = 3;
+                empStaffAndStu.IsDel = false;
+                empStaffAndStu.Ising = false;
+                empStaffAndStu.QuarterID = query.QuarterID;
+                empStaffAndStu.Remark = "登记为未就业学生";
+                empStaffAndStu.Studentno = param0.StudentNO;
+                dbempStaffAndStu.Insert(empStaffAndStu);
+
+                ajaxResult.Success = true;
+            }
+            catch (Exception)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+         
+
         }
     }
 }
