@@ -1,0 +1,156 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>User_RoelManage</title>
+
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+    </style>
+</head>
+<body>
+    <input type="hidden" id="userId" value="@ViewBag.user.UserId" />
+    <div id="mywarp">
+
+        <h2 style=" margin-top:10px; text-align:center;">用户名：@ViewBag.user.UserName</h2>
+        <hr />
+
+        <div style="margin-top:30px;" id="test3" class="demo-transfer"></div>
+
+        <hr />
+        <div id="btns" style="text-align:center;margin-top:20px;">
+            <button style="width:150px;" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="commit" id="commit" type="button">提交</button>
+
+            <button style="width:150px;" class="layui-btn layui-btn-primary" id="close" type="button">关闭</button>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(['transfer', 'layer'], function () {
+
+            var transfer = layui.transfer;
+            var layer = layui.layer;
+
+            function initData() {
+
+                var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                //获取用户ID
+
+                var userId = $("#userId").val();
+
+                function roleChanage(data, index) {
+                    console.log(data);
+                    console.log(index);
+                }
+
+                //发送请求
+                $.post('/BaseSysManage/Base_UserRole/UserRoleManageData', { userId: userId }, function (result) {
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.close(loadIndex); //关闭加载层
+
+
+                        //获取拥有的角色ID
+                        var haveRole_arry = new Array();
+
+                        for (var i = 0; i < result.Data.havelist.RoleIdList.length; i++) {
+                            haveRole_arry.push(result.Data.havelist.RoleIdList[i]);
+                        }
+
+                        
+                        //渲染
+
+                        //显示搜索框
+                        transfer.render({
+                            elem: '#test3'
+                            , data: result.Data.alllist
+                            , title: ['未拥有角色', '拥有角色']
+                            , showSearch: true
+                            , value: haveRole_arry
+                            , onchange: roleChanage
+                            ,id:"rolelist"
+
+                        });
+                    }
+                    else {
+                        layer.close(loadIndex); //关闭加载层
+                        layer.msg('数据初始化失败！', { icon: 2 }, function () {
+
+                           
+                        });
+
+                    }
+
+
+                });
+
+            }
+
+            //初始化数据
+            initData()
+
+            //提交
+            $("#commit").click(function () {
+
+                var getData = transfer.getData('rolelist'); 
+
+                layer.confirm('确认对该账号进行角色变动?', { icon: 3, title: '提示' }, function (index) {
+                    //do something
+                    var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                    layer.close(index);
+                    var userId = $("#userId").val();
+
+                    var rolelist = new Array();
+
+                    for (var i = 0; i < getData.length; i++) {
+                        rolelist.push(getData[i].value);
+                    } 
+
+                    //发送请求
+                    $.post('/BaseSysManage/Base_UserRole/SetUserRoles', { userId: userId, roleIdlist: rolelist }, function (result) {
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.close(loadIndex); //关闭加载层
+                            layer.msg('设置成功！', { icon: 1 }, function () {
+
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index); //再执行关闭
+
+                            });
+                        }
+
+                        else {
+                            layer.close(loadIndex); //关闭加载层
+                            layer.msg('服务器异常！', { icon: 2 }, function () {
+                                
+
+                            });
+                        }
+
+                    });
+
+                });
+
+            });
+
+            $("#close").click(function () {
+
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            });
+
+
+        });
+    </script>
+</body>
+</html>

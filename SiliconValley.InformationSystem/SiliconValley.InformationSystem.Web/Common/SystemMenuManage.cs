@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Web
 
         #region 私有成员
 
-        private static string _configFile { get; } = "~/Config/SystemMenu.config";
+        public static string _configFile { get; } = "~/Config/SystemMenu.config";
         private static List<Menu> _allMenu { get; set; }
         private static void InitAllMenu()
         {
@@ -137,6 +137,62 @@ namespace SiliconValley.InformationSystem.Web
                     aMenu.IsShow = false;
             });
         }
+
+
+        /// <summary>
+        /// 获取最后一层菜单
+        /// </summary>
+        /// <returns></returns>
+        public static List<Menu> lastMenu(Menu menu, List<Menu> remenus)
+        {
+            Menu menus = new Menu();
+
+            if (menu.SubMenus != null)
+            {
+                foreach (var item in menu.SubMenus)
+                {
+                    if (item.Permission != null)
+                    {
+                        remenus.Add(item);
+
+                        
+                    }
+                    lastMenu(item, remenus);
+                }
+            }
+            
+
+            return remenus;
+        }
+
+        public static Menu ParentMenu(Menu menu, List<Menu> remenus)
+        {
+            Menu menus = new Menu();
+
+            foreach (var item in remenus)
+            {
+                List<Menu> temp = new List<Menu>();
+               var templist = lastMenu(item, temp);
+
+                foreach (var item1 in templist)
+                {
+                    if (item1.Permission == menu.Permission)
+                    {
+                        menus = item;
+                        break;
+                    }
+                }
+            }
+
+            return menus;
+
+            
+        }
+
+       
+
+
+      
 
         private static string GetUrl(string virtualUrl)
         {

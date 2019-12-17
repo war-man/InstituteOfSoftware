@@ -75,31 +75,33 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             //DataSet ds = new DataSet();
             //adapter.Fill(ds);
 
-           // DataTable user = ds.Tables[0];
+           //// DataTable user = ds.Tables[0];
 
-            List<users> users = new List<users>();
-            users.Add(new users() { ID = 1, name = "唐敏", age = 19, birthday = "2000-08-24".ToDateTime() });
-            users.Add(new users() { ID = 1, name = "唐da敏", age = 19, birthday = "2000-08-24".ToDateTime() });
-            users.Add(new users() { ID = 1, name = "唐xiao敏", age = 19, birthday = "2000-08-24".ToDateTime() });
-            users.Add(new users() { ID = 1, name = "唐mm敏", age = 19, birthday = "2000-08-24".ToDateTime() });
-            DataTable user = users.ToDataTable<users>();
-            var userbaty = AsposeOfficeHelper.DataTableToExcelBytes(user);
+           // List<users> users = new List<users>();
+           // users.Add(new users() { ID = 1, name = "唐敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+           // users.Add(new users() { ID = 1, name = "唐da敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+           // users.Add(new users() { ID = 1, name = "唐xiao敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+           // users.Add(new users() { ID = 1, name = "唐mm敏", age = 19, birthday = "2000-08-24".ToDateTime() });
+           // DataTable user = users.ToDataTable<users>();
+           // var userbaty = AsposeOfficeHelper.DataTableToExcelBytes(user);
 
            
-            int rowNumber = user.Rows.Count;
-            int columnNumber = user.Columns.Count;
-            int colIndex = 0;
-            if (rowNumber == 0)
-            {
+           // int rowNumber = user.Rows.Count;
+           // int columnNumber = user.Columns.Count;
+           // int colIndex = 0;
+           // if (rowNumber == 0)
+           // {
 
-                return Content("d"); ;
-            }
+           //     return Content("d"); ;
+           // }
             
 
             //建立Excel对象 
             Microsoft.Office.Interop.Excel.Application excel = new Microsoft.Office.Interop.Excel.Application();
             
+
             excel.Application.Workbooks.Add(true);
+            
             //excel.Application.Workbooks.Open()
             excel.Visible = true;//是否打开该Excel文件 
 
@@ -116,20 +118,20 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             var jj= ojb["user"].ToString();
 
             JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
-            //生成字段名称 
-            foreach (DataColumn col in user.Columns)
-            {
-                colIndex++;
-                excel.Cells[1, colIndex] = jo[col.ColumnName] ;
-            }
+            ////生成字段名称 
+            //foreach (DataColumn col in user.Columns)
+            //{
+            //    colIndex++;
+            //    excel.Cells[1, colIndex] = jo[col.ColumnName] ;
+            //}
 
             //填充数据 
-            for (int c = 1; c <=rowNumber; c++)
+            for (int c = 1; c <=3; c++)
             {
 
-                for (int j = 0; j < columnNumber; j++)
+                for (int j = 0; j < 3; j++)
                 {
-                    excel.Cells[c + 1, j + 1] = user.Rows[c-1].ItemArray[j];
+                    var ss = excel.Cells[c + 1, j + 1];
                 }
             }
 
@@ -188,23 +190,40 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
         }
 
+        public ActionResult rtest()
+        {
+            return View();
+        }
+
         public ActionResult insert()
         {
-            string filename= SessionHelper.Session["url"].ToString();
-            DataTable table= AsposeOfficeHelper.ReadExcel(Server.MapPath(@"\uploadXLSXfile\" + filename));
+            
+            DataTable table= AsposeOfficeHelper.ReadExcel(Server.MapPath("/uploadXLSXfile/湖南硅谷云教育科技有限公司_考勤报表_20191101-20191130(1).xlsx"));
 
             SqlConnection con = new SqlConnection("server=.;database=exsil;uid=sa;pwd=123;");
 
             con.Open();
             SqlBulkCopy sqlBulkCopy = new SqlBulkCopy(con);
 
-            sqlBulkCopy.DestinationTableName = "users";
+            List<string> arry = new List<string> {"1","2","3","4","5","六","日","姓名","部门"};
 
+            sqlBulkCopy.DestinationTableName = "users";
             sqlBulkCopy.BatchSize = table.Rows.Count;
-            sqlBulkCopy.ColumnMappings.Add("序号", "ID");
-            sqlBulkCopy.ColumnMappings.Add("姓名", "name");
-            sqlBulkCopy.ColumnMappings.Add("年龄", "age");
-            sqlBulkCopy.ColumnMappings.Add("生日", "birthday");
+            foreach (var item in arry)
+            {
+                try
+                {
+                    sqlBulkCopy.ColumnMappings.Add(item, Guid.NewGuid().ToString());
+                }
+                catch (Exception)
+                {
+
+                    
+                }
+               
+                
+            }
+
 
             sqlBulkCopy.WriteToServer(table);
 

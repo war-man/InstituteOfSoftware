@@ -200,6 +200,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\BaseSysManage\BaseSysManageAreaRegistration.cs" />
+    <Compile Include="Areas\BaseSysManage\Controllers\Base_PermissionController.cs" />
     <Compile Include="Areas\BaseSysManage\Controllers\Base_UserRoleController.cs" />
     <Compile Include="Areas\Base_SysManage\Base_SysManageAreaRegistration.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\Base_AppSecretController.cs" />
@@ -308,6 +309,7 @@
     <Compile Include="Areas\Teaching\Controllers\StudentHomeWorkController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
+    <Compile Include="Common\layuitree.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -774,13 +776,17 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Config\NingboGeojson.json" />
-    <Content Include="Config\Permission.config" />
+    <Content Include="Config\Permission.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Config\Province.json" />
     <Content Include="Config\system.config" />
     <Content Include="Config\SystemMenu.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Config\UrlPermission.config" />
+    <Content Include="Config\UrlPermission.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\Base_SysManage\Views\web.config" />
     <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Form.cshtml" />
     <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Index.cshtml" />
@@ -1226,6 +1232,10 @@
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\AccountIndex.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\createAccount.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\selectEmp.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\createRole.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\UserRoelManage.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\RoleUrlPermiss.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\MenuPermissionIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2834,6 +2844,8 @@
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~HEAD" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
     <Content Include="uploadXLSXfile\Sheet1.xlsx" />
+    <Content Include="uploadXLSXfile\湖南硅谷云教育科技有限公司_考勤报表_20191101-20191130%281%29.xlsx" />
+    <Content Include="Views\Home\rtest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

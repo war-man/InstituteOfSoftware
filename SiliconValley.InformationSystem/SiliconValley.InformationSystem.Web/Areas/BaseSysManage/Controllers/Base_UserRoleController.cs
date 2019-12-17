@@ -15,18 +15,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Util;
 
+    [CheckLogin]
     public class Base_UserRoleController : Controller
     {
 
         private readonly Base_UserBusiness db_user;
-
+        private readonly Base_SysRoleBusiness db_role;
         public Base_UserRoleController()
         {
             db_user = new Base_UserBusiness();
+            db_role = new Base_SysRoleBusiness();
         }
 
 
         // GET: BaseSysManage/Base_UserRole
+
+
+        /// <summary>
+        /// 角色管理
+        /// </summary>
+        /// <returns></returns>
         public ActionResult RoleIndex()
         {
             return View();
@@ -39,6 +47,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         /// <returns></returns>
         public ActionResult AccountIndex()
         {
+         
             return View();
         }
 
@@ -232,5 +241,326 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
 
         }
+
+
+        /// <summary>
+        /// 角色数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RoleData(int page, int limit, string roleName)
+        {
+            List<Base_SysRole> rolelist = new List<Base_SysRole>();
+
+            if (roleName ==null)
+            {
+                //获取全部数据
+                rolelist.AddRange(db_role.GetList().ToList());
+
+            }
+            else
+            {
+                rolelist.AddRange(db_role.GetList().ToList().Where(d=>d.RoleName.Contains(roleName)).ToList());
+            }
+
+
+            var skiplist = rolelist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            var obj = new {
+                code = 0,
+                msg="",
+                count = rolelist.Count,
+                data = skiplist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 创建角色 
+        /// </summary>
+        /// <returns></returns>
+        /// []
+        /// 
+        [HttpGet]
+        public ActionResult createRole()
+        {
+            return View();
+        }
+
+
+
+       /// <summary>
+       /// 创建角色
+       /// </summary>
+       /// <param name="roleName">角色名称</param>
+       /// <param name="businessName">业务名称</param>
+       /// <returns></returns>
+        [HttpPost]
+        public ActionResult createRole(string roleName, string businessName)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                result = db_role.createRole(roleName, businessName);
+
+                
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "服务器异常";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+        /// <summary>
+        /// 用户角色管理
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UserRoelManage(string userId)
+        {
+            //获取用户
+           var user = db_user.GetList().Where(d => d.UserId == userId).FirstOrDefault();
+
+            ViewBag.user = user;
+
+            return View();
+        }
+
+
+        /// <summary>
+        /// 用户角色数据
+        /// </summary>
+        /// <param name="userId">用户ID</param>
+        /// <returns></returns>
+        public ActionResult UserRoleManageData(string userId)
+        {
+            AjaxResult result = new AjaxResult();
+            try
+            {
+                //获取所有角色
+                var allrolelist = db_role.GetList();
+
+                List<object> allrolelist_obj = new List<object>();
+
+                ///转换数据类型
+                foreach (var item in allrolelist)
+                {
+                    var temp = new {
+
+                        value = item.RoleId,
+                        title = item.RoleName
+                    };
+
+                    allrolelist_obj.Add(temp);
+                }
+
+                //获取用户的角色
+                var HaveRolelis = Base_UserBusiness.GetTheUser(userId);
+
+
+                var tempobj = new {
+                    alllist = allrolelist_obj,
+                    havelist = HaveRolelis
+                };
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = tempobj;
+
+                
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+        /// <summary>
+        /// 给账户授予角色
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="roleIdlist"></param>
+        /// <returns></returns>
+
+
+         [HttpPost]
+        public ActionResult SetUserRoles(string userId, List<string> roleIdlist)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                //首先排除掉账号所拥有的角色
+                //List<string> WillsetRolelist = new List<string>();
+
+                //var currentHaverolelist = Base_UserBusiness.GetUserRoleIds(userId);
+
+                //foreach (var item in roleIdlist)
+                //{
+                //    //判断是否已经拥有了该角色
+                //    if (!db_user.IsContains(currentHaverolelist, item))
+                //    {
+                //        WillsetRolelist.Add(item);
+                //    }
+                //}
+
+                db_user.SetUserRole(userId, roleIdlist);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 角色菜单配置
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult RoleUrlPermiss(string roleId)
+        {
+            //获取角色
+            var role = db_role.GetList().Where(d=>d.RoleId == roleId).FirstOrDefault();
+            ViewBag.role = role;
+            return View();
+
+        }
+
+
+
+        [HttpPost]
+        public ActionResult RoleUrlPermissData(string roleId)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var RoleTempPermisslist = db_role.RolePermission(roleId);
+
+                List<PermissionModule> RolePermisslist = new List<PermissionModule>();
+
+                var allpermisslist = PermissionManage.GetAllPermissionModules();
+
+                List<Common.layuitree> treelist = new List<Common.layuitree>();
+
+                foreach (var item in RoleTempPermisslist)
+                {
+                    //加载第一层
+                    Common.layuitree firsttree = new Common.layuitree();
+
+                    firsttree.field = item.Value;
+                    firsttree.title = item.Name;
+                    firsttree.id = item.Value;
+                    //加载第二ceng
+                    foreach (var item1 in item.Items)
+                    {
+                        Common.layuitree secondtree = new Common.layuitree();
+
+                        secondtree.field = item1.Value;
+                        secondtree.title = item1.Name;
+                        secondtree.id = item.Value+item1.Value;
+                        //判断是否有该权限
+                        var ischeck = false;
+
+                        if (item1.IsChecked == true)
+                        {
+                            ischeck = true;
+                            firsttree.spread = true;
+                        }
+
+                        
+                        secondtree.@checked = ischeck;
+
+                        firsttree.children.Add(secondtree);
+                    }
+
+                    treelist.Add(firsttree);
+                }
+
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = treelist;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+            
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 给角色配置菜单
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SetPermissToRole(string roleId, List<Common.layuitree> permisslist)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                List<string> WillsetPermisslist = new List<string>();
+
+                foreach (var item in permisslist)
+                {
+                    foreach (var item1 in item.children)
+                    {
+                        WillsetPermisslist.Add(item.field+"."+item1.field);
+                    }
+                }
+
+                db_role.SavePermission(roleId, WillsetPermisslist);
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+
+       
     }
 }
