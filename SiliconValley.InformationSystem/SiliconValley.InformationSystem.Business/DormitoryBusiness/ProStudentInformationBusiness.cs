@@ -1,4 +1,5 @@
 ﻿using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private ProScheduleForTrainees dbproScheduleForTrainees;
         private ProHeadClass dbproHeadClass;
         private ProHeadmaster dbheadmaster;
+        private EmploymentStaffBusiness dbemploymentStaff;
+        private EmpClassBusiness dbempClass;
         /// <summary>
         /// 获取所有的在校生
         /// </summary>
@@ -59,6 +62,31 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
           
         }
+        /// <summary>
+        /// 根据学会编号获取就业班主任班主任
+        /// </summary>
+        /// <param name="StudentNumber"></param>
+        /// <returns></returns>
+        public EmployeesInfo GetEEmpinfoByStudentNumber(string StudentNumber)
+        {
+            dbemp = new EmployeesInfoManage();
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            dbempClass = new EmpClassBusiness();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+             var obj0 = dbproScheduleForTrainees.GetTraineesByStudentNumber(StudentNumber);
 
+            var obj1 = dbempClass.GetStaffByClassid(obj0.ID_ClassName);
+            if (obj1 != null)
+            {
+                return dbemploymentStaff.GetEmpInfoByEmpID(obj1.ID);
+            }
+            else
+            {
+                EmployeesInfo emppp = new EmployeesInfo();
+                emppp.EmpName = "该班级暂未有班主任";
+                return emppp;
+            }
+
+        }
     }
 }

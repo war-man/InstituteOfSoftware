@@ -107,8 +107,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     ///判断这个学生是否出现过在第一阶段中 如果有变成第二阶段 如果没有就是第一阶段
                     ///第一次是员工A 转交给员工B 之后B搞不定又转交给A
 
-
-
                     var obj1 = dbempStaffAndStu.GetStage1Bystudentno(item.Studentno);
                     var obj2 = dbempStaffAndStu.GetStage2Bystudentno(item.Studentno);
                     if (obj1.EmpStaffID == param0.EmpStaffID)

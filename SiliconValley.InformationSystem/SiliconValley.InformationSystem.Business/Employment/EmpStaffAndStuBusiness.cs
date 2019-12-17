@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.Employment
 {
-    public class EmpStaffAndStuBusiness:BaseBusiness<EmpStaffAndStu>
+    public class EmpStaffAndStuBusiness : BaseBusiness<EmpStaffAndStu>
     {
         private StudentIntentionBusiness dbstudentIntention;
         private EmploymentAreasBusiness dbemploymentAreas;
@@ -17,24 +17,58 @@ namespace SiliconValley.InformationSystem.Business.Employment
         private ProStudentInformationBusiness dbproStudentInformation;
         private ProClassSchedule dbproClassSchedule;
         private QuarterBusiness dbquarter;
+        private EmploySituationBusiness dbemploySituation;
+        private EmploymentStaffBusiness dbemploymentStaff;
         /// <summary>
         /// 返回全部可用的专员带学生就业信息
         /// </summary>
         /// <returns></returns>
         public List<EmpStaffAndStu> GetEmpStaffAndStus() {
-           return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
-        
         /// <summary>
-        /// 获取员工带学生带ing的记录
+        /// 返回正在就业的记录
+        /// </summary>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmploymentState1()
+        {
+            return this.GetEmpStaffAndStus().Where(a => a.EmploymentState == 1).ToList();
+        }
+        /// <summary>
+        /// 返回已经就业的记录
+        /// </summary>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmploymentState2()
+        {
+            return this.GetEmpStaffAndStus().Where(a => a.EmploymentState == 2).ToList();
+        }
+        /// <summary>
+        /// 返回未就业的记录
+        /// </summary>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmploymentState3()
+        {
+            return this.GetEmpStaffAndStus().Where(a => a.EmploymentState == 3).ToList();
+        }
+        /// <summary>
+        /// 获取正在带的学生带ing的记录
         /// </summary>
         /// <returns></returns>
         public List<EmpStaffAndStu> Getising()
         {
-            return this.GetEmpStaffAndStus().Where(a => a.Ising == true).ToList();
-        }
 
+            return this.GetEmploymentState1().Where(a => a.Ising == true).ToList();
+        }
+        /// <summary>
+        /// 获取正在带的学生带ing的记录
+        /// </summary>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetisingByempid(int empid)
+        {
+
+            return this.Getising().Where(a => a.EmpStaffID == empid).ToList();
+        }
         /// <summary>
         /// 获取阶段为1的记录
         /// </summary>
@@ -96,12 +130,12 @@ namespace SiliconValley.InformationSystem.Business.Employment
                         data.RemoveAt(i);
                     }
                 }
-                
+
             }
             return data.FirstOrDefault();
         }
 
-      
+
 
 
         /// <summary>
@@ -111,21 +145,18 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public bool isdistribution(string studentno) {
             bool result = false;
-            if (this.GetEmpStaffAndStus().Where(a => a.Studentno == studentno).FirstOrDefault()!=null)
+            if (this.GetEmpStaffAndStus().Where(a => a.Studentno == studentno).FirstOrDefault() != null)
             {
                 result = true;
             }
             return result;
         }
-
-        
-
         /// <summary>
         /// 根据学生编号返回这个学生未就业就业分配
         /// </summary>
         /// <returns></returns>
         public EmpStaffAndStu GetEmploymentState3ByStudentno(string studentno) {
-           return this.GetEmploymentState3().Where(a=> a.Studentno == studentno).FirstOrDefault();
+            return this.GetEmploymentState3().Where(a => a.Studentno == studentno).FirstOrDefault();
         }
 
         /// <summary>
@@ -141,7 +172,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             dbquarter = new QuarterBusiness();
             dbproStudentInformation = new ProStudentInformationBusiness();
             List<EmpStaffAndStuView> stuViews = new List<EmpStaffAndStuView>();
-           var data= this.GetEmploymentState3();
+            var data = this.GetEmploymentState3();
 
             var list1 = dbstudentIntention.GetnodistributionIntentions();
             foreach (var item in data)
@@ -151,12 +182,12 @@ namespace SiliconValley.InformationSystem.Business.Employment
             foreach (var item in list1)
             {
                 EmpStaffAndStuView view = new EmpStaffAndStuView();
-               ScheduleForTrainees Trainees= dbproScheduleForTrainees.GetTraineesByStudentNumber(item.StudentNO);
+                ScheduleForTrainees Trainees = dbproScheduleForTrainees.GetTraineesByStudentNumber(item.StudentNO);
                 view.classno = Trainees.ClassID;
                 view.Areaname = dbemploymentAreas.GetEntity(item.AreaID).AreaName;
                 view.AreaID = item.AreaID;
                 EmpStaffAndStu queryobj = this.GetEmpStaffAndStuingBystudentno(item.StudentNO);
-                if (queryobj!=null)
+                if (queryobj != null)
                 {
                     view.EmploymentStage = "第二次就业";
                     view.ID = queryobj.ID;
@@ -173,7 +204,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 view.StudentNO = item.StudentNO;
                 stuViews.Add(view);
             }
-            
+
             return stuViews;
         }
 
@@ -183,31 +214,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <returns></returns>
         public List<EmpStaffAndStu> GetEmploymentState1ByEmpid(int empid) {
-           return this.Getising().Where(a => a.EmpStaffID == empid).ToList();
-        }
-
-        /// <summary>
-        /// 返回正在就业的记录
-        /// </summary>
-        /// <returns></returns>
-        public List<EmpStaffAndStu> GetEmploymentState1() {
-           return this.GetEmpStaffAndStus().Where(a => a.EmploymentState == 1).ToList();
-        }
-        /// <summary>
-        /// 返回已经就业的记录
-        /// </summary>
-        /// <returns></returns>
-        public List<EmpStaffAndStu> GetEmploymentState2()
-        {
-            return this.GetEmpStaffAndStus().Where(a => a.EmploymentState == 2).ToList();
-        }
-        /// <summary>
-        /// 返回未就业的记录
-        /// </summary>
-        /// <returns></returns>
-        public List<EmpStaffAndStu> GetEmploymentState3()
-        {
-            return this.GetEmpStaffAndStus().Where(a => a.EmploymentState == 3).ToList();
+            return this.Getising().Where(a => a.EmpStaffID == empid).ToList();
         }
 
         /// <summary>
@@ -217,6 +224,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public EmpStaffAndStuView studentnoconversionempstaffandstubiew(string studentno)
         {
+            dbemploymentStaff = new EmploymentStaffBusiness();
             dbproScheduleForTrainees = new ProScheduleForTrainees();
             dbemploymentAreas = new EmploymentAreasBusiness();
             dbstudentIntention = new StudentIntentionBusiness();
@@ -232,14 +240,161 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
             view.EmploymentStage = queryobj.EmploymentStage == 1 ? "第一次就业" : "第二次就业";
             view.ID = queryobj.ID;
-
             view.QuarterID = intention.QuarterID;
             view.Quartertitle = dbquarter.GetEntity(intention.QuarterID).QuaTitle;
             view.Salary = intention.Salary;
             view.StudentName = dbproStudentInformation.GetEntity(studentno).Name;
             view.StudentNO = studentno;
+            EmployeesInfo employeesInfo= dbproStudentInformation.GetEEmpinfoByStudentNumber(studentno);
+            view.empname = employeesInfo.EmpName;
+
+            switch (queryobj.EmploymentState)
+            {
+                case 1:
+                    view.EmploymentState = "就业中";
+                    break;
+                case 2:
+                    view.EmploymentState = "已就业";
+                    break;
+                case 3:
+                    view.EmploymentState = "未就业";
+                    break;
+            }
             return view;
         }
 
+        /// <summary>
+        /// 根据就业专员id 跟计划id 返回出这个带学生数据
+        /// </summary>
+        /// <param name="QuarterID"></param>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetAllByQuarter(int QuarterID, int empid)
+        {
+            List<EmpStaffAndStu> data = this.GetEmploymentState1ByEmpid(empid);
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                if (data[i].QuarterID != QuarterID)
+                {
+                    data.RemoveAt(i);
+                }
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// 根据计划id 返回全部的数据
+        /// </summary>
+        /// <param name="QuarterID"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetAllByQuarter(int QuarterID) {
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            List<EmploymentStaff> emplist = dbemploymentStaff.GetALl();
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            foreach (var item in emplist)
+            {
+                result.AddRange(this.GetAllByQuarter(QuarterID, item.ID));
+            }
+            return result;
+        }
+        /// <summary>
+        /// 根据年度获取员工数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetAllByYear(int year, int empid)
+        {
+            dbquarter = new QuarterBusiness();
+            List<Quarter> data = dbquarter.GetQuartersByYear(year);
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            foreach (var item in data)
+            {
+                result.AddRange(this.GetAllByQuarter(item.ID, empid));
+            }
+            return result;
+        }
+        /// <summary>
+        /// 根据年度获取全部数据
+        /// </summary>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetAllByYear(int year) {
+            dbquarter = new QuarterBusiness();
+            List<Quarter> data = dbquarter.GetQuartersByYear(year);
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            foreach (var item in data)
+            {
+                result.AddRange(this.GetAllByQuarter(item.ID));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 将集合EmpStaffAndStu 转化为结合EmpStaffAndStuVIew
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStuView> EmpStaffAndStuConversionEmpStaffAndStuView(List<EmpStaffAndStu> data) {
+            List<EmpStaffAndStuView> result = new List<EmpStaffAndStuView>();
+            foreach (var item in data)
+            {
+                result.Add(this.studentnoconversionempstaffandstubiew(item.Studentno));
+            }
+            return result;
+        }
+
+
+        /// <summary>
+        /// 获取该专员该季度带学生转化过后i的数据
+        /// </summary>
+        public List<EmpStaffAndStuView> Conversioned(int QuarterID, int empid)
+        {
+            List<EmpStaffAndStu> data = this.GetAllByQuarter(QuarterID, empid);
+            return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
+        }
+        /// <summary>
+        /// 获取该季度带学生转化过后i的数据
+        /// </summary>
+        public List<EmpStaffAndStuView> Conversioned(int QuarterID)
+        {
+            List<EmpStaffAndStu> data = this.GetAllByQuarter(QuarterID);
+            return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
+        }
+        /// <summary>
+        /// 获取该专员该年度带学生转化过后i的数据
+        /// </summary>
+        public List<EmpStaffAndStuView> Conversioned(string year, int empid)
+        {
+            int paramyear = int.Parse(year);
+            List<EmpStaffAndStu> data = this.GetAllByYear(paramyear,empid);
+            return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
+        }
+        /// <summary>
+        /// 获取年度带学生转化过后i的数据
+        /// </summary>
+        public List<EmpStaffAndStuView> Conversioned(string year)
+        {
+            int paramyear = int.Parse(year);
+            List<EmpStaffAndStu> data = this.GetAllByYear(paramyear);
+            return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
+        }
+
+        /// <summary>
+        /// 获取正在带带学生转化过后i的数据
+        /// </summary>
+        public List<EmpStaffAndStuView> Conversioned(bool isJurisdiction,int empid)
+        {
+            List<EmpStaffAndStu> data = new List<EmpStaffAndStu>();
+            if (isJurisdiction)
+            {
+                data = this.Getising();
+            }
+            else
+            {
+                data = this.GetisingByempid(empid);
+            }
+            
+            return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
+        }
     }
 }

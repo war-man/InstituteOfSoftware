@@ -19,9 +19,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
        [Key]
         public int ID { get; set; }
-        public Nullable<int> IntID { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
+        public string StudentNO { get; set; }
+        public string NoReasons { get; set; }
+        public Nullable<int> EntinfoID { get; set; }
+        /// <summary>
+        /// 实际工资
+        /// </summary>
+        public string RealWages { get; set; }
     }
 }

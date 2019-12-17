@@ -18,6 +18,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         private ProScheduleForTrainees dbproScheduleForTrainees;
         private SurveyRecordsBusiness dbsurveyRecords;
         private CDInterviewBusiness dbCDInterview;
+        private EmploymentStaffBusiness dbemploymentStaff;
         /// <summary>
         /// 获取所有的专员带班记录
         /// </summary>
@@ -379,5 +380,17 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public EmpClass GetEmpClassByclassid(int classid) {
           return  this.GetIQueryable().Where(a => a.IsDel == false).Where(a => a.ClassId == classid).FirstOrDefault();
         }
+
+        /// <summary>
+        /// 根据班级编号返回就业员工
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public EmploymentStaff GetStaffByClassid(int classid) {
+            EmpClass empClass= this.GetEmpClassByclassid(classid);
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            return dbemploymentStaff.GetEntity(empClass.EmpStaffID);
+        }
+        
     }
 }

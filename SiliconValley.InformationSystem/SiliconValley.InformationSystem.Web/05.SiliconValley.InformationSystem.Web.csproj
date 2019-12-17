@@ -269,6 +269,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\EmploySituationController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmpStaffAndStuController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\QuarterController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SelfObtainRcoredController.cs" />
@@ -398,11 +399,15 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmpStaffAndStu\EmpStaffAndStuIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\edit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploySituation\EmploySituationIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploySituation\employed.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploySituation\entlist.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -1150,6 +1155,7 @@
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1801TA刘雨欣.jpg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
+    <Content Include="xmlfile\entxml.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />

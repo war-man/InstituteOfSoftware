@@ -25,6 +25,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         public string StudentName { get; set; }
         public string StudentNO { get; set; }
         public string classno { get; set; }
+        public string empname { get; set; }
+        public string EmploymentState { get; set; }
 
     }
 }
