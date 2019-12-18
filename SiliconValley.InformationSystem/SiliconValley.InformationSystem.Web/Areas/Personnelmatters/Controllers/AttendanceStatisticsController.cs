@@ -193,30 +193,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-        [HttpPost]
-        public ActionResult DeleteAdInfoEmp(string list)
-        {
-            AttendanceInfoManage adinfomanage = new AttendanceInfoManage();
-            var AjaxResultxx = new AjaxResult();
-            try
-            {
-                string[] ids = list.Split(',');
-                for (int i = 0; i < ids.Length - 1; i++)
-                {
-                    string id = ids[i];
-                    var ad = adinfomanage.GetEntity(int.Parse(id));
-                    ad.IsDel = true;
-                    adinfomanage.Update(ad);
-                    AjaxResultxx = adinfomanage.Success();
-                }
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = adinfomanage.Error(ex.Message);
-            }
-            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
-        }
-
+       
         /// <summary>
         /// Excel文件导入
         /// </summary>

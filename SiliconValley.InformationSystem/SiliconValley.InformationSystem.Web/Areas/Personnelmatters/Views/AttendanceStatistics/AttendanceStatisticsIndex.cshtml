@@ -6,14 +6,13 @@
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal" lay-event="addAdsinfo"><i class="layui-icon"></i>Excel文件导入</button>
-        <button class="layui-btn layui-btn-sm  layui-btn-radius layui-btn-normal " lay-event="timeanddaysChange">年月份及应到勤天数改变</button>
-        <button class="layui-btn layui-btn-sm  layui-btn-radius layui-btn-normal " lay-event="forbiddenEmp">禁用</button>
+        <button class="layui-btn layui-btn-sm" lay-event="addAdsinfo"><i class="layui-icon">&#xe60a;</i>Excel文件导入</button>
+        <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange">年月份及应到勤天数改变</button>
     </div>
 </script>
 @*操作栏*@
 <script type="text/html" id="barDemo">
-    <a class="layui-btn  layui-btn-xs layui-btn-warm" lay-event="edit">编辑</a>
+    <a class="layui-btn  layui-btn-xs " lay-event="edit">编辑</a>
 </script>
 
 @*员工在职状态*@
@@ -69,7 +68,7 @@
                     </div>
                 </div>
 
-                <button class="layui-btn layui-btn-warm layui-btn-radius" type="button" id="Conditionselect" style="margin-left:50px;">查询</button>
+                <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:50px;">查询</button>
             </div>
         </form>
     </fieldset>
@@ -128,22 +127,6 @@
                         break;
                     case 'timeanddaysChange':
                         TimeandDaysChange();
-                        break;
-                    case 'forbiddenEmp':
-                        var data = checkStatus.data;
-                        console.log(data);
-                        if (data == 0) {
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.alert('请至少选中一条记录', { title: '提示信息', icon: 0 }, function (index) {
-                                    layer.close(index);
-                                });
-                            });
-                        } else {
-                            layer.confirm('确定禁用选中的员工?', function (index) {
-                                delEtrinfo(data); 
-                            });
-                        }
                         break;
                 };
             });
@@ -218,32 +201,7 @@
             })
 
         }
-        //禁用员工的方法
-        function delEtrinfo(data) {
-            var list = "";
-            for (var i = 0; i < data.length; i++) {
-
-                list += data[i].AttendanceId + ",";
-            }
-            $.post("/Personnelmatters/AttendanceStatistics/DeleteAdInfoEmp", { 'list': list }, function (da) {
-                console.log(da);
-                if (da.Success) {
-                    layer.alert("删除成功!", { icon: 1 }, function (index) {
-                        layui.use(['table'], function () {
-                            var table = layui.table;
-                            table.reload('myAttendanceinfo');
-                        });
-                        layer.close(index);
-                    });
-                }
-                else {
-                    layer.alert("删除失败!");
-                }
-            })
-
-
-        }
-
+        
 
 
         //格式化时间

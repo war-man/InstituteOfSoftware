@@ -3,15 +3,71 @@
     ViewBag.Title = "EmpSalaryEmbodyIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@*模糊查询*@
+<fieldset>
+    <legend>条件查询</legend>
+    <form class="layui-form" action="" lay-filter="formtest">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:100px;">所属部门:</label>
+                <div class="layui-input-inline">
+                    <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
+                        <option value="">请选择所属部门</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:100px;">所属岗位:</label>
+                <div class="layui-input-inline">
+                    <select name="PositionId" id="PositionId" lay-search="" style="width:130px;">
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:120px;margin-left:-40px;">社保缴费基数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="ContributionBase" name="ContributionBase" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:100px;">个人社保:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="PersonalSocialSecurity" name="PersonalSocialSecurity" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:120px;">查询</button>
+        </div>
+    </form>
+</fieldset>
+
 <table id="salarysystemtab" lay-filter="salarysystemtab"></table>
+@*头部工具栏*@
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="editSS">社保缴费基数及个人社保修改</button>
+    </div>
+</script>
 @*操作栏*@
 <script type="text/html" id="barDemo">
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-  
+
 </script>
 
 @section script{
-    <script>    
+    <script>
         layui.use(['table', 'layer', 'form', 'laydate', 'element'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -27,7 +83,8 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                      { field: 'empName', title: '姓名', width: 100, sort: true }
+                    { type: 'checkbox', width: 80 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
                     , { field: 'Depart', title: '所属部门', width: 120, sort: true }
                     , { field: 'Position', title: '所属岗位', width: 110, sort: true }
                     , { field: 'BaseSalary', title: '基本工资', sort: true, width: 110 }
@@ -44,7 +101,7 @@
                 , page: true
             });
 
-     
+
             //监听行工具事件
             table.on('tool(salarysystemtab)', function (obj) {
                 var data = obj.data;
@@ -59,13 +116,76 @@
                         , anim: 4
                         , skin: 'demo-class'
                     });
-                } 
-             
+                }
+
             });
 
+            //头工具栏事件
+            table.on('toolbar(salarysystemtab)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'editSS':
+                        var data = checkStatus.data;
+                        console.log(data);
+                        if (data == 0) {
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.alert('请至少选中一条记录', { title: '提示信息', icon: 0 }, function (index) {
+                                    layer.close(index);
+                                });
+                            });
+                        } else {
+                            EditSS(data);
+                        }
 
+                        break;
+
+                };
+            });
+
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var ename = $("#EmpName").val();//员工姓名
+                var deptname = $("#deptid").val();//员工所属部门
+                var pname = $("#PositionId").val();//员工所属岗位
+                var ContributionBase = $("#ContributionBase").val();//社保缴费基数
+                var PersonalSocialSecurity = $("#PersonalSocialSecurity").val();//个人社保
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('mySalarySystem', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: ename + "," + deptname + "," + pname + "," + ContributionBase + "," + PersonalSocialSecurity
+                        }
+                    });
+                });
+
+
+
+            });
         });
 
+        //社保及社保缴费基数的修改
+        function EditSS(data) {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                var list = "";
+                for (var i = 0; i < data.length; i++) {
+
+                    list += data[i].Id + ",";
+                }
+                layer.open({
+                    type: 2
+                    , area: ["400px", "300px"]
+                    , title: ""
+                    , content: '/Personnelmatters/EmplSalaryEmbody/UpdateEmpSSinfo?list=' + list
+                    , anim: 2
+                });
+
+            })
+
+        }
 
         //格式化时间
         function GetYearAndMonth(cellval) {
@@ -134,6 +254,62 @@
         }
     </script>
 
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#deptid").append(new Option("请选择部门", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PositionId").empty();
+                            console.log(resultData.data);
+                            $("#PositionId").append(new Option("请选择岗位", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#PositionId')
+                                    .append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PositionId").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
+    </script>
 
 
 }
