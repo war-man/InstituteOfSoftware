@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Util;
+    using SiliconValley.InformationSystem.Entity.Entity;
 
     [CheckLogin]
     public class Base_UserRoleController : Controller
@@ -21,10 +22,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
         private readonly Base_UserBusiness db_user;
         private readonly Base_SysRoleBusiness db_role;
+        private readonly OtherPermissionBusiness db_otherPermission;
         public Base_UserRoleController()
         {
             db_user = new Base_UserBusiness();
             db_role = new Base_SysRoleBusiness();
+            db_otherPermission = new OtherPermissionBusiness();
         }
 
 
@@ -462,9 +465,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             try
             {
                 var RoleTempPermisslist = db_role.RolePermission(roleId);
-
-                List<PermissionModule> RolePermisslist = new List<PermissionModule>();
-
                 var allpermisslist = PermissionManage.GetAllPermissionModules();
 
                 List<Common.layuitree> treelist = new List<Common.layuitree>();
@@ -561,6 +561,187 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         }
 
 
-       
+        /// <summary>
+        /// 添加其他权限页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult setOtherPermissTorole(string role)
+        {
+            ViewBag.role = role;
+
+            return View();
+        }
+
+        public ActionResult OtherPermissionData(string role, int page, int limit)
+        {
+            //获取这个角色没有的权限
+
+            var alllist = db_otherPermission.AllOtherPermissions(); //所有其他权限
+
+            var rolelist = db_otherPermission.GetPermissionByRole(role);
+
+            //所有角色 减去 拥有角色 = 未拥有角色
+
+            List<OthorPermission> resultlist = new List<OthorPermission>();
+
+            foreach (var item in alllist)
+            {
+                if (!db_otherPermission.IsContains(rolelist, item))
+                {
+                    resultlist.Add(item);
+                }
+            }
+
+            var skiplist = resultlist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            var obj = new {
+                code = 0,
+                msg = "",
+                count = resultlist.Count,
+                data = skiplist
+
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult HaveOtherPermissionData(int page, int limit, string role)
+        {
+           var list = db_otherPermission.GetPermissionByRole(role);
+            var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
+
+
+            var obj = new {
+
+                code = 0,
+                msg="",
+                count = list.Count,
+                data = skiplist
+            };
+
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 删除其他权限
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult remove(string role, string permissionValues)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var permission_arry = permissionValues.Split(',').ToList();
+                permission_arry.RemoveAt(permission_arry.Count - 1);
+                db_otherPermission.removeRolePermissions(role, permission_arry);
+
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 删除其他权限
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult add(string role, string permissionValues)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                var permission_arry = permissionValues.Split(',').ToList();
+                permission_arry.RemoveAt(permission_arry.Count - 1);
+                db_otherPermission.addRolePermissions(role, permission_arry);
+
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "";
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult selectMenuPermission()
+        {
+            return View();
+        }
+        public ActionResult menuPermissionlist()
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               
+                var allpermisslist = PermissionManage.GetAllPermissionModules();
+
+                List<Common.layuitree> treelist = new List<Common.layuitree>();
+
+                foreach (var item in allpermisslist)
+                {
+                    //加载第一层
+                    Common.layuitree firsttree = new Common.layuitree();
+
+                    firsttree.field = item.Value;
+                    firsttree.title = item.Name;
+                    firsttree.id = item.Value;
+                    //加载第二ceng
+                    foreach (var item1 in item.Items)
+                    {
+                        Common.layuitree secondtree = new Common.layuitree();
+
+                        secondtree.field = item.Value +"."+ item1.Value;
+                        secondtree.title = item1.Name;
+                        secondtree.id = item.Value + item1.Value;
+
+                        firsttree.children.Add(secondtree);
+                    }
+
+                    treelist.Add(firsttree);
+                }
+
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = treelist;
+
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+
     }
 }

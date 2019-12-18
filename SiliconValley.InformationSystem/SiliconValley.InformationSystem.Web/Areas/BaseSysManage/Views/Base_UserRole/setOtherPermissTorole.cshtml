@@ -1,0 +1,172 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>setOtherPermissTorole</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <input type="hidden" value="@ViewBag.role" id="role" />
+    <div>
+        <div>
+            <h3>未拥有权限</h3>
+            <table class="layui-hide" id="noHavePermissiontable" lay-filter="noHavePermissiontable"></table>
+            <script type="text/html" id="toolbarDemo1">
+                <div class="layui-btn-container">
+               
+                    <button class="layui-btn layui-btn-sm" lay-event="set"><i class="layui-icon layui-icon-set-sm"></i>赋予</button>
+                </div>
+            </script>
+        </div>
+        <hr />
+        <div>
+            <h3>拥有权限</h3>
+            <table class="layui-hide" id="HavePermissiontable" lay-filter="HavePermissiontable"></table>
+            <script type="text/html" id="toolbarDemo2">
+                <div class="layui-btn-container">
+
+                    <button class="layui-btn layui-btn-sm" lay-event="remove"><i class="layui-icon layui-icon-set-sm"></i>移除</button>
+                </div>
+            </script>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'layer', 'table'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+            var table = layui.table;
+
+            var role = $("#role").val();
+
+            table.render({
+                elem: '#noHavePermissiontable'
+                , url: '/BaseSysManage/Base_UserRole/OtherPermissionData?role=' + role
+                , toolbar: '#toolbarDemo1' //开启头部工具栏，并为其绑定左侧模板
+                , id: "noHavePermissiontable"
+                , title: '角色'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'Id', hide: true, title: '标识', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'PermissionValue', title: '权限值', width: "45%" }
+                    , { field: 'Desct', title: '描述', width: "45%" }
+
+
+                ]]
+                , page: true
+            });
+
+            table.render({
+                elem: '#HavePermissiontable'
+                , url: '/BaseSysManage/Base_UserRole/HaveOtherPermissionData?role=' + role
+                , toolbar: '#toolbarDemo2' //开启头部工具栏，并为其绑定左侧模板
+                , id: "HavePermissiontable"
+                , title: '角色'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'Id', hide: true, title: '标识', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'PermissionValue', title: '权限值', width: "45%" }
+                    , { field: 'Desct', title: '描述', width: "45%" }
+
+
+                ]]
+                , page: true
+            });
+            //头工具栏事件
+            table.on('toolbar(noHavePermissiontable)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'set':
+                        var data = checkStatus.data;
+
+                        //赋予权限
+                        var role = $("#role").val();
+
+                        if (data.length == 0) {
+                            layer.msg("请选择权限", { icon: 2 });
+
+                            return;
+                        }
+
+                        var permissvalues = "";
+
+                        for (var i = 0; i < data.length; i++) {
+                            permissvalues += data[i].PermissionValue+",";
+                        }
+
+
+                        var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                        $.post("/BaseSysManage/Base_UserRole/add", { role: role, permissionValues: permissvalues }, function (result) {
+
+                            if (result.ErrorCode == 200) {
+                                layer.close(loadIndex);
+                                layer.msg("赋予成功", { icon: 1 });
+                                table.reload("HavePermissiontable");
+                                table.reload("noHavePermissiontable");
+                            }
+                            else {
+                                layer.msg("服务器异常", { icon: 2 });
+                            }
+                        });
+
+                        break;
+
+
+                };
+            });
+
+            table.on('toolbar(HavePermissiontable)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'remove':
+                        var data = checkStatus.data;
+
+                        //赋予权限
+                        var role = $("#role").val();
+
+                        if (data.length == 0) {
+                            layer.msg("请选择权限", { icon: 2 });
+
+                            return;
+                        }
+
+                        var permissvalues = "";
+
+                        for (var i = 0; i < data.length; i++) {
+                            permissvalues += data[i].PermissionValue + ",";
+                        }
+
+
+                        var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                        $.post("/BaseSysManage/Base_UserRole/remove", { role: role, permissionValues: permissvalues }, function (result) {
+
+                            if (result.ErrorCode == 200) {
+                                layer.close(loadIndex);
+                                layer.msg("移除成功", { icon: 1 });
+                                table.reload("HavePermissiontable");
+                                table.reload("noHavePermissiontable");
+                            }
+                            else {
+                                layer.msg("服务器异常", { icon: 2 });
+                            }
+                        });
+                        break;
+
+
+                };
+            });
+
+           
+
+        });
+    </script>
+</body>
+</html>

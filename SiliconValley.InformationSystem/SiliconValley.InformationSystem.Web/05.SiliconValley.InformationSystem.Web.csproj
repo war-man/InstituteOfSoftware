@@ -326,6 +326,8 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\BaseSysManage\css\style.css" />
+    <Content Include="Areas\BaseSysManage\js\style.js" />
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
     <Content Include="Areas\ExaminationSystem\config\InvigilatorConfig.xml">
@@ -1236,6 +1238,11 @@
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\UserRoelManage.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\RoleUrlPermiss.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_Permission\MenuPermissionIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\setOtherPermissTorole.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\MenusIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\addMenu.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\selectMenuPermission.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\permissManage.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

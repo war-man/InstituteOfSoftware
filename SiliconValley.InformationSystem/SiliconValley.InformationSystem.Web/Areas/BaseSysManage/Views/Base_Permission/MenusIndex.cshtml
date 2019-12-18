@@ -1,0 +1,190 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MenusIndex</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+
+    <style>
+        #mytree {
+            float:left;
+        }
+        #toor {
+            float;
+        }
+    </style>
+</head>
+<body>
+    <div>
+
+        <div id="mytree">
+          
+        </div>
+
+        <div id="toor">
+            <button class="layui-btn-primary layui-btn" id="add">添加子菜单</button>
+            <input type="checkbox"  title="顶级菜单"  value="true" id="isFirlMenu" />
+        </div>
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+   
+    <script type="text/javascript">
+
+        function layerW(callback) {
+            layer.open({
+                type: 2,
+                area: ['300px', '800px'],
+                title: "选择权限",
+                content: "/BaseSysManage/Base_UserRole/selectMenuPermission",
+                end: callback
+            });
+        }
+
+        var permiss;
+
+        function setPer(per) {
+            permiss = per;
+        }
+
+        function getper() {
+            return permiss;
+        }
+
+        var selectNode; 
+
+        layui.use(['form', 'layer','tree'], function () {
+
+            var layer = layui.layer;
+            var tree = layui.tree;
+
+            ///加载子菜单
+            function loadSubMenu(menuObj,obj) {
+              
+                if (menuObj.SubMenus != null) {
+
+                    for (var i = 0; i < menuObj.SubMenus.length; i++) {
+
+                        var obj1 = new Object();
+                        obj1.title = menuObj.SubMenus[i].Name;
+                        obj1.children = new Array();
+                        obj1.id = Math.ceil(Math.random() * 100000);
+                        obj1.field = menuObj.SubMenus[i].Permission;
+                        loadSubMenu(menuObj.SubMenus[i], obj1);
+
+                        obj.children.push(obj1);
+                    }
+                    
+                } 
+            }
+
+            function NodeClick(obj) {
+                selectNode = obj.data;
+            }
+
+            $.post('/BaseSysManage/Base_Permission/MenuData', {}, function (result) {
+
+                console.log(result);
+
+                if (result.ErrorCode == 200) {
+
+                    layer.msg("数据加载正常", { icon: 1 });
+
+                    var menudata = result.Data;
+
+                    //一级菜单列表
+
+                    var treedata = new Array();
+
+                    for (var i = 0; i < menudata.length; i++) {
+
+                        var obj = new Object();
+
+                        obj.title = menudata[i].Name;
+                        obj.children = new Array();
+                        obj.id = Math.ceil(Math.random() * 100000);
+
+                        obj.field = menudata[i].Permission;
+
+                        loadSubMenu(menudata[i], obj);
+
+                        console.log(obj);
+                        treedata.push(obj);
+                    }
+
+
+                    console.log(treedata);
+                    tree.render({
+                        elem: '#mytree'
+                        , id: "mytree"
+                        , click: NodeClick
+                        , data: treedata
+                        
+                       
+
+                    });
+
+                   
+                }
+                else {
+
+                    layer.msg("数据加载异常", {icon:2});
+                }
+            });
+
+
+            $("#add").click(function () {
+                //判断是否添加顶级菜单
+                var isfirst = $("#isFirlMenu")[0].checked;
+                if (isfirst) {
+                    selectNode = undefined;
+                }
+                else {
+                    //判断是否是最后一层
+
+                    if (selectNode == undefined) {
+
+                        layer.msg("请选择节点", { icon: 2 });
+                        return;
+                    }
+
+                    if (selectNode.field != null) {
+                        layer.msg("当前为最后一层菜单 不能添加子菜单", { icon: 2 });
+                        return;
+                    }
+                }
+
+
+
+                layer.open({
+
+                    type: 2,
+                    area: ['500px', '600px'],
+                    title: "添加菜单",
+                    content: "/BaseSysManage/Base_Permission/addMenu",
+
+                });
+
+
+
+
+            });
+        });
+
+
+
+     
+    </script>
+
+
+</body>
+</html>

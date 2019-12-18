@@ -8,6 +8,8 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 {
+    using SiliconValley.InformationSystem.Business;
+    using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using System.Xml;
     public class Base_PermissionController : Controller
     {
@@ -263,5 +265,348 @@ item1.Value;
 
             return null;
         }
+
+        public ActionResult MenusIndex()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 菜单数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MenuData()
+        {
+            AjaxResult result = new AjaxResult(); ;
+
+            try
+            {
+               var list = SystemMenuManage.GetAllSysMenu();
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = list;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        /// <summary>
+        /// 添加菜单页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult addMenu()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 添加菜单
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        [HttpPost]
+        public ActionResult addMenu(string MenuName, string ParentMenu, string url, string permiss)
+        {
+            
+            //加载 url xml
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(Server.MapPath(SystemMenuManage._configFile));
+
+            var root = xmlDocument.DocumentElement;
+
+            if (ParentMenu == "")
+            {
+                //一级菜单
+                var elem = xmlDocument.CreateElement("FirstMenu");
+                var attrName = xmlDocument.CreateAttribute("Name");
+                attrName.Value = MenuName;
+                elem.SetAttributeNode(attrName);
+                if (url == "")
+                {
+                    //表示不是最后一级
+                    root.AppendChild(elem);
+                }
+                else
+                {
+                    //表示最后一级  添加url permiss
+                    var urlattr = xmlDocument.CreateAttribute("Url");
+                    var perattr = xmlDocument.CreateAttribute("Permission");
+
+                    elem.SetAttributeNode(attrName); elem.SetAttributeNode(perattr);
+                    root.AppendChild(elem);
+                }
+
+
+            }
+            else
+            {
+                //需要找到负极
+                //添加二字
+
+
+                var firstMenus = root.GetElementsByTagName("FirstMenu");
+
+              
+
+                foreach (XmlElement item in firstMenus)
+                {
+                    if (item.Attributes["Name"].Value != ParentMenu)
+                    {
+                        foreach (XmlElement item1 in item.ChildNodes)
+                        {
+                            if (item1.Attributes["Name"].Value != ParentMenu)
+                            {
+
+                                foreach (XmlElement item2 in item1.ChildNodes)
+                                {
+                                    if (item2.Attributes["Name"].Value != ParentMenu)
+                                    {
+
+                                    }
+                                    else
+                                    {
+                                       
+                                    }
+                                }
+                            }
+                            else
+                            {
+
+                                //添加二字
+                                var elem = xmlDocument.CreateElement("ThirdMenu");
+                                var attrName = xmlDocument.CreateAttribute("Name");
+                                attrName.Value = MenuName;
+                                elem.SetAttributeNode(attrName);
+                                if (url == "")
+                                {
+                                    //表示不是最后一级
+                                    item1.AppendChild(elem);
+                                }
+                                else
+                                {
+                                    //表示最后一级  添加url permiss
+                                    var urlattr = xmlDocument.CreateAttribute("Url");
+                                    urlattr.Value = url;
+
+                                    var perattr = xmlDocument.CreateAttribute("Permission");
+                                    perattr.Value = permiss;
+
+                                    elem.SetAttributeNode(urlattr); elem.SetAttributeNode(perattr);
+                                    item1.AppendChild(elem);
+                                }
+                                xmlDocument.Save(Server.MapPath(SystemMenuManage._configFile));
+
+                                return Json("1", JsonRequestBehavior.AllowGet);
+                            }
+
+                        }
+                    }
+                    else {
+                        //添加二字
+                        var elem = xmlDocument.CreateElement("SecondMenu");
+                        var attrName = xmlDocument.CreateAttribute("Name");
+                        attrName.Value = MenuName;
+                        elem.SetAttributeNode(attrName);
+                        if (url == "")
+                        {
+                            //表示不是最后一级
+                            item.AppendChild(elem);
+                        }
+                        else
+                        {
+                            //表示最后一级  添加url permiss
+                            var urlattr = xmlDocument.CreateAttribute("Url");
+                            var perattr = xmlDocument.CreateAttribute("Permission");
+                            urlattr.Value = url;
+                            perattr.Value = permiss;
+                            elem.SetAttributeNode(urlattr); elem.SetAttributeNode(perattr);
+                            item.AppendChild(elem);
+                        }
+
+                        xmlDocument.Save(Server.MapPath(SystemMenuManage._configFile));
+
+                        return Json("1", JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+             
+
+            }
+            xmlDocument.Save(Server.MapPath(SystemMenuManage._configFile));
+
+            return Json("1", JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 权限管理
+        /// </summary>
+        /// <returns></returns>
+
+        public ActionResult permissManage()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 添加新的权限
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult addFirstPermiss(string name1, string name2, string code1, string code2)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+
+                //加载 url xml
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(Server.MapPath("/Config/Permission.config"));
+
+                var root = xmlDocument.DocumentElement;
+
+                //创建一级菜单
+                var first = xmlDocument.CreateElement("module");
+                var attr_name = xmlDocument.CreateAttribute("name");
+                attr_name.Value = name1;
+                var attr_value = xmlDocument.CreateAttribute("value");
+                attr_value.Value = code1;
+                first.SetAttributeNode(attr_name);
+                first.SetAttributeNode(attr_value);
+
+                //二级
+                var second = xmlDocument.CreateElement("permission");
+                var attr_name2 = xmlDocument.CreateAttribute("name");
+                attr_name2.Value = name2;
+                var attr_value2 = xmlDocument.CreateAttribute("value");
+                attr_value2.Value = code2;
+                second.SetAttributeNode(attr_name2);
+                second.SetAttributeNode(attr_value2);
+
+                first.AppendChild(second);
+
+                root.AppendChild(first);
+
+                //添加到数据库
+
+                BaseBusiness<Base_PermissionAppId> dbp = new BaseBusiness<Base_PermissionAppId>();
+
+                Base_PermissionAppId base_PermissionAppId = new Base_PermissionAppId();
+
+                base_PermissionAppId.AppId = "AppTest";
+                base_PermissionAppId.Id = Guid.NewGuid().ToString();
+                base_PermissionAppId.PermissionValue = code1 + "." + code2;
+
+                dbp.Insert(base_PermissionAppId);
+
+                xmlDocument.Save(Server.MapPath("/Config/Permission.config"));
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+        /// <summary>
+        /// 添加新的权限
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult addsencdPermiss(string name1, string code1, string parentCode)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                //加载 url xml
+                XmlDocument xmlDocument = new XmlDocument();
+                xmlDocument.Load(Server.MapPath("/Config/Permission.config"));
+
+                var root = xmlDocument.DocumentElement;
+
+                //获取一级菜单
+                var firstModu = root.GetElementsByTagName("module");
+
+                foreach (XmlElement item in firstModu)
+                {
+                    var value = item.Attributes["value"].Value;
+                    if (value == parentCode)
+                    {
+                        //添加子节点
+
+                        var second = xmlDocument.CreateElement("permission");
+                        var attr_name2 = xmlDocument.CreateAttribute("name");
+                        attr_name2.Value = name1;
+                        var attr_value2 = xmlDocument.CreateAttribute("value");
+                        attr_value2.Value = code1;
+                        second.SetAttributeNode(attr_name2);
+                        second.SetAttributeNode(attr_value2);
+
+                        item.AppendChild(second);
+
+                        root.AppendChild(item);
+
+                        //添加到数据库
+
+                        BaseBusiness<Base_PermissionAppId> dbp = new BaseBusiness<Base_PermissionAppId>();
+
+                        Base_PermissionAppId base_PermissionAppId = new Base_PermissionAppId();
+
+                        base_PermissionAppId.AppId = "AppTest";
+                        base_PermissionAppId.Id = Guid.NewGuid().ToString();
+                        base_PermissionAppId.PermissionValue = parentCode + "." + code1;
+
+                        dbp.Insert(base_PermissionAppId);
+                        xmlDocument.Save(Server.MapPath("/Config/Permission.config"));
+
+                        break;
+                    }
+                }
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+
+
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet); ;
+
+        }
+
+
+
     }
 }

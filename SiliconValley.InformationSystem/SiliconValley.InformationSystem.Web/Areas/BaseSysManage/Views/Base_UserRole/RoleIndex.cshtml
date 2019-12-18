@@ -43,6 +43,9 @@
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="createRole"><i class="layui-icon layui-icon-add-1"></i>新建角色</button>
             <button class="layui-btn layui-btn-sm" lay-event="menuConfig"><i class="layui-icon layui-icon-set-sm"></i>显示菜单配置</button>
+            <button class="layui-btn layui-btn-sm" lay-event="otherPermissionConfig"><i class="layui-icon layui-icon-set-sm"></i>其他权限</button>
+            <button class="layui-btn layui-btn-sm" lay-event="addMenu"><i class="layui-icon layui-icon-set-sm"></i>菜单添加</button>
+            <button class="layui-btn layui-btn-sm" lay-event="permissionMange"><i class="layui-icon layui-icon-set-sm"></i>权限管理</button>
         </div>
     </script>
 
@@ -117,7 +120,7 @@
                         }
 
                         layer.open({
-
+                            
                             type: 2,
                             area: ['300px', '800px'],
                             title: "角色_菜单配置",
@@ -128,6 +131,59 @@
                                 table.reload("roleTable");
 
                             }
+                        });
+
+                        break;
+                    case 'otherPermissionConfig':
+
+                        
+                        var data = checkStatus.data;
+
+                        if (data.length == 0) {
+
+                            layer.msg('请选择角色！', { icon: 2 }, function () {
+
+
+                            });
+
+                            return;
+                        }
+
+                        layer.open({
+                            
+                            type: 2,
+                            area: ['1000px', '800px'],
+                            title: "角色_其他权限配置",
+                            content: '/BaseSysManage/Base_UserRole/setOtherPermissTorole?role=' + data[0].RoleId,
+                            end: function () {
+
+                                //表格重载
+                                table.reload("roleTable");
+
+                            }
+                        });
+
+                        break;
+                        
+                    case 'addMenu':
+
+                        layer.open({
+
+                            type: 2,
+                            area: ['1000px', '800px'],
+                            title: "菜单管理",
+                            content: '/BaseSysManage/Base_Permission/MenusIndex',
+                        });
+
+                        break;
+                    case 'permissionMange':
+
+                        layer.open({
+
+                            type: 2,
+                            area: ['300px', '800px'],
+                            title: "菜单管理",
+                            content: '/BaseSysManage/Base_Permission/permissManage',
                         });
 
                         break;
