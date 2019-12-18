@@ -167,5 +167,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
+
+        [HttpPost]
+        public ActionResult DeleteSalaryManageEmp(string list)
+        {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            AttendanceInfoManage admanage = new AttendanceInfoManage();
+            MeritsCheckManage mcmanage = new MeritsCheckManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                string[] ids = list.Split(',');
+                for (int i = 0; i < ids.Length - 1; i++)
+                {
+                    string id = ids[i];
+                    var ad = msrmanage.GetEntity(int.Parse(id));
+                  AjaxResultxx.Success=  msrmanage.EditEmpMS(ad.EmployeeId);
+                    if (AjaxResultxx.Success) {
+                        bool e = esemanage.EditEmpSalaryState(ad.EmployeeId);//员工体系表禁用该员工
+                        AjaxResultxx.Success = e;
+                    }
+                    if (AjaxResultxx.Success)
+                    {
+                        bool a = admanage.EditEmpStateToAds(ad.EmployeeId);//员工考勤表禁用该员工
+                        AjaxResultxx.Success = a;
+                    }
+                    if (AjaxResultxx.Success)
+                    {
+                        bool e = mcmanage.EditEmpStateToMC(ad.EmployeeId);//员工绩效表禁用该员工
+                        AjaxResultxx.Success = e;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

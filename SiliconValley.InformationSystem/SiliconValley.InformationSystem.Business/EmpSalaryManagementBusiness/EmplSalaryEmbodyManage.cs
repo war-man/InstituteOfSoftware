@@ -63,16 +63,20 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         }
 
 
-
+        /// <summary>
+        /// 禁用某员工
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
         public bool EditEmpSalaryState(string empid) {
-            var ese=this.GetEntity(empid);
+            var ese = this.GetList().Where(e => e.EmployeeId == empid).FirstOrDefault() ;
             bool result = false;
             try
             {
                 ese.IsDel = true;
                 this.Update(ese);
                 result = true;
-                BusHelper.WriteSysLog("工资体系表去除该员工", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog("工资体系表禁用该员工成功！", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
             {

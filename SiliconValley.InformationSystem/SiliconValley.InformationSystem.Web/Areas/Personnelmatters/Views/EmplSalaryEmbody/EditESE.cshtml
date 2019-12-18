@@ -49,14 +49,14 @@
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">员工编号:</label>
-                        <div class="layui-input-inline" style="width:190px;">
+                        <div class="layui-input-inline" >
                             <input type="text" name="EmployeeId" id="EmployeeId" readonly style="border:0px;" class="layui-input" />
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名:</label>
-                        <div class="layui-input-inline" style="width:190px;">
+                        <div class="layui-input-inline" >
                             <input type="text" name="empName" id="empName" readonly style="border:0px;" class="layui-input" />
                         </div>
                     </div>
@@ -85,42 +85,29 @@
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">基本工资:</label>
-                        <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.BaseSalary, new Dictionary<string, object>() { { "lay-verify", "number" }, { "class", "layui-input" } })
+                        <div class="layui-input-block" >
+                            @Html.TextBoxFor(a => a.BaseSalary, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "class", "layui-input" } })
                         </div>
                     </div>
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">岗位工资:</label>
-                        <div class="layui-input-block" style="width:190px;">
-                            @Html.TextBoxFor(a => a.PositionSalary, new Dictionary<string, object>() { { "class", "layui-input" } })
-                        </div>
-                    </div>
-
-
-
-                </div>
-
-                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">绩效额度:</label>
-                        <div class="layui-input-inline" style="width:190px;">
+                        <div class="layui-input-block" >
                             @Html.TextBoxFor(a => a.PerformancePay, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                         </div>
 
                     </div>
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">笔记本补助:</label>
-                        <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.NetbookSubsidy, new Dictionary<string, object>() { { "class", "layui-input salary" } })
-                        </div>
-                    </div>
-
                 </div>
 
                 <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">笔记本补助:</label>
+                        <div class="layui-input-block" >
+                            @Html.TextBoxFor(a => a.NetbookSubsidy, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">个人社保:</label>
@@ -128,6 +115,9 @@
                             @Html.TextBoxFor(a => a.PersonalSocialSecurity, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">社保补贴:</label>
@@ -136,16 +126,17 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label" style="width:-120px;">社保缴费基数:</label>
+                        <label class="layui-form-label" style="width:140px;margin-left:-60px">社保缴费基数:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.ContributionBase, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
+
+
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">个税:</label>
@@ -154,22 +145,19 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
-                    </div>
 
+                    </div>
                 </div>
 
+            
             </div>
 
-                <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
+                <div class="layui-form-item" style="margin-left:200px;margin-top:20px;">
                     <div class="layui-input-block">
                         <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
                         <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>

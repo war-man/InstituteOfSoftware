@@ -8,8 +8,11 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="timeUpdate">年月份改变</button>
+        <button class="layui-btn layui-btn-sm" lay-event="forbiddenEmp">禁用</button>
     </div>
 </script>
+
+<h3 style="text-align:center;">湖南硅谷云教育科技有限公司--@ViewBag.yearandmonth--工资表</h3>
 
 @*模糊查询*@
 <fieldset>
@@ -45,7 +48,6 @@
 
     </form>
 </fieldset>
-
 <table id="salarytab" lay-filter="salarytab"></table>
 
 
@@ -58,7 +60,6 @@
             var form = layui.form;
             var laydate = layui.laydate;
             var element = layui.element;
-           // console.log(@ViewBag.yearandmonth);
             table.render({
                 elem: '#salarytab'
                 , url: '/Personnelmatters/EmpSalaryManagement/EmpSalaryData'
@@ -66,48 +67,62 @@
                 , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
-                , cols: [[{ title: '湖南硅谷云教育科技有限公司--' + "@ViewBag.yearandmonth"+ "--工资表", colspan: 22 }],
-                    [{ type: 'checkbox', width: 28, rowspan:2}
-                        , { field: 'empName', title: '姓名', width: 100, sort: true, rowspan:2 }
-                        , { field: 'Depart', title: '所属部门', width: 130, sort: true, rowspan:2 }
-                        , { field: 'Position', title: '所属岗位', width: 110, sort: true, rowspan:2 }
-                        , { field: 'toRegularDays', title: '出勤天数', width: 110, sort: true, rowspan:2 }
-                        , { field: 'baseSalary', title: '基本工资', sort: true, width: 110, rowspan:2 }
-                        , { field: 'positionSalary', title: '岗位工资', sort: true, width: 110, rowspan:2 }
-                        , { field: 'finalGrade', title: '绩效分', sort: true, width: 100, rowspan:2 }
-                        , { field: 'PerformanceSalary', title: '绩效工资', sort: true, width: 110, rowspan:2 }
-                        , { field: 'netbookSubsidy', title: '笔记本补助',  width: 125, rowspan:2 }
-                        , { field: 'socialSecuritySubsidy', title: '社保补贴', width: 110, rowspan:2 }
-                        , { field: 'SalaryOne', title: '应发工资1', width: 120, rowspan:2 }
-                        , { field: 'OvertimeCharges', title: '加班费用',  width: 110, rowspan:2 }
-                        , { field: 'Bonus', title: '奖金/元',  width: 110, rowspan:2 }
+                , cols: [[{ type: 'checkbox', width: 28, rowspan: 2 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true, rowspan: 2 }
+                    , { field: 'Depart', title: '所属部门', width: 130, sort: true, rowspan: 2 }
+                    , { field: 'Position', title: '所属岗位', width: 110, sort: true, rowspan: 2 }
+                    , { field: 'toRegularDays', title: '出勤天数', width: 110, sort: true, rowspan: 2 }
+                    , { field: 'baseSalary', title: '基本工资', sort: true, width: 110, rowspan: 2 }
+                    , { field: 'positionSalary', title: '岗位工资', sort: true, width: 110, rowspan: 2 }
+                    , { field: 'finalGrade', title: '绩效分', sort: true, width: 100, rowspan: 2 }
+                    , { field: 'PerformanceSalary', title: '绩效工资', sort: true, width: 110, rowspan: 2 }
+                    , { field: 'netbookSubsidy', title: '笔记本补助', width: 120, rowspan: 2 }
+                    , { field: 'socialSecuritySubsidy', title: '社保补贴', width: 105, rowspan: 2 }
+                    , { field: 'SalaryOne', title: '应发工资1', width: 115, rowspan: 2 }
+                    , { field: 'OvertimeCharges', title: '加班费用', width: 105, rowspan: 2 }
+                    , { field: 'Bonus', title: '奖金/元', width: 105, rowspan: 2 }
 
-                        , { align: 'center', title: '考勤扣款', colspan:4 }
+                    , { align: 'center', title: '考勤扣款', colspan: 4 }
 
-                        , { field: 'OtherDeductions', title: '其他扣款',  width: 110, rowspan:2}
-                        , { field: 'SalaryTwo', title: '应发工资2',  width: 120, rowspan:2}
-                        , { field: 'PersonalSocialSecurity', title: '个人社保', sort: true, width: 110, rowspan:2 }
-                        , { field: 'PersonalIncomeTax', title: '个税', sort: true, width: 100, rowspan:2 }
-                        , { field: 'Total', title: '合计', width: 100, rowspan:2 }
-                        , { field: 'PayCardSalary', title: '实发工资(工资卡)',  width: 160, rowspan:2  }
-                        , { field: 'CashSalary', title: '实发工资(现金)',  width: 150, rowspan:2 }
-                    ], [
-                          { field: 'leavedays', title: '请假天数', width: 110 }
-                        , { field: 'LeaveDeductions', title: '请假扣款/元', width: 120 }
-                        , { field: 'TardyWithhold', title: '迟到扣款/元', width: 120 }
-                        , { field: 'LeaveWithhold', title: '早退扣款/元', width: 120 }
-                    ]]
+                    , { field: 'OtherDeductions', title: '其他扣款', width: 105, rowspan: 2 }
+                    , { field: 'SalaryTwo', title: '应发工资2', width: 115, rowspan: 2 }
+                    , { field: 'PersonalSocialSecurity', title: '个人社保', sort: true, width: 110, rowspan: 2 }
+                    , { field: 'PersonalIncomeTax', title: '个税', sort: true, width: 105, rowspan: 2 }
+                    , { field: 'Total', title: '合计', width: 100, rowspan: 2 }
+                    , { field: 'PayCardSalary', title: '实发工资(工资卡)', width: 160, rowspan: 2 }
+                    , { field: 'CashSalary', title: '实发工资(现金)', width: 150, rowspan: 2 }
+                ], [
+                    { field: 'leavedays', title: '请假天数', width: 110 }
+                    , { field: 'LeaveDeductions', title: '请假扣款/元', width: 115 }
+                    , { field: 'TardyWithhold', title: '迟到扣款/元', width: 115 }
+                    , { field: 'LeaveWithhold', title: '早退扣款/元', width: 115 }
+                ]]
                 , page: true
             });
 
             //头工具栏事件
             table.on('toolbar(salarytab)', function (obj) {
-                //var checkStatus = table.checkStatus(obj.config.id);
+                var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'timeUpdate':
                         TimeUpdate();
                         break;
-
+                    case 'forbiddenEmp':
+                        var data = checkStatus.data;
+                        console.log(data);
+                        if (data == 0) {
+                            layui.use('layer', function () {
+                                var layer = layui.layer;
+                                layer.alert('请至少选中一条记录', { title: '提示信息', icon: 0 }, function (index) {
+                                    layer.close(index);
+                                });
+                            });
+                        } else {
+                            layer.confirm('确定禁用选中的员工?', function (index) {
+                                delSalaryEmpinfo(data);
+                            });
+                        }
+                        break;
                 };
             });
 
@@ -151,6 +166,31 @@
 
         }
 
+        //禁用员工的方法
+        function delSalaryEmpinfo(data) {
+            var list = "";
+            for (var i = 0; i < data.length; i++) {
+
+                list += data[i].Id + ",";
+            }
+            $.post("/Personnelmatters/EmpSalaryManagement/DeleteSalaryManageEmp", { 'list': list }, function (da) {
+                console.log(da);
+                if (da.Success) {
+                    layer.alert("已禁用!", { icon: 1 }, function (index) {
+                        layui.use(['table'], function () {
+                            var table = layui.table;
+                            table.reload('mySalaryStatistics');
+                        });
+                        layer.close(index);
+                    });
+                }
+                else {
+                    layer.alert("禁用失败!");
+                }
+            })
+
+
+        }
 
     </script>
 

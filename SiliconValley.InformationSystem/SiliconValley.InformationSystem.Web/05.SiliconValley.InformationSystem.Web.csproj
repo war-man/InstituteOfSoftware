@@ -1246,6 +1246,7 @@
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
     <Content Include="Areas\Market\Views\Infomation\InfomationIndexView.cshtml" />
     <Content Include="Areas\Market\Views\Status\StatusIndexView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmplSalaryEmbody\UpdateEmpSSinfo.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

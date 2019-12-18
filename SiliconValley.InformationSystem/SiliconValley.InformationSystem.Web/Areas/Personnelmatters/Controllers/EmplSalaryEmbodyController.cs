@@ -20,11 +20,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         //获取员工工资体系表所有数据
-        public ActionResult GetSalarySystemData(int page, int limit)
+        public ActionResult GetSalarySystemData(int page, int limit,string AppCondition)
         {
             EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var eselist = empsemanage.GetList();
+            var eselist = empsemanage.GetList().Where(s => s.IsDel == false).ToList() ;
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string ename = str[0];
+                string deptname = str[1];
+                string pname = str[2];
+                string ContributionBase = str[3];
+                string PersonalSocialSecurity = str[4];
+                eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(deptname))
+                {
+                    eselist = eselist.Where(e => empmanage.GetDeptByEmpid(e.EmployeeId).DeptId == int.Parse(deptname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(pname))
+                {
+                    eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).PositionId == int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(ContributionBase))
+                {
+                    eselist = eselist.Where(e => e.ContributionBase ==int.Parse(ContributionBase)).ToList();
+                }
+                if (!string.IsNullOrEmpty(PersonalSocialSecurity))
+                {
+                    eselist = eselist.Where(e => e.PersonalSocialSecurity ==decimal.Parse(PersonalSocialSecurity)).ToList();
+                }
+ 
+            }
             var newlist = eselist.OrderBy(e => e.Id).Skip((page - 1) * limit).Take(limit);
             var mylist = from e in newlist
                          select new
@@ -73,9 +100,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditESE(EmplSalaryEmbody ese) {
             var AjaxResultxx = new AjaxResult();
             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            EmployeesInfoManage emanage = new EmployeesInfoManage();
             try
             {
                 var myese = esemanage.GetEntity(ese.Id);
+                var emp = emanage.GetInfoByEmpID(ese.EmployeeId);
+                if (!string.IsNullOrEmpty(emp.PositiveDate.ToString()))
+                {
+                    ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary ;
+                }
+                else {
+                    ese.PositionSalary = emp.Salary - ese.BaseSalary ;
+                }
+                if (!string.IsNullOrEmpty(ese.PerformancePay.ToString())) {
+                    ese.PositionSalary = ese.PositionSalary - ese.PerformancePay;
+                }
+                
                 ese.IsDel = myese.IsDel;
                 esemanage.Update(ese);
                 AjaxResultxx= esemanage.Success();
@@ -112,7 +152,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj,JsonRequestBehavior.AllowGet);
        }
 
-        
+        public ActionResult UpdateEmpSSinfo(string list) {
+            ViewBag.idlist = list;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult UpdateEmpSSinfo(string idlist, string ContributionBase, string PersonalSocialSecurity) {
+            var AjaxResultxx = new AjaxResult();
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            try
+            {
+                string[] ids = idlist.Split(',');
+                for (int i = 0; i < ids.Length - 1; i++)
+                {
+                    string id = ids[i];
+                    var ad = esemanage.GetEntity(int.Parse(id));
+                    ad.ContributionBase =int.Parse(ContributionBase);
+                    ad.PersonalSocialSecurity =decimal.Parse(PersonalSocialSecurity);
+                    esemanage.Update(ad);
+                    AjaxResultxx = esemanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = esemanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

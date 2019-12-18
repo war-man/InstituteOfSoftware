@@ -35,5 +35,31 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             return result;
 
         }
+
+         /// <summary>
+        /// 往员工考勤表加入员工编号
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public bool EditEmpStateToAds(string empid)
+        {
+            bool result = false;
+            try
+            {
+                var ads= this.GetList().Where(e => e.EmployeeId == empid).FirstOrDefault();
+                ads.IsDel = true;
+                this.Update(ads);
+                result = true;
+                BusHelper.WriteSysLog("考勤表禁用员工成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+
+            }
+            catch (Exception ex)
+            {
+                result = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            return result;
+
+        }
     }
 }
