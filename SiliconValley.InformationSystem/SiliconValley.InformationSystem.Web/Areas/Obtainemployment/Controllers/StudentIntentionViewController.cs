@@ -96,14 +96,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                         dbproStudentInformation.Update(studentobj);
                     }
                     StudnetIntention studnetIntention = new StudnetIntention();
-                    if (param0.AreaID!=0)
-                    {
+                  
                         studnetIntention.AreaID = param0.AreaID;
-                    }
-                    else
-                    {
-                        studnetIntention.AreaID = null;
-                    }
+                   
                    
                     studnetIntention.Salary = param0.Salary;
                     studnetIntention.StudentNO = param0.StudentNO;
