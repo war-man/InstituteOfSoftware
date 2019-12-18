@@ -101,57 +101,77 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbempStaffAndStu = new EmpStaffAndStuBusiness();
                 foreach (var item in param0.quarterIDAndStudentnos)
                 {
+                    ///判断是否第一次有数据没有 加一条
                     ///先获取第一次跟第二次，如果第二次，判断第一次这个员工id是否等于这个当前传入过来的员工id，如果等于，判断第二次是否为null，
                     ///如果不为null，isdel改为true，如果没有就没有，该第一次的isdistribution=true；
                     ///判断这个学生是否在第二阶段出现过，如果有就只要修改这个员工编号就行
                     ///判断这个学生是否出现过在第一阶段中 如果有变成第二阶段 如果没有就是第一阶段
                     ///第一次是员工A 转交给员工B 之后B搞不定又转交给A
+                    
 
                     var obj1 = dbempStaffAndStu.GetStage1Bystudentno(item.Studentno);
                     var obj2 = dbempStaffAndStu.GetStage2Bystudentno(item.Studentno);
-                    if (obj1.EmpStaffID == param0.EmpStaffID)
+                    if (obj1==null)
                     {
-                        if (obj2 != null)
-                        {
-                            obj2.IsDel = true;
-                            dbempStaffAndStu.Update(obj2);
-                        }
-
-                        obj1.Ising = true;
-                        dbempStaffAndStu.Update(obj1);
-
+                        EmpStaffAndStu andStu = new EmpStaffAndStu();
+                        andStu.Date = DateTime.Now;
+                        andStu.EmploymentStage = 1;
+                        andStu.EmploymentState = 1;
+                        andStu.EmpStaffID = param0.EmpStaffID;
+                        andStu.IsDel = false;
+                        andStu.QuarterID = item.QuarterID;
+                        andStu.Remark = string.Empty;
+                        andStu.Studentno = item.Studentno;
+                        andStu.Ising = true;
+                        dbempStaffAndStu.Insert(andStu);
                     }
                     else
                     {
-                        if (obj2 != null)
+                        if (obj1.EmpStaffID == param0.EmpStaffID)
                         {
-                            obj2.EmpStaffID = param0.EmpStaffID;
+                            if (obj2 != null)
+                            {
+                                obj2.IsDel = true;
+                                dbempStaffAndStu.Update(obj2);
+                            }
+
+                            obj1.Ising = true;
+                            dbempStaffAndStu.Update(obj1);
+
                         }
                         else
                         {
-                            EmpStaffAndStu andStu = new EmpStaffAndStu();
-                            andStu.Date = DateTime.Now;
-                            if (obj1 != null)
+                            ///修改员工id 修改是否带
+                            if (obj2 != null)
                             {
-                                andStu.EmploymentStage = 2;
+                                obj2.EmpStaffID = param0.EmpStaffID;
+                                obj2.Ising = true;
+                                dbempStaffAndStu.Update(obj2);
                             }
                             else
                             {
-                                andStu.EmploymentStage = 1;
+                                ///添加一条阶段二数据
+                                EmpStaffAndStu andStu = new EmpStaffAndStu();
+                                andStu.Date = DateTime.Now;
+                                andStu.EmploymentStage = 2;
+                                andStu.EmploymentState = 1;
+                                andStu.EmpStaffID = param0.EmpStaffID;
+                                andStu.IsDel = false;
+                                andStu.QuarterID = item.QuarterID;
+                                andStu.Remark = string.Empty;
+                                andStu.Studentno = item.Studentno;
+                                andStu.Ising = true;
+                                dbempStaffAndStu.Insert(andStu);
+
+                                ///修改阶段1 的 ising 
+                                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                                obj1.Ising = false;
+                                dbempStaffAndStu.Update(obj1);
                             }
-
-                            andStu.EmploymentState = 1;
-                            andStu.EmpStaffID = param0.EmpStaffID;
-                            andStu.IsDel = false;
-                            andStu.QuarterID = item.QuarterID;
-                            andStu.Remark = string.Empty;
-                            andStu.Studentno = item.Studentno;
-                            andStu.Ising = true;
-                            dbempStaffAndStu.Insert(andStu);
-                            
-
                         }
                     }
+                   
+
                     StudnetIntention intention = dbstudentIntention.GetInformationBystudentno(item.Studentno);
                     intention.isdistribution = true;
                     dbstudentIntention.Update(intention);

@@ -33,5 +33,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 实际工资
         /// </summary>
         public string RealWages { get; set; }
+
+        /// <summary>
+        /// 记录人
+        /// </summary>
+        public int empid { get; set; }
     }
 }

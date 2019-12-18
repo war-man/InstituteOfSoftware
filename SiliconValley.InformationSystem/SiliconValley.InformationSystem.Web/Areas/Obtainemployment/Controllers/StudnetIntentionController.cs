@@ -310,7 +310,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 dbproStudentInformation.Update(student);
                 ajaxResult.Success = true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 ajaxResult.Success = false;
                 ajaxResult.Msg = "请联系信息部成员！";
