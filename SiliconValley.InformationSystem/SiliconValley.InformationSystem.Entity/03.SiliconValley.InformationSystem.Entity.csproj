@@ -375,6 +375,7 @@
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DuplicateSurveyRecords.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\employed_entView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\EmploySituationView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\EmpStaffAndStuView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\QuarterIDAndStudentno.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchEmpClassView.cs" />

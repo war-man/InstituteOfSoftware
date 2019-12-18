@@ -124,7 +124,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
             {
                 for (int i = data.Count - 1; i >= 0; i--)
                 {
-
                     if (data[i].EmploymentStage != 2)
                     {
                         data.RemoveAt(i);
@@ -395,6 +394,57 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             
             return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
+        }
+
+        /// <summary>
+        ///  全部 计划
+        /// </summary>
+        /// <returns></returns>
+        public List<Quarter> Quarters() {
+            return this.infoconversiontoquart(this.GetEmpStaffAndStus());
+        }
+
+
+        /// <summary>
+        /// 全部数据中的这个员工带的东西
+        /// </summary>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmpStaffAndStusByempid(int empid) {
+          return  this.GetEmpStaffAndStus().Where(a => a.EmpStaffID == empid).ToList();
+        }
+
+        /// <summary>
+        ///  员工 计划
+        /// </summary>
+        /// <returns></returns>
+        public List<Quarter> Quarters(int empid)
+        {
+            return this.infoconversiontoquart(this.GetEmpStaffAndStusByempid(empid));
+        }
+
+        /// <summary>
+        ///  分配表转化为计划   
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public List<Quarter> infoconversiontoquart(List<EmpStaffAndStu> data) {
+            dbquarter = new QuarterBusiness();
+            for (int i = 0; i < data.Count; i++)
+            {
+                for (int j = data.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                {
+                    if (data[i].QuarterID == data[j].QuarterID)
+                    {
+                        data.RemoveAt(j);
+                    }
+                }
+            }
+            List<Quarter> result = new List<Quarter>();
+            foreach (var item in data)
+            {
+                result.Add(dbquarter.GetEntity(item.QuarterID));
+            }
+            return result;
         }
     }
 }

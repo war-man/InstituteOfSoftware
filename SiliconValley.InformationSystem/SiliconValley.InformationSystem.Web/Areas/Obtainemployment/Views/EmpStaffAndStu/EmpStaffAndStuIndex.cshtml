@@ -185,12 +185,12 @@
     <script>
         layui.use(['laypage', 'form', 'table', 'layer'], function () {
             var table = layui.table, form = layui.form, layer = layui.layer;
-            var table00, areaid, data, studentnos,empstaffname,studentnames="",empstaffid,studentno;
+            var table00, areaid, data, studentnos,empstaffname,empstaffid,studentno;
             
             jQuery(function () {
                 areaid = -1;
                 loadtable();
-                loadstaff();
+               
             });
             function init() {
                 $(".btnDiv").mouseenter(function () {
@@ -328,8 +328,6 @@
                 });
 
             }
-        
-            
             function loadtable() {
                 table00 = table.render({
                     elem: '#table00'
@@ -342,6 +340,7 @@
                     //, toolbar: '#toolbarDemo'
                     , done: function (res, curr, count) {
                         data = res.data;
+                         loadstaff();
                     }
                     , cols: [[ //标题栏
                         { type: 'checkbox' }
@@ -363,7 +362,7 @@
                 table00.reload({
                     url: '/Obtainemployment/EmpStaffAndStu/table00'
                     , done: function (res, curr, count) {
-
+                        loadstaff();
                     }
                     , where: {
                         string0: areaid,
@@ -393,13 +392,14 @@
                 if (checkStatus.data.length > 0) {
                     var param0 = new Object();
                     var quarterIDAndStudentnos = new Array();
+                    var studentnames = "";
                     param0.EmpStaffID = data.field.EmpStaffID;
                     for (var i = 0; i < checkStatus.data.length; i++) {
                         var QuarterIDAndStudentno = new Object();
                         QuarterIDAndStudentno.QuarterID = checkStatus.data[i].QuarterID;
                         QuarterIDAndStudentno.Studentno = checkStatus.data[i].StudentNO;
                         quarterIDAndStudentnos.push(QuarterIDAndStudentno);
-                        studentnames = studentnames + " " + checkStatus.data[i].StudentName;
+                         studentnames= studentnames + " " + checkStatus.data[i].StudentName;
                     }
                     param0.quarterIDAndStudentnos = quarterIDAndStudentnos;
                     console.log(param0);
@@ -412,6 +412,7 @@
                                 if (successdata.Success) {
                                     layer.close(index);
                                     layer.msg('分配成功！', { icon: 6, time: 2000 }, function () {
+
                                          reloadloadtable00();
                                     });
 

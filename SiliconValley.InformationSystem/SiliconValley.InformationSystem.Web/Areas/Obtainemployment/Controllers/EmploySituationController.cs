@@ -1,15 +1,12 @@
 ﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
-using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
-using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
@@ -132,13 +129,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 ///如果存在值，那就证明这个公司是已经有数据了，不需要进行添加，如果没有值，需要进行添加操作
                 dbemploySituation = new EmploySituationBusiness();
                 dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                dbemploymentStaff = new EmploymentStaffBusiness();
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
                 if (param0.EntinfoID == null)
                 {
                     dbenterpriseInfo = new EnterpriseInfoBusiness();
                     dbemploymentStaff = new EmploymentStaffBusiness();
                     dbentSpee = new EntSpeeBusiness();
-                    Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-                    var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+               
                     ///添加公司
                     EnterpriseInfo enterprise = new EnterpriseInfo();
                     enterprise.EmpStaffID = queryempstaff.ID;
@@ -176,7 +175,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                         dbentSpee.Insert(entSpee);
                     }
                 }
-
                 ///添加就业情况
                 EmploySituation employSituation = new EmploySituation();
                 employSituation.EntinfoID = param0.EntinfoID;
@@ -185,6 +183,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 employSituation.RealWages = param0.RealWages;
                 employSituation.Remark = string.Empty;
                 employSituation.StudentNO = param0.StudentNO;
+                employSituation.empid = queryempstaff.ID;
                 dbemploySituation.Insert(employSituation);
 
                 ///修改这个专员带学生记录 改为已就业
@@ -266,27 +265,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 
                 dbemploySituation = new EmploySituationBusiness();
                 dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                dbemploymentStaff = new EmploymentStaffBusiness();
                 param0.Date = DateTime.Now;
                 param0.IsDel = false;
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+                param0.empid = queryempstaff.ID;
                 dbemploySituation.Insert(param0);
 
-                ///修改分配记录 这个学生没人带了
+                ///修改分配记录 这个学生没人带了  
+                ///如果这个数据本身就是第二次数据呢？
                var query=  dbempStaffAndStu.GetIsingBystudentno(param0.StudentNO);
                 query.Ising = false;
                 dbempStaffAndStu.Update(query);
 
-                ///添加一个数据 变成第二次就业数据
-                dbempStaffAndStu = new EmpStaffAndStuBusiness();
-                EmpStaffAndStu empStaffAndStu = new EmpStaffAndStu();
-                empStaffAndStu.Date = DateTime.Now;
-                empStaffAndStu.EmploymentStage = 2;
-                empStaffAndStu.EmploymentState = 3;
-                empStaffAndStu.IsDel = false;
-                empStaffAndStu.Ising = false;
-                empStaffAndStu.QuarterID = query.QuarterID;
-                empStaffAndStu.Remark = "登记为未就业学生";
-                empStaffAndStu.Studentno = param0.StudentNO;
-                dbempStaffAndStu.Insert(empStaffAndStu);
+                if (query.EmploymentStage!=1)
+                {
+                    query.EmpStaffID = null;
+                    query.Ising = false;
+                }
+                else
+                {
+                    ///添加一个数据 变成第二次就业数据
+                    dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                    EmpStaffAndStu empStaffAndStu = new EmpStaffAndStu();
+                    empStaffAndStu.Date = DateTime.Now;
+                    empStaffAndStu.EmploymentStage = 2;
+                    empStaffAndStu.EmploymentState = 3;
+                    empStaffAndStu.IsDel = false;
+                    empStaffAndStu.Ising = false;
+                    empStaffAndStu.QuarterID = query.QuarterID;
+                    empStaffAndStu.Remark = "登记为未就业学生";
+                    empStaffAndStu.Studentno = param0.StudentNO;
+                    dbempStaffAndStu.Insert(empStaffAndStu);
+                }
+                
 
                 ajaxResult.Success = true;
             }
@@ -298,6 +311,57 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
          
 
+        }
+
+        /// <summary>
+        /// 历史记录
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EmploySituationSee()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 就业情况表单
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="string1">学生姓名</param>
+        /// <param name="string2">等级 1或者是2  1--年   2--计划</param>
+        /// <param name="string3">计划id或者是年份 eg: 1007 季度id & 2019 年度</param>
+        /// <returns></returns>
+        public ActionResult table01(int page, int limit, string string1,string string2,int int1)
+        {
+            dbemploySituation = new EmploySituationBusiness();
+            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
+            bool year = false;
+            if (string2=="1")
+            {
+                year = true;
+            }
+            List<EmploySituationView> data= dbemploySituation.GetSituationsViewByQuarterid(isJurisdiction, year, int1, queryempstaff.ID);
+
+            if (!string.IsNullOrEmpty(string1))
+            {
+                data = data.Where(a => a.StudentName.Contains(string1)).ToList();
+            }
+
+            var data1 = data.OrderByDescending(a => a.Salary).Skip((page - 1) * limit).Take(limit).ToList();
+            var returnObj = new
+            {
+                code = 0,
+                msg = "",
+                count = data.Count,
+                data = data1
+            };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
         }
     }
 }

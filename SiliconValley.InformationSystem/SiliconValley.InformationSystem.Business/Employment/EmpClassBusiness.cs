@@ -47,7 +47,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
 
             ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
-            return dbclass.GetIQueryable().Where(a => a.IsDelete == false).ToList();
+            return dbclass.GetIQueryable().Where(a => a.IsDelete == false&&a.ClassstatusID==null).ToList();
 
 
         }
