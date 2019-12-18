@@ -152,6 +152,7 @@
     <Compile Include="Employment\EmploymentAreasBusiness.cs" />
     <Compile Include="Employment\EmploymentJurisdictionBusiness.cs" />
     <Compile Include="Employment\EmploymentStaffBusiness.cs" />
+    <Compile Include="Employment\EmploySituationBusiness.cs" />
     <Compile Include="Employment\EmpQuarterClassBusiness.cs" />
     <Compile Include="Employment\EmpStaffAndStuBusiness.cs" />
     <Compile Include="Employment\EnterpriseInfoBusiness.cs" />

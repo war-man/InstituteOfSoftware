@@ -100,7 +100,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         }
 
         /// <summary>
-        /// 根据员工id 返回它涉及到得计划
+        /// 根据员工id 返回它涉及到得计划个 根据班级来的。
         /// </summary>
         /// <returns></returns>
         public List<Quarter> GetQuartersByempid(int empid)

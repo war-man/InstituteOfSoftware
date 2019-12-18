@@ -174,7 +174,26 @@
                     ]]
                 });
             }
-
+               //重新加载表格数据 url
+            function loadtable00() {
+                table00.reload({
+                    url: '/Obtainemployment/SelfObtainRcored/table00'
+                    , done: function (res, curr, count) {
+                        if (!isbtn) {
+                            console.log('join');
+                            studentdata = res.data;
+                        }
+                    }
+                    , where: {
+                        leave: myleave,
+                        string1:string1,
+                        string2: string2
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
             //绑定节点点击
             dtree.on("node('demoTree')", function (obj) {
                 isbtn = false;
@@ -275,28 +294,6 @@
                     });
                 }
             });
-
-            //重新加载表格数据 url
-            function loadtable00() {
-                table00.reload({
-                    url: '/Obtainemployment/SelfObtainRcored/table00'
-                    , done: function (res, curr, count) {
-                        if (!isbtn) {
-                            console.log('join');
-                            studentdata = res.data;
-                        }
-                    }
-                    , where: {
-                        leave: myleave,
-                        string1:string1,
-                        string2: string2
-                    }
-                    , page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                });
-            }
-           
 
             $(document).off("click", '.myimgbtn').on('click', '.myimgbtn', function () {
                 console.log($(this).attr('myvalue'));

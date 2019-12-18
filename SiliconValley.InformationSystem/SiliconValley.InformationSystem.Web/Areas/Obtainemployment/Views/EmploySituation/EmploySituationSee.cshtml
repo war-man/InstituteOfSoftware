@@ -1,0 +1,238 @@
+﻿@{
+    ViewBag.Title = "EmploySituationSee";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h2>EmploySituationSee</h2>*@
+
+<style>
+    #div0 {
+        width: 19%;
+        height: 800px;
+        border: 1px solid red;
+        float: left;
+    }
+
+    #div1 {
+        width: 80%;
+        height: 800px;
+        border: 1px solid red;
+        float: right;
+    }
+</style>
+
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/dtree.css" rel="stylesheet" />
+<link href="~/Scripts/dtree2.5.4/layui_ext/dtree/font/dtreefont.css" rel="stylesheet" />
+<div>
+
+    <div id="div0">
+        <ul id="demoTree" class="dtree" data-id="0"></ul>
+    </div>
+
+    <div id="div1">
+        <div id="topdiv">
+            <div id="mystudentwhytop">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline" id="mubandiv">
+                            <label class="layui-form-label" id="querylable" style="width:100px">搜索选择框</label>
+
+                            <div class="layui-input-inline" style="width:156px">
+                                <input type="text" name="name0" id="name0" @*lay-verify="required"*@ placeholder="请输入学生姓名" autocomplete="off" class="layui-input">
+                            </div>
+
+                            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" id="btn0" type="button" lay-filter="btn0">搜索</button>
+
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="tablediv">
+            <div id="table00div">
+                <table class="layui-hide" id="table01" lay-filter="table01"></table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section script{
+
+    <script>
+        layui.extend({
+            dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'
+        }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
+            var dtree = layui.dtree, table = layui.table;
+            var string1 = "", string2, int1;
+            //时间转化
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+            //初始化树
+            var myDTree = dtree.render({
+                elem: "#demoTree",
+                initLevel: 1,
+                url: '/Obtainemployment/EmploySituation/EstablishTree',
+                success: function (res, $obj, first) {
+                    // res:当前异步加载的数据，
+                    //$obj:当前组件的根节点的JQuery对象，
+                    //first:是否首次加载。
+                    console.log(res);
+                    //console.log($obj);
+                    //console.log(first);
+                    //empQuarterclassid = res.data[0].children[0].children[0].nodeId;
+                    string2 = 1;
+                    int1 = res.data[0].nodeId;
+                    //treedata = res.data;
+                    loadtable();
+                    //console.log(empQuarterclassid);
+                },
+                formatter: {
+                    title: function (data) {  // 示例给有子集的节点返回节点统计
+                        var s = data.context;
+                        if (data.children) {
+                            s += ' <span style=\'color:blue\'>(' + data.children.length + ')</span>';
+                        }
+                        return s;
+                    }
+                },
+                nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
+                leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
+                icon: ["3", "11"], // 使用
+                response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
+            });
+            //绑定节点点击
+            dtree.on("node('demoTree')", function (obj) {
+                isbtn = false;
+                string1 = "";
+                studentname = "";
+                $("#name0").val("");
+                //console.log(obj);
+                var dtreeobj = obj.param;
+                string2 = dtreeobj.level;
+                int1 = dtreeobj.nodeId;
+                loadtable00();
+            });
+
+            function loadtable() {
+                table00 = table.render({
+                elem: '#table01'
+                , url: '/Obtainemployment/EmploySituation/table01?string2='+string2+'&int1='+int1
+                , skin: 'line' //行边框风格
+                , even: true //开启隔行背景
+                , limit: 20
+                , limits: [10, 20, 30, 45, 60, 75]
+                , page: true
+                , done: function (res, curr, count) {
+                }
+                , cols: [[ //标题栏
+                    { type: 'radio' }
+                    , { field: 'ID', title: '分配id'/*, width: 180*/, hide: true }
+                    , {
+                        field: 'StudentName', title: '学生姓名', width: 105, templet: function (d) {
+                            console.log(d.EntinfoID);
+                            if (d.EntinfoID == null) {
+                                  return "<span style=color:red;>" + d.StudentName + "</span>"
+                            } else {
+                                return d.StudentName;
+                            }
+                          
+
+                        }
+                    }
+                    , { field: 'StudentNO', title: '学生编号', width: 105,hide: true }
+                    , { field: 'empname', title: '就业专员', width: 105 }
+                    , { field: 'classno', title: '班级', width: 105 }
+                    , { field: 'City', title: '就业城市', width: 105 }
+                    , { field: 'Salary', title: '预计工资', width: 105 }
+                    , { field: 'RealWages', title: '实际工资', width: 105 }
+                    , { field: 'EntinfoName', title: '公司名称', width: 119 }
+                    , { field: 'NoReasons', title: '未就业原因', width: 119 }
+                    , {
+                        field: 'Date', title: '记录时间', width: 105, templet: function (d) {
+                            return "<span style=color:blue;>" + TimeChange(d.Date) + "</span>"
+
+                        }
+                    }
+                    , { field: 'Remark', title: '备注', width: 119 }
+                ]]
+            });
+            }
+            
+
+            //重新加载表格数据 url
+            function loadtable00() {
+                table00.reload({
+                    url: '/Obtainemployment/EmploySituation/table01'
+                    , done: function (res, curr, count) {
+                        //if (!isbtn) {
+                        //    console.log('join');
+                        //    studentdata = res.data;
+                        //}
+                    }
+                    , where: {
+                        string1: string1,
+                        string2: string2,
+                        int1:int1
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+                        //监听工具条
+            table.on('tool(table01)', function (obj) {
+                var data = obj.data;
+                if (obj.event == 'employed') {
+                    layer.open({
+                        type: 2,
+                        content: "/Obtainemployment/EmploySituation/employed?param0=" + data.StudentNO,
+                        title: "就业登记",
+                        area: ['800px', '500px'],
+                        success: function (layero, index) {
+                            //let body = layui.layer.getChildFrame('body', index);
+                            //body.find("#classnumnber").val(clickclassnumber);
+                        },
+                        end: function () {
+                            loadtable00();
+                        }
+                    });
+                } else if (obj.event == 'unemployed') {
+                    layer.open({
+                        type: 2,
+                        content: "/Obtainemployment/EmploySituation/unemployed?param0=" + data.StudentNO,
+                        title: "未就业登记",
+                        area: ['800px', '300px'],
+                        success: function (layero, index) {
+                            //let body = layui.layer.getChildFrame('body', index);
+                            //body.find("#classnumnber").val(clickclassnumber);
+                        },
+                        end: function () {
+                            loadtable00();
+                        }
+                    });
+                }
+            });
+                //提交
+            $("#btn0").click(function () {
+                string1 = $("#name0").val();
+                loadtable00();
+            });
+        });
+    </script>
+}
+

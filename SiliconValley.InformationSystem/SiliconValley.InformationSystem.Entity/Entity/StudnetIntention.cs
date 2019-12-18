@@ -24,10 +24,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Key]
         public int ID { get; set; }
         public string StudentNO { get; set; }
-        public Nullable<int> AreaID { get; set; }
+        public int AreaID { get; set; }
         public string Salary { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
+        public Nullable<bool> isdistribution { get; set; }
         public Nullable<System.DateTime> Date { get; set; }
        public int QuarterID { get; set; }
         public int Empinfoid { get; set; }

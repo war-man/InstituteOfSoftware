@@ -376,9 +376,14 @@
     <Compile Include="ViewEntity\MyStaticsData.cs" />
     <Compile Include="ViewEntity\My_StudentDataOne.cs" />
     <Compile Include="ViewEntity\NotreturningLateView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\addEmpStaffAndStuView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DeviceInformationHelp.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DistributionView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\DuplicateSurveyRecords.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\employed_entView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\EmploySituationView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\EmpStaffAndStuView.cs" />
+    <Compile Include="ViewEntity\ObtainEmploymentView\QuarterIDAndStudentno.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\SResearchEmpClassView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\EmploymentYearView.cs" />
     <Compile Include="ViewEntity\ObtainEmploymentView\QuarterView.cs" />

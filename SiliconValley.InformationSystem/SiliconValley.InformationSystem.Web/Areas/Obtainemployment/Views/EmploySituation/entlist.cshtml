@@ -1,0 +1,70 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>entlist</title>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <link href="~/dleiicon/font_xhlb4bpyaza/iconfont.css" rel="stylesheet" />
+    <style>
+    </style>
+</head>
+<body>
+    <div>
+        <form>
+            <textarea name="" required lay-verify="required" placeholder="请输入" style="display:none" class="layui-textarea filename"></textarea>
+        </form>
+        <table class="layui-hide" id="table00" lay-filter="table00"></table>
+    </div>
+
+    <script>
+        layui.use(['form', 'layedit', 'laydate', 'table'], function () {
+            var form = layui.form, layer = layui.layer, table = layui.table;
+            $(function () {
+                var jsdata = JSON.parse($(".filename").val());
+                console.log(jsdata);
+                table.render({
+                    elem: '#table00'
+                    , data: jsdata
+                    , skin: 'line' //行边框风格
+                    , even: true //开启隔行背景
+                    , cols: [[ //标题栏
+                        { type: 'radio' }
+                        , { field: 'ID', title: '公司id', hide: true }
+                        , { field: 'EntName', title: '企业名称', width: 105 }
+                        , { field: 'EntAddress', title: '企业地址', width: 105 }
+                        , { field: 'EntScale', title: '规模', width: 105 }
+                        , { field: 'EntNature', title: '性质', width: 105 }
+                        , { field: 'EntWelfare', title: '福利', width: 190 }
+                        , { field: 'entspee', title: '专业id', width: 190, hide: true }
+                    ]]
+                });
+                table.reload('table00', {
+
+                });
+            })
+            //监听行双击事件
+            table.on('row(table00)', function (obj) {
+                console.log(obj.data); //得到当前行数据
+                var mytr = obj.tr[0];
+                $("tr").css("background", "");
+                $(mytr).css("background", "pink");
+                window.parent.objdata = obj.data;
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            });
+
+
+
+        });
+
+    </script>
+</body>
+</html>

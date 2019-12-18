@@ -5,25 +5,28 @@
 }
 
 @*<h2>EmpStaffAndStuIndex</h2>*@
+<link href="~/dleiicon/font_xhlb4bpyaza/iconfont.css" rel="stylesheet" />
 <style>
     #div1 {
-        width: 39%;
+        width: 45%;
         height: 900px;
-        border: 1px solid red;
+        /*border: 1px solid red;*/
         float: left;
     }
 
     #div2 {
-        width: 22%;
+        
+        width: 20%;
         height: 900px;
-        border: 1px solid red;
+        /*border: 1px solid red;*/
         float: left;
+        margin-left:2%;
     }
 
     #div3 {
-        width: 39%;
+        width: 33%;
         height: 900px;
-        border: 1px solid red;
+        /*border: 1px solid red;*/
         float: left;
     }
 
@@ -35,11 +38,26 @@
         .btnDiv .delete {
             position: absolute;
             top: 0px;
-            right: 0px;
+            /*right: 0px;*/
+            right: -23px;
             width: 50px;
             height: 50px;
             display: none;
         }
+
+    #toplist {
+        height: 30%;
+        /*border: 1px solid red;*/
+    }
+
+    #detailed {
+        height: 70%;
+        /*border: 1px solid red;*/
+    }
+
+    .lad {
+        width: 90px;
+    }
 </style>
 <div id="div1">
     <div id="topdiv">
@@ -50,9 +68,11 @@
                         <label class="layui-form-label" id="querylable" style="width:120px;">搜索选择框</label>
                         <div class="layui-input-inline" style="width:156px">
                             <select name="modules" id="modules" @*lay-verify="required"*@ lay-filter="select00" lay-search="">
-                                <option value="ing">株洲</option>
-                                <option value="ed">上海</option>
-                                <option value="ed">深圳</option>
+                                <option value="-1">全部</option>
+                                @foreach (var item in ViewBag.arealist)
+                                {
+                                    <option value="@item.ID">@item.AreaName</option>
+                                }
                             </select>
                         </div>
                         <div class="layui-input-inline" style="width:156px">
@@ -72,67 +92,350 @@
     </div>
 
 </div>
-<div id="div2">
-    <input type="checkbox" />
+<div id="div2" style="margin-top:4%">
+    <div>
+        <h2>    选择就业专员 </h2>
+    </div>
+    <form class="layui-form" action="">
+        <div class="layui-row layui-form-item">
+            <div id="divadd">
+
+            </div>
+        </div>
+        <div class="layui-row layui-form-item">
+            <button class="layui-btn layui-btn-radius layui-btn-normal layui-btn" lay-submit="" lay-filter="btn1">分配</button>
+        </div>
+
+    </form>
 </div>
 <div id="div3">
     <div id="toplist">
-        <div class="btnDiv">
-            <button class="layui-btn layui-btn-lg layui-btn-radius">李四</button>
-            <a href="javascript:void(0);">
-                <img src="~/Images/del.png" height="6" width="6" distributionid="123" class="delete" />
-            </a>
-        </div>
+
     </div>
     <div id="detailed">
+        <form class="layui-form" action="">
 
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label lad">学生姓名:</label>
+                    <div class="layui-input-inline indiv" style="width: 146px;">
+                        <input type="text" id="StudentName" style="border:none;background-color:transparent;" value="" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label lad">班级名称:</label>
+                    <div class="layui-input-inline indiv" style="width: 146px;">
+                        <input type="text" id="classno" style="border:none;background-color:transparent;" value="" class="layui-input" readonly="readonly" />
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label lad">预想薪资:</label>
+                    <div class="layui-input-inline indiv" style="width: 146px;">
+                        <input type="text" id="Salary" style="border:none;background-color:transparent;" value="" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label lad">预想城市:</label>
+                    <div class="layui-input-inline" style="width: 146px;">
+                        <input type="text" id="Areaname" style="border:none;background-color:transparent;" value="" class="layui-input" readonly="readonly" />
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label lad">毕业季度:</label>
+                    <div class="layui-input-inline indiv" style="width: 146px;">
+                        <input type="text" id="Quartertitle" style="border:none;background-color:transparent;" value="" class="layui-input" readonly="readonly" />
+                    </div>
+                </div>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label lad">就业阶段:</label>
+                    <div class="layui-input-inline" style="width: 146px;">
+                        <input type="text" id="EmploymentStage" style="border:none;background-color:transparent;" value="" class="layui-input" readonly="readonly" />
+
+                    </div>
+                </div>
+            </div>
+
+        </form>
     </div>
 </div>
 @section script{
 
     <script src="~/Scripts/underscore.js"></script>
-
+    <script type="text/template" id="muban0">
+        <input type="radio" name="EmpStaffID" title="{{=title}}" value="{{=value}}" lay-filter="radio00" lay-skin="primary" {{=checked}}>
+    </script>
+    <script type="text/template" id="muban1">
+        <div class="btnDiv">
+            <button class="layui-btn layui-btn-lg layui-btn-primary layui-btn-radius">{{=studentname}}</button>
+            <a href="javascript:void(0);">
+                <span class="iconfont icon-shanchu delete" distributionid="{{=studentno}}"></span>
+            </a>
+        </div>
+    </script>
     <script>
         layui.use(['laypage', 'form', 'table', 'layer'], function () {
             var table = layui.table, form = layui.form, layer = layui.layer;
-            var table00;
-            $(document).ready(init);
+            var table00, areaid, data, studentnos,empstaffname,empstaffid,studentno;
+            
+            jQuery(function () {
+                areaid = -1;
+                loadtable();
+               
+            });
             function init() {
                 $(".btnDiv").mouseenter(function () {
                     $(this).find(".delete").show();
+                    //console.log($(this));
+                    //console.log($($($(this).children()[1]).children()[0]).attr('distributionid'));
+                    studentno = $($($(this).children()[1]).children()[0]).attr('distributionid');
+                    //console.log(studentno);
+                    loadform();
 
                 });
                 $(".btnDiv").mouseleave(function () {
                     $(this).find(".delete").hide();
                 });
-
             }
             $(document).off("click", '.delete').on('click', '.delete', function () {
-                console.log($(this).attr('distributionid'));
+                //console.log($(this).attr('distributionid'));
                 $(this).parent().parent().remove();
-            });
-            table00 = table.render({
-                elem: '#table00'
-                , url: '/Obtainemployment/EmpStaffAndStu/table00'
-                , skin: 'line' //行边框风格
-                , even: true //开启隔行背景
-                , limit: 20
-                , limits: [10, 20, 30, 45, 60, 75]
-                , page: true
-                //, toolbar: '#toolbarDemo'
-                , done: function (res, curr, count) {
+                $.ajax({
+                    url: '/Obtainemployment/EmpStaffAndStu/Redistribution',
+                    async: false,
+                    data: { param0: studentno },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('取消分配成功！', { icon: 6, time: 2000 }, function () {
+                                reloadloadtable00();
+                            });
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
 
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+                //reloadloadtable00();
+            });
+            function loadstaff() {
+                $("#divadd").children().remove();
+                var data = JSON.parse('@Html.Raw(ViewBag.empstaff)');
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban0").html());
+                    var html = "";
+                    if (i == 0) {
+                        html = obj({ value: data[i].ID, title: data[i].EmpStaffName, checked: "checked" });
+                        empstaffid =  data[i].ID;
+                        empstaffname = data[i].EmpStaffName;
+                    } else {
+                        html = obj({ value: data[i].ID, title: data[i].EmpStaffName, checked: "" });
+                    }
+                    $("#divadd").append($(html));
                 }
-                , cols: [[ //标题栏
-                    { type: 'checkbox' }
-                    , { field: 'studentno', title: '学生编号', hide: true }
-                    , { field: 'studnetname', title: '学生姓名', width: 90 }
-                    , { field: 'empname', title: '预想城市', width: 90 }
-                    , { field: 'classno', title: '预想薪资', width: 90 }
-                    , { field: 'title', title: '季度', width: 117 }
-                    , { field: 'title', title: '班级', width: 90 }
-                    , { field: 'title', title: '就业状态', width: 117 }
-                ]]
+                loadstudent();
+                form.render();
+            }
+            function loadstudent() {
+                $.ajax({
+                    url: '/Obtainemployment/EmpStaffAndStu/loadstudent',
+                    //async: false,
+                    data: { param0: empstaffid },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            var data = successdata.Data;
+                            loadjsstudent(data);
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+            }
+            function loadjsstudent(data) {
+                console.log(data);
+                $("#toplist").children().remove();
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        var obj = _.template($("#muban1").html());
+                        if (i == 0) {
+                            studentno = data[i].Studentno;
+                        }
+                        var html = obj({ studentname: data[i].studentname, studentno: data[i].Studentno });
+                        $("#toplist").append($(html));
+                    }
+                    $(document).ready(init);
+                    loadform();
+                } else {
+                    layer.msg('该就业专员未分配学生!', { icon: 6, time: 1000 }, function () {
+                        $("#classno").val("");
+                        $("#StudentName").val("");
+                        $("#Salary").val("");
+                        $("#Areaname").val("");
+                        $("#Quartertitle").val("");
+                        $("#EmploymentStage").val("");
+                    });
+                }
+                
+            }
+            function loadform() {
+                 $.ajax({
+                    url: '/Obtainemployment/EmpStaffAndStu/loadform',
+                     //async: false,
+                     data: { param0: studentno },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            var data = successdata.Data;
+                            $("#classno").val(data.classno);
+                            $("#StudentName").val(data.StudentName);
+                            $("#Salary").val(data.Salary);
+                            $("#Areaname").val(data.Areaname);
+                            $("#Quartertitle").val(data.Quartertitle);
+                            $("#EmploymentStage").val(data.EmploymentStage);
+
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+
+            }
+            function loadtable() {
+                table00 = table.render({
+                    elem: '#table00'
+                    , url: '/Obtainemployment/EmpStaffAndStu/table00?string0=' + areaid
+                    , skin: 'line' //行边框风格
+                    , even: true //开启隔行背景
+                    , limit: 20
+                    , limits: [10, 20, 30, 45, 60, 75]
+                    , page: true
+                    //, toolbar: '#toolbarDemo'
+                    , done: function (res, curr, count) {
+                        data = res.data;
+                         loadstaff();
+                    }
+                    , cols: [[ //标题栏
+                        { type: 'checkbox' }
+                        , { field: 'ID', title: 'ID', hide: true }
+                        , { field: 'StudentNO', title: '学生编号', width: 90, hide: true }
+                        , { field: 'StudentName', title: '学生姓名', width: 90 }
+                        , { field: 'QuarterID', title: '季度id', width: 90, hide: true }
+                        , { field: 'Areaname', title: '预想城市', width: 90 }
+                        , { field: 'Salary', title: '预想薪资', width: 90 }
+                        , { field: 'Quartertitle', title: '季度'/*, width: 117*/ }
+                        , { field: 'classno', title: '班级', width: 90 }
+                        , { field: 'EmploymentStage', title: '就业状态'/*, width: 117 */ }
+                    ]]
+                });
+            }
+
+            //重新加载表格数据 url
+            function reloadloadtable00() {
+                table00.reload({
+                    url: '/Obtainemployment/EmpStaffAndStu/table00'
+                    , done: function (res, curr, count) {
+                        loadstaff();
+                    }
+                    , where: {
+                        string0: areaid,
+                        string1: studentnos
+                    }
+                    , page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                });
+            }
+            form.on('select(select00)', function (data) {
+                areaid = data.value;
+                reloadloadtable00();
+
+            });
+            form.on('radio(radio00)', function (data) {
+                empstaffid = data.value;
+                empstaffname = $(data.elem).attr('title');
+                console.log(empstaffname);
+                loadstudent();
+            });
+            //分配
+            form.on('submit(btn1)', function (data) {
+                var checkStatus = table.checkStatus('table00'); //table00 即为基础参数 id 对应的值
+                console.log(checkStatus.data) //获取选中行的数据
+                console.log(data.field);
+                if (checkStatus.data.length > 0) {
+                    var param0 = new Object();
+                    var quarterIDAndStudentnos = new Array();
+                    var studentnames = "";
+                    param0.EmpStaffID = data.field.EmpStaffID;
+                    for (var i = 0; i < checkStatus.data.length; i++) {
+                        var QuarterIDAndStudentno = new Object();
+                        QuarterIDAndStudentno.QuarterID = checkStatus.data[i].QuarterID;
+                        QuarterIDAndStudentno.Studentno = checkStatus.data[i].StudentNO;
+                        quarterIDAndStudentnos.push(QuarterIDAndStudentno);
+                         studentnames= studentnames + " " + checkStatus.data[i].StudentName;
+                    }
+                    param0.quarterIDAndStudentnos = quarterIDAndStudentnos;
+                    console.log(param0);
+                    layer.confirm('是否确定将 <span style="color:red">&nbsp&nbsp'+studentnames+'</span>&nbsp&nbsp分配给&nbsp&nbsp<span style="color:red">'+empstaffname+'&nbsp&nbsp</span>?', { icon: 3, title: '提示' }, function (index) {
+                        $.ajax({
+                            url: '/Obtainemployment/EmpStaffAndStu/distribution',
+                            type: 'POST',
+                            data: { param0: param0 },
+                            success: function (successdata) {
+                                if (successdata.Success) {
+                                    layer.close(index);
+                                    layer.msg('分配成功！', { icon: 6, time: 2000 }, function () {
+
+                                         reloadloadtable00();
+                                    });
+
+                                } else {
+                                    layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                                    });
+                                }
+                            },
+                            error: function (errordata) {
+                                layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                                });
+                            }
+                        });
+                    });
+
+                } else {
+                    layer.msg('请选择要分配的学生！', { icon: 6, time: 2000 }, function () {
+
+                    });
+                }
+                return false;
             });
         });
     </script>

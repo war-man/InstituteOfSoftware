@@ -43,5 +43,43 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return this.GetAll().Where(a => a.ID == EnterID).FirstOrDefault();
         }
 
+
+        /// <summary>
+        /// 名字是否唯一  true 可以使用 false 不能使用
+        /// </summary>
+        /// <returns></returns>
+        public bool isonlyname(string entname,string entid) {
+            bool result = false;
+            //判断是否是自己
+            if (!string.IsNullOrEmpty(entid))
+            {
+                int keyid = int.Parse(entid);
+               var queryobj=  this.GetEntity(keyid);
+                if (queryobj.EntName==entname)
+                {
+                    result = true;
+                }
+            }
+            else
+            {
+                var query = this.GetInfoByentname(entname);
+                if (query==null)
+                {
+                    return true;
+                }
+            }
+            return result;
+        }
+
+       /// <summary>
+       /// 根据公司名称返回这个公司对象
+       /// </summary>
+       /// <param name="entname"></param>
+       /// <returns></returns>
+        public EnterpriseInfo GetInfoByentname(string entname) {
+           return this.GetAll().Where(a => a.EntName == entname).FirstOrDefault();
+        }
+
+        
     }
 }
