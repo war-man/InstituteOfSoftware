@@ -273,6 +273,7 @@
     <Compile Include="Areas\Obtainemployment\Controllers\EmpClassController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentAreasController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploymentCommissionerController.cs" />
+    <Compile Include="Areas\Obtainemployment\Controllers\EmploymentSummaryController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmploySituationController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\EmpStaffAndStuController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\QuarterController.cs" />
@@ -1253,6 +1254,7 @@
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\EmploySituationSee.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\entlist.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\unemployed.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\EmploymentSummaryIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
