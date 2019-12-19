@@ -19,6 +19,7 @@ using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 using SiliconValley.InformationSystem.Business.EducationalBusiness;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.ClassDynamics_Business;
+using SiliconValley.InformationSystem.Business.Employment;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -757,6 +758,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return shortmessageBusiness.EntiShortmessage("学费催费", content);
         }
+
+        private EmpClassBusiness empClassBusiness;
         /// <summary>
         /// S2,S3升学
         /// </summary>
@@ -764,6 +767,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public AjaxResult EntitAddClassSchedule(int ClassID)
         {
+            empClassBusiness = new EmpClassBusiness();
+           
             AjaxResult result = null;
             try
             {
