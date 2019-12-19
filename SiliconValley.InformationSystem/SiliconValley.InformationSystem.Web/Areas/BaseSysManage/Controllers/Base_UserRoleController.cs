@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
     public class Base_UserRoleController : Controller
     {
 
+
         private readonly Base_UserBusiness db_user;
         private readonly Base_SysRoleBusiness db_role;
         private readonly OtherPermissionBusiness db_otherPermission;
