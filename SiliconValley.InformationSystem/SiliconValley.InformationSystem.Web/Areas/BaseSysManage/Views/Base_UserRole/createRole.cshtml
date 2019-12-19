@@ -1,0 +1,125 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>createRole</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+
+        form {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="mywarp">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">角色名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" width="300" lay-verify="required" value="" name="roleName" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">业务名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" width="300" lay-verify="required" value="" name="businessName" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <hr />
+            
+
+
+            <div id="btns" style="text-align:center;">
+                <button style="width:150px;" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="commit" id="commit" type="button">创建</button>
+
+                <button style="width:150px;" class="layui-btn layui-btn-primary" id="close" type="button">关闭</button>
+            </div>
+
+        </form>
+    </div>
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+        
+
+            //监听提交   //创建账号
+            form.on('submit(commit)', function (data) {
+
+                console.log(data);
+
+                layer.confirm('确定创建?', { icon: 3, title: '提示' }, function (index) {
+
+                    layer.close(index);
+
+                    var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                    
+                    //发送请求
+                    $.post('/BaseSysManage/Base_UserRole/createRole', data.field, function (result) {
+
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.close(loadIndex);
+
+                            layer.msg('创建成功！', { icon: 1 }, function () {
+
+                                //关闭页面
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index);
+                            });
+
+                        }
+                        else {
+                            layer.close(loadIndex);
+                            layer.msg(result.Msg, { icon: 2 }, function () {
+
+                            });
+
+
+                        }
+
+                    });
+
+
+                });
+                return false;
+            });
+
+            $("#close").click(function () {
+
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭
+            });
+
+        });
+    </script>
+</body>
+</html>
+

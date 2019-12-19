@@ -270,6 +270,19 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
 
 
         }
+
+        public bool IsContains(List<string> rolelist, string roleid)
+        {
+            foreach (var item in rolelist)
+            {
+                if (item == roleid)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
     public class Base_UserModel : Base_User

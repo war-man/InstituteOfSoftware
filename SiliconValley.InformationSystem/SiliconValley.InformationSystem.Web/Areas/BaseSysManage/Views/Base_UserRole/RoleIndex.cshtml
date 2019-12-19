@@ -3,137 +3,215 @@
     ViewBag.Title = "RoleIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@section style{
 
-@*@section toolbar{
-    <a id="add" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加</a>
-    <a id="edit" class="easyui-linkbutton" data-options="iconCls:'icon-edit'">修改</a>
-    <a id="delete" class="easyui-linkbutton" data-options="iconCls:'icon-remove'">删除</a>
-}*@
+    <style>
+        #mywarp {
+            width: 100%;
+        }
+    </style>
 
-@*@section search{
-    <div class="search_wrapper">
-        <div class="search_item">
-            <label class="search_label">查询类别</label>
-            <select name="condition" class="easyui-combobox" data-options="width:100">
-                <option value="">请选择</option>
-                <option value="RoleName">角色名</option>
-            </select>
-            <input name="keyword" class="easyui-textbox" style="width:150px" />
-        </div>
-        <div class="search_submit">
-            <a href="javascript:;" class="easyui-linkbutton" data-options="iconCls:'icon-search'" onclick="searchGrid(this,'#dataTable')">查询</a>
-        </div>
+}
+
+<div id="mywarp">
+
+    <div id="searchdiv">
+        <form class="layui-form">
+            <div class="layui-form-item">
+
+
+                
+                <div class="layui-inline">
+                    <label class="layui-form-label" style="width:100px;">角色：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="rolename" value=""  class="layui-input">
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+
+                    <div class="layui-input-inline">
+                        <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="search">查询</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-}*@
-<div id="dataTable">
+
+    <table class="layui-hide" id="roleTable" lay-filter="roleTable"></table>
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="createRole"><i class="layui-icon layui-icon-add-1"></i>新建角色</button>
+            <button class="layui-btn layui-btn-sm" lay-event="menuConfig"><i class="layui-icon layui-icon-set-sm"></i>显示菜单配置</button>
+            <button class="layui-btn layui-btn-sm" lay-event="otherPermissionConfig"><i class="layui-icon layui-icon-set-sm"></i>其他权限</button>
+            <button class="layui-btn layui-btn-sm" lay-event="addMenu"><i class="layui-icon layui-icon-set-sm"></i>菜单添加</button>
+            <button class="layui-btn layui-btn-sm" lay-event="permissionMange"><i class="layui-icon layui-icon-set-sm"></i>权限管理</button>
+        </div>
+    </script>
 
 </div>
 
-<script>
-    var rootUrl = '@Url.Content("~/")';
+@section script{
+    
 
-    function initTable() {
-        $('#dataTable').datagrid({
-            url: rootUrl + 'Base_SysManage/Base_SysRole/GetDataList',
-            method: 'POST',
-            //queryParams: { 'id': id },
-            idField: 'Id',
-            fit: true,
-            fitColumns: true,
-            singleSelect: false,
-            selectOnCheck: false,
-            checkOnSelect: false,
-            //rownumbers: true,
-            pagination: true,
-            pageSize: 30,
-            //nowrap: false,
-            pageList: [10, 20, 30, 50, 100, 150, 200],
-            //showFooter: true,
-            columns: [[
-                { title: 'ck', field: 'ck', checkbox: true },
-                { title: '角色名', field: 'RoleName', width: 300, fixed: true },
-                {
-                    title: '操作', field: '_', width: 200, fixed: true, formatter: function (value,row) {
-                        var html = '';
-                        html += '<a href="javascript:;" onclick="setPermission(\'{0}\',\'{1}\')">设置权限</a>'.format(row['RoleId'], row['RoleName']);
+    <script>
+        layui.use(['form', 'layer','table'], function () {
 
-                        return html;
-                    }
-                }
-            ]],
-            onBeforeSelect: function () {
-                return false;
-            }
-        });
-    }
+            var form = layui.form;
+            var layer = layui.layer;
+            var table = layui.table;
 
-    $(function () {
-        initTable();
+            table.render({
+                elem: '#roleTable'
+                , url: '/BaseSysManage/Base_UserRole/RoleData'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , id: "roleTable"
+                , title: '角色'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'RoleId', hide: true, title: '标识', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'RoleName', title: '角色名称', width: "45%" }
+                    , { field: 'BusinessName', title: '业务名称', width: "45%" }
+                   
 
-        //添加数据
-        $('#add').click(function () {
-            dialogOpen({
-                id: 'form',
-                title: '添加数据',
-                width: 500,
-                height: 200,
-                url: rootUrl + 'Base_SysManage/Base_SysRole/Form',
-            });
-        });
-
-        //修改数据
-        $('#edit').click(function () {
-            var selected = $("#dataTable").datagrid("getChecked");
-            if (!selected || !selected.length) {
-                dialogError('请选择要修改的记录!');
-                return;
-            }
-            var id = selected[0].Id;
-
-            dialogOpen({
-                id: 'form',
-                title: '修改数据',
-                width: 500,
-                height: 200,
-                url: rootUrl + 'Base_SysManage/Base_SysRole/Form?id=' + id,
-            });
-        });
-
-        //删除数据
-        $('#delete').click(function () {
-            var checked = $("#dataTable").datagrid("getChecked");
-            if (!checked || !checked.length) {
-                dialogError('请选择要删除的记录!');
-                return;
-            }
-            var ids = $.map(checked, function (item) {
-                return item['Id'];
+                ]]
+                , page: true
             });
 
-            dialogComfirm('确认删除吗？', function () {
-                $.postJSON(rootUrl + 'Base_SysManage/Base_SysRole/DeleteData', { ids: JSON.stringify(ids) }, function (resJson) {
-                    if (resJson.Success) {
-                        $('#dataTable').datagrid('clearSelections').datagrid('clearChecked');
-                        $('#dataTable').datagrid('reload');
-                        dialogMsg('删除成功!');
-                    }
-                    else {
-                        dialogError(resJson.Msg);
-                    }
-                });
-            });
-        });
-    });
 
-    //设置权限
-    function setPermission(roleId,roleName) {
-        dialogOpen({
-            id: 'permissionForm',
-            title: '设置角色【{0}】权限'.format(roleName),
-            width: '80%',
-            height: '80%',
-            url: rootUrl + 'Base_SysManage/Base_SysRole/PermissionForm?roleId={0}'.format(roleId),
+            //头工具栏事件
+            table.on('toolbar(roleTable)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'createRole':
+                        var data = checkStatus.data;
+
+                        //创建角色
+
+                        layer.open({
+
+                            type: 2,
+                            area: ['500px', '300px'],
+                            title: "新建角色",
+                            content: '/BaseSysManage/Base_UserRole/createRole',
+                            end: function () {
+
+                                //表格重载
+                                table.reload("roleTable");
+
+                            }
+                        });
+
+                        break;
+
+                    case 'menuConfig':
+
+                        //角色菜单配置
+                        var data = checkStatus.data;
+
+                        if (data.length == 0) {
+
+                            layer.msg('请选择角色！', { icon: 2 }, function () {
+
+
+                            });
+
+                            return;
+                        }
+
+                        layer.open({
+                            
+                            type: 2,
+                            area: ['300px', '800px'],
+                            title: "角色_菜单配置",
+                            content: '/BaseSysManage/Base_UserRole/RoleUrlPermiss?roleId=' + data[0].RoleId,
+                            end: function () {
+
+                                //表格重载
+                                table.reload("roleTable");
+
+                            }
+                        });
+
+                        break;
+                    case 'otherPermissionConfig':
+
+                        
+                        var data = checkStatus.data;
+
+                        if (data.length == 0) {
+
+                            layer.msg('请选择角色！', { icon: 2 }, function () {
+
+
+                            });
+
+                            return;
+                        }
+
+                        layer.open({
+                            
+                            type: 2,
+                            area: ['1000px', '800px'],
+                            title: "角色_其他权限配置",
+                            content: '/BaseSysManage/Base_UserRole/setOtherPermissTorole?role=' + data[0].RoleId,
+                            end: function () {
+
+                                //表格重载
+                                table.reload("roleTable");
+
+                            }
+                        });
+
+                        break;
+                        
+                    case 'addMenu':
+
+                        layer.open({
+
+                            type: 2,
+                            area: ['1000px', '800px'],
+                            title: "菜单管理",
+                            content: '/BaseSysManage/Base_Permission/MenusIndex',
+                        });
+
+                        break;
+                    case 'permissionMange':
+
+                        layer.open({
+
+                            type: 2,
+                            area: ['300px', '800px'],
+                            title: "菜单管理",
+                            content: '/BaseSysManage/Base_Permission/permissManage',
+                        });
+
+                        break;
+
+                };
+            });
+
+            ///查询
+            form.on('submit(search)', function (data) {
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                table.reload('roleTable', {
+                    url: '/BaseSysManage/Base_UserRole/RoleData',
+                        where: {
+                            roleName: data.field.rolename,
+
+                        }
+                    });
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
         });
-    }
-</script>
+    </script>    
+    
+}
+
+
 
