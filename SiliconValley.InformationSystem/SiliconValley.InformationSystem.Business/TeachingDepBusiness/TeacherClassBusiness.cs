@@ -6,13 +6,15 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 {
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+    using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System.Xml;
 
-    public class TeacherClassBusiness:BaseBusiness<ClassTeacher>
+    public class TeacherClassBusiness : BaseBusiness<ClassTeacher>
     {
 
 
@@ -28,7 +30,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         GrandBusiness db_grand = new GrandBusiness();
 
         public TeacherBusiness db_teacher = new TeacherBusiness();
-
         BaseBusiness<Curriculum> Currculum_Entity = new BaseBusiness<Curriculum>();
 
         /// <summary>
@@ -38,7 +39,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         public List<ClassTeacher> GetClassTeachers()
         {
-            return this.GetList().Where(d => d.IsDel == false).ToList() ;
+            return this.GetList().Where(d => d.IsDel == false).ToList();
         }
 
 
@@ -52,18 +53,18 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public List<ClassSchedule> GetCrrentMyClass(int teacherid)
         {
 
-           var templist =  this.GetClassTeachers().Where(d=>d.TeacherID==teacherid).ToList();
+            var templist = this.GetClassTeachers().Where(d => d.TeacherID == teacherid).ToList();
 
             BaseBusiness<ClassSchedule> classdb = new BaseBusiness<ClassSchedule>();
 
-            var classlisttemp = classdb.GetList().Where(d => d.IsDelete == false && d.ClassStatus==false).ToList();
+            var classlisttemp = classdb.GetList().Where(d => d.IsDelete == false && d.ClassStatus == false).ToList();
 
             List<ClassSchedule> resultlist = new List<ClassSchedule>();
 
             foreach (var item in templist)
             {
 
-               var obj = classlisttemp.Where(d => d.id == item.ClassNumber).FirstOrDefault();
+                var obj = classlisttemp.Where(d => d.id == item.ClassNumber).FirstOrDefault();
 
                 if (obj != null)
                 {
@@ -85,7 +86,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public StudentInformation GetStudentByNumber(string studentnumber)
         {
 
-           var student = db_student.GetList().Where(d=>d.IsDelete==false && d.StudentNumber==studentnumber).FirstOrDefault();
+            var student = db_student.GetList().Where(d => d.IsDelete == false && d.StudentNumber == studentnumber).FirstOrDefault();
 
             return student;
         }
@@ -96,7 +97,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public List<ClassSchedule> AllClassSchedule()
         {
-            return db_class.GetIQueryable().ToList() ;
+            return db_class.GetIQueryable().ToList().Where(d => d.IsDelete == false).ToList();
         }
         public StudentDetailView GetStudetentDetailView(StudentInformation student)
         {
@@ -121,14 +122,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             if (student.Picture == null || student.Picture == "")
             {
                 //默认头像
-               var defaultImg = Avatar.GetElementsByTagName("default")[0];
+                var defaultImg = Avatar.GetElementsByTagName("default")[0];
                 detailView.Avatar = avatarUrl + defaultImg.Attributes["img"].Value;
             }
             else
             {
-                detailView.Avatar = avatarUrl+student.Picture;
+                detailView.Avatar = avatarUrl + student.Picture;
             }
-            
+
             detailView.qq = student.qq;
             detailView.Sex = (bool)student.Sex ? "男" : "女";
             detailView.State = student.State;
@@ -136,25 +137,25 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             detailView.Telephone = student.Telephone;
             detailView.WeChat = student.WeChat;
             detailView.IdCard = student.identitydocument;
-            
+
             //获取这个学员的当前班级
 
-           var temp = db_studentclass.GetList().Where(d => d.CurrentClass == true && d.StudentID == student.StudentNumber).FirstOrDefault();
-            ClassSchedule myclass = db_class.GetList().Where(d=>d.IsDelete==false && d.ClassNumber==temp.ClassID).FirstOrDefault();
+            var temp = db_studentclass.GetList().Where(d => d.CurrentClass == true && d.StudentID == student.StudentNumber).FirstOrDefault();
+            ClassSchedule myclass = db_class.GetList().Where(d => d.IsDelete == false && d.ClassNumber == temp.ClassID).FirstOrDefault();
             var classmenber = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == myclass.id && d.Studentnumber == student.StudentNumber).FirstOrDefault();
 
 
             if (classmenber != null)
             {
-               var posti =  db_members.GetList().Where(d => d.IsDelete == false && d.ID == classmenber.Typeofposition).FirstOrDefault();
+                var posti = db_members.GetList().Where(d => d.IsDelete == false && d.ID == classmenber.Typeofposition).FirstOrDefault();
                 detailView.PositionName = posti.Nameofmembers;
 
             }
 
-            
 
-           detailView.ClassName = myclass.ClassNumber;
-            var grand =  db_grand.GetGrandByID((int)myclass.grade_Id);
+
+            detailView.ClassName = myclass.ClassNumber;
+            var grand = db_grand.GetGrandByID((int)myclass.grade_Id);
 
             if (grand != null)
             {
@@ -175,7 +176,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             {
                 detailView.MajorName = "";
             }
-            
+
 
 
             return detailView;
@@ -206,20 +207,21 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             {
                 classTableView.MajorName = db_major.GetSpecialtyByID((int)classSchedule.Major_Id).SpecialtyName;
             }
-            else {
+            else
+            {
                 classTableView.MajorName = "";
 
             }
 
-            
 
-            classTableView.ClassSize= this.GetStudentByClass(classSchedule.id).Count;//班级人数
-             //学员班级                                                                                              //学员班级
+
+            classTableView.ClassSize = this.GetStudentByClass(classSchedule.id).Count;//班级人数
+                                                                                      //学员班级                                                                                              //学员班级
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
 
             try
             {
-                
+
                 var master = headerclass.GetList().Where(d => d.IsDelete == false && d.ClassID == classScheduleBusiness.GetEntity(classSchedule.ClassNumber).id).FirstOrDefault();
 
                 var temp1 = headermaster.GetList().Where(d => d.IsDelete == false && d.ID == master.LeaderID).FirstOrDefault();//获取到班主任
@@ -243,7 +245,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 classTableView.qqGroup = "暂无";
             }
 
-           
+
 
             return classTableView;
 
@@ -253,11 +255,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <summary>
         /// 获取班级
         /// </summary>
-        /// <param name="classnumber">班级编号</param>
+        /// <param name="classnumber">班级id</param>
         /// <returns></returns>
         public ClassSchedule GetClassByClassNumber(string classnumber)
         {
-            return db_class.GetList().Where(d => d.IsDelete == false && d.id ==int.Parse( classnumber)).FirstOrDefault();
+            return db_class.GetList().Where(d => d.IsDelete == false && d.id == int.Parse(classnumber)).FirstOrDefault();
 
         }
 
@@ -277,7 +279,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             var memberlist = db_members.GetList().Where(d => d.IsDelete == false).ToList();
 
 
-           var temp = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classnumber).ToList();
+            var temp = db_stuposi.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classnumber).ToList();
 
             foreach (var item in memberlist)
             {
@@ -294,7 +296,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     result[item.Nameofmembers] = null;
                 }
 
-               
+
             }
 
             return result;
@@ -313,11 +315,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             //获取学员班级
 
-             var dd = db_studentclass.GetList().Where(d => d.StudentID == studentnumber && d.CurrentClass == true).FirstOrDefault();
+            var dd = db_studentclass.GetList().Where(d => d.StudentID == studentnumber && d.CurrentClass == true).FirstOrDefault();
 
             TeacherBusiness db = new TeacherBusiness();
 
-           return db.GetTeachers().Where(x=>x.TeacherID== this.GetList().Where(d => d.ClassNumber == dd.ID_ClassName && d.IsDel == false).FirstOrDefault().TeacherID) .FirstOrDefault();
+            return db.GetTeachers().Where(x => x.TeacherID == this.GetList().Where(d => d.ClassNumber == dd.ID_ClassName && d.IsDel == false).FirstOrDefault().TeacherID).FirstOrDefault();
 
 
 
@@ -330,15 +332,16 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public EmployeesInfo ClassTeacher(string classNumber)
         {
             var tempobj = this.GetList().Where(d => d.ClassNumber == int.Parse(classNumber)).FirstOrDefault();
-            if (tempobj!=null)
+            if (tempobj != null)
             {
                 var tempobj1 = db_teacher.GetTeachers().Where(d => d.TeacherID == tempobj.TeacherID).FirstOrDefault();
-                if (tempobj1!=null)
+                if (tempobj1 != null)
                 {
                     BaseBusiness<EmployeesInfo> empmanage = new BaseBusiness<EmployeesInfo>();
 
                     return empmanage.GetList().Where(d => d.EmployeeId == tempobj1.EmployeeId).FirstOrDefault();
-                }else
+                }
+                else
                 {
                     return new EmployeesInfo();
                 }
@@ -347,7 +350,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             {
                 return new EmployeesInfo();
             }
-                             
+
         }
 
         /// <summary>
@@ -375,11 +378,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             List<StudentInformation> result = new List<StudentInformation>();
 
-           var templist = this.AllScheduleForTrainees().Where(d => d.ID_ClassName == classId && d.CurrentClass == true).ToList();
+            var templist = this.AllScheduleForTrainees().Where(d => d.ID_ClassName == classId && d.CurrentClass == true).ToList();
 
             foreach (var item in templist)
             {
-               var student = this.GetStudentByNumber(item.StudentID);
+                var student = this.GetStudentByNumber(item.StudentID);
 
                 if (student != null)
                     result.Add(student);
@@ -394,11 +397,129 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public ClassSchedule GetScheduleByStudent(string studentnumber)
         {
-           var tempobj = db_studentclass.GetIQueryable().Where(d => d.CurrentClass == true && d.StudentID == studentnumber).FirstOrDefault();
+            var tempobj = db_studentclass.GetIQueryable().Where(d => d.CurrentClass == true && d.StudentID == studentnumber).FirstOrDefault();
 
-           return this.AllClassSchedule().Where(d => d.id == tempobj.ID_ClassName).FirstOrDefault();
+            return this.AllClassSchedule().Where(d => d.id == tempobj.ID_ClassName).FirstOrDefault();
         }
-         
+
+        /// <summary>
+        /// 获取班级专业
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public Specialty GetClass_Major(int classid)
+        {
+            var classschu = this.GetClassByClassNumber(classid.ToString());
+
+            return db_major.GetSpecialtyByID(classschu.Major_Id);
+
+        }
+
+
+
+        /// <summary>
+        /// 获取教员带班记录
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassTeacher> TeacherArrangementRecord(int teacherid)
+        {
+            return this.GetIQueryable().Where(d => d.TeacherID == teacherid).ToList();
+
+        }
+
+        public List<ClassSchedule> GrandClassByUser(Base_UserModel user)
+        {
+            //获取账号所有的角色
+
+            var userRoles = user.RoleIdList;
+
+
+            List<ClassSchedule> emplist = new List<ClassSchedule>();
+
+            //循环获取每个角色的权限
+
+            foreach (var role in userRoles)
+            {
+                // 权限id 权限名称 ,可查看的部门 
+
+
+                //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
+                BaseBusiness<OtherRoleMapPermissionValue> db_permissrole = new BaseBusiness<OtherRoleMapPermissionValue>();
+
+                var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
+
+                foreach (var permission in permissions)
+                {
+                    //根据权限到 配置文件中去匹配
+                    XmlDocument xmlDocument = new XmlDocument();
+                    xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Areas/Teaching/config/empmanageConfig.xml"));
+
+                    var xmlRoot = xmlDocument.DocumentElement;
+
+                    var permissionConfig = (XmlElement)xmlRoot.GetElementsByTagName("grandteacherPermissions")[0];
+
+                    //获取配置文件中的权限
+                    XmlNodeList permissNmaes = permissionConfig.ChildNodes;
+
+                    foreach (XmlElement item in permissNmaes)
+                    {
+                        if (item.Attributes["permissionid"].Value == permission.PermissionValue)
+                        {
+                            //获取部门
+                            var grandStr = item.Attributes["grand"].Value.Split(',');
+                            List<string> deplist = grandStr.ToList();
+                            if (grandStr[grandStr.Length - 1] == "")
+                            {
+                                deplist.RemoveAt(grandStr.Length - 1);
+                            }
+                            //阶段教员
+
+                            foreach (var depItem in deplist)
+                            {
+                                emplist.AddRange(GetClassScheduleByGrand(int.Parse(depItem)));
+                            }
+                        }
+                    }
+                }
+
+            }
+
+            List<ClassSchedule> resultlist = new List<ClassSchedule>();
+
+            foreach (var item in emplist)
+            {
+                if (!IsContains(resultlist, item))
+                {
+                    resultlist.Add(item);
+                }
+            }
+            return resultlist;
+
+        }
+
+        public List<ClassSchedule> GetClassScheduleByGrand(int grandid)
+        {
+            return db_class.GetIQueryable().Where(d => d.grade_Id == grandid && d.IsDelete == false).ToList();
+        }
+
+        public bool IsContains(List<ClassSchedule> scours, ClassSchedule classSchedule)
+        {
+            foreach (var item in scours)
+            {
+                if (item.id == classSchedule.id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+
+        public List<ClassTeacher> TeacherArrangementRecord(string classid)
+        {
+            return this.GetIQueryable().ToList().Where(d => d.ClassNumber == int.Parse(classid)).ToList();
+        }
         /// <summary>
         ///  获取班级正在上的课程
         /// </summary>
@@ -406,16 +527,18 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public Curriculum GetClassOnCurr(int class_id)
         {
-           ClassTeacher find= this.GetClassTeachers().Where(t => t.ClassNumber == class_id).FirstOrDefault();
-            if (find!=null)
+            ClassTeacher find = this.GetClassTeachers().Where(t => t.ClassNumber == class_id).FirstOrDefault();
+            if (find != null)
             {
-               return Currculum_Entity.GetEntity(find.Skill);
+                return Currculum_Entity.GetEntity(find.Skill);
             }
             else
             {
                 return null;
             }
-          
+
         }
+
+
     }
 }
