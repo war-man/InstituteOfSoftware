@@ -74,5 +74,27 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             return result;
         }
+
+
+        /// <summary>
+        ///删除居住信息
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public bool DelStaffacc(string empid) {
+            bool result = false;
+           var data=  this.GetStaffAccdationsByEmpinfoID(empid);
+            if (data==null)
+            {
+                result = true;
+            }
+            else
+            {
+                data.IsDel = true;
+                this.Update(data);
+                result =true;
+            }
+            return result;
+        }
     }
 }
