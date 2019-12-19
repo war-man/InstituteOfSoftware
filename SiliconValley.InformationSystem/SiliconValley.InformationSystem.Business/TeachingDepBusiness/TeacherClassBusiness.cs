@@ -29,6 +29,8 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         public TeacherBusiness db_teacher = new TeacherBusiness();
 
+        BaseBusiness<Curriculum> Currculum_Entity = new BaseBusiness<Curriculum>();
+
         /// <summary>
         /// 学员所在班级
         /// </summary>
@@ -397,6 +399,23 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
            return this.AllClassSchedule().Where(d => d.id == tempobj.ID_ClassName).FirstOrDefault();
         }
          
-
+        /// <summary>
+        ///  获取班级正在上的课程
+        /// </summary>
+        /// <param name="class_id">班级编号</param>
+        /// <returns></returns>
+        public Curriculum GetClassOnCurr(int class_id)
+        {
+           ClassTeacher find= this.GetClassTeachers().Where(t => t.ClassNumber == class_id).FirstOrDefault();
+            if (find!=null)
+            {
+               return Currculum_Entity.GetEntity(find.Skill);
+            }
+            else
+            {
+                return null;
+            }
+          
+        }
     }
 }

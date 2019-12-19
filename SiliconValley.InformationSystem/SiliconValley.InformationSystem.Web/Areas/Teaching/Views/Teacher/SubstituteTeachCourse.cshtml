@@ -31,7 +31,7 @@
                     <label class="layui-form-label">班级:</label>
                     <div class="layui-input-block">
                         <select name="ClassNumber" lay-filter="classnumber">
-
+                            <option value="0">--请选择--</option>
                             @{
 
                                 foreach (var item in ViewBag.classList as List<ClassSchedule>)
@@ -52,12 +52,8 @@
                     </div>
 
                     <label class="layui-form-label"></label>
-                    <div class="layui-input-inline">
-                        .
-
-                        <input type="radio" lay-filter="BefoDaterSpecific" name="TeachDateSpec" value="上午" title="上午" checked="">
-                        <input type="radio" lay-filter="BefoDaterSpecific" name="TeachDateSpec" value="下午" title="下午">
-
+                    <div id="timeName_Div" name="timeName_Div" class="layui-input-inline">
+                        
 
                     </div>
 
@@ -239,7 +235,7 @@
             });
 
 
-            ///表单提交
+            ///表单提交 
             form.on('submit(commit)', function (data) {
 
                 if (!isHvaeRescon) {
@@ -277,15 +273,31 @@
 
             });
 
-
+            var spec = "";
             ///监听班级下拉框
             form.on('select(classnumber)', function (data) {
-
+                //获取XX班级的上课时间段
+                var timename_div = document.getElementsByName("timeName_Div");
+                timename_div[0].innerHTML = "";
+                if (data.value != "0") {
+                    $.ajax({
+                        url: '/Teaching/Teacher/GetTimeName/' + data.value,
+                        success: function (sucdata) {
+                            spec = sucdata.Data;
+                            if (sucdata.Success == true) {
+                                $('<input type="radio" lay-filter="BefoDaterSpecific" checked name="TeachDateSpec" value="' + sucdata.Data + '" title="' + sucdata.Data + '">').appendTo($(timename_div[0]));
+                                form.render();
+                            } else {
+                                layer.msg('系统错误，请重试!!', { icon:2 });
+                            }
+                        }
+                    });
+                }
 
                 //获取时间
                 var date = document.getElementsByName("TeachDate")[0].value;
 
-                var spec = document.getElementsByName("TeachDateSpec")[0].value;
+                
 
 
                 if (date == "" || date == undefined || spec == undefined || spec == "") {
@@ -298,9 +310,7 @@
             });
 
 
-
-
-
+            
         });
 
     </script>

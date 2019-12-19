@@ -15,12 +15,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 
     [CheckLogin]
     public class TeacherController : Controller
     {
-        // GET: Teaching/Teacher
-
+        // GET: /Teaching/Teacher/GetTimeName
+        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+        #region
 
         // 教员上下文
         private readonly TeacherBusiness db_teacher;
@@ -33,10 +35,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         private readonly GrandBusiness db_grand;
 
-        
+        private readonly TeacherClassBusiness Teacherclass_Entity;
 
-        
-        
+        private readonly EvningSelfStudyManeger Evningselfstudy_Entity;
+
+        private readonly TeacherBusiness Teacher_Entity;
+
+        private readonly ClassScheduleBusiness ClassSchedule_Entity;
+
+        private readonly BaseDataEnumManeger BaseDataEnum_Entity;
+
         public TeacherController()
         {
             db_teacher = new TeacherBusiness();
@@ -44,6 +52,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             db_teacher_sBearing = new TecharOnstageBearingBusiness();
             db_specialty = new SpecialtyBusiness();
             db_grand = new GrandBusiness();
+            Teacherclass_Entity = new TeacherClassBusiness();
+            Evningselfstudy_Entity = new EvningSelfStudyManeger();
+            Teacher_Entity = new TeacherBusiness();
+            ClassSchedule_Entity = new ClassScheduleBusiness();
+            BaseDataEnum_Entity = new BaseDataEnumManeger();
         }
         public ActionResult TeachersInfo()
         {
@@ -1126,7 +1139,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion
 
         /// <summary>
         /// 代课表单视图
@@ -1140,9 +1153,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //获取当前登录老师的班级
             TeacherClassBusiness db = new TeacherClassBusiness();
-            var classScadu = db.GetCrrentMyClass(teacher.TeacherID); //班级
+            var classScadu = db.GetCrrentMyClass(1002); //班级teacher.TeacherID
             ViewBag.classList = classScadu;
-
             //提供专业老师
 
             var teachers = db_teacher.GetTeachers();
@@ -1161,7 +1173,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return View();
              
         }
-
+        
+        //获取这个班级的上课时间段
+        public ActionResult GetTimeName(int id)
+        {
+            AjaxResult a = new AjaxResult();
+           ClassSchedule find= ClassSchedule_Entity.GetEntity(id);
+            if (find!=null)
+            {
+                a.Data = BaseDataEnum_Entity.GetEntity(find.BaseDataEnum_Id).Name;
+                a.Success = true;
+            }
+            else
+            {
+                a.Success = false;
+            }
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 代课表单提交
@@ -1196,11 +1224,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-
-
-
+        }   
         /// <summary>
         /// 加课表单视图
         /// </summary>
@@ -1215,17 +1239,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             TeacherClassBusiness db = new TeacherClassBusiness();
             var classScadu = db.GetCrrentMyClass(teacher.TeacherID); //班级
             ViewBag.classList = classScadu;
-
-            ///提供课程数据
-            CourseBusiness db_course = new CourseBusiness();
-
-            var courselist = db_course.GetCurriculas().ToList();
-
-            ViewBag.CourseList = courselist;
             return View();
 
         }
 
+
+        /// <summary>
+        /// 获取班级目前所上课程
+        /// </summary>
+        /// <param name="id">班级编号</param>
+        /// <returns></returns>
+        public ActionResult GetCurrName(int id)
+        {
+            //获取这个班级现在上的课程
+           Curriculum curriculum= Teacherclass_Entity.GetClassOnCurr(id);
+            AjaxResult a = new AjaxResult();
+            if (curriculum!=null)
+            {
+                a.Success = true;
+                a.Data = curriculum;
+            }
+            else
+            {
+                a.Success = false;
+                a.Msg = "该班级还未有老师上课,需要联系教务老师！！！";
+            }
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+        
+         
 
 
         /// <summary>
@@ -1235,16 +1277,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpPost]
         public ActionResult AddCourse(AddCourse addCourse)
         {
-            AjaxResult result = new AjaxResult();
-
+            AjaxResult result;
+            AddCourseManeger AddCourse = new AddCourseManeger();
             try
             {
-
+                addCourse.TeacherID = Teacher_Entity.GetList().Where(t => t.EmployeeId == UserName.EmpNumber).FirstOrDefault().TeacherID;
+                addCourse.ApplyDate = DateTime.Now;
+                addCourse.Isdel = false;
+                result= AddCourse.AddData(addCourse);                
             }
             catch (Exception)
             {
-
-                throw;
+                result = new AjaxResult();
+                result.Success = false;
+                result.Msg = "系统错误，请重试！！！";
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -1282,6 +1328,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+
 
     }
 }

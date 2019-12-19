@@ -118,5 +118,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return true;
             }
         }
+        /// <summary>
+        /// 获取XX校区有效的教室
+        /// </summary>
+        /// <param name="id">校区Id</param>
+        /// <returns></returns>
+        public List<Classroom> GetAddreeClassRoom(int id)
+        {
+           return GetExitsData().Where(c => c.BaseData_Id == id).ToList();
+        }
     }
 }

@@ -10,7 +10,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     public class ClassroomController : Controller
     {
-        public static readonly ClassroomManeger Classroom_Entity = new ClassroomManeger();
+        private ClassroomManeger Classroom_Entity;
+        private BaseDataEnumManeger BaseData_Entity;
 
         // GET: /Educational/Classroom/ClassroomIndexView
         public ActionResult ClassroomIndexView()
@@ -20,14 +21,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         public ActionResult GetClassRoom(int limit,int page)
         {
-           List<Classroom> c_list= Classroom_Entity.GetList();
-            var mydata = c_list.OrderByDescending(c => c.Id).Skip((page - 1) * limit).Take(limit);
+            Classroom_Entity = new ClassroomManeger();
+            BaseData_Entity = new BaseDataEnumManeger();
+            List<Classroom> c_list= Classroom_Entity.GetList();
+            var mydata = c_list.OrderByDescending(c => c.Id).Skip((page - 1) * limit).Take(limit).Select(c => new {
+                Id = c.Id,
+                IsDelete = c.IsDelete,
+                ClassroomName=c.ClassroomName,
+                OfAddren = BaseData_Entity.GetEntity(c.BaseData_Id).Name,
+                Count=c.Count,
+                Rmark=c.Rmark
+            }).ToList();
             var jsondata = new { code=0,msg="",data=mydata,count=c_list.Count};
             return Json(jsondata, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AddorEditView(int? id)
-        {
+        {          
+            BaseData_Entity = new BaseDataEnumManeger();
+            Classroom_Entity = new ClassroomManeger();
             if (id>0)
             {
                 //编辑页面
@@ -36,12 +48,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             }
             else
             {
+                //获取校区名称
+                List<SelectListItem> SchoolsType = BaseData_Entity.GetsameFartherData("校区地址").Select(t=>new SelectListItem() { Text=t.Name,Value=t.Id.ToString()}).ToList();
+                ViewBag.schools = SchoolsType;
                 return View();
             }
         }
         [HttpPost]
         public ActionResult AddorEditFunction(Classroom c)
         {
+            Classroom_Entity = new ClassroomManeger();
             try
             {                 
                 if (c.Id > 0)
@@ -72,7 +88,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 }
                 return Json("ok",JsonRequestBehavior.AllowGet);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return Json("系统错误，请重试！！！", JsonRequestBehavior.AllowGet);
             }
@@ -87,7 +103,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <returns></returns>
         public ActionResult Delete(int id)
         {
-           if(Classroom_Entity.My_Delete(id))
+            Classroom_Entity = new ClassroomManeger();
+            if (Classroom_Entity.My_Delete(id))
             {
                 return Json("ok",JsonRequestBehavior.AllowGet);
             }

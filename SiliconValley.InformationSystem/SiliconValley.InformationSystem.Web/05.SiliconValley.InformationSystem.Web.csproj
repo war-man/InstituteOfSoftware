@@ -236,10 +236,12 @@
     <Compile Include="Areas\Educational\Controllers\InStockController.cs" />
     <Compile Include="Areas\Educational\Controllers\InStockGoodsController.cs" />
     <Compile Include="Areas\Educational\Controllers\IsGoodOrBadController.cs" />
+    <Compile Include="Areas\Educational\Controllers\LeaderAddCourseToExamineController.cs" />
     <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\Controllers\ReconcileController.cs" />
     <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
+    <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
     <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
@@ -412,6 +414,15 @@
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
     <Content Include="Areas\Market\Views\Infomation\InfomationIndexView.cshtml" />
     <Content Include="Areas\Market\Views\Status\StatusIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\Edit_rView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\SerachReconcile_Index.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\AddCourse.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\AdjustmentCourse.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\Application.cshtml" />
+    <Content Include="Areas\Educational\Views\LeaderAddCourseToExamine\LeaderAddCourseToExamineIndex.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\SubstituteTeachCourse.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\BigDataUpdate.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\ClassBigDataAID.cshtml" />
     <None Include="Config\Obempstaff.config" />
     <Content Include="Areas\Teaching\config\SatisfactionSurveyConfig.xml" />
     <Content Include="Areas\Teaching\config\studentConfig.xml" />
@@ -1145,6 +1156,8 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
+    <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
     <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
@@ -2844,6 +2857,7 @@
     <Folder Include="Areas\Educational\Views\PurchaseType\" />
     <Folder Include="Areas\Educational\Views\Shared\" />
     <Folder Include="Areas\Educational\Views\ShppingDetail\" />
+    <Folder Include="Areas\Educational\Views\TeacherNight\" />
     <Folder Include="Areas\Finance\Models\" />
     <Folder Include="Areas\Finance\Views\Shared\" />
     <Folder Include="Areas\Logistics\Controllers\" />

@@ -18,12 +18,27 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public Nullable<int> Count { get; set; }
+        /// <summary>
+        /// 加课次数
+        /// </summary>
+        public int Count { get; set; }
+        /// <summary>
+        /// 加课原因
+        /// </summary>
         public string reason { get; set; }
         public Nullable<int> TeacherID { get; set; }
-        public string ClassNumber { get; set; }
-        public Nullable<System.DateTime> ApplyDate { get; set; }
-        public Nullable<System.DateTime> TeachDate { get; set; }
+        /// <summary>
+        /// 班级编号
+        /// </summary>
+        public int ClassNumber { get; set; }
+        /// <summary>
+        /// 申请日期
+        /// </summary>
+        public DateTime ApplyDate { get; set; }
+        /// <summary>
+        /// 加班开始日期
+        /// </summary>
+        public DateTime TeachDate { get; set; }
 
         /// <summary>
         /// 具体日期 (上午 下午 晚自习)
@@ -36,6 +51,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
        /// </summary>
         public int Course { get; set; }
 
-
+        public bool Isdel { get; set; }
     }
 }
