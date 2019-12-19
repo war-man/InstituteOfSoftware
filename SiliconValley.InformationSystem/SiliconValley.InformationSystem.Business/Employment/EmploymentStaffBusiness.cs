@@ -1,5 +1,6 @@
 ﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -19,6 +20,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
     {
 
         private EmpClassBusiness dbempClass;
+        private EmpStaffAndStuBusiness dbempStaffAndStu;
+        private StaffAccdationBusiness dbstaffAccdation;
+
+
         /// <summary>
         /// 获取没离职的就业专员列表
         /// </summary>
@@ -207,12 +212,21 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="EmpInfoID"></param>
         /// <returns></returns>
         public bool DelEmploystaff(string EmpInfoID) {
-            EmploymentStaff data = this.GetEmploymentByEmpInfoID(EmpInfoID);
-            data.IsDel = true;
             bool result = false;
             try
             {
+                ///删除员工表
+                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                EmploymentStaff data = this.GetEmploymentByEmpInfoID(EmpInfoID);
+                data.IsDel = true;
                 this.Update(data);
+
+                ///删除宿舍记住信息 调方法
+                dbstaffAccdation = new StaffAccdationBusiness();
+                dbstaffAccdation.DelStaffacc(EmpInfoID);
+
+                ///删除他现在在带的班级
+                
                 result = true;
                 BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑成功。", EnumType.LogType.编辑数据);
             }
@@ -252,5 +266,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
                return this.GetEntity(empClass.EmpStaffID);
             }
         }
+
+
+
     }
 }

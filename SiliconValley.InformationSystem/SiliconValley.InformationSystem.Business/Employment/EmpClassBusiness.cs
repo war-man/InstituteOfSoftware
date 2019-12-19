@@ -29,6 +29,10 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
+        public EmpClass GetEmpclassByclassid(int classid) {
+           return this.GetEmpClassFormServer().Where(a => a.ClassId == classid).FirstOrDefault();
+        }
+
         // <summary>
         /// 根据就业专员id获取就业专员带班记录
         /// </summary>
@@ -47,7 +51,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
 
             ClassScheduleBusiness dbclass = new ClassScheduleBusiness();
-            return dbclass.GetIQueryable().Where(a => a.IsDelete == false&&a.ClassstatusID==null).ToList();
+            return dbclass.GetIQueryable().Where(a => a.IsDelete == false && a.ClassstatusID == null).ToList();
 
 
         }
@@ -59,7 +63,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public ClassSchedule GetClassedByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.id == classiD && a.IsDelete == false && a.ClassStatus == true).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD && a.ClassStatus == true).FirstOrDefault();
         }
         /// <summary>
         /// 根据班级id获取正在学习的班级
@@ -68,7 +72,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public ClassSchedule GetClassingByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.id == classiD && a.IsDelete == false && a.ClassStatus == false).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD  && a.ClassStatus == false).FirstOrDefault();
         }
         /// <summary>
         /// 获取带班已毕业的
@@ -135,7 +139,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 return false;
         }
 
-      
+
         /// <summary>
         /// 获取s3或者时s4没有毕业也还没分配专员的对象集合
         /// </summary>
@@ -270,12 +274,12 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="ClassNumber"></param>
         /// <returns></returns>
-        public List<EmpClass> CorrespondingByClassNumber(List<EmpClass> result,string ClassNumber) {
+        public List<EmpClass> CorrespondingByClassNumber(List<EmpClass> result, string ClassNumber) {
             dbproClassSchedule = new ProClassSchedule();
-            for (int i = result.Count-1; i >=0; i--)
+            for (int i = result.Count - 1; i >= 0; i--)
             {
-                var query= dbproClassSchedule.GetEntity(result[i].ClassId);
-                if (query.ClassNumber!= ClassNumber)
+                var query = dbproClassSchedule.GetEntity(result[i].ClassId);
+                if (query.ClassNumber != ClassNumber)
                 {
                     result.Remove(result[i]);
                 }
@@ -319,7 +323,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                         }
                     }
                 }
-                empClassView.peoplecount= surveylist.Count;
+                empClassView.peoplecount = surveylist.Count;
 
                 if (query.ClassStatus == true)
                     empClassView.isgraduation = true;
@@ -378,7 +382,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="classid"></param>
         /// <returns></returns>
         public EmpClass GetEmpClassByclassid(int classid) {
-          return  this.GetIQueryable().Where(a => a.IsDel == false).Where(a => a.ClassId == classid).FirstOrDefault();
+            return this.GetIQueryable().Where(a => a.IsDel == false).Where(a => a.ClassId == classid).FirstOrDefault();
         }
 
         /// <summary>
@@ -387,10 +391,37 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="classid"></param>
         /// <returns></returns>
         public EmploymentStaff GetStaffByClassid(int classid) {
-            EmpClass empClass= this.GetEmpClassByclassid(classid);
+            EmpClass empClass = this.GetEmpClassByclassid(classid);
             dbemploymentStaff = new EmploymentStaffBusiness();
             return dbemploymentStaff.GetEntity(empClass.EmpStaffID);
         }
-        
+
+        /// <summary>
+        /// 升学改班级
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public bool entrance(int classid) {
+            bool result = false;
+            try
+            {
+                var data = this.GetEmpclassByclassid(classid);
+                if (data == null)
+                {
+                    result = true;
+                }
+                else
+                {
+                    data.ClassId = classid;
+                    this.Update(data);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            }
+
+            return result;
+        }
     }
 }
