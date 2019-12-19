@@ -446,5 +446,53 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return result;
         }
+
+        /// <summary>
+        /// 删除这个员工现在带的学生记录而且是正在就业的记录
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public bool delempstaffandstuByempid(int empid) {
+            bool result = false;
+            try
+            {
+                var data = this.GetEmploymentState1ByEmpid(empid);
+                foreach (var item in data)
+                {
+                    ///如果是第一阶段 删除之后再添加一个二次就业记录
+                    ///如是是第二阶段，删除当前ising=false,再将empid 修改为空
+                    if (item.EmploymentStage == 1)
+                    {
+                        item.Ising = false;
+                        this.Update(item);
+                        EmpStaffAndStu newobj = new EmpStaffAndStu();
+                        newobj.Date = DateTime.Now;
+                        newobj.EmploymentStage = 2;
+                        newobj.EmploymentState = 1;
+                        newobj.EmpStaffID = null;
+                        newobj.IsDel = false;
+                        newobj.Ising = false;
+                        newobj.QuarterID = item.QuarterID;
+                        newobj.Remark = string.Empty;
+                        newobj.Studentno = item.Studentno;
+                        this.Insert(newobj);
+                    }
+                    else
+                    {
+                        item.Ising = false;
+                        item.EmpStaffID = null;
+                        this.Update(item);
+                    }
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+                result = false;
+            }
+            return result;
+        }
+        
     }
 }

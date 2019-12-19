@@ -226,7 +226,13 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 dbstaffAccdation.DelStaffacc(EmpInfoID);
 
                 ///删除他现在在带的班级
-                
+                dbempClass = new EmpClassBusiness();
+                dbempClass.delempforclass(data.ID);
+
+                ///删除现在学生记录
+                dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                dbempStaffAndStu.delempstaffandstuByempid(data.ID);
+
                 result = true;
                 BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑成功。", EnumType.LogType.编辑数据);
             }
