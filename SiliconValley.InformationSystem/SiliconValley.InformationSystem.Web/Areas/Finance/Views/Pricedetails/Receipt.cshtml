@@ -62,7 +62,7 @@
                     </div><div style="float:left;line-height:50px;font-size:24pt;">湖南硅谷高科软件学员收据单</div>
                 </td>
                 <td colspan="1" style="text-align:center;">
-                    <div>NO:<label style="color:red;font-size:13pt;">0000001</label></div> 
+                    <div>NO:<label style="color:red;font-size:13pt;">@ViewBag.Invoicenumber</label></div> 
                     <div>日期:<label id="AddDate">2019-08-09</label></div>
                 </td>
             </tr>
@@ -146,7 +146,7 @@
         if (Receiptdata[i].Rategory == "阶段费用缴纳" || Receiptdata[i].Rategory == "学费" || Receiptdata[i].Rategory == "食宿费") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#text thead").append($('<tr style="text-align:center;border-left:#ffffff;"><td colspan="6">' + Receiptdata[i].GrandName + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
-        } else if ( Receiptdata[i].Rategory == "自考本科费用") {
+        } else if (Receiptdata[i].Rategory == "自考本科费用" || Receiptdata[i].Rategory=="其它") {
             var Amountofmoney = Receiptdata[i].Amountofmoney + ".00";
             $("#text thead").append($('<tr style="text-align:center;border-left:#ffffff;"><td colspan="6">' + Receiptdata[i].Rategory+"：" + Receiptdata[i].ostitemsName + '</td><td colspan="4">' + Amountofmoney + '</td></tr>'));
         }

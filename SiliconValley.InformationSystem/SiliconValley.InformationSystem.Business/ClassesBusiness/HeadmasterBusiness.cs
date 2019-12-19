@@ -321,14 +321,19 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         {
             //班级业务
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-            return Hoadclass.GetList().Where(a => a.IsDelete == false).Select(a => new TeamleaderdistributionView
+
+          var ClassZ=  classScheduleBusiness.ClassList();
+           
+            return ClassZ.Select(a => new TeamleaderdistributionView
             {
-                HeadmasterName = employeesInfoManage.GetEntity(this.GetEntity(a.LeaderID).informatiees_Id).EmpName,
-                ClassName = classScheduleBusiness.GetEntity(a.ClassID).ClassNumber,
-                ClassID=(int)a.ClassID,
-                 Stage= classScheduleBusiness.GetClassGrand((int)a.ClassID, 222),
-                 Major= classScheduleBusiness.GetClassGrand((int)a.ClassID, 1),
-                 HeadmasterImages= employeesInfoManage.GetEntity(this.GetEntity(a.LeaderID).informatiees_Id).Image
+                HeadmasterName = this.ClassHeadmaster(a.id).EmpName,
+              
+                ClassName = classScheduleBusiness.GetEntity(a.id).ClassNumber,
+                ClassID=(int)a.id,
+                 Stage= classScheduleBusiness.GetClassGrand((int)a.id, 222),
+                 Major= classScheduleBusiness.GetClassGrand((int)a.id, 1),
+                 HeadmasterImages= this.ClassHeadmaster(a.id).Image
+              
             }).ToList();
         }
         /// <summary>

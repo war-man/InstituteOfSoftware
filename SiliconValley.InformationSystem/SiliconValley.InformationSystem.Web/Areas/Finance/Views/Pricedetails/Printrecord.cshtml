@@ -5,16 +5,41 @@
 }
 
 @model SiliconValley.InformationSystem.Entity.ViewEntity.vierprice
- @using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@section style{
+    <style>
+        .site-doc-icon li .layui-anim {
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            margin: 0 auto 10px;
+            text-align: center;
+            background-color: #009688;
+            cursor: pointer;
+            color: #fff;
+            border-radius: 50%;
+        }
+    </style>
+}
+
 <ul class="layui-timeline">
 
     @{
+        int Total = 0;
         foreach (var item in ViewBag.vier as List<vierprice>)
         {
+            decimal db = 0;
             <li class="layui-timeline-item">
                 <i class="layui-icon layui-timeline-axis"></i>
                 <div class="layui-timeline-content layui-text">
-                    <h3 class="layui-timeline-title">@item.Date</h3>
+                    @foreach (var item1 in item.Chicked)
+                    {
+
+                        db += item1.Amountofmoney;
+                        Total += Convert.ToInt32(item1.Amountofmoney);
+
+                    }
+                    <h3 class="layui-timeline-title">@item.Date (@db)</h3>
 
                     @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
                     {
@@ -37,5 +62,40 @@
         }
     }
 
- 
+
 </ul>
+<div style="position:absolute; right:800px;top:300px;">
+    <ul class="site-doc-icon site-doc-anim">
+        <li>
+            <div class="layui-anim" data-anim="layui-anim-rotate layui-anim-loop">总共:<label  style="font:18pt;">@Total</label>  元</div>
+        </li>
+    </ul>
+</div>
+
+@section script{
+    <script>
+        layui.use([], function () {
+            var $ = layui.jquery;
+            //演示动画开始
+            $('.site-doc-icon .layui-anim ').on('click', function () {
+                var othis = $(this), anim = othis.data('anim');
+
+                //停止循环
+                if (othis.hasClass('layui-anim-loop')) {
+                    return othis.removeClass(anim);
+                }
+                othis.removeClass(anim);
+                setTimeout(function () {
+                    othis.addClass(anim);
+                });
+                //恢复渐隐
+                if (anim === 'layui-anim-fadeout') {
+                    setTimeout(function () {
+                        othis.removeClass(anim);
+                    }, 1300);
+                }
+            });
+            //演示动画结束
+        })
+    </script>
+}

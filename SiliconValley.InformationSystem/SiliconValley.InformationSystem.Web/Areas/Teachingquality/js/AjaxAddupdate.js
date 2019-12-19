@@ -123,12 +123,13 @@ function Transaction(url, mytitle, width, hegin) {
         });
 }
 //年月日
-    function getNowFormatDate(date) {
-
+function getNowFormatDate(date) {
+    var da = new Date(date);
+    console.log(da);
     var seperator1 = "-";
-    var year = date.getFullYear();
-    var month = date.getMonth() + 1;
-    var strDate = date.getDate();
+    var year = da.getFullYear();
+    var month = da.getMonth() + 1;
+    var strDate = da.getDate();
     if (month >= 1 && month <= 9) {
         month = "0" + month;
     }
@@ -144,9 +145,9 @@ function Transaction(url, mytitle, width, hegin) {
         return "";
     var date = new Date(parseInt(newtime.slice(6)));
     var year = date.getFullYear();
-    var month = date.getMonth();
+    var month = date.getMonth()+1;
     if (month < 10) {
-        month = "0" + (parseInt(month) + 1);
+        month = "0" + parseInt(month);
     }
     var day = date.getDate();
     if (day < 10) {
@@ -343,7 +344,7 @@ function Price(dbase,callback) {
 }
 //本科费用
 function Otherexpenses(id, callback) {
-    $.post("/Finance/Pricedetails/Otherexpenses" , id, function (data) {
+    $.post("/Finance/Pricedetails/Otherexpensese" , id, function (data) {
         callback(data);
     });
 }
@@ -373,7 +374,7 @@ function ajaxprice(url, datae,callback) {
                     , btn: ['确认']
                     , btnAlign: 'c'
                     , moveType: 1 //拖拽模式，0或者1
-                    , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + data.Msg + '！！！</div>'
+                    , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + data.Msg + '！！！</div>'
                     , success: function (layero) {
 
                         var btn = layero.find('.layui-layer-btn');

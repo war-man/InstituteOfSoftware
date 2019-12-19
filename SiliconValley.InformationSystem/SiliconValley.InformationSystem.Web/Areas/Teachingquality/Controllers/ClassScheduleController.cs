@@ -60,8 +60,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //主页面
         public ActionResult Index()
         {
+            //公共类库
+            BaseDataEnumManeger baseDataEnumManeger = new BaseDataEnumManeger();
             //专业课时段
-            ViewBag.BaseDataEnum_Id = BanseDatea.GetList().Select(a => new SelectListItem { Text = a.Name, Value = a.Id.ToString() });
+            ViewBag.BaseDataEnum_Id = baseDataEnumManeger.GetsameFartherData("上课时间类型").Select(a => new SelectListItem { Text = a.Name, Value = a.Id.ToString() });
             //专业
             ViewBag.Major_Id = Techarcontext.GetList().Select(a => new SelectListItem { Text = a.SpecialtyName, Value = a.Id.ToString() });
             //阶段
@@ -85,7 +87,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         SpecialtyBusiness Techarcontext = new SpecialtyBusiness();
         //阶段
         GrandBusiness Grandcontext = new GrandBusiness();
-    
+       [HttpGet]
         //获取数据
         public ActionResult GetDate(int page ,int limit,string ClassNumber,string Major_Id,string grade_Id,string BaseDataEnum_Id,string ClassstatusID)
         {
@@ -291,11 +293,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string MenName = Request.QueryString["MenName"];
             //数据操作
             string Entity = Request.QueryString["Entity"];
-
-
          return Json(dbtext.Entityembers(Stuid, MenName, (int)classNumberss, Entity),JsonRequestBehavior.AllowGet);
-
-
 
         }
         //班会表单页面
@@ -416,7 +414,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         }
 
-       /// <summary>
+        /// <summary>
        /// 验证当前班级是否有下一个阶段
        /// </summary>
        /// <param name="ClassID">班级编号</param>
@@ -464,15 +462,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <param name="limit"></param>
         /// <param name="id">班级号</param>
         /// <returns></returns>
-        public ActionResult listTuiton(int page, int limit,int id)
+        public ActionResult listTuiton(int page, int limit,int id,string Studentid,string Name,string Isitinturn)
         {
-           var x= dbtext.listTuiton(page, limit, id);
+           var x= dbtext.listTuiton(id);
+            if (!string.IsNullOrEmpty(Studentid))
+            {
+                x = x.Where(a => a.Stidentid == Studentid).ToList();
+            }
+            if (!string.IsNullOrEmpty(Name))
+            {
+                x = x.Where(a => a.Name.Contains(Name)).ToList();
+            }
+            if (!string.IsNullOrEmpty(Isitinturn))
+            {
+                x = x.Where(a => a.Isitinturn== Isitinturn).ToList();
+            }
+            var da=  x.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
                 code = "",
                 msg = "",
-              
-                data = x
+               count=x.Count,
+                data = da
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
@@ -483,25 +494,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.horetem = x == null ? "" : x.content;
             return View();
         }
-        /// <summary>
-        /// 短信模板
-        /// </summary>
-        /// <param name="Datailedcost">内容</param>
-        /// <returns></returns>
-        // [HttpPost]
-       //[ValidateInput(false)]
-       // public ActionResult SMScharging(string Datailedcost)
-       // {
-       //     // 引入序列化
-       //     JavaScriptSerializer serializer = new JavaScriptSerializer();
-       //  //   string str = Datailedcost.Substring(3, Datailedcost.Length - 7);
-       //     //Replace("Name", "替换").Replace("NextStageID","S2");
-       //     // 序列化
-       //     // var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
-       //     //return dbtext.SMScharging(personlist);
-       //     return Json(dbtext.EntiShortmessage(Datailedcost), JsonRequestBehavior.AllowGet);
+        // <summary>
+        // 短信模板
+        // </summary>
+        // <param name = "Datailedcost" > 内容 </ param >
+        // < returns ></ returns >
+         [HttpPost]
+       [ValidateInput(false)]
+        public ActionResult SMScharging(string Datailedcost)
+        {
+            // 引入序列化
+            JavaScriptSerializer serializer = new JavaScriptSerializer();
+            //   string str = Datailedcost.Substring(3, Datailedcost.Length - 7);
+            //Replace("Name", "替换").Replace("NextStageID","S2");
+            // 序列化
+            // var  personlist = serializer.Deserialize<List<DetailedcostView>>(Datailedcost);
+            //return dbtext.SMScharging(personlist);
+            return Json(dbtext.EntiShortmessage(Datailedcost), JsonRequestBehavior.AllowGet);
 
-       // }
+        }
         /// <summary>
         /// 短信催费
         /// </summary>
@@ -615,6 +626,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 premium = a.InsurancePremium,
                 Sex = student.GetEntity(a.StudentID).Sex,
                 Startdate = a.Starttime,
+            
                 Telephonenumber = student.GetEntity(a.StudentID).Telephone
             }).ToList();
                 
@@ -664,6 +676,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.StudentList = studentlist;
             return View(insuranceView);
         }
+
+        //学员保险业务
+        private BaseBusiness<DetailedStudentIn> detailedstudentinBusiness;
         /// <summary>
         /// 保险数据添加
         /// </summary>
@@ -674,6 +689,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.InsuranceAdd(insuranceView), JsonRequestBehavior.AllowGet);
         }
+
+          /// <summary>
+          /// 保险数据信息补充表单
+          /// </summary>
+          /// <returns></returns>
+        [HttpGet]
+        public ActionResult SupplementInsuran()
+        {
+            detailedstudentinBusiness= new BaseBusiness<DetailedStudentIn>();
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+            string Students = Request.QueryString["ID"];
+
+            string StuID = Students.Substring(0, Students.Length - 1);
+            ViewBag.Student = StuID;
+
+            string[] stu = StuID.Split(',');
+            InsuranceView insuranceView = new InsuranceView();
+            
+            foreach (var item in stu)
+            {
+              var StuIDs =  detailedstudentinBusiness.GetEntity(int.Parse(item));
+                StudentInformation information = new StudentInformation();
+                insuranceView.ClassNumber = Stuclass.SutdentCLassName(StuIDs.StudentID).ClassID;
+                information.Name = student.GetEntity(StuIDs.StudentID).Name;
+                studentlist.Add(information);
+            }
+            ViewBag.StudentList = studentlist;
+            return View(insuranceView);
+        }
+        [HttpPost]
+        public ActionResult SupplementInsuran(InsuranceView insuranceView)
+        {
+            return Json(dbtext.SupplementInsuran(insuranceView), JsonRequestBehavior.AllowGet);
+        }
         public ActionResult PhoneSMS()
         {
             string str = "<p>湖南硅谷高科软件学员逾期缴费学员通知：</p><p>{Name}家长：您好！经财务核查，您孩子{NextStageID}阶段升学费用逾期未缴，应交{ShouldJiao}元，欠费{Surplus}元。请您于本周内经财务办理缴费手续，逾期不缴教务处将根据学员管理规定予以听课处理。感谢您的配合与理解！</p><p>班主任：{HeadmasterName}&nbsp; 电话：{Phone}</p><p><br/></p>";
@@ -681,6 +730,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return null;
         }
 
-
+        public ActionResult Tuitionfeeforentrancestudy()
+        {
+            return View();
+        }
     }
 }

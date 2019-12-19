@@ -19,6 +19,7 @@ using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 using SiliconValley.InformationSystem.Business.EducationalBusiness;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.ClassDynamics_Business;
+using SiliconValley.InformationSystem.Business.Employment;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -627,14 +628,13 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <summary>
         /// 获取班级学员缴费记录
         /// </summary>
-        /// <param name="page"></param>
-        /// <param name="limit"></param>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public List<DetailedcostView> listTuiton(int page, int limit, int ClassName)
+        public List<DetailedcostView> listTuiton( int ClassName)
         {
+            ClassScheduleBusiness classSchedules = new ClassScheduleBusiness();
             var CLaaNuma = this.GetList().Where(a => a.id == ClassName).FirstOrDefault();
-            var Mylist = this.ClassStudentneList(ClassName);
+            var Mylist = classSchedules.ClassStudentneViewList(ClassName);
             List<DetailedcostView> lisrDetaild = new List<DetailedcostView>();
             foreach (var item in Mylist)
             {
@@ -644,11 +644,11 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 detailedcostView.Name = item.Name;
                 detailedcostView.Stidentid = item.StuNameID;
                 detailedcostView.Sex = item.Sex == false ? "女" : "男";
-                detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName).EmpName;
-                detailedcostView.Phone = Hadmst.ClassHeadmaster(ClassName).Phone;
+                detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName)==null?"无": Hadmst.ClassHeadmaster(ClassName).EmpName;
+                detailedcostView.Phone = Hadmst.ClassHeadmaster(ClassName)==null?"无": Hadmst.ClassHeadmaster(ClassName).Phone;
                 lisrDetaild.Add(detailedcostView);
             }
-            lisrDetaild = lisrDetaild.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
+            
             return lisrDetaild;
         }
         /// <summary>
@@ -686,7 +686,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             detailedcostView.Isitinturn = price >= myprice ? "交齐" : "未交齐";
             detailedcostView.ShouldJiao = myprice;
             detailedcostView.Surplus = myprice - price;
-
             detailedcostView.NextStageID = Grandcontext.GetEntity(x.NextStageID).GrandName;
             detailedcostView.CurrentStageID = Grandcontext.GetEntity(Grand).GrandName;
             return detailedcostView;
@@ -759,6 +758,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return shortmessageBusiness.EntiShortmessage("学费催费", content);
         }
+
+        private EmpClassBusiness empClassBusiness;
         /// <summary>
         /// S2,S3升学
         /// </summary>
@@ -766,6 +767,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public AjaxResult EntitAddClassSchedule(int ClassID)
         {
+            empClassBusiness = new EmpClassBusiness();
+           
             AjaxResult result = null;
             try
             {
@@ -1898,12 +1901,8 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     {
                         detailedList.AddRange(detailedstudentinBusiness.GetList().Where(a => a.StudentID == item.StudentID && a.Endtime <= date).ToList());
                     }
-                }
-             
-              
-                
+                } 
             }
-
             foreach (var item in detailedList.OrderByDescending(a=>a.ID))
             {
                 if (!this.Insurancerepetition(ins, item))
@@ -1986,7 +1985,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// <returns></returns>
         public AjaxResult InsuranceAdd(InsuranceView insuranceStudentView)
         {
-        
             AjaxResult retus = null;
             try
             {
@@ -2009,6 +2007,49 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 retus.Success = true;
         
                 BusHelper.WriteSysLog("保险数据添加", EnumType.LogType.添加数据);
+                retus.Msg = "操作成功";
+
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
+        /// <summary>
+        /// 保险数据补充
+        /// </summary>
+        /// <param name="insuranceView">数据对象</param>
+        /// <returns></returns>
+        public AjaxResult SupplementInsuran(InsuranceView  insuranceView)
+        {
+            AjaxResult retus = null;
+            try
+            {
+                List<DetailedStudentIn> detaileds = new List<DetailedStudentIn>();
+                detailedstudentinBusiness = new BaseBusiness<DetailedStudentIn>();
+                string[] Student = insuranceView.StudentID.Split(',');
+                foreach (var item in Student)
+                {
+
+                    DetailedStudentIn  studentIn= detailedstudentinBusiness.GetEntity(int.Parse(item));
+                 
+                    studentIn.Endtime = insuranceView.Duedate;
+                    studentIn.Starttime = insuranceView.Startdate;
+                   
+                    studentIn.InsurancePremium = insuranceView.premium;
+                    studentIn.Remarks = insuranceView.Remarks;
+                    detaileds.Add(studentIn);
+                }
+                detailedstudentinBusiness.Update(detaileds);
+                retus = new SuccessResult();
+                retus.Success = true;
+
+                BusHelper.WriteSysLog("保险数据修改", EnumType.LogType.编辑数据);
                 retus.Msg = "操作成功";
 
             }

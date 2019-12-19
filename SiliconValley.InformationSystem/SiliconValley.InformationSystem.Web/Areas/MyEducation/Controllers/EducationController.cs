@@ -241,5 +241,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.MyEducation.Controllers
         {
             return Json(dbtext.GetDatechievement(id,  page,  limit), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 根据学号获取是否报名本科
+        /// </summary>
+        /// <param name="Studentid">学号</param>
+        /// <returns></returns>
+        public ActionResult StudentUndergraduatecount(string Studentid)
+        {
+            return Json(dbtext.StudentUndergraduatecount(Studentid), JsonRequestBehavior.AllowGet);
+        }
     }
 }
