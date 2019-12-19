@@ -146,8 +146,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
             var queryempclsslist = dbempClass.GetEmpsByEmpID(empid);
             try
             {
-              
-
                 for (int i = queryempclss.Count - 1; i >= 0; i--)
                 {
                     for (int j = 0; j < queryempclsslist.Count; j++)
@@ -157,8 +155,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
                             if (j == queryempclsslist.Count - 1)
                             {
                                 queryempclss.RemoveAt(i);
-
-
                             }
                         }
                         else

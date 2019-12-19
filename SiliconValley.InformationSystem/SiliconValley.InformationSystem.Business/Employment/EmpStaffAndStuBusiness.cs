@@ -288,7 +288,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<EmpStaffAndStu> GetAllByQuarter(int QuarterID) {
             dbemploymentStaff = new EmploymentStaffBusiness();
-            List<EmploymentStaff> emplist = dbemploymentStaff.GetALl();
+            List<EmploymentStaff> emplist = dbemploymentStaff.GetIQueryable().ToList();
             List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
             foreach (var item in emplist)
             {

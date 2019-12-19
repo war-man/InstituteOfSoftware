@@ -414,18 +414,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
 
 
-        /// <summary>
-        /// 获取教员带班记录
-        /// </summary>
-        /// <returns></returns>
-        public List<ClassTeacher> TeacherArrangementRecord(int teacherid)
-        {
-           return  this.GetIQueryable().Where(d => d.TeacherID == teacherid).ToList();
 
-        }
 
         public List<ClassSchedule> GrandClassByUser(Base_UserModel user)
         {
+            
             //获取账号所有的角色
 
             var userRoles = user.RoleIdList;
