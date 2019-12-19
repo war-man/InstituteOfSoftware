@@ -103,6 +103,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);
                     view.TardyWithhold = attendobj.TardyWithhold;
                     view.LeaveWithhold = attendobj.LeaveWithhold;
+                    view.NoClockWithhold = attendobj.NoClockWithhold;
                 }
 
 
@@ -112,11 +113,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                
                 view.OtherDeductions = item.OtherDeductions;
                
-                #region 应发工资1赋值
-                view.SalaryTwo =msrmanage.GetSalarytwo(view.SalaryOne, view.OvertimeCharges,view.Bonus,view.LeaveDeductions,view.TardyWithhold,view.LeaveWithhold,view.OtherDeductions);
+                #region 应发工资2赋值
+                view.SalaryTwo =msrmanage.GetSalarytwo(view.SalaryOne, view.OvertimeCharges,view.Bonus,view.LeaveDeductions,view.TardyWithhold,view.LeaveWithhold,view.NoClockWithhold,view.OtherDeductions);
                 #endregion
-                item.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;
-                view.PersonalSocialSecurity = item.PersonalSocialSecurity;
+                view.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;
                 view.PersonalIncomeTax = eseobj.PersonalIncomeTax;
                 item.Total=msrmanage.GetTotal(view.Id,view.SalaryTwo,view.PersonalSocialSecurity,view.PersonalIncomeTax);
                 view.Total = item.Total;
