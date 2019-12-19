@@ -26,7 +26,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult PerformanceAssessShow(int page,int limit) {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var mclist = mcmanage.GetList().Where(s=>s.IsDel==false);
+            var mclist = mcmanage.GetList().Where(s=>s.IsDel==false).ToList();
             var newlist = mclist.Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
