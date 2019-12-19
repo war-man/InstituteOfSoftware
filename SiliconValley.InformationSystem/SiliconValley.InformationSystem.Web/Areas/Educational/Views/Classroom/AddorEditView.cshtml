@@ -22,7 +22,7 @@
             line-height: 36px;
         }
 
-            #but1:hover
+        #but1:hover
             {
                 background-color: aqua;
             }
@@ -129,16 +129,15 @@
                             if (Model != null)
                             {
                                 <input type="hidden" id="Id" name="Id" value="@Model.Id" />
-                                <span id="ClassroomName" name="ClassroomName" class="LableCss1">@Model.ClassroomName</span>
+                                <input type="text" id="ClassroomName" name="ClassroomName" readonly="readonly" placeholder="名称" class="layui-input linu" style="border:0px" value="@Model.ClassroomName"/>
                             }
                             else
                             {
                                 <input type="text" id="ClassroomName" name="ClassroomName" lay-verify="required" placeholder="名称" class="layui-input linu" />
-                                @*@Html.TextBoxFor(c=>c.ClassroomName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "名称" }, { "class", "layui-input linu" } });*@
                             }
                         }
 
-                     
+
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -148,13 +147,33 @@
                     </div>
                 </div>
             </div>      
-            <div class="layui-row layui-form-item">                
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">说明:</label>
-                    <div class="layui-input-block">
-                        @Html.TextAreaFor(c => c.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
-                    </div>
-                </div>
+            <div class="layui-row layui-form-item">
+                @{
+                    if (Model == null)
+                    {
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">所属校区:</label>
+                            <div class="layui-input-block">
+                                @Html.DropDownListFor(c=>c.BaseData_Id, ViewBag.schools as IEnumerable<SelectListItem> , new Dictionary<string, object>() { { "class", "layui-select" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">说明:</label>
+                            <div class="layui-input-block">
+                                @Html.TextAreaFor(c => c.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
+                            <label class="layui-form-label">说明:</label>
+                            <div class="layui-input-block">
+                                @Html.TextAreaFor(c => c.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
+                            </div>
+                        </div>
+                    }
+                }
             </div>
         </div>
         <div class="layui-form-item" style="margin-top:80px;">

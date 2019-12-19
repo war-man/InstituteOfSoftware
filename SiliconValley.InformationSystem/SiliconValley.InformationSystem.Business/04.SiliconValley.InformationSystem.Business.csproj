@@ -130,6 +130,7 @@
     <Compile Include="DormitoryBusiness\StaffAccdationBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungBusiness.cs" />
     <Compile Include="DormitoryBusiness\TungFloorBusiness.cs" />
+    <Compile Include="EducationalBusiness\AddCourseManeger.cs" />
     <Compile Include="EducationalBusiness\BaseDataEnumManeger.cs" />
     <Compile Include="EducationalBusiness\BeOnDutyManeger.cs" />
     <Compile Include="EducationalBusiness\BreakManeger.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="EducationalBusiness\Reconcile_Com.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
+    <Compile Include="EducationalBusiness\TeacherNightManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CDInterviewBusiness.cs" />

@@ -320,6 +320,7 @@
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
     <Compile Include="ViewEntity\ClassCourseView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
+    <Compile Include="ViewEntity\ClassRoom_AddCourse.cs" />
     <Compile Include="ViewEntity\ClassSchedltData.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />

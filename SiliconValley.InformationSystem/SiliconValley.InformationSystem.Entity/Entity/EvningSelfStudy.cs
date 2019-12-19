@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// <summary>
         /// 课程名称
         /// </summary>
-        public string Curr_Name { get; set; }
+        public string emp_id { get; set; }
         /// <summary>
         /// 备注
         /// </summary>

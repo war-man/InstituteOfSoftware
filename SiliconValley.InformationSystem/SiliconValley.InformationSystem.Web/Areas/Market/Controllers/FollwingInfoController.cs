@@ -11,6 +11,7 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -18,9 +19,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     {
         ConsultManeger CM_Entity = new ConsultManeger();
         StuStateManeger ST_Entity = new StuStateManeger();
+        EmployeesInfoManage Enplo_Entity;
+        ConsultTeacherManeger ConsultTeacher;
         // GET: /Market/FollwingInfo/ListStudentView
         //获取当前上传的操作人
-        string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
         public ActionResult FollwingInfoIndex()
         {           
             return View();
@@ -31,8 +34,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult GetImageData()
         {
+            ConsultTeacher = new ConsultTeacherManeger();
+
             //判断是哪个咨询师
-            List<ConsultZhuzImageData> ConsultZhuzImageData_data = CM_Entity.GetImageData("1");
+            int f_id = ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+            List<ConsultZhuzImageData> ConsultZhuzImageData_data = CM_Entity.GetImageData(f_id.ToString());
             return Json(ConsultZhuzImageData_data,JsonRequestBehavior.AllowGet);
         }
 
@@ -116,6 +122,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个添加方法
         public ActionResult AddFunction()
         {
+            Enplo_Entity = new EmployeesInfoManage();
             try
             {
                 string Rank = Request.Form["Rank"];
@@ -130,14 +137,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 new_f.Rank = Rank;
                 new_f.Rmark = Rmark;
                 FM_Entity.Insert(new_f);
-                BusHelper.WriteSysLog(UserName+"添加了一条跟踪学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName +"添加了一条跟踪学生信息", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 return Json("ok",JsonRequestBehavior.AllowGet);
 
             }
             catch (Exception ex)
             {
                 //将错误填写到日志中     
-                BusHelper.WriteSysLog(UserName+"添加数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                 return Json("添加跟踪信息失败，请重试！！！", JsonRequestBehavior.AllowGet);
             }
              
@@ -185,12 +192,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 find_f.Rmark = My_Rmark;
                 find_f.TailAfterSituation = My_TailAfterSituation;
                 CM_Entity.GetFollwingManeger().Update(find_f);
-                BusHelper.WriteSysLog(UserName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(UserName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("系统错误，请重试!!!",JsonRequestBehavior.AllowGet);
             }
              

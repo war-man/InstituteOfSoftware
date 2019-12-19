@@ -25,9 +25,8 @@
                     <label class="layui-form-label">班级:</label>
                     <div class="layui-input-block">
                         <select name="ClassNumber" lay-filter="classnumber">
-
+                            <option value="0">--请选择--</option>
                             @{
-
                                 foreach (var item in ViewBag.classList as List<ClassSchedule>)
                                 {
                                     <option value="@item.id">@item.ClassNumber</option>
@@ -45,7 +44,7 @@
                         <input type="text" name="TeachDate" id="date1" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                     </div>
 
-                    <label class="layui-form-label"></label>
+                    <label class="layui-form-label">时间段：</label>
                     <div class="layui-input-inline" style="width:280px;">
                         .
 
@@ -63,15 +62,7 @@
 
                     <label class="layui-form-label">课程:</label>
                     <div class="layui-input-inline">
-                        <select name="Course" lay-verify="required" lay-search="">
-                            <option value="">当前课程:asp.net</option>
-                            @{
-                                foreach (var item in ViewBag.CourseList as List<Curriculum>)
-                                {
-                                    <option value="@item.CurriculumID">@item.CourseName</option>
-                                }
-                            }
-                        </select>
+                        <select name="Course" id="Course" lay-search=""></select>
                     </div>
                 </div>
                     <div>
@@ -90,7 +81,7 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">理由：</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入内容" name="reason" class="layui-textarea"></textarea>
+                        <textarea placeholder="请输入内容" name="reason" class="layui-textarea" lay-verify="required"></textarea>
                     </div>
                 </div>
                 <hr />
@@ -98,7 +89,7 @@
 
 
                     <button style="width:200px;" class="layui-btn layui-btn-primary" lay-submit lay-filter="commit" type="button" id="commit">提交</button>
-                    <button style="width:200px;" class="layui-btn layui-btn-primary" type="button" id="close">关闭</button>
+                    <button style="width:200px;" class="layui-btn layui-btn-primary" onclick="MyClose()" type="button" id="close">关闭</button>
                 </div>
 
             </form>
@@ -112,6 +103,11 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
+        function MyClose() {
+            var layer = layui.layer;
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭   
+        }
         layui.use(['form', 'layer','laydate'], function(){
             var form = layui.form;
             var layer = layui.layer;
@@ -157,21 +153,55 @@
             ///表单提交
             form.on('submit(commit)', function (data) {
 
-                var postData = {
+                if (data.field.ClassNumber == "0") {
+                    layer.msg('班级不能为空!', { icon: 2 });
+                } else {
+                    var postData = {
+                        Count: $(".count").text(),
+                        reason: data.field.reason,
+                        ClassNumber: data.field.ClassNumber,
+                        SpecDate: data.field.SpecDate,
+                        Course: data.field.Course,
+                        TeachDate: data.field.TeachDate
+                    };
 
-                    Count: $(".count").text(),
-                    reason: data.field.reason,
-                    ClassNumber: data.field.ClassNumber,
-                    SpecDate: data.field.SpecDate,
-                    Course: data.field.Course
-
-                };
-
-               //发送请求
-                $.post("");
+                    $.ajax({
+                        url: '/Teaching/Teacher/AddCourse',
+                        data: postData,
+                        type:'POST',
+                        success: function (sucdata) {
+                            if (sucdata.Success == true) {
+                                layer.msg('提交成功', { icon: 1, shade: 0.8 }, function () {
+                                    MyClose();
+                                });
+                            } else {
+                                layer.msg(sucdata.Msg, {icon:2});
+                            }
+                        }
+                    })
+                }
+                 
 
                 return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
+            //获取班级课程
+            form.on('select(classnumber)', function (data) {
+                $("#Course")[0].innerHTML = "";
+                if (data.value != "0") {
+                    $.ajax({
+                        url: '/Teaching/Teacher/GetCurrName/' + data.value,
+                        success: function (sucdata) {
+                            if (sucdata.Success == true) {
+                                $('<option value=' + sucdata.Data.CurriculumID + '>' + sucdata.Data.CourseName + '</option>').appendTo($("#Course"));
+                                form.render();
+                            } else {
+                                layer.msg(sucdata.Msg, { icon: 2 });
+                            }
+                        }
+                    });
+                }  
+            });      
+
         });
     </script>
 </body>

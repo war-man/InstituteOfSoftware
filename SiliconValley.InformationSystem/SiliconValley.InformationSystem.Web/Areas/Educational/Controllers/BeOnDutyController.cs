@@ -14,10 +14,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     public class BeOnDutyController : Controller
     {
         BeOnDutyManeger BD_Entity = new BeOnDutyManeger();
-        string UserName = Base_UserBusiness.GetCurrentUser().UserName;//获取当前登录人
+        
         // GET: /Educational/BeOnDuty/FindSingleData
         public ActionResult BeOnDutyIndexView()
         {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             return View();
         }
         //数据加载
@@ -39,7 +40,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(UserName+ "加载值班，加班费数据时出现：" + ex.Message, EnumType.LogType.加载数据);
+                //BusHelper.WriteSysLog(UserName+ "加载值班，加班费数据时出现：" + ex.Message, EnumType.LogType.加载数据);
                 var datajson = new
                 {
                     code = 0,  
@@ -73,7 +74,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                         find_be.TypeName = TypeName;
                         find_be.Cost = Convert.ToDecimal(Cost);
                         BD_Entity.Update(find_be);
-                        BusHelper.WriteSysLog(UserName + "值班，加班费用成功编辑数据", EnumType.LogType.编辑数据);
+                        //BusHelper.WriteSysLog(UserName + "值班，加班费用成功编辑数据", EnumType.LogType.编辑数据);
                     }
                 }
                 else
@@ -85,13 +86,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     newBeonduty.IsDelete = false;
                     newBeonduty.AddDate = DateTime.Now;
                     BD_Entity.Insert(newBeonduty);
-                    BusHelper.WriteSysLog(UserName + "值班，加班费用成功添加数据", EnumType.LogType.添加数据);
+                    //BusHelper.WriteSysLog(UserName + "值班，加班费用成功添加数据", EnumType.LogType.添加数据);
                 }                                  
                 return Json("ok",JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(UserName + "值班，加班费用添加数据时出现：" + ex.Message, EnumType.LogType.添加数据);
+                //BusHelper.WriteSysLog(UserName + "值班，加班费用添加数据时出现：" + ex.Message, EnumType.LogType.添加数据);
                 return Json("系统错误，请重试！！！", JsonRequestBehavior.AllowGet);
             }             
         }
