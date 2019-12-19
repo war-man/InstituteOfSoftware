@@ -320,6 +320,7 @@
     <Compile Include="ViewEntity\ChannelStaffIndexView.cs" />
     <Compile Include="ViewEntity\ClassCourseView.cs" />
     <Compile Include="ViewEntity\ClassdetailsView.cs" />
+    <Compile Include="ViewEntity\ClassRoom_AddCourse.cs" />
     <Compile Include="ViewEntity\ClassSchedltData.cs" />
     <Compile Include="ViewEntity\ClassStudentView.cs" />
     <Compile Include="ViewEntity\ClassTableView.cs" />
@@ -421,6 +422,7 @@
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentData.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
+    <Compile Include="ViewEntity\StudentFeeRecordView.cs" />
     <Compile Include="ViewEntity\StudentUnionDepartmentView.cs" />
     <Compile Include="ViewEntity\StuHomeWorkView.cs" />
     <Compile Include="ViewEntity\SuccessionrecordView.cs" />
@@ -430,6 +432,7 @@
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
+    <Compile Include="ViewEntity\TotalcostView.cs" />
     <Compile Include="ViewEntity\TransactionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\TungView.cs" />

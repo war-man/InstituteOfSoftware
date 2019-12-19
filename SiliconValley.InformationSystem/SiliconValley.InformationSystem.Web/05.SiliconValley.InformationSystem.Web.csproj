@@ -200,6 +200,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Areas\BaseSysManage\BaseSysManageAreaRegistration.cs" />
+    <Compile Include="Areas\BaseSysManage\Controllers\Base_PermissionController.cs" />
     <Compile Include="Areas\BaseSysManage\Controllers\Base_UserRoleController.cs" />
     <Compile Include="Areas\Base_SysManage\Base_SysManageAreaRegistration.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\Base_AppSecretController.cs" />
@@ -259,11 +260,9 @@
     <Compile Include="Areas\Market\Controllers\ConsultController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultTeacherController.cs" />
     <Compile Include="Areas\Market\Controllers\FollwingInfoController.cs" />
-    <Compile Include="Areas\Market\Controllers\InfomationController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
-    <Compile Include="Areas\Market\Controllers\StatusController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\MyEducation\Controllers\EducationController.cs" />
@@ -312,6 +311,7 @@
     <Compile Include="Areas\Teaching\Controllers\StudentHomeWorkController.cs" />
     <Compile Include="Areas\Teaching\Controllers\TeacherController.cs" />
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
+    <Compile Include="Common\layuitree.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
@@ -328,6 +328,8 @@
     <Compile Include="Scripts\vendor\umeditor\net\Uploader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\BaseSysManage\css\style.css" />
+    <Content Include="Areas\BaseSysManage\js\style.js" />
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
     <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
     <Content Include="Areas\ExaminationSystem\config\InvigilatorConfig.xml">
@@ -414,9 +416,10 @@
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\plugins\upload\trumbowyg.upload.php" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.js" />
     <Content Include="Areas\ExaminationSystem\js\trumbowyg\trumbowyg.min.js" />
-    <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\css\bootstrap.css" />
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
+    <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
+    <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -778,13 +781,17 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Config\NingboGeojson.json" />
-    <Content Include="Config\Permission.config" />
+    <Content Include="Config\Permission.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Config\Province.json" />
     <Content Include="Config\system.config" />
     <Content Include="Config\SystemMenu.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Config\UrlPermission.config" />
+    <Content Include="Config\UrlPermission.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Areas\Base_SysManage\Views\web.config" />
     <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Form.cshtml" />
     <Content Include="Areas\Base_SysManage\Views\Base_AppSecret\Index.cshtml" />
@@ -816,7 +823,6 @@
     <Content Include="Areas\Market\Views\web.config" />
     <Content Include="Areas\Teaching\Views\web.config" />
     <Content Include="Areas\Teachingquality\Views\web.config" />
-    <Content Include="Areas\Obtainemployment\Views\web.config" />
     <Content Include="Areas\Logistics\Views\web.config" />
     <Content Include="Areas\Personnelmatters\Views\web.config" />
     <Content Include="Areas\Finance\Views\web.config" />
@@ -867,15 +873,6 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\DeptUpdate.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmp.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Index.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\AddEnterprise.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\EditEnterprise.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\Enterdetail.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\EnterpriseInfoIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmpClass\Distribution.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmpClass\EmpClassIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EditEmployStaff.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmployDetailView.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmploymentCommissionerIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\RecruitingDataSummary\Editrpt.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\NetIndex.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
@@ -1150,33 +1147,12 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
-    <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120033610.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191127043148.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191211102732.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\bir4.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\birth3.gif" />
-    <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA舒克.png" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1801TA刘雨欣.jpg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
-    <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\CDinterview\SResearchRecordRegister.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentAreas\EmploymentAreasAdd.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentAreas\EmploymentAreasIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SimulatInterviewIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SResearchRecordRegister.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordRegister.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
     <Content Include="Areas\Educational\Views\BaseDataEnum\AddorEditView.cshtml" />
     <Content Include="Areas\Educational\Views\BaseDataEnum\BaseDataEnumIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Break\AddorEditView.cshtml" />
@@ -1198,27 +1174,19 @@
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\WarehouseIndexView.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Quarter\addquarter.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Quarter\QuarterIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Quarter\uptquarter.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\Distribution\DistributionIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomDisabled\RoomDisabledIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\AddRoomPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\HttpGetUpdRoom.cshtml" />
     <Content Include="Areas\Dormitory\Views\RoomBasis\RoomBasisIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\StaffRoomDetails\Staffloadlistwith.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\SelfObtainRcoredIndex.cshtml" />
     <Content Include="Areas\Dormitory\Views\Basics\AddFloorPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\Basics\AddTungPage.cshtml" />
     <Content Include="Areas\Dormitory\Views\Basics\BasicsIndex.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
     <Content Include="Areas\flow\Views\web.config" />
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\UpdateTime.cshtml" />
     <Content Include="Areas\Dormitory\Controllers\StaffRoomDetailsController.cs~parent of cd53ee6... 123" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\Marking.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\StuPersonalScores.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\ChangeTimeandDays.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\EditAttendanceInfo.cshtml" />
     <Content Include="Areas\Teaching\Views\SatisfactionSurvey\CreateHeadMasterSurveyConfig.cshtml" />
@@ -1242,19 +1210,52 @@
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\AccountIndex.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\createAccount.cshtml" />
     <Content Include="Areas\BaseSysManage\Views\Base_UserRole\selectEmp.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\ContractEnd.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
-    <Content Include="Areas\Market\Views\Infomation\InfomationIndexView.cshtml" />
-    <Content Include="Areas\Market\Views\Status\StatusIndexView.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmpStaffAndStu\EmpStaffAndStuIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\createRole.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\UserRoelManage.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\RoleUrlPermiss.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\MenuPermissionIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\setOtherPermissTorole.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\MenusIndex.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\addMenu.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_UserRole\selectMenuPermission.cshtml" />
+    <Content Include="Areas\BaseSysManage\Views\Base_Permission\permissManage.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\AddEnterprise.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\EditEnterprise.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\Enterdetail.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\BusinessManagement\EnterpriseInfoIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\CDinterviewIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\CDSResearchRecordRegister.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\CDinterview\edit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmpClass\Distribution.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmpClass\EmpClassIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentAreas\EmploymentAreasAdd.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentAreas\EmploymentAreasIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EditEmployStaff.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmployDetailView.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentCommissioner\EmploymentCommissionerIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\EmploymentSummaryIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\employed.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\EmploySituationIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\EmploySituationSee.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\entlist.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\EmploySituation\unemployed.cshtml" />
-    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\EmploymentSummaryIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmpStaffAndStu\EmpStaffAndStuIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Quarter\addquarter.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Quarter\QuarterIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\Quarter\uptquarter.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\add.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\edit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SelfObtainRcored\SelfObtainRcoredIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SimulatInterviewIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SimulatInterview\SResearchRecordRegister.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\edit.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\SResearchRecord\SResearchRecordRegister.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudentIntentionView\StudentIntentionViewIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\add.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\web.config" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2863,6 +2864,8 @@
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~HEAD" />
     <Content Include="uploadXLSXfile\Template\Excle模板.xls~zhonglunpan" />
     <Content Include="uploadXLSXfile\Sheet1.xlsx" />
+    <Content Include="uploadXLSXfile\湖南硅谷云教育科技有限公司_考勤报表_20191101-20191130%281%29.xlsx" />
+    <Content Include="Views\Home\rtest.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2890,6 +2893,7 @@
     <Folder Include="Areas\MyEducation\Models\" />
     <Folder Include="Areas\MyEducation\Views\Shared\" />
     <Folder Include="Areas\Obtainemployment\Models\" />
+    <Folder Include="Areas\Obtainemployment\Views\Distribution\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
@@ -2906,6 +2910,7 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
+    <Folder Include="uploadXLSXfile\EmpImage\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

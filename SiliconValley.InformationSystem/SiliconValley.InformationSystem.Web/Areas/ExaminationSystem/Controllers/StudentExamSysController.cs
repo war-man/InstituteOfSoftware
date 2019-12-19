@@ -14,6 +14,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Entity.MyEntity;
    
+
+    [CheckLogin]
     public class StudentExamSysController : Controller
     {
 
@@ -50,14 +52,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
-                var exam = db_stuExam.StudetnSoonExam("19081997072400004").OrderByDescending(d => d.BeginDate).FirstOrDefault();
+                var studentNumber = SessionHelper.Session["studentnumber"].ToString();
+                var exam = db_stuExam.StudetnSoonExam(studentNumber.ToString()).OrderByDescending(d => d.BeginDate).FirstOrDefault();
                 var examview = db_exam.ConvertToExaminationView(exam);
 
                 //在判断是否考完了
 
                 if (examview != null)
                 {
-                    var scores = db_examScores.StuExamScores(examview.ID, "19081997072400004");
+                    var scores = db_examScores.StuExamScores(examview.ID, studentNumber);
 
                     if (scores.ChooseScore != null)
                     {
@@ -106,9 +109,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             ViewBag.EXAMVIEW = EXAMVIEW;
 
             //~获取答卷信息.
-
+            var studentNumber = SessionHelper.Session["studentnumber"].ToString();
             //获取当前登录学员
-           var answerSheetInfo = db_stuExam.AnswerSheetInfos(examid, "19081997072400004");
+            var answerSheetInfo = db_stuExam.AnswerSheetInfos(examid, studentNumber);
 
             ViewBag.AnswerSheetInfo = answerSheetInfo;
 
@@ -240,10 +243,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             var examview = db_exam.ConvertToExaminationView(exam);
 
             //随机选择一个机试题
-
+            var studentNumber = SessionHelper.Session["studentnumber"].ToString();
             //首先查看是否已经随机获取到了一个
-            
-            var candidateInfo =  db_exam.AllCandidateInfo(examid).Where(d=>d.StudentID == "19081997072400004").FirstOrDefault();
+
+            var candidateInfo =  db_exam.AllCandidateInfo(examid).Where(d=>d.StudentID == studentNumber).FirstOrDefault();
             ComputerTestQuestionsView computer = null;
             if (candidateInfo.ComputerPaper == null)
             {
@@ -379,11 +382,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
+                var studentNumber = SessionHelper.Session["studentnumber"].ToString();
                 // 1.将解答题答案存入文件  2 将机试题文件放入AnswerSheet文件夹 3.修改数据库值（选择题分数，解答题答案路径，机试题路径）4.记录选择题分数
 
                 //1 将解答题答案存入文件 首先新建学生答卷文件夹
                 //名称规则 学号加上考试ID
-                string direName = "19081997072400004" + examid;
+                string direName = studentNumber + examid;
                 DirectoryInfo directoryInfo = new DirectoryInfo(Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName));
                 directoryInfo.Create();
 
@@ -412,7 +416,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 //3.修改数据库值（选择题分数，解答题答案路径，机试题路径）
                 db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
-                var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.Examination == examid && d.StudentID == "19081997072400004").FirstOrDefault();
+                var Candidateinfo = db_exam.AllCandidateInfo(examid).Where(d => d.Examination == examid && d.StudentID == studentNumber).FirstOrDefault();
                 Candidateinfo.Paper = Server.MapPath("/Areas/ExaminationSystem/Files/AnswerSheet/" + direName + "/" + answerfilename);
 
                 //获取需要替换的字符串路径
@@ -433,7 +437,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 //获取考生
 
-               var stuScores = db_examScores.StuExamScores(examid, "19081997072400004");
+               var stuScores = db_examScores.StuExamScores(examid, studentNumber);
 
                 if (stuScores == null)
                 {

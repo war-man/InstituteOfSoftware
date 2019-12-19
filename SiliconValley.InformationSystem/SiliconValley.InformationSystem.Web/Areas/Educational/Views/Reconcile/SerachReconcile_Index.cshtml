@@ -125,6 +125,12 @@
 </script>
 <div>
     <table id="Recon_table" lay-filter="Recon_table"></table>
+    <script type="text/html" id="Recon_toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData">班级调课</button>
+        </div>
+    </script>
 </div>
 <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
 @section script{
@@ -201,10 +207,10 @@
             //table初始化
             table.render({
                 elem: '#Recon_table'
+                , toolbar: '#Recon_toolbarDemo'
                 , url: '/Educational/Reconcile/GetReconAllData'
                 , cols: [[
-                    { type: 'radio', fixed: 'left' }
-                    , { field: 'class_name', title: '班级', fixed: 'left' }
+                     { field: 'class_name', title: '班级', fixed: 'left' }
                     , { field: 'classroom_name', title: '教室', }
                     , { field: 'currname', title: '课程' }
                     , { field: 'timeName', title: '上课时间段' }
@@ -245,7 +251,7 @@
                     layer.open({
                         type: 2,
                         content: '/Educational/Reconcile/Edit_rView/' + data.Id,
-                        area: ['1300px', '600px'],
+                        area: ['800px', '600px'],
                         title: '编辑数据'
                         , shade: 0.8
                         , anim: 4
@@ -284,6 +290,38 @@
                 });
                 return false;
             });
+
+            //批量调课
+            //头工具栏事件
+            table.on('toolbar(Recon_table)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Reconcile/BigDataUpdate',
+                            area: ['680px', '400px'],
+                            title: '全体数据修改'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;   
+                    case 'Class_getCheckData':
+                        //班级调课
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Reconcile/ClassBigDataAID',
+                            area: ['680px', '450px'],
+                            title: '班级数据修改'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                };
+            });
+
         });
     </script>
 }

@@ -17,6 +17,9 @@
 
   <grandteacherPermissions>
     <permission permissionid="GetAllGrandTeacher" grand="1,2,3,4"></permission>
+    <permission permissionid="S1S2GrandTeacher" grand="1,2"></permission>
+    <permission permissionid="S3GrandTeacher" grand="3"></permission>
+    <permission permissionid="S4GrandTeacher" grand="4"></permission>
   </grandteacherPermissions>
  
   

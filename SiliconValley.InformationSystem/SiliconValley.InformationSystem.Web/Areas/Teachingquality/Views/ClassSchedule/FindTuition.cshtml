@@ -8,14 +8,61 @@
     </style>
 }
 <input type="text" id="ClassNname" value="@ViewBag.ClassName" style="display:none" />
+<form class="layui-form" action="">
+    <div class="layui-container">
+        <div class="layui-row ">
+
+
+            <div class="layui-row layui-form-item">
+
+
+
+                <div class="layui-col-xs4">
+                    <label class="layui-form-label">学号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" l name="StudentNumber" class="layui-input" />
+
+                    </div>
+                </div>
+                <div class="layui-col-xs4  layui-col-sm4 layui-col-md4">
+                   
+                        <label class="layui-form-label">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="Name"  id="Name" autocomplete="off" class="layui-input">
+                        </div>
+                    
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="layui-form-label" style="width:100px;">是否交齐</label>
+                    <div class="layui-input-block" style="width:200px;">
+                        <select name="Isitinturn" lay-filter="aihao" >
+                            <option value="" selected="selected">全部</option>
+                            <option value="交齐">交齐</option>
+                          
+                            <option value="未交齐">未交齐</option>
+                          
+                        </select>
+                    </div>
+                </div>
+
+            <div style="position:absolute;left:98%;top:1px;">
+                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+            </div>
+
+
+        </div>
+
+    </div>
+        </div>
+</form>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 @section script{
     <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
     @*头部工具栏*@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="Levyfees"><i class="layui-icon">&#xe654;</i>短信催交</button>
-            <button class="layui-btn layui-btn-sm" lay-event="EntiShortme"><i class="layui-icon">&#xe654;</i>编辑催费模板</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Levyfees"><i class="layui-icon">&#xe667;</i>短信催交</button>
+            <button class="layui-btn layui-btn-sm" lay-event="EntiShortme"><i class="layui-icon">&#xe642;</i>编辑催费模板</button>
         </div>
     </script>
     <script>
@@ -117,6 +164,20 @@
                         Popup("/Teachingquality/ClassSchedule/SMScharging", "短信模板编辑", 700, 620);
                         break;
                 };
+            });
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+                var x = data.field;
+                table.reload('idTest', {
+                    where: {
+                        Name: x.Name,
+                        Studentid: x.StudentNumber,
+                        Isitinturn: x.Isitinturn
+                    }, page: {
+                        curr: 1
+                    }
+                });
+                return false;
             });
         });
 

@@ -75,10 +75,11 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                     {
                         if (student.Password == u.Password)
                         {
+                            SessionHelper.Session["UserId"] = student.StudentNumber;
                             SessionHelper.Session["studentnumber"] = student.StudentNumber;
                             err.Success = true;
                             err.Msg = "登陆成功!";
-                            err.Data = "/Base_SysManage/Base_SysMenu/Index";
+                            err.Data = "/ExaminationSystem/StudentExamSys/StuExamIndex";
 
                             //获取权限
 

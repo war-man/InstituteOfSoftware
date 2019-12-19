@@ -20,13 +20,33 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         [Key]
         public int Id { get; set; }
         public Nullable<int> Tearcher_Id { get; set; }
+        /// <summary>
+        /// 班级
+        /// </summary>
         public string ClassSchedule_Id { get; set; }
+        /// <summary>
+        /// 值班情况
+        /// </summary>
         public string OnByReak { get; set; }
+        /// <summary>
+        /// 值班类型
+        /// </summary>
         public Nullable<int> BeOnDuty_Id { get; set; }
+        /// <summary>
+        /// 安排日期
+        /// </summary>
         public Nullable<System.DateTime> OrwatchDate { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
     
-      
+        /// <summary>
+        /// 值班时间段
+        /// </summary>
+        public string timename { get; set; }
+        /// <summary>
+        /// 教室
+        /// </summary>
+        public int ClassRoom_id { get; set; }
+
     }
 }

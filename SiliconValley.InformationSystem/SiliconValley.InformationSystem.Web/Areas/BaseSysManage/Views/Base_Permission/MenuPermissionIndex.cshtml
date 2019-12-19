@@ -1,0 +1,289 @@
+﻿
+@{
+    ViewBag.Title = "MenuPermissionIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+ 
+    <style>
+
+
+        * {
+            margin:0;
+        }
+        #mywarp {
+        
+            width:100%;
+
+        }
+        #permissionContetDiv {
+            float: left;
+            width: 79%;
+            border-left: 1px solid gray;
+            height: 500px;
+        }
+
+        #mytreeDiv {
+            float: left;
+            width: 20%;
+        }
+
+        .selectNode {
+            color:red;
+        }
+
+    </style>
+    
+    
+ }
+
+    <div id="mywarp">
+
+
+        <div id="mytreeDiv">
+
+            <div id="nytree">
+
+
+            </div>
+        </div>
+
+        <div id="permissionContetDiv">
+
+            <div id="editDiv">
+                <button class="layui-btn layui-btn-primary" id="edit" type="button">编辑</button>
+            </div>
+
+            <div id="permissionContet">
+
+
+               
+            </div>
+
+            <button type="button"  id ="commitMenu"class="layui-btn-primary layui-btn">提交</button>
+
+        </div>
+
+
+    </div>
+
+<script type="text/template" id="muban">
+
+    <div style="height:100%; margin:0px auto; text-align:center;">
+        
+        <div class="menuslist"></div>
+     
+        <br />
+        <input class="urlInput" readonly style="width:60%; height:30px;" placeholder="请输入url" type="text" value="{{=url}}" />
+    </div>
+
+
+</script>
+<script src="~/Scripts/underscore.js"></script>
+@section script{
+    <script>
+        var menutype= "";
+        var selectNode = "";
+
+        layui.use(['tree', 'form', 'layer','element'], function(){
+
+            
+            var tree = layui.tree;
+            var form = layui.form;
+            var layer = layui.layer;
+
+            var menus = "";
+            function test(objMenu) {
+
+                if (objMenu.SubMenus != null) {
+
+                    menus += objMenu.Name+',';
+
+                    for (var i = 0; i < objMenu.SubMenus.length; i++) {
+                        test(objMenu.SubMenus[i])
+                    }
+                } 
+            }
+
+
+            function addInputMenu(menuobj,tip) {
+                var div = $("<div></div>");
+
+                var input = $("<input type='text' value='' class='menuname'  readonly  style='margin-left:10px; width:60%; height:30px;'/>");
+                input.attr("placeholder", tip);
+                div.append(input);
+              
+                input.val(menuobj);
+
+                $(".menuslist").append(div);
+            }
+
+            function treeNodeclick(obj) {
+                console.log(obj); //得到当前点击的节点数据
+                obj.data.checked = true;
+                selectNode = obj.data.field;
+                obj.elem.siblings().find(".layui-tree-entry .layui-tree-txt").removeClass("selectNode");
+                obj.elem.find(".layui-tree-entry .layui-tree-txt").addClass("selectNode");
+
+              
+
+                var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                $("#permissionContet").html("");
+                menus = "";
+                //发送请求
+                $.post('/BaseSysManage/Base_Permission/PermissionUrl', { permission: obj.data.field }, function (result) {
+                    console.log(result);
+                    if (result.ErrorCode == 200) {
+                        layer.close(loadIndex);
+                        var templateHtml = _.template($("#muban").html());
+                        
+                        var templateData = templateHtml({ url: result.Data.node.Url });
+                        $("#permissionContet").append(templateData);
+
+                        if (result.Data.node.Url != null) {
+
+                            menutype = "edit";
+                        }
+
+                        else {
+                            menutype = "add";
+                            for (var i = 0; i < 3; i++) {
+                                var tip = "输入"+(i+1 )+"级菜单";
+                                addInputMenu("", tip);
+                            }
+                        }
+                    }
+                    else {
+                        layer.close(loadIndex);
+
+                        layer.msg('数据加载异常！', { icon: 2 }, function () {
+
+
+                        });
+                    }
+
+                });
+
+                console.log(obj.data.children); //当前节点下是否有子节点
+            }
+
+            function initData() {
+                var roleId = $("#roleId").val();
+
+                var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                $.post("/BaseSysManage/Base_Permission/MenuPermissionData", { roleId: roleId }, function (result) {
+
+                    console.log(result);
+                    if (result.ErrorCode == 200) {
+                        layer.close(loadIndex);
+                        tree.render({
+                            elem: '#nytree'
+                            , id: "mytree"
+                            , data: result.Data
+                            , click: treeNodeclick
+                            , showCheckbox:true
+
+                        });
+                    } else {
+                        layer.close(loadIndex);
+
+                        layer.msg('服务器异常！', { icon: 2 }, function () {
+
+
+                        });
+
+                    }
+
+
+                });
+            }
+
+            ///初始化数据
+            initData();
+
+            $("#edit").click(function () {
+
+                $("#permissionContet input").removeAttr("readonly");
+
+            });
+
+            //提交菜单
+
+            $("#commitMenu").click(function () {
+
+
+                //判断是否选中了节点
+                if (selectNode == "") {
+
+                    layer.msg("请选择节点!", { icon: 2 });
+                    return;
+                }
+
+
+
+                //判断是否输入了url
+                var url = $("#permissionContetDiv .urlInput").val();
+
+                if (!url) {
+                    layer.msg("请输入url!", { icon: 2 });
+                    return;
+                }
+
+                //正则
+                var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                if (menutype = "edit") {
+                    //发送请求
+                    $.post('/BaseSysManage/Base_Permission/editMenu', { permission: selectNode, url: url }, function (result) {
+
+
+                        if (result.ErrorCode == 200) {
+                            layer.close(loadIndex);
+                            layer.msg("修改成功", { icon: 1 });
+
+                        }
+                        else {
+                            layer.close(loadIndex);
+                            layer.msg("失败", { icon: 2 });
+                        }
+
+                    });
+                } else {
+
+                    //添加
+
+
+                var count = 0;
+                var menuNames = "";
+                //判断是否填了一级菜单
+                $("#permissionContetDiv .menuslist input").each(function (index) {
+                    console.log($(this).val());
+                    if ($(this).val()) {
+
+                        count++;
+                        menuNames += $(this).val()+",";
+
+                    }
+                });
+
+                if (count == 0) {
+
+                    layer.msg("至少输入一级菜单!", { icon: 2 });
+                    return;
+                }
+
+                }
+
+                
+               
+
+
+            });
+
+        
+        });
+    </script>
+    
+    
+ }
+

@@ -158,7 +158,12 @@
 @section script{
 <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
     <script>       
- 
+        function TableFulsh() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('Reconcile_table');
+            });
+        }
         layui.use(['form','laydate','table'], function () {
             var form = layui.form;
             var laydate = layui.laydate;

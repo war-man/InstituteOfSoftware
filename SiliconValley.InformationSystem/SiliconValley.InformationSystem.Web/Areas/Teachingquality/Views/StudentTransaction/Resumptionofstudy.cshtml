@@ -98,7 +98,7 @@
                     <td colspan="1" id="CLassNames">
                         @if (ViewBag.Types == "1")
                         {
-                         @Model.NowCLassName
+                            @Model.NowCLassName
                         }
                         else
                         {
@@ -111,19 +111,19 @@
                     <td>@Model.Telephone</td>
                     <th class="th1">是否领书</th>
                     <td>
-                     
+
                         <div class="layui-input-inline">
                             @if (ViewBag.Types == "1")
                             {
-                               string isde= Model.IsBookcollection == false ? "否" : "是";
-                            <div>
-                                @isde
-                            </div> 
+                                string isde = Model.IsBookcollection == false ? "否" : "是";
+                                <div>
+                                    @isde
+                                </div>
                             }
                             else
                             {
-                            <input type="radio" name="IsBookcollection" value="false" title="否" checked="checked">
-                            <input type="radio" name="IsBookcollection" value="true" title="是">
+                                <input type="radio" name="IsBookcollection" value="false" title="否" checked="checked">
+                                <input type="radio" name="IsBookcollection" value="true" title="是">
                             }
 
                         </div>
@@ -280,7 +280,7 @@
             //})
             //return false;
 
-           
+
             if ($("#NowCLass").val() != "") {
                 var datas = data.field;
                 TransactionAdd("/Teachingquality/StudentTransaction/Resumptionofstudy", datas);
@@ -288,7 +288,7 @@
                 layer.msg('请选择需要复学的班级');
             }
         });
-     
+
     });
     //拿到班级号
     $("#ClassName").click(function () {
@@ -301,5 +301,20 @@
         $("#NowCLass").val(data.id);
         $("#ClassName").css("display", "none");
         $("#CLassNames").text(data.ClassNumber);
+    }
+</script>
+@*打印*@
+<script>
+    document.getElementById('btn').onclick = function () {
+
+        Print('#text', {
+            onStart: function () {
+                console.log('onStart', new Date())
+            },
+            onEnd: function () {
+                console.log('onEnd', new Date())
+            }
+        })
+
     }
 </script>

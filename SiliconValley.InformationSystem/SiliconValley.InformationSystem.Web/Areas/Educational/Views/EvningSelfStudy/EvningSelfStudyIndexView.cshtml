@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "EvningSelfStudyIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+    <style>
+
+    </style>
+    }
+ <table id="Eving_table" lay-filter="Eving_table"></table>
+
+@section script{
+    <script>
+        layui.use(['table'], function () {
+            var table = layui.table;
+            table.render({
+                elem: '#Eving_table'
+                , url: ''
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , cols: [[
+                    { type: 'radio'}
+                    , { field: 'id', title: '班级' }
+                    , { field: 'username', title: '教室' }                    
+                    , { field: 'sex', title: '上课时间段' }
+                    , { field: 'city', title: '安排的日期' }
+                    , { field: 'sign', title: '上课的老师' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+                ]]
+                , page: true
+            });
+
+
+        });
+    </script>
+    }
+

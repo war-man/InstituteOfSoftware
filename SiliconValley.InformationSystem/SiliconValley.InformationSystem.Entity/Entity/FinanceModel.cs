@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
        public int id { get; set; }
+        /// <summary>
+        /// 员工编号
+        /// </summary>
        public string Financialstaff { get; set; }
        public bool IsDelete { get; set; }
        public DateTime AddDate { get; set; }

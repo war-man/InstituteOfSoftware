@@ -7,6 +7,7 @@ using System.Linq.Dynamic;
 
 namespace SiliconValley.InformationSystem.Business.Base_SysManage
 {
+   
     public class Base_SysRoleBusiness : BaseBusiness<Base_SysRole>
     {
         #region 外部接口
@@ -86,6 +87,55 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
 
             Service.Insert(insertList);
             PermissionManage.ClearUserPermissionCache();
+        }
+
+        public AjaxResult createRole(string roleName, string businessName)
+        {
+            AjaxResult result = new AjaxResult();
+
+            //首先验证 是否存在
+           var existrole = this.GetList().Where(d => d.RoleName == roleName).FirstOrDefault();
+
+            if (existrole != null)
+            {
+                //已存在
+                result.ErrorCode = 444;
+                result.Msg = "角色名称重复！";
+                result.Data = null;
+
+                return result;
+            }
+
+            //********************************************************************//
+
+            Base_SysRole role = new Base_SysRole();
+            role.BusinessName = businessName;
+            role.Id = Guid.NewGuid().ToString();
+            role.RoleId = Guid.NewGuid().ToString();
+            role.RoleName = roleName;
+
+            this.AddData(role);
+
+            result.ErrorCode = 200;
+            result.Msg = "成功！";
+            result.Data = null;
+
+            return result;
+
+        }
+
+
+
+        /// <summary>
+        /// 获取角色所拥有的url权限
+        /// </summary>
+        /// <returns></returns>
+        public List<PermissionModule> RolePermission(string roleId)
+        {
+
+           var result = PermissionManage.GetRolePermissionModules(roleId);
+
+            return result;
         }
 
         #endregion

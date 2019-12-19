@@ -86,9 +86,9 @@
     @*头部工具栏*@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>开设班级</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe62e;</i>开设班级</button>
          
-            <button class="layui-btn layui-btn-sm" lay-event="FindTuition"><i class="layui-icon">&#xe654;</i>升学缴费情况</button>
+            <button class="layui-btn layui-btn-sm" lay-event="FindTuition"><i class="layui-icon">&#xe770;</i>升学缴费情况</button>
         </div>
     </script>
     <script type="text/html" id="barDemo">
@@ -152,6 +152,8 @@
                 , limit: 8
                 , limits: [8, 10, 15]
             });
+
+          
             //查看班级学员
             table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
                 var data = obj.data; //获得当前行数据

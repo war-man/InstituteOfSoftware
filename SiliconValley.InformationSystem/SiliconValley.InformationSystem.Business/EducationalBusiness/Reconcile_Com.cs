@@ -259,6 +259,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return  PositionBusiness.GetList().Where(p => p.IsDel == false).ToList();
         }
-      
+        /// <summary>
+        /// 判断这个班级应该去达康维嘉校区上晚自习还是继善高科校区上晚自习 (true--继善高科校区,fale--达康维嘉校区)
+        /// </summary>
+        /// <param name="class_id"></param>
+        /// <returns></returns>
+        public static bool judgeClass(int class_id)
+        {
+            ClassSchedule find= ClassSchedule_Entity.GetEntity(class_id);
+            List<Grand> grand1 = GetGrand_Id(true).Where(g=>g.Id==find.grade_Id).ToList();
+            if (grand1.Count>0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

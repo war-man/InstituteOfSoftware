@@ -763,5 +763,14 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             return data;
          
         }
+        /// <summary>
+        /// 根据学号获取是否报名本科
+        /// </summary>
+        /// <param name="Studentid">学号</param>
+        /// <returns></returns>
+        public int StudentUndergraduatecount(string Studentid)
+        {
+            return this.GetList().Where(a => a.StudentNumber == Studentid && a.IsDelete == false).Count();
+        }
     }
 }

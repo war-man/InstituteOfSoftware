@@ -119,6 +119,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.SalaryView
         /// 早退扣款
         /// </summary>
         public Nullable<decimal> LeaveWithhold { get; set; }
+        /// <summary>
+        /// 缺卡扣款
+        /// </summary>
+        public Nullable<decimal> NoClockWithhold { get; set; }
+        
 
     }
 }

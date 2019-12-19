@@ -1,0 +1,184 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>permissManage</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="mywarp">
+
+      
+        <input type="checkbox"  title="顶级" value="顶级" id="isFirst" />
+
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">一级名称：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="menuname1" name="menuname1" lay-verify="required" class="layui-input">
+                        <input placeholder="Code" id="menunamecode1" type="text" name="menunamecode1" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">二级名称：</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="menuname2" id="menuname2" lay-verify="required" class="layui-input">
+                        <input type="text" placeholder="Code" id="menunamecode2" name="menunamecode2" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+            <button class="layui-btn layui-btn-primary" lay-submit lay-filter="add" type="button">添加</button>
+        </form>
+
+
+        <hr />
+        <hr />
+        <div id="mytree"></div>
+
+        <hr />
+
+       
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+        var selectNode;
+
+        layui.use(['transfer', 'layer','tree','form'], function () {
+            var tree = layui.tree;
+            var transfer = layui.transfer;
+            var layer = layui.layer;
+            var form = layui.form;
+
+
+            function NodeClick(obj) {
+
+                selectNode = obj.data;
+
+            }
+
+            function initData() {
+                var roleId = $("#roleId").val();
+
+                var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                $.post("/BaseSysManage/Base_UserRole/menuPermissionlist", { roleId: roleId }, function (result) {
+
+                    console.log(result);
+                    if (result.ErrorCode == 200) {
+                        layer.close(loadIndex);
+                        tree.render({
+                            elem: '#mytree'
+                            , id: "mytree"
+                            , data: result.Data
+                            , showCheckbox: true  //是否显示复选框
+                            , oncheck: NodeClick
+
+                        });
+                    } else {
+                        layer.close(loadIndex);
+
+                        layer.msg('服务器异常！', { icon: 2 }, function () {
+
+
+                        });
+
+                    }
+
+
+                });
+            }
+
+            ///初始化数据
+            initData();
+
+            form.on('submit(add)', function (data) {
+         
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                //判断是否添加顶级节点
+
+                var isFirst = $("#isFirst")[0].checked;
+                alert(isFirst);
+                if (isFirst) {
+                    //添加顶级节点
+
+                    //获取一级 和 二级
+
+                    var name1 = $("#menuname1").val();
+                    var name2 = $("#menuname2").val();
+                    var code2 = $("#menunamecode2").val();
+                    var code1 = $("#menunamecode1").val();
+
+                    $.post('/BaseSysManage/Base_Permission/addFirstPermiss', { name1: name1, name2: name2, code1: code1, code2: code2 }, function (result) {
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.msg("添加成功", { icon: 1 });
+
+                        }
+                        else {
+                            layer.msg("服务器异常", { icon: 2 });
+                        }
+
+                    });
+
+                }
+
+                else {
+                   
+
+                    //获取
+                    var name1 = $("#menuname1").val();
+                    var code1 = $("#menunamecode1").val();
+
+                    if (selectNode == undefined) {
+                         layer.msg("请选择节点");
+                        return;
+                    }
+
+                    if (selectNode.field.indexOf('.') > 0) {
+
+                        layer.msg("请选择一级节点");
+                        return;
+                    }
+
+                    $.post('/BaseSysManage/Base_Permission/addsencdPermiss', { name1: name1, code1: code1, parentCode: selectNode.field}, function (result) {
+
+                        if (result.ErrorCode == 200) {
+
+                            layer.msg("添加成功", { icon: 1 });
+
+                        }
+                        else {
+                            layer.msg("服务器异常", { icon: 2 });
+                        }
+
+                    });
+
+                }
+
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+            //提交
+            $("#add").click(function () {
+
+              
+
+
+            });
+
+        });
+    </script>
+</body>
+</html>

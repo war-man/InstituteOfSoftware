@@ -13,7 +13,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
     public class EvningSelfStudyManeger : BaseBusiness<EvningSelfStudy>
     {
         static readonly RedisCache redisCache = new RedisCache();
-        
+        private ClassroomManeger ClassRoom_Entity;
+        private BaseDataEnumManeger BaseDataEnum_Entity;
+
         /// <summary>
         /// 从缓存中获取所有数据
         /// </summary>
@@ -92,12 +94,30 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     old_e.Anpaidate = new_e.Anpaidate;
                     old_e.curd_name = new_e.curd_name;
                     this.Update(old_e);
-                    EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+                     redisCache.RemoveCache("EvningSelfStudyList");
                     a.Success = true;
                 }
             }
             catch (Exception ex)
             {
+                a.Msg = ex.Message;
+                a.Success = false;
+            }
+            return a;
+        }
+        
+        public AjaxResult Update_DataTwo(EvningSelfStudy new_e)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Update(new_e);
+                redisCache.RemoveCache("EvningSelfStudyList");
+                a.Success = true;
+            }
+            catch (Exception ex)
+            {
+
                 a.Msg = ex.Message;
                 a.Success = false;
             }
@@ -137,6 +157,71 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return list;
         }
-
+        /// <summary>
+        /// 获取XX日期XX教室晚自习安排
+        /// </summary>
+        /// <param name="time">日期</param>
+        /// <param name="classroom_id">教室</param>
+        /// <returns></returns>
+        public EvningSelfStudy GetNving(DateTime time,int class_id)
+        {
+          return  EvningSelfStudyGetAll().Where(e => e.Anpaidate == time && e.ClassSchedule_id == class_id).FirstOrDefault();
+        }
+        /// <summary>
+        /// 获取晚自习在XX教室上课的班级
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <param name="classoom_id"></param>
+        /// <returns></returns>
+        public List<EvningSelfStudy> GetOnCurrClass(DateTime dateTime, int classoom_id)
+        {
+            return EvningSelfStudyGetAll().Where(e => e.Anpaidate == dateTime && e.Classroom_id == classoom_id).ToList();
+        }
+        /// <summary>
+        /// 获取空教室
+        /// </summary>
+        /// <param name="dateTime">日期</param>
+        /// <param name="old">false-达康维嘉校区，true--继善高科校区</param>
+        /// <returns></returns>
+        public ClassRoom_AddCourse  GetEmptyClassroom(DateTime dateTime,bool old)
+        {
+            ClassRoom_Entity = new ClassroomManeger();
+            ClassRoom_AddCourse result = new ClassRoom_AddCourse();
+            BaseDataEnum_Entity = new BaseDataEnumManeger();
+            List<EvningSelfStudy> getlist = EvningSelfStudyGetAll().Where(e=>e.Anpaidate== dateTime).ToList();
+            int base_id = 0;
+            if (old)
+            { 
+                //获取继善高科校区教室
+                 base_id= BaseDataEnum_Entity.GetSingData("继善高科校区", false).Id;
+            }
+            else
+            {
+                base_id = BaseDataEnum_Entity.GetSingData("达嘉维康校区", false).Id;
+            }
+            if (base_id!=0)
+            {
+                List<Classroom> list_classroom1 = ClassRoom_Entity.GetAddreeClassRoom(base_id);
+                foreach (var item in list_classroom1)
+                {
+                    //ClassRoom_AddCourse
+                    List<EvningSelfStudy> list_ev = getlist.Where(e => e.Classroom_id == item.Id && e.Anpaidate == dateTime).ToList();
+                    int count = list_ev.Count;
+                    if (count == 0)
+                    {
+                        result.ClassRoomId = item.Id;
+                        result.TimeName = "晚一";
+                        break;
+                    }
+                    else if (count == 1)
+                    {
+                        result.ClassRoomId = item.Id;
+                        result.TimeName = list_ev[0].curd_name == "晚一" ? "晚二" : "晚一";
+                        break;
+                    }
+                }
+            }            
+            return result;
+        }
     }
 }

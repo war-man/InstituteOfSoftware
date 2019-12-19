@@ -1,0 +1,109 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>selectMenuPermission</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="mywarp">
+        <div id="mytree"></div>
+
+        <hr />
+
+        <div id="btns" style="text-align:center; ">
+            <button class="layui-btn layui-btn-primary" type="button" id="commit">提交</button>
+
+            <button class="layui-btn layui-btn-primary" id="close" type="button">关闭</button>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+        var selectNode;
+
+        layui.use(['transfer', 'layer','tree'], function () {
+            var tree = layui.tree;
+            var transfer = layui.transfer;
+            var layer = layui.layer;
+
+
+
+            function NodeClick(obj) {
+
+                selectNode = obj.data;
+
+            }
+
+            function initData() {
+                var roleId = $("#roleId").val();
+
+                var loadIndex = layer.load(2, { time: 10 * 1000 });  //加载样式
+                $.post("/BaseSysManage/Base_UserRole/menuPermissionlist", { roleId: roleId }, function (result) {
+
+                    console.log(result);
+                    if (result.ErrorCode == 200) {
+                        layer.close(loadIndex);
+                        tree.render({
+                            elem: '#mytree'
+                            , id: "mytree"
+                            , data: result.Data
+                            , showCheckbox: true  //是否显示复选框
+                            , oncheck: NodeClick
+
+                        });
+                    } else {
+                        layer.close(loadIndex);
+
+                        layer.msg('服务器异常！', { icon: 2 }, function () {
+
+
+                        });
+
+                    }
+
+
+                });
+            }
+
+            ///初始化数据
+            initData();
+
+            //提交
+            $("#commit").click(function () {
+
+                console.log(selectNode);
+
+                if (selectNode == null) {
+
+                    layer.msg("请选择子集");
+                    return;
+                }
+
+                if (selectNode.children.length > 0) {
+
+
+                    layer.msg("请选择子集");
+                    return;
+                }
+
+                window.parent.setPer(selectNode);
+
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index);
+              
+
+            });
+
+        });
+    </script>
+</body>
+</html>

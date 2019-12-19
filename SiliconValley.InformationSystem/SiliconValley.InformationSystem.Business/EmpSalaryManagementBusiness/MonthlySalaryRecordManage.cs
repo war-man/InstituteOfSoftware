@@ -209,7 +209,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="LeaveWithhold">早退扣款</param>
         /// <param name="OtherDeductions">其他扣款</param>
         /// <returns></returns>
-        public decimal? GetSalarytwo(decimal? salaryone, decimal? OvertimeCharges, decimal? Bonus, decimal? LeaveDeductions, decimal? TardyWithhold, decimal? LeaveWithhold, decimal? OtherDeductions)
+        public decimal? GetSalarytwo(decimal? salaryone, decimal? OvertimeCharges, decimal? Bonus, decimal? LeaveDeductions, decimal? TardyWithhold, decimal? LeaveWithhold, decimal? NoClockWithhold, decimal? OtherDeductions)
         {
             decimal? SalaryTwo = salaryone;
             if (!string.IsNullOrEmpty(OvertimeCharges.ToString()))
@@ -231,6 +231,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             if (!string.IsNullOrEmpty(LeaveWithhold.ToString()))
             {
                 SalaryTwo = SalaryTwo - LeaveWithhold;
+            }
+            if (!string.IsNullOrEmpty(NoClockWithhold.ToString()))
+            {
+                SalaryTwo = SalaryTwo - NoClockWithhold;
             }
             if (!string.IsNullOrEmpty(OtherDeductions.ToString()))
             {

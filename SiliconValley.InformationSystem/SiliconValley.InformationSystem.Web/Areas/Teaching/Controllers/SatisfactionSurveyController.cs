@@ -1208,9 +1208,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             {
 
                 //1. 添加结果表  2.添加详细表 
-
+                var studentnumber = SessionHelper.Session["studentnumber"].ToString();
                 SatisficingResult Surveyresult = new SatisficingResult();
-                Surveyresult.Answerer = "19081997072400004";
+                Surveyresult.Answerer = studentnumber;
 
                 var date = DateTime.Now;
 
@@ -1278,9 +1278,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             {
 
                 //1. 添加结果表  2.添加详细表 
-
+                var studentnumber = SessionHelper.Session["studentnumber"].ToString();
                 SatisficingResult Surveyresult = new SatisficingResult();
-                Surveyresult.Answerer = "19081997072400004";
+                Surveyresult.Answerer = studentnumber;
 
                 var date = DateTime.Now;
 
@@ -1636,7 +1636,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             try
             {
-                var data = db_survey.GetSatisficingConfigsByStudent("19081997072400004", type);
+                var studentnumber = SessionHelper.Session["studentnumber"].ToString();
+                var data = db_survey.GetSatisficingConfigsByStudent(studentnumber, type);
                 result.Data = data;
                 result.Msg = "成功";
                 result.ErrorCode = 200;
