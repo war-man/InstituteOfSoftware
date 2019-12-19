@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     public class CDinterviewController : Controller
     {
         private EmploymentJurisdictionBusiness dbemploymentJurisdiction;

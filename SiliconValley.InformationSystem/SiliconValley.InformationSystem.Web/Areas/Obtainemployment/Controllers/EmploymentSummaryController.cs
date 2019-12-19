@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     /// <summary>
     /// 总结
     /// </summary>
