@@ -57,8 +57,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// <returns></returns>
         public ActionResult StuPersonalScores()
         {
+            var studentNumber = SessionHelper.Session["studentnumber"].ToString();
             //学员的考试
-            List<Examination> examlist = db_stuExam.StuExaminationEnd("19081997072400002");
+            List<Examination> examlist = db_stuExam.StuExaminationEnd(studentNumber);
 
             ViewBag.ExamList = examlist;
 
@@ -71,10 +72,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult StuPersonalScores(int examid)
         {
             AjaxResult result = new AjaxResult();
-
+            
             try
             {
-                var examscores = db_examScores.StuExamScores(examid, "19081997072400002");
+                var studentNumber = SessionHelper.Session["studentnumber"].ToString();
+                var examscores = db_examScores.StuExamScores(examid, studentNumber);
                 result.ErrorCode = 200;
                 result.Msg = "成功";
                 result.Data = examscores;
