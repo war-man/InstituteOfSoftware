@@ -15,6 +15,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 学号
         /// </summary>
         public string StudentID { get; set; }
+        /// <summary>
+        /// 班级ID
+        /// </summary>
+        public int ClassID { get; set; }
 
         public int ID { get; set; }
         /// <summary>

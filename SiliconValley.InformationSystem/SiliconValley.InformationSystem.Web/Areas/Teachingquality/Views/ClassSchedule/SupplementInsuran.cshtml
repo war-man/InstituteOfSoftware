@@ -3,7 +3,7 @@
     Layout = null;
 }
 @model  SiliconValley.InformationSystem.Entity.ViewEntity.InsuranceView
-    @using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
 <!DOCTYPE html>
 
 <html>
@@ -14,18 +14,18 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <style>
-        .linu{
-            width:200px;
-          
+        .linu {
+            width: 200px;
         }
-        .mysql{
-            margin-top:8px;
+
+        .mysql {
+            margin-top: 8px;
         }
     </style>
 </head>
 <body>
     <div>
-      
+
         <form class="layui-form" action="" id="form">
             <div class="layui-container">
                 <input type="text" value="@ViewBag.Student" name="StudentID" style="display:none;" />
@@ -37,13 +37,11 @@
                         <label class="layui-form-label">班级名称</label>
                         <div class="layui-input-block" style="">
                             @Model.ClassNumber
-
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 ">
                         <label class="layui-form-label">已选学员</label>
                         <div class="layui-input-block">
-
                             <div class="layui-collapse" lay-filter="test">
                                 <div class="layui-colla-item">
                                     <h2 class="layui-colla-title">保险报入</h2>
@@ -62,36 +60,26 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
-
                     </div>
-
-
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label las">开始日期</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Startdate, new Dictionary<string, object>() { { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.Startdate, new Dictionary<string, object>() { { "lay-verify", "required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label las">到期日期</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.Duedate, new Dictionary<string, object>() { { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.Duedate, new Dictionary<string, object>() { { "lay-verify", "required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label las">保费</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input linu" } })
                         </div>
-                    </div>
-
-
-
-
-
-
+                    </div>  
                 </fieldset>
             </div>
             <div class="layui-row layui-form-item" style="margin-top:20px;">
@@ -160,24 +148,25 @@
                     layer.msg('结束时间不能小于开始时间');
                     $('#Duedate').val($('#Startdate').val());
                 }
-               
+
             }
         })
-  
+
         //提交数据
         form.on('submit(demo1)', function (data) {
 
             var x = data.field;
             console.log(x);
-            ajaxprice("/Teachingquality/ClassSchedule/InsuranceAdd", x, function () {
+            ajaxprice("/Teachingquality/ClassSchedule/SupplementInsuran", x, function () {
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.GetData();
                 parent.layer.close(index);
             })
-           
+       
+
         });
 
-       
+
 
         //正则表达式
         form.verify({
@@ -188,9 +177,9 @@
             //}
         });
         //ajax
-       
-   
-       
+
+
+
 
 
     });
