@@ -58,7 +58,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult SearchEmpclassInfo(int page, int limit, string empname, string classnumber, string whyshow)
         {
             dbempclass = new EmpClassBusiness();
-            dbempstaff = new EmploymentStaffBusiness();
+             dbempstaff = new EmploymentStaffBusiness();
             dbspee = new SpecialtyBusiness();
             dbproClassSchedule = new ProClassSchedule();
             //获取了s3以s4未毕业的班级而且没分配的班级

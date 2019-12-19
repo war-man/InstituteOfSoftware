@@ -38,16 +38,21 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
         }
 
+        /// <summary>
+        /// 去除该员工
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
         public bool EditEmpMS(string empid)
         {
-            var ems = this.GetEntity(empid);
+            var ems = this.GetList().Where(s=>s.EmployeeId==empid).FirstOrDefault();
             bool result = false;
             try
             {
                 ems.IsDel = true;
                 this.Update(ems);
                 result = true;
-                BusHelper.WriteSysLog("月度工资表去除该员工", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog("月度工资表禁用该员工", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
             {

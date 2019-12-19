@@ -22,7 +22,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         ConsultTeacherManeger Ct_Entiry = new ConsultTeacherManeger();
         private EmployeesInfoManage Employsinfo_Entity;
         //获取当前上传的操作人
-        string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
         // GET: /Market/ConsultTeacher/ConsultTeacherIndex
         public ActionResult ConsultTeacherIndex()
         {
@@ -97,6 +97,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult EdiConsultTeacherFunction()
         {
+            Employsinfo_Entity = new EmployeesInfoManage();
             try
             {
                 string Id = Request.Form["Id"].ToString();
@@ -117,13 +118,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 findc.Rmark = Rmark;
                 Ct_Entiry.Update(findc);
-                BusHelper.WriteSysLog("操作人:" + UserName + "成功编辑了咨询师数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog("操作人:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了咨询师数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("ok", JsonRequestBehavior.AllowGet);
 
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog("操作人:" + UserName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                BusHelper.WriteSysLog("操作人:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("数据错误！！！", JsonRequestBehavior.AllowGet);
             }             
         }

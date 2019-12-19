@@ -30,6 +30,7 @@ using SiliconValley.InformationSystem.Business.NewExcel;
 using DataTable = System.Data.DataTable;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.RegionManage;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -54,7 +55,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         ExcelHelper Excel_Entity;
 
-        string UserName = Base_UserBusiness.GetCurrentUser().UserName;//获取当前登录人
+        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+        
         #endregion
 
         //这是一个数据备案的主页面
@@ -85,6 +87,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             region_Entity = new RegionManeges();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             Stustate_Entity = new StuStateManeger();
+            EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
+            Department department= Enplo_Entity.GetDeptByEmpid(UserName.EmpNumber);
             #region 取值
             string findNamevalue = Request.QueryString["findNamevalue"];
             string findPhonevalue = Request.QueryString["findPhonevalue"];
@@ -94,7 +98,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string findBeanManvalue = Request.QueryString["findBeanManvalue"];
             string findAreavalue = Request.QueryString["findAreavalue"];
             #endregion
-            List<StudentPutOnRecord> stu_IQueryable =s_Entity.GetAllStudentKeepData().OrderByDescending(s=>s.Id).ToList();
+            List<StudentPutOnRecord> stu_IQueryable;
+            #region 判断是网路部人员登录还是咨询部人员登录
+
+            StuInfomationType find_type = StuInfomationType_Entity.GetNameSearchId("网络招生");
+            if (department.DeptName=="咨询部")
+            {
+                //获取网络招生的数据
+                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s=>s.StuInfomationType_Id== find_type.Id).ToList();
+            }
+            else if(department.DeptName == "网络部")
+            {
+                //获取除了网络招生以外的数据
+                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s => s.StuInfomationType_Id != find_type.Id).ToList();
+            }
+            else
+            {
+                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
+            }
+            #endregion
             #region 模糊查询
             if (!string.IsNullOrEmpty(findNamevalue))
             {
@@ -384,7 +406,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     s.StuBirthy = null;
                     s.StuDateTime = DateTime.Now;
                     s.StuEducational = item1.StuEducational;
-                    s.StuEntering = "201909020020";//需要判断登录人
+                    s.StuEntering = UserName.EmpNumber;
                     StuInfomationType find_sinfomation= StuInfomationType_Entity.SerchSingleData(item1.StuInfomationType_Id, false);
                     if (find_sinfomation!=null)
                     {

@@ -75,7 +75,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         /// <summary>
         /// 区域id
         /// </summary>
-        public Nullable<int> AreaID { get; set; }
+        public int AreaID { get; set; }
 
         /// <summary>
         /// 希望薪资

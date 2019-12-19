@@ -28,18 +28,6 @@
         .divCss1{
         width:260px;
         }
-        #left_div
-        {
-            float: left;
-            width: 50%;
-        }
-
-        #right_div
-        {
-            float: right;
-            width: 45%;  
-            height:500px;
-        }
         .hideDiv{
         display:none;
         }
@@ -50,7 +38,6 @@
 </head>
 <body>
     <div>
-        <div id="left_div">
             <form class="layui-form" style="margin-top:50px;" lay-filter="reidt_form">
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-x6 layui-col-sm6 layui-col-md6">
@@ -91,7 +78,7 @@
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">上课时间段:</label>
-                        <div class="layui-input-block">
+                        <div id="MytimeName_div" class="layui-input-block">
                             @Html.TextBoxFor(r => r.curdname, new Dictionary<string, object>() { { "class", "layui-input textCss1 borCss" }, { "disabled", "disabled" } })
                         </div>
                     </div>
@@ -124,55 +111,14 @@
 
                     </div>
                 </div>
-            </form>
-        </div>
-        <fieldset id="right_div">
-            <legend>教员选择区</legend>
-            <div id="img_div">
-                <img src="~/Images/2019090308462490.gif" />
-                <h1>
-                    教员选择说明:
-                </h1>
-                <h2 class="textCss1">
-                    *自习课不能选择任课老师
-                </h2>
-                <h2 class="textCss1">
-                    *只能选择一位教员
-                </h2>
-                <h2 class="textCss1">
-                    *操作人员请谨慎选择教员
-                </h2>
-            </div>
-            <div id="serch_div" class="hideDiv">
-                <div>
-                    <div>
-                        <form class="layui-form" lay-filter="sercheremp_form">
-                            <div class="layui-row layui-form-item">
-                                <div class="layui-col-x5 layui-col-sm5 layui-col-md5">
-                                    <label class="LableCss1">员工姓名:</label>
-                                    <div class="layui-input-block">
-                                        <input id="nameemp" name="nameemp" type="text" class="layui-input" placeholder="员工姓名" />
-                                    </div>
-                                </div>
-                                <div class="layui-col-x3 layui-col-sm3 layui-col-md3" style="margin-left:20px">
-                                    <button type="button" onclick="GetEmpData()" class="layui-btn">查询</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div style="width:99%;margin-left:1%;">
-                        <table id="emp_table" lay-filter="emp_table"></table>
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-         
+            </form>      
     </div>  
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
     <script>
         var mm = $("#teachername").val();
+        var timename = $("#curdname").val();
         layui.use(['form','laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
@@ -211,8 +157,15 @@
             form.on('select(curr)', function (data) {
                 $("#teacher_div")[0].innerHTML = "";     
               if (data.value == "自习") {                  
-                  $("#img_div").removeClass("hideDiv");
-                  $("#serch_div").addClass("hideDiv");
+                  //改变时间段                   
+                  if (timename == "上午") {
+                      $('#MytimeName_div')[0].innerHTML = "";
+                      $('<select name="curdname" id="curdname"><option value="上午12节">上午1、2节</option><option value="上午34节">上午3、4节</option><option value="上午四节">上午四节</option></select>').appendTo($('#MytimeName_div'));
+                  } else if (timename == "下午") {
+                      $('#MytimeName_div')[0].innerHTML = "";
+                      $('<select name="curdname" id="curdname"><option value="下午12节">下午1、2节</option><option value="下午34节">下午3、4节</option><option value="下午四节">下午四节</option></select></select>').appendTo($('#MytimeName_div'));                    
+                  }
+                  form.render();
               } else {
                   if (mm.length > 0) {
                       $('<input name="teacher" id="teacher" class="layui-input textCss1" disabled="disabled" />').appendTo($("#teacher_div"));
@@ -254,17 +207,7 @@
                 });
             });
         }
-        function GetEmpData() {
-                layui.use('table', function () {
-                    var table = layui.table;
-                    table.reload('emp_table', {
-                        url: '/Educational/Reconcile/GetEmpTable'
-                        , where: { "empname": $("#nameemp").val() }
-                    });
-                    $("#serch_div").removeClass("hideDiv");
-                }); 
-        }
-        
+      
     </script>
 </body>
 </html>

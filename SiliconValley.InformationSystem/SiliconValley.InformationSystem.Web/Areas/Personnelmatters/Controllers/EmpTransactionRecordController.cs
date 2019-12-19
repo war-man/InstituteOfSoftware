@@ -1,6 +1,14 @@
-﻿using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+﻿using SiliconValley.InformationSystem.Business.Channel;
+using SiliconValley.InformationSystem.Business.ClassesBusiness;
+using SiliconValley.InformationSystem.Business.Consult_Business;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
 using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
+using SiliconValley.InformationSystem.Business.FinanceBusiness;
 using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
@@ -24,7 +32,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             EmpTransactionManage etmanage = new EmpTransactionManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var list = etmanage.GetList().ToList();
+            var list = etmanage.GetList().Where(s=>s.IsDel==false).ToList();
             var mylist = list.OrderByDescending(e => e.TransactionId).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in mylist
                          select new
@@ -216,6 +224,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                               e.EmpName,
                               Position = empinfo.GetPosition((int)e.PositionId).PositionName,
                               Depart = empinfo.GetDept((int)e.PositionId).DeptName,
+                              e.PositionId,
+                              empinfo.GetDept((int)e.PositionId).DeptId,
                               e.Sex,
                               e.Age,
                               e.Nation,
@@ -254,11 +264,225 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 提交异动信息的添加
+        /// </summary>
+        /// <param name="etr"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult AddEtrInfo(EmpTransaction etr)
         {
             var ajaxresult = new AjaxResult();
+            EmpTransactionManage etrmanage = new EmpTransactionManage();
+            MoveTypeManage mtmanage = new MoveTypeManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            try
+            {
+                etr.IsDel = false;
+                etrmanage.Insert(etr);
+                ajaxresult = etrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = etrmanage.Error(ex.Message);
+            }
+
+            if (ajaxresult.Success) {
+                var mtname = mtmanage.GetList().Where(s => s.IsDel == false && s.ID == etr.TransactionType).FirstOrDefault().MoveTypeName;
+                if (mtname.Equals("离职")) {
+                    #region 员工表（及相关子表）修改（离职）
+                    var emp = empmanage.GetEntity(etr.EmployeeId);
+                    emp.IsDel = true;
+                    empmanage.Update(emp);
+                    ajaxresult = empmanage.Success();
+
+                    if (ajaxresult.Success)
+                    {
+                        var dname = empmanage.GetDept(emp.PositionId).DeptName;
+                        var pname = empmanage.GetPosition(emp.PositionId).PositionName;
+                        if (dname.Equals("就业部"))
+                        {
+                            EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+                            bool es = esmanage.DelEmploystaff(emp.EmployeeId);
+                            ajaxresult.Success = es;
+                        }
+                        if (dname.Equals("市场部"))
+                        {
+                            ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+                            bool cs = csmanage.DelChannelStaff(emp.EmployeeId);
+                            ajaxresult.Success = cs;
+                        }
+                        if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
+                        {
+                            HeadmasterBusiness hmmanage = new HeadmasterBusiness();
+                            bool hm = hmmanage.QuitEntity(emp.EmployeeId);
+                            ajaxresult.Success = hm;
+                        }
+
+                        if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
+                        {
+                            InstructorListBusiness itmanage = new InstructorListBusiness();
+                            bool hm = itmanage.RemoveInstructorList(emp.EmployeeId);
+                            ajaxresult.Success = hm;
+                        }
+                        if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
+                        {
+                            ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
+                            bool s = cmanage.DeltConsultTeacher(emp.EmployeeId);
+                            ajaxresult.Success = s;
+                        }
+                        if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))
+                        {
+                            TeacherBusiness teamanage = new TeacherBusiness();
+                            bool s = teamanage.dimission(emp.EmployeeId);
+                            ajaxresult.Success = s;
+                        }
+                        if (dname.Equals("财务部"))
+                        {
+                            FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+                            bool s = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
+                            ajaxresult.Success = s;
+                        }
+
+                    }
+
+                }
+                #endregion
+                else if (mtname.Equals("转正"))
+                {
+                    if (ajaxresult.Success)
+                    {
+                        var emp = empmanage.GetEntity(etr.EmployeeId);
+                        emp.PositiveDate = etr.TransactionTime;
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
+
+                        //员工转正时间修改好之后将该员工的绩效工资及岗位工资修改一下
+                        if (ajaxresult.Success)
+                        {
+                            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                            var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                            //当该员工的岗位是主任或者是副主任绩效额度为1000，普通员工为500
+                            if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                            {
+                                ese.PerformancePay = 1000;
+                            }
+                            else
+                            {
+                                ese.PerformancePay = 500;
+                            }
+                            ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+
+                            esemanage.Update(ese);
+                            ajaxresult = esemanage.Success();
+                        }
+                    }
+                }
+                else if (mtname.Equals("调岗"))
+                {
+                    if (ajaxresult.Success)
+                    {
+                        var emp = empmanage.GetEntity(etr.EmployeeId);
+                        if (emp.PositiveDate == null)
+                        {
+                            emp.ProbationSalary = etr.PresentSalary;
+                        }
+                        else
+                        {
+                            emp.Salary = etr.PresentSalary;
+                        }
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
+                        if (ajaxresult.Success)
+                        {
+                            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                            var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                            if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                            {
+                                ese.PerformancePay = 1000;
+                            }
+                            else
+                            {
+                                ese.PerformancePay = 500;
+                            }
+                            if (emp.PositiveDate == null)
+                            {
+                                ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                            }
+                            else
+                            {
+                                ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                            }
+                            esemanage.Update(ese);
+                            ajaxresult = esemanage.Success();
+                        }
+                    }
+                } else if (mtname.Equals("加薪")) {
+                    if(ajaxresult.Success){
+                        //异动添加成功后将员工表中的员工工资也改变
+                        var emp = empmanage.GetEntity(etr.EmployeeId);
+                        if (emp.PositiveDate == null)
+                        {
+                            emp.ProbationSalary = etr.PresentSalary;
+                        }
+                        else
+                        {
+                            emp.Salary = etr.PresentSalary;
+                        }
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
+                        //员工工资改变之后，将员工岗位工资也改一下
+                        if (ajaxresult.Success)
+                        {
+                            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                            var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                            if (emp.PositiveDate == null)
+                            {
+                                ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                            }
+                            else
+                            {
+                                ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                            }
+
+                            esemanage.Update(ese);
+                            ajaxresult = esemanage.Success();
+                        }
+                    }
+                }
+            }
+
+
             return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 删除异动信息，即修改异动信息的状态
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult DeleteTransactionInfo(string list) {
+            EmpTransactionManage brmanage = new EmpTransactionManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                string[] arr = list.Split(',');
+
+                for (int i = 0; i < arr.Length - 1; i++)
+                {
+                    string id = arr[i];
+                    var br = brmanage.GetEntity(int.Parse(id));
+                    br.IsDel = true;
+                    brmanage.Update(br);
+                    AjaxResultxx = brmanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = brmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
     }
 }

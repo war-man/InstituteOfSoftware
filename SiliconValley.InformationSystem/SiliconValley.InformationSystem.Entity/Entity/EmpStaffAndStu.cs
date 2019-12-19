@@ -48,5 +48,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 就业状态 1：就业中 2：已就业 3：未就业
         /// </summary>
          public int EmploymentState { get; set; }
+
+        /// <summary>
+        /// 是否正在带 true 带 false 不带
+        /// </summary>
+        public bool Ising { get; set; }
     }
 }

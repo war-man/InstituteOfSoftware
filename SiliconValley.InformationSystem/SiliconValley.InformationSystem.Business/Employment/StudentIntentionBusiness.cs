@@ -266,5 +266,14 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public StudnetIntention GetInformationBystudentno(string studentno) {
            return this.GetStudentIntentions().Where(a => a.StudentNO == studentno).FirstOrDefault();
         }
+
+
+        /// <summary>
+        /// 获取没有被分配的意向数据
+        /// </summary>
+        /// <returns></returns>
+        public List<StudnetIntention> GetnodistributionIntentions() {
+            return this.GetStudentIntentions().Where(a => a.isdistribution == false).ToList();
+        }
     }
 }

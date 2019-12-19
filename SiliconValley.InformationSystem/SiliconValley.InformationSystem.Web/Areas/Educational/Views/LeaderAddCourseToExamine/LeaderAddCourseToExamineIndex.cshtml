@@ -1,0 +1,85 @@
+﻿
+@{
+    ViewBag.Title = "LeaderAddCourseToExamineIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+}
+<table id="addcourse" name="addcourse" lay-filter="addcourse"></table>
+@section script{
+    <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
+    <script>
+        function TableFlush() {
+            layer.use('table', function () {
+                var table = layui.table;
+                table.reload('addcourse');
+            });
+        }
+
+        layui.use(['table','layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            table.render({
+                elem: '#addcourse'
+                , url: '/Educational/LeaderAddCourseToExamine/GetLeaderAddCourseTableData'
+                , cols: [[
+                    {
+                        field: 'ApplyDate', title: '申请日期', templet: function (res) {
+                            return TimeChange(res.ApplyDate);
+                        }
+                    }
+                    , { field: 'Count', title: '加课次数' }
+                    , { field: 'TeacherIDname', title: '申请人'}
+                    , { field: 'ClassNumber', title: '所教班级' }
+                    , { field: 'SpecDate', title: '上课时间段' }
+                    , {
+                        field: 'TeachDate', title: '加课日期', templet: function (res) {
+                            return TimeChange(res.TeachDate);
+                        }
+                    }
+                    , { field: 'reason', title: '加课原因' }
+                    , {
+                        fixed: 'right', title: '操作', templet: function (res) {
+                            if (res.Isdel == false) {
+                                return '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">审核</a>'
+                            } else {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">已审核</a>'
+                            }
+                        }
+                    }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(addcourse)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('确定批准吗？', function (index) {
+                        $.ajax({
+                            url: '/Educational/LeaderAddCourseToExamine/GreeAddCourse/' + data.Id,
+                            success: function (sucdata) {
+                                if (sucdata.Success == false) {
+                                    layer.msg('系统错误，请重试！！！', { icon: 2 }, function () {
+                                        //刷新
+                                        TableFlush();
+                                    });
+                                } else{
+                                    layer.msg('审批通过！', { icon: 1,shade:0.8 }, function () {
+                                        //刷新
+                                        TableFlush();
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    
+                }
+            });
+        });
+    </script>
+}
+

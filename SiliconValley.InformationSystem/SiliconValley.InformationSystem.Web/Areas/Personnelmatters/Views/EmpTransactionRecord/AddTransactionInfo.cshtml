@@ -41,14 +41,14 @@
 </head>
 <body>
     <div>
-        <form class="layui-form" action="" lay-filter="" >
+        <form class="layui-form" action="" lay-filter="">
             <div class="layui-container">
                 <input type="hidden" id="EmployeeId" name="EmployeeId" class="layui-input" />
                 <div class="layui-row layui-form-item" style="margin-top:20px;">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">员工姓名:</label>
                         <div class="layui-input-block" style="width:200px;">
-                            <input type="text" id="EmpName" name="EmpName" class="layui-input" />
+                            <input type="text" id="EmpName" name="EmpName" class="layui-input" readonly lay-verify="required"/>
                             <i class="layui-icon layui-icon-search" id="iconbtn" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 210px;"></i>
                         </div>
 
@@ -57,14 +57,14 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">异动类型:</label>
                         <div class="layui-input-block">
-                            <select id="typeSelect" name="typeSelect" lay-filter="myform"  >
+                            <select id="TransactionType" name="TransactionType" lay-filter="myform">
                                 <option value="-1">请选择类型</option>
                                 @foreach (var item in ViewBag.etrType as List<MoveType>)
                                 {
                                     <option value="@item.ID" mytxt="">@item.MoveTypeName</option>
                                 }
                             </select>
-                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -92,19 +92,20 @@
                 </div>
 
                 <div class="layui-row layui-form-item" id="transferPosition" style="border:0px;display:none">
-
+                    <input type="hidden" id="PreviousPosition" name="PreviousPosition" class="layui-input" />
+                    <input type="hidden" id="PreviousDept" name="PreviousDept" class="layui-input" />
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">现部门:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.PreviousDept, new Dictionary<string, object>() { { "class", "layui-input" } })
+                                <input type="text" id="Depart" name="Depart" class="layui-input" style="border:0px" readonly/>
                             </div>
                         </div>
 
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">现岗位:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.PreviousPosition, new Dictionary<string, object>() { { "class", "layui-input" } })
+                                <input type="text" id="Position" name="Position" class="layui-input" style="border:0px" readonly />
                             </div>
                         </div>
                     </div>
@@ -113,14 +114,14 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">现工资标准:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.PreviousSalary, new Dictionary<string, object>() { { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.PreviousSalary, new Dictionary<string, object>() { { "style", "border:0px" }, { "readonly", "true" }, { "class", "layui-input" } })
                             </div>
                         </div>
 
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">拟转部门:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.PresentDept, new Dictionary<string, object>() { { "class", "layui-input " } })
+                                <select name="PresentDept" id="PresentDept" style="width:130px;" lay-filter="deptidfilter" lay-search=""></select>
                             </div>
                         </div>
                     </div>
@@ -129,7 +130,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">拟转岗位:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.PresentPosition, new Dictionary<string, object>() { { "class", "layui-input " } })
+                                <select name="PresentPosition" id="PresentPosition" lay-search=""></select>
                             </div>
                         </div>
 
@@ -147,7 +148,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">现工资标准:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="salaryBefore" name="salaryBefore" class="layui-input" />
+                            <input type="text" id="salaryBefore" name="salaryBefore" class="layui-input" style="border:0px" readonly />
                         </div>
                     </div>
 
@@ -171,29 +172,17 @@
     </div>
 
     <script>
-        //将选择的员工信息从弹出层获取，并赋值给相应的属性
-        function GetEmpData(Itemnames) {
-            // return Itemnames;
-            console.log(Itemnames);
-            $("#EmployeeId").val(Itemnames.EmployeeId);
-            $("#EmpName").val(Itemnames.EmpName);
-            $("#PreviousDept").val(Itemnames.Depart);
-            $("#PreviousPosition").val(Itemnames.Position);
-            if (Itemnames.PositiveDate == null) {
-                $("#PreviousSalary").val(Itemnames.ProbationSalary);
-                $("#salaryBefore").val(Itemnames.ProbationSalary);
-            } else {
-                $("#PreviousSalary").val(Itemnames.Salary);
-                $("#salaryBefore").val(Itemnames.Salary);
-            }
-        }
-      
+
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
             //form.render();
+
+            laydate.render({
+                elem: '#TransactionTime',
+            });//身份证有效期
 
             $("#iconbtn").click(function () {
                 layer.open({
@@ -205,41 +194,46 @@
                 });
             });
 
+            //将选择的员工信息从弹出层获取，并赋值给相应的属性
+        
             //异动类型下拉框监听事件
             form.on('select(myform)', function (data) {
                 var s = data.value;
-                console.log(data);
-
+              
                 $(data.elem).children().each(function (index, elem) {
                     var currentValue = $(elem).val();
 
                     if (currentValue == s) {
-                        if ($(elem).text() =="调岗") {
+                        if ($(elem).text() == "调岗") {
                             document.getElementById('transferPosition').style.display = "block";
                             document.getElementById('Raises').style.display = "none";
                         } else if ($(elem).text() == "加薪") {
                             document.getElementById('Raises').style.display = "block";
                             document.getElementById('transferPosition').style.display = "none";
+                        } else {
+                            document.getElementById('transferPosition').style.display = "none";
+                            document.getElementById('Raises').style.display = "none";
                         }
                     }
 
                 });
 
-               //else {
-                //    document.getElementById('transferPosition').style.display = "none";
-                //}
-                    
+              
             });
-         
+
             //添加异动信息提交
             form.on('submit(demo1)', function (data) {
-
+                console.log("加薪前工资：" + data.field.salaryBefore);
+                if (data.field.Raiselimit != "") {
+                    data.field.PresentSalary = parseFloat(data.field.salaryBefore) + parseFloat(data.field.Raiselimit);
+                    console.log("加薪后工资：" + data.field.PresentSalary);
+                }
                 $.post("/Personnelmatters/EmpTransactionRecord/AddEtrInfo", data.field, function (data) {
-                    console.log("岗位：" + data);
+                  
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            // parent.layui.table.reload('myPosition');
+                            parent.layui.table.reload('myETR');
                             parent.layer.close(index);
 
                         });
@@ -256,6 +250,79 @@
                 parent.layer.close(index);
             });
         });
+
+
+        function GetEmpData(Itemnames) {
+            $("#EmployeeId").val(Itemnames.EmployeeId);
+            $("#EmpName").val(Itemnames.EmpName);
+            $("#PreviousDept").val(Itemnames.DeptId);
+            $("#PreviousPosition").val(Itemnames.PositionId);
+            $("#Depart").val(Itemnames.Depart);
+            $("#Position").val(Itemnames.Position);
+            if (Itemnames.PositiveDate == null) {
+                $("#PreviousSalary").val(Itemnames.ProbationSalary);
+                $("#salaryBefore").val(Itemnames.ProbationSalary);
+            } else {
+                $("#PreviousSalary").val(Itemnames.Salary);
+                $("#salaryBefore").val(Itemnames.Salary);
+            }
+        }
+
+    </script>
+
+
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#PresentDept").empty();
+                    $("#PresentDept").append(new Option("请选择部门", ""));
+                    if (resultData.code == 0) {
+                        $.each(resultData.data, function (index, item) {
+                            $("#PresentDept").append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#PresentDept").append(new Option("暂无数据", ""));
+                    }
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PresentPosition").empty();
+                            $("#PresentPosition").append(new Option("请选择岗位", ""));
+
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $("#PresentPosition").append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PresentPosition").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
+
+
     </script>
 </body>
 </html>

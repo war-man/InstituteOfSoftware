@@ -1,0 +1,83 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>BigDataUpdate</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <form class="layui-form" style="margin-top:40px">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">原本日期:</label>
+                    <div class="layui-input-block">
+                        <input id="oldTime" name="oldTime" class="layui-input" />
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">上课日期:</label>
+                    <div class="layui-input-block">
+                        <input id="endtime" name="endtime" class="layui-input"/>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;margin-top:50px">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="Update_Big">确定修改</button>
+                    <button type="button" class="layui-btn" onclick="MyClose()">取消关闭</button>
+                </div>
+            </div>
+        </form>
+         
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#oldTime'
+                , theme: 'molv'
+            });
+
+            //监听提交
+            form.on('submit(Update_Big)', function (data) {
+                
+                $.ajax({
+                    url: '/Educational/Reconcile/BigDataAID',
+                    type: 'POST',
+                    data: data.field,
+                    success: function (sucdata) {
+                        if (sucdata == false) {
+                            layer.msg('系统错误，请重试！！', { icon: 2 });
+                        } else {
+                            layer.msg('调课成功！！', { icon: 1, shade: 0.8 }, function () {
+                                window.parent.TableFulsh();
+                                MyClose();
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+        });
+
+        function MyClose() {
+            var layer = layui.layer;
+            //当你在iframe页面关闭自身时
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭   
+        }
+    </script>
+</body>
+</html>

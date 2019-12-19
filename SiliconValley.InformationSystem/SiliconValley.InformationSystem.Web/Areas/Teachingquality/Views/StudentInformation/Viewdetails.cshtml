@@ -18,9 +18,18 @@
             border: 1px;
             border-bottom-style: solid;
         }
+        #StudentImages {
+            width: 100px;
+            height: 100px;
+            z-index:999;
+            position: absolute;
+            right: 50px;
+            top: 50px;
+        }
     </style>
 </head>
 <body>
+    <div id="StudentImages" ></div>
     <input type="text" style="display:none;" value="@ViewBag.stuid" id="stuid" />
     <div style="text-align:center;margin-top:10px;height:30px;">
         <h3>详细资料</h3>
@@ -226,7 +235,10 @@
             $("#Traine").val(data.Traine)//学员性格
             $("#Hobby").val(data.Hobby)//兴趣爱好
             $("#Nation").val(data.Nation)//民族
-
+            if (data.Images!= null) {
+                $("#StudentImages").append($("<img style='width:100px; height:100px;' src='/Areas/Teachingquality/studentImg/" + data.Images + "' />"));
+            }
+         
             var ClassS = data.classa.split(',');
             console.log(ClassS);
             if (ClassS[1] == 2) {

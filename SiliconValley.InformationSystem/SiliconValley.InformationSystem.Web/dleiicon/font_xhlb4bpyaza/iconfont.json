@@ -55,6 +55,13 @@
       "unicode_decimal": 58631
     },
     {
+      "icon_id": "2986427",
+      "name": "搜索--1",
+      "font_class": "search",
+      "unicode": "e501",
+      "unicode_decimal": 58625
+    },
+    {
       "icon_id": "3139957",
       "name": "数字0",
       "font_class": "shuzi0",

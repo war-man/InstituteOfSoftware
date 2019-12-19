@@ -6,14 +6,14 @@
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm  layui-btn-radius layui-btn-normal " lay-event="timeanddaysChange">年月份及应到勤天数改变</button>
+        <button class="layui-btn layui-btn-sm" lay-event="addAdsinfo"><i class="layui-icon">&#xe60a;</i>Excel文件导入</button>
+        <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange">年月份及应到勤天数改变</button>
     </div>
 </script>
 @*操作栏*@
 <script type="text/html" id="barDemo">
-    <a class="layui-btn  layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn  layui-btn-xs " lay-event="edit">编辑</a>
 </script>
-
 
 @*员工在职状态*@
 <script type="text/html" id="empstate">
@@ -26,6 +26,53 @@
 
 <div>
     <h3 style="text-align:center;">湖南硅谷云教育科技有限公司考勤统计表</h3>
+
+    @*模糊查询*@
+    <fieldset>
+        <legend>条件查询</legend>
+        <form class="layui-form" action="" lay-filter="formtest">
+            <div class="layui-row layui-form-item">
+                <div >
+                    <label class="layui-form-label">姓名：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+                <div >
+                    <label class="layui-form-label" style="width:100px;">所属部门:</label>
+                    <div class="layui-input-inline">
+                        <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
+                            <option value="">请选择所属部门</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="layui-form-label" style="width:100px;">所属岗位:</label>
+                    <div class="layui-input-inline">
+                        <select name="PositionId" id="PositionId" lay-search="" style="width:130px;">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div >
+                    <label class="layui-form-label" style="width:100px;">员工状态:</label>
+                    <div class="layui-input-inline">
+                        <select name="empIsDel" id="empIsDel">
+                            <option value="">--请选择--</option>
+                            <option value="False">在职</option>
+                            <option value="True">离职</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:50px;">查询</button>
+            </div>
+        </form>
+    </fieldset>
+
     <table id="CheckingIntab" lay-filter="CheckingIntab"></table>
 </div>
 
@@ -47,23 +94,25 @@
                 , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
-                , cols: [[{ title: "@ViewBag.yearandmonth" + "   应到勤天数：" + "@ViewBag.DeserveToRegularDays" + "天", colspan: 16 }],
-                    [ { field: 'empName', title: '姓名', width: 110, sort: true }
+                , cols: [[{ title: "@ViewBag.yearandmonth" + "   应到勤天数：" + "@ViewBag.DeserveToRegularDays" + "天", colspan: 17 }],
+                    [ { type:'checkbox',width: 80 }
+                    , { field: 'empName', title: '姓名', width: 100, sort: true }
                     , { field: 'empDept', title: '所属部门', width: 120, sort: true }
                     , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
-                    , { field: 'ToRegularDays', title: '到勤天数', sort: true, width: 110 }
-                        , { field: 'LeaveDays', title: '请假天数', sort: true, width: 110 }
-                        , { field: 'WorkAbsentNum', title: '上班缺卡次数', sort: true, width: 140 }
-                        , { field: 'WorkAbsentRecord', title: '上班缺卡记录', sort: true, width: 140 }
-                        , { field: 'OffDutyAbsentNum', title: '下班缺卡次数', sort: true, width: 140 }
-                        , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录', sort: true, width: 140 }
-                        , { field: 'TardyNum', title: '迟到次数', sort: true, width: 110 }
-                        , { field: 'TardyRecord', title: '迟到记录', sort: true, width: 110 }
-                        , { field: 'LeaveEarlyNum', title: '早退次数', sort: true, width: 110 }
-                        , { field: 'LeaveEarlyRecord', title: '早退记录', sort: true, width: 110 }
-                        , { field: 'Remark', title: '备注', sort: true, width: 110 }
-                        , { field: 'empIsDel', title: '是否离职', sort: true, width: 110, templet: '#empstate' }
-                    , { /*title: '操作',*/ toolbar: '#barDemo', width: 100, fixed: 'right' }
+                    , { field: 'ToRegularDays', title: '到勤天数',  width: 100 }
+                    , { field: 'LeaveDays', title: '请假天数', width: 100 }
+                    , { field: 'NoClockTotalNum', title: '总缺卡次数', width: 135 }
+                    , { field: 'WorkAbsentNum', title: '上班缺卡次数',width: 135}
+                    , { field: 'WorkAbsentRecord', title: '上班缺卡记录',  width: 135 }
+                    , { field: 'OffDutyAbsentNum', title: '下班缺卡次数', width: 135 }
+                    , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录',  width: 135 }
+                    , { field: 'TardyNum', title: '迟到次数',  width: 100 }
+                    , { field: 'TardyRecord', title: '迟到记录',  width: 100 }
+                    , { field: 'LeaveEarlyNum', title: '早退次数',  width: 100 }
+                    , { field: 'LeaveEarlyRecord', title: '早退记录', width: 100 }
+                    , { field: 'Remark', title: '备注', width: 140 }
+                    , { field: 'empIsDel', title: '员工状态', sort: true, width: 110, templet: '#empstate' }
+                    , { title: '操作', toolbar: '#barDemo', width: 100, fixed: 'right' }
                 ]]
                 , page: true
 
@@ -71,12 +120,14 @@
 
             //头工具栏事件
             table.on('toolbar(CheckingIntab)', function (obj) {
-                //var checkStatus = table.checkStatus(obj.config.id);
+                var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
+                    case 'addAdsinfo':
+                        AddAdsinfo();
+                        break;
                     case 'timeanddaysChange':
                         TimeandDaysChange();
                         break;
-
                 };
             });
 
@@ -93,17 +144,52 @@
                         , anim: 4
                         , skin: 'demo-class'
                     });
-                } 
-             
+                }
+
             });
 
+            //模糊查询点击事件
+            $("#Conditionselect").click(function () {
+                var ename = $("#EmpName").val();//员工姓名
+                var deptname = $("#deptid").val();//员工所属部门
+                var pname = $("#PositionId").val();//员工所属岗位
+                var empstate = $("#empIsDel").val();//性别
+                console.log("员工状态" + empstate);
+                layui.use(['table'], function () {
+                    var table = layui.table;
+                    table.reload('myAttendanceinfo', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }, where: {
+                            AppCondition: ename + "," + deptname + "," + pname + "," + empstate
+                        }
+                    });
+                });
 
-        });
+
+
+            });
+
+        }); 
+        //添加考勤信息
+        function AddAdsinfo() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["400px", "400px"]
+                    , title: ""
+                    , content: '/Personnelmatters/AttendanceStatistics/AddAdsInfo'
+                    , anim: 2
+                });
+
+            })
+
+        }
         //年月份/应到勤天数改变
         function TimeandDaysChange() {
             layui.use(['layer'], function (args) {
                 var layer = layui.layer;      //layui对象
-
                 layer.open({
                     type: 2
                     , area: ["400px", "400px"]
@@ -115,6 +201,7 @@
             })
 
         }
+        
 
 
         //格式化时间
@@ -142,5 +229,61 @@
     </script>
 
 
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#deptid").append(new Option("请选择部门", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#PositionId").empty();
+                            console.log(resultData.data);
+                            $("#PositionId").append(new Option("请选择岗位", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#PositionId')
+                                    .append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#PositionId").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
+    </script>
 
 }

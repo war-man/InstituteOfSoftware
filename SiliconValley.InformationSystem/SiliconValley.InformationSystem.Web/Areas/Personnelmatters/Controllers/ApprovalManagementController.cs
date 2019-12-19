@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using System.Text;
     using System.IO;
     using SiliconValley.InformationSystem.Business.Common;
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
 
     public class ApprovalManagementController : Controller
     {
@@ -45,8 +46,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //转正申请
         public ActionResult PositiveApply() {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908230013";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -73,8 +75,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //离职申请
         public ActionResult DimissionApply() {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201909040025";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -101,8 +104,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //转岗申请
         public ActionResult TransferPositionApply() {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908230013";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -130,8 +134,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         //加薪申请
         public ActionResult RaisesApply()
         {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908230013";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -158,8 +163,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //加班申请
         public ActionResult OvertimeApply() {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908150003";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             BeOnDutyManeger bodmanage = new BeOnDutyManeger();
             var typelist = bodmanage.GetList();
@@ -264,8 +270,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //调休申请
         public ActionResult DaysOffApply() {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908150003";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             return View();
         }
@@ -305,8 +312,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         //请假申请
         public ActionResult LeaveApply() {
+            var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
             // string eid = Session["loginname"].ToString();//填写申请的员工即当前登录的员工
-            string eid = "201908150003";//为测试，暂时设置的死数据
+            string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
             ViewBag.eid = eid;
             LeaveTypeManage ltype = new LeaveTypeManage();
             var leavetypelist = ltype.GetList();

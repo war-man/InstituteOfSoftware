@@ -16,9 +16,5 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string curdname { get; set; }
         public string anpaidate { get; set; }
         public string ramak { get; set; }
-        /// <summary>
-        /// 重新选择的老师
-        /// </summary>
-        public string newteacher { get; set; }
     }   
 }

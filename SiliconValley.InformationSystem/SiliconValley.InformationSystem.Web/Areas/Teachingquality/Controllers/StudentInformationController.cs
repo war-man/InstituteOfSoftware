@@ -276,7 +276,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     {
                         if (x.Count > 0)
                         {
-                            if (x[i].Id == item.StudentPutOnRecord_Id)
+                            if (x[i].Id == item.StudentPutOnRecord_Id&&item.State==null)
                             {
                                 x.Remove(x[i]);
                             }
@@ -472,10 +472,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Hobby = a.Hobby,//兴趣爱好
                 Nation = a.Nation,//民族
                 Sex = a.Sex,//性别,
-                Guardian=a.Guardian,//亲属Mylist("ScheduleForTrainees").
-                AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber ).First().AddDate,//入班时间
-               classa = Stuclass.ClassNames(stuid)//班级号
-                                                                                                                                                                                                                                                                                                                 //a => a.IsDelete == false && a.ClassStatus == false
+                Guardian = a.Guardian,//亲属Mylist("ScheduleForTrainees").
+                AddDate = Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber).First().AddDate,//入班时间
+                classa = Stuclass.ClassNames(stuid),//班级号
+                Images = a.Picture
+                //a => a.IsDelete == false && a.ClassStatus == false
             };
             
                 //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称

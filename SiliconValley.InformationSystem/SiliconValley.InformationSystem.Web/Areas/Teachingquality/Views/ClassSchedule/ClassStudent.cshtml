@@ -212,6 +212,15 @@
 </div>
 <div class="layui-collapse fload" lay-accordion="" style="width:25%; border:1px solid #1cc09f;height:600px;text-align:center; margin-top:20px;">
     <div class="layui-colla-item">
+        <h2 class="layui-colla-title"> 学员管理</h2>
+        <div class="layui-colla-content layui-anim">
+            <div>
+                <button type="button" id="InsuranceAdd" class="layui-btn layui-btn-fluid mybut">学员保险</button>
+            </div>
+            
+        </div>
+    </div>
+    <div class="layui-colla-item">
         <h2 class="layui-colla-title"> 班级群号管理</h2>
         <div class="layui-colla-content layui-anim">
             <div>
@@ -288,7 +297,7 @@
                 <h2 class="layui-colla-title"> 升学管理</h2>
                 <div class="layui-colla-content layui-anim">
                     @{
-                        if (ViewBag.Stage == "S1" || ViewBag.Stage == "Y1"&&ViewBag.Status==null)
+                        if (ViewBag.Stage == "S1" || ViewBag.Stage == "Y1" && ViewBag.Status == null)
                         {
                             <div>
                                 <button type="button" id="Dismantleclasses" class="layui-btn layui-btn-fluid mybut">升学分配班级</button>
@@ -769,7 +778,7 @@
                     type: 2,
                     area: ['700px', '700px']
                     , content: "/Teachingquality/ClassSchedule/Dismantleclasses?StudentID=" + x
-                    , end: function () { table.reload('idTest'); }
+                    , end: function () { StudentDate(); }
                     , anim: 1,
                     //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                 });
@@ -803,7 +812,7 @@
                 ClassName:@Html.Raw(ViewBag.ClassID),
             };
             WhateverAdd("/Teachingquality/ClassSchedule/EntitAddClassSchedule", dbase);
-        
+            StudentDate();
         }); 
         //S4毕业
         $("#ClassEnd").click(function () {
@@ -811,10 +820,13 @@
                 ClassID:@Html.Raw(ViewBag.ClassID),
             };
            WhateverAdd("/Teachingquality/ClassSchedule/ClassEnd", dbase);
-        
+            StudentDate();
         });
     });
-
+    //学员保险
+    $("#InsuranceAdd").click(function () {
+        window.location = "/Teachingquality/ClassSchedule/Insurance?ClassID=" + $("#ClassName").text();
+    });
     //设置班委
  
     //群管理操作返回数据

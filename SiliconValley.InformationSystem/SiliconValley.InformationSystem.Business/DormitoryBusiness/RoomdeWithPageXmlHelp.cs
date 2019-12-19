@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public int GetRoomType(RoomTypeEnum.RoomType roomType) {
             string roomtypename = roomType.ToString();
             int value = 0;
-            XElement xe = XElement.Load(@"F:\Projects\硅谷信息平台版本更新\1.0.9\SiliconValley.InformationSystem\SiliconValley.InformationSystem.Web\xmlfile\RoomdeWithPage.xml");
+            XElement xe = XElement.Load(System.Web.HttpContext.Current.Server.MapPath("/xmlfile/RoomdeWithPage.xml"));
             IEnumerable<XElement> elements = from ele in xe.Elements(roomtypename)
                                              select ele;
             foreach (var ele in elements)
@@ -40,7 +40,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             string sextypename = sexType.ToString();
             int value = 0;
 
-            XElement xe = XElement.Load(@"F:\Projects\硅谷信息平台版本更新\1.0.9\SiliconValley.InformationSystem\SiliconValley.InformationSystem.Web\xmlfile\RoomdeWithPage.xml");
+            XElement xe = XElement.Load(System.Web.HttpContext.Current.Server.MapPath("/xmlfile/RoomdeWithPage.xml"));
             IEnumerable<XElement> elements = from ele in xe.Elements(sextypename)
                                              select ele;
             foreach (var ele in elements)
@@ -56,7 +56,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// <param name="projectname"></param>
         /// <returns></returns>
         public string GetPointsdeductionproject(string projectname) {
-            XElement xe = XElement.Load(@"F:\Projects\硅谷信息平台版本更新\1.0.9\SiliconValley.InformationSystem\SiliconValley.InformationSystem.Web\xmlfile\Pointsdeductionproject.xml");
+            XElement xe = XElement.Load(System.Web.HttpContext.Current.Server.MapPath("/xmlfile/Pointsdeductionproject.xml"));
             IEnumerable<XElement> elements = from ele in xe.Elements("project")
                                              select ele;
             foreach (var ele in elements)

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<root>
+  <EntScales>
+    <EntScale val="少于50人"></EntScale>
+    <EntScale val="50-100人"></EntScale>
+    <EntScale val="150-500人"></EntScale>
+    <EntScale val="500-1000人"></EntScale>
+  </EntScales>
+  <EntNatures>
+    <EntNature val="国企"></EntNature>
+    <EntNature val="外资（欧美）"></EntNature>
+    <EntNature val="外资（非欧美）"></EntNature>
+    <EntNature val="上市公司"></EntNature>
+    <EntNature val="合资"></EntNature>
+    <EntNature val="民营公司"></EntNature>
+    <EntNature val="外企代表处"></EntNature>
+    <EntNature val="政府机关"></EntNature>
+    <EntNature val="事业单位"></EntNature>
+    <EntNature val="非营利组织"></EntNature>
+    <EntNature val="创业公司"></EntNature>
+  </EntNatures>
+</root>

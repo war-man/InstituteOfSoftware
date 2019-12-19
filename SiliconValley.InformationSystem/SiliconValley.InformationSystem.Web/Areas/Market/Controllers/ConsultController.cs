@@ -14,6 +14,7 @@ using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -26,9 +27,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         TeacherClassBusiness TB_Entity = new TeacherClassBusiness();//获取任课老师
         ClassScheduleBusiness CB_Entity = new ClassScheduleBusiness();//获取专业跟阶段
         StuStateManeger SM_Entity = new StuStateManeger();//获取状态
-
+        private EmployeesInfoManage Employsinfo_Entity;
         //获取当前上传的操作人
-        string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
 
         // GET: /Market/Consult/Insertconsult
         public ActionResult ConsultIndex()
@@ -239,6 +240,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         [HttpPost]
         public ActionResult Insertconsult()
         {
+            Employsinfo_Entity = new EmployeesInfoManage();
             try
             {
                 string studentlist = Request.Form["listid"];
@@ -261,16 +263,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 else
                 {
-                    WriteSysLog("用户:"+ UserName + "添加分量操作错误", EnumType.LogType.添加数据);
+                    WriteSysLog("用户:"+ Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量操作错误", EnumType.LogType.添加数据);
                     return Json("系统错误，请重试!!!",JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
             {
-                WriteSysLog("用户:" + UserName + "添加分量操作出现"+ex.Message, EnumType.LogType.添加数据);
+                WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量操作出现"+ex.Message, EnumType.LogType.添加数据);
                 return Json("系统错误，请重试!!!", JsonRequestBehavior.AllowGet);
             }
-            WriteSysLog("用户:" + UserName + "添加分量信息成功" , EnumType.LogType.添加数据);
+            WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量信息成功" , EnumType.LogType.添加数据);
             return Json("ok",JsonRequestBehavior.AllowGet);
         }
     }
