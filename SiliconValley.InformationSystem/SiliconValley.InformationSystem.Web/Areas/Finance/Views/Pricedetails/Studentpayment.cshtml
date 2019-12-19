@@ -198,25 +198,32 @@
                     }], 
                      showLine: true  //是否开启连接线
                     , click: function (obj) {
-                        //console.log(obj);
-                        switch (obj.data.title) {
-                            case "自考本科费用":
-                                var checkStatus = table.checkStatus('idTest');
-                                // console.log(checkStatus.data[0].StudentNumber);
-                                var da = checkStatus.data;
-                                $.post("/Finance/Pricedetails/BoolEnroll/" + da[0].StudentNumber+"?Typeid=" + obj.data.id, function (da) {
-                                    if (da > 0) {
-                                        Cost(600, 430, "/Finance/Pricedetails/Undergraduatefee/", "自考本科费用", obj.data.id);
-                                    } else {
-                                        layer.alert('费用已交齐!', { icon: 0 });
-                                    }
-                                });
-                               
-                                break;
-                            case "阶段费用缴纳":
-                                Cost(800, 750, "/Finance/Pricedetails/StudentPrice/", "阶段费用缴纳", obj.data.id);
-                                break;
-                        }
+                        $.post("/Finance/Pricedetails/IsFinanc", function (dc) {
+                            if (dc == true) {
+                                switch (obj.data.title) {
+                                    case "自考本科费用":
+                                        var checkStatus = table.checkStatus('idTest');
+                                        // console.log(checkStatus.data[0].StudentNumber);
+                                        var da = checkStatus.data;
+                                        $.post("/Finance/Pricedetails/BoolEnroll/" + da[0].StudentNumber + "?Typeid=" + obj.data.id, function (da) {
+                                            if (da > 0) {
+                                                Cost(600, 430, "/Finance/Pricedetails/Undergraduatefee/", "自考本科费用", obj.data.id);
+                                            } else {
+                                                layer.alert('费用已交齐!', { icon: 0 });
+                                            }
+                                        });
+
+                                        break;
+                                    case "阶段费用缴纳":
+                                        Cost(800, 750, "/Finance/Pricedetails/StudentPrice/", "阶段费用缴纳", obj.data.id);
+                                        break;
+                                    case "其它":
+                                        Cost(800, 500, "/Finance/Pricedetails/Otherexpenses/", "其它费用缴纳", obj.data.id);
+                                        break;
+                                }
+                            } else { layer.msg("当前登录账号不能进行缴费");}
+                        });
+                       
 
                     }
                 });

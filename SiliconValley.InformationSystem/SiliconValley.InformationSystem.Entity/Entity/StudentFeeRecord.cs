@@ -20,12 +20,33 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudenID { get; set; }
+        /// <summary>
+        /// 金额
+        /// </summary>
         public Nullable<decimal> Amountofmoney { get; set; }
+        /// <summary>
+        /// 经办人
+        /// </summary>
         public Nullable<int> FinanceModelid { get; set; }
+        /// <summary>
+        /// 消费时间
+        /// </summary>
         public Nullable<System.DateTime> AddDate { get; set; }
+        /// <summary>
+        /// 名目
+        /// </summary>
         public int Costitemsid { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
     }
 }

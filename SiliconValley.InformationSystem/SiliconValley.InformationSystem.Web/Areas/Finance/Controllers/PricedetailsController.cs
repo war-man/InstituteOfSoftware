@@ -134,8 +134,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             int Typeid = int.Parse(Request.QueryString["Typeid"]);
             return Json(enrollmentBusinesse.Costlist(id, Typeid).Count(), JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
         //获取没有阶段的明目费用
-        public ActionResult Otherexpenses(string Costitemsid)
+        public ActionResult Otherexpensese(string Costitemsid)
         {
             return Json( dbtext.Otherexpenses(Costitemsid),JsonRequestBehavior.AllowGet);
         }
@@ -175,7 +176,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             List<TreeClass> listtree = new List<TreeClass>();
             foreach (var item in list)
             {
-                if (item.Name== "自考本科费用")
+                if (item.Name== "自考本科费用"|| item.Name == "其它")
                 {
                     TreeClass seclass = new TreeClass();
                     seclass.title = item.Name;
@@ -199,22 +200,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(dbtext.Studentfeepayment(Grand_id, studentid), JsonRequestBehavior.AllowGet);
          
         }
-       
-
+       /// <summary>
+       /// 验证当前是否有功能操作权限
+       /// </summary>
+       /// <returns></returns>
+        public ActionResult IsFinanc()
+        {
+            return Json(dbtext.IsFinanc(), JsonRequestBehavior.AllowGet);
+        }
 
         //费用收据发票数据
         public ActionResult Receipt()
         {
-          
-        
-                var personlist = SessionHelper.Session["person"] as List<StudentFeeRecord>;
-          
+            //学员费用
+            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
+            var personlist = SessionHelper.Session["person"] as List<StudentFeeRecord>;
+            string Invoicenumber = "";
+            int counts = studentfee.GetList().Count();
+            if (counts<10)
+            {
+                Invoicenumber = "000000" + counts;
+            }
+            else if (counts<100)
+            {
+                Invoicenumber = "00000" + counts;
+            }
+            else if (counts<1000)
+            {
+                Invoicenumber = "0000" + counts;
+            }
+            else if (counts<10000)
+            {
+                Invoicenumber = "000" + counts;
+            }
+            else if (counts<100000)
+            {
+                Invoicenumber = "00" + counts;
+            }
+            else if (counts<1000000)
+            {
+                Invoicenumber = "0" + counts;
+            }
+            else
+            {
+                Invoicenumber = counts.ToString();
+            }
+            ViewBag.Invoicenumber = Invoicenumber;
             // 引入序列化
             //JavaScriptSerializer serializer = new JavaScriptSerializer();
             // string person = Request.QueryString["person"];
             //序列化
             // var  personlist = serializer.Deserialize<List<StudentFeeRecord>>(person);
-       
+
             ViewBag.student = JsonConvert.SerializeObject(dbtext.StudentFind(personlist.FirstOrDefault().StudenID));
             ViewBag.Receiptdata = JsonConvert.SerializeObject(dbtext.Receiptdata(personlist));
             //ViewBag.Remarks = personlist.FirstOrDefault().Remarks;
@@ -227,6 +264,73 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.vier = dbtext.FienPrice(student);
             return View();
         }
-      
+        [HttpGet]
+        public ActionResult Otherexpenses(string id)
+        {
+            ViewBag.Typeid = Request.QueryString["Typeid"];
+            //学号
+            ViewBag.Stuid = id;
+            return View();
+        }
+        /// <summary>
+        /// 其它缴费数据操作
+        /// </summary>
+        /// <param name="StudenID">学号</param>
+        /// <param name="Consumptionname">名称</param>
+        /// <param name="Amountofmoney">金额</param>
+        /// <param name="Remarks">备注</param>
+        /// <param name="Typeid">名目</param>
+        /// <returns></returns>
+        public ActionResult Otherconsumption(string StudenID, string Consumptionname, decimal Amountofmoney, string Remarks, int Typeid)
+        {
+            return Json(dbtext.Otherconsumption(StudenID, Consumptionname, Amountofmoney, Remarks, Typeid), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 费用报表
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult FeeReport()
+        {
+            ViewBag.TypeID = costitemssX.GetList().Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() });
+            return View();
+        }
+        
+        /// <summary>
+        /// 获取缴费名目
+        /// </summary>
+        /// <param name="StudentID">学号</param>
+        /// <param name="Name">姓名</param>
+        /// <param name="TypeID">类型</param>
+        /// <param name="qBeginTime">开始时间</param>
+        /// <param name="qEndTime">结束时间</param>
+        /// <returns></returns>
+        public ActionResult Nominaldata(int page, int limit, string StudentID, string Name, string TypeID, string qBeginTime, string qEndTime)
+        {
+            var x = dbtext.Nominaldata(StudentID, Name, TypeID, qBeginTime, qEndTime);
+            
+            var dataList = x.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = dataList
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+          
+        }
+        /// <summary>
+        /// 获取总额统计
+        /// </summary>
+        /// <param name="StudentID">学号</param>
+        /// <param name="Name">姓名</param>
+        /// <param name="TypeID">类型</param>
+        /// <param name="qBeginTime">开始时间</param>
+        /// <param name="qEndTime">结束时间</param>
+        /// <returns></returns>
+        public ActionResult DateTatal(string StudentID, string Name, string TypeID, string qBeginTime, string qEndTime)
+        {
+            return Json(dbtext.DateTatal(StudentID, Name, TypeID, qBeginTime, qEndTime), JsonRequestBehavior.AllowGet);
+        }
     }
 }

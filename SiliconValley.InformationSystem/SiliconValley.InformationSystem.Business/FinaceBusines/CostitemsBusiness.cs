@@ -138,7 +138,7 @@ namespace SiliconValley.InformationSystem.Business.FinaceBusines
         /// <returns></returns>
         public List<CostitemsX> TypeDate()
         {
-          return  cisitemesx.GetList().Where(a => a.IsDelete == false).ToList();
+          return  cisitemesx.GetList().Where(a => a.IsDelete == false&&a.Name!="其它").ToList();
         }
         /// <summary>
         /// 获取名目的所有数据

@@ -147,9 +147,9 @@
         function Boolfeestandard(id, Name) {
             $.post("/Finance/Pricedetails/costiBoolName/" + id + "?Name=" + Name, function (data) {
                 if (data > 0) {
-
+                    layer.msg('请勿重复录入');
                     $("#lab1").css("display", "block");
-
+                  
                     $("#Amountofmoney").attr("readonly", "readonly");
                 } else {
                     $("#lab1").css("display", "none");
@@ -192,7 +192,8 @@
         });
         //监听单选框
         form.on('radio(erweima)', function (data) {
-
+            $("#lab1").css("display", "none");
+            $("#lab2").css("display", "none");
             if (data.elem.title == "学费" || data.elem.title == "学杂费" || data.elem.title == "食宿费") {
                 Tuition();
                 if (data.elem.title == "学费" || data.elem.title == "食宿费") {
@@ -204,7 +205,9 @@
                 }
             } else {
                 $($("#domes").children()).remove();
-                $("#lab1").css("display", "none");
+               
+                $("#disp").css("display", "block");
+                $("#Name").val("");
                 $("#Amountofmoney").removeAttr("readonly");
             }
         });

@@ -1,0 +1,288 @@
+﻿
+@{
+    ViewBag.Title = "FeeReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    
+@section style{
+    <style>
+        .title {
+            width: 100px;
+        }
+    </style>
+}
+<form class="layui-form" action="">
+    <div class="layui-container">
+
+
+        <div class="layui-row layui-form-item">
+
+
+            <div class="layui-col-xs7">
+                <label class="layui-form-label title">学员姓名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs4" style="margin-left:-120px;">
+
+                <label class="layui-form-label title">学&nbsp;&nbsp;&nbsp;&nbsp;号</label>
+                <div class="layui-input-inline">
+                    <input type="tel" style="width:100%;" name="StudentID" lay-verify="number" id="StudentNumberID" autocomplete="off" class="layui-input">
+
+                </div>
+
+            </div>
+
+
+
+            <div class="layui-col-xs6">
+                <div class="layui-inline">
+                    <label for="" class="layui-form-label title">时间段</label>
+                    <div class="layui-input-inline startTime">
+                        <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                    <div class="layui-form-mid" >到</div>
+                    <div class="layui-input-inline endTime">
+
+                        <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="layui-col-xs4" style="margin-left:-5px;">
+
+                <label class="layui-form-label labels">类型</label>
+                <div class="layui-input-inline">
+
+
+                    @Html.DropDownList("TypeID", ViewBag.TypeID as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <div style="position:absolute;left:80%;top:20px;">
+            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+        </div>
+
+    </div>
+
+
+
+
+</form>
+<table class="layui-hide" id="test" lay-filter="test"></table>
+@section script{
+    <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
+    <script type="text/html" id="leftbarDemo">
+        <div style="color:#0475C5;font-size:13pt;" id="Totals">
+            
+        </div>
+    </script>
+    <script>
+
+        function Total(dbase) {
+            var Tost = "";
+            var count = 0;
+            $.post("/Finance/Pricedetails/DateTatal", dbase, function (da) {
+                for (var i = 0; i < da.length; i++) {
+                    Tost = Tost + da[i].TypeName + "：" + da[i].Total + "元，"
+                    count = count + da[i].Total;
+                }
+                Tost=   Tost + "总额:" + count+"元";
+                $("#Totals").text(Tost);
+                console.log(Tost);
+            })
+            
+        }
+        Total();
+        layui.use(['table', 'layer', 'laydate', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            // 时间选择器初始化 开始时间
+            laydate.render({
+                elem: '#qBeginTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+
+                    var startDate = new Date(value).getTime();
+                    var endTime = new Date($('#qEndTime').val()).getTime();
+
+                    // console.log(ri);
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qBeginTime').val($('#qEndTime').val());
+                    }
+                    if (startDate > curDate.getTime()) {
+                        layer.msg('开始时间不能大于当前时间');
+                        $('#qBeginTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+            //正则表达式
+            form.verify({
+                Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                                return '姓名不能有特殊字符';
+                            }
+                            if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                                return '姓名首尾不能出现下划线\'_\'';
+                            }
+                            if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                                return '姓名只能由中文或字母组成';
+                            }
+                        }
+                    }
+
+                },//(^$)|^\d{10}$/
+                number: function (value) {
+                    if (!/^[^\s]*$/.test(value)) {
+                        return '内容不能输入空格';
+                    } else {
+                        if (value == '') {
+                            return '';
+                        } else {
+                            var identitydocument = /^\d/;
+                            if (!identitydocument.test(value)) {
+                                return '学号由数字组成';
+                            }
+                        }
+                    }
+
+                }
+            });
+
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#Classmeetingdate',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var endTime = new Date(value).getTime();
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#Classmeetingdate').val(curYearMonthrDay);
+                    }
+                }
+            })
+
+            // 时间选择器初始化 结束时间
+            laydate.render({ //结束时间
+                elem: '#qEndTime',
+                format: 'yyyy-MM-dd',
+                done: function (value, date, endDate) {
+                    var startDate = new Date($('#qBeginTime').val()).getTime();
+                    var endTime = new Date(value).getTime();
+                    if (endTime < startDate) {
+                        layer.msg('结束时间不能小于开始时间');
+                        $('#qEndTime').val($('#qBeginTime').val());
+                    }
+                    if (endTime > curDate.getTime()) {
+                        layer.msg('结束时间不能大于当前时间');
+                        $('#qEndTime').val(curYearMonthrDay);
+                    }
+                }
+            })
+            //表格渲染
+            table.render({
+                elem: '#test'
+                , url: '/Finance/Pricedetails/Nominaldata'
+                , toolbar: '#leftbarDemo'
+                , id: 'idTest'
+                , page: true
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , cols: [[
+                    { type: 'radio' } 
+                    , { field: 'StudenID', title: '学号' }
+                    , { field: 'Name', title: '姓名' }
+                    , { field: 'ClassName', title: '班级' }
+                    , { field: 'FinancialstaffName', title: '经办人' }
+
+                    , {
+                        field: 'AddDate', title: '时间', templet: function (c) {
+                            return getFDate(c.AddDate);
+                        }
+                    }
+                    , {
+                        field: 'CostitemsName', title: '名目', templet: function (c) {
+                            return c.StageName+c.CostitemsName
+                        }
+                    }
+                  
+                    , { field: 'Amountofmoney', title: '费用 ' }
+
+                ]]
+                , page: true
+                , limit: 8
+                , limits: [8, 10, 15]
+            });
+            //注册或编辑学员信息
+            function Registeredtrainees(name, id) {
+
+                layer.open({
+                    title: name,
+                    type: 2,
+                    area: ['680px', '740px']
+                    , content: "/Teachingquality/InterviewStudents/StudIenterEntiy?id=" + id
+                    , end: function () { table.reload('idTest'); select(); }
+                    , anim: 1,
+                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                });
+            }
+            //监听头部工具栏
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getAdd':
+                        var a = "登记学员谈话记录";
+                        Registeredtrainees(a);
+                        break;
+                    case 'getUpdate':
+
+
+                        if (checkStatus.data.length > 0) {
+                            var a = "修改学员谈话记录"
+                            var id = checkStatus.data[0].ID;
+                            Registeredtrainees(a, id);
+                        } else {
+                            layer.alert('请选择一条数据', { icon: 0 });
+                        }
+                        break;
+                };
+            });
+
+
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+                var x = data.field;
+                console.log(x);
+                Total(x);
+                table.reload('idTest', {
+                    where: {
+                        StudentID: x.StudentID,
+                        Name: x.Name,
+                        TypeID: x.TypeID,
+                        qBeginTime: x.qBeginTime,
+                        qEndTime: x.qEndTime
+                    }, page: {
+                        curr: 1
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
+}
