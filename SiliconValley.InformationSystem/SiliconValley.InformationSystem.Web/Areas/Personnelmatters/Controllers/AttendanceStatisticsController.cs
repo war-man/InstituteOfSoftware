@@ -80,6 +80,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.Remark,
                              e.IsDel,
                              e.DeserveToRegularDays,
+                             e.NoClockWithhold,
+                             e.TardyWithhold,
+                             e.LeaveWithhold
                              #endregion
 
                          };
