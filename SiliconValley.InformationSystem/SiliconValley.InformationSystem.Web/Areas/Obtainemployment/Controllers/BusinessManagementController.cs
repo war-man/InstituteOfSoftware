@@ -14,7 +14,9 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    
     using SiliconValley.InformationSystem.Business.Common;
+    [CheckLogin]
     public class BusinessManagementController : Controller
     {
 

@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     public class EmpStaffAndStuController : Controller
     {
         private EmpStaffAndStuBusiness dbempStaffAndStu;

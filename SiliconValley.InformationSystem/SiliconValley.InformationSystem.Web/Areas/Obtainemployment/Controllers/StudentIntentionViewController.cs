@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     public class StudentIntentionViewController : Controller
     {
 

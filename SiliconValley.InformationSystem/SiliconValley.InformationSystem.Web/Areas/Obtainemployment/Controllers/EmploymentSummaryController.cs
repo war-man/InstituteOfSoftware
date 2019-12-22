@@ -7,6 +7,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     /// <summary>
     /// 总结
     /// </summary>
@@ -36,8 +37,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <summary>
         /// 加载员工
         /// </summary>
+        /// <param name="string1">等级，1为年，2为季度</param>
+        /// <param name="string2">值 2019 或者 1007</param>
         /// <returns></returns>
-        public ActionResult loadempstaff() {
+        public ActionResult loadempstaff(string string1,string string2) {
+
             return null;
         }
     }
