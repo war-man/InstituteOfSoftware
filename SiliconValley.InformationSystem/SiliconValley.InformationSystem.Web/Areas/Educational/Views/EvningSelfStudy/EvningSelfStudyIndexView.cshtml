@@ -5,33 +5,183 @@
 }
 @section style{
     <style>
-
     </style>
-    }
- <table id="Eving_table" lay-filter="Eving_table"></table>
+}
+    <form class="layui-form">
+        <label class="LableCss1">阶段:</label>
+        <div style="display:inline-block;width:200px">
+            @Html.DropDownList("grandTwo", ViewBag.grlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grandTwo" } })
+        </div>
+        <label class="LableCss1">班级:</label>
+        <div style="display:inline-block;width:200px">
+            <div id="form_class">
 
+            </div>
+        </div>
+        <label class="LableCss1">开始日期:</label>
+        <div style="width:150px;display:inline-block">
+            <input type="text" name="onetime" id="onetime" class="layui-input" />
+        </div>
+        <label class="LableCss1">结束日期:</label>
+        <div style="width:150px;display:inline-block">
+            <input type="text" name="twotime" id="twotime" class="layui-input" />
+        </div>
+        <button type="submit" class="layui-btn" lay-submit="" lay-filter="sercher">查询</button>
+    </form>
+<table id="Eving_table" lay-filter="Eving_table"></table>
+<script type="text/html" id="Ev_toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">班级调课</button>
+    </div>
+</script>
+
+<script type="text/html" id="Ev_barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
 @section script{
     <script>
-        layui.use(['table'], function () {
+        function TableFulsh() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('Eving_table');
+            });
+        }
+        layui.use(['table', 'form', 'laydate'], function () {
             var table = layui.table;
+            var form = layui.form;
+            var date_my = 0;
             table.render({
                 elem: '#Eving_table'
-                , url: ''
-                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , url: '/Educational/EvningSelfStudy/EvningTableData'
+                , toolbar: '#Ev_toolbarDemo'
                 , cols: [[
-                    { type: 'radio'}
-                    , { field: 'id', title: '班级' }
-                    , { field: 'username', title: '教室' }                    
-                    , { field: 'sex', title: '上课时间段' }
-                    , { field: 'city', title: '安排的日期' }
-                    , { field: 'sign', title: '上课的老师' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+                    { type: 'radio' }
+                    , { field: 'ClassSchedule_id', title: '班级' }
+                    , { field: 'ClassroomName', title: '教室' }
+                    , { field: 'curd_name', title: '上课时间段' }
+                    , {
+                        field: 'Anpaidate', title: '自习日期', templet: function (res) {
+                            return TimeChange(res.Anpaidate);
+                        }
+                    }
+                    , { field: 'EmpName', title: '上课的老师' }
+                    , { field:'Rmark',title:'备注'}
+                    , { fixed: 'right', title: '操作', toolbar: '#Ev_barDemo', width: 150 }
                 ]]
                 , page: true
             });
 
+            //头工具栏事件
+            table.on('toolbar(Eving_table)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':                         
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/EvningSelfStudy/BigDataADIview',
+                            area: ['780px', '450px'],
+                            title: '全体数据调课'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                    case 'getCheckLength':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/EvningSelfStudy/ClassDataADIview',
+                            area: ['780px', '450px'],
+                            title: '班级数据调课'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;                   
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(Eving_table)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.ajax({
+                            url: '/Educational/EvningSelfStudy/Delete/'+data.Id,
+                            success: function (sudata) {
+                                if (sudata.Success == false) {
+                                    layer.msg('系统错误，请重试!', {icon:2});
+                                } else {
+                                    layer.msg('成功删除!', { icon: 1, shade: 0.8 }, function () {
+                                        TableFulsh();
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {              
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/EvningSelfStudy/UpdateEvning/' + data.Id,
+                        area: ['780px', '450px'],
+                        title: '数据修改'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+            });
+
+            form.on('select(grandTwo)', function (data) {
+                $("#form_class")[0].innerHTML = "";
+                if (data.value != "0") {
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                        success: function (sudata) {
+                            //获取班级slect
+                            var classselect1 = $('<select id="class_selectone" name="class_selectone" class="layui-select"><option value="0" selected>--请选择--</select>');
+                            for (var i = 0; i < sudata.length; i++) {
+                                $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect1);
+                            }
+                            $("#form_class").append(classselect1);
+                            form.render(); //更新全部
+                        }
+                    });
+                }
+            });
+
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#onetime'
+                , theme: 'molv'
+                , done: function () {
+
+                }
+            });
+            laydate.render({
+                elem: '#twotime'
+                , theme: 'molv'
+            });
+
+            //监听提交
+            form.on('submit(sercher)', function (data) {
+                layui.use('table', function () {
+                    var table = layui.table;
+                    table.reload('Eving_table', {
+                        where: {
+                            "class_selectone": $("#class_selectone").val(),
+                            "onetime": $("#onetime").val(),
+                            "twotime": $("#twotime").val()
+                        }                         
+                    });
+                });     
+                return false;
+            });
 
         });
     </script>
-    }
+}
 
