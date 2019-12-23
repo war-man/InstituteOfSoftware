@@ -165,27 +165,34 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             var msr = this.GetEntity(id);
             try
             {
-                if (!string.IsNullOrEmpty(persalary.ToString()))
+                if (!string.IsNullOrEmpty(shouldday.ToString()))
                 {
-                    countsalary = one + persalary;
-                }
-                else
-                {
-                    countsalary = one;
-                }
-                if (!string.IsNullOrEmpty(leaveday.ToString()))
-                {
-                    countsalary = countsalary / shouldday * leaveday;
+                    if (!string.IsNullOrEmpty(persalary.ToString()))
+                    {
+                        countsalary = one + persalary;
+                    }
+                    else
+                    {
+                        countsalary = one;
+                    }
+                    if (!string.IsNullOrEmpty(leaveday.ToString()))
+                    {
+                        countsalary = countsalary / shouldday * leaveday;
 
-                    msr.LeaveDeductions = countsalary;
-                    this.Update(msr);
-                    result = this.Success();
-                    countsalary = (decimal)Math.Round(Convert.ToDouble(countsalary), 2);
+                        msr.LeaveDeductions = countsalary;
+                        this.Update(msr);
+                        result = this.Success();
+                        countsalary = (decimal)Math.Round(Convert.ToDouble(countsalary), 2);
+                    }
+                    else
+                    {
+                        countsalary = null;
+                    }
                 }
-                else
-                {
+                else {
                     countsalary = null;
                 }
+             
 
             }
             catch (Exception ex)

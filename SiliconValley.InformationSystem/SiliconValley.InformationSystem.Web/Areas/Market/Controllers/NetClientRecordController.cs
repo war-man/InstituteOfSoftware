@@ -15,6 +15,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using SiliconValley.InformationSystem.Business.Common;
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
 
     public class NetClientRecordController : Controller
     {
@@ -185,8 +186,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+                                                               
+                string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
                 // ncr.EmployeeId=session['网络咨询师'];网咨信息登记者即为正在登录该页面的员工
-                ncr.EmployeeId = "201908150004";//防止测试的报错暂时设置一个死值
+                ncr.EmployeeId = eid;//防止测试的报错暂时设置一个死值
                 ncr.NetClientDate = DateTime.Now;
                 nmanage.Insert(ncr);
                AjaxResultxx= nmanage.Success();
@@ -249,19 +253,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                var emp= ncrinfo.GetEntity(id);
                 switch (name)
                 {
                     case "IsFaceConsult":
-                        var emp1 = ncrinfo.GetEntity(id);
-                            emp1.IsFaceConsult = ismarry;
-                        ncrinfo.Update(emp1);
+                       
+                            emp.IsFaceConsult = ismarry;
                         break;
                     case "IsDel":
-                        var emp2 = ncrinfo.GetEntity(id);
-                            emp2.IsDel =ismarry;
-                        ncrinfo.Update(emp2);
+                            emp.IsDel =ismarry;
+
                         break;
                 }
+                ncrinfo.Update(emp);
                 AjaxResultxx = ncrinfo.Success();
             }
             catch (Exception ex)

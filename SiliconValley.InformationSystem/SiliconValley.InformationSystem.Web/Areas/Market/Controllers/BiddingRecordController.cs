@@ -10,6 +10,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Util;
+    using SiliconValley.InformationSystem.Business.Base_SysManage;
 
     public class BiddingRecordController : Controller
     {
@@ -91,8 +92,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
+                var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
+
+                string eid = UserName.EmpNumber;//为测试，暂时设置的死数据
                 //br.Recorder=登录的人就是记录的人
-                br.Recorder = "201908150004";//到时候再设置为登陆的用户
+                br.Recorder = eid;//到时候再设置为登陆的用户
                 br.IsDel = false;
                 brmanage.Insert(br);
                 AjaxResultxx = brmanage.Success();
