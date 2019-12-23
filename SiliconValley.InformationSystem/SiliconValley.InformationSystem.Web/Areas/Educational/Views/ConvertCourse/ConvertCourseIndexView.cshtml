@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "ConvertCourseIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+
+    </style>
+    }
+<table id="test" lay-filter="test"></table>
+
+@section script{
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+
+            table.render({
+                elem: '#test'
+                , url: '/test/table/demo1.json'
+                , toolbar: '#toolbarDemo'  
+                , cols: [[
+                    { type: 'radio' }
+                    , {
+                        field: 'id', title: '申请时间', templet: function (res) {
+
+                        }
+                    , { field: 'id', title: '申请人' }
+                    , { field: 'username', title: '代课老师', width: 120, edit: 'text' }
+                    , {field: 'email', title: '班级', width: 150, edit: 'text'}                   
+                    , { field: 'city', title: '原先日期', width: 100 }
+                    , { field: 'sex', title: '代课日期', width: 80, edit: 'text', sort: true }
+                    , { field: 'sign', title: '上课时间段' }
+                    , {
+                        fixed: 'right', title: '操作', width: 150, templet: function (res) {
+                            if (res.Isdel == false) {
+                                return 
+                            } else {
+                                return 
+                            }
+                        }
+                ]]
+                , page: true
+            });
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        obj.del();
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    layer.prompt({
+                        formType: 2
+                        , value: data.email
+                    }, function (value, index) {
+                        obj.update({
+                            email: value
+                        });
+                        layer.close(index);
+                    });
+                }
+            });
+        });
+    </script>
+    }
+
+

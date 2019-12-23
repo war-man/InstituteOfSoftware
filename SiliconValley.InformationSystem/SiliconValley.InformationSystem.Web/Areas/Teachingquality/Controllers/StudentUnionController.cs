@@ -11,6 +11,7 @@ using System.Web.Mvc;
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
     //学生会
+    [CheckLogin]
     public class StudentUnionController : Controller
     {
         public static string UnName = null;

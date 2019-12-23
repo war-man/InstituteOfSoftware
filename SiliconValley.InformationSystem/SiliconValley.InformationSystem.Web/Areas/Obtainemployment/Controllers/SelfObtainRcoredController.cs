@@ -15,6 +15,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     /// <summary>
     /// 自主就业控制器
     /// </summary>

@@ -630,7 +630,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         /// </summary>
         /// <param name="ClassName">班级名称</param>
         /// <returns></returns>
-        public List<DetailedcostView> listTuiton( int ClassName)
+        public List<DetailedcostView> listTuiton(int ClassName)
         {
             ClassScheduleBusiness classSchedules = new ClassScheduleBusiness();
             var CLaaNuma = this.GetList().Where(a => a.id == ClassName).FirstOrDefault();
@@ -758,7 +758,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return shortmessageBusiness.EntiShortmessage("学费催费", content);
         }
-
         private EmpClassBusiness empClassBusiness;
         /// <summary>
         /// S2,S3升学
@@ -790,7 +789,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             //再添加一个新班级
             this.Insert(ClassSchedules);
        
-            var ClassStudent=  ss.GetList().Where(a => a.ID_ClassName == ClassID).ToList();
+            var ClassStudent=  ss.GetList().Where(a => a.ID_ClassName == ClassID&&a.CurrentClass==true).ToList();
             
             foreach (var item in ClassStudent)
             {

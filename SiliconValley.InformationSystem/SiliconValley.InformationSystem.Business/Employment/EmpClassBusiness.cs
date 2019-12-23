@@ -33,6 +33,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
            return this.GetEmpClassFormServer().Where(a => a.ClassId == classid).FirstOrDefault();
         }
 
+
+
         // <summary>
         /// 根据就业专员id获取就业专员带班记录
         /// </summary>
@@ -42,6 +44,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         {
             return this.GetEmpClassFormServer().Where(a => a.EmpStaffID == EmplotStaffID).ToList();
         }
+
 
         /// <summary>
         /// 获取所有的班级对象
@@ -139,7 +142,51 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 return false;
         }
 
+        /// <summary>
+        /// 根据员工id 返回出这个员工现在带班对象 （没毕业的）
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public List<EmpClass> GetEmpClassesindByempid(int empid) {
+            dbproClassSchedule = new ProClassSchedule();
+            var data = this.GetEmpsByEmpID(empid);
+            for (int i = data.Count - 1; i >= 0; i--)
+            {
+                ClassSchedule classSchedule= dbproClassSchedule.GetEntity(data[i].ClassId);
+                if (this.IsGraduation(classSchedule))
+                {
+                    data.RemoveAt(i);
+                }
+            }
+            return data;
+        }
 
+
+        /// <summary>
+        /// 删除传入过来的员工id正在带班的记录
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public bool delempforclass(int empid) {
+            bool result = false;
+            try
+            {
+                var data = this.GetEmpClassesindByempid(empid);
+                foreach (var item in data)
+                {
+                    item.IsDel = true;
+                    this.Update(item);
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+                result = false;
+            }
+            return result;
+            
+        }
         /// <summary>
         /// 获取s3或者时s4没有毕业也还没分配专员的对象集合
         /// </summary>

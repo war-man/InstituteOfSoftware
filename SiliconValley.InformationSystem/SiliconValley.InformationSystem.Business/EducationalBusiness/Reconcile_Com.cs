@@ -277,5 +277,25 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return false;
             }
         }
+        /// <summary>
+        /// 获取某个校区的有效班级(true--继善,false-达康)
+        /// </summary>
+        /// <param name="s1ors3"></param>
+        /// <returns></returns>
+        public static List<ClassSchedule> GetClass(bool s1ors3)
+        {
+            List<ClassSchedule> list = new List<ClassSchedule>();
+            List<ClassSchedule> class_all = Reconcile_Com.ClassSchedule_Entity.ClassList();
+            List<Grand> grands= GetGrand_Id(s1ors3);
+            foreach (ClassSchedule item in class_all)
+            {
+               int count= grands.Where(g => g.Id == item.grade_Id).ToList().Count;
+                if (count>0)
+                {
+                    list.Add(item);
+                }
+            }
+            return list;
+        }
     }
 }

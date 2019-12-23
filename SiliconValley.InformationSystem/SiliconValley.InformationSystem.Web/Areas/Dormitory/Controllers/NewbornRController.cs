@@ -14,6 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 {
+    [CheckLogin]
     /// <summary>
     /// 新生入住控制器
     /// </summary>

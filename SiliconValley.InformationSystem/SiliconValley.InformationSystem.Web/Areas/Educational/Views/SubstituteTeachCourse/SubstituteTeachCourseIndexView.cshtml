@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "SubstituteTeachCourseIndexView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{
+}
+<table id="Substitute_Table" lay-filter="Substitute_Table"></table>
+@section script{
+    <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
+    <script>
+        function TableFulsh() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('Substitute_Table');
+            });
+        }
+        layui.use('table', function () {
+            var table = layui.table;
+
+            table.render({
+                elem: '#Substitute_Table'
+                , url: '/Educational/SubstituteTeachCourse/SubstituteTableData'
+                , cols: [[
+                    { type: 'radio' }
+                    , { field: 'Applier', title: '申请人' }
+                    , {
+                        field: 'ApplyDate', title: '申请时间', templet: function (res) {
+
+                            return formatDate(res.ApplyDate)
+                        }
+                    }
+                    , { field: 'Reson', title: '理由', }
+                    , {
+                        field: 'TeachDate', title: '代课日期', templet: function (res) {
+                            return TimeChange(res.TeachDate)
+                        }
+                    }
+                    , { field: 'Teacher', title: '代课人' }
+                    , { field: 'ClassNumber', title: '班级' }
+                    , { field: 'TeachDateSpec', title: '上课时间段' }
+                    , {
+                        fixed: 'right', title: '操作', width: 150, templet: function (res) {
+                            if (res.isdel == true) {
+                                return '<a class="layui-btn layui-btn-xs" lay-event="edit">已审核</a>'
+                            } else {
+                                return '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">审核</a>'
+                            }
+                        }
+                    }
+
+                ]]
+                , page: true
+            });
+
+
+
+            //监听行工具事件
+            table.on('tool(Substitute_Table)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的同意吗？', function (index) {
+                        $.ajax({
+                            url: '/Educational/SubstituteTeachCourse/ApprovalStubstitute/' + data.Id,
+                            success: function (sucdata) {
+                                if (sucdata.Success == false) {
+                                    layer.msg('系统错误！请重试', { icon: 2 });
+                                } else {
+                                    layer.msg('操作成功', { icon: 1, shade: 0.8 }, function () {
+                                        TableFulsh();
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                } 
+            });
+        });
+    </script>
+}
+

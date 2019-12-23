@@ -288,7 +288,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<EmpStaffAndStu> GetAllByQuarter(int QuarterID) {
             dbemploymentStaff = new EmploymentStaffBusiness();
-            List<EmploymentStaff> emplist = dbemploymentStaff.GetALl();
+            List<EmploymentStaff> emplist = dbemploymentStaff.GetIQueryable().ToList();
             List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
             foreach (var item in emplist)
             {
@@ -446,5 +446,100 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return result;
         }
+
+        /// <summary>
+        /// 删除这个员工现在带的学生记录而且是正在就业的记录
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public bool delempstaffandstuByempid(int empid) {
+            bool result = false;
+            try
+            {
+                var data = this.GetEmploymentState1ByEmpid(empid);
+                foreach (var item in data)
+                {
+                    ///如果是第一阶段 删除之后再添加一个二次就业记录
+                    ///如是是第二阶段，删除当前ising=false,再将empid 修改为空
+                    if (item.EmploymentStage == 1)
+                    {
+                        item.Ising = false;
+                        this.Update(item);
+                        EmpStaffAndStu newobj = new EmpStaffAndStu();
+                        newobj.Date = DateTime.Now;
+                        newobj.EmploymentStage = 2;
+                        newobj.EmploymentState = 1;
+                        newobj.EmpStaffID = null;
+                        newobj.IsDel = false;
+                        newobj.Ising = false;
+                        newobj.QuarterID = item.QuarterID;
+                        newobj.Remark = string.Empty;
+                        newobj.Studentno = item.Studentno;
+                        this.Insert(newobj);
+                    }
+                    else
+                    {
+                        item.Ising = false;
+                        item.EmpStaffID = null;
+                        this.Update(item);
+                    }
+                }
+                result = true;
+            }
+            catch (Exception ex)
+            {
+
+                result = false;
+            }
+            return result;
+        }
+
+
+        #region 就业统计涉及方法
+        /// <summary>
+        /// 获取全部得数据中被带得记录 根据计划id 进行筛选
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmpstaffAndStuinfodataByQuarterid(int param0) {
+          return  this.GetEmpStaffAndStus().Where(a => a.Ising == true&a.QuarterID==param0).ToList();
+        }
+        /// <summary>
+        /// 获取全部得数据中被带得记录 根据计划id 进行筛选
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmpstaffAndStuinfodataByyear(int param0)
+        {
+            dbquarter = new QuarterBusiness();
+            var list= dbquarter.GetQuartersByYear(param0);
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            foreach (var item in list)
+            {
+                result.AddRange(this.GetEmpstaffAndStuinfodataByQuarterid(item.ID));
+
+            }
+            return result;
+        }
+        public List<EmpStaffAndStu> GetEmploymentSummaryData(bool isyear,int param0,int? empid) {
+
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            if (isyear)
+            {
+                result= this.GetEmpstaffAndStuinfodataByyear(param0);
+            }
+            else
+            {
+                result= this.GetEmpstaffAndStuinfodataByQuarterid(param0);
+            }
+            if (empid!=null)
+            {
+                result= result.Where(a => a.EmpStaffID == empid).ToList();
+            }
+
+            return result;
+
+        }
+        #endregion
     }
 }

@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Util;
 
+    [CheckLogin]
     /// <summary>
     /// 就业专员管理
     /// </summary>

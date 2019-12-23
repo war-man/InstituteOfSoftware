@@ -18,6 +18,7 @@ using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
 {
+    [CheckLogin]
     public class PricedetailsController : Controller
     {
  

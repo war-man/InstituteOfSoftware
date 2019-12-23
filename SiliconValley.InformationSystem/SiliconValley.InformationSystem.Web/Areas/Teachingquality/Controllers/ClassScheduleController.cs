@@ -25,8 +25,8 @@ using SiliconValley.InformationSystem.Entity.Entity;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
-   
 
+    [CheckLogin]
     public class ClassScheduleController : Controller
     {
         private static int? classNumberss = null;
@@ -464,6 +464,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <returns></returns>
         public ActionResult listTuiton(int page, int limit,int id,string Studentid,string Name,string Isitinturn)
         {
+            StudentFeeStandardBusinsess studentFeeStandardBusinsess = new StudentFeeStandardBusinsess();
+            studentFeeStandardBusinsess.TuitionFine(id);
            var x= dbtext.listTuiton(id);
             if (!string.IsNullOrEmpty(Studentid))
             {
@@ -581,7 +583,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.Shiftwork(transactionView), JsonRequestBehavior.AllowGet);
         }
-    
         /// <summary>
         /// 通过班级获取该班级所有异动数据
         /// </summary>
@@ -594,7 +595,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
            
             return Json(dbtext.TransactionDate(page,limit,ClassID,TypeName,StudentID,Name, IsaDopt),JsonRequestBehavior.AllowGet);
         }
-       /// <summary>
+        /// <summary>
        /// 学员保险
        /// </summary>
        /// <returns></returns>
@@ -676,7 +677,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.StudentList = studentlist;
             return View(insuranceView);
         }
-
         //学员保险业务
         private BaseBusiness<DetailedStudentIn> detailedstudentinBusiness;
         /// <summary>
@@ -689,12 +689,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.InsuranceAdd(insuranceView), JsonRequestBehavior.AllowGet);
         }
-
-          /// <summary>
+        /// <summary>
           /// 保险数据信息补充表单
           /// </summary>
           /// <returns></returns>
+         
         [HttpGet]
+        
         public ActionResult SupplementInsuran()
         {
             detailedstudentinBusiness= new BaseBusiness<DetailedStudentIn>();
@@ -718,6 +719,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.StudentList = studentlist;
             return View(insuranceView);
         }
+        /// <summary>
+        /// 添加保险
+        /// </summary>
+        /// <param name="insuranceView"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SupplementInsuran(InsuranceView insuranceView)
         {
@@ -729,10 +735,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
              dbtext.PhoneSMS("15073315702",str);
             return null;
         }
-
-        public ActionResult Tuitionfeeforentrancestudy()
+        public ActionResult Studententrancefee()
         {
+            ViewBag.ClassID = Request.QueryString["ClassID"];
             return View();
         }
+        /// <summary>
+        /// 获取学员未交阶段的欠费
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult Tuitionfeeforentrancestudy(int page, int limit)
+        {
+            StudentFeeStandardBusinsess studentFeeStandardBusinsess = new StudentFeeStandardBusinsess();
+            var ClassID = int.Parse(Request.QueryString["ClassID"]);
+            var list = studentFeeStandardBusinsess.TuitionFine(ClassID);
+            var Myx = list.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = list.Count,
+                data = Myx
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+     
     }
 }

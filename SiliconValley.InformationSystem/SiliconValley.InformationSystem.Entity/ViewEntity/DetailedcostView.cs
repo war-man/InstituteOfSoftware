@@ -30,6 +30,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public string CurrentStageID { get; set; }
         /// <summary>
+        /// 阶段id
+        /// </summary>
+        public int StagesID { get; set; }
+        /// <summary>
         /// 升学阶段
         /// </summary>
         public string NextStageID { get; set; }

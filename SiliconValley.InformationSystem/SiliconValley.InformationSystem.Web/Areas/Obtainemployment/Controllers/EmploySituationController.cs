@@ -11,6 +11,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
+    [CheckLogin]
     public class EmploySituationController : Controller
     {
         private EmploymentJurisdictionBusiness dbemploymentJurisdiction;
