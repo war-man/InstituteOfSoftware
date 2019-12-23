@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.Common;
     using SiliconValley.InformationSystem.Business.Base_SysManage;
 
+    [CheckLogin]
     public class ApprovalManagementController : Controller
     {
         // GET: Personnelmatters/ApprovalManagement

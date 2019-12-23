@@ -7,6 +7,7 @@ using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Entity.ViewEntity.SalaryView;
 using SiliconValley.InformationSystem.Util;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
@@ -165,7 +166,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// 工资表中员工禁用
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult DeleteSalaryManageEmp(string list)
         {
@@ -205,5 +210,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult EditEmpSalary(int id) {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+             var msr=msrmanage.GetEntity(id);
+            ViewBag.id = id;
+            return View(msr);
+        }
+       
+        [HttpPost]
+        public ActionResult EditEmpSalary(MonthlySalaryRecord msr) {
+            var AjaxResultxx = new AjaxResult();
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+            try
+            {
+                msrmanage.Update(msr);
+                AjaxResultxx = msrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
     }
 }

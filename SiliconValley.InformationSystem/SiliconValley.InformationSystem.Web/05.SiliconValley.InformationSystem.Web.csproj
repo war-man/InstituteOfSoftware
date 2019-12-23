@@ -1278,6 +1278,9 @@
     <Content Include="Areas\Educational\Views\EvningSelfStudy\ClassDataADIview.cshtml" />
     <Content Include="Areas\Educational\Views\ConvertCourse\ConvertCourseIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\SubstituteTeachCourse\SubstituteTeachCourseIndexView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\ContractEnd.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\EditEmpSalary.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

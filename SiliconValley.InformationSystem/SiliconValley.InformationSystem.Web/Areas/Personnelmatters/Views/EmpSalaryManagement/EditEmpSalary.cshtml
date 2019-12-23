@@ -1,0 +1,113 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.MonthlySalaryRecord
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditEmpSalary</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" id="Positive" lay-filter="Positive">
+            <input type="hidden" value="@ViewBag.id"  id="Id" name="Id"/>
+            <div class="layui-container"> 
+                <div class="layui-form-item" style="margin-top:60px;">
+                    <label class="layui-form-label">加班费用:</label>
+                    <div class="layui-input-inline">
+                        @Html.TextBoxFor(a => a.OvertimeCharges, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">奖金:</label>
+                    <div class="layui-input-inline" >
+                        @Html.TextBoxFor(a => a.Bonus, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">其他扣款:</label>
+                    <div class="layui-input-inline" >
+                        @Html.TextBoxFor(a => a.OtherDeductions, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                    </div>
+                </div>
+            </div>
+            <div class="layui-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">请假扣款:</label>
+                    <div class="layui-input-inline" >
+                        @Html.TextBoxFor(a => a.LeaveDeductions, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-left:50px;margin-top:70px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+         
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
+            //提交
+            form.on('submit(demo1)', function (data) {
+                $.post("/Personnelmatters/EmpSalaryManagement/EditEmpSalary", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
+                return false;
+            });
+
+            //关闭页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layui.table.reload('mySalaryStatistics');
+                parent.layer.close(index);
+            });
+        });
+
+
+    </script>
+</body>
+</html>
