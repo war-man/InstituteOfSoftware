@@ -6,17 +6,23 @@
 @using SiliconValley.InformationSystem.Entity.MyEntity;
 @section style{
     <style>
+        .demo-class2{
+           width:280px;
+           text-align:center;
+           
+        }
         .demo-class2 .layui-layer-btn a
         {
-            background: #ffd800;
+            background: #009688;
             color: #fff;
             border: none;
         }
         body .demo-class2 .layui-layer-title
         {
-            background: #ffd800;
+            background: #009688;
             color: #fff;
             border: none;
+ 
         }
         li{
           cursor:pointer;
@@ -210,7 +216,6 @@
                 url: "/Market/FollwingInfo/GetMonData",
                 data: { "MonthName": MonName, "Status": Status},
                 success: function (SucData) {
-                    console.log(SucData);
                     var divmiddle = $("#div_middle_top");
                     $("#h3Css")[0].innerText = Status;
                     for (var i = 0; i < SucData.length; i++) {
@@ -223,18 +228,31 @@
         function butClick(id) {
             layui.use('layer', function () {
                 var layer = layui.layer;
-                layer.confirm('<span>是否查看跟踪信息？</span>',
-                    { icon: 3, title: '系统温馨提示', skin: 'demo-class2', shade: 0.8 },
+                layer.confirm('',
+                    { title: '业务选择', skin: 'demo-class2', shade: 0.8, btn: ['查看跟踪信息', '填写跟踪信息']},
                     function (index) {
                         //打开详情页面
                         layer.close(index);//关闭弹出层
                         layer.open({
                             type: 2,
                             content: '/Market/Consult/FollwingInfoView/' + id
-                            , area: ['1000px', '650px'],
-                            title: false
+                            , area: ['1000px', '650px']
+                            ,title: '跟踪页面'
                             , shade: 0.8
                             , anim: 4
+                            , skin: 'demo-class2'
+                        });
+                    }, function (index) {
+                        layer.close(index);//关闭弹出层
+                        //打开跟踪添加页面
+                        layer.open({
+                            type: 2,
+                            content: '/Market/FollwingInfo/AddFollwingInfo/' + id
+                            , area: ['1000px', '650px'],
+                            title: '添加跟踪页面'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class2'
                         });
                     });
             });

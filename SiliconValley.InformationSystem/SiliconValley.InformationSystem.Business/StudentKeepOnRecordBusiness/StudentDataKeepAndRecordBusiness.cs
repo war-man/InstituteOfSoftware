@@ -18,7 +18,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         SchoolYearPlanBusiness Syb_Entity = new SchoolYearPlanBusiness();
         RedisCache redisCache;
         //创建一个用于查询数据的员工信息实体
-        EmployeesInfoManage Enplo_Entity; 
+        public EmployeesInfoManage Enplo_Entity; 
          //创建一个用于查询区域的实体
          RegionManeges region_Entity;
 

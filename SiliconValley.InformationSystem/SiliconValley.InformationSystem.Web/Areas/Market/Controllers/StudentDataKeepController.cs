@@ -106,12 +106,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             if (department.DeptName=="咨询部")
             {
                 //获取网络招生的数据
-                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s=>s.StuInfomationType_Id== find_type.Id).ToList();
+                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s=>s.StuInfomationType_Id!= find_type.Id).ToList();
             }
             else if(department.DeptName == "网络部")
             {
                 //获取除了网络招生以外的数据
-                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s => s.StuInfomationType_Id != find_type.Id).ToList();
+                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s => s.StuInfomationType_Id == find_type.Id).ToList();
             }
             else
             {
@@ -294,7 +294,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     news.StuDateTime = DateTime.Now;
                     news.IsDelete = false;
-                    news.StuEntering = "201908150001";
+                    news.StuEntering = UserName.EmpNumber;
                     if (news.StuStatus_Id==-1 || news.StuStatus_Id==null)
                     {
                        AjaxResult a1  = Stustate_Entity.GetStu("未报名");
@@ -457,11 +457,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuStatus_Id = finds.StuStatus_Id,
                     StuVisit = finds.StuVisit,
                     StuWeiXin = finds.StuWeiXin,
-                    e_Name =s_Entity.GetEmployeeValue(finds.EmployeesInfo_Id, false),
-                    StuEntering_1 =s_Entity.GetEmployeeValue(finds.StuEntering, false),
-                    InfomationTypeName = StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id)==null?"未定义": StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,
-                    StatusName = Stustate_Entity.GetEntity(finds.StuStatus_Id)==null?"未填写": Stustate_Entity.GetEntity(finds.StuStatus_Id).StatusName,
-                    Region_id= finds.Region_id==null?"区域外":region_Entity.GetEntity(finds.Region_id).ID.ToString()
+                    e_Name = s_Entity.GetEmployeeValue(finds.EmployeesInfo_Id, false),
+                    StuEntering_1 = s_Entity.GetEmployeeValue(finds.StuEntering, false),
+                    InfomationTypeName = StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id) == null ? "未定义" : StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,
+                    StatusName = Stustate_Entity.GetEntity(finds.StuStatus_Id) == null ? "未填写" : Stustate_Entity.GetEntity(finds.StuStatus_Id).StatusName,
+                    Region_id = finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString()
                 };
                 return Json(newdata, JsonRequestBehavior.AllowGet);
             }
@@ -477,12 +477,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             Stustate_Entity = new StuStateManeger();
             s_Entity = new StudentDataKeepAndRecordBusiness();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
+            int s_id = Convert.ToInt32(id);
+            StudentPutOnRecord find= s_Entity.GetEntity(s_id);
+            region_Entity = new RegionManeges();
             ViewBag.id = id;
             //获取信息来源的所有数据
             ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
 
             //获取学生状态来源的所有数据
             ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
+
+            //获取区域
+            ViewBag.regin = region_Entity.GetEntity(find.Region_id).RegionName;
             return View();
         }
 
@@ -842,7 +848,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(UserName+"Excel大批量导入数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                BusHelper.WriteSysLog(s_Entity.Enplo_Entity.GetEntity(UserName).EmpName +"Excel大批量导入数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                 var datajson = new
                 {
                     resut = "no",

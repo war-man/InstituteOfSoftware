@@ -17,11 +17,12 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     [CheckLogin]
-    public class ReconcileController : Controller
+    public class ReconcileController : BaseMvcController
     {
         // GET: /Educational/Reconcile/SerachReconcile_Index
         static readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
         private EmployeesInfoManage dbemployeesInfo;
+        static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
         static Recon_Login_Data GetBaseData(string Emp)
         {
             Recon_Login_Data new_re = new Recon_Login_Data();
@@ -47,7 +48,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             }
             return new_re;
         }
-        static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
         //获取当前登录员是哪个校区的教务
         static Recon_Login_Data rr = GetBaseData(UserName.EmpNumber);
           static int base_id = rr.ClassRoom_Id;
