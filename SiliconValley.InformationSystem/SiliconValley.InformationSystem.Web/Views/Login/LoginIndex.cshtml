@@ -116,10 +116,7 @@
                             window.location.href = data.Data;
                         } else {
                             //配置一个透明的询问框
-                            layer.msg(data.Msg, {
-                                time: 10000, //10s后自动关闭
-                                btn: ['明白了']
-                            });
+                            alert(data.Msg);
                         }
                     }
                 });

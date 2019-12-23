@@ -27,6 +27,7 @@
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <TypeScriptToolsVersion>3.0</TypeScriptToolsVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=8.1.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -89,17 +92,15 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Routing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
@@ -140,6 +141,7 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
     <Reference Include="WebGrease">
       <Private>True</Private>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
@@ -430,6 +432,8 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.js" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
+    <Content Include="Images\2019090308462490.gif" />
+    <Content Include="Images\del.png" />
     <Content Include="Images\班级.jpg" />
     <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />
@@ -766,12 +770,6 @@
     <Content Include="Images\3382.jpg" />
     <Content Include="Images\562108.jpg" />
     <Content Include="Images\58c84f57.jpg" />
-    <Content Include="Images\onepgscr-3.jpg" />
-    <Content Include="Images\onepgscr-4.jpg" />
-    <Content Include="Images\onepgscr-5.jpg" />
-    <Content Include="Images\onepgscr-6.jpg" />
-    <Content Include="Images\onepgscr-7.jpg" />
-    <Content Include="Images\redLove.jpg.gif" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -829,8 +827,6 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
-    <Content Include="Areas\Teaching\Views\StudentDataKeep\StudentDataKeepIndex.cshtml" />
-    <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffList.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Viewdetails.cshtml" />
@@ -886,7 +882,6 @@
     <Content Include="Areas\Market\Views\SchoolYearPlan\AddSchoolYearPlan.cshtml" />
     <Content Include="Areas\Market\Views\SchoolYearPlan\SchoolYearPlanIndex.cshtml" />
     <Content Include="Config\Major.json" />
-    <Content Include="Config\StudentPutOnRecord.json" />
     <Content Include="Areas\Market\Views\BiddingRecord\BiddingIndex.cshtml" />
     <Content Include="Areas\Market\Views\BiddingRecord\AddBiddingRecord.cshtml" />
     <Content Include="Areas\Market\Views\BiddingRecord\EditBR.cshtml" />
@@ -1147,8 +1142,6 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
-    <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA舒克.png" />
-    <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1801TA刘雨欣.jpg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
@@ -1166,10 +1159,8 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\NewsRexoncileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\Warehouse\AddView.cshtml" />
@@ -1256,6 +1247,7 @@
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\web.config" />
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -2792,20 +2784,6 @@
     <Content Include="Scripts\vendor\util\util.js" />
     <Content Include="Scripts\vendor\vue\vue.js" />
     <Content Include="uploadXLSXfile\ComputerTestQuestionsWord2019年10月9日.png" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\1.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190904052834Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092555Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905092957Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093344Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905093931Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094235Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094606Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905094823Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095037Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095258Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905095330Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100014Admin.jpg" />
-    <Content Include="uploadXLSXfile\ConsultTeacherImage\20190905100125Admin.jpg" />
     <Content Include="uploadXLSXfile\DaysOffImage\20191014030555.jpeg" />
     <Content Include="uploadXLSXfile\DaysOffImage\20191014030701.jpeg" />
     <Content Include="uploadXLSXfile\DaysOffImage\20191014031141.jpeg" />
@@ -2854,7 +2832,6 @@
     <Content Include="Views\Login\LoginIndex.cshtml" />
     <Content Include="Views\Home\test.cshtml" />
     <Content Include="Views\Home\show.cshtml" />
-    <Content Include="Views\DataKeepOnRecord\DataKeepOnRecordIndex.cshtml" />
     <Content Include="Scripts\layui\font\iconfont.eot" />
     <Content Include="Scripts\layui\font\iconfont.ttf" />
     <Content Include="Scripts\layui\font\iconfont.woff" />
@@ -2909,8 +2886,11 @@
     <Folder Include="assets\img\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
+    <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
     <Folder Include="uploadXLSXfile\EmpImage\" />
+    <Folder Include="uploadXLSXfile\SelfObtainRcoredImg\" />
+    <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
