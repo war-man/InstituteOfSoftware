@@ -10,10 +10,11 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class InfomationController : Controller
     {
         private StuInfomationTypeManeger StuInfomationType_Entity;
-        // GET: /Market/Infomation/AddInfomationType
+        // GET: /Market/Infomation/InfomationIndexView
         public ActionResult InfomationIndexView()
         {
             return View();

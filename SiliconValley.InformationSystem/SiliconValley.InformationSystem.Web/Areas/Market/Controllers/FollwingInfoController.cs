@@ -15,13 +15,14 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class FollwingInfoController : BaseMvcController
     {
         ConsultManeger CM_Entity = new ConsultManeger();
         StuStateManeger ST_Entity = new StuStateManeger();
         EmployeesInfoManage Enplo_Entity;
         ConsultTeacherManeger ConsultTeacher;
-        // GET: /Market/FollwingInfo/ListStudentView
+        // GET: /Market/FollwingInfo/FollwingInfoIndex
         //获取当前上传的操作人
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
         public ActionResult FollwingInfoIndex()

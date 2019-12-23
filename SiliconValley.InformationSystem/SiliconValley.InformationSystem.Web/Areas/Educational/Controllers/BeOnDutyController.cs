@@ -11,11 +11,12 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class BeOnDutyController : Controller
     {
         BeOnDutyManeger BD_Entity = new BeOnDutyManeger();
-        
-        // GET: /Educational/BeOnDuty/FindSingleData
+
+        // GET: /Educational/BeOnDuty/BeOnDutyIndexView
         public ActionResult BeOnDutyIndexView()
         {
             var UserName = Base_UserBusiness.GetCurrentUser();//获取当前登录人
