@@ -1764,7 +1764,49 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             else
             {
-                
+                int yes = 0;
+                try
+                {
+                    List<Reconcile> find_list = AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate > dateTime).ToList();
+                    foreach (Reconcile item in find_list)
+                    {
+                        item.AnPaiDate = item.AnPaiDate.AddDays(addcount);
+                        this.Update(item);
+                    }
+                    //清空缓存
+                    Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                    for (int i = 0; i < addcount; i++)
+                    {
+                        Reconcile r = new Reconcile();
+                        r.AnPaiDate = dateTime.AddDays(i);
+                        r.ClassRoom_Id = find_list[0].ClassRoom_Id;
+                        r.ClassSchedule_Id = class_id;
+                        r.Curriculum_Id = curr_name;
+                        r.Curse_Id = timename;
+                        r.EmployeesInfo_Id = emp_id;
+                        r.IsDelete = false;
+                        r.NewDate = DateTime.Now;
+                        this.AddData(r);
+                        yes++;
+                    }
+
+                    if (yes == (addcount - 1))
+                    {
+                        data.Success = true;
+                    }
+                    else
+                    {
+                        data.Success = false;
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                    data.Success = false;
+                    data.Msg = ex.Message;
+                }
+
+ 
             }
             return data;
         }       

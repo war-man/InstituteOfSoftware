@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public List<EmploymentStaff> GetALl()
         {
-           return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public EmploymentStaff GetEmploymentStaffByempid(string EmployeeId)
         {
-          return  this.GetALl().Where(a => a.EmployeesInfo_Id == EmployeeId).FirstOrDefault();
+            return this.GetALl().Where(a => a.EmployeesInfo_Id == EmployeeId).FirstOrDefault();
         }
         /// <summary>
         /// 用于详细页面
@@ -168,8 +168,9 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name=""></param>
         /// <returns></returns>
-        public EmployeesInfo GetEmpInfoByEmpID(int EmpID) {
-            var empdata= this.GetEmploymentByID(EmpID);
+        public EmployeesInfo GetEmpInfoByEmpID(int EmpID)
+        {
+            var empdata = this.GetEmploymentByID(EmpID);
             return this.GetEmployeesInfoByID(empdata.EmployeesInfo_Id);
         }
         /// <summary>
@@ -203,32 +204,44 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="EmpInfoID"></param>
         /// <returns></returns>
-        public EmploymentStaff GetEmploymentByEmpInfoID(string EmpInfoID) {
-          return  this.GetALl().Where(a => a.EmployeesInfo_Id == EmpInfoID).FirstOrDefault();
+        public EmploymentStaff GetEmploymentByEmpInfoID(string EmpInfoID)
+        {
+            return this.GetALl().Where(a => a.EmployeesInfo_Id == EmpInfoID).FirstOrDefault();
         }
         /// <summary>
         /// 删除就业专员
         /// </summary>
         /// <param name="EmpInfoID"></param>
         /// <returns></returns>
-        public bool DelEmploystaff(string EmpInfoID) {
+        public bool DelEmploystaff(string EmpInfoID)
+        {
             bool result = false;
             try
             {
                 ///删除员工表
                 dbempStaffAndStu = new EmpStaffAndStuBusiness();
                 EmploymentStaff data = this.GetEmploymentByEmpInfoID(EmpInfoID);
-                data.IsDel = true;
-                this.Update(data);
+                if (data == null)
+                {
+                    result = true;
+                }
+                else
+                {
+                    data.IsDel = true;
+                    this.Update(data);
+                    ///删除宿舍记住信息 调方法
+                    dbstaffAccdation = new StaffAccdationBusiness();
+                    dbstaffAccdation.DelStaffacc(EmpInfoID);
+                    ///删除他现在在带的班级
+                    dbempClass = new EmpClassBusiness();
+                    dbempClass.delempforclass(data.ID);
+                    ///删除现在学生记录
+                    dbempStaffAndStu = new EmpStaffAndStuBusiness();
+                    dbempStaffAndStu.delempstaffandstuByempid(data.ID);
+                    result = true;
+                    BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑成功。", EnumType.LogType.编辑数据);
+                }
 
-                ///删除宿舍记住信息 调方法
-                dbstaffAccdation = new StaffAccdationBusiness();
-                dbstaffAccdation.DelStaffacc(EmpInfoID);
-
-                ///删除他现在在带的班级
-                
-                result = true;
-                BusHelper.WriteSysLog("当就业员工离职的时候，对就业专员的isdel进行修改，位于Employment文件夹中EmploymentStaffBusiness业务类中DelEmploystaff方法，编辑成功。", EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
             {
@@ -238,36 +251,44 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return result;
         }
-
         /// <summary>
         /// 获取当前登陆的就业员工
         /// </summary>
         /// <returns></returns>
-        public EmploymentStaff Getloginuser() {
+        public EmploymentStaff Getloginuser()
+        {
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             return this.GetEmploymentByEmpInfoID(user.EmpNumber);
         }
-
-
         /// <summary>
         /// 根据班级id返回带班老师的员工编号
         /// </summary>
         /// <param name="classid"></param>
         /// <returns></returns>
-        public EmploymentStaff GetStaffByclassid(int classid) {
+        public EmploymentStaff GetStaffByclassid(int classid)
+        {
             dbempClass = new EmpClassBusiness();
-          EmpClass empClass=  dbempClass.GetEmpClassByclassid(classid);
-            if (empClass==null)
+            EmpClass empClass = dbempClass.GetEmpClassByclassid(classid);
+            if (empClass == null)
             {
                 return null;
             }
             else
             {
-               return this.GetEntity(empClass.EmpStaffID);
+                return this.GetEntity(empClass.EmpStaffID);
             }
         }
 
 
-
+        /// <summary>
+        ///根据传入过来得值获取这年或者是这季度得参与过得员工
+        /// </summary>
+        /// <param name="isyear"></param>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public List<EmploymentStaff> GetStaffsByQuarter(bool isyear, int param0)
+        {
+            return null;
+        }
     }
 }

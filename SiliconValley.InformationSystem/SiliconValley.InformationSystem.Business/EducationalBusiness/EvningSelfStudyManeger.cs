@@ -104,8 +104,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 a.Success = false;
             }
             return a;
-        }
-        
+        }       
         public AjaxResult Update_DataTwo(EvningSelfStudy new_e)
         {
             AjaxResult a = new AjaxResult();
@@ -222,6 +221,53 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 }
             }            
             return result;
+        }
+
+        public AjaxResult ALLDataADI(bool s1ors3,int count,DateTime starTime)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                List<ClassSchedule> class_list = Reconcile_Com.GetClass(s1ors3);
+                List<EvningSelfStudy> e_list = EvningSelfStudyGetAll().Where(e => e.Anpaidate >= starTime).ToList();
+                foreach (EvningSelfStudy item in e_list)
+                {
+                    int c_count = class_list.Where(c => c.id == item.ClassSchedule_id).ToList().Count;
+                    if (c_count > 0)
+                    {
+                        item.Anpaidate = item.Anpaidate.AddDays(count);
+                        this.Update(item);
+                    }
+                }
+                a.Success = true;
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+            }
+            return a;
+        }
+
+        public AjaxResult ClassALLDataADI(int count, DateTime starTime,int class_id)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                List<EvningSelfStudy> e_list = EvningSelfStudyGetAll().Where(e => e.Anpaidate >= starTime && e.ClassSchedule_id==class_id).ToList();
+                foreach (EvningSelfStudy item in e_list)
+                {                     
+                    item.Anpaidate = item.Anpaidate.AddDays(count);
+                    this.Update(item);        
+                }
+                a.Success = true;
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+            }
+            return a;
         }
     }
 }
