@@ -279,7 +279,6 @@
     <Compile Include="Areas\Obtainemployment\Controllers\SelfObtainRcoredController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SimulatInterviewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
-    <Compile Include="Areas\Obtainemployment\Controllers\StudentIntentionViewController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\StudnetIntentionController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />

@@ -275,5 +275,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public List<StudnetIntention> GetnodistributionIntentions() {
             return this.GetStudentIntentions().Where(a => a.isdistribution == false).ToList();
         }
+
+     
     }
 }

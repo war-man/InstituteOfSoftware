@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
     using SiliconValley.InformationSystem.Util;
-    [CheckLogin]
+    //[CheckLogin]
     public class EmpClassController : Controller
     {
         /// <summary>
