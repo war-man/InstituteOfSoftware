@@ -1355,7 +1355,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
            var head = headmaster.GetList().Where(d => d.informatiees_Id == user.EmpNumber && d.IsDelete==false).FirstOrDefault();
 
-            var list = db_teacherclass.AllClassSchedule().Where(d => d.IsDelete == false).ToList();
+            var list = db_teacherclass.AllClassSchedule().Where(d => d.IsDelete == false).ToList().Where(d=>d.ClassstatusID == null);
 
             ViewBag.classlist = list;
 
@@ -1468,8 +1468,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //获取班级
 
-            var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList();
-
+            var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList().Where(d=>d.ClassstatusID == null);
+            
             ViewBag.classlist = classlist;
 
             return View();

@@ -334,7 +334,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         public void subscribeExam(Dictionary<string, bool> studentlist, int examid)
         {
-
+            TeachingDepBusiness.TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
             Examination examination = this.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
 
@@ -352,6 +352,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                     candidateInfo.IsReExam = item.Value;
                     candidateInfo.Paper = null;
                     candidateInfo.StudentID = item.Key;
+                    candidateInfo.ClassId = dbteacherclass.GetScheduleByStudent(item.Key).id;
 
                     db_candidateinfo.Insert(candidateInfo);
                 }

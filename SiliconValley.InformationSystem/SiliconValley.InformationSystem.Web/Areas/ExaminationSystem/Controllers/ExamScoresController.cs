@@ -685,6 +685,109 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
         }
 
+        /// <summary>
+        /// 考试成绩查询
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExamScoreSearch()
+        {
+
+
+
+            //获取所有考试
+            var allExam = db_exam.AllExamination();
+
+            ViewBag.Examlist = allExam;
+
+
+            return View();
+        }
+
+        /// <summary>
+        /// 成绩数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExamScoreData(int page, int limit, string examid, string classiD)
+        {
+            List<StudentExamScoreView> scorelist = new List<StudentExamScoreView>();
+            var list1 = new List<TestScore>();
+
+            if (classiD == "0")
+            {
+                list1 = db_examScores.GetIQueryable().ToList().Where(d => d.Examination == int.Parse(examid)).ToList();
+            }
+            else
+            {
+                //帅选班级
+               var templist = db_examScores.GetIQueryable().ToList().Where(d => d.Examination == int.Parse(examid)).ToList();
+
+                foreach (var item in templist)
+                {
+                    var tempobj1 = db_exam.AllCandidateInfo(int.Parse(examid)).Where(d => d.CandidateNumber == item.CandidateInfo).FirstOrDefault();
+
+                    if (tempobj1 != null)
+                    {
+                        if (tempobj1.ClassId == int.Parse(classiD))
+                        {
+                            list1.Add(item);
+                        }
+                    }
+
+                }
+            }
+
+            var skiplist = list1.Skip((page - 1) * limit).Take(limit).ToList();
+
+            foreach (var item in skiplist)
+            {
+                var temp = db_examScores.ConvertToStudentExamScoreView(item);
+
+                if (temp != null)
+                {
+                    scorelist.Add(temp);
+                }
+            }
+
+            var obj = new {
+
+                code = 0,
+                msg = "",
+                count = list1.Count,
+                data = scorelist
+
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        /// <summary>
+        /// 获取参加考试的班级
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExamJoinClass(int examid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               var classlist = db_examScores.GetExamJoinClass(examid);
+
+                result.ErrorCode = 200;
+                result.Data = classlist;
+                result.Msg = "";
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
     }
 }

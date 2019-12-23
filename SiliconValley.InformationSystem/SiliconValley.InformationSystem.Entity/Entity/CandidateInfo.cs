@@ -27,6 +27,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Paper { get; set; }
 
         public string ComputerPaper { get; set; }
-    
+
+        public int ClassId { get; set; }
+
+
     }
 }

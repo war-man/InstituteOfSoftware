@@ -617,7 +617,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             //获取班主任的班级
             //var classs = db_headclass.GetList().Where(d => d.IsDelete == false && d.LeaderID == headmaster.ID).ToList();
 
-            var classs = dbclass.GetIQueryable().ToList() ;
+            var classs = dbclass.GetIQueryable().ToList().Where(d => d.ClassstatusID == null).ToList();
 
             
            
