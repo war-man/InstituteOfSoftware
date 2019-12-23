@@ -17,6 +17,7 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
+    [CheckLogin]
     //出勤
     public class StudentAttendancController : Controller
     {

@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     /// <summary>
     /// 学员异动处理
     /// </summary>
+       [CheckLogin]
     public class StudentTransactionController : Controller
     {
         private readonly ClassScheduleBusiness dbtext;
