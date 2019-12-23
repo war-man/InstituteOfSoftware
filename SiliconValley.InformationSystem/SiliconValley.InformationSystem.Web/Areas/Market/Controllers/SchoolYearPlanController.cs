@@ -9,6 +9,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    //[CheckLogin]
     public class SchoolYearPlanController : Controller
     {
         /// <summary>
@@ -103,6 +104,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             
             return Json(ajaxResult,JsonRequestBehavior.AllowGet) ;
+        }
+
+        /// <summary>
+        /// 修改计划 只能修改当前这年得计划。
+        /// 不能修改其他年份得计划
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public ActionResult EidtSchoolYearPlan(string param0)
+        {
+            dbplan = new SchoolYearPlanBusiness();
+            SchoolYearPlan query = dbplan.GetEntity(param0);
+            ViewBag.data = Newtonsoft.Json.JsonConvert.SerializeObject(query);
+            return View();
+
+
+
         }
     }
 }

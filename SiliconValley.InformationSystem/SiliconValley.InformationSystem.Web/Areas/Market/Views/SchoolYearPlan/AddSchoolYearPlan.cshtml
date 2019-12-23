@@ -7,9 +7,7 @@
 <!DOCTYPE html>
 
 <html>
-<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-3.3.1.min.js"></script>
-<script src="~/Scripts/layui/layui.js"></script>
+
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>添加年度计划</title>
@@ -38,129 +36,89 @@
         }
     </style>
     <script src="~/Scripts/underscore.js"></script>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
 </head>
 <body>
 
-    <h1 style="text-align:center;height:50px;">添加年度计划</h1>
+    @*<h1 style="text-align:center;height:50px;">添加年度计划</h1>*@
     <div>
         <form class="layui-form" action="">
             <div class="layui-container">
-                <fieldset>
-                    <legend>计划详情</legend>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">计划标题</label>
-                            <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required|title" }, { "placeholder", "请输入计划标题" }, { "class", "layui-input " }, { "lay-reqtext", "计划标题不可为空" } })
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">渠道预计人数</label>
-                            <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.MarketForecast, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "渠道预计人数" }, { "lay-reqtext", "渠道预计人数不可为空" } })
-                            </div>
-                        </div>
 
-                    </div>
-
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">口碑预计人数</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Estimatednumberofwordofmouth, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "口碑预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "口碑预计人数不可为空" } })
-                            </div>
+                <div class="layui-row layui-form-item" style="margin-top:5%;">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">计划标题</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required|title" }, { "placeholder", "请输入计划标题" }, { "class", "layui-input " }, { "lay-reqtext", "计划标题不可为空" } })
                         </div>
                     </div>
 
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">网络预计人数</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.PredictedNetworkNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "网络预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "网络预计人数不可为空" } })
-                            </div>
+                </div>
+
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">口碑预计数</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Estimatednumberofwordofmouth, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "口碑预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "口碑预计人数不可为空" } })
                         </div>
                     </div>
-
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">区域预计人数</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.AreaNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "区域预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "区域预计人数不可为空" } })
-                            </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">网络预计数</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.PredictedNetworkNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "网络预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "网络预计人数不可为空" } })
                         </div>
                     </div>
+                </div>
 
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">备注</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Remak, new Dictionary<string, object>() { { "class", "layui-input" } })
-                            </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">渠道预计数</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.MarketForecast, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "渠道预计人数" }, { "lay-reqtext", "渠道预计人数不可为空" } })
                         </div>
                     </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">区域预计数</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.AreaNumber, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "区域预计人数" }, { "class", "layui-input" }, { "lay-reqtext", "区域预计人数不可为空" } })
+                        </div>
+                    </div>
+                </div>
 
-                </fieldset>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.Remak, new Dictionary<string, object>() { { "class", "layui-textarea" } })
+                        </div>
+                    </div>
+                </div>
+
             </div>
             <div class="layui-form-item">
-                <div class="layui-input-inline">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+
+                    </div>
+
                 </div>
-                <div class="layui-input-inline">
-                    <button class="layui-btn" id="clode">取消</button>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="clode">取消</button>
+                    </div>
                 </div>
             </div>
-        </form>
+</form>
     </div>
 
 
-    <script type="text/template" id="muban">
-        <fieldset class="fieldset">
-            <legend class="major">{{=content}}</legend>
-            <div class="layui-row layui-form-item">
-                <div class="layui-block">
-                    <fieldset>
-                        <legend class="title">薪资</legend>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-input-block">
-                                <input type="text" placeholder="请输入薪资" class="layui-input EntSalary" name="EntSalary{{=content}}">
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="layui-block">
-                    <fieldset>
-                        <legend class="title">岗位职责</legend>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-input-block">
-                                <textarea placeholder="请输入内容" class="layui-textarea JobResponsibilities " name="JobResponsibilities{{=content}}"></textarea>
-                            </div>
-
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="layui-block">
-                    <fieldset>
-                        <legend class="title">任职要求</legend>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-input-block">
-                                <textarea placeholder="请输入内容" class="layui-textarea Requirements" name="Requirements{{=content}}"></textarea>
-                            </div>
-                        </div>
-                    </fieldset>
-                </div>
-
-
-            </div>
-        </fieldset>
-    </script>
 
     <script>
-
-
-
-
         var MrDLayer;
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form

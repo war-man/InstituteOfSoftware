@@ -4,11 +4,11 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@section style{
+@*@section style{
 
     <link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />
 
-}
+}*@
 
 
 <script type="text/html" id="toolbarDemo">
@@ -27,65 +27,32 @@
 @section script{
     <script>
 
-        var MrDtableIns;
-        var MrDLayer;
-        var MrDWhyShow;
-        jQuery(function () {
-            0
-            MrDWhyShow = "all";
-        });
-        //时间转换方法
-        function TimeChange(newtime) {
-            if (newtime == null)
-                return "";
-            var date = new Date(parseInt(newtime.slice(6)));
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            if (month < 10) {
-                month = "0" + Number(month + 1);
-            }
-            var day = date.getDate();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            var result = year + '-' + month + '-' + day;
-            return result;
-        }
 
-
-        //显示条件查询
-        function WhyShow(value) {
-            MrDtableIns.reload({
-                where: {
-                    whyshow: value
-                }
-                , page: {
-                    curr: 1
-                }
-            });
-        }
-
-        //添加合作企业
-        function AddSchoolYearPlan() {
-            MrDLayer.open({
-                type: 2
-                , area: ["800px", "620px"]
-                , title: "添加合作企业信息"
-                , content: '/Market/SchoolYearPlan/AddSchoolYearPlan'
-                , anim: "2" /* 改变弹出层弹出方式*/
-                , end: function () {
-                    MrDtableIns.reload('Enterprise', {
-                        page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
-                    });
-                }
-            });
-        }
+    
+   
         layui.use(['table', 'layer'], function () {
             var table = layui.table;
             var layer = layui.layer; //layui对象
-            MrDLayer = layer;
+
+                 //时间转换方法
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = "0" + Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+
+
 
             //展示已知数据
             var tableIns = table.render({
@@ -118,31 +85,35 @@
             table.on('tool(SchoolYearPlanfilter)', function (obj) {
                 var data = obj.data;
                 console.log(data);
-                if (obj.event === 'distribution') {
-                    if (data.EntID) {
-                        layer.msg('该班级已经分配专员了。', {
-                            time: 1000, //20s后自动关闭
-                            btn: ['关闭']
-                        });
+                var day2 = new Date();
+                day2.setTime(day2.getTime());
+                var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+                var plantime = TimeChange(data.PlanDate);
+                var splits2 = s2.split('-');
+                var splitplantime = plantime.split("-");
+                console.log(splitplantime[0]);
+                console.log(splits2[0]);
+                if (splitplantime[0] != splits2[0]) {
+                    layer.msg('不可修改往年数据！', { icon: 6, time: 2000 }, function () {
 
-                    } else {
+                    });
+                } else {
+                    if (obj.event == 'EidtSchoolYearPlan') {
                         layer.open({
-                            type: 2
-                            , area: ["1000px", "620px"]
-                            , title: "分配班级"
-                            , content: '/Obtainemployment/EmpClass/Distribution/' + data.ClassNumber
-                            , anim: "2" /* 改变弹出层弹出方式*/
-                            , end: function () {
-                                table.reload('empclass', {
-                                    page: {
-                                        curr: 1
-                                    }
-                                });
-
+                            type: 2,
+                            content: "/Market/SchoolYearPlan/EidtSchoolYearPlan?param0=" + data.ID,
+                            title: "修改年度计划",
+                            area: ['690px', '830px'],
+                            //area: ['850px', '760px'],
+                            success: function (layero, index) {
+                                let body = layui.layer.getChildFrame('body', index);
+                                body.find("#classnumnber").val(clickclassnumber);
+                            },
+                            end: function () {
+                                reloadtable();
                             }
                         });
                     }
-
                 }
             });
 
@@ -151,41 +122,26 @@
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'addSchoolYearPlan':
-                        AddSchoolYearPlan();
+                        layer.open({
+                            type: 2
+                            , area: ["700px", "420px"]
+                            , title: "添加年度计划"
+                            , content: '/Market/SchoolYearPlan/AddSchoolYearPlan'
+                            , anim: "2" /* 改变弹出层弹出方式*/
+                            , end: function () {
+                                MrDtableIns.reload('Enterprise', {
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
+                            }
+                        });
                         break;
                 };
             });
         });
 
-        //$("#grandlist li a").click(function () {
-        //    var grand = $(this).text();
-        //    $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-        //    var grandid = $(this).attr("grandid");
-        //    $("#selectGrand").attr("grandid", grandid);
-        //    var a = $(this).attr("whyshow");
-        //    MrDWhyShow = a;
-        //    WhyShow(a);
-        //    if (a == "nodistribution") {
-        //        $("#empname").attr("disabled", "disabled");
-        //    } else {
-        //        $("#empname").removeAttr("disabled");
-        //    }
-        //});
 
-        //$("#SearchEnter").click(function () {
-        //    var empname = $("#empname").val();
-        //    var classnumber = $("#classnumber").val();
-        //    MrDtableIns.reload({
-        //        where: {
-        //            empname: empname,
-        //            classnumber: classnumber,
-        //            whyshow: MrDWhyShow
-        //        }
-        //        , page: {
-        //            curr: 1
-        //        }
-        //    });
-        //});
     </script>
 }
 
