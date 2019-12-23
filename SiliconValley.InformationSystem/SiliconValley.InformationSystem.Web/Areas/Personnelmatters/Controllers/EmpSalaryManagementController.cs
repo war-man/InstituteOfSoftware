@@ -53,22 +53,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             foreach (var item in newlist)
             {
                 MySalaryObjView view = new MySalaryObjView();
-                view.Id = item.Id;
-                view.EmployeeId = item.EmployeeId;
-                view.empName = empmanage.GetEntity(item.EmployeeId).EmpName;
-                view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;
-                view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;
-              
-                
-               
-                //员工工资体系表
-                var eseobj= msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
-                view.baseSalary = eseobj.BaseSalary;
-                view.positionSalary = eseobj.PositionSalary;
+                view.Id = item.Id;//工资编号
+                view.EmployeeId = item.EmployeeId;//员工编号
+                view.empName = empmanage.GetEntity(item.EmployeeId).EmpName;//员工姓名
+                view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;//所属部门
+                view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;//所属岗位
+
+                //拿到该员工工资体系对象
+                var eseobj = msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
+                view.baseSalary = eseobj.BaseSalary;//基本工资
+                view.positionSalary = eseobj.PositionSalary;//岗位工资
                 if (msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth) == null)
                 {
-                    view.finalGrade =null;
-                 
+                    view.finalGrade =null;//绩效分
+
                 }
                 else {
                     view.finalGrade = msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth).FinalGrade;
@@ -76,14 +74,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }
                 if (view.finalGrade == null)
                 {
-                    view.PerformanceSalary = null;
+                    view.PerformanceSalary = null;//绩效工资
                 }
                 else {
                     view.PerformanceSalary =msrmanage.GetempPerformanceSalary(view.finalGrade,eseobj.PerformancePay);
                 }
               
-                view.netbookSubsidy = eseobj.NetbookSubsidy;
-                view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;
+                view.netbookSubsidy = eseobj.NetbookSubsidy;//笔记本补助
+                view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;//社保补贴
                 #region 应发工资1赋值
                 var one = view.baseSalary + view.positionSalary;
               
@@ -93,35 +91,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth);
                 if (attendobj == null)
                 {
-                    view.toRegularDays = null;
-                    view.leavedays = null;
+                    view.toRegularDays = null;//到勤天数
+                    view.leavedays = null;//请假天数
                 }
                 else
                 {
                     view.toRegularDays = attendobj.ToRegularDays;
                     view.leavedays = attendobj.LeaveDays;
-                    view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);
-                    view.TardyWithhold = attendobj.TardyWithhold;
-                    view.LeaveWithhold = attendobj.LeaveWithhold;
-                    view.NoClockWithhold = attendobj.NoClockWithhold;
+                    view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);//请假扣款
+                    view.TardyWithhold = attendobj.TardyWithhold;//迟到扣款
+                    view.LeaveWithhold = attendobj.LeaveWithhold;//早退扣款
+                    view.NoClockWithhold = attendobj.NoClockWithhold;//缺卡扣款
                 }
 
 
-                view.OvertimeCharges = item.OvertimeCharges;
-                view.Bonus = item.Bonus;
+                view.OvertimeCharges = item.OvertimeCharges;//加班费用
+                view.Bonus = item.Bonus;//奖金
 
                
-                view.OtherDeductions = item.OtherDeductions;
+                view.OtherDeductions = item.OtherDeductions;//其他扣款
                
                 #region 应发工资2赋值
                 view.SalaryTwo =msrmanage.GetSalarytwo(view.SalaryOne, view.OvertimeCharges,view.Bonus,view.LeaveDeductions,view.TardyWithhold,view.LeaveWithhold,view.NoClockWithhold,view.OtherDeductions);
                 #endregion
-                view.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;
-                view.PersonalIncomeTax = eseobj.PersonalIncomeTax;
+                view.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;//个人社保
+                view.PersonalIncomeTax = eseobj.PersonalIncomeTax;//个税
                 item.Total=msrmanage.GetTotal(view.Id,view.SalaryTwo,view.PersonalSocialSecurity,view.PersonalIncomeTax);
-                view.Total = item.Total;
-                view.PayCardSalary = msrmanage.GetPaycardSalary(view.Id,view.Total,view.PersonalSocialSecurity,eseobj.ContributionBase);
-                view.CashSalary =msrmanage.GetCashSalary(view.Id,view.Total,view.PayCardSalary);
+                view.Total = item.Total;//合计
+                view.PayCardSalary = msrmanage.GetPaycardSalary(view.Id,view.Total,view.PersonalSocialSecurity,eseobj.ContributionBase);//工资卡工资
+                view.CashSalary =msrmanage.GetCashSalary(view.Id,view.Total,view.PayCardSalary);//现金工资
                 result.Add(view);
             }
             
