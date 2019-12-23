@@ -18,6 +18,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class ConsultController : BaseMvcController
     {
         ConsultManeger CM_Entity = new ConsultManeger();
@@ -31,7 +32,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取当前上传的操作人
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
 
-        // GET: /Market/Consult/Insertconsult
+        // GET: /Market/Consult/ConsultIndex
         public ActionResult ConsultIndex()
         {
             ViewBag.data = CM_Entity.GetConsultTeacher().Select(c => new ConsultShowData

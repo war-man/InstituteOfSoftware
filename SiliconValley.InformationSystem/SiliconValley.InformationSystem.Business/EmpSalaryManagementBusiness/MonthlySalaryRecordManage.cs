@@ -207,6 +207,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="LeaveDeductions">请假扣款</param>
         /// <param name="TardyWithhold">迟到扣款</param>
         /// <param name="LeaveWithhold">早退扣款</param>
+        ///  /// <param name="NoClockWithhold">缺卡扣款</param>
         /// <param name="OtherDeductions">其他扣款</param>
         /// <returns></returns>
         public decimal? GetSalarytwo(decimal? salaryone, decimal? OvertimeCharges, decimal? Bonus, decimal? LeaveDeductions, decimal? TardyWithhold, decimal? LeaveWithhold, decimal? NoClockWithhold, decimal? OtherDeductions)
@@ -308,7 +309,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     this.Update(msr);
                     result = true;
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     result = false;
                 }
@@ -347,7 +348,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 cash = total;
             }
             }
-                catch (Exception ex)
+                catch (Exception)
                 {
                 result = false;
                 cash = null;

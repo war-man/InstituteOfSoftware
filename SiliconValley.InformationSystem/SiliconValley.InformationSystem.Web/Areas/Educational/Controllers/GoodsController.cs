@@ -8,9 +8,10 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class GoodsController : Controller
     {
-        // GET: /Educational/Goods/DeleteGoods
+        // GET: /Educational/Goods/GoodsIndexView
         public static readonly GoodsManeger Goods_Entity = new GoodsManeger();
         public static readonly ShppingDetailManeger ShppingDetail_Entity = new ShppingDetailManeger();
         public static readonly StockInfoManeger Stockinfo_Entity = new StockInfoManeger();

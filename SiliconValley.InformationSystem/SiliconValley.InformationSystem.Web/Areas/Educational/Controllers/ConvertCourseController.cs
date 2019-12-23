@@ -6,9 +6,10 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class ConvertCourseController : Controller
     {
-        // GET: Educational/ConvertCourse
+        // GET: /Educational/ConvertCourse/ConvertCourseIndexView
         public ActionResult ConvertCourseIndexView()
         {
             return View();
