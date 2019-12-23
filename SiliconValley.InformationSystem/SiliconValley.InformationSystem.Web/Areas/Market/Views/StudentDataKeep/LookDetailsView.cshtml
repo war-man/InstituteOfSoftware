@@ -339,7 +339,7 @@
                         <label class="layui-form-label">区域</label>
                         <div class="layui-input-block">
                             <span name="reginname" id="reginname" class="LableCss1">
-
+                                @ViewBag.regin
                             </span>
                         </div>
                     </div>
@@ -446,7 +446,6 @@
                         $("#StatusName")[0].innerText = successdata.StatusName;
                         $("#e_Name")[0].innerText = successdata.e_Name;
                         $("#Reak")[0].innerText = successdata.Reak;
-                        $("#reginname")[0].innerText = successdata.ReginName
                     } else {
                         layui.use(['layer'], function () {
                             var layer = layui.layer;

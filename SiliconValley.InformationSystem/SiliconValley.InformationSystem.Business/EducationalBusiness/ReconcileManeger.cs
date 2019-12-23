@@ -46,6 +46,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return AllReconcile().Where(r => r.Id == id).FirstOrDefault();
         }
+        
         /// <summary>
         /// 单条数据添加（false--失败，true--成功）
         /// </summary>
@@ -570,11 +571,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             Curriculum fin_c = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName == name).FirstOrDefault();
             if (fin_c != null)
             {
-                Curriculum find_two_c = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.Grand_Id == fin_c.Grand_Id).OrderBy(c => c.Sort).LastOrDefault();
-                if (find_two_c.CurriculumID == fin_c.CurriculumID)
-                {
-                    s = true;
-                }
+                s =Convert.ToBoolean( fin_c.IsEndCurr);
             }
             return s;
         }
@@ -1093,7 +1090,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     bool is1 = Reconcile_Com.GetBrand(c1.grade_Id);
                     if (is1 == true && currname == "英语")
                     {
-                        continue;
+                        break;
                     }
                     foreach (Classroom c2 in getroom2)
                     {
@@ -1123,7 +1120,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                     {
                                         //判断安排自习课的次数
                                         int cout = count(r.ClassSchedule_Id, times[0], times[times.Count - 1], r.Curriculum_Id);
-                                        if (cout <= 3)
+                                        if (cout < 3)
                                         {
                                             //安排
                                             this.AddData(r);
@@ -1272,49 +1269,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
         /// <summary>
-        /// 判断XX教室XX天排了晚一或晚二
-        /// </summary>
-        /// <param name="time">日期</param>
-        /// <param name="classroom_id">教室编号</param>
-        /// <returns></returns>
-        public string Overflow(DateTime time,int classroom_id,string timename)
-        {
-           int count= EvningSelfStudy_Entity.EvningSelfStudyGetAll().Where(r => r.Anpaidate == time && r.Classroom_id == classroom_id && r.curd_name == timename).ToList().Count();
-            if (count<=0)
-            {
-                return timename;
-            }
-            else
-            {
-                if (timename == "晚一")
-                {
-                    int count2 = EvningSelfStudy_Entity.EvningSelfStudyGetAll().Where(r => r.Anpaidate == time && r.Classroom_id == classroom_id && r.curd_name == "晚二").ToList().Count;
-                    if (count2 <= 0)
-                    {
-                        return "晚二";
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                else
-                {
-                    int count2 = EvningSelfStudy_Entity.EvningSelfStudyGetAll().Where(r => r.Anpaidate == time && r.Classroom_id == classroom_id && r.curd_name == "晚一").ToList().Count;
-                    if (count2 <= 0)
-                    {
-                        return "晚一";
-                    }
-                    else
-                    {
-                        return null;
-                    }
-                }
-                
-                 
-            }
-        }
-        /// <summary>
         /// 晚自习安排
         /// </summary>
         /// <param name="classes">班级集合</param>
@@ -1323,7 +1277,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="xmlfile">Xml文件</param>
         public void NightAnpai(List<ClassSchedule> classes,List<DateTime> times,List<Classroom> classrooms, string xmlfile)
         {
-            Random rand = new Random();
+            int i = 1;
             foreach (DateTime time in times)
             {
                 //判断周六是否要上课
@@ -1336,8 +1290,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 {
                     foreach (Classroom c2 in classrooms)
                     {
-                        int number = rand.Next(1,100);
-                        string str1= number%3==0? Overflow(time, c2.Id,"晚一"): Overflow(time, c2.Id, "晚二");
+
+                        string str1 = i % 2 == 0 ? "晚二" : "晚一";
+                        
                         if (!string.IsNullOrEmpty(str1))
                         {
                             r.curd_name = str1;
@@ -1352,6 +1307,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             {
                                 //安排
                                 EvningSelfStudy_Entity.Add_Data(r);
+                                i++;
                                 break;
                             }
                         }

@@ -66,17 +66,19 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         //获取某个月份所有备案数据
         public List<StudentPutOnRecord> GetMonStudent(int monName)
         {
-            List<StudentPutOnRecord> All_stu= Stu_Entity.GetList().Where(s => Convert.ToDateTime(s.StuDateTime).Month == monName).ToList();//获取某个月份备案的所有数据
+            List<StudentPutOnRecord> All_stu= Stu_Entity.GetAllStudentKeepData().Where(s => Convert.ToDateTime(s.StuDateTime).Month == monName).ToList();//获取某个月份备案的所有数据
             List<Consult> All_con = this.GetList();//获取所有分量数据
             List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
-            //去分量的地方筛选没有被分量的学生
-            for (int i = 0; i < All_stu.Count; i++)
+
+            if (All_stu.Count > 0)
             {
-                for (int j = 0; j < All_con.Count; j++)
+                //去分量的地方筛选没有被分量的学生
+                for (int i = 0; i < All_stu.Count; i++)
                 {
-                    if (All_stu[i].Id==All_con[j].StuName)
+                    int count = All_con.Where(c => c.StuName == All_stu[i].Id).ToList().Count;
+                    if (count<=0)
                     {
-                        All_stu.Remove(All_stu[i]);
+                        result.Add(All_stu[i]);
                     }
                 }
             }
@@ -168,7 +170,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         /// <returns></returns>
         public List<StudentPutOnRecord> GetStudentPutRecored()
         {
-            return Stu_Entity.GetList();
+            return Stu_Entity.GetAllStudentKeepData();
         }
         /// <summary>
         /// 获取当个学生备案数据

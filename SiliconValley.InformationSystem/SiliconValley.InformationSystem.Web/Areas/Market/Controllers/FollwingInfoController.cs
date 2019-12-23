@@ -25,8 +25,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: /Market/FollwingInfo/FollwingInfoIndex
         //获取当前上传的操作人
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
+        static int f_id = 0;
         public ActionResult FollwingInfoIndex()
-        {           
+        {
+            ConsultTeacher = new ConsultTeacherManeger();
+
+            //判断是哪个咨询师
+            f_id = ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             return View();
         }
         /// <summary>
@@ -38,7 +43,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ConsultTeacher = new ConsultTeacherManeger();
 
             //判断是哪个咨询师
-            int f_id = ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             List<ConsultZhuzImageData> ConsultZhuzImageData_data = CM_Entity.GetImageData(f_id.ToString());
             return Json(ConsultZhuzImageData_data,JsonRequestBehavior.AllowGet);
         }
@@ -46,17 +50,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult GetMonData(int MonthName,string Status)
         {
             List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            //判断是哪个咨询师         
             if (Status=="完成量")
             {
-                result=CM_Entity.GetStudentData(MonthName, "1", 1);
+                result=CM_Entity.GetStudentData(MonthName, "1", f_id);
             }
             else if (Status == "未完成量")
             {
-                result=CM_Entity.GetStudentData(MonthName, "2", 1);
+                result=CM_Entity.GetStudentData(MonthName, "2", f_id);
             }
             else if (Status == "分量数")
             {
-                result=CM_Entity.GetStudentData(MonthName, "3", 1);
+                result=CM_Entity.GetStudentData(MonthName, "3", f_id);
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -67,30 +72,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="id">学生名称</param>
         /// <returns></returns>
         public ActionResult GetMonthStudent(string id)
-        {
-            List<Consult> con_list = CM_Entity.GetList().Where(c =>CM_Entity.GetSingleStudent( c.StuName).StuName==id).ToList();
-            List<StudentPutOnRecord> stu_list = CM_Entity.GetStudentPutRecored();
+        {             
+            List<StudentPutOnRecord> stu_list = CM_Entity.GetStudentPutRecored().Where(s=>s.StuName==id).ToList();
             List<StudentPutOnRecord> find_list = new List<StudentPutOnRecord>();
-
-            foreach (Consult item2 in con_list)
+            List<Consult> find_consult = CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();//获取XX咨询师的分量情况
+            foreach (Consult item2 in find_consult)
             {
-                foreach (StudentPutOnRecord item1 in stu_list)
+                StudentPutOnRecord find_s= stu_list.Where(s => s.Id == item2.StuName).FirstOrDefault();
+                if (find_s!=null)
                 {
-                    if (item1.Id == item2.StuName)
-                    {
-                        find_list.Add(item1);
-                    }
+                    find_list.Add(find_s);
                 }
             }
             //获取这个学生的跟踪信息次数
             int j = 0;
             List<FollwingInfo> find = CM_Entity.GetFollwingManeger().GetList();
-            if (con_list.Count==1)
+            if (find_consult.Count==1)
             {
                 int i = 0;
                 foreach (FollwingInfo item in find)
                 {
-                    foreach (Consult c in con_list)
+                    foreach (Consult c in find_consult)
                     {
                         if (item.Consult_Id==c.Id)
                         {
@@ -158,7 +160,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //获取该学生的Id
             ViewBag.Name = find_stu.StuName;
             ViewBag.Sex = find_stu.StuSex==false?"女":"男";
-            ViewBag.Number =Convert.ToInt32(SessionHelper.Session["Number"])+"次";
+            //获取跟踪总数
+            Consult find_consult = CM_Entity.GetList().Where(c => c.StuName == id).FirstOrDefault();
+            FollwingInfoManeger FM_Entity = CM_Entity.GetFollwingManeger();
+            int count= FM_Entity.GetList().Where(f => f.Consult_Id == find_consult.Id).ToList().Count;
+            ViewBag.Number = count + "次";
             //获取这个学生的所有咨询信息
             Consult find_c= CM_Entity.GetList().Where(c => c.StuName == id).FirstOrDefault();
             List<FollwingInfo> flist= CM_Entity.GetFollwingManeger().GetList().Where(f => f.Consult_Id == find_c.Id).ToList();
@@ -193,12 +199,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 find_f.Rmark = My_Rmark;
                 find_f.TailAfterSituation = My_TailAfterSituation;
                 CM_Entity.GetFollwingManeger().Update(find_f);
-                BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("ok", JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("系统错误，请重试!!!",JsonRequestBehavior.AllowGet);
             }
              
