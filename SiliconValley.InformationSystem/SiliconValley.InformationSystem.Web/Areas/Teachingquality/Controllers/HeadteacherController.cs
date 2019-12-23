@@ -14,6 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
+    [CheckLogin]
     public class HeadteacherController : Controller
     {
         public static int HeadteID;

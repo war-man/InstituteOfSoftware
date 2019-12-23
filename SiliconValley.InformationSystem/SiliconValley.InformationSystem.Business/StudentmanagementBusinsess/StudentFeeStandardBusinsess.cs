@@ -620,6 +620,135 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
 
             return MyViewList;
         }
+        /// <summary>
+        /// 阶段应缴模型类
+        /// </summary>
+        public class ViewGotosch
+        {
+            /// <summary>
+            /// 阶段id
+            /// </summary>
+            public int id { get; set; }
+            /// <summary>
+            /// 应交
+            /// </summary>
+            public decimal Price { get; set; }
+        }
+        /// <summary>
+        /// 模型类
+        /// </summary>
+        public class ViewCostit
+        {
+            public string StudentID { get; set; }
+            public int? GrandID { get; set; }
+            public decimal? Price { get; set; }
+        }
+        /// <summary>
+        /// 获取学员信息
+        /// </summary>
+        /// <param name="ClassName">班级号</param>
+        /// <param name="StudentID">学号</param>
+        /// <returns></returns>
+        public DetailedcostView FineDetail(int ClassName,string StudentID)
+        {
+            var student = studentInformationBusiness.GetEntity(StudentID);
+           DetailedcostView detailedcostView = new DetailedcostView();
+            detailedcostView.ClassName = classschedu.GetEntity(ClassName).ClassNumber;
+            detailedcostView.Name = student.Name;
+            detailedcostView.Stidentid = student.StudentNumber;
+            detailedcostView.Sex = student.Sex == false ? "女" : "男";
+            detailedcostView.HeadmasterName = headmasters.ClassHeadmaster(ClassName) == null ? "无" : headmasters.ClassHeadmaster(ClassName).EmpName;
+            detailedcostView.Phone = headmasters.ClassHeadmaster(ClassName) == null ? "无" : headmasters.ClassHeadmaster(ClassName).Phone;
+            return detailedcostView;
+        }
+        /// <summary>
+        /// 拿到学生欠费的数据
+        /// </summary>
+        /// <param name="ClassID"></param>
+        /// <returns></returns>
+        public List<DetailedcostView> TuitionFine(int ClassID)
+        {
+            //拿到学生已经交了费用的
+            List<DetailedcostView> listdetailedc = new List<DetailedcostView>();
+            //升学阶段
+            BaseBusiness<GotoschoolStage> GotoschoolStageBusiness = new BaseBusiness<GotoschoolStage>();
+            //阶段应交费用
+            List<ViewGotosch> gotosches = new List<ViewGotosch>();
+            //获取阶段价格单
+            var costit= costitemsBusiness.GetList().Where(a => a.Grand_id != null).ToList();
+               //当前阶段
+             var ClassGrade = classschedu.GetEntity(ClassID).grade_Id;
+            //拿到应该缴费的阶段
+            var Gotoschool = classschedu.RecursionStage(ClassGrade);
+            var StudentClass = classschedu.FintClassSchedule(ClassID);
+            //拿到阶段以及应缴的费用
+            foreach (var item in Gotoschool)
+            {
+                ViewGotosch viewGotosch = new ViewGotosch();
+                viewGotosch.Price = 0;
+                viewGotosch.id = item.CurrentStageID;
+                foreach (var item1 in costit)
+                {
+                    if (item.CurrentStageID==item1.Grand_id)
+                    {
+                        viewGotosch.Price = viewGotosch.Price + item1.Amountofmoney;
+                    }
+                }
+                gotosches.Add(viewGotosch);
+            }
 
+            var student = classschedu.ClassStudentneList(ClassID);
+            foreach (var item in student)
+            {
+              var fee=  studentfee.GetList().Where(a => a.StudenID == item.StuNameID).Select(a=>new ViewCostit { GrandID= costitemsBusiness.GetEntity(a.Costitemsid).Grand_id, Price=a.Amountofmoney, StudentID=a.StudenID}).ToList();
+
+                foreach (var item1 in Gotoschool)
+                {
+                    DetailedcostView detailedcostView = new DetailedcostView();
+                    detailedcostView.CurrentStageID = geand.GetEntity(item1.CurrentStageID).GrandName;
+                    detailedcostView.StagesID = item1.CurrentStageID;
+                    detailedcostView.Amountofmoney = 0;
+                    if (fee.Count>0)
+                    {
+                        foreach (var item2 in fee)
+                        {
+                            detailedcostView.Stidentid = item2.StudentID;
+                            if (item2.GrandID == item1.CurrentStageID)
+                            {
+                                detailedcostView.Amountofmoney = detailedcostView.Amountofmoney + (decimal)item2.Price;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        detailedcostView.Stidentid = item.StuNameID;
+                        detailedcostView.Amountofmoney = 0;
+                    }
+                  
+                    listdetailedc.Add(detailedcostView);
+                }
+            }
+            List<DetailedcostView> listdetailedcs = new List<DetailedcostView>();                                
+            foreach (var item in gotosches)
+            {
+                foreach (var item1 in listdetailedc)
+                {
+                    if (item.id==item1.StagesID)
+                    {
+                        if (item1.Amountofmoney< item.Price)
+                        {
+                            DetailedcostView detailedcostView = FineDetail(ClassID, item1.Stidentid);
+                            detailedcostView.Amountofmoney = item1.Amountofmoney;
+                            detailedcostView.CurrentStageID = item1.CurrentStageID;
+                            detailedcostView.ShouldJiao = item.Price;
+                            detailedcostView.Surplus = item.Price - item1.Amountofmoney;
+                            listdetailedcs.Add(detailedcostView);
+                        }
+                    }
+                   
+                }
+            }
+            return listdetailedc;
+        }
     }
 }

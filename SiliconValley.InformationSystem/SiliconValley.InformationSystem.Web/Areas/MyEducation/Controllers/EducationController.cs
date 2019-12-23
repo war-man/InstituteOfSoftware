@@ -18,6 +18,7 @@ using System.Web.Script.Serialization;
 namespace SiliconValley.InformationSystem.Web.Areas.MyEducation.Controllers
 {
     //本科管理
+    [CheckLogin]
     public class EducationController : Controller
     {  //课程类别
         BaseBusiness<Undergraduatemajor> UndergraduatemajorYBusiness = new BaseBusiness<Undergraduatemajor>();

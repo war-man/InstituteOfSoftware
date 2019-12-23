@@ -15,6 +15,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
+    [CheckLogin]
     public class InterviewStudentsController : Controller
     {
         // GET: Teachingquality/InterviewStudents
