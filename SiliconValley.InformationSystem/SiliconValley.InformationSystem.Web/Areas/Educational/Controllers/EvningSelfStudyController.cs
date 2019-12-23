@@ -14,9 +14,10 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class EvningSelfStudyController : Controller
     {
-        // GET: /Educational/EvningSelfStudy/BigDataADIfunction
+        // GET: /Educational/EvningSelfStudy/EvningSelfStudyIndexView
 
         EvningSelfStudyManeger EvningSelefstudy_Entity;
         public ActionResult EvningSelfStudyIndexView()
@@ -52,9 +53,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             }
             return new_re;
         }
-        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
+        static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
         //获取当前登录员是哪个校区的教务
-        static Recon_Login_Data rr = GetBaseData("201911190041");
+        static Recon_Login_Data rr = GetBaseData(UserName.EmpNumber);
         static int base_id = rr.ClassRoom_Id;//确定校区
         static bool IsOld = rr.IsOld;//确定教务
 

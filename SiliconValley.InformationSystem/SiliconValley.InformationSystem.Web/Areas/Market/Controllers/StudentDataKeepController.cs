@@ -35,6 +35,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
     //zheshi
+    [CheckLogin]
     public class StudentDataKeepController : BaseMvcController
     {
         // GET: /Market/StudentDataKeep/DelteInfomationType

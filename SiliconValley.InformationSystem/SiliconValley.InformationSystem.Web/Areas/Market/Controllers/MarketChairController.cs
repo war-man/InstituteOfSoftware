@@ -11,11 +11,12 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class MarketChairController : Controller
     {
         #region 创建业务实体
         //获取当前上传的操作人
-        string UserName = Base_UserBusiness.GetCurrentUser().UserName;
+        Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
         MarketChairManeger MarketChair_Entity = new MarketChairManeger();
         EmployeesInfoManage Employes_Entity = new EmployeesInfoManage();
         #endregion

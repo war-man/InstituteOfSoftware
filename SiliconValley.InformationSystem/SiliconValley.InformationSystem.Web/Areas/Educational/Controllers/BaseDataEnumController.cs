@@ -8,10 +8,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
     using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
-
+    [CheckLogin]
     public class BaseDataEnumController : Controller
     {
-        // GET: /Educational/BaseDataEnum/AddorEditView
+        // GET: /Educational/BaseDataEnum/BaseDataEnumIndexView
         public ActionResult BaseDataEnumIndexView()
         {
             return View();

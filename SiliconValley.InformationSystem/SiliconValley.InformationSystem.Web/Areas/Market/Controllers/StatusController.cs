@@ -10,11 +10,12 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class StatusController : Controller
     {
 
         private StuStateManeger Stustate_Entity;
-        // GET: /Market/Status/GetStatusData
+        // GET: /Market/Status/StatusIndexView
         public ActionResult StatusIndexView()
         {
             return View();

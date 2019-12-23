@@ -17,6 +17,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class ConsultTeacherController : Controller
     {
         ConsultTeacherManeger Ct_Entiry = new ConsultTeacherManeger();

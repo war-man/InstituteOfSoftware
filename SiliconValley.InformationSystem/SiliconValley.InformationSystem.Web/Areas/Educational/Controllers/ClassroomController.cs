@@ -8,6 +8,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class ClassroomController : Controller
     {
         private ClassroomManeger Classroom_Entity;

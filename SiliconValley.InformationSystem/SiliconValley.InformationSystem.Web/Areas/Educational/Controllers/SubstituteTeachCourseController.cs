@@ -12,6 +12,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 {
+    [CheckLogin]
     public class SubstituteTeachCourseController : BaseMvcController
     {
         SubstituteTeachCourseManeger SubstituteTeachCourse_Entity;
@@ -19,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         EmployeesInfoManage EmployeesInfo_Entity;
         ClassScheduleBusiness ClassSchedule_Entity;
         ReconcileManeger Reconcile_Entity;
-        // GET: /Educational/SubstituteTeachCourse/ApprovalStubstitute
+        // GET: /Educational/SubstituteTeachCourse/SubstituteTeachCourseIndexView
         public ActionResult SubstituteTeachCourseIndexView()
         {
             return View();
