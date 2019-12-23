@@ -108,7 +108,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">身份证号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.IdCardNum, new Dictionary<string, object>() { { "lay-verify", "myIdCardNum" }, { "placeholder", "请输入身份证号" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.IdCardNum, new Dictionary<string, object>() { { "lay-verify", "required|myIdCardNum" }, { "placeholder", "请输入身份证号" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
