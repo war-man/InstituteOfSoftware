@@ -493,6 +493,53 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return result;
         }
-        
+
+
+        #region 就业统计涉及方法
+        /// <summary>
+        /// 获取全部得数据中被带得记录 根据计划id 进行筛选
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmpstaffAndStuinfodataByQuarterid(int param0) {
+          return  this.GetEmpStaffAndStus().Where(a => a.Ising == true&a.QuarterID==param0).ToList();
+        }
+        /// <summary>
+        /// 获取全部得数据中被带得记录 根据计划id 进行筛选
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> GetEmpstaffAndStuinfodataByyear(int param0)
+        {
+            dbquarter = new QuarterBusiness();
+            var list= dbquarter.GetQuartersByYear(param0);
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            foreach (var item in list)
+            {
+                result.AddRange(this.GetEmpstaffAndStuinfodataByQuarterid(item.ID));
+
+            }
+            return result;
+        }
+        public List<EmpStaffAndStu> GetEmploymentSummaryData(bool isyear,int param0,int? empid) {
+
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+            if (isyear)
+            {
+                result= this.GetEmpstaffAndStuinfodataByyear(param0);
+            }
+            else
+            {
+                result= this.GetEmpstaffAndStuinfodataByQuarterid(param0);
+            }
+            if (empid!=null)
+            {
+                result= result.Where(a => a.EmpStaffID == empid).ToList();
+            }
+
+            return result;
+
+        }
+        #endregion
     }
 }

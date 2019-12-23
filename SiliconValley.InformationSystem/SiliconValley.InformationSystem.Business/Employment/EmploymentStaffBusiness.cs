@@ -51,7 +51,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public EmployeesInfo GetEmployeesInfoByID(string EmployeeId)
         {
             var NomyEmp = new EmployeesInfoManage();
-            var cc = NomyEmp.GetIQueryable().Where(a => a.EmployeeId == EmployeeId && a.IsDel == false).FirstOrDefault();
+            var cc = NomyEmp.GetEntity(EmployeeId);
             return cc;
         }
         /// <summary>
@@ -279,16 +279,45 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
         }
 
-
+        #region 就业统计
         /// <summary>
         ///根据传入过来得值获取这年或者是这季度得参与过得员工
         /// </summary>
         /// <param name="isyear"></param>
         /// <param name="param0"></param>
         /// <returns></returns>
-        public List<EmploymentStaff> GetStaffsByQuarter(bool isyear, int param0)
+        public List<EmploymentStaff> GetSummaryStaffs(bool isyear, int param0)
         {
-            return null;
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+            List<EmpStaffAndStu> querydata = new List<EmpStaffAndStu>();
+            if (isyear)
+            {
+                querydata = dbempStaffAndStu.GetEmpstaffAndStuinfodataByyear(param0);
+            }
+            else
+            {
+                querydata = dbempStaffAndStu.GetEmpstaffAndStuinfodataByQuarterid(param0);
+            }
+            for (int i = 0; i < querydata.Count; i++)  //外循环是循环的次数
+            {
+                for (int j = querydata.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                {
+
+                    if (querydata[i].EmpStaffID == querydata[j].EmpStaffID)
+                    {
+                        querydata.RemoveAt(j);
+                    }
+                }
+            }
+            List<EmploymentStaff> result = new List<EmploymentStaff>();
+            foreach (var item in querydata)
+            {
+               result.Add(this.GetEntity(item.EmpStaffID));
+            }
+            return result;
         }
+        #endregion
+
+
     }
 }

@@ -44,12 +44,8 @@
         <form class="layui-form">
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">选择专员</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="sex" value="0" title="周尚丰">
-                    <input type="radio" name="sex" value="1" title="周囧的" checked>
-                    <input type="radio" name="sex" value="0" title="杨雪的">
-                    <input type="radio" name="sex" value="1" title="石一磊">
-                    <input type="radio" name="sex" value="0" title="中智的">
+                <div class="layui-input-block" id="staffdiv">
+                
                 </div>
             </div>
             <div class="layui-form-item">
@@ -93,7 +89,15 @@
                         <input type="text" name="password" value="20%" autocomplete="off" class="layui-input" style="width:50%;border:none;background-color:transparent;" />
                     </div>
                 </div>
-
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label" style="width: 128px;">参与班级：</label>
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-xs layui-btn-radius" style="margin-top:8px;">1701NA</button>
+                        <button class="layui-btn layui-btn-xs layui-btn-radius" style="margin-top:8px;">1702NA</button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
@@ -103,13 +107,16 @@
 </div>
 
 @section script{
-
+    <script type="text/template" id="muban1">
+            <input type="radio" name="empid" value="{{=empid}}" title="{{=staffname}}" {{=checked}}>
+    </script>
+    <script src="~/Scripts/underscore.js"></script>
     <script>
         layui.extend({
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dist/dtree'
         }).use(['dtree', 'layer', 'jquery', 'form', 'table'], function () {
             var dtree = layui.dtree, table = layui.table, form = layui.form;
-            var string1 = "", string2, int1;
+            var string1 = "", param0, param1;
             //时间转化
             function TimeChange(newtime) {
                 if (newtime == null)
@@ -140,10 +147,11 @@
                     //console.log($obj);
                     //console.log(first);
                     //empQuarterclassid = res.data[0].children[0].children[0].nodeId;
-                    string2 = 1;
-                    int1 = res.data[0].nodeId;
+                    param0 = true;
+                    param1 = res.data[0].nodeId;
+                    loadstaff();
                     //treedata = res.data;
-                    loadtable();
+                    //loadtable();
                     //console.log(empQuarterclassid);
                 },
                 formatter: {
@@ -168,8 +176,8 @@
                 $("#name0").val("");
                 //console.log(obj);
                 var dtreeobj = obj.param;
-                string2 = dtreeobj.level;
-                int1 = dtreeobj.nodeId;
+                param0 = dtreeobj.level;
+                param1 = dtreeobj.nodeId;
                 loadtable00();
             });
 
@@ -195,8 +203,6 @@
                                 } else {
                                     return d.StudentName;
                                 }
-
-
                             }
                         }
                         , { field: 'StudentNO', title: '学生编号', width: 105, hide: true }
@@ -218,7 +224,39 @@
                 });
             }
 
+            function loadstaff() {
+                $.ajax({
+                    url: '/Obtainemployment/EmploymentSummary/loadempstaff',
+                    async: false,
+                    data: { param0: param0,param1:param1 },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            jsloadstaff(successdata.Data);
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
 
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+            }
+            function jsloadstaff(data) {
+                $("#staffdiv").children().remove();
+                var obj = _.template($("#muban1").html());
+                var html = obj({ empid: "", staffname: "全部", checked: "checked" });
+                $("#staffdiv").append($(html));
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban1").html());
+                     var html = obj({ empid: data[i].ID, staffname: data[i].staffname, checked: "" });
+                    $("#staffdiv").append($(html));
+                }
+                form.render();
+            }
             //重新加载表格数据 url
             function loadtable00() {
                 table00.reload({

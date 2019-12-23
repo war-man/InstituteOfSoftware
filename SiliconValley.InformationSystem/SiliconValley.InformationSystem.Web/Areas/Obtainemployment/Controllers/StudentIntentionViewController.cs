@@ -45,22 +45,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             if (obj != null)
             {
                 ViewBag.existence = true;
-                if (obj.AreaID==null)
-                {
-                    view.AreaName = "其他城市";
-                }
-                else
-                {
-                    var areasobj = dbemploymentAreas.GetEntity(obj.AreaID);
-                    view.AreaName = areasobj.AreaName;
-                }
+
+                var areasobj = dbemploymentAreas.GetEntity(obj.AreaID);
+                view.AreaName = areasobj.AreaName;
+
                 view.Salary = obj.Salary;
 
             }
             else
             {
                 ViewBag.existence = false;
-                
+
                 var aa = dbemploymentAreas.GetAll();
                 var cc = aa.Select(a => new
                 {
