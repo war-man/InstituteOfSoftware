@@ -355,6 +355,7 @@
     <Compile Include="ViewEntity\ExaminationSystemView\ExamTypeView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\HeadMasterSortView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\MarkingArrangeView.cs" />
+    <Compile Include="ViewEntity\ExaminationSystemView\StudentExamScoreView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\StudentIsReExamHelper.cs" />
     <Compile Include="ViewEntity\ExaminationView.cs" />
     <Compile Include="ViewEntity\flooralloryes.cs" />

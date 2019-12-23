@@ -281,10 +281,59 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             temp.MarkingTeacher = empid;
             db_markingArrange.Update(temp);
-
-           
-             
         }
+
+
+        public StudentExamScoreView ConvertToStudentExamScoreView(TestScore testScore)
+        {
+            StudentExamScoreView view = new StudentExamScoreView();
+
+            TeachingDepBusiness.TeacherClassBusiness dbteacherclass = new TeachingDepBusiness.TeacherClassBusiness();
+
+            var candidInfo = db_exam.AllCandidateInfo().Where(d => d.CandidateNumber == testScore.CandidateInfo).FirstOrDefault();
+            BaseBusiness<StudentInformation> dbstudentg = new BaseBusiness<StudentInformation>();
+            //阅卷老师
+            TeachingDepBusiness.TeacherBusiness dbteacher = new TeachingDepBusiness.TeacherBusiness();
+            view.MarkingTeacherName = db_emp.GetInfoByEmpID( dbteacher.GetTeacherByID(testScore.Reviewer).EmployeeId).EmpName;
+            view.Score = testScore;
+            BaseBusiness<ClassSchedule> dbclass = new BaseBusiness<ClassSchedule>();
+            view.StudentClass = dbclass.GetIQueryable().Where(d => d.id == candidInfo.ClassId).FirstOrDefault().ClassNumber;
+            view.StudentName = dbstudentg.GetIQueryable().Where(d => d.StudentNumber == candidInfo.StudentID).FirstOrDefault().Name;
+            view.ExamTitle = db_exam.AllExamination().Where(d => d.ID == testScore.Examination).FirstOrDefault().Title;
+
+            return view;
+
+
+        }
+
+
+        /// <summary>
+        /// 获取参加考试班级
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassSchedule> GetExamJoinClass(int examid)
+        {
+            TeachingDepBusiness.TeacherClassBusiness dbteacherclass = new TeachingDepBusiness.TeacherClassBusiness();
+            List<ClassSchedule> classlist = new List<ClassSchedule>();
+
+           var lsit = db_exam.AllCandidateInfo(examid);
+
+            foreach (var item in lsit)
+            {
+               var tempclass = dbteacherclass.AllClassSchedule().Where(d => d.id == item.ClassId).FirstOrDefault();
+
+                if (!dbteacherclass.IsContains(classlist, tempclass))
+                {
+                    //如果不存在
+                    classlist.Add(tempclass);
+                }
+            }
+
+
+            return classlist;
+        }
+
+      
         
 
     }

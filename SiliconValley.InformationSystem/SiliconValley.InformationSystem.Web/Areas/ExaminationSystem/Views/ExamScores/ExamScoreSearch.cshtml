@@ -1,0 +1,166 @@
+﻿
+@{
+    ViewBag.Title = "ExamScoreSearch";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+  
+    <style>
+        #mydiv {
+            width:100%;
+        }
+    </style>
+    
+  }
+
+<div id="mydiv">
+
+    <div id="toor">
+        <form class="layui-form">
+
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">考试</label>
+                    <div class="layui-input-inline">
+                        <select name="Exam" lay-verify="required" lay-filter="Exam" lay-search="">
+                            @{
+                                foreach (var item in ViewBag.Examlist as List<Examination>)
+                                {
+                                    <option value="@item.ID">@item.Title</option>
+                                }
+                            }
+                            
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">班级</label>
+                    <div class="layui-input-inline">
+                        <select name="classNumber" id="classnumber" lay-search="">
+                            
+                            
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label"></label>
+                        <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="search" id="search">查询</button>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+    <table class="layui-hide" lay-filter="ExamScores" id="ExamScores"></table>
+</div>
+
+@section script{
+    
+
+    <script>
+        layui.use(['table', 'layer', 'form'], function () {
+            var form = layui.form;
+            var table = layui.table;
+            var layer = layui.layer;
+
+            table.render({
+                elem: '#ExamScores'
+                , url: '/ExaminationSystem/ExamScores/ExamScoreData'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , id:"ExamScores"
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'ExamTitle', title: '考试名称', width: "13%", edit: 'text' }
+                    , {
+                        field: 'StudentName', title: '学员名称', width: "13%", edit: 'text'}
+                    
+                    , { field: 'StudentClass', title: '当时班级', width: "13%", edit: 'text', sort: true }
+                    , { field: 'ChooseScore', title: '选择题分数', width: "13%", templet: '<div>{{d.Score.ChooseScore}}</div>'  }
+                    , { field: 'TextQuestionScore', width: "13%", title: '解答题分数', templet: '<div>{{d.Score.TextQuestionScore}}</div>' }
+                    , { field: 'OnBoard', title: '机试分数', width: "13%", templet: '<div>{{d.Score.OnBoard}}</div>' }
+                    , {
+                        field: 'zongfen', sort: true, title: '总分', width: "13%", templet: function (res) {
+
+                            var zongfen = res.Score.ChooseScore + res.Score.TextQuestionScore + res.Score.OnBoard
+
+                            return zongfen;
+                        }
+                    }
+                    
+                ]]
+                , page: true
+            });
+
+            form.on('select(Exam)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/ExaminationSystem/ExamScores/ExamJoinClass",
+                    data: { examid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+
+                        console.log(resultData);
+
+                        if (resultData.ErrorCode == 200) {
+                            //清空赋值
+                            $("#classnumber").empty();
+
+                            $("#classnumber").append(new Option("班级", ""));
+                            $.each(resultData.Data, function (index, item) {
+                                //赋值
+                                console.log(item.ClassNumber);
+                                $('#classnumber').append(new Option(item.ClassNumber, item.id));
+                            });
+                        } else {
+                            layer.msg("数据加载错误！", { icon: 2 });
+                            $("#classnumber").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            });
+            layui.form.render("select");
+
+            form.on('submit(search)', function (data) {
+              
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                if (!data.field.classNumber) {
+                    data.field.classNumber = "0";
+                }
+
+                table.reload('ExamScores', {
+                    url: '/ExaminationSystem/ExamScores/ExamScoreData'
+                    , where: {
+
+                        examid: data.field.Exam,
+                        classiD: data.field.classNumber
+                    } //设定异步数据接口的额外参数
+                    //,height: 300
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+        });
+    </script>
+    
+}
+
