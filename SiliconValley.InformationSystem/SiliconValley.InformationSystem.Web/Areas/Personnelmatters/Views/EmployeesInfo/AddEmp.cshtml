@@ -64,7 +64,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">钉钉工号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入员工钉钉号" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "required|number|CheckDDNum" }, { "placeholder", "请输入员工钉钉号" }, { "class", "layui-input" } })
                         </div>
                     </div>
                 </div>
@@ -286,8 +286,8 @@
                         <label class="layui-form-label">图片:</label>
                         <div class="layui-input-block">
                             <input type="file" id="Image" name="Image" />
-                            <div style="border:1px solid #808080;width:400px;height:200px;">
-                                <img id="showimg" style="width:400px;height:200px;" />
+                            <div style="border:1px solid #808080;width:460px;height:200px;">
+                                <img id="showimg" style="width:460px;height:200px;" />
                             </div>
                         </div>
                     </div>
@@ -501,8 +501,37 @@
                             return '天数只能是1至31之间';
                         }
                     }
-                }//验证哪天
+                },//验证哪天
+                CheckDDNum: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var resultdata = check(value);
+                        return resultdata;
+                    } 
+                }//验证钉钉号是否重复
             });
+
+            function check(value) {  
+                var str;
+                $.ajax({
+                    url: '/Personnelmatters/EmployeesInfo/CheckDDNum',
+                    type: 'get',
+                    async: false,
+                    data: { ddnum: value},
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            str = '已经存在该钉钉号，请重新输入！';
+                        } else {
+                            str = '';
+                        }
+                    },
+                    error: function (errordata) {
+                        str = '网络不佳！';
+                    }
+                });
+                return str;             
+            }
             //工资输入判断
             $(".salary").keyup(function () {
                 var reg = $(this).val().match(/\d+\.?\d{0,2}/);

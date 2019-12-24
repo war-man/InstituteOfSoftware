@@ -300,34 +300,34 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 empinfo.Insert(emp);
                 AjaxResultxx = empinfo.Success();
                 if (AjaxResultxx.Success) {
-                    var dname = empinfo.GetDept(emp.PositionId).DeptName;
-                    var pname = empinfo.GetPosition(emp.PositionId).PositionName;
+                    var dname = empinfo.GetDept(emp.PositionId).DeptName;//获取该员工所属部门名称
+                    var pname = empinfo.GetPosition(emp.PositionId).PositionName;//获取该员工所属岗位名称
                 if (dname.Equals("就业部"))
                 {
-                    bool s = esmanage.AddEmploystaff(emp.EmployeeId);
+                    bool s = esmanage.AddEmploystaff(emp.EmployeeId);//给就业部员工表添加员工
                     AjaxResultxx.Success = s;
                 }
                 if (dname.Equals("市场部"))
                 {
                     bool s = csmanage.AddChannelStaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
-                }
+                }//给市场部员工表添加员工
                 if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && !pname.Equals("教官"))
                 {
                     bool s = hm.AddHeadmaster(emp.EmployeeId);
                     AjaxResultxx.Success = s;
-                    }
+                    }//给两个教质部员工表添加除教官外的员工
                 if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && pname.Equals("教官"))
                     {
                         bool s = itmanage.AddInstructorList(emp.EmployeeId);
                         AjaxResultxx.Success = s;
-                    }
+                    }//给教官员工表添加教官
                 if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
                 {
                     bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
                     AjaxResultxx.Success = s;
-                }
-                if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部")|| dname.Equals("s4教学部"))
+                }//给咨询部员工表添加除咨询助理外的员工
+                if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部")|| dname.Equals("s4教学部"))//给三个教学部员工表添加员工
                 {
                     Teacher tea = new Teacher();
                     tea.EmployeeId = emp.EmployeeId;
@@ -338,7 +338,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
                     AjaxResultxx.Success = s;
-                }
+                }//给财务部员工表添加员工
                     bool ss = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
                     AjaxResultxx.Success = ss;
                     if (AjaxResultxx.Success) {
@@ -527,6 +527,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             string result = year + "-" + month + "-" + date;
             return result;
         }
+        /// <summary>
+        /// 验证钉钉号是否已存在
+        /// </summary>
+        /// <param name="ddnum"></param>
+        /// <returns></returns>
+        public ActionResult CheckDDNum(string ddnum) {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var emplist = empmanage.GetList();
+                for (int i = 0; i < emplist.Count(); i++)
+                {
+                    if (emplist[i].DDAppId==int.Parse(ddnum)) {
+                        AjaxResultxx.Success = true;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                AjaxResultxx.Success = false;
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
 
         #region 部门及岗位相关业务
         //部门及岗位管理页面显示
