@@ -19,9 +19,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     [CheckLogin]
     public class ReconcileController : BaseMvcController
     {
-        // GET: /Educational/Reconcile/TimeName
+        // GET: /Educational/Reconcile/GetTecherAll
         static readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
         private EmployeesInfoManage dbemployeesInfo;
+        private TeacherClassBusiness TeacherClass_Entity;
         static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
         static Recon_Login_Data GetBaseData(string Emp)
         {
@@ -887,8 +888,113 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             string time = Request.Form["time"];
             BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
             int time2 = base_Entity.GetsameFartherData("上课时间类型").Where(b=>b.Name==time).FirstOrDefault().Id;
-            return null;
+            AjaxResult a= Reconcile_Com.ClassSchedule_Entity.Modifyclasstime(class_id, time2);
+            if (a.Success==true)
+            {
+                //修改调课单
+                DateTime dd = DateTime.Now;
+                string date = dd.Year + "-" + dd.Month + "-" + dd.Day;
+                DateTime dd2= Convert.ToDateTime(date);
+                List<Reconcile> find_list= Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
+               AjaxResult a2= Reconcile_Entity.Update_data2(find_list, time);
+                if (a2.Success==true && a.Success==true)
+                {
+                    return Json(a2, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    a2.Msg = "修改排课数据失败，请联系开发人员！！！";
+                    return Json(a2, JsonRequestBehavior.AllowGet);
+                }
+                 
+            }
+            else
+            {
+                return Json(a, JsonRequestBehavior.AllowGet);
+            }
+             
+        }
 
+        public ActionResult UpdateClassTeacher()
+        {
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grandlist = g_list;
+            return View();
+        }
+        /// <summary>
+        /// 获取所有上专业课老师
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetTecherAll(int id)
+        {
+            dbemployeesInfo = new EmployeesInfoManage();
+            List<TeacherData> tlist = new List<TeacherData>();
+            List<Teacher> teachers = Reconcile_Com.Teacher_Entity.GetTeachers();
+            foreach (Teacher item in teachers)
+            {
+                EmployeesInfo find_e= dbemployeesInfo.GetEntity(item.EmployeeId);
+               
+                 
+                if (find_e!=null)
+                {
+                    string name = Reconcile_Com.PositionBusiness.GetEntity(find_e.PositionId).PositionName;
+                    if (name != "英语老师" || name != "数学老师" || name != "语文老师")
+                    {
+                        TeacherData t = new TeacherData();
+                        t.Emp_id = find_e.EmployeeId;
+                        t.Name = find_e.EmpName;
+                        t.Teacher_id = item.TeacherID;
+                        tlist.Add(t);
+                    }
+                    
+                }
+
+               
+            }
+            //获取该班级的专业老师
+            TeacherClass_Entity = new TeacherClassBusiness();
+            ClassTeacher find_ct=  TeacherClass_Entity.GetList().Where(t => t.ClassNumber == id && t.IsDel == false).FirstOrDefault();
+            int teacher_id = find_ct == null ? 0 :Convert.ToInt32( find_ct.TeacherID);
+            var data = new { t_id=teacher_id,list_teacher= tlist };
+            return Json(data,JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult UpdateClassTeacherFuntion()
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                int class_id = Convert.ToInt32(Request.Form["class_select"]);
+                int teacher_id = Convert.ToInt32(Request.Form["teacher_id"]);
+                ClassTeacher find_ct = Reconcile_Com.TeacherClass_Entity.GetList().Where(t => t.ClassNumber == class_id && t.IsDel == false).FirstOrDefault();
+                if (find_ct != null)
+                {
+                    find_ct.TeacherID = teacher_id;
+                    TeacherClass_Entity.Update(find_ct);
+
+                    //更新排课表
+                    DateTime dd = DateTime.Now;
+                    string date = dd.Year + "-" + dd.Month + "-" + dd.Day;
+                    DateTime dd2 = Convert.ToDateTime(date);
+                    List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
+                    string emp = Reconcile_Com.Teacher_Entity.GetEntity(teacher_id).EmployeeId;
+                    a= Reconcile_Entity.Update_date3(find_list, emp);
+                    if (a.Success==false)
+                    {
+                        a.Msg = "修改排课数据错误！！！";
+                    }
+                }
+                return Json(a, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                a.Success = false;
+                a.Msg = "系统错误！！！";
+                return Json(a,JsonRequestBehavior.AllowGet);
+            }
+            
         }
     }
 }

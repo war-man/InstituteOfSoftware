@@ -431,6 +431,7 @@
     <Compile Include="ViewEntity\SurveyCommitView.cs" />
     <Compile Include="ViewEntity\SurveyGroupByDateView.cs" />
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
+    <Compile Include="ViewEntity\TeacherData.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />

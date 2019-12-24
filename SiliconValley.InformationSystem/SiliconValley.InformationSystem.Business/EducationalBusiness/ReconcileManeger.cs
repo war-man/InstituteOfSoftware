@@ -180,6 +180,50 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a;
         }
+        
+        public AjaxResult Update_data2(List<Reconcile> r,string timename)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                foreach (Reconcile item in r)
+                {
+                    item.Curse_Id = timename;
+                    this.Update(item);
+                }
+                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                a.Success = true;
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+                
+            }
+
+            return a;
+        }
+        
+        public AjaxResult Update_date3(List<Reconcile> r, string emp)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                foreach (Reconcile item in r)
+                {
+                    item.EmployeesInfo_Id = emp;
+                    this.Update(item);
+                }
+                a.Success = true;
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+            }
+            return a; 
+        }
+        
         /// <summary>
          /// 判断日期是否可以排课（true--可以排课，false--不可以排课）
          /// </summary>
