@@ -130,6 +130,7 @@
             <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData">班级调课</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData">修改班级上专业课时间段</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData2">修改班级上专业课老师</button>
         </div>
     </script>
 </div>
@@ -321,12 +322,23 @@
                         });
                         break;
                     case 'Class_getUpdateData':
-                        //班级调课
+                        //班级修改上课时间段
                         layer.open({
                             type: 2,
                             content: '/Educational/Reconcile/UpdateClassView',
                             area: ['680px', '450px'],
                             title: '班级数据修改'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                    case 'Class_getUpdateData2':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Reconcile/UpdateClassTeacher',
+                            area: ['680px', '450px'],
+                            title: '修改班级上专业课老师'
                             , shade: 0.8
                             , anim: 4
                             , skin: 'demo-class'
