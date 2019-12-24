@@ -859,6 +859,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                     {
                         UpdateSche.CurrentClass = false;
                         UpdateSche.IsGraduating = true;
+                       var stu= studentInformationBusiness.GetEntity(UpdateSche.StudentID);
+                        //修改学生状态为毕业
+                        stu.State = BasicdatBusiness.GetList().Where(a => a.Name == "毕业" && a.IsDetele == false).FirstOrDefault().ID;
+                        studentInformationBusiness.Update(stu);
                         //删除宿舍
                         Accdation = new AccdationinformationBusiness();
                         Accdation.delacc(UpdateSche.StudentID);

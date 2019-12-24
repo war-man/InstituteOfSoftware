@@ -22,6 +22,7 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Business.EducationalBusiness;
 using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 using SiliconValley.InformationSystem.Entity.Entity;
+using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -785,9 +786,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult Entranceexaminationresults()
         {
+            ViewBag.ClassID = Request.QueryString["ClassID"];
             return View();
         }
-
+        public ActionResult EntranceexaminationresultsDate(int page, int limit)
+        {
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            int grade_Id = dbtext.GetEntity(ClassID).grade_Id;
+            ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
+            var z = examScoresBusiness.ClassScores(ClassID, grade_Id);
+          var x=  examScoresBusiness.ClassScores(ClassID, grade_Id).Select(a=>new {
+             
+              a.StudentNumber,
+              Name= student.GetEntity(a.StudentNumber).Name,
+              student.GetEntity(a.StudentNumber).identitydocument,
+             Sex= student.GetEntity(a.StudentNumber).Sex==false?"女":"男",
+              a.Score.OnBoard,
+              Writtenexamination = a.Score.ChooseScore + a.Score.TextQuestionScore,
+          }).ToList();
+            var Myx = x.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = Myx
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+           
+        }
         public ActionResult AddClassactivities()
         {
             return View();
