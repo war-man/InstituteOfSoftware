@@ -301,6 +301,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             view.StudentClass = dbclass.GetIQueryable().Where(d => d.id == candidInfo.ClassId).FirstOrDefault().ClassNumber;
             view.StudentName = dbstudentg.GetIQueryable().Where(d => d.StudentNumber == candidInfo.StudentID).FirstOrDefault().Name;
             view.ExamTitle = db_exam.AllExamination().Where(d => d.ID == testScore.Examination).FirstOrDefault().Title;
+            view.StudentNumber = candidInfo.StudentID;
 
             return view;
 
