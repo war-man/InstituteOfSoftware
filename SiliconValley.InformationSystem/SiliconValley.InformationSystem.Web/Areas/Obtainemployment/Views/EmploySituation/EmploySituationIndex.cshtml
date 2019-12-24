@@ -68,74 +68,74 @@
             var dtree = layui.dtree, table = layui.table;
             var string1="";
             ////初始化树
-            //var myDTree = dtree.render({
-            //    elem: "#demoTree",
-            //    initLevel: 1,
-            //    url: '/Obtainemployment/EmploySituation/EstablishTree',
-            //    success: function (res, $obj, first) {
-            //        // res:当前异步加载的数据，
-            //        //$obj:当前组件的根节点的JQuery对象，
-            //        //first:是否首次加载。
-            //        console.log(res);
-            //        //console.log($obj);
-            //        //console.log(first);
-            //        //empQuarterclassid = res.data[0].children[0].children[0].nodeId;
-            //        myleave = 1;
-            //        string2 = res.data[0].nodeId;
-            //        treedata = res.data;
-            //        loadtable();
-            //        //console.log(empQuarterclassid);
-            //    },
-            //    formatter: {
-            //        title: function (data) {  // 示例给有子集的节点返回节点统计
-            //            var s = data.context;
-            //            if (data.children) {
-            //                s += ' <span style=\'color:blue\'>(' + data.children.length + ')</span>';
-            //            }
-            //            return s;
-            //        }
-            //    },
-            //    nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
-            //    leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
-            //    icon: ["3", "11"], // 使用
-            //    response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
-            //});
-            ////绑定节点点击
-            //dtree.on("node('demoTree')", function (obj) {
-            //    isbtn = false;
-            //    string1 = "";
-            //    studentname = "";
-            //    $("#name0").val("");
-            //    //console.log(obj);
-            //    var dtreeobj = obj.param;
-            //    myleave = dtreeobj.level;
-            //    string2 = dtreeobj.nodeId;
-            //    switch (dtreeobj.level) {
-            //        //最外层
-            //        case '1':
-            //            for (var i = 0; i < treedata.length; i++) {
-            //                if (treedata[i].nodeId == dtreeobj.nodeId) {
-            //                    empQuarterclassid = treedata[i].children[0].children[0].nodeId;
-            //                    break;
-            //                }
-            //            }
+            var myDTree = dtree.render({
+                elem: "#demoTree",
+                initLevel: 1,
+                url: '/Obtainemployment/EmploySituation/EstablishTree',
+                success: function (res, $obj, first) {
+                    // res:当前异步加载的数据，
+                    //$obj:当前组件的根节点的JQuery对象，
+                    //first:是否首次加载。
+                    console.log(res);
+                    //console.log($obj);
+                    //console.log(first);
+                    //empQuarterclassid = res.data[0].children[0].children[0].nodeId;
+                    myleave = 1;
+                    string2 = res.data[0].nodeId;
+                    treedata = res.data;
+                    //loadtable();
+                    //console.log(empQuarterclassid);
+                },
+                formatter: {
+                    title: function (data) {  // 示例给有子集的节点返回节点统计
+                        var s = data.context;
+                        if (data.children) {
+                            s += ' <span style=\'color:blue\'>(' + data.children.length + ')</span>';
+                        }
+                        return s;
+                    }
+                },
+                nodeIconArray: { "3": { "open": "dtree-icon-pulldown", "close": "dtree-icon-pullup" } },  // 自定扩展的二级非最后一级图标，从1开始
+                leafIconArray: { "11": "dtree-icon-star" },  // 自定义扩展的二级最后一级图标，从11开始
+                icon: ["3", "11"], // 使用
+                response: { statusCode: 200, rootName: "data", treeId: "nodeId", title: "context" }
+            });
+            //绑定节点点击
+            dtree.on("node('demoTree')", function (obj) {
+                isbtn = false;
+                string1 = "";
+                studentname = "";
+                $("#name0").val("");
+                //console.log(obj);
+                var dtreeobj = obj.param;
+                myleave = dtreeobj.level;
+                string2 = dtreeobj.nodeId;
+                switch (dtreeobj.level) {
+                    //最外层
+                    case '1':
+                        for (var i = 0; i < treedata.length; i++) {
+                            if (treedata[i].nodeId == dtreeobj.nodeId) {
+                                empQuarterclassid = treedata[i].children[0].children[0].nodeId;
+                                break;
+                            }
+                        }
 
-            //            break;
-            //        //中间层
-            //        case '2':
-            //            empQuarterclassid = obj.childParams[0].nodeId;
+                        break;
+                    //中间层
+                    case '2':
+                        empQuarterclassid = obj.childParams[0].nodeId;
 
-            //            break;
-            //        //最里层
-            //        case '3':
+                        break;
+                    //最里层
+                    case '3':
 
-            //            empQuarterclassid = dtreeobj.nodeId;
-            //            string2 = dtreeobj.nodeId;
-            //            break;
-            //    }
-            //    loadtable00();
-            //    console.log(empQuarterclassid);
-            //});
+                        empQuarterclassid = dtreeobj.nodeId;
+                        string2 = dtreeobj.nodeId;
+                        break;
+                }
+                //loadtable00();
+                console.log(empQuarterclassid);
+            });
 
             
             table00 = table.render({

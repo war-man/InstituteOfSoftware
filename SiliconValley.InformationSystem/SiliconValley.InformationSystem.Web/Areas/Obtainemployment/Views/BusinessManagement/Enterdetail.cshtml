@@ -82,11 +82,10 @@
 </head>
 <body>
 
-    <h1 style="text-align:center;height:50px;">查看企业信息</h1>
+    @*<h1 style="text-align:center;height:50px;">查看企业信息</h1>*@
     <div>
         <form class="layui-form" action="">
-            <fieldset>
-                <legend>基础数据</legend>
+    
                 <div class="layui-row">
 
                     <div class="layui-col-md6">
@@ -140,7 +139,7 @@
 
                 </div>
 
-            </fieldset>
+      
                 <div id="list" class="layui-row layui-form-item">
 
 
@@ -161,8 +160,6 @@
                             @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "readonly", "readonly" }, { "style", "line-height:40px;color:dodgerblue;border:0px;" } })
                         </div>
                     </div>
-                </div>
-                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">联系方式</label>
                         <div class="layui-input-block">

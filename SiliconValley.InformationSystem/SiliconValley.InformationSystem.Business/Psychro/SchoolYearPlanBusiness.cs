@@ -17,8 +17,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// </summary>
         /// <returns></returns>
         public List<SchoolYearPlan> GetAll() {
-           var data= this.GetIQueryable().Where(a => a.IsDel == false).ToList();
-            return data;
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
         /// <summary>
         /// 根据计划id获取计划对象

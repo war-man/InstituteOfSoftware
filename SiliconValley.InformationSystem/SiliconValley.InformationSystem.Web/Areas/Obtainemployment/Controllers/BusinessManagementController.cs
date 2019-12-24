@@ -11,11 +11,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SiliconValley.InformationSystem.Business.Common;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    
-    using SiliconValley.InformationSystem.Business.Common;
+
+
     [CheckLogin]
     public class BusinessManagementController : Controller
     {

@@ -6,13 +6,11 @@
 <!DOCTYPE html>
 
 @using SiliconValley.InformationSystem.Entity.ViewEntity
-
-
-
-
-<link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-<script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+<script src="~/Scripts/layui/layui.js"></script>
+<script src="~/Scripts/underscore.js"></script>
+
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -167,20 +165,19 @@
             $("#index").append($(html));
         }
         $("#ipt1").keyup(function () {
-                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
-                var txt = '';
-                if (reg != null) {
-                    txt = reg[0];
-                }
-                $(this).val(txt);
-            }).change(function () {
-                $(this).keypress();
-                var v = $(this).val();
-                if (/\.$/.test(v))
-                {
-                    $(this).val(v.substr(0, v.length - 1));
-                }
-            });
+            var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+            var txt = '';
+            if (reg != null) {
+                txt = reg[0];
+            }
+            $(this).val(txt);
+        }).change(function () {
+            $(this).keypress();
+            var v = $(this).val();
+            if (/\.$/.test(v)) {
+                $(this).val(v.substr(0, v.length - 1));
+            }
+        });
         layui.use(['transfer', 'layer', 'util','form'], function () {
             var form = layui.form;
             var transfer = layui.transfer;

@@ -29,7 +29,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult CDinterviewIndex()
         {
             dbempClass = new EmpClassBusiness();
-            var list = dbempClass.GetEmpClassesByempinfoid("201908220012");
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var list = dbempClass.GetEmpClassesByempinfoid(user.EmpNumber);
             var aa = list.Select(a => new
             {
                 ClassNumber =a.ClassId
@@ -140,8 +141,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <returns></returns>
         public ActionResult SearchData0(int page, int limit, string param0, string param1)
         {
-            CacheHelper.Cache.RemoveCache("Coldairarrow.Fx.Net.Easyui.GitHub_Cache_Base_UserModel_Obtain");
+            //CacheHelper.Cache.RemoveCache("Coldairarrow.Fx.Net.Easyui.GitHub_Cache_Base_UserModel_Obtain");
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
             dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
             dbempClass = new EmpClassBusiness();
             dbproClassSchedule = new ProClassSchedule();
