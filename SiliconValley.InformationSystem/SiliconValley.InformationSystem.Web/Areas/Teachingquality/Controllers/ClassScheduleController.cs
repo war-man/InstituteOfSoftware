@@ -158,7 +158,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
                 Major_Id = a.Major_Id==null?"暂无专业": Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
-                HeadmasterName= Hadmst.ClassHeadmaster(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
+                HeadmasterName= Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
                 IsBool = classtatus.GetList().Where(c=>c.IsDelete==false&&c.id==a.ClassstatusID).FirstOrDefault()==null?"正常":classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
                  stuclasss = Stuclass.GetList().Where(c=>c.ID_ClassName==a.id&&c.CurrentClass==true).Count()//班级人数
             }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
@@ -735,8 +735,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
              dbtext.PhoneSMS("15073315702",str);
             return null;
         }
+        /// <summary>
+        /// 学员欠费页面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Studententrancefee()
         {
+            ViewBag.Stages = Grandcontext.GetList().Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
             ViewBag.ClassID = Request.QueryString["ClassID"];
             return View();
         }
@@ -746,11 +751,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult Tuitionfeeforentrancestudy(int page, int limit)
+        public ActionResult Tuitionfeeforentrancestudy(int page, int limit,string Stidentid,string Name,string StagesID)
         {
             StudentFeeStandardBusinsess studentFeeStandardBusinsess = new StudentFeeStandardBusinsess();
             var ClassID = int.Parse(Request.QueryString["ClassID"]);
             var list = studentFeeStandardBusinsess.TuitionFine(ClassID);
+            if (!string.IsNullOrEmpty(Stidentid))
+            {
+                list = list.Where(a => a.Stidentid == Stidentid).ToList();
+            }
+            if (!string.IsNullOrEmpty(Name))
+            {
+                list = list.Where(a => a.Name.Contains(Name)).ToList();
+            }
+            if (!string.IsNullOrEmpty(StagesID))
+            {
+                int staid = int.Parse(StagesID);
+                list = list.Where(a => a.StagesID == staid).ToList();
+            }
             var Myx = list.OrderBy(a => a.Stidentid).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
@@ -762,5 +780,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
      
+        /// <summary>
+        /// 升学成绩
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Entranceexaminationresults()
+        {
+            return View();
+        }
     }
 }

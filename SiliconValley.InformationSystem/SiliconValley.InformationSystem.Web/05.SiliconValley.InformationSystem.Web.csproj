@@ -308,6 +308,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
@@ -427,6 +428,7 @@
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
+    <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -1279,6 +1281,31 @@
     <Content Include="Areas\Educational\Views\EvningSelfStudy\ClassDataADIview.cshtml" />
     <Content Include="Areas\Educational\Views\ConvertCourse\ConvertCourseIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\SubstituteTeachCourse\SubstituteTeachCourseIndexView.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Insurance.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\InsuranceAdd.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Shiftwork.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Studententrancefee.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\SupplementInsuran.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Classinquiry.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Dropoutofschools.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Dropoutofschoolsdetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Exoeldetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Expel.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuilddetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuild.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Resumptionodetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Resumptionofstudy.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Successionrecord.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschool.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Transactiondetails.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschooldetailed.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentTransaction\transactionprocessing.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Entranceexaminationresults.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\FeeReport.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Otherexpenses.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Tuitionandfees.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

@@ -65,7 +65,7 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                 <label class="layui-form-label lables">报考批次 </label>
                 <div class="layui-input-inline">
-                    @Html.TextBoxFor(a => a.Registeredbatch, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入报考批次(2014)" }, { "class", "layui-input " } })
+                    @Html.TextBoxFor(a => a.Registeredbatch, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入报考批次(2014)" }, { "class", "layui-input " } })
                 </div>
             </div>
 

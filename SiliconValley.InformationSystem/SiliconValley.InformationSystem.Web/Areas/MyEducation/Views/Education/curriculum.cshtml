@@ -52,19 +52,19 @@
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                     <label class="layui-form-label lables">课程代码</label>
                     <div class="layui-input-inline">
-                        @Html.TextBoxFor(a => a.Coursecode, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入课程代码" }, { "class", "layui-input " } })
+                        @Html.TextBoxFor(a => a.Coursecode, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入课程代码" }, { "class", "layui-input " } })
                     </div>
                 </div>
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                     <label class="layui-form-label lables">学分</label>
                     <div class="layui-input-inline">
-                        @Html.TextBoxFor(a => a.Credit, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入学分" }, { "class", "layui-input " } })
+                        @Html.TextBoxFor(a => a.Credit, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入学分" }, { "class", "layui-input " } })
                     </div>
                 </div>
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                     <label class="layui-form-label lables">费用</label>
                     <div class="layui-input-inline">
-                        @Html.TextBoxFor(a => a.Cost, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入费用" }, { "class", "layui-input " } })
+                        @Html.TextBoxFor(a => a.Cost, new Dictionary<string, object>() { { "lay-verify", "required|Cost" }, { "placeholder", "请输入费用" }, { "class", "layui-input " } })
                     </div>
                 </div>
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -106,7 +106,15 @@
                 }
             });
         }
+        //正则
+        form.verify({
+            Cost: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (/\d+\.?\d{0,2}/.test(value)) {
+                        return '请输入正确的价格';
+                }
+            }
 
+        });
 
         //重置
         $("#remove").click(function () {

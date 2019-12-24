@@ -13,17 +13,41 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 学员访谈表
+    /// </summary>
     [Table(name: "InterviewStudents")]
     public partial class InterviewStudents
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 访谈话题
+        /// </summary>
         public string InterviewTopics { get; set; }
+        /// <summary>
+        /// 访谈日期
+        /// </summary>
         public Nullable<System.DateTime> Dateofinterview { get; set; }
+        /// <summary>
+        /// 访谈内容
+        /// </summary>
         public string Interviewcontent { get; set; }
+        /// <summary>
+        /// 访谈记录人（员工表）
+        /// </summary>
         public string InterviewRecorderID { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudentNumberID { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
     
        

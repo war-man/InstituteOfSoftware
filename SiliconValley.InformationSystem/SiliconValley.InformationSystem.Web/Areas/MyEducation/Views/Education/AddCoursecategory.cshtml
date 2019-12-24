@@ -28,7 +28,7 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                 <label class="layui-form-label" style="width:90px;margin-left:-10px;">课程类别名称</label>
                 <div class="layui-input-inline">
-                    @Html.TextBoxFor(a => a.Coursetitle, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入课程类别名称" }, { "class", "layui-input " } })
+                    @Html.TextBoxFor(a => a.Coursetitle, new Dictionary<string, object>() { { "lay-verify", "required|Coursetitle" }, { "placeholder", "请输入课程类别名称" }, { "class", "layui-input " } })
                 </div>
                 <label style="color:red;margin-left:70%;margin-top:-30px;display:none;" id="label">请换一个名称</label>
             </div>
@@ -145,5 +145,27 @@
             }
 
         })
+        //正则
+        form.verify({
+            Coursetitle: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                            return '类别名称不能有特殊字符';
+                        }
+                        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                            return '类别名称首尾不能出现下划线\'_\'';
+                        }
+                        if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                            return '类别名称只能由中文或字母组成';
+                        }
+                    
+                }
+
+            }
+
+        });
+
     });
 </script>

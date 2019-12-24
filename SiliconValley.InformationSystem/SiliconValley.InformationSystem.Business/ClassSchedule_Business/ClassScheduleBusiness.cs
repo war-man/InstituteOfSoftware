@@ -20,6 +20,7 @@ using SiliconValley.InformationSystem.Business.EducationalBusiness;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.ClassDynamics_Business;
 using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -643,7 +644,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 detailedcostView.ClassName =this.GetEntity( ClassName).ClassNumber;
                 detailedcostView.Name = item.Name;
                 detailedcostView.Stidentid = item.StuNameID;
-                detailedcostView.Sex = item.Sex == false ? "女" : "男";
+                detailedcostView.Sex =  studentInformationBusiness.GetEntity(item.StuNameID).Sex== false ? "女" : "男";
                 detailedcostView.HeadmasterName = Hadmst.ClassHeadmaster(ClassName)==null?"无": Hadmst.ClassHeadmaster(ClassName).EmpName;
                 detailedcostView.Phone = Hadmst.ClassHeadmaster(ClassName)==null?"无": Hadmst.ClassHeadmaster(ClassName).Phone;
                 lisrDetaild.Add(detailedcostView);
@@ -2061,6 +2062,12 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
             }
             return retus;
+        }
+
+        public object Entranceexaminationresults()
+        {
+            ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
+            return null;
         }
     }
 }

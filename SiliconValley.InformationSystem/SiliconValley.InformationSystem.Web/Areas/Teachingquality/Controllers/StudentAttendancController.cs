@@ -122,7 +122,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 count = listx.Count,
                 data = dataList
             };
-          return Json(data, JsonRequestBehavior.AllowGet);
+            return Json(data, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

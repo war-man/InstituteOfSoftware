@@ -135,11 +135,13 @@
             });
 
             //部门双击事件
-            $(".bordent").dblclick(function () {
+            $("body").on("dblclick", ".bordent", function () {
                 var name = $($($($(this).children()[0]).children()[0]).children()[0]).val();
                 console.log(name);
                 window.location = "/Teachingquality/StudentUnion/StudentUnionMemberss/" + name
             });
+
+           
         });
         function GetPartsItmes(name) {
             console.log(name);
