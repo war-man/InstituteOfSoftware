@@ -695,7 +695,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
           /// <returns></returns>
          
         [HttpGet]
-        
         public ActionResult SupplementInsuran()
         {
             detailedstudentinBusiness= new BaseBusiness<DetailedStudentIn>();
@@ -779,13 +778,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
-     
         /// <summary>
         /// 升学成绩
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         public ActionResult Entranceexaminationresults()
+        {
+            return View();
+        }
+
+        public ActionResult AddClassactivities()
         {
             return View();
         }

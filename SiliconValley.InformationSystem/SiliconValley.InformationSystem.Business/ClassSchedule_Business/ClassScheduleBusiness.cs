@@ -2035,12 +2035,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 string[] Student = insuranceView.StudentID.Split(',');
                 foreach (var item in Student)
                 {
-
                     DetailedStudentIn  studentIn= detailedstudentinBusiness.GetEntity(int.Parse(item));
-                 
                     studentIn.Endtime = insuranceView.Duedate;
                     studentIn.Starttime = insuranceView.Startdate;
-                   
                     studentIn.InsurancePremium = insuranceView.premium;
                     studentIn.Remarks = insuranceView.Remarks;
                     detaileds.Add(studentIn);
@@ -2051,7 +2048,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
                 BusHelper.WriteSysLog("保险数据修改", EnumType.LogType.编辑数据);
                 retus.Msg = "操作成功";
-
             }
             catch (Exception ex)
             {
@@ -2078,7 +2074,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 x.BaseDataEnum_Id = Types;
                 this.Update(x);
                 retus = new SuccessResult();
-                retus.Success = true;
+                retus.Success = true;  
 
                 BusHelper.WriteSysLog("班级上课时间段数据修改成功", EnumType.LogType.编辑数据);
                 retus.Msg = "更改成功";
