@@ -680,6 +680,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
              var ClassGrade = classschedu.GetEntity(ClassID).grade_Id;
             //拿到应该缴费的阶段
             var Gotoschool = classschedu.RecursionStage(ClassGrade);
+            Gotoschool.Add(new GotoschoolStage { CurrentStageID = ClassGrade, NextStageID = 0, ID = 0 });
             var StudentClass = classschedu.FintClassSchedule(ClassID);
             //拿到阶段以及应缴的费用
             foreach (var item in Gotoschool)
@@ -737,18 +738,19 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                     {
                         if (item1.Amountofmoney< item.Price)
                         {
-                            DetailedcostView detailedcostView = FineDetail(ClassID, item1.Stidentid);
+                            DetailedcostView detailedcostView =this.FineDetail(ClassID, item1.Stidentid);
                             detailedcostView.Amountofmoney = item1.Amountofmoney;
                             detailedcostView.CurrentStageID = item1.CurrentStageID;
                             detailedcostView.ShouldJiao = item.Price;
                             detailedcostView.Surplus = item.Price - item1.Amountofmoney;
+                            detailedcostView.StagesID = item1.StagesID;
                             listdetailedcs.Add(detailedcostView);
                         }
                     }
                    
                 }
             }
-            return listdetailedc;
+            return listdetailedcs;
         }
     }
 }

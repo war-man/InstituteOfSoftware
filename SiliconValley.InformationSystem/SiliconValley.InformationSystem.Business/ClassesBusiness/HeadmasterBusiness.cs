@@ -162,7 +162,6 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// <returns></returns>
         public EmployeesInfo ClassHeadmaster(int ClassName)
         {
-
             //学员班级
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
             var mysex = Hoadclass.GetList().Where(a =>  a.ClassID ==ClassName).ToList();
@@ -176,6 +175,19 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
                 head = mysex.FirstOrDefault();
             }
             var leid = head == null?new Headmaster(): this.GetEntity(head.LeaderID);
+            return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
+        }
+
+        public EmployeesInfo HeadmastaerClassFine(int ClassID)
+        {
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            var mysex = Hoadclass.GetList().Where(a => a.ClassID == ClassID).ToList();
+            HeadClass head = new HeadClass();
+           
+                head = mysex.OrderByDescending(a=>a.ID).FirstOrDefault();
+          
+            var leid = head == null ? new Headmaster() : this.GetEntity(head.LeaderID);
             return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
         }
         /// <summary>

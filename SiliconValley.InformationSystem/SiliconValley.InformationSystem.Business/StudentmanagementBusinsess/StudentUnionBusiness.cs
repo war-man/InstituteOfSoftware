@@ -103,7 +103,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                     aa.Studentnumber,//学号
                     StidentName = Student.GetList().Where(a => a.IsDelete == false && a.State == null && a.StudentNumber == aa.Studentnumber).First().Name,
                     StudentSex = Student.GetList().Where(a => a.IsDelete == false && a.State == null && a.StudentNumber == aa.Studentnumber).First().Sex,
-                    ClassName = ClassSche.GetList().Where(a => a.CurrentClass == true && a.StudentID == aa.Studentnumber).First().ClassID,
+                    ClassName = ClassSche.GetList().Where(a => a.CurrentClass == true && a.StudentID == aa.Studentnumber).FirstOrDefault()==null?"暂无": ClassSche.GetList().Where(a => a.CurrentClass == true && a.StudentID == aa.Studentnumber).First().ClassID,
                     Department= UnionDepart.GetList().Where(a=>a.Dateofregistration==false&&a.ID==aa.department).First().Departmentname,
                     Position= SUnionPosition.GetList().Where(a=>a.Dateofregistration==false&&a.ID==aa.position).First().Jobtitle,
                     aa.Inrtiationtime,

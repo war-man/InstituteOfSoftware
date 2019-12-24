@@ -24,15 +24,18 @@
             foreach (var item in Model as List<StudentInformation>)
             {
                 a++;
-                if (a > 4)
+                if (a == 1)
                 {
-                    a = 0;
-                    <br />
+                    <button type="button" style="width:135px;margin-top:10px;margin-left:10px;" class="layui-btn stu" value="@item.StudentNumber"><i class="layui-icon">&#xe770;</i>@item.Name (@item.StudentNumber.Substring(12))</button>
                 }
-              
-                    <button type="button" style="width:135px;margin-top:10px;" class="layui-btn stu"  value="@item.StudentNumber"><i class="layui-icon">&#xe770;</i>@item.Name (@item.StudentNumber.Substring(12))</button>
-        
-              
+                else
+                {
+                    <button type="button" style="width:135px;margin-top:10px;" class="layui-btn stu" value="@item.StudentNumber"><i class="layui-icon">&#xe770;</i>@item.Name (@item.StudentNumber.Substring(12))</button>
+
+                }
+
+
+
 
             }
         }

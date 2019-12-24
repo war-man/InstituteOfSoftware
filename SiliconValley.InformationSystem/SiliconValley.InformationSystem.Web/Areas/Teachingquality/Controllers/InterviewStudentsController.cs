@@ -33,6 +33,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             dbtext = new InterviewStudentsBusiness();
         }
+        //当前登陆人
+        Base_UserModel user = Base_UserBusiness.GetCurrentUser();
         //主页面
         public ActionResult Index()
         {
@@ -41,7 +43,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //主页面获取表格数据
         public ActionResult GetDate(int page, int limit, string Name, string StudentNumberID, string qBeginTime, string InterviewTopicsm, string qEndTime)
         {
-            var list = dbtext.GetList().Where(a=>a.IsDelete==false).ToList();
+           var list = new List<InterviewStudents>();
+            if (user.UserName == "Admin")
+            {
+                list = dbtext.GetList().Where(a => a.IsDelete == false).ToList();
+            }
+            else
+            {
+                list = dbtext.GetList().Where(a => a.IsDelete == false&&a.InterviewRecorderID== user.EmpNumber).ToList();
+            }
+         
             if (!string.IsNullOrEmpty(Name))
             {
                var x= student.GetList().Where(a => a.IsDelete == false && a.Name.Contains(Name)).ToList();

@@ -81,7 +81,7 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                 <label class="layui-form-label lables">考期</label>
                 <div class="layui-input-inline">
-                    @Html.TextBoxFor(a => a.Examinationperiod, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入年份+月份" }, { "class", "layui-input " } })
+                    @Html.TextBoxFor(a => a.Examinationperiod, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入年份+月份" }, { "class", "layui-input " } })
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">

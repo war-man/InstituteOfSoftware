@@ -18,11 +18,13 @@
             border: 1px;
             border-bottom-style: solid;
         }
+
         .bordel {
             line-height: 40px;
             color: dodgerblue;
             border: 0px;
         }
+
         .textl {
             width: 350px;
             height: 200px;
@@ -40,7 +42,7 @@
                 <label class="layui-form-label">培训标题</label>
                 <div class="layui-input-inline">
                     @Html.TextBoxFor(a => a.TrainingTitle, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input bordel" } })
-                   
+
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -70,3 +72,18 @@
     </div>
 </body>
 </html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate', 'upload', 'layer'], function () {
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+        $("#but1").click(function () {
+            closeopen();
+        });
+    });
+</script>
