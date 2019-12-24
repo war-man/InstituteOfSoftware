@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.Channel;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
@@ -310,10 +311,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //现在给一个固定数据id为039e3e3891eea-1e885eb2-75a3-4f82-bb9a-570d717f2af4 员工编号为201908160008 姓名：徐宝平 部门：渠道 岗位：主任
 
             dbempstaff = new EmploymentStaffBusiness();
-            var EmployeesInfo_Id = "201908160008";
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
             //拿员工对象
-            EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID(EmployeesInfo_Id);
+            EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID(user.EmpNumber);
 
             //拿岗位对象 
             var PositionInfo = dbempstaff.GetPositionByID(employeesInfo.PositionId);
@@ -326,7 +328,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.employeesInfo = employeesInfo;
             dbbeian = new StudentDataKeepAndRecordBusiness();
             //获取的是他这个备案而且是已经报名的学生集合
-            List<StudentPutOnRecord> mystudentlist = dbbeian.GetrReport(EmployeesInfo_Id);
+            List<StudentPutOnRecord> mystudentlist = dbbeian.GetrReport(user.EmpNumber);
             //获取这个员工的预资所有的预资单
             dbprefunding = new PrefundingBusiness();
             dbperinfo = new PerInfoBusiness();
