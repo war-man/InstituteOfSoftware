@@ -1247,6 +1247,12 @@
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\web.config" />
+    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\EditEmpSalary.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmplSalaryEmbody\UpdateEmpSSinfo.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\ContractEnd.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />

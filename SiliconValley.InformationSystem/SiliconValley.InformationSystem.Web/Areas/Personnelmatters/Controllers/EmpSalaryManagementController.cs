@@ -105,11 +105,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     view.NoClockWithhold = attendobj.NoClockWithhold;//缺卡扣款
                 }
 
-
                 view.OvertimeCharges = item.OvertimeCharges;//加班费用
                 view.Bonus = item.Bonus;//奖金
-
-               
+   
                 view.OtherDeductions = item.OtherDeductions;//其他扣款
                
                 #region 应发工资2赋值
