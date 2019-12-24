@@ -216,6 +216,7 @@
                 initLevel: 1,
                 url: '/Dormitory/DormitoryInfo/EstablishTree',
                 success: function (res, $obj, first) {
+                    //console.log(res);
                     jstungid = res.data[0].nodeId;
                     jsfloorid = res.data[0].children[0].nodeId;
                     loaddata();

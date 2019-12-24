@@ -18,7 +18,7 @@ using System.Xml.Linq;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 {
-    [CheckLogin]
+    //[CheckLogin]
     /// <summary>
     /// 宿舍管理控制器
     /// </summary>

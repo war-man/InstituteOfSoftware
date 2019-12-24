@@ -21,13 +21,12 @@
 <body>
     <div>
 
-        <h1 style="text-align:center;">修改教员信息</h1>
+        @*<h1 style="text-align:center;">修改教员信息</h1>*@
 
 
         <hr />
         <form class="layui-form" lay-filter="editteacher">
-            <fieldset id="jiben">
-                <legend>基本信息</legend>
+        
 
                 <div class="layui-form-item">
                     <div class="layui-inline">
@@ -78,10 +77,8 @@
                         </div>
                     </div>
                 </div>
-            </fieldset>
+       
 
-            <fieldset>
-                <legend>编辑区域</legend>
 
 
                 @Html.HiddenFor(a => a.ID)
@@ -120,7 +117,6 @@
                 </div>
 
 
-            </fieldset>
         </form>
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>

@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
@@ -17,6 +18,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
     {
         private dbprosutdent_dbproheadmaster dbprosutdent_Dbproheadmaster;
         private NotreturningLateBusiness dbnotreturn;
+        private InstructorListBusiness dbinstructorList;
         private NotreturningLateViewBusiness dbnotreturningLateViewBusiness;
         private ProStudentInformationViewBusiness dbproStudentInformationViewBusiness;
         // GET: Dormitory/Registrationforlatearrival
@@ -72,10 +74,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             AjaxResult ajaxResult = new AjaxResult();
             dbprosutdent_Dbproheadmaster = new dbprosutdent_dbproheadmaster();
             dbnotreturn = new NotreturningLateBusiness();
+            dbinstructorList = new InstructorListBusiness();
             Headmaster queryheadmaster = dbprosutdent_Dbproheadmaster.GetHeadmasterByStudentNumber(notreturningLate.StudentNumber);
             notreturningLate.AddTime = DateTime.Now;
             notreturningLate.HeadMasterID = queryheadmaster.ID;
-            notreturningLate.Inspector = 1;
+
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            var query = dbinstructorList.GetInstructorByempid(user.EmpNumber);
+            notreturningLate.Inspector = query.ID;
+
             notreturningLate.IsDelete = false;
 
             if (dbnotreturn.AddNotreturningLate(notreturningLate))
