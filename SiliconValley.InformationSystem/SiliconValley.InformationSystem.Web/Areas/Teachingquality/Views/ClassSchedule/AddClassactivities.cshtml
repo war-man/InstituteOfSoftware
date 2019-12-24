@@ -1,0 +1,118 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.MyEntity.Classactivities
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddClassactivities</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div>
+        <h3 style="text-align:center;margin-top:30px;">@ViewBag.Name</h3>
+        <div>
+            <form class="layui-form" action="" id="form">
+                <div class="layui-container">
+                    <fieldset>
+
+                        <legend>基础数据</legend>
+
+                        <div class="layui-row layui-form-item">
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label" id="lab1">班级名称</label>
+                                <div class="layui-input-inline">
+
+                                    @Html.HiddenFor(a => a.ID)
+                                    <input type="text" value="@ViewBag.ClassName" disabled="disabled" class="layui-input bordel" />
+                                    @Html.HiddenFor(a => a.ClassID, new Dictionary<string, object>() { { "lay-verify", "required" } })
+
+                                </div>
+                            </div>
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label">活动类型</label>
+                                <div class="layui-input-inline">
+                                    @Html.TextBoxFor(a => a.Activitytype, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入班会标题" }, { "class", "layui-input width" } })
+
+                                </div>
+                            </div>
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+
+                                <label class="layui-form-label">活动日期</label>
+
+                                <div class="layui-input-block">
+                                    @{
+                                        string str = Model.Activitytime.ToString();
+                                        string mystr = "";
+
+                                        if (str != "")
+                                        {
+                                            str = str.Substring(0, str.Length - 8);
+                                            string[] strin = str.Split('/');
+                                            foreach (var item in strin)
+                                            {
+                                                string dateti = item;
+                                                if (Convert.ToInt32(item) < 10)
+                                                {
+                                                    dateti = "0" + item;
+                                                }
+                                                mystr += dateti + "-";
+                                            }
+                                            <input type="text" id="Classmeetingdate" value="@mystr.Substring(0,mystr.Length-1)" name="Classmeetingdate" lay-verify="date|required" autocomplete="off" placeholder="年-月-日" class="layui-input linu" />
+                                        }
+                                        else
+                                        {
+                                            @Html.TextBoxFor(a => a.Activitytime, new Dictionary<string, object>() { { "lay-verify", "date|required" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                                        }
+
+
+                                    }
+
+
+
+
+                                </div>
+
+                            </div>
+
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label">活动地点</label>
+                                <div class="layui-input-block">
+                                    @Html.TextAreaFor(a => a.place, new Dictionary<string, object>() { { "placeholder", "请输入班会内容" }, { "lay-verify", "required|MyText" }, { "class", "llayui-textarea Nation" } })
+                                </div>
+                            </div>
+                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                                <label class="layui-form-label">备注</label>
+                                <div class="layui-input-block">
+                                    @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入备注" }, { "class", "llayui-textarea Nation" } })
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+
+                    </fieldset>
+                </div>
+                <div class="layui-row layui-form-item" style="margin-top:20px;">
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                            <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

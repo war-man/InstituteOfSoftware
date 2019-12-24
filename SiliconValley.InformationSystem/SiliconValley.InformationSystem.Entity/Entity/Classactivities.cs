@@ -18,13 +18,37 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
-        public string ClassNumber { get; set; }
+        /// <summary>
+        /// 班级id
+        /// </summary>
+        public int ClassID { get; set; }
+        /// <summary>
+        /// 活动地点
+        /// </summary>
         public string place { get; set; }
+        /// <summary>
+        /// 参加人数
+        /// </summary>
         public Nullable<int> Number { get; set; }
+        /// <summary>
+        /// 活动类型
+        /// </summary>
         public string Activitytype { get; set; }
+        /// <summary>
+        /// 活动时间
+        /// </summary>
         public Nullable<System.DateTime> Activitytime { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        ///  是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
     }
 }

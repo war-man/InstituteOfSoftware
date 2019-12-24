@@ -48,13 +48,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //    List<EmployeesInfo> EmployeesInfoList = new List<EmployeesInfo>();
 
 
-            var emp=   employeesInfoManage.GetList().Where(a => a.IsDel == false).ToList();
-       var dataList = list.Select(c=>new { c.informatiees_Id, informatiees_Name = employeesInfoManage.GetEntity(c.informatiees_Id).EmpName,
+        var emp=   employeesInfoManage.GetList().Where(a => a.IsDel == false).ToList();
+        var dataList = list.Select(c=>new { c.informatiees_Id, informatiees_Name = employeesInfoManage.GetEntity(c.informatiees_Id).EmpName,
         informatiees_Sex = emp.Where(a=>a.EmployeeId==c.informatiees_Id).FirstOrDefault().Sex ,
         Name = business.GetList().Where(a=>a.Pid== emp.Where(q=>q.EmployeeId==c.informatiees_Id).FirstOrDefault().PositionId&&a.IsDel==false).FirstOrDefault().PositionName,
         EntryTime = emp.Where(a=>a.EmployeeId==c.informatiees_Id).FirstOrDefault().EntryTime,
-        ID=c.ID
-    }).OrderBy(a => a.informatiees_Id).Skip((page - 1) * limit).Take(limit).ToList();
+            DeptName=   employeesInfoManage.GetDeptByEmpid(dbtext.GetEntity(c.ID).informatiees_Id).DeptName,
+            ID =c.ID
+        }).OrderBy(a => a.informatiees_Id).Skip((page - 1) * limit).Take(limit).ToList();
         //  var x = dbtext.GetList();
         var data = new
         {
