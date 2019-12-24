@@ -9,7 +9,11 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
-    //[CheckLogin]
+
+    /// <summary>
+    /// 找生年计划控制器
+    /// </summary>
+    [CheckLogin]
     public class SchoolYearPlanController : Controller
     {
         /// <summary>
@@ -106,20 +110,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(ajaxResult,JsonRequestBehavior.AllowGet) ;
         }
 
+
+        [HttpGet]
         /// <summary>
         /// 修改计划 只能修改当前这年得计划。
         /// 不能修改其他年份得计划
         /// </summary>
         /// <param name="param0"></param>
         /// <returns></returns>
-        public ActionResult EidtSchoolYearPlan(string param0)
+        public ActionResult EidtSchoolYearPlan(int param0)
         {
             dbplan = new SchoolYearPlanBusiness();
             SchoolYearPlan query = dbplan.GetEntity(param0);
             ViewBag.data = Newtonsoft.Json.JsonConvert.SerializeObject(query);
             return View();
 
+        }
 
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult EidtSchoolYearPlan(SchoolYearPlan param0)
+        {
+            AjaxResult ajaxResult = new AjaxResult();
+            try
+            {
+                dbplan = new SchoolYearPlanBusiness();
+                SchoolYearPlan querydata=  dbplan.GetEntity(param0.ID);
+                querydata.AreaNumber = param0.AreaNumber;
+                querydata.Estimatednumberofwordofmouth = param0.Estimatednumberofwordofmouth;
+                querydata.PredictedNetworkNumber = param0.PredictedNetworkNumber;
+                querydata.Remak = param0.Remak;
+                querydata.Title = param0.Title;
+                dbplan.Update(querydata);
+                ajaxResult.Success = true;
+            }
+            catch (Exception ex)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请联系信息部成员！";
+            }
+            return Json(ajaxResult, JsonRequestBehavior.AllowGet);
 
         }
     }

@@ -4,44 +4,39 @@
     <meta charset="utf-8">
     <title>穿梭框组件</title>
 
-    <link href="~/Scripts/layui-v2.5.4/layui/css/layui.css" rel="stylesheet" />
+
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/layui-v2.5.4/layui/layui.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
     <style>
-        .fiCss1 {
-            float: left;
-        }
     </style>
 </head>
 <body>
     <div>
         <form class="layui-form" action="">
-            <div class="layui-container">
-                <div class="layui-col-xs9 layui-col-sm9 layui-col-md9">
-                    <fieldset class="fiCss1">
-                        <legend>分配区域</legend>
-                        <div class="layui-row layui-form-item">
 
-                            <div id="test4" class="demo-transfer"></div>
-
+            <div class="layui-container" style="margin-top:5%;">
+                <div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
+                    <div class="layui-row layui-form-item">
+                        <label class="layui-form-label">选择区域：</label>
+                        <div class="layui-input-inline" id="regiondiv" style="width: 76%;">
+          
                         </div>
-                    </fieldset>
+                    </div>
+
                 </div>
-                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                    <fieldsetn class="fiCss1">
-                        <legend>选择上级</legend>
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <div class="layui-input-inline">
-                                    <input type="text" name="channelstaffid" id="channelstaffid" value="@ViewBag.ChannelStaffID" hidden="hidden" />
-                                    @Html.DropDownList("dudu", ViewBag.shangji as List<SelectListItem>)
-                                </div>
-                                <div class="layui-input-inline">
-                                    <button type="button" onclick="DistributionArea()">安排</button>
-                                </div>
-                            </div>
+                <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                    <div class="layui-row layui-form-item">
+                        <label class="layui-form-label">选择上级：</label>
+                        <div class="layui-input-inline" style="width:119px;">
+                            <input type="text" name="channelstaffid" id="ChannelStaffID" value="@ViewBag.ChannelStaffID" hidden="hidden" />
+                            <select name="RegionalDirectorID" lay-filter="myselect" id="Superiordiv">
+                            </select>
                         </div>
-                    </fieldsetn>
+                        
+                        <button class="layui-btn layui-btn-radius layui-btn-primary" lay-submit lay-filter="btn1">安排</button>
+                    </div>
                 </div>
 
             </div>
@@ -49,59 +44,109 @@
     </div>
 
 
+    <script type="text/template" id="muban0">
+        <option value="{{=value}}">{{=title}}</option>
+    </script>
+
+   <script type="text/template" id="muban1">
+           <input type="checkbox" name="RegionID" class="myRegion" lay-skin="primary" title="{{=RegionName}}" value="{{=ID}}">
+   </script>
 
     <script>
-        var mytransfer;
-       
+      
+
         layui.use(['transfer', 'layer', 'util'], function () {
-            var $ = layui.$
-                , transfer = layui.transfer
-                , layer = layui.layer
-                , util = layui.util;
+            var $ = layui.$, transfer = layui.transfer, layer = layui.layer, util = layui.util, form = layui.form;
 
-            var data = JSON.parse('@Html.Raw(ViewBag.regions)');
-            //显示搜索框
-            transfer.render({
-                elem: '#test4'
-                , data: data
-                , title: ['可分配区域', '已分配区域']
-                , showSearch: true
-                ,id: 'mykey' //定义索引
-                ,parseData: function(res){
-                    return {
-                      "value": res.ID //数据值
-                      ,"title": res.RegionName //数据标题
-                      ,"disabled": res.disabled  //是否禁用
-                      ,"checked": res.checked //是否选中
+
+
+            jQuery(function () {
+                loadSuperior();
+                loadregion();
+            });
+            function loadSuperior() {
+                var data = JSON.parse('@Html.Raw(ViewBag.shangji)');
+                $("#Superiordiv").children().remove();
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban0").html());
+                    var html = obj({ value: data[i].Value, title: data[i].Text });
+                    $("#Superiordiv").append($(html));
+                }
+                form.render();
+            }
+
+            function loadregion() {
+                var data = JSON.parse('@Html.Raw(ViewBag.regions)');
+                $("#regiondiv").children().remove();
+                console.log(data);
+                for (var i = 0; i < data.length; i++) {
+                    var obj = _.template($("#muban1").html());
+                    var html = obj({ RegionName: data[i].RegionName, ID: data[i].ID });
+                    $("#regiondiv").append($(html));
+                }
+                checkyes();
+                form.render();
+            }
+
+            function checkyes() {
+                var data = JSON.parse('@Html.Raw(ViewBag.yes)');
+                $('.myRegion').each(function (index) {
+                    for (var i = 0; i < data.length; i++) {
+                        if ($(this).val() == data[i].ID) {
+                            $(this).attr('checked', 'checked');
+                        }
                     }
-                  }
-            })
-            mytransfer = transfer;
-        });
+                });
+            }
 
-        function DistributionArea() {
-            var empinfoid= $("#dudu").val();
-            var channelstaffid = $("#channelstaffid").val();
-            var data = mytransfer.getData('mykey');
-            $.ajax({
-                url: "/Market/ChannelStaff/DoDistribution",
-                type: "POST",
-                data: {empinfoid:empinfoid,channelstaffid:channelstaffid,jsonarr:JSON.stringify(data)},
-                async: true,
-                success: function (data) {
-                    if (data.Success) {
-                        layer.msg(data.Msg, { icon: 1 }, function () {
-                            //先得到当前iframe层的索引
-                            var index = parent.layer.getFrameIndex(window.name);
-                            parent.layer.close(index); //再执行关闭
+
+
+            form.on('submit(btn1)', function (data) {
+                console.log(data.elem) //被执行事件的元素DOM对象，一般为button对象
+                console.log(data.form) //被执行提交的form对象，一般在存在form标签时才会返回
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+                var arr = new Array();
+                $("input:checkbox[name='RegionID']:checked").each(function (i) {
+                    arr[i] = $(this).val();
+                });
+                data.field.RegionIDs = arr.join(",");//将数组合并成字符串
+                console.log(data.field);
+                $.ajax({
+                    url: '/Market/ChannelStaff/DoDistribution',
+                    //async: false,
+                    type:'POST',
+                    data: { param0: data.field },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('录入完成！', { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                                close();
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
                         });
                     }
-                },
-                error: function(data){
+                });
 
-                }
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
             });
-        }
+
+            function close() {
+                //先得到当前iframe层的索引
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+
+       
     </script>
 </body>
 </html>

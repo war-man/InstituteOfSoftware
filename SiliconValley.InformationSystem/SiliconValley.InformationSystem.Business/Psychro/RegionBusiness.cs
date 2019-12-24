@@ -12,6 +12,8 @@ namespace SiliconValley.InformationSystem.Business.Psychro
     /// </summary>
     public class RegionBusiness : BaseBusiness<Region>
     {
+        private ChannelAreaBusiness dbemparea;
+
         /// <summary>
         /// 获取全部区域
         /// </summary>
@@ -32,12 +34,13 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// <summary>
         /// 获取没有分配的区域
         /// </summary>
-        /// <param name="dbchannelarea"></param>
+        
         /// <returns></returns>
-        public List<Region> GetNoDistribution(ChannelAreaBusiness dbchannelarea)
+        public List<Region> GetNoDistribution()
         {
+            dbemparea = new ChannelAreaBusiness();
             var regionlist = this.GetRegions();
-            var channelarealist = dbchannelarea.GetChannelAreas();
+            var channelarealist = dbemparea.GetChannelAreas();
             for (int i = regionlist.Count - 1; i >= 0; i--)
             {
                 foreach (var item in channelarealist)
@@ -51,6 +54,41 @@ namespace SiliconValley.InformationSystem.Business.Psychro
                 }
             }
             return regionlist;
+        }
+
+        /// <summary>
+        /// 根据员工id返回出这个员工分配的区域
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public List<Region> GetRegionsByempid(int channelid) {
+            dbemparea = new ChannelAreaBusiness();
+           var data= dbemparea.GetChannelAreas().Where(a => a.ChannelStaffID == channelid).ToList();
+            return this.ChannelAreaconversionRegion(data);
+        }
+
+        /// <summary>
+        ///将员工分配区域对象转化为区域id
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public Region ChannelAreaconversionRegion(ChannelArea param0) {
+           return  this.GetEntity(param0.RegionID);
+        }
+
+        /// <summary>
+        ///将员工分配区域对象转化为区域id
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <returns></returns>
+        public List<Region> ChannelAreaconversionRegion(List<ChannelArea> param0)
+        {
+            List<Region> result = new List<Region>();
+            foreach (var item in param0)
+            {
+                result.Add(this.GetEntity(item.RegionID));
+            }
+            return result;
         }
     }
 }

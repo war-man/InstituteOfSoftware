@@ -103,14 +103,17 @@
                             type: 2,
                             content: "/Market/SchoolYearPlan/EidtSchoolYearPlan?param0=" + data.ID,
                             title: "修改年度计划",
-                            area: ['690px', '830px'],
-                            //area: ['850px', '760px'],
+                            area: ["700px", "420px"],
                             success: function (layero, index) {
-                                let body = layui.layer.getChildFrame('body', index);
-                                body.find("#classnumnber").val(clickclassnumber);
+                                //let body = layui.layer.getChildFrame('body', index);
+                                //body.find("#classnumnber").val(clickclassnumber);
                             },
                             end: function () {
-                                reloadtable();
+                                  MrDtableIns.reload('Enterprise', {
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
                             }
                         });
                     }

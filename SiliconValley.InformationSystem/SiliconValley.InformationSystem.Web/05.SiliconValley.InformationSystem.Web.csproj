@@ -884,7 +884,6 @@
     <Content Include="Areas\Market\Views\NetClientRecord\AddNetConsultStuinfo.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\DetailInfo.cshtml" />
     <Content Include="Areas\Market\Views\NetClientRecord\EditView.cshtml" />
-    <Content Include="Areas\Market\Views\ChannelYearPlan\ChannelYearPlanIndex.cshtml" />
     <Content Include="Areas\Market\Views\ConsultTeacher\ConsultTeacherIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\MarketChairIndex.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\ThisIsImageDataView.cshtml" />
@@ -1279,6 +1278,7 @@
     <Content Include="Areas\Educational\Views\ConvertCourse\ConvertCourseIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\SubstituteTeachCourse\SubstituteTeachCourseIndexView.cshtml" />
     <Content Include="Areas\Market\Views\SchoolYearPlan\EidtSchoolYearPlan.cshtml" />
+    <Content Include="Areas\Market\Views\ChannelYearPlan\NewChannelYearPlanIndex.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />

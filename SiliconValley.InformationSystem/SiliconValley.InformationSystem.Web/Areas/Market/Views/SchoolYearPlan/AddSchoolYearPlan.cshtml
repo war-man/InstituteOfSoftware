@@ -13,27 +13,6 @@
     <title>添加年度计划</title>
 
     <style>
-        #but1 {
-            position: absolute;
-            top: 13%;
-            left: 35%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-
-            #but1:hover {
-                background-color: aqua;
-            }
-
-        #Nation {
-            width: 100px;
-        }
-
-        .linu {
-            width: 200px;
-        }
     </style>
     <script src="~/Scripts/underscore.js"></script>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
@@ -115,9 +94,6 @@
             </div>
 </form>
     </div>
-
-
-
     <script>
         var MrDLayer;
         layui.use(['form', 'layedit', 'laydate'], function () {
@@ -150,15 +126,11 @@
                         console.log(data);
                         if (data.Success) {
                             layer.msg(data.Msg, { icon: 1 }, function () {
-                                //先得到当前iframe层的索引
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index); //再执行关闭
+                                close();
                             })
                         } else {
                             layer.msg(data.Msg, { icon: 1 }, function () {
-                                //先得到当前iframe层的索引
-                                var index = parent.layer.getFrameIndex(window.name);
-                                parent.layer.close(index); //再执行关闭
+                                close();
                             });
                         }
                     },
@@ -171,13 +143,14 @@
         });
 
         $("#clode").click(function () {
+            close();
+        });
+        function close() {
             //先得到当前iframe层的索引
             var index = parent.layer.getFrameIndex(window.name);
             parent.MrDLayer.close(index); //再执行关闭
-        });
+        }
 
     </script>
-
-
 </body>
 </html>

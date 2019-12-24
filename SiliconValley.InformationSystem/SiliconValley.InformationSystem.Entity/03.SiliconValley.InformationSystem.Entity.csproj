@@ -366,6 +366,8 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
+    <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
+    <Compile Include="ViewEntity\MarketView\DistributionView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
     <Compile Include="ViewEntity\MrdCircleRightView.cs" />
     <Compile Include="ViewEntity\MrdCircleView.cs" />
