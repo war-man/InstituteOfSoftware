@@ -317,6 +317,7 @@
     <Compile Include="Common\SystemMenuManage.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -2846,6 +2847,7 @@
     <Content Include="uploadXLSXfile\Sheet1.xlsx" />
     <Content Include="uploadXLSXfile\湖南硅谷云教育科技有限公司_考勤报表_20191101-20191130%281%29.xlsx" />
     <Content Include="Views\Home\rtest.cshtml" />
+    <Content Include="Views\Student\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
