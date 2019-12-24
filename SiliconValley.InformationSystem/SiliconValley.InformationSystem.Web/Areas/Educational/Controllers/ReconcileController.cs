@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     [CheckLogin]
     public class ReconcileController : BaseMvcController
     {
-        // GET: /Educational/Reconcile/SerachReconcile_Index
+        // GET: /Educational/Reconcile/TimeName
         static readonly ReconcileManeger Reconcile_Entity = new ReconcileManeger();
         private EmployeesInfoManage dbemployeesInfo;
         static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
@@ -860,7 +860,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             bool s= Reconcile_Entity.AidClassData(startime, count, class_id);
             return Json(s,JsonRequestBehavior.AllowGet);
         }
-        
+
         #endregion
+
+        /// <summary>
+        /// 修改班级上课时间段页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UpdateClassView()
+        {
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grandlist = g_list;
+
+            //获取上课时间段
+            BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
+            List<BaseDataEnum> basesataenum = base_Entity.GetsameFartherData("上课时间类型");
+            ViewBag.baseE = basesataenum;
+            return View();
+        }
+        
+        public ActionResult UpdateClassFunction()
+        {
+            int class_id=Convert.ToInt32( Request.Form["class_select"]);
+            string time = Request.Form["time"];
+            BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
+            int time2 = base_Entity.GetsameFartherData("上课时间类型").Where(b=>b.Name==time).FirstOrDefault().Id;
+            return null;
+
+        }
     }
 }

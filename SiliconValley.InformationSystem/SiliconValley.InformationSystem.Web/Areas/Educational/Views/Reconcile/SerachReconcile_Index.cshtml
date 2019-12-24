@@ -129,6 +129,7 @@
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData">班级调课</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData">修改班级上专业课时间段</button>
         </div>
     </script>
 </div>
@@ -312,6 +313,18 @@
                         layer.open({
                             type: 2,
                             content: '/Educational/Reconcile/ClassBigDataAID',
+                            area: ['680px', '450px'],
+                            title: '班级数据修改'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                    case 'Class_getUpdateData':
+                        //班级调课
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Reconcile/UpdateClassView',
                             area: ['680px', '450px'],
                             title: '班级数据修改'
                             , shade: 0.8
