@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="mywarp" style="text-align:center; margin-top:100px;">
+
+    <button style="width:150px; height:150px;" id="survey" class="layui-btn layui-btn-primary" type="button">满意度填写</button>
+    <button style="width:150px; height:150px;" id="exam" class="layui-btn layui-btn-primary" type="button">考试</button>
+
+</div>
+
+@section script{
+    
+ <script>
+
+
+     layui.use(['layer'], function(){
+     
+     var layer = layui.layer;
+
+         $("#survey").click(function () {
+
+             window.location.href = '/Teaching/SatisfactionSurvey/StudentSurveyIndex'
+
+         });
+
+         $("#exam").click(function () {
+
+             window.location.href = '/ExaminationSystem/StudentExamSys/StuExamIndex'
+
+         });
+
+     });
+
+
+    </script>   
+    
+ }

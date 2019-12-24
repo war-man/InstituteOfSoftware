@@ -79,7 +79,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                             SessionHelper.Session["studentnumber"] = student.StudentNumber;
                             err.Success = true;
                             err.Msg = "登陆成功!";
-                            err.Data = "/ExaminationSystem/StudentExamSys/StuExamIndex";
+                            err.Data = "/Student/Index";
 
                             //获取权限
 
