@@ -159,6 +159,7 @@
     <Compile Include="Entity\EntSpee.cs" />
     <Compile Include="Entity\Equipment.cs" />
     <Compile Include="Entity\EvningSelfStudy.cs" />
+    <Compile Include="Entity\ExamBreach.cs" />
     <Compile Include="Entity\Examination.cs" />
     <Compile Include="Entity\ExaminationPaper.cs" />
     <Compile Include="Entity\ExaminationRoom.cs" />

@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
-
+    [CheckLogin]
     public class RecordOfConversationController : Controller
     {
 

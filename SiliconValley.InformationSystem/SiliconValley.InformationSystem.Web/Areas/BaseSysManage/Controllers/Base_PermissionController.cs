@@ -11,6 +11,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
     using SiliconValley.InformationSystem.Business;
     using SiliconValley.InformationSystem.Entity.Base_SysManage;
     using System.Xml;
+    [CheckLogin]
     public class Base_PermissionController : Controller
     {
         // GET: BaseSysManage/Base_Permission

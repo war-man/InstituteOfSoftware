@@ -20,6 +20,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
     /// <summary>
     /// 学员成绩控制器
     /// </summary>
+    /// 
+    [CheckLogin]
     public class ExamScoresController : Controller
     {
         // GET: ExaminationSystem/ExamScores

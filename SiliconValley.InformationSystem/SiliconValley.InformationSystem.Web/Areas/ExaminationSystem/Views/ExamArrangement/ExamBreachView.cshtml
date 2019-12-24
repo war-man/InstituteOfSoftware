@@ -1,0 +1,139 @@
+﻿
+@{
+    ViewBag.Title = "ExamBreachView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<div id="mywarp">
+
+
+    <div id="toor">
+
+        <form class="layui-form">
+
+            <div class="layui-form-item">
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">考试</label>
+                    <div class="layui-input-inline">
+                        <select name="Exam" lay-verify="required" lay-filter="Exam" lay-search="">
+                            @{
+                                foreach (var item in ViewBag.Examlist as List<Examination>)
+                                {
+                                    <option value="@item.ID">@item.Title</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label"></label>
+                        <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="search" id="search">查询</button>
+                    </div>
+
+
+                </div>
+
+                <div class="layui-inline">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label"></label>
+                        <button type="button" class="layui-btn layui-btn-primary"  id="AddBreach"><i class="layui-icon layui-icon-add-1"></i>记录违纪情况</button>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </form>
+
+    </div>
+
+    <div id="table">
+
+        <table class="layui-hide" lay-filter="ExamBreach" id="ExamBreach"></table>
+
+    </div>
+
+
+</div>
+
+@section script{
+
+    <script>
+        layui.use(['form', 'table', 'layer'], function () {
+
+
+            var form = layui.form;
+            var table = layui.table;
+            var layer = layui.layer;
+
+            table.render({
+                elem: '#ExamBreach'
+                , url: '/ExaminationSystem/ExamArrangement/ExamBreachData?examid=0'
+                , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                    title: '提示'
+                    , layEvent: 'LAYTABLE_TIPS'
+                    , icon: 'layui-icon-tips'
+                }]
+                , id: "ExamBreach"
+                , title: '用户数据表'
+                , cols: [[
+                    { type: 'checkbox', fixed: 'left' }
+                    , { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
+                    , { field: 'ExamTitle', title: '考试名称', width: "30%" }
+                    , {
+                        field: 'StudentName', title: '学员名称', width: "30%"
+                    }
+
+                    , { field: 'Breach', title: '违纪情况', width: "30%", sort: true }
+
+
+                ]]
+                , page: true
+            });
+
+            form.on('submit(search)', function (data) {
+
+                console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+
+               
+
+                table.reload('ExamBreach', {
+                    url: '/ExaminationSystem/ExamArrangement/ExamBreachData'
+                    , where: {
+
+                        examid: data.field.Exam,
+                       
+                    } //设定异步数据接口的额外参数
+                    //,height: 300
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+
+
+            //添加违纪情况
+
+            $("#AddBreach").click(function () {
+
+                layer.open({
+                    type: 2,
+                    area: ["800px", '600px'],
+                    title: "+违纪情况",
+                    content:"/ExaminationSystem/ExamArrangement/AddExamBreachView",
+
+                });
+            });
+
+        });
+    </script>
+
+}
+
+
+

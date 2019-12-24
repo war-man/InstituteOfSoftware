@@ -9,6 +9,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView;
 
     //考试成绩业务类
@@ -333,8 +334,70 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return classlist;
         }
 
-      
-        
 
+        /// <summary>
+        /// 获取班级升学成绩
+        /// </summary>
+        /// <param name="classid">班级ID</param>
+        /// <param name="grandId">阶段ID</param>
+        /// <returns></returns>
+        public List<StudentExamScoreView> ClassScores(int classid, int grandId)
+        {
+
+            var list =db_exam.AllExamination();
+
+            //筛选出 升学考试
+            List<ExaminationView> examviewlist = new List<ExaminationView>();
+
+            foreach (var item in list)
+            {
+                //var exam = db_exam.AllExamination().Where(d => d.ID == item.Examination).FirstOrDefault();
+
+                var examview = db_exam.ConvertToExaminationView(item);
+
+                if (examview.ExamType.GrandID == grandId && examview.ExamType.ExamTypeID == 1)
+                {
+
+                    examviewlist.Add(examview);
+                }
+               
+            }
+
+            ///筛选出班级学生
+
+            List<CandidateInfo> candidateifnolist = new List<CandidateInfo>();
+
+
+            foreach (var item in examviewlist)
+            {
+               var candidlist = db_exam.AllCandidateInfo(item.ID).Where(d=>d.ClassId == classid).ToList();
+
+                if (candidlist != null)
+                {
+                    candidateifnolist.AddRange(candidlist);
+                }
+            }
+
+            //获取成绩
+            List<StudentExamScoreView> scorelist = new List<StudentExamScoreView>();
+
+            foreach (var item in candidateifnolist)
+            {
+                var score = this.AllExamScores().Where(d=>d.CandidateInfo == item.CandidateNumber).FirstOrDefault();
+
+                if (score != null)
+                {
+                   var tempobj = this.ConvertToStudentExamScoreView(score);
+
+                    if (tempobj != null)
+                    {
+                        scorelist.Add(tempobj);
+                    }
+                }
+            }
+
+
+            return scorelist;
+        }
     }
 }
