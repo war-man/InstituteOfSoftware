@@ -303,6 +303,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\InterviewStudentsController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentAttendancController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
+    <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
@@ -1247,6 +1248,12 @@
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\web.config" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Entranceexaminationresults.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Insurance.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\InsuranceAdd.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Shiftwork.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\SupplementInsuran.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Studententrancefee.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />

@@ -54,7 +54,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public int grade_Id { get; set; }
         /// <summary>
-        /// 枚举 1是上午
+        /// 上课时间段
         /// </summary>
         public Nullable<int> BaseDataEnum_Id { get; set; }
         /// <summary>

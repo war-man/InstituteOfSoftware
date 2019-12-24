@@ -2063,6 +2063,37 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return retus;
         }
+        /// <summary>
+        /// 修改班级上课时间段
+        /// </summary>
+        /// <param name="ClassID">班级id</param>
+        /// <param name="Types">上午或者下午id</param>
+        /// <returns></returns>
+        public AjaxResult Modifyclasstime(int ClassID,int Types)
+        {
+          var x=  this.GetEntity(ClassID);
+            AjaxResult retus = null;
+            try
+            {
+                x.BaseDataEnum_Id = Types;
+                this.Update(x);
+                retus = new SuccessResult();
+                retus.Success = true;
+
+                BusHelper.WriteSysLog("班级上课时间段数据修改成功", EnumType.LogType.编辑数据);
+                retus.Msg = "更改成功";
+            }
+            catch (Exception ex)
+            {
+
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, EnumType.LogType.系统异常);
+            }
+            return retus;
+        }
 
         public object Entranceexaminationresults()
         {
