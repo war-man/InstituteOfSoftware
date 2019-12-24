@@ -9,9 +9,66 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Entranceexaminationresults</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
 </head>
 <body>
-    <div> 
+    <div>
+        <input type="text" value="@ViewBag.ClassID" style="display:none;" id="ClassID" />
     </div>
+    <table class="layui-hide" id="test" lay-filter="test"></table>
+
 </body>
 </html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+
+        //表格渲染
+        table.render({
+            elem: '#test'
+            , url: '/Teachingquality/ClassSchedule/EntranceexaminationresultsDate?ClassID=' + $("#ClassID").val()
+            , toolbar: '#toolbarDemo'
+            , id: 'idTest'
+            , page: true
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , cols: [[
+                { type: 'radio' }
+                , { field: 'StudentNumber', title: '学号', sort: true }
+                , { field: 'Name', title: '姓名' }
+                , { field: 'identitydocument', title: '身份证 ' }
+                , { field: 'Sex', title: '性别 ' }
+                , { field: 'OnBoard', title: '机试 ' }
+               
+                , { field: 'Writtenexamination', title: '笔试 ' }
+                , {
+                    field: 'OnBoard', title: '总分', templet: function (c) {
+                        return c.OnBoard + c.Writtenexamination
+                    }
+                }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+            ]]
+            , page: true
+            , limit: 8
+            , limits: [8, 10, 15]
+        });
+
+
+        //查看班级学员
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            console.log(data);
+            if (layEvent === 'select') { //查看
+                window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + data.id;
+                console.log(data);
+            }
+
+        });
+          });
+
+</script>
