@@ -20,6 +20,7 @@ using System.Xml;
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
     //考试安排控制器
+    [CheckLogin]
     public class ExamArrangementController : Controller
     {
 
@@ -110,6 +111,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             return Json(obj, JsonRequestBehavior.AllowGet);
         }
 
+
+        
         public ActionResult GetChoiceQuestionByID(int id)
         {
             AjaxResult result = new AjaxResult();
@@ -315,6 +318,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             };
 
             return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 获取阶段课程
+        /// </summary>
+        /// <returns></returns>
+
+        public ActionResult GetCourseByGrand(int grandid)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+               var COURSE = db_course.GetCurriculas().Where(d => d.Grand_Id == grandid).ToList();
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = COURSE;
+            }
+            catch (Exception EX)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "";
+                result.Data = null;
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+           
         }
 
         /// <summary>
@@ -1533,6 +1566,92 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             return Json(obj, JsonRequestBehavior.AllowGet);
 
+        }
+
+
+        /// <summary>
+        /// 考试违纪情况视图
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExamBreachView()
+        {
+            //提供考试
+
+            var examlist = db_examination.AllExamination().OrderByDescending(d => d.BeginDate).ToList();
+
+            ViewBag.Examlist = examlist;
+            return View();
+
+        }
+
+
+        /// <summary>
+        /// 考试违纪数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExamBreachData(int limit, int page, int examid)
+        {
+            List<ExamBreach> examBreaches = new List<ExamBreach>();
+
+            if (examid == 0)
+            {
+                //获取全部数据
+                examBreaches = db_examination.AllExamBreach();
+            }
+            else
+            {
+
+                examBreaches = db_examination.AllExamBreach().Where(d=>d.Exam == examid).ToList();
+
+            }
+
+            BaseBusiness<StudentInformation> dbstudent = new BaseBusiness<StudentInformation>();
+
+            var skiplist = examBreaches.Skip((page - 1) * limit).Take(limit);
+
+            List<object> objlist = new List<object>();
+
+            foreach (var item in skiplist)
+            {
+                
+
+                var obj = new {
+
+                    ID = item.ID,
+                    ExamTID = item.Exam,
+                    ExamTitle = db_examination.AllExamination().Where(d => d.ID == item.Exam).FirstOrDefault().Title,
+                    StudentNumber = item.StudentNumber,
+                    StudentName = dbstudent.GetEntity(item.StudentNumber).Name,
+                    Breach = item.Breach,
+                    CreateDate = item.CreateDate
+
+
+                };
+
+                objlist.Add(obj);
+            }
+
+
+            var resultobj = new {
+
+                code = 0,
+                msg = "",
+                count = examBreaches.Count,
+                data = objlist
+
+            };
+
+            return Json(resultobj, JsonRequestBehavior.AllowGet);
+        }
+
+        
+        /// <summary>
+        /// 添加考试违纪情况
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddExamBreachView()
+        {
+            return View();
         }
     }
 }

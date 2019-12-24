@@ -21,6 +21,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
     /// <summary>
     /// 考试题库控制器
     /// </summary>
+    /// 
+    [CheckLogin]
     public class QuestionsBankController : Controller
     {
 

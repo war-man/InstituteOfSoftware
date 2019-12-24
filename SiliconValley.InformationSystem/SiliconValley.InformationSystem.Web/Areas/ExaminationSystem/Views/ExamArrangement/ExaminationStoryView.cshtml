@@ -15,12 +15,12 @@
             , toolbar: '#toolbarDemo'
             , cols: [[
                 { type: 'checkbox' },
-                { field: 'ID', width: 150, hide: true, title: 'id', sort: true },
-                    { field: 'Title', width: 150, title: '标题', sort: true },
-                { field: 'TypeName', width: 120, title: '考试类型', sort: true }
-                  ,{ field: 'grand', width: 80, title: '阶段', sort: true }
+                { field: 'ID', width: "11%", hide: true, title: 'id', sort: true },
+                { field: 'Title', width: "11%", title: '标题', sort: true },
+                { field: 'TypeName', width: "11%", title: '考试类型', sort: true }
+                , { field: 'grand', width: "11%", title: '阶段', sort: true }
                 , {
-                    field: 'BeginDate', width: 150, title: '考试时间', templet: function (res) {
+                    field: 'BeginDate', width: "11%", title: '考试时间', templet: function (res) {
 
                         var utcstr = res.BeginDate.substr(res.BeginDate.indexOf('(')+1, 13);
 
@@ -36,8 +36,8 @@
 
                     }
                 }
-                , { field: 'TimeLimit', width: 80, title: '时限', sort: true }
-                , { field: 'IsEnd', width: 80, title: '状态' }
+                , { field: 'TimeLimit', width: "11%", title: '时限', sort: true }
+                , { field: 'IsEnd', width: "11%", title: '状态' }
                 , { field: 'Remark', title: '备注', width: '30%', minWidth: 100 } //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
                
             ]]

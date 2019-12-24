@@ -1247,6 +1247,9 @@
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\StudnetIntentionIndex.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\StudnetIntention\uptstudnetintention.cshtml" />
     <Content Include="Areas\Obtainemployment\Views\web.config" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamScores\ExamScoreSearch.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ExamBreachView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\AddExamBreachView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />

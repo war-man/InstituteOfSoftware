@@ -86,11 +86,11 @@
                 , cols: [[
                     { type: 'checkbox', fixed: 'left' }
                     , { field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true, sort: true }
-                    , { field: 'ExamTitle', title: '考试名称', width: "13%", edit: 'text' }
+                    , { field: 'ExamTitle', title: '考试名称', width: "13%" }
                     , {
-                        field: 'StudentName', title: '学员名称', width: "13%", edit: 'text'}
+                        field: 'StudentName', title: '学员名称', width: "13%"}
                     
-                    , { field: 'StudentClass', title: '当时班级', width: "13%", edit: 'text', sort: true }
+                    , { field: 'StudentClass', title: '当时班级', width: "13%", sort: true }
                     , { field: 'ChooseScore', title: '选择题分数', width: "13%", templet: '<div>{{d.Score.ChooseScore}}</div>'  }
                     , { field: 'TextQuestionScore', width: "13%", title: '解答题分数', templet: '<div>{{d.Score.TextQuestionScore}}</div>' }
                     , { field: 'OnBoard', title: '机试分数', width: "13%", templet: '<div>{{d.Score.OnBoard}}</div>' }

@@ -66,6 +66,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return this.GetList().ToList();
         }
 
+        /// <summary>
+        /// 获取考试违纪情况数据
+        /// </summary>
+        /// <returns></returns>
+        public List<ExamBreach> AllExamBreach()
+        {
+            BaseBusiness<ExamBreach> dbexambreach = new BaseBusiness<ExamBreach>();
+
+            return dbexambreach.GetIQueryable().ToList();
+        }
 
         /// <summary>
         /// 转换模型视图

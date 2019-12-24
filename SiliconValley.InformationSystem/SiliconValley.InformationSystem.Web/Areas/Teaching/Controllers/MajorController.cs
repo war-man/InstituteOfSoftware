@@ -10,6 +10,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using System.IO;
+    [CheckLogin]
     public class MajorController : Controller
     {
 

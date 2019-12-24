@@ -44,7 +44,7 @@
                                 @{
                                     foreach (var item in ViewBag.ExamTypes as List<ExamTypeView>)
                                     {
-                                        <option value="@item.TypeName.ID">@item.TypeName.TypeName (@item.GrandID.GrandName)</option>
+                                        <option grandid="@item.GrandID.Id" typeid="@item.TypeName.ID" value="@item.ID">@item.TypeName.TypeName (@item.GrandID.GrandName)</option>
                                     }
                                 }
                             </select>
@@ -140,7 +140,51 @@
                 console.log(data.value); //得到被选中的值
                 console.log(data.othis); //得到美化后的DOM对象
 
-                if (data.value == "2") {
+
+
+                var type;
+                var grandid;
+                
+                $(data.elem).children().each(function (index, elem) {
+
+                    var value = $(elem).val();
+
+                    if (value == data.value) {
+                        type = $(elem).attr("typeid");
+                        grandid = $(elem).attr("grandid")
+                    }
+
+                });
+
+
+                if (type == "2") {
+
+
+                    $.ajax({
+                        url: "/ExaminationSystem/ExamArrangement/GetCourseByGrand",
+                        data: { grandid: grandid },
+                        dataType: "json",
+                        success: function (resultData) {
+
+                            console.log(resultData);
+
+                            if (resultData.ErrorCode == 200) {
+                                //清空赋值
+                                $("#course").empty();
+
+                                $("#course").append(new Option("课程", ""));
+                                $.each(resultData.Data, function (index, item) {
+                                    //赋值
+                                    console.log(item.ClassNumber);
+                                    $('#course').append(new Option(item.CourseName, item.CurriculumID));
+                                });
+                            } else {
+                                layer.msg("数据加载错误！", { icon: 2 });
+                                $("#course").append(new Option("暂无数据", ""));
+                            }
+                            layui.form.render("select");
+                        }
+                    });
 
                     $("#courseDiv").show();
 
@@ -152,7 +196,7 @@
 
 
             });      
-
+            layui.form.render("select");
 
             form.on('submit(sbumit)', function (data) {
 
@@ -167,8 +211,7 @@
                     course: data.field.course
                 };
 
-                console.log(obj);
-
+               
                 //发送请求
                 $.post("/ExaminationSystem/ExamArrangement/ReleaseExamination", obj, function (result) {
 
