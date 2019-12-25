@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>ClassDataADIview</title>
+    <title>BigDataClassChangView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 </head>
 <body>
@@ -88,7 +88,7 @@
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
                 $.ajax({
-                    url: '/Educational/Reconcile/ClassBigDataFunction',
+                    url: '/Educational/Reconcile/ClassDataClassChangfunction',
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {

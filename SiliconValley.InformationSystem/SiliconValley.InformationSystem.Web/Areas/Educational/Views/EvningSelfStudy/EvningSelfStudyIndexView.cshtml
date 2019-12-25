@@ -33,6 +33,8 @@
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">班级调课</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData2">全体上课日期调换</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength2">班级上课日期调换</button>
     </div>
 </script>
 
@@ -99,7 +101,29 @@
                             , anim: 4
                             , skin: 'demo-class'
                         });
-                        break;                   
+                        break;
+                    case 'getCheckLength2':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/EvningSelfStudy/BigDataClassChangView',
+                            area: ['780px', '450px'],
+                            title: '班级上课日期调换'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;   
+                    case 'getCheckData2':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/EvningSelfStudy/BigDataChangView',
+                            area: ['780px', '450px'],
+                            title: '全体上课日期调换'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
                 };
             });
 
