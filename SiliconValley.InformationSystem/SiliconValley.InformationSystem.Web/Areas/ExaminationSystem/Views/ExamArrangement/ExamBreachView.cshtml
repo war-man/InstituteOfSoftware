@@ -65,6 +65,65 @@
 @section script{
 
     <script>
+
+
+        ///选择考试数据窗口
+        function selectExamWindow(callback) {
+
+            layer.open({
+
+                type: 2,
+                area: ["1000px", '800px'],
+                title: "选择考试",
+                content: "/ExaminationSystem/ExamArrangement/selectExam",
+                end: callback
+
+            });
+
+        }
+
+        ///选择考试的考生数据窗口
+        function selectcandidWindow(examid,callback) {
+
+            layer.open({
+
+                type: 2,
+                area: ["1000px", '800px'],
+                title: "选择考试",
+                content: "/ExaminationSystem/ExamArrangement/selectcandidInfo?examid=" + examid,
+                end: callback
+
+            });
+
+        }
+
+        var examData;
+
+        function setexamData(exam) {
+
+            examData = exam;
+        }
+
+        function getexamData() {
+            return examData
+        }
+
+
+
+        var stuData;
+
+        function setstuData(Data) {
+
+            stuData = Data;
+        }
+
+        function getstuData() {
+            return stuData
+        }
+
+
+
+
         layui.use(['form', 'table', 'layer'], function () {
 
 
@@ -125,7 +184,15 @@
                     type: 2,
                     area: ["800px", '600px'],
                     title: "+违纪情况",
-                    content:"/ExaminationSystem/ExamArrangement/AddExamBreachView",
+                    content: "/ExaminationSystem/ExamArrangement/AddExamBreachView",
+                    end: function () {
+
+                        //刷新
+                        table.reload('ExamBreach', {
+                           
+                        });
+
+                    }
 
                 });
             });
