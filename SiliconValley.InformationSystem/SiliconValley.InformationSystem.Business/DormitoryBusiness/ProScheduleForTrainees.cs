@@ -16,6 +16,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         private ProClassSchedule dbproClassSchedule;
         private ProStudentInformationBusiness dbproStudentInformation;
 
+
         public List<ScheduleForTrainees> GetScheduleForTraineesIng() {
 
             return this.GetIQueryable().Where(a => a.CurrentClass == true).ToList();
@@ -71,6 +72,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public List<ScheduleForTrainees> GetTraineesByClassid(int classid)
         {
             dbproClassSchedule = new ProClassSchedule();
+
+            ///判断是否是毕业班级
             if (dbproClassSchedule.isgraduationclass(classid))
             {
                 return this.GetScheduleForTraineesed().Where(a => a.ID_ClassName == classid).ToList();
