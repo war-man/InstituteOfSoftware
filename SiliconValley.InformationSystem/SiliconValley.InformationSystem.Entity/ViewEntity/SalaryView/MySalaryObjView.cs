@@ -123,7 +123,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.SalaryView
         /// 缺卡扣款
         /// </summary>
         public Nullable<decimal> NoClockWithhold { get; set; }
-        
+
+        /// <summary>
+        /// 员工在职状态
+        /// </summary>
+        public Nullable<bool> EmpState { get; set; }
 
     }
 }

@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
@@ -40,11 +42,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              empIsDel=emanage.GetInfoByEmpID(e.EmployeeId).IsDel,
                              e.YearAndMonth,
                              e.RoutineWork,
-                             e.RoutineWorkPropotion,
-                             e.RoutineWorkFillRate,
+                             routineWorkPropotion=e.RoutineWorkPropotion<=1 && e.RoutineWorkPropotion>0? (e.RoutineWorkPropotion*100)+"%": e.RoutineWorkPropotion>1?e.RoutineWorkPropotion+"%":null,
+                             routineWorkFillRate=e.RoutineWorkFillRate<=1&& e.RoutineWorkFillRate>0?(e.RoutineWorkFillRate*100)+"%":e.RoutineWorkFillRate>1? e.RoutineWorkFillRate + "%":null,
                              e.OtherWork,
-                             e.OtherWorkPropotion,
-                             e.OtherWorkFillRate,
+                             otherWorkPropotion=e.OtherWorkPropotion<=1&&e.OtherWorkPropotion>0?(e.OtherWorkPropotion*100)+"%":e.OtherWorkPropotion>1? e.OtherWorkPropotion + "%":null,
+                             otherWorkFillRate=e.OtherWorkFillRate<=1&&e.OtherWorkFillRate>0?(e.OtherWorkFillRate*100)+"%":e.OtherWorkFillRate>1? e.OtherWorkFillRate + "%":null,
                              e.SelfReportedScore,
                              e.SuperiorGrade,
                              e.FinalGrade,
@@ -62,6 +64,56 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
 
             return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EditEmpPFAssess(int id) {
+            MeritsCheckManage mcmanage = new MeritsCheckManage();
+             var mc=mcmanage.GetEntity(id);
+            ViewBag.id = id;
+            return View(mc);
+        }
+        public ActionResult GetMCByid(int id) {
+            MeritsCheckManage mcmanage = new MeritsCheckManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var mc = mcmanage.GetEntity(id);
+            var mcobj = new {
+                mc.Id,
+                mc.EmployeeId,
+                empName=empmanage.GetInfoByEmpID(mc.EmployeeId).EmpName,
+                empmanage.GetInfoByEmpID(mc.EmployeeId).Sex,
+                mc.YearAndMonth,
+                mc.RoutineWork,
+                mc.RoutineWorkPropotion,
+                mc.RoutineWorkFillRate,
+                mc.OtherWork,
+                mc.OtherWorkPropotion,
+                mc.OtherWorkFillRate,
+                mc.SelfReportedScore,
+                mc.SuperiorGrade,
+                mc.FinalGrade,
+                mc.Remark,
+                mc.IsDel
+            };
+            return Json(mcobj,JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult EditEmpPFAssess(MeritsCheck mc) {
+            var AjaxResultxx = new AjaxResult();
+            MeritsCheckManage mcmanage = new MeritsCheckManage();
+            try
+            {
+                var m = mcmanage.GetEntity(mc.Id);
+                mc.EmployeeId = m.EmployeeId;
+                mc.YearAndMonth = m.YearAndMonth;
+                mc.IsDel = m.IsDel;
+                mcmanage.Update(mc);
+                AjaxResultxx = mcmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = mcmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
     }
 }

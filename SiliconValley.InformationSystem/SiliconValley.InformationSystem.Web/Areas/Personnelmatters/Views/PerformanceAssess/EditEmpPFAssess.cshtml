@@ -1,0 +1,224 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@model SiliconValley.InformationSystem.Entity.MyEntity.MeritsCheck
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditEmpPFAssess</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 13%;
+            left: 35%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+
+            #but1:hover {
+                background-color: aqua;
+            }
+
+        #Nation {
+            width: 100px;
+        }
+
+        .linu {
+            height: 100px;
+        }
+    </style>
+
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" id="Positive" lay-filter="Positive">
+            <input type="hidden" value="@ViewBag.id" id="Id" name="Id" />
+            <div class="layui-container">
+                <div class="layui-form-item" style="margin-top:20px;">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="empName" id="empName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">性别:</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="Sex" value="男" title="男">
+                            <input type="radio" name="Sex" value="女" title="女">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item" style="margin-top:20px;">
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-60px;"*@>日常工作内容:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.RoutineWork, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>日常工作权重占比:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.RoutineWorkPropotion, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>日常工作完成率:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.RoutineWorkFillRate, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label" @*style="width:160px;margin-left:-30px;"*@>其他或领导临时指派任务:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.OtherWork, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>其他工作权重占比:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.OtherWorkPropotion, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>其他工作完成率:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.OtherWorkFillRate, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>自评得分:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.SelfReportedScore, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>上级评分:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.SuperiorGrade, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注:</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-left:50px;margin-top:30px;">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(function () {
+            loademp();// 初始化编辑数据加载
+        });
+        function loademp() {
+            var id = $("#Id").val();
+
+            $.get("/Personnelmatters/PerformanceAssess/GetMCByid/" + id, function (data) {
+                layui.use(['layer', 'form', 'table'], function () {
+                    var form = layui.form;
+                    $("#empName").val(data.empName);
+                    data.Sex = data.Sex.toString();
+                    data.RoutineWorkPropotion = data.RoutineWorkPropotion>0&& data.RoutineWorkPropotion <= 1 ? (data.RoutineWorkPropotion * 100) + "%" : data.RoutineWorkPropotion + "%",
+                        data.RoutineWorkFillRate = data.RoutineWorkFillRate>0&& data.RoutineWorkFillRate <= 1 ? (data.RoutineWorkFillRate * 100) + "%" : data.RoutineWorkFillRate + "%",
+                        data.OtherWorkPropotion = data.OtherWorkPropotion >0&&data.OtherWorkPropotion <= 1 ? (data.OtherWorkPropotion * 100) + "%" : data.OtherWorkPropotion + "%",
+                        data.OtherWorkFillRate = data.OtherWorkFillRate>0&&data.OtherWorkFillRate <= 1 ? (data.OtherWorkFillRate * 100) + "%" : data.OtherWorkFillRate + "%",
+                        form.val("Positive", data);
+
+                });
+            })
+        }
+
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laydate = layui.laydate;
+
+
+            //工资输入判断
+            $(".salary").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+
+            //提交
+            form.on('submit(demo1)', function (data) {
+                console.log("提交：" + data.field.RoutineWorkPropotion);
+                $.post("/Personnelmatters/PerformanceAssess/EditEmpPFAssess", data.field, function (data) {
+                    if (data.Success) {
+                        layer.alert("编辑成功!", { icon: 1 }, function () {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    } else {
+                        layer.alert("编辑失败!");
+                    }
+                });
+                return false;
+            });
+
+            //关闭页面
+            $("#btnclose1").click(function () {
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layui.table.reload('mySalaryStatistics');
+                parent.layer.close(index);
+            });
+        });
+
+
+    </script>
+</body>
+</html>
