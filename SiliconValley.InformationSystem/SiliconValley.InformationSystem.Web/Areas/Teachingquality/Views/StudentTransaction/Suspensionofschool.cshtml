@@ -117,14 +117,13 @@
                     <td colspan="5">
 
                         <div class="layui-inline">
-                            <label class="layui-form-label">从</label>
-                         
+                            
 
                             @if (ViewBag.Types == "1")
                             {
-                                <div class="layui-input-inline startTime">
-                                    <div style="margin-top:10px;width:200px;">
-                                        @Model.qBeginTime.ToString().Substring(0, Model.qBeginTime.ToString().Length - 7)
+                                <div class="layui-input-inline startTime" style="text-align:center;">
+                                    <div style="margin-top:10px;width:240px;">
+                                        从 @Model.qBeginTime.ToString().Substring(0, Model.qBeginTime.ToString().Length - 7)
                                         至
                                         @Model.qEndTime.ToString().Substring(0, Model.qEndTime.ToString().Length - 7)
                                         休学
