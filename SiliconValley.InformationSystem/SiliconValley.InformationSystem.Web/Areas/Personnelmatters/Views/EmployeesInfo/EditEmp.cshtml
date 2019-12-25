@@ -93,7 +93,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">钉钉工号:</label>
                         <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "number" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.DDAppId, new Dictionary<string, object>() { { "lay-verify", "number|CheckDDNum" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
@@ -498,8 +498,38 @@
                             return '月份只能是1至31之间';
                         }
                     }
-                }//验证哪天
+                },//验证哪天
+                CheckDDNum: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var resultdata = check(value);
+                        console.log(resultdata);
+                        return resultdata;
+                    }
+                }//验证钉钉号是否重复
             });
+
+            function check(value) {
+                var str;
+                $.ajax({
+                    url: '/Personnelmatters/EmployeesInfo/CheckDDNum',
+                    type: 'get',
+                    async: false,
+                    data: { ddnum: value },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            str = '已经存在该钉钉号，请重新输入！';
+                        } else {
+                            str = '';
+                        }
+                    },
+                    error: function (errordata) {
+                        str = '网络不佳！';
+                    }
+                });
+                return str;
+            }
 
             //工资输入判断
             $(".salary").keyup(function () {

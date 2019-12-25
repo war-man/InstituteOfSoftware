@@ -22,6 +22,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 AttendanceInfo ese = new AttendanceInfo();
                 ese.EmployeeId = empid;
                 ese.IsDel = false;
+                ese.YearAndMonth = this.GetList().LastOrDefault().YearAndMonth;
                 this.Insert(ese);
                 result = true;
                 BusHelper.WriteSysLog("考勤表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
