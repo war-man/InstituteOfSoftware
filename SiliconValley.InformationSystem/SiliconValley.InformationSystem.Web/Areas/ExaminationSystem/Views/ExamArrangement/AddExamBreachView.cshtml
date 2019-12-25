@@ -9,9 +9,260 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>AddExamBreachView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #selectExam:hover,#selectStu:hover{
+        
+            color:blue;
+        }
+
+        .examdataItem {
+            display:inline-block;
+            margin-left:10px;
+        }
+
+        .examdataItem label {
+            font-size:18px;
+            color:blue;
+        }
+    </style>
 </head>
 <body>
-    <div> 
+    <div style="text-align:center;">
+        <div id="selectExam" style="text-align:center;margin-top:30px;cursor:pointer;"><i class="layui-icon layui-icon-flag"></i>选择考试数据</div>
+        <br />
+        <div id="examData">
+
+
+
+        </div>
+
+        <div id="selectStu" style="text-align:center;margin-top:30px; cursor:pointer;"><i class="layui-icon layui-icon-username"></i>选择学员</div>
+        <br />
+        <div id="stuData"></div>
+
+        <div style="text-align:center;">
+            <hr />
+            <div style="text-align:center;">违纪情况</div>
+            <br />
+            <textarea rows="10" style="width:90%;" id="breach"></textarea>
+        </div>
+
+        <button type="button" style="width:100px;margin-top:50px;" class="layui-btn layui-btn-primary" id="commit">提交</button>
+
     </div>
+
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script src="~/Areas/Teaching/Scripts/util.js"></script>
+    <script type="text/template" id="muban1">
+        <div>
+
+            <div class="examdataItem">
+                <label>考试标题:</label><span>{{=examTitle}}</span>
+            </div>
+
+            <div class="examdataItem">
+                <label>考试时间:</label><span>{{=examDate}}</span>
+            </div>
+            <div class="examdataItem">
+                <label>阶段:</label><span>{{=examGrand}}</span>
+            </div>
+
+            <div class="examdataItem">
+                <label>类型:</label><span>{{=examtype}}</span>
+            </div>
+
+
+        </div>
+    </script>
+
+    <script type="text/template" id="muban2">
+        <div>
+
+            <div class="examdataItem">
+                <label>姓名:</label><span>{{=name}}</span>
+            </div>
+
+            <div class="examdataItem">
+                <label>身份证:</label><span>{{=idcard}}</span>
+            </div>
+            <div class="examdataItem">
+                <label>电话:</label><span>{{=Telephone}}</span>
+            </div>
+
+            <div class="examdataItem">
+                <label>微信:</label><span>{{=WeChat}}</span>
+            </div>
+
+
+        </div>
+    </script>
+    <script type="text/template" id="muban2">
+        <button>hsdfkhj</button>
+    </script>
+    <script>
+
+        var examid;
+        var stuNumber;
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+
+            $("#selectExam").click(function () {
+
+                window.parent.selectExamWindow(function () {
+
+                    //获取考试数据
+                    var examData = window.parent.getexamData();
+
+                    if (examData != undefined) {
+
+                        $("#examData").html("");
+
+                        $("#stuData").html("");
+                        stuNumber = undefined;
+
+                        examid = examData.ID;
+
+                        //渲染数据
+                        var templateHtml = _.template($("#muban1").html());
+
+
+                        var examdateUTC = examData.BeginDate.substr(examData.BeginDate.indexOf('(') + 1, 13);
+
+                        var datestr = formaDateUtc(examdateUTC);
+
+                        var templateData = templateHtml({ examTitle: examData.Title, examDate: datestr, examGrand: examData.grand, examtype: examData.TypeName });
+
+                        $("#examData").append(templateData);
+
+
+                    }
+
+                });
+
+
+            });
+
+
+            ///选择考生
+            $("#selectStu").click(function () {
+                //判断有没有选择考试数据
+
+                if (examid == undefined) {
+
+                    layer.msg("请选择考试数据", { icon: "2" });
+
+                    return;
+
+                }
+
+                window.parent.selectcandidWindow(examid, function () {
+
+                    //获取学员数据
+                    var stuData = window.parent.getstuData();
+
+                    console.log(stuData);
+
+                    if (stuData != undefined) {
+                       
+                        $("#stuData").html("");
+
+                      
+                        stuNumber = stuData.StudentNumber;
+
+                        //渲染数据
+                        var templateHtml = _.template($("#muban2").html());
+
+
+                       
+
+                        var templateData = templateHtml({ name: stuData.Name, idcard: stuData.identitydocument, Telephone: stuData.Telephone, WeChat: stuData.WeChat });
+
+                        $("#stuData").append(templateData);
+
+
+                    }
+
+                });
+
+
+            });
+
+
+            //点击提交
+
+            $("#commit").click(function () {
+
+                //判断是否选择了考试数据
+
+                if (examid == undefined) {
+
+                    layer.msg("请选择考试数据", {icon:"2"});
+
+                    return;
+                }
+
+                if (stuNumber == undefined) {
+                    layer.msg("请选择学生数据", { icon: "2" });
+
+                    return;
+                }
+
+                //获取违纪数据
+                var breach = $("#breach").val();
+
+                if (!breach) {
+
+                    layer.msg("请输入违纪情况", { icon: "2" });
+
+                    return;
+                }
+
+                //提交
+                var loadindex = layer.load(2, { time: 10 * 1000 }); // 加载层
+                layer.confirm('确定提交?', { icon: 3, title: '提示' }, function (index) {
+                    
+                    //发送请求
+                    layer.close(index);
+                    $.post("/ExaminationSystem/ExamArrangement/ExamBreach", { examid: examid, stumber: stuNumber, breach: breach }, function (result) {
+                        
+                        if (result.ErrorCode == 200) {
+
+                            layer.close(loadindex);
+                            layer.msg("记录成功", { icon: 1 }, function () {
+
+                                var index1 = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                parent.layer.close(index1);
+                            });
+
+                        }
+
+                        else {
+                            layer.close(loadindex);
+
+                            layer.msg("服务器异常", { icon: 2 }, function () {
+
+                             
+                            });
+
+                        }
+
+                    });
+
+
+                   
+                });
+
+            });
+        });
+
+    </script>
 </body>
 </html>

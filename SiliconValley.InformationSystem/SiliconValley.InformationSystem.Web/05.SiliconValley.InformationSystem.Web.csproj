@@ -1251,6 +1251,8 @@
     <Content Include="Areas\ExaminationSystem\Views\ExamScores\ExamScoreSearch.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ExamBreachView.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\AddExamBreachView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\selectExam.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\selectcandidInfo.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
