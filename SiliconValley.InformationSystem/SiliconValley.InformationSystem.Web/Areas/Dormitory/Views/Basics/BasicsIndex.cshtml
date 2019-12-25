@@ -37,12 +37,12 @@
         var myDTree;
         layui.extend({
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dleiool/dtree'
-        }).use(['element', 'layer', 'table', 'code', 'util', 'dtree', 'form'], function () {
+        }).use([ 'layer', 'table', 'dtree', ], function () {
 
-            var element = layui.element, layer = layui.layer, table = layui.table, util = layui.util, dtree = layui.dtree, form = layui.form, $ = layui.$;
+            var layer = layui.layer, table = layui.table, dtree = layui.dtree;
             var jstungid, jsfloorid;
             $(function () {
-                loadtree();
+                //loadtree();
             });
             //时间转化
             function TimeChange(newtime) {
@@ -139,6 +139,7 @@
                     }
                 }
             });
+
             dtree.on("node(toolbarTree5)", function (obj) {
                 console.log(obj);
                 var dtreeobj = obj.param;

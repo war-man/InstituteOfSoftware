@@ -63,5 +63,13 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
 
         }
 
+        public List<InstructorList> GetInstructorLists() {
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+        }
+
+        public InstructorList GetInstructorByempid(string empid) {
+           return this.GetInstructorLists().Where(a => a.EmployeeNumber == empid).FirstOrDefault();
+        }
+
     }
 }

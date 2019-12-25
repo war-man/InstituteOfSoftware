@@ -20,14 +20,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         // GET: /Educational/EvningSelfStudy/EvningSelfStudyIndexView
 
         EvningSelfStudyManeger EvningSelefstudy_Entity;
-        public ActionResult EvningSelfStudyIndexView()
-        {
-            //获取阶段
-            List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
-            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0" ,Selected=true});
-            ViewBag.grlist = g_list;
-            return View();
-        }
+       
+
         static Recon_Login_Data GetBaseData(string Emp)
         {
             Recon_Login_Data new_re = new Recon_Login_Data();
@@ -58,6 +52,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         static Recon_Login_Data rr = GetBaseData(UserName.EmpNumber);
         static int base_id = rr.ClassRoom_Id;//确定校区
         static bool IsOld = rr.IsOld;//确定教务
+
+        public ActionResult EvningSelfStudyIndexView()
+        {
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grlist = g_list;
+            return View();
+        }
 
         public ActionResult EvningTableData(int page,int limit)
         {
@@ -193,5 +196,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             AjaxResult a= EvningSelefstudy_Entity.ClassALLDataADI(count, startime, class_id);
             return Json(a,JsonRequestBehavior.AllowGet);
         }
+
+        //全体上课日期调换
+        public ActionResult BigDataChangView()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult BigDataChangFunction()
+        {
+            DateTime startime = Convert.ToDateTime(Request.Form["oldTime"]);
+            DateTime endtime = Convert.ToDateTime(Request.Form["endtime"]);
+
+            EvningSelefstudy_Entity = new EvningSelfStudyManeger();
+            List<EvningSelfStudy> find_e=  EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == startime).ToList();
+            AjaxResult a= EvningSelefstudy_Entity.ChangDate(find_e, endtime);
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
+
+        //班级上课日期调换
+        public ActionResult BigDataClassChangView()
+        {
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
+            ViewBag.grlist = g_list;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult ClassDataClassChangfunction()
+        {
+            EvningSelefstudy_Entity = new EvningSelfStudyManeger();
+            DateTime startime = Convert.ToDateTime(Request.Form["starTime"]);
+            DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);  
+            int class_id = Convert.ToInt32(Request.Form["class_select"]);
+            List<EvningSelfStudy> find_e= EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.ClassSchedule_id == class_id && e.Anpaidate == startime).ToList();
+            AjaxResult a = EvningSelefstudy_Entity.ChangDate(find_e, endtime);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

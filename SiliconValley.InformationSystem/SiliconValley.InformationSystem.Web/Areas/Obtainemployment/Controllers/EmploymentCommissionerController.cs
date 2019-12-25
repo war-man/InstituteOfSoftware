@@ -1,4 +1,9 @@
-﻿
+﻿using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +12,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    using SiliconValley.InformationSystem.Business;
-    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
-    using SiliconValley.InformationSystem.Business.Employment;
-    using SiliconValley.InformationSystem.Entity.MyEntity;
-    using SiliconValley.InformationSystem.Entity.ViewEntity;
-    using SiliconValley.InformationSystem.Util;
+
 
     [CheckLogin]
     /// <summary>

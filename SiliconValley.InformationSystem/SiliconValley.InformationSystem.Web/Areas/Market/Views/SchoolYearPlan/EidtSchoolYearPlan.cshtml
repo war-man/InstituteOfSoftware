@@ -1,0 +1,218 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EidtSchoolYearPlan</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="">
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item" style="margin-top:5%;">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">计划标题</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="Title" id="Title" placeholder="请输入计划标题" autocomplete="off" lay-verify="required|title" class="layui-input" lay-reqtext="计划标题不可为空">
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">口碑预计数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="Estimatednumberofwordofmouth" id="Estimatednumberofwordofmouth" placeholder="口碑预计人数" autocomplete="off" lay-verify="required" class="layui-input" lay-reqtext="口碑预计人数不可为空">
+                        </div>
+
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">网络预计数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="PredictedNetworkNumber" id="PredictedNetworkNumber" placeholder="网络预计数" autocomplete="off" lay-verify="required" class="layui-input" lay-reqtext="网络预计人数不可为空">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">渠道预计数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="MarketForecast" id="MarketForecast" placeholder="渠道预计数" autocomplete="off" lay-verify="required" class="layui-input" lay-reqtext="渠道预计人数不可为空">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">区域预计数</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="AreaNumber" id="AreaNumber" placeholder="区域预计数" autocomplete="off" lay-verify="required" class="layui-input" lay-reqtext="区域预计人数不可为空">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            <textarea placeholder="请输入备注"  id="Remak" class="layui-textarea" name="Remak"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">修改</button>
+
+                    </div>
+
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="clode">取消</button>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form, layer = layui.layer, layedit = layui.layedit, laydate = layui.laydate;
+
+            var formdata;
+
+            //自定义验证规则
+            form.verify({
+                title: function (value) {
+                    if (value.length < 5) {
+                        return '标题至少得5个字符啊';
+                    }
+                }
+            });
+            $("#MarketForecast").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+            $("#Estimatednumberofwordofmouth").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+            $("#PredictedNetworkNumber").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+            $("#AreaNumber").keyup(function () {
+                var reg = $(this).val().match(/\d+\.?\d{0,2}/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
+            jQuery(function () {
+                loadform();
+            });
+            function loadform() {
+                formdata = JSON.parse('@Html.Raw(ViewBag.data)');
+                console.log(formdata);
+                $("#Title").val(formdata.Title);
+                $("#Estimatednumberofwordofmouth").val(formdata.Estimatednumberofwordofmouth);
+                $("#PredictedNetworkNumber").val(formdata.PredictedNetworkNumber);
+                $("#MarketForecast").val(formdata.MarketForecast);
+                $("#AreaNumber").val(formdata.AreaNumber);
+                $("#Remak").val(formdata.Remak);
+            }
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                var jsonStr = data.field
+                jsonStr.ID = formdata.ID;
+                $.post({
+                    url: "/Market/SchoolYearPlan/EidtSchoolYearPlan",
+                    data: { param0: jsonStr },
+                    type: "POST",
+                    async: true,
+                    success: function (data) {
+                        console.log(data);
+                        if (data.Success) {
+                            layer.msg('录入成功', { icon: 1 }, function () {
+                                close();
+                            })
+                        } else {
+                            layer.msg(data.Msg, { icon: 1 }, function () {
+                                close();
+                            });
+                        }
+                    },
+                    error: function () {
+
+                    }
+                });
+                return false;
+            });
+
+
+            //关闭
+            $("#clode").click(function () {
+                close();
+            });
+            function close() {
+                //先得到当前iframe层的索引
+                var index = parent.layer.getFrameIndex(window.name);
+                parent.layer.close(index); //再执行关闭
+            }
+        });
+
+
+    </script>
+</body>
+</html>

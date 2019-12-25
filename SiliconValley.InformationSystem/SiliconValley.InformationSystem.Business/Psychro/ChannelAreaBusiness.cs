@@ -128,9 +128,9 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         /// </summary>
         /// <param name="channelStaffID"></param>
         /// <returns></returns>
-        public ChannelArea GetAreaByChannelID(int channelStaffID)
+        public List<ChannelArea> GetAreaByChannelID(int channelStaffID)
         {
-            return this.GetChannelAreas().Where(a => a.ChannelStaffID == channelStaffID).FirstOrDefault();
+            return this.GetChannelAreas().Where(a => a.ChannelStaffID == channelStaffID).ToList();
         }
 
         /// <summary>

@@ -50,12 +50,13 @@ namespace SiliconValley.InformationSystem.Business.Psychro
         {
             dbplan = new SchoolYearPlanBusiness();
              //获取了这个员工的升降职记录
-             var emptralist = this.GetTransactionsByMoveType12().Where(a => a.EmployeeId == EmployeeId).ToList();
+             var emptralist = this.GetTransactionsByEmpID(EmployeeId);
 
             //拿去下一个计划对象
             var nextplan = dbplan.GetNextPlan(nowplan);
-            //排除掉不属于这个阶段的记录
 
+
+            //排除掉不属于这个阶段的记录
             List<EmpTransaction> onlist = new List<EmpTransaction>();
 
             foreach (var item in emptralist)
@@ -74,6 +75,7 @@ namespace SiliconValley.InformationSystem.Business.Psychro
                     {
                         onlist.Add(item);
                     }
+
                 }
             }
             return onlist.OrderByDescending(a => a.TransactionTime).FirstOrDefault();

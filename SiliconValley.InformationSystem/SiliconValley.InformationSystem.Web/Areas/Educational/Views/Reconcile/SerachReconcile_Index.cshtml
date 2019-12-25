@@ -129,6 +129,8 @@
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData">班级调课</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData2">全体上课日期调换</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData3">班级上课日期调换</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData">修改班级上专业课时间段</button>
             <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData2">修改班级上专业课老师</button>
         </div>
@@ -339,6 +341,28 @@
                             content: '/Educational/Reconcile/UpdateClassTeacher',
                             area: ['680px', '450px'],
                             title: '修改班级上专业课老师'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                    case 'Class_getCheckData2':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Reconcile/ChangReconciledata',
+                            area: ['680px', '450px'],
+                            title: '全体上课日期调换'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                    case 'Class_getCheckData3':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/Reconcile/ChangClassDateView',
+                            area: ['680px', '450px'],
+                            title: '指定班级上课日期调换'
                             , shade: 0.8
                             , anim: 4
                             , skin: 'demo-class'

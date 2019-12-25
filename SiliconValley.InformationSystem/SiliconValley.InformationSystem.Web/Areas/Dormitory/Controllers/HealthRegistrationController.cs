@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.Common;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -33,6 +34,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         private DormitoryhygieneBusiness dbdormhygiene;
 
         private HygienicDeductionBusiness dbhygieneduction;
+        private InstructorListBusiness dbinstructorList;
+        
         // GET: Dormitory/HealthRegistration
         public ActionResult HealthRegistrationIndex()
         {
@@ -139,6 +142,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             dbprosutdent_Dbproheadmaster = new dbprosutdent_dbproheadmaster();
             dbdormhygiene = new DormitoryhygieneBusiness();
             dbhygieneduction = new HygienicDeductionBusiness();
+            dbinstructorList = new InstructorListBusiness();
             int DorminfoID = dormitoryhygiene.DorminfoID;
             List<Accdationinformation> queryacclist = dbacc.GetAccdationinformationByDormId(DorminfoID);
             List<Headmaster> backlist = new List<Headmaster>();
@@ -147,7 +151,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                 //现在就使用1 号 教官 王涛
                 dormitoryhygiene.IsDel = false;
                 dormitoryhygiene.Addtime = DateTime.Now;
-                dormitoryhygiene.Inspector = 1;
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                var query= dbinstructorList.GetInstructorByempid(user.EmpNumber);
+                dormitoryhygiene.Inspector = query.ID;
+
                 string now = dormitoryhygiene.Addtime.ToString();
 
                 if (dbdormhygiene.AddDormitoryhygiene(dormitoryhygiene))

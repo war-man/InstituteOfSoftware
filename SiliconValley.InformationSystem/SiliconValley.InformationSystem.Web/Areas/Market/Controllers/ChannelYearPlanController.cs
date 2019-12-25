@@ -17,6 +17,10 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+
+    /// <summary>
+    /// 市场年度总结
+    /// </summary>
     public class ChannelYearPlanController : Controller
     {
         /// <summary>
@@ -65,176 +69,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         private StudentInformationBusiness dbstudent;
 
         private ScheduleForTraineesBusiness dbclass;
-        // GET: Market/ChannelYearPlan
-        public ActionResult ChannelYearPlanIndex()
-        {
-            dbschoolpaln = new SchoolYearPlanBusiness();
-            dbchannelstaff = new ChannelStaffBusiness();
-            dbempstaff = new EmployeesInfoManage();
 
-            var data = dbschoolpaln.GetAll().OrderByDescending(a => a.ID).Select(a => new ShowyearnameView
-            {
-                SchoolPlanID = a.ID,
-                ShowTitle = a.Title
-            }).ToList();
-
-            ViewBag.YearName = data;
-            var nowyear = data.FirstOrDefault();
-            ViewBag.NowYearName = nowyear;
-            var nowpaln = dbschoolpaln.GetPlanByID(nowyear.SchoolPlanID);
-            //加载该年的主任
-            var zhurenlist = dbchannelstaff.GetChannelZhurenByPlan(nowpaln, dbschoolpaln);
-            var empzhuren = new List<EmployeesInfo>();
-            foreach (var item in zhurenlist)
-            {
-                var bubu = dbempstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
-                empzhuren.Add(bubu);
-            }
-            ViewBag.empzhuren = empzhuren;
-            return View();
-        }
-        /// <summary>
-        /// 表格数据
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult ChannelYearPlanData(int page, int limit, int? PlanID, string EmpID)
-        {
-
-            dbchannelstaff = new ChannelStaffBusiness();
-            dbschoolpaln = new SchoolYearPlanBusiness();
-            dbempstaff = new EmployeesInfoManage();
-            dbbeian = new StudentDataKeepAndRecordBusiness();
-            dbdebit = new DebitBusiness();
-            dbfunding = new PrefundingBusiness();
-            dbarea = new ChannelAreaBusiness();
-            dbregion = new RegionBusiness();
-            int? selectplan = 0;
-            if (PlanID != null)
-            {
-                selectplan = PlanID;
-            }
-            else
-            {
-                var plan = dbschoolpaln.GetAll().LastOrDefault();
-                selectplan = plan.ID;
-            }
-            //该年
-            var planinfo = dbschoolpaln.GetPlanByID(selectplan);
-
-            //获取该年有的人
-            var data = dbchannelstaff.GetChannelByYear(planinfo, dbschoolpaln);
-
-            //排序的数据
-            var sortdata = new List<ChannelStaff>();
-            //加载该年的主任
-            var zhurenlist = dbchannelstaff.GetChannelZhurenByPlan(planinfo, dbschoolpaln);
-
-
-            //删除主任
-            for (int i = data.Count - 1; i >= 0; i--)
-            {
-                foreach (var item in zhurenlist)
-                {
-                    if (data[i].EmployeesInfomation_Id == item.EmployeesInfomation_Id)
-                    {
-                        data.Remove(data[i]);
-                    }
-                }
-            }
-
-
-            //加载有主任系列的员工
-            foreach (var item in zhurenlist)
-            {
-                //主任以及自己的团队
-                var resultzhurenteam = dbarea.GetTeamByEmpID(item.EmployeesInfomation_Id, planinfo, data);
-                sortdata.AddRange(resultzhurenteam);
-            }
-            //删除已经sortdata集合有的员工
-            for (int i = data.Count - 1; i >= 0; i--)
-            {
-                foreach (var item in sortdata)
-                {
-                    if (data[i].EmployeesInfomation_Id == item.EmployeesInfomation_Id)
-                    {
-                        data.Remove(data[i]);
-                    }
-                }
-            }
-            //加载还存在的data数据
-            sortdata.AddRange(data);
-
-            if (!string.IsNullOrEmpty(EmpID))
-            {
-                foreach (var mrdzhuren in zhurenlist)
-                {
-                    if (mrdzhuren.EmployeesInfomation_Id == EmpID)
-                    {
-                        //主任以及自己的团队
-                        sortdata = dbarea.GetTeamByEmpID(EmpID, planinfo, data);
-                        break;
-                    }
-                }
-            }
-
-            List<MrdChannelYearPlanIndexView> mrdplan = new List<MrdChannelYearPlanIndexView>();
-            foreach (var item in sortdata)
-            {
-                //获取这个渠道员工这一年的上门量
-                var goschoolcount = dbbeian.GetGoSchoolByPlan(selectplan, item.EmployeesInfomation_Id);
-                //获取这个渠道员工这一年的备案量
-                var beiancount = dbbeian.GetBeanCount(item.EmployeesInfomation_Id, selectplan);
-                //获取这个渠道员工这一年的学员报名量
-                var baomingcount = dbbeian.GetBaoMingCount(item.EmployeesInfomation_Id, selectplan);
-                //获取借资量与预资量
-                var debitcount = dbdebit.GetDebitsByYear(item.EmployeesInfomation_Id, planinfo);
-                var fundingcoung = dbfunding.GetPrefundingsByYear(item.EmployeesInfomation_Id, planinfo);
-
-                //获取员工该年度计划负责区域
-                var channelarea = dbarea.GetAreaByPaln(item.ID, planinfo);
-
-                var mrdRegionName = "";
-                var mrRegionID = "";
-                if (channelarea.Count != 0)
-                {
-                    foreach (var mrdarea in channelarea)
-                    {
-                        var region = dbregion.GetRegionByID(mrdarea.RegionID);
-                        mrdRegionName = mrdRegionName == "" ? region.RegionName : mrdRegionName + "、" + region.RegionName;
-                        mrRegionID = mrRegionID == "" ? region.ID.ToString() : mrRegionID + "、" + region.ID.ToString();
-                    }
-                }
-
-                MrdChannelYearPlanIndexView mrdChannel = new MrdChannelYearPlanIndexView();
-                var empinfo = dbempstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
-                mrdChannel.ChannelDate = empinfo.EntryTime;
-                mrdChannel.ChannelStaffID = item.ID;
-                mrdChannel.ChannelYearPlanID = selectplan;
-                mrdChannel.BeianNumber = beiancount.Count;
-                mrdChannel.GoSchoolNumber = goschoolcount.Count;
-                mrdChannel.EmpName = empinfo.EmpName;
-                mrdChannel.Phone = empinfo.Phone;
-                mrdChannel.PlanNumber = planinfo.AreaNumber;
-                mrdChannel.Region = mrdRegionName;
-                mrdChannel.RegionID = mrRegionID;
-                mrdChannel.SignUpNumber = baomingcount.Count;
-                mrdChannel.QuitDate = item.QuitDate;
-                mrdChannel.EmpStaffID = item.EmployeesInfomation_Id;
-                mrdChannel.DebitNumber = debitcount.Count + fundingcoung.Count;
-                mrdplan.Add(mrdChannel);
-            }
-
-
-            var bnewdata = mrdplan.Skip((page - 1) * limit).Take(limit).ToList();
-            var returnObj = new
-            {
-                code = 0,
-                msg = "",
-                count = mrdplan.Count(),
-                data = bnewdata
-            };
-            return Json(returnObj, JsonRequestBehavior.AllowGet);
-        }
 
         public ActionResult NewChannelYearPlanIndex()
         {

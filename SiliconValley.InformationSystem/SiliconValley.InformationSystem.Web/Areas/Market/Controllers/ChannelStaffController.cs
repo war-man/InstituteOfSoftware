@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.Channel;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
@@ -9,6 +10,7 @@ using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.MarketView;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -167,57 +169,56 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             ViewBag.ChannelStaffID = id;
             dbregion = new RegionBusiness();
-            dbemparea = new ChannelAreaBusiness();
+
             dbempinfo = new EmployeesInfoManage();
             dbchastaff = new ChannelStaffBusiness();
 
-            //拿没有分配的区域
-            var data = dbregion.GetNoDistribution(dbemparea);
+            //全部数据
+            var data = dbregion.GetRegions();
+            var yangxiao = new EmployeesInfo();
+            //获取分配的数据
+            var yes = dbregion.GetRegionsByempid(id);
 
-            int zhiwei = 0;
             var empinfo = dbempinfo.GetInfoByChannelID(id);
-            //拿主任列表
-            var zhuren = dbempinfo.GetChannelStaffZhuren();
-            //拿副主任列表
-            var fuzhuren = dbempinfo.GetChannelStaffFuzhuren();
+     
+            List<EmployeesInfo> myempinfolist = new List<EmployeesInfo>();
+
             if (dbempinfo.IsFuzhiren(empinfo))
             {
-                zhiwei = 1;
+                //拿主任列表
+                myempinfolist = dbempinfo.GetChannelStaffZhuren();
 
             }
             else if (dbempinfo.IsChannelZhuren(empinfo))
             {
-                zhiwei = 2;
+                yangxiao = dbempinfo.GetYangxiao();
+                myempinfolist.Add(yangxiao);
             }
-            switch (zhiwei)
+            else
             {
-                case 1:
-                    ViewBag.shangji = zhuren.Select(a => new SelectListItem
-                    {
-                        Text = a.EmpName,
-                        Value = a.EmployeeId.ToString()
-                    }).ToList();
-                    break;
-                case 2:
-                    List<EmployeesInfo> myempinfolist = new List<EmployeesInfo>();
-                    var yangxiao = dbempinfo.GetYangxiao();
-                    myempinfolist.Add(yangxiao);
-                    ViewBag.shangji = myempinfolist.Select(a => new SelectListItem
-                    {
-                        Text = a.EmpName,
-                        Value = a.EmployeeId.ToString()
-                    }).ToList();
-                    break;
-                default:
-                    ViewBag.shangji = fuzhuren.Select(a => new SelectListItem
-                    {
-                        Text = a.EmpName,
-                        Value = a.EmployeeId.ToString()
-                    }).ToList();
-                    break;
+                //拿副主任列表
+                myempinfolist = dbempinfo.GetChannelStaffFuzhuren();
             }
-            
+            List<DistributionAreaView> result = new List<DistributionAreaView>();
+            foreach (var item in myempinfolist)
+            {
+
+                DistributionAreaView areaView = new DistributionAreaView();
+                areaView.Text = item.EmpName;
+                if (yangxiao.EmployeeId!=null)
+                {
+                    areaView.Value = null;
+                }
+                else
+                {
+                    areaView.Value = dbchastaff.GetChannelByEmpID(item.EmployeeId).ID;
+                }
+                result.Add(areaView);
+            }
+          
             ViewBag.regions = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            ViewBag.shangji = Newtonsoft.Json.JsonConvert.SerializeObject(result);
+            ViewBag.yes = Newtonsoft.Json.JsonConvert.SerializeObject(yes);
             return View();
         }
         [HttpPost]
@@ -225,46 +226,77 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// 执行分配
         /// </summary>
         /// <returns></returns>
-        public ActionResult DoDistribution(string empinfoid, int channelstaffid, string jsonarr)
+        public ActionResult DoDistribution(DistributionView param0)
         {
-            dbemparea = new ChannelAreaBusiness();
-            dbchastaff = new ChannelStaffBusiness();
-            dbempinfo = new EmployeesInfoManage();
-            JArray jArray = JArray.Parse(jsonarr);
+
             AjaxResult ajaxResult = new AjaxResult();
-            var mychannelstaff = dbchastaff.GetChannelByID(channelstaffid);
-            bool iszhuren = dbempinfo.IsChannelZhuren(mychannelstaff.EmployeesInfomation_Id);
-            foreach (var item in jArray)
+            try
             {
-                JObject jdata = (JObject)item;
-                ChannelArea channelArea = new ChannelArea();
-                channelArea.ChannelStaffID = channelstaffid;
-                if (iszhuren)
+                dbemparea = new ChannelAreaBusiness();
+                dbchastaff = new ChannelStaffBusiness();
+                dbempinfo = new EmployeesInfoManage();
+
+                ///将已经存在的数据进行一个排除，将这个regions 集合中存在的数据进行一个删除，
+                ///判断以前的区域主管是否是当前传入过来的主管id 如果不是进行一个修改数据
+                ///进行添加操作
+                List<string> regions = param0.RegionIDs.Split(',').ToList();
+                List<ChannelArea> areas= dbemparea.GetAreaByChannelID(param0.ChannelStaffID);
+                for (int i = regions.Count - 1; i >= 0; i--)
                 {
-                    channelArea.RegionalDirectorID = null;
+                    for (int j = areas.Count - 1; j >= 0; j--)
+                    {
+                        //排除相同的。
+                        if (int.Parse(regions[i]) == areas[j].RegionID)
+                        {
+                            regions.RemoveAt(i);
+                            areas.RemoveAt(j);
+                            break;
+                        }
+                    }
                 }
-                else
+
+                //删除存在数据中现在没有的数据
+                foreach (var item in areas)
                 {
-                    var empinfo = dbchastaff.GetChannelByEmpID(empinfoid);
-                    channelArea.RegionalDirectorID = empinfo.ID;
+                    item.IsDel = true;
+                    dbemparea.Update(item);
                 }
-                channelArea.RegionID = int.Parse(jdata["value"].ToString());
-                channelArea.IsDel = false;
-                channelArea.StaffAreaDate = DateTime.Now;
-                try
+
+
+
+                ///拿取删除过后的数据
+                List<ChannelArea> newareas = dbemparea.GetAreaByChannelID(param0.ChannelStaffID);
+                foreach (var item in newareas)
                 {
+                    if (param0.RegionalDirectorID != item.RegionalDirectorID)
+                    {
+                        item.RegionalDirectorID = param0.RegionalDirectorID;
+                        dbemparea.Update(item);
+                    }
+                }
+
+                ///添加
+                foreach (var item in regions)
+                {
+                    ChannelArea channelArea = new ChannelArea();
+                    channelArea.ChannelStaffID = param0.ChannelStaffID;
+                    channelArea.IsDel = false;
+                    channelArea.RegionalDirectorID = param0.RegionalDirectorID;
+                    channelArea.RegionID = int.Parse(item);
+                    channelArea.StaffAreaDate = DateTime.Now;
                     dbemparea.Insert(channelArea);
-                    BusHelper.WriteSysLog("给渠道员工分配区域的时候，位于Market区域ChannelStaffController控制器中DoDistribution方法，添加成功。", EnumType.LogType.添加数据);
-                    ajaxResult = dbemparea.Success("分配成功");
-                }
-                catch (Exception ex)
-                {
 
-                    BusHelper.WriteSysLog("给渠道员工分配区域的时候，位于Market区域ChannelStaffController控制器中DoDistribution方法，添加失败。" + ex.Message, EnumType.LogType.添加数据);
-                    ajaxResult = dbemparea.Error("分配失败");
                 }
 
+                ajaxResult.Success = true;
             }
+            catch (Exception ex)
+            {
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "请及时联系信息部成员。";
+            }
+           
+        
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
@@ -279,10 +311,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //现在给一个固定数据id为039e3e3891eea-1e885eb2-75a3-4f82-bb9a-570d717f2af4 员工编号为201908160008 姓名：徐宝平 部门：渠道 岗位：主任
 
             dbempstaff = new EmploymentStaffBusiness();
-            var EmployeesInfo_Id = "201908160008";
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
             //拿员工对象
-            EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID(EmployeesInfo_Id);
+            EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID(user.EmpNumber);
 
             //拿岗位对象 
             var PositionInfo = dbempstaff.GetPositionByID(employeesInfo.PositionId);
@@ -295,7 +328,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.employeesInfo = employeesInfo;
             dbbeian = new StudentDataKeepAndRecordBusiness();
             //获取的是他这个备案而且是已经报名的学生集合
-            List<StudentPutOnRecord> mystudentlist = dbbeian.GetrReport(EmployeesInfo_Id);
+            List<StudentPutOnRecord> mystudentlist = dbbeian.GetrReport(user.EmpNumber);
             //获取这个员工的预资所有的预资单
             dbprefunding = new PrefundingBusiness();
             dbperinfo = new PerInfoBusiness();

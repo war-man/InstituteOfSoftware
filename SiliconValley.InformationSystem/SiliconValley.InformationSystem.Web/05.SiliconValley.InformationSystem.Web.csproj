@@ -323,7 +323,6 @@
     <Compile Include="Common\SystemMenuManage.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
-    <Compile Include="Controllers\StudentController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -1151,22 +1150,8 @@
     <Content Include="Scripts\LodopFuncs.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
-    <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120033027.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120033610.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191120110928.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191122050300.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191127043148.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\20191211102732.jpeg" />
-    <Content Include="uploadXLSXfile\EmpImage\bir4.jpg" />
-    <Content Include="uploadXLSXfile\EmpImage\birth3.gif" />
-    <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
-    <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
-    <Content Include="xmlfile\entxml.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
     <Content Include="Areas\Educational\Views\BaseDataEnum\AddorEditView.cshtml" />
@@ -1283,28 +1268,18 @@
     <Content Include="Areas\Educational\Views\Reconcile\SerachReconcile_Index.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\UpdateClassView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\UpdateClassTeacher.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\Birthdayremind.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\ContractEnd.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmplSalaryEmbody\UpdateEmpSSinfo.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\EditEmpSalary.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
-    <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Classinquiry.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Dropoutofschools.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Dropoutofschoolsdetailed.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Exoeldetailed.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Expel.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuild.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Rebuilddetailed.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Resumptionodetailed.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Resumptionofstudy.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Successionrecord.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschool.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Suspensionofschooldetailed.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Transactiondetails.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\transactionprocessing.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\ChangReconciledata.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\ChangClassDateView.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\BigDataADIview.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\ClassDataADIview.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\EvningSelfStudyIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\UpdateEvning.cshtml" />
+    <Content Include="Areas\Educational\Views\ConvertCourse\ConvertCourseIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\LeaderAddCourseToExamine\LeaderAddCourseToExamineIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\SubstituteTeachCourse\SubstituteTeachCourseIndexView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\TeacherNightViewIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\BigDataChangView.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\BigDataClassChangView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
@@ -2901,7 +2876,6 @@
     <Content Include="uploadXLSXfile\Sheet1.xlsx" />
     <Content Include="uploadXLSXfile\湖南硅谷云教育科技有限公司_考勤报表_20191101-20191130%281%29.xlsx" />
     <Content Include="Views\Home\rtest.cshtml" />
-    <Content Include="Views\Student\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2947,6 +2921,8 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\" />
+    <Folder Include="uploadXLSXfile\EmpImage\" />
+    <Folder Include="uploadXLSXfile\SelfObtainRcoredImg\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>
