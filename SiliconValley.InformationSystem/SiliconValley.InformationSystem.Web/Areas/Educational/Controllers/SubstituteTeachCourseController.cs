@@ -61,7 +61,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             Reconcile_Entity = new ReconcileManeger();
             SubstituteTeachCourse_Entity = new SubstituteTeachCourseManeger();
             SubstituteTeachCourse find= SubstituteTeachCourse_Entity.GetEntity(id);
-            AjaxResult a= Reconcile_Entity.Daike(find.TeachDate, find.Teacher, find.ClassNumber);
+            AjaxResult a= Reconcile_Entity.Daike(find.TeachDate, find.Teacher, find.ClassNumber);//去排课表改数据
+            if (a.Success==true)
+            {
+                //改为已审批
+                find.IsDel = true;
+               a.Success= SubstituteTeachCourse_Entity.Update_data(find);
+            }           
             return Json(a,JsonRequestBehavior.AllowGet);
         }
     }

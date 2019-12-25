@@ -28,7 +28,7 @@ namespace SiliconValley.InformationSystem.Util
         /// <summary>
         /// 当前Session
         /// </summary>
-        public static _Session Session { get; } = new _Session();
+        public static _Session Session { get; set; } = new _Session();
 
         /// <summary>
         /// 自定义_Session类

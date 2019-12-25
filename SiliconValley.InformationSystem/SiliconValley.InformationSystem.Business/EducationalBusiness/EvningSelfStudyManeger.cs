@@ -42,9 +42,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                this.Insert(e);
-                EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
-                a.Success = true;
+               int count= EvningSelfStudyGetAll().Where(e1 => e1.Classroom_id == e.Classroom_id && e1.ClassSchedule_id == e.ClassSchedule_id && e1.curd_name == e.curd_name && e1.Anpaidate == e.Anpaidate).ToList().Count;
+                if (count<=0)
+                {
+                    this.Insert(e);
+                    EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+                    a.Success = true;
+                }                
             }
             catch (Exception ex)
             {
@@ -234,6 +238,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
+                //获取教务对应的班级
                 List<ClassSchedule> class_list = Reconcile_Com.GetClass(s1ors3);
                 List<EvningSelfStudy> e_list = EvningSelfStudyGetAll().Where(e => e.Anpaidate >= starTime).ToList();
                 foreach (EvningSelfStudy item in e_list)
