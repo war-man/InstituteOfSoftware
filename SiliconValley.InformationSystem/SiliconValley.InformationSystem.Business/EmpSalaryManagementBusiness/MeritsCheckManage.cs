@@ -22,6 +22,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 MeritsCheck ese = new MeritsCheck();
                 ese.EmployeeId = empid;
                 ese.IsDel = false;
+                 ese.YearAndMonth=this.GetList().LastOrDefault().YearAndMonth;
                 this.Insert(ese);
                 result = true;
                 BusHelper.WriteSysLog("绩效考核表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);

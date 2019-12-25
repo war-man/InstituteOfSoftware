@@ -1274,6 +1274,8 @@
     <Content Include="Areas\Personnelmatters\Views\EmpSalaryManagement\EditEmpSalary.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\AddTransactionInfo.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmpTransactionRecord\SelectEmp.cshtml" />
+    <Content Include="Areas\Market\Views\Infomation\InfomationIndexView.cshtml" />
+    <Content Include="Areas\Market\Views\Status\StatusIndexView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />

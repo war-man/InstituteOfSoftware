@@ -538,11 +538,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 var emplist = empmanage.GetList();
-                for (int i = 0; i < emplist.Count(); i++)
-                {
-                    if (emplist[i].DDAppId==int.Parse(ddnum)) {
-                        AjaxResultxx.Success = true;
-                    }
+                if (emplist.Where(s=>s.DDAppId==int.Parse(ddnum)).Count()>0) {
+                    AjaxResultxx.Success = true;
                 }
             }
             catch (Exception)
