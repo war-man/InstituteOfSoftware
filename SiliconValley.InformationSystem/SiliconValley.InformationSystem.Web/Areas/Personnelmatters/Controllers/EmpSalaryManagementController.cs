@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 string ename = str[0];
                 string deptname = str[1];
                 string pname = str[2];
-
+                string Empstate = str[3];
                 eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
                 if (!string.IsNullOrEmpty(deptname))
                 {
@@ -46,7 +46,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     eselist = eselist.Where(e => empmanage.GetPositionByEmpid(e.EmployeeId).Pid == int.Parse(pname)).ToList();
                 }
-               
+                if (!string.IsNullOrEmpty(Empstate))
+                {
+                    eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).IsDel ==bool.Parse(Empstate)).ToList();
+                }
+
             }
             var newlist = eselist.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
             List<MySalaryObjView> result = new List<MySalaryObjView>();
@@ -59,7 +63,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 view.empName = empmanage.GetEntity(item.EmployeeId).EmpName;//员工姓名
                 view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;//所属部门
                 view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;//所属岗位
-
+                view.EmpState= empmanage.GetEntity(item.EmployeeId).IsDel;
                 //拿到该员工工资体系对象
                 var eseobj = msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
                 view.baseSalary = eseobj.BaseSalary;//基本工资
@@ -221,7 +225,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
             try
             {
-                msrmanage.Update(msr);
+                var mobj = msrmanage.GetEntity(msr.Id);
+                mobj.OvertimeCharges = msr.OvertimeCharges;
+                mobj.Bonus = msr.Bonus;
+                mobj.OtherDeductions = msr.OtherDeductions;
+                msrmanage.Update(mobj);
                 AjaxResultxx = msrmanage.Success();
             }
             catch (Exception ex)

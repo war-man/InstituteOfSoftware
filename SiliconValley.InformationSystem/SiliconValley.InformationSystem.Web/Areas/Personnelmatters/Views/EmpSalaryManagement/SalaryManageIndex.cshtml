@@ -19,13 +19,13 @@
     <legend>条件查询</legend>
     <form class="layui-form" action="" lay-filter="formtest">
         <div class="layui-row layui-form-item">
-            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+            <div >
                 <label class="layui-form-label">姓名：</label>
                 <div class="layui-input-inline">
                     <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+            <div style="margin-left:20px;">
                 <label class="layui-form-label" style="width:100px;">所属部门:</label>
                 <div class="layui-input-inline">
                     <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
@@ -34,7 +34,7 @@
 
                 </div>
             </div>
-            <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+            <div style="margin-left:20px;">
                 <label class="layui-form-label" style="width:100px;">所属岗位:</label>
                 <div class="layui-input-inline">
                     <select name="PositionId" id="PositionId" lay-search="" style="width:130px;">
@@ -42,7 +42,18 @@
                     </select>
                 </div>
             </div>
-            <button class="layui-btn" type="button" id="Conditionselect">查询</button>
+            <div style="margin-left:20px;">
+                <label class="layui-form-label" style="width:100px;">员工状态:</label>
+                <div class="layui-input-inline">
+                    <select name="Empstate" id="Empstate" lay-search="" style="width:130px;">
+                        <option value="">--请选择--</option>
+                        <option value="False">在职</option>
+                        <option value="True">离职</option>
+                    </select>
+                  
+                </div>
+            </div>
+            <button class="layui-btn" type="button" id="Conditionselect" style="margin-left:30px;">查询</button>
 
         </div>
 
@@ -54,7 +65,14 @@
 <script type="text/html" id="barDemo">
     <a class="layui-btn  layui-btn-xs " lay-event="edit">编辑</a>
 </script>
-
+@*员工在职状态*@
+<script type="text/html" id="empstate">
+    {{# if(d.EmpState==false){ }}
+    {{ d.EmpState="在职" }}
+    {{# }else{ }}
+    {{ d.EmpState="离职" }}
+    {{# } }}
+</script>
 
 @section script{
     <script>
@@ -96,7 +114,8 @@
                     , { field: 'Total', title: '合计', width: 100, rowspan: 2 }
                     , { field: 'PayCardSalary', title: '实发工资(工资卡)', width: 160, rowspan: 2 }
                     , { field: 'CashSalary', title: '实发工资(现金)', width: 150, rowspan: 2 }
-                    , { title: '操作', toolbar: '#barDemo', width: 100, fixed: 'right', rowspan: 2  }
+                    , { field: 'EmpState', title: '员工状态', width: 100, rowspan: 2, templet: '#empstate' }
+                    , { title: '操作', toolbar: '#barDemo', width: 100, fixed: 'right', rowspan: 2 }
                 ], [
                     { field: 'leavedays', title: '请假天数', width: 110 }
                     , { field: 'LeaveDeductions', title: '请假扣款/元', width: 115 }
@@ -156,14 +175,14 @@
                 var ename = $("#EmpName").val();//员工姓名
                 var deptname = $("#deptid").val();//员工所属部门
                 var pname = $("#PositionId").val();//员工所属岗位
-
+                var Empstate = $("#Empstate").val();
                 layui.use(['table'], function () {
                     var table = layui.table;
                     table.reload('mySalaryStatistics', {
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }, where: {
-                            AppCondition: ename + "," + deptname + "," + pname
+                            AppCondition: ename + "," + deptname + "," + pname + "," + Empstate
                         }
                     });
                 });

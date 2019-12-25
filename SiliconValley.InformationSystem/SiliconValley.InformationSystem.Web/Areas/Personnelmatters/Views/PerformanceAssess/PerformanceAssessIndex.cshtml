@@ -13,7 +13,14 @@
 <script type="text/html" id="barDemo">
     <a class="layui-btn  layui-btn-xs" lay-event="edit">编辑</a>
 </script>
-
+@*员工在职状态*@
+<script type="text/html" id="empstate">
+    {{# if(d.empIsDel==false){ }}
+    {{ d.empIsDel="在职" }}
+    {{# }else{ }}
+    {{ d.empIsDel="离职" }}
+    {{# } }}
+</script>
 
 @section script{
     <script>
@@ -35,20 +42,37 @@
                     { field: 'empName', title: '姓名', width: 100, sort: true }
                     , { field: 'empDept', title: '所属部门', width: 130, sort: true }
                     , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
-                    , { field: 'RoutineWork', title: '日常工作内容',  width: 130 }
-                    , { field: 'RoutineWorkPropotion', title: '日常工作权重占比', width: 150 }
-                    , { field: 'RoutineWorkFillRate', title: '日常工作完成率', width: 140 }
-                    , { field: 'OtherWork', title: '其他领导临时指派任务',  width: 170 }
-                    , { field: 'OtherWorkPropotion', title: '其他工作权重占比',  width: 150 }
-                    , { field: 'OtherWorkFillRate', title: '其他工作完成率', width: 140 }
+                    , { field: 'RoutineWork', title: '日常工作内容', width: 130 }
+                    , { field: 'routineWorkPropotion', title: '日常工作权重占比', width: 150 }
+                    , { field: 'routineWorkFillRate', title: '日常工作完成率', width: 140 }
+                    , { field: 'OtherWork', title: '其他领导临时指派任务', width: 170 }
+                    , { field: 'otherWorkPropotion', title: '其他工作权重占比', width: 150 }
+                    , { field: 'otherWorkFillRate', title: '其他工作完成率', width: 140 }
                     , { field: 'SelfReportedScore', title: '自评得分', sort: true, width: 110 }
                     , { field: 'SuperiorGrade', title: '上级评分', sort: true, width: 110 }
                     , { field: 'FinalGrade', title: '最终绩效分', sort: true, width: 120 }
-                    , { field: 'empIsDel', title: '员工状态', sort: true, width: 110 }
-                    , { field: 'Remark', title: '备注', width: 200}
+                    , { field: 'empIsDel', title: '员工状态', sort: true, width: 110, templet: '#empstate'  }
+                    , { field: 'Remark', title: '备注', width: 200 }
                     , { title: '操作', toolbar: '#barDemo', width: 110, fixed: 'right' }
                 ]]
                 , page: true
+
+            });
+
+            //监听行工具事件
+            table.on('tool(PerAsstab)', function (obj) {
+                var data = obj.data;
+                if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/PerformanceAssess/EditEmpPFAssess/?id=' + data.Id
+                        , area: ["900px", "760px"]
+                        , title: '员工绩效考核编辑'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
 
             });
 
