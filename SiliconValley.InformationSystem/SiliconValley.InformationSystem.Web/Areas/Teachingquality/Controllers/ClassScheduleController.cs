@@ -798,7 +798,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
           var x=  examScoresBusiness.ClassScores(ClassID, grade_Id).Select(a=>new {
              
               a.StudentNumber,
-              Name= student.GetEntity(a.StudentNumber).Name,
+              a.StudentName,
               student.GetEntity(a.StudentNumber).identitydocument,
              Sex= student.GetEntity(a.StudentNumber).Sex==false?"女":"男",
               a.Score.OnBoard,

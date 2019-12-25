@@ -770,7 +770,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         /// <returns></returns>
         public int StudentUndergraduatecount(string Studentid)
         {
-            return this.GetList().Where(a => a.StudentNumber == Studentid && a.IsDelete == false).Count();
+            return this.GetList().Where(a => a.StudentNumber == Studentid && a.IsDelete == false&&a.PassNumber!=null).Count();
         }
     }
 }
