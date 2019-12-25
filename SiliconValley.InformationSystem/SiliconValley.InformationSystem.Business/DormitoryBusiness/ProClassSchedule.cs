@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.Employment;
+﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using System;
 using System.Collections.Generic;
@@ -13,14 +14,16 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
     /// </summary>
    public class ProClassSchedule:BaseBusiness<ClassSchedule>
     {
+        private ClassScheduleBusiness dbclassSchedule;
         private EmpQuarterClassBusiness dbempQuarterClass;
         /// <summary>
         /// 获取没有毕业的还在用的班级
         /// </summary>
         /// <returns></returns>
-        public List<ClassSchedule> GetClassSchedules() {
-            return this.GetIQueryable().Where(a => a.IsDelete == false && a.ClassStatus == false).ToList();
-            
+        public List<ClassSchedule> GetClassSchedules()
+        {
+            dbclassSchedule = new ClassScheduleBusiness();
+            return dbclassSchedule.Normalclass();
         }
 
         /// <summary>
@@ -66,7 +69,8 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <returns></returns>
         public List<ClassSchedule> GetClassSchedulesed() {
-            return this.GetIQueryable().Where(a => a.IsDelete == false && a.ClassStatus == true).ToList();
+            dbclassSchedule = new ClassScheduleBusiness();
+           return  dbclassSchedule.Graduatingclass();
         }
 
         /// <summary>
