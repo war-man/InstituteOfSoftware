@@ -84,9 +84,9 @@
 
 <script>
 
-    layui.use(['laypage', 'layedit','table','layer'], function () {
+    layui.use(['laypage', 'layedit','table','layer','form'], function () {
         //获取设备信息
-        var device = layui.device(), table = layui.table, clickclassnumber = '', layer = layui.layer;
+        var device = layui.device(), table = layui.table, clickclassnumber = '', layer = layui.layer, form = layui.form;
          var type = "ing", classno, classid, studentname, isadd = false;
         
         jQuery(function () {
@@ -132,9 +132,9 @@
 
                     }
                 },
-                { field: 'interviewcount', title: '访谈次数',width:90 },
-                { field: 'totalnumber', title: '应访谈人数', width: 100 },
-                  { field: 'peoplecount', title: '实际访谈人数',width:115  },
+                { field: 'interviewcount', title: '模拟次数',width:90 },
+                { field: 'totalnumber', title: '应模拟人数', width: 100 },
+                  { field: 'peoplecount', title: '实际模拟人数',width:115  },
                 { field: 'repeatedinterviews', title: '重复次数', width: 90 }
               
             ]]
@@ -143,7 +143,7 @@
 
        function reloadtable00() {
             table.reload('table00', {
-                url:'/Obtainemployment/SResearchRecord/SearchData0',
+                url:'/Obtainemployment/SimulatInterview/SearchData0',
                 where: {
                     param0: type,
                     param1:classno
@@ -164,7 +164,7 @@
                         }
                        
                     }
-                    //reloadtable11();
+                    reloadtable11();
                     
                      
                 }
@@ -209,11 +209,11 @@
             ]]
 
         });
-        function reloadtable() {
+        function reloadtable11() {
             table.reload('table11', {
                 url: '/Obtainemployment/SimulatInterview/SearchData',
                 where: {
-                    param0: clickclassnumber
+                    param0: classid
                 }
                 , page: {
                     curr: 1 //重新从第 1 页开始
@@ -221,6 +221,21 @@
             });
         }
        
+        form.on('select(select00)', function (data) {
+            console.log(data.elem); //得到select原始DOM对象
+            console.log(data.value); //得到被选中的值
+            console.log(data.othis); //得到美化后的DOM对象
+            switch (data.value) {
+                case "ed":
+                    type = "ed";
+                    break;
+                case "ing":
+                    type = "ing";
+                    break;
+            }
+            isadd = false;
+            reloadtable00();
+        });
         $(document).off('click', '.myclass').on('click', '.myclass', function (e) {
             $('.myclass').removeClass('layui-btn-warm');
             $(this).addClass('layui-btn-warm');
@@ -239,19 +254,33 @@
             $(mytr).css("background", "pink");
             reloadtable11();
         });
+        form.on('submit(btn0)', function (data) {
+            //console.log(data.field);
+            classno = data.field.name0;
+            isadd = false;
+            reloadtable00();
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+        form.on('submit(btn1)', function (data) {
+            //console.log(data.field);
+            classno = data.field.name0;
+            isadd = false;
+            reloadtable00();
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
          //头工具栏事件
         table.on('toolbar(table11)', function (obj) {
             switch (obj.event) {
                 case 'add':
                     layer.open({
                         type: 2,
-                        content: "/Obtainemployment/SimulatInterview/SResearchRecordRegister?param0="+clickclassnumber,
-                        title: "添加谈话",
+                        content: "/Obtainemployment/SimulatInterview/SResearchRecordRegister?param0="+classid,
+                        title: "添加面试记录",
                         area: ['690px', '820px'],
                         //area: ['850px', '760px'],
                         success: function (layero, index) {
                             let body = layui.layer.getChildFrame('body', index);
-                            body.find("#classnumnber").val(clickclassnumber);
+                            body.find("#classnumnber").val(classid);
                         },
                         end: function () {
                             reloadtable();

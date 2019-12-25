@@ -72,7 +72,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 result = dbempClass.CorrespondingByClassNumber(result, param1);
             }
-            var aa = dbempClass.Conversion(result);
+            var aa = dbempClass.Conversion1(result);
 
             var resultdata1 = aa.OrderByDescending(a => a.classid).Skip((page - 1) * limit).Take(limit).ToList();
 
