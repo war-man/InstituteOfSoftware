@@ -193,7 +193,15 @@
                     datatype: 'json',
                     success: function (successdata) {
                         if (successdata.Success) {
-                            loadstudent(successdata.Data.Studentlist);
+
+                            if (successdata.Data.Studentlist.length>0) {
+                                loadstudent(successdata.Data.Studentlist);
+                            } else {
+                                   layer.msg('暂未可操作学生!', { icon: 6, time: 2000 }, function () {
+                                       close();
+                            });
+                            }
+                            
 
                         } else {
                             layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {

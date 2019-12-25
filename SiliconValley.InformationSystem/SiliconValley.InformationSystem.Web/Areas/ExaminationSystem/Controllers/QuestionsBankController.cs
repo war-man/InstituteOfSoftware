@@ -638,7 +638,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 string filename = word.FileName;
                 string Extension = Path.GetExtension(filename);
 
-                string newfilename = DateTime.Now.ToLongDateString() + Extension;
+                TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+
+                 var Utc = Convert.ToInt64(ts.TotalSeconds).ToString();
+
+                string newfilename = Utc + Extension;
 
                 string path = Server.MapPath("~/uploadXLSXfile/ComputerTestQuestionsWord/" + newfilename);
 

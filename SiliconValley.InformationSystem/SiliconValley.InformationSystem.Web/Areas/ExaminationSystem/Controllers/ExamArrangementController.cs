@@ -1653,5 +1653,107 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         {
             return View();
         }
+
+
+        /// <summary>
+        /// 选择考试数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult selectExam()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 选择考生数据
+        /// </summary>
+        /// <param name="examid"></param>
+        /// <returns></returns>
+
+        public ActionResult selectcandidInfo(int examid)
+        {
+
+            ViewBag.Examid = examid;
+            return View();
+
+        }
+
+        /// <summary>
+        /// 考生数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExamStuData(int examid, int limit, int page)
+        {
+            BaseBusiness<StudentInformation> dbstudent = new BaseBusiness<StudentInformation>();
+
+            List<StudentInformation> stulit = new List<StudentInformation>();
+
+            var candidifnolist = db_examination.AllCandidateInfo(examid);
+
+            var skiplist = candidifnolist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            foreach (var item in skiplist)
+            {
+               var tempobj = dbstudent.GetEntity(item.StudentID);
+
+                if (tempobj != null)
+                {
+                    stulit.Add(tempobj);
+                }
+            }
+
+            var obj = new {
+
+                code = 0,
+                msg ="",
+                count = candidifnolist.Count,
+                data = stulit
+
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+
+        }
+
+        /// <summary>
+        /// 提交考试违纪记录
+        /// </summary>
+        /// <returns></returns>
+        /// 
+        [HttpPost]
+        public ActionResult ExamBreach(int examid, string stumber, string breach)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                BaseBusiness<ExamBreach> dbexambreach = new BaseBusiness<ExamBreach>();
+
+                ExamBreach data = new ExamBreach();
+                data.Breach = breach;
+                data.CreateDate = DateTime.Now;
+                data.Exam = examid;
+                data.StudentNumber = stumber;
+
+                dbexambreach.Insert(data);
+
+                result.ErrorCode = 200;
+                result.Msg = "";
+                result.Data = null;
+            }
+            catch (Exception ex)
+            {
+                result.ErrorCode = 500;
+                result.Msg = "";
+                result.Data = null;
+
+               
+            }
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
     }
 }

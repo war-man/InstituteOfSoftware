@@ -19,6 +19,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         private SurveyRecordsBusiness dbsurveyRecords;
         private CDInterviewBusiness dbCDInterview;
         private EmploymentStaffBusiness dbemploymentStaff;
+        private SimulatInterviewBusiness dbsimulatInterview;
         /// <summary>
         /// 获取所有的专员带班记录
         /// </summary>
@@ -372,7 +373,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 }
                 empClassView.peoplecount = surveylist.Count;
 
-                if (query.ClassStatus == true)
+                if (dbproClassSchedule.isgraduationclass(query.id))
                     empClassView.isgraduation = true;
                 else
                     empClassView.isgraduation = false;
@@ -381,6 +382,57 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return views;
         }
 
+        /// <summary>
+        /// 转化 将就业部带班记录转为SimulatInterviewView 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public List<SimulatInterviewView> Conversion1(List<EmpClass> result)
+        {
+            dbproClassSchedule = new ProClassSchedule();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbsimulatInterview = new SimulatInterviewBusiness();
+            List<SimulatInterviewView> views = new List<SimulatInterviewView>();
+        
+            foreach (var item in result)
+            {
+                var query = dbproClassSchedule.GetEntity(item.ClassId);
+
+                //该班级的面试记录
+                var surveylist = dbsimulatInterview.GetSimulatInterviewsByclassid(item.ClassId);
+
+                //班级学生记录
+                var trainesslist = dbproScheduleForTrainees.GetTraineesByClassid(item.ClassId);
+
+                SimulatInterviewView simulatInterviewView = new SimulatInterviewView();
+
+                simulatInterviewView.classid = query.id;
+                simulatInterviewView.classnumber = query.ClassNumber;
+                simulatInterviewView.interviewcount = surveylist.Count;
+                simulatInterviewView.totalnumber = trainesslist.Count;
+                simulatInterviewView.repeatedinterviews = 0;
+                for (int i = 0; i < surveylist.Count; i++)
+                {
+                    for (int j = surveylist.Count - 1; j > i; j--)  //内循环是 外循环一次比较的次数
+                    {
+                        if (surveylist[i].StudentNo == surveylist[j].StudentNo)
+                        {
+                            surveylist.RemoveAt(j);
+                            simulatInterviewView.repeatedinterviews = simulatInterviewView.repeatedinterviews + 1;
+                        }
+                    }
+                }
+                simulatInterviewView.peoplecount = surveylist.Count;
+
+                if (dbproClassSchedule.isgraduationclass(query.id))
+                    simulatInterviewView.isgraduation = true;
+                else
+                    simulatInterviewView.isgraduation = false;
+                views.Add(simulatInterviewView);
+
+            }
+            return views;
+        }
 
         /// <summary>
         /// 转化 数据返回右侧数据 cd

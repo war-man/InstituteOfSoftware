@@ -19,11 +19,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Table("ClassSchedule")]
     public partial class ClassSchedule
     {
-
-
-
-      
-        ///   /// <summary>
+       /// <summary>
         /// 班级id
         /// </summary>
         [Key]

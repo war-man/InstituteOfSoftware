@@ -2094,6 +2094,23 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return retus;
         }
+        /// <summary>
+        /// 获取毕业班级
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassSchedule> Graduatingclass()
+        {
+            var GradID = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "毕业").FirstOrDefault().id;
+           return this.GetList().Where(a => a.IsDelete == false && a.ClassstatusID == GradID).ToList();
+        }
+        /// <summary>
+        /// 获取正常班级
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassSchedule> Normalclass()
+        {
+            return this.GetList().Where(a => a.IsDelete == false && a.ClassstatusID == null).ToList();
+        }
 
         public object Entranceexaminationresults()
         {
