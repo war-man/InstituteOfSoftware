@@ -19,13 +19,13 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">原本日期:</label>
                     <div class="layui-input-block">
-                        <input id="oldTime" name="oldTime" class="layui-input" />
+                        <input id="oldTime" name="oldTime" class="layui-input" lay-verify="required"/>
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">上课日期:</label>
                     <div class="layui-input-block">
-                        <input id="endtime" name="endtime" class="layui-input" />
+                        <input id="endtime" name="endtime" class="layui-input" lay-verify="required"/>
                     </div>
                 </div>
 
@@ -50,12 +50,15 @@
                 elem: '#oldTime'
                 , theme: 'molv'
             });
-
+            laydate.render({
+                elem: '#endtime'
+                , theme: 'molv'
+            });
             //监听提交
             form.on('submit(Update_Big)', function (data) {
 
                 $.ajax({
-                    url: '/Educational/EvningSelfStudy/BigDataADIfunction',
+                    url: '/Educational/EvningSelfStudy/BigDataChangFunction',
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {

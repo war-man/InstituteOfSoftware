@@ -222,7 +222,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }            
             return result;
         }
-
+        /// <summary>
+        /// 日期往前挪或往后退
+        /// </summary>
+        /// <param name="s1ors3"></param>
+        /// <param name="count"></param>
+        /// <param name="starTime"></param>
+        /// <returns></returns>
         public AjaxResult ALLDataADI(bool s1ors3,int count,DateTime starTime)
         {
             AjaxResult a = new AjaxResult();
@@ -267,6 +273,34 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 a.Success = false;
                 a.Msg = ex.Message;
             }
+            return a;
+        }
+
+        /// <summary>
+        /// 上课日期调换
+        /// </summary>
+        /// <param name="e"></param>
+        /// <param name="d1"></param>
+        /// <returns></returns>
+        public AjaxResult ChangDate(List<EvningSelfStudy> e,DateTime d1)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                foreach (EvningSelfStudy it in e)
+                {
+                    it.Anpaidate = d1;
+                    this.Update(it);
+                }
+                EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+                a.Success = true;               
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+            }
+
             return a;
         }
     }

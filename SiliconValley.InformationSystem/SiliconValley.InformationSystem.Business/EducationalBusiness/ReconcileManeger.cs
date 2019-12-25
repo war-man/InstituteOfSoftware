@@ -61,8 +61,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 s = true;
                 Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                string e = ex.Message;
                 s = false;                
             }
             return s;
@@ -188,7 +189,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 foreach (Reconcile item in r)
                 {
-                    item.Curse_Id = timename;
+                    if (item.Curse_Id=="下午" || item.Curse_Id == "上午")
+                    {
+                        item.Curse_Id = timename;
+                    }else
+                    {
+                        string tr = item.Curse_Id.Substring(2, 2);
+                        item.Curse_Id = timename=="上午"? "下午" + tr+"节":"上午"+tr+"节";
+                    }
+                    
+                    
                     this.Update(item);
                 }
                 Reconcile_Com.redisCache.RemoveCache("ReconcileList");
@@ -223,6 +233,28 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a; 
         }
+        
+        public AjaxResult update_date4(List<Reconcile> r, DateTime time)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                foreach (Reconcile em in r)
+                {
+                    em.AnPaiDate = time;
+                    this.Update(em);
+                }
+                a.Success = true;
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+            }
+            return a; 
+
+        }
+       
         
         /// <summary>
          /// 判断日期是否可以排课（true--可以排课，false--不可以排课）
@@ -1130,12 +1162,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                 foreach (ClassSchedule c1 in monring)
                 {
-                    //判断这个班级是否是Y1,判断课程是否是英语
-                    bool is1 = Reconcile_Com.GetBrand(c1.grade_Id);
-                    if (is1 == true && currname == "英语")
-                    {
-                        break;
-                    }
+                     
                     foreach (Classroom c2 in getroom2)
                     {
                         //看看这个教室排满了没有
@@ -1176,6 +1203,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             }
                             else
                             {
+                                //判断这个班级是否是Y1,判断课程是否是英语
+                                bool is1 = Reconcile_Com.GetBrand(c1.grade_Id);
+                                if (is1 == true && currname == "英语")
+                                {
+                                    break;
+                                }
                                 //判断这个班级是否在这个期间安排了这个课程
                                 bool Ishavecurr = IsHaveCurr(times[0], times[times.Count - 1], currname, c1.id);
                                 if (Ishavecurr == false)
@@ -1189,12 +1222,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                             if (isok)
                                             {
                                                 //获取英语老师                                                                                                
-                                                r.EmployeesInfo_Id = AnpaiTeacher(c1.grade_Id, currname, str, time);
+                                                r.EmployeesInfo_Id =string.IsNullOrEmpty( AnpaiTeacher(c1.grade_Id, currname, str, time))==true?null: AnpaiTeacher(c1.grade_Id, currname, str, time);
                                             }
                                             break;
                                         case "班会":
                                             //获取班会老师
-                                            r.EmployeesInfo_Id = GetMasterTeacher(c1.id, time, str);
+                                            r.EmployeesInfo_Id = string.IsNullOrEmpty(GetMasterTeacher(c1.id, time, str))==true?null: GetMasterTeacher(c1.id, time, str);
                                             break;
                                         case "职素":
                                             //判断该班级是否可以安排职素课
@@ -1202,7 +1235,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                             if (isok2)
                                             {
                                                 //获取职素老师
-                                                r.EmployeesInfo_Id = GetRandMASteacher(true, IsOld, time, r.Curse_Id).EmployeeId;
+                                                r.EmployeesInfo_Id = GetRandMASteacher(true, IsOld, time, r.Curse_Id)==null?null: GetRandMASteacher(true, IsOld, time, r.Curse_Id).EmployeeId;
                                             }
                                             break;
                                         case "军事":
@@ -1211,7 +1244,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                             if (isok3)
                                             {
                                                 //获取军事老师
-                                                r.EmployeesInfo_Id = GetRandMASteacher(false, IsOld, time, r.Curse_Id).EmployeeId;
+                                                r.EmployeesInfo_Id = GetRandMASteacher(false, IsOld, time, r.Curse_Id)==null?null: GetRandMASteacher(false, IsOld, time, r.Curse_Id).EmployeeId;
                                             }
                                             break;
                                     }

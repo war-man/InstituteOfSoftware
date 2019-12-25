@@ -864,6 +864,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         #endregion
 
+        #region 调课
         /// <summary>
         /// 修改班级上课时间段页面
         /// </summary>
@@ -972,7 +973,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 if (find_ct != null)
                 {
                     find_ct.TeacherID = teacher_id;
-                    TeacherClass_Entity.Update(find_ct);
+                    Reconcile_Com.TeacherClass_Entity.Update(find_ct);
 
                     //更新排课表
                     DateTime dd = DateTime.Now;
@@ -988,7 +989,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 }
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 a.Success = false;
                 a.Msg = "系统错误！！！";
@@ -996,5 +997,56 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             }
             
         }
+
+        /// <summary>
+        /// 全体上课日期调换
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ChangReconciledata()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ChangReconcileFunction()
+        {
+            DateTime startime = Convert.ToDateTime(Request.Form["starTime"]);
+            DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);
+            List<ClassSchedule> class_s= Reconcile_Com.GetClass(IsOld);
+            List<Reconcile> lisr_r= Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate == startime).ToList();
+            List<Reconcile> find_lidt = new List<Reconcile>();
+            foreach (Reconcile i in lisr_r)
+            {
+                int count = class_s.Where(s => s.id == i.ClassSchedule_Id).ToList().Count;
+                if (count>0)
+                {
+                    find_lidt.Add(i);
+                }
+            }
+            AjaxResult a= Reconcile_Entity.update_date4(find_lidt, endtime);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 指定班级上课日期调换
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ChangClassDateView()
+        {
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grandlist = g_list;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ChangClassDataFunction()
+        {
+            int class_id = Convert.ToInt32(Request.Form["class_select"]);
+            DateTime startime = Convert.ToDateTime(Request.Form["starTime"]);
+            DateTime endtime = Convert.ToDateTime(Request.Form["endTime"]);
+            List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate == startime).ToList();
+           AjaxResult a=  Reconcile_Entity.update_date4(find_list, endtime);
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

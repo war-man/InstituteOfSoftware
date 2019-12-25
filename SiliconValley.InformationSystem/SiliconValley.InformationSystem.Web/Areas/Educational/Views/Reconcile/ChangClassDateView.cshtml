@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>ClassDataADIview</title>
+    <title>ChangClassDateView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
 </head>
 <body>
@@ -18,7 +18,7 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">阶段:</label>
                     <div class="layui-input-block">
-                        @Html.DropDownList("glist", ViewBag.grlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grand" } })
+                        @Html.DropDownList("glist", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grand" } })
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -55,7 +55,7 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form', 'laydate'], function () {
+        layui.use(['form','laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             laydate.render({
@@ -69,7 +69,7 @@
 
             form.on('select(grand)', function (data) {
                 $("#Myclass_Div")[0].innerHTML = "";
-                if (data.value != "0") {
+                if (data.value!="0") {
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
                         success: function (sudata) {
@@ -88,7 +88,7 @@
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
                 $.ajax({
-                    url: '/Educational/Reconcile/ClassBigDataFunction',
+                    url: '/Educational/Reconcile/ChangClassDataFunction',
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {
