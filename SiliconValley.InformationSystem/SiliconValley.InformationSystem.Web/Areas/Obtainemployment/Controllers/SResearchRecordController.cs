@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    //[CheckLogin]
+    [CheckLogin]
     /// <summary>
     /// 学生第一次访谈
     /// </summary>
@@ -183,6 +183,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             };
             return Json(returnObj, JsonRequestBehavior.AllowGet);
         }
+
         /// <summary>
         /// 右侧
         /// </summary>

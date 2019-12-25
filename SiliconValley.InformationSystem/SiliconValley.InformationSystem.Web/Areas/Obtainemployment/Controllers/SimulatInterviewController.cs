@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
@@ -17,6 +18,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
     /// </summary>
     public class SimulatInterviewController : Controller
     {
+        private EmploymentJurisdictionBusiness dbemploymentJurisdiction;
         private EmpClassBusiness dbempClass;
         private ProScheduleForTrainees dbproScheduleForTrainees;
         private ProStudentInformationBusiness dbproStudentInformation;
@@ -26,16 +28,64 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         // GET: Obtainemployment/SimulatInterview
         public ActionResult SimulatInterviewIndex()
         {
-            //1：获取登陆用户的信息 但是我是在用测试阶段 所以使用一个简单的 empid  杨雪：201908220012
-            dbempClass = new EmpClassBusiness();
-            var list = dbempClass.GetEmpClassesByempinfoid("201908220012");
-            var aa = list.Select(a => new
-            {
-                ClassNumber = a.ClassId
-            }).ToList();
-            ViewBag.list = Newtonsoft.Json.JsonConvert.SerializeObject(aa);
             return View();
         }
+        /// <summary>
+        /// 左侧表格
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="param0"></param>
+        /// <param name="param1">班级号</param>
+        /// <returns></returns>
+        public ActionResult SearchData0(int page, int limit, string param0, string param1)
+        {
+
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
+            dbempClass = new EmpClassBusiness();
+            dbproClassSchedule = new ProClassSchedule();
+            List<EmpClass> result = new List<EmpClass>();
+            if (dbemploymentJurisdiction.isstaffJurisdiction(user))
+            {
+                result = dbempClass.GetIQueryable().Where(a => a.IsDel == false).ToList();
+            }
+            else
+            {
+                result = dbempClass.GetEmpClassesByempinfoid(user.EmpNumber);
+            }
+            switch (param0)
+            {
+                case "ing":
+                    result = dbempClass.Leavebehinding(result);
+                    break;
+                case "ed":
+                    result = dbempClass.Leavebehinded(result);
+                    break;
+
+                default:
+                    result = dbempClass.Leavebehinding(result);
+                    break;
+            }
+
+            if (!string.IsNullOrEmpty(param1))
+            {
+                result = dbempClass.CorrespondingByClassNumber(result, param1);
+            }
+            var aa = dbempClass.Conversion(result);
+
+            var resultdata1 = aa.OrderByDescending(a => a.classid).Skip((page - 1) * limit).Take(limit).ToList();
+
+            var returnObj = new
+            {
+                code = 0,
+                msg = "",
+                count = aa.Count(),
+                data = resultdata1
+            };
+            return Json(returnObj, JsonRequestBehavior.AllowGet);
+        }     
+
         /// <summary>
         /// 获取数据
         /// </summary>
