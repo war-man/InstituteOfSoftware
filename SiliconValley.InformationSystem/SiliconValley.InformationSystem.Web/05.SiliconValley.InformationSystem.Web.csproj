@@ -1294,6 +1294,10 @@
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\Transactiondetails.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentTransaction\transactionprocessing.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\AddClassactivities.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\AddExamBreachView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\ExamBreachView.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\selectcandidInfo.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\ExamArrangement\selectExam.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
