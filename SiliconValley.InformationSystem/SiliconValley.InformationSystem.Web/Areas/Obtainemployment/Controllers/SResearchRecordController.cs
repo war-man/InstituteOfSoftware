@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    [CheckLogin]
+    //[CheckLogin]
     /// <summary>
     /// 学生第一次访谈
     /// </summary>
@@ -72,9 +72,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
             catch (Exception)
             {
-
                 ajaxResult.Success = false;
-
             }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
@@ -202,6 +200,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             if (!string.IsNullOrEmpty(param0))
             {
                 var list = dbproScheduleForTrainees.GetTraineesByClassid(int.Parse(param0));
+              
                 var list1 = dbsurveyRecords.GetSurveys();
 
 
