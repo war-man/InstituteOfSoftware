@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.Channel;
+﻿using SiliconValley.InformationSystem.Business;
+using SiliconValley.InformationSystem.Business.Channel;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Psychro;
@@ -69,6 +70,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         private StudentInformationBusiness dbstudent;
 
         private ScheduleForTraineesBusiness dbclass;
+
+        private TeacherClassBusiness dbteacherClass;
 
 
         public ActionResult NewChannelYearPlanIndex()
@@ -874,6 +877,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbheadermaster = new HeadmasterBusiness();
             dbclass = new ScheduleForTraineesBusiness();
             dbstudent = new StudentInformationBusiness();
+            dbteacherClass = new TeacherClassBusiness();
             SchoolYearPlan nowplan = dbschoolpaln.GetPlanByID(myplanid);
             //根据选择的的条件获取对应的员工
             List<ChannelStaff> Querylist = this.Resultbytiaojian(myempid, myistema, nowplan);
@@ -907,7 +911,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 var empinfo= dbempstaff.GetInfoByEmpID(item.EmployeesInfo_Id);
                 var sutdentlist =dbstudent.GetIQueryable().ToList();
                 var student = sutdentlist.Where(a => a.IsDelete == false && a.StudentPutOnRecord_Id == item.Id).FirstOrDefault();
-                var mrdteacher = dbteacher.GetTeacherByStudent(student.StudentNumber);
+                var mrdteacher = dbteacherClass.GetTeacherByStudent1(student.StudentNumber);
 
                 var headermaster = dbheadermaster.Listheadmasters(student.StudentNumber);
 
@@ -940,5 +944,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(returnObj, JsonRequestBehavior.AllowGet);
 
         }
+
+ 
     }
 }

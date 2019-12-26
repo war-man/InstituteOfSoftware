@@ -195,6 +195,49 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return returnlist.OrderByDescending(d=>d.TeacherID) .ToList();
 
         }
+        /// <summary>
+        /// 获取所有教员
+        /// </summary>
+        /// <returns></returns>
+        public List<Teacher> GetTeachers1()
+        {
+
+            List<Teacher> resultlist = new List<Teacher>();
+
+            var temp = this.GetList().Where(d => d.IsDel == false).ToList();
+
+            foreach (var item in temp)
+            {
+                if (!EmpIsDel(item))
+                {
+                    resultlist.Add(item);
+                }
+            }
+
+            //排除掉教务
+
+            List<Teacher> returnlist = new List<Teacher>();
+
+            foreach (var item in resultlist)
+            {
+                var emp = this.GetEmpByEmpNo(item.EmployeeId);
+
+                var empview = this.ConvertToEmpDetailView(emp);
+
+                if (empview != null)
+                {
+                    if (!empview.PositionId.PositionName.Contains("教务"))
+                    {
+                        returnlist.Add(item);
+                    }
+                }
+
+            }
+
+
+            return returnlist.OrderByDescending(d => d.TeacherID).ToList();
+
+        }
 
         /// <summary>
         /// / 更具员工编号获取员工

@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    [CheckLogin]
+    //[CheckLogin]
     /// <summary>
     /// 学生第一次访谈
     /// </summary>
@@ -58,6 +58,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// <returns></returns>
         public ActionResult SResearchRecordRegister(SurveyRecords param0)
         {
+            dbemploymentStaff = new EmploymentStaffBusiness();
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             var query = dbemploymentStaff.GetEmploymentStaffByempid(user.EmpNumber);
             AjaxResult ajaxResult = new AjaxResult();
