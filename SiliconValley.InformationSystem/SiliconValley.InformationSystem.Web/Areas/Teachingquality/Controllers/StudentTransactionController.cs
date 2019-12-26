@@ -51,7 +51,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult transactionprocessing()
         {
             ViewBag.ClassID = Request.QueryString["ClassID"];
-            ViewBag.Types = BasicdatBusiness.GetList().Where(a => a.IsDetele == false).Select(a => new SelectListItem { Value = a.ID.ToString(), Text = a.Name });
+            ViewBag.Types = BasicdatBusiness.GetList().Where(a => a.IsDetele == false&&a.Name!="毕业").Select(a => new SelectListItem { Value = a.ID.ToString(), Text = a.Name });
             return View();
         }
         /// <summary>

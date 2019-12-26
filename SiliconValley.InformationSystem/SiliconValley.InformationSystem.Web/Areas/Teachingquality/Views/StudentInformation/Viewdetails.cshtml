@@ -55,12 +55,17 @@
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">出生日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="BirthDates" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">年龄</label>
                 <div class="layui-input-inline">
                     <input type="text" id="BirthDate" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
                 </div>
             </div>
-
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label" id="ClassNames">班级</label>
                 <div class="layui-input-inline">
@@ -74,7 +79,7 @@
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                <label class="layui-form-label" >亲属电话</label>
+                <label class="layui-form-label">亲属电话</label>
                 <div class="layui-input-inline">
                     <input type="text" id="Familyphone" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
                 </div>
@@ -229,7 +234,8 @@
             $("#Familyaddress").val(data.Familyaddress);//家庭住址
             $("#WeChat").val(data.WeChat);//微信
             $("#qq").val(data.qq);//qq
-            $("#BirthDate").val(Age(TimeChange(data.BirthDate)));//出生日期
+            $("#BirthDate").val(Age(TimeChange(data.BirthDate)));//年龄
+            $("#BirthDates").val(TimeChange(data.BirthDate));//出生日期
             $("#identitydocument").val(data.identitydocument);//身份证号码
             $("#Reack").val(data.Reack)//备注
             $("#Traine").val(data.Traine)//学员性格

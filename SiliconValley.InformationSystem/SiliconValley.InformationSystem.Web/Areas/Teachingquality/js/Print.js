@@ -56,6 +56,7 @@
             inputs[k].removeAttribute('checked')
           }
         } else if (inputs[k].type == "text") {
+            console.log(inputs[k].value);
           inputs[k].setAttribute('value', inputs[k].value)
         }
       }
