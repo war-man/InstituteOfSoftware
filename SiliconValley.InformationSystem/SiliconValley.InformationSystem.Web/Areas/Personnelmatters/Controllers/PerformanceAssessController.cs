@@ -25,10 +25,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult PerformanceAssessShow(int page,int limit) {
+        public ActionResult PerformanceAssessShow(int page,int limit,string AppCondition) {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var mclist = mcmanage.GetList().Where(s=>s.IsDel==false).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string ename = str[0];
+                string deptname = str[1];
+                string pname = str[2];
+                string Empstate = str[3];
+                mclist = mclist.Where(e => emanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(deptname))
+                {
+                    mclist = mclist.Where(e => emanage.GetDeptByEmpid(e.EmployeeId).DeptId == int.Parse(deptname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(pname))
+                {
+                    mclist = mclist.Where(e => emanage.GetPositionByEmpid(e.EmployeeId).Pid == int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(Empstate))
+                {
+                    mclist = mclist.Where(e => emanage.GetInfoByEmpID(e.EmployeeId).IsDel == bool.Parse(Empstate)).ToList();
+                }
+
+            }
             var newlist = mclist.Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new

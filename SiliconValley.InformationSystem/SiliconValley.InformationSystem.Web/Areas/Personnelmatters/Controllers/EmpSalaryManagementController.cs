@@ -218,7 +218,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.id = id;
             return View(msr);
         }
-       
+        public ActionResult GetMSRById(int id)
+        {
+            MonthlySalaryRecordManage esemanage = new MonthlySalaryRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var ese = esemanage.GetEntity(id);
+            var newobj = new
+            {
+                ese.Id,
+                ese.EmployeeId,
+                empName = empmanage.GetEntity(ese.EmployeeId).EmpName,
+                deptName = empmanage.GetDeptByEmpid(ese.EmployeeId).DeptName,
+                pName = empmanage.GetPositionByEmpid(ese.EmployeeId).PositionName,
+                ese.Bonus,
+                ese.OvertimeCharges,
+                ese.OtherDeductions,
+                ese.IsDel
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult EditEmpSalary(MonthlySalaryRecord msr) {
             var AjaxResultxx = new AjaxResult();
