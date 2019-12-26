@@ -905,11 +905,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     baominglist.AddRange(resultlist);
                 }
             }
-
+            var sutdentlist = dbstudent.GetIQueryable().ToList();
             foreach (var item in baominglist)
             {
                 var empinfo= dbempstaff.GetInfoByEmpID(item.EmployeesInfo_Id);
-                var sutdentlist =dbstudent.GetIQueryable().ToList();
                 var student = sutdentlist.Where(a => a.IsDelete == false && a.StudentPutOnRecord_Id == item.Id).FirstOrDefault();
                 var mrdteacher = dbteacherClass.GetTeacherByStudent1(student.StudentNumber);
 
@@ -922,8 +921,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 listView.GoSchoolDate = Convert.ToDateTime(item.StuVisit);
                 listView.StudentName = item.StuName;
                 listView.OldSchoolName = item.StuSchoolName;
-                listView.ProfessionalTeacher = dbempstaff.GetInfoByEmpID(mrdteacher.EmployeeId).EmpName;
-                listView.Headmaster = dbempstaff.GetInfoByEmpID(headermaster.EmployeeId).EmpName;
+                listView.ProfessionalTeacher = mrdteacher.EmpName;
+
+                if (headermaster==null)
+                {
+                    listView.Headmaster = "暂无班主任";
+                }
+                else
+                {
+                    listView.Headmaster = headermaster.EmpName;
+                }
+                
                 listView.ClassNo = dbclass.SutdentCLassName(student.StudentNumber).ClassID;
 
                 resultdataviewlist.Add(listView);
