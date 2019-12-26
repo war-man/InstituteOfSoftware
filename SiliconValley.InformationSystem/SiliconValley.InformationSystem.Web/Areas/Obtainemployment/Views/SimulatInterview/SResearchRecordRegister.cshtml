@@ -69,7 +69,7 @@
                                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                                     <label class="layui-form-label lad">班级名称:</label>
                                     <div class="layui-input-inline">
-                                        <input type="text" id="classnumnber" class="layui-input" readonly="readonly" style="border:none" />
+                                        <input type="text" id="classnumber" class="layui-input" readonly="readonly" style="border:none" />
 
                                     </div>
                                 </div>
@@ -177,9 +177,10 @@
             //获取设备信息
             var layer = layui.layer, form = layui.form, element = layui.element, StudentNO = '',classnumber="";
 
-            jQuery(function () {
-                classnumber = '@Html.Raw(ViewBag.param0)';
-                $("#classnumnber").val(classnumber);
+                 jQuery(function () {
+                 classnumber = '@Html.Raw(ViewBag.param0)';
+                classid = '@Html.Raw(ViewBag.param1)';
+                $("#classnumber").val(classnumber);
                 loaddata();
 
             });
@@ -189,7 +190,7 @@
                     url: '/Obtainemployment/SimulatInterview/getmudata',
                     type: 'GET',
                     async: false,//设置按钮是否禁用
-                    data: { param0: classnumber },
+                    data: { param0: classid },
                     datatype: 'json',
                     success: function (successdata) {
                         if (successdata.Success) {
@@ -201,17 +202,17 @@
                                        close();
                             });
                             }
-                            
+
 
                         } else {
                             layer.msg('请及时联系信息部的成员!', { icon: 6, time: 2000 }, function () {
-
+                                  close();
                             });
                         }
                     },
                     error: function (errordata) {
                         layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
-
+                              close();
                         });
                     }
                 });
@@ -233,7 +234,7 @@
                     form.render();
                 }
             }
-    
+
             form.on('radio(vvv)', function (data) {
                 //console.log(data.elem); //得到radio原始DOM对象
                 //console.log(data.value); //被点击的radio的value值
