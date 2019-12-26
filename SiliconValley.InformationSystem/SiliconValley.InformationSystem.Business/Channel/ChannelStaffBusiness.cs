@@ -305,7 +305,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
             List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
             foreach (var item in data)
             {
-                if (item.StatusTime!=null)
+                if (item.StuStatus_Id==2)
                 {
                     if (Convert.ToDateTime(item.StatusTime).Month == month)
                     {

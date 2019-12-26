@@ -9,6 +9,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+    using SiliconValley.InformationSystem.Business.DormitoryBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -329,21 +330,55 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <param name="studentnumber">学员编号</param>
         /// <returns></returns>
-        public Teacher GetTeacherByStudent1(string studentnumber)
+        public EmployeesInfo GetTeacherByStudent1(string studentnumber)
         {
-            //获取学员班级
 
-            var dd = db_studentclass.GetList().Where(d => d.StudentID == studentnumber && d.CurrentClass == true).FirstOrDefault();
+            ProStudentInformationBusiness proStudentInformationBusiness = new ProStudentInformationBusiness();
+            EmployeesInfo t = new EmployeesInfo();
+            var query= proStudentInformationBusiness.GetEntity(studentnumber);
+            if (query.State==2)
+            {
+                t.EmpName = "";
+                return t;
+            }
+            else
+            {
+                //获取学员班级
 
-            TeacherBusiness db = new TeacherBusiness();
+                var dd = db_studentclass.GetList().Where(d => d.StudentID == studentnumber && d.CurrentClass == true).FirstOrDefault();
 
-            return db.GetTeachers1().Where(x => x.TeacherID == this.GetList().Where(d => d.ClassNumber == dd.ID_ClassName && d.IsDel == false).FirstOrDefault().TeacherID).FirstOrDefault();
 
+                if (dd == null)
+                {
+                    t.EmpName = "";
+                    return t;
+                }
+                else
+                {
+                    TeacherBusiness db = new TeacherBusiness();
+
+
+                    var teachclass = this.GetList().Where(d => d.ClassNumber == dd.ID_ClassName && d.IsDel == false).FirstOrDefault();
+
+                    if (teachclass == null)
+                    {
+                        t.EmpName = "";
+                        return t;
+                    }
+
+                    ///获取老师对性能
+                    var teacher = db.GetTeachers1().Where(d => d.TeacherID == teachclass.TeacherID).FirstOrDefault();
+
+                    return db_teacher.GetEmpByEmpNo(teacher.EmployeeId);
+                }
+               
+            }
+          
 
 
         }
 
-        
+
         /// <summary>
         /// 获取班级教学老师
         /// </summary>
