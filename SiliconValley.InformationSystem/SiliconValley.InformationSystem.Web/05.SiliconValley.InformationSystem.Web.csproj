@@ -1360,6 +1360,7 @@
     <Content Include="Areas\Teaching\Views\Class\GetStuHomeWorkDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\RecordStuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\EditEmpPFAssess.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />

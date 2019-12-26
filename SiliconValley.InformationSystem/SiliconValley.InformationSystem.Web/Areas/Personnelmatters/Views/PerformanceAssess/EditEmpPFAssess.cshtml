@@ -73,14 +73,14 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>日常工作权重占比:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.RoutineWorkPropotion, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.RoutineWorkPropotion, new Dictionary<string, object>() { { "class", "layui-input rate" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>日常工作完成率:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.RoutineWorkFillRate, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.RoutineWorkFillRate, new Dictionary<string, object>() { { "class", "layui-input rate" } })
                         </div>
                     </div>
                 </div>
@@ -98,14 +98,14 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>其他工作权重占比:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.OtherWorkPropotion, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.OtherWorkPropotion, new Dictionary<string, object>() { { "class", "layui-input rate" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label" @*style="width:150px;margin-left:-30px;"*@>其他工作完成率:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.OtherWorkFillRate, new Dictionary<string, object>() { { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.OtherWorkFillRate, new Dictionary<string, object>() { { "class", "layui-input rate" } })
                         </div>
                     </div>
                 </div>
@@ -159,10 +159,10 @@
                     var form = layui.form;
                     $("#empName").val(data.empName);
                     data.Sex = data.Sex.toString();
-                    data.RoutineWorkPropotion = data.RoutineWorkPropotion>0&& data.RoutineWorkPropotion <= 1 ? (data.RoutineWorkPropotion * 100) + "%" : data.RoutineWorkPropotion + "%",
-                        data.RoutineWorkFillRate = data.RoutineWorkFillRate>0&& data.RoutineWorkFillRate <= 1 ? (data.RoutineWorkFillRate * 100) + "%" : data.RoutineWorkFillRate + "%",
-                        data.OtherWorkPropotion = data.OtherWorkPropotion >0&&data.OtherWorkPropotion <= 1 ? (data.OtherWorkPropotion * 100) + "%" : data.OtherWorkPropotion + "%",
-                        data.OtherWorkFillRate = data.OtherWorkFillRate>0&&data.OtherWorkFillRate <= 1 ? (data.OtherWorkFillRate * 100) + "%" : data.OtherWorkFillRate + "%",
+                   data.RoutineWorkPropotion = data.RoutineWorkPropotion > 0 && data.RoutineWorkPropotion <= 1 ? (data.RoutineWorkPropotion * 100) + "%" : data.RoutineWorkPropotion > 1 ? data.RoutineWorkPropotion + "%" : null,
+                       data.RoutineWorkFillRate = data.RoutineWorkFillRate > 0 && data.RoutineWorkFillRate <= 1 ? (data.RoutineWorkFillRate * 100) + "%" : data.RoutineWorkFillRate > 1 ? data.RoutineWorkFillRate + "%" : null,
+                       data.OtherWorkPropotion = data.OtherWorkPropotion > 0 && data.OtherWorkPropotion <= 1 ? (data.OtherWorkPropotion * 100) + "%" : data.OtherWorkPropotion > 1 ? data.OtherWorkPropotion + "%" : null,
+                       data.OtherWorkFillRate = data.OtherWorkFillRate > 0 && data.OtherWorkFillRate <= 1 ? (data.OtherWorkFillRate * 100) + "%" : data.OtherWorkFillRate > 1 ? data.OtherWorkFillRate + "%" : null,
                         form.val("Positive", data);
 
                 });
@@ -176,6 +176,21 @@
                 , layedit = layui.layedit
                 , laydate = layui.laydate;
 
+            //比率 小数或者100以内的整数
+            $(".rate").keyup(function () {
+                var reg = $(this).val().match(/^0\.?\d{0,2}$|^[1-9]$|^1[0-9]$|^2[0-9]$|^3[0-9]$|^4[0-9]$|^5[0-9]$|^6[0-9]$|^7[0-9]$|^8[0-9]$|^9[0-9]$|^10[0]$/);
+                var txt = '';
+                if (reg != null) {
+                    txt = reg[0];
+                }
+                $(this).val(txt);
+            }).change(function () {
+                $(this).keypress();
+                var v = $(this).val();
+                if (/\.$/.test(v)) {
+                    $(this).val(v.substr(0, v.length - 1));
+                }
+            });
 
             //工资输入判断
             $(".salary").keyup(function () {
@@ -191,11 +206,34 @@
                 if (/\.$/.test(v)) {
                     $(this).val(v.substr(0, v.length - 1));
                 }
-            });
+                });
+
 
             //提交
             form.on('submit(demo1)', function (data) {
-                console.log("提交：" + data.field.RoutineWorkPropotion);
+                var str1 = data.field.RoutineWorkPropotion;
+                var str2 = data.field.RoutineWorkFillRate;
+                var str3 = data.field.OtherWorkPropotion;
+                var str4 = data.field.OtherWorkFillRate;
+                if (str1.indexOf('%') != -1) {
+                    var strs = new Array();
+                    strs = str1.split('%');
+                    data.field.RoutineWorkPropotion = strs[0];
+                } else if (str2.indexOf('%') != -1) {
+                    var strs = new Array();
+                    strs = str2.split('%');
+                    data.field.RoutineWorkFillRate = strs[0];
+                } else if (str3.indexOf('%') != -1) {
+                    var strs = new Array();
+                    strs = str3.split('%');
+                    data.field.OtherWorkPropotion = strs[0];
+                } else if (str4.indexOf('%')!=-1) {
+                    var strs = new Array();
+                    strs = str4.split('%');
+                    data.field.OtherWorkFillRate = strs[0];
+                }
+               
+               console.log("提交：" + data.field.RoutineWorkPropotion );
                 $.post("/Personnelmatters/PerformanceAssess/EditEmpPFAssess", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("编辑成功!", { icon: 1 }, function () {
@@ -213,7 +251,7 @@
             //关闭页面
             $("#btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('mySalaryStatistics');
+                parent.layui.table.reload('myPerAss');
                 parent.layer.close(index);
             });
         });
