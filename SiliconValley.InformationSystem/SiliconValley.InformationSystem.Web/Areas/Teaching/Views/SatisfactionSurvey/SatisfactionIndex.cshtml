@@ -59,32 +59,14 @@
     <div id="SatisfactionWarp">
         <h2 style="text-align:center;">欢迎来到满意度调查</h2>
 
-        @{
-
-            foreach (var item in ViewBag.Permisslist as List<string>)
-            {
-
-                if (item.Trim() == "SatisfactionSurvey.ConfigSetting")
-                {
+        
 
                     <div class="SatisfactionItems" id="SatisfactionConfig">
                         <i class="layui-icon layui-icon-set-sm" style="font-size: 50px; color: #1E9FFF;"></i>
                         <br />
                         <span>满意度调查项配置</span>
                     </div>
-                }
-
-            }
-        }
-
-        @{
-
-            foreach (var item in ViewBag.Permisslist as List<string>)
-            {
-
-                if (item.Trim() == "SatisfactionSurvey.SurveyHistoryView")
-                {
-
+            
 
                     <div class="SatisfactionItems" id="SatisfactionSurveyHistory">
                         <i class="layui-icon layui-icon-log" style="font-size: 50px; color: #1E9FFF;"></i>
@@ -94,10 +76,7 @@
                         </span>
                     </div>
 
-                }
-
-            }
-        }
+               
 
 
 
