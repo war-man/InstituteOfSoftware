@@ -287,15 +287,24 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                 if (obj != null)
                 {
-                    result[item.Nameofmembers] = db_student.GetList().Where(d => d.IsDelete == false && d.StudentNumber == obj.Studentnumber).FirstOrDefault();
+                    //判断学员的班级是否是当前的班级
+                    var classss = GetScheduleByStudent(obj.Studentnumber);
+
+                    if (classss.id == classnumber)
+                    {
+                        if (obj != null)
+                        {
+                            result[item.Nameofmembers] = db_student.GetList().Where(d => d.IsDelete == false && d.StudentNumber == obj.Studentnumber).FirstOrDefault();
 
 
+                        }
+                        else
+                        {
+                            result[item.Nameofmembers] = null;
+                        }
+                    }
                 }
-                else
-                {
-                    result[item.Nameofmembers] = null;
-                }
-
+      
 
             }
 
