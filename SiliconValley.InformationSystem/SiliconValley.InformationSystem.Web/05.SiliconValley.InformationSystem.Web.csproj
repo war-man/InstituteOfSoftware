@@ -1497,6 +1497,7 @@
     <Content Include="Areas\Teaching\Views\Class\RecordStuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
     <Content Include="Config\MyExcelClass.json" />
+    <Content Include="Config\Obempstaff.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.ttf" />
