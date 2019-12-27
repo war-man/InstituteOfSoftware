@@ -448,6 +448,8 @@
     <Content Include="Areas\Teaching\css\zzsc.css" />
     <Content Include="Areas\Teaching\fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Config\ExamCourseconfig.xml" />
+    <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -1494,6 +1496,7 @@
     <Content Include="Areas\Teaching\Views\Class\GetStuHomeWorkDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\RecordStuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
+    <Content Include="Config\MyExcelClass.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.ttf" />
@@ -3154,6 +3157,8 @@
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
     <Content Include="Scripts\live2d\assets\waifu-tips.json" />
+    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年11月13日.rar" />
+    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年12月12日.rar" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
