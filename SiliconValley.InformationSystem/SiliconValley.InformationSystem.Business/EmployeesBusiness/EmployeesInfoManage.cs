@@ -26,6 +26,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             var str = pmanage.GetEntity(pid);
             return str;
         }
+
+        
         /// <summary>
         /// 根据员工编号获取所属岗位对象
         /// </summary>
@@ -174,7 +176,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// </summary>
         /// <returns></returns>
         public List<EmployeesInfo> GetChannelStaffZhuren() {
-           return this.GetAll().Where(a => a.PositionId == 1006).ToList();
+            return this.GetAll().Where(a => this.GetPositionByEmpid(a.EmployeeId).PositionName == "市场主任").ToList();
+       
         }
 
         /// <summary>
@@ -196,11 +199,11 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             return this.GetInfoByEmpID(channel.EmployeesInfomation_Id);
         }
         /// <summary>
-        /// 杨校
+        /// 杨校(常务副校长岗位)
         /// </summary>
         /// <returns></returns>
         public EmployeesInfo GetYangxiao() {
-            return this.GetAll().Where(a => a.EmployeeId == "201908290017").FirstOrDefault();
+            return this.GetAll().Where(a => this.GetPositionByEmpid(a.EmployeeId).PositionName=="常务副校长").FirstOrDefault();
         }
         /// <summary>
         /// 判断是否是渠道主任
@@ -226,7 +229,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// <returns></returns>
         public bool IsChannelZhuren(EmployeesInfo empinfo) {
             bool iszhuren = false;
-            if (empinfo.PositionId== 1006)
+            var query = this.GetChannelStaffZhuren().Where(a => a.EmployeeId == empinfo.EmployeeId).FirstOrDefault();
+            if (query!=null)
             {
                 iszhuren = true;
             }
@@ -241,7 +245,8 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         public bool IsFuzhiren(EmployeesInfo empinfo)
         {
             bool isfuzhuren = false;
-            if (empinfo.PositionId == 2010)
+            var query = this.GetChannelStaffFuzhuren().Where(a => a.EmployeeId == empinfo.EmployeeId).FirstOrDefault();
+            if (query!=null)
             {
                 isfuzhuren = true;
             }

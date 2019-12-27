@@ -189,19 +189,21 @@ namespace SiliconValley.InformationSystem.Business.Channel
                 var yidong = dbyidong.GetTransactionByPlan_EmpID(item.EmployeesInfomation_Id, nowschoolplan);
                 if (yidong != null)
                 {
-                    //主任
-                    if (yidong.PresentPosition == 1006)
+                  var  query=   dbstaff.GetEntity(yidong.EmployeeId);
+                    if (dbstaff.IsFuzhiren(query))
                     {
                         zhurenlist.Add(item);
                     }
+                    
                 }
                 else
                 {
                     var empinfo = dbstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
-                    if (empinfo.PositionId == 1006)
+                    if (dbstaff.IsFuzhiren(empinfo))
                     {
                         zhurenlist.Add(item);
                     }
+                    
                 }
             }
             return zhurenlist;
