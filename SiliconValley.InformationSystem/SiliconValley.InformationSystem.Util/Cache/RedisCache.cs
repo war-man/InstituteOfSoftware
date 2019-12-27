@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Util
         public RedisCache()
         {
             _databaseIndex = 0;
-            string config = "172.16.40.100:6379";
+            string config = "106.13.108.40:6379";
             _redisConnection = ConnectionMultiplexer.Connect(config);
         }
 

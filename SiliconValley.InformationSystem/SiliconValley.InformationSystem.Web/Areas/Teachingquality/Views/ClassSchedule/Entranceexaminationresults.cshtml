@@ -17,6 +17,57 @@
     <div>
         <input type="text" value="@ViewBag.ClassID" style="display:none;" id="ClassID" />
     </div>
+    @*<form class="layui-form" action="">
+        <div class="layui-container">
+            <div class="layui-row ">
+
+                <div class="layui-col-xs10">
+                    <div class="layui-row layui-form-item">
+
+
+                        <div class="layui-col-xs6">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="Sex" value="false" title="女">
+                                <input type="radio" name="Sex" value="true" title="男">
+                                <input type="radio" name="Sex" value="" title="全部" checked="checked">
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6">
+                            <label class="layui-form-label">学号</label>
+                            <div class="layui-input-inline">
+                                <input type="text" lay-verify="number" name="StudentNumber" class="layui-input" />
+
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6">
+
+                            <label class="layui-form-label">身份证</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="identityi" name="identitydocument" class="layui-input linu" />
+
+                            </div>
+
+                        </div>
+                        <div style="position:absolute;left:90%;top:20px;">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </form>*@
     <table class="layui-hide" id="test" lay-filter="test"></table>
 
 </body>
@@ -49,11 +100,11 @@
                         return c.OnBoard + c.Writtenexamination
                     }
                 }
-                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+             
             ]]
             , page: true
-            , limit: 8
-            , limits: [8, 10, 15]
+            , limit: 5
+            , limits: [5,8, 10]
         });
 
 
