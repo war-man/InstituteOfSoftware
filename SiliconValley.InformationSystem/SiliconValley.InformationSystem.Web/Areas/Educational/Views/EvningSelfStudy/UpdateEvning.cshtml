@@ -96,7 +96,7 @@
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {
-                        if (sucdata == false) {
+                        if (sucdata.Success == false) {
                             layer.msg('系统错误，请重试！！', { icon: 2 });
                         } else {
                             layer.msg('修改成功！！', { icon: 1, shade: 0.8 }, function () {

@@ -68,6 +68,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             List<EvningSelfStudy> selfStudies = EvningSelefstudy_Entity.EvningSelfStudyGetAll();
             List<Grand> glist= Reconcile_Com.GetGrand_Id(IsOld);
             List<EvningSelfStudy> Evn_list = new List<EvningSelfStudy>();
+            //筛选所属教务的班级晚自习安排
             foreach (EvningSelfStudy item in selfStudies)
             {
                 int grand_id =Reconcile_Com.ClassSchedule_Entity.GetEntity(item.ClassSchedule_id).grade_Id;
@@ -113,7 +114,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             EvningSelefstudy_Entity = new EvningSelfStudyManeger();
             //获取班级
-             List<SelectListItem> class_select = Reconcile_Com.GetClass(true).Select(e => new SelectListItem() { Text = e.ClassNumber, Value = e.id.ToString() }).ToList();
+             List<SelectListItem> class_select = Reconcile_Com.GetClass(IsOld).Select(e => new SelectListItem() { Text = e.ClassNumber, Value = e.id.ToString() }).ToList();
             ViewBag.Classlist = class_select;
             //获取教室
             List<SelectListItem> classrooms = Reconcile_Com.Classroom_Entity.GetAddreeClassRoom(base_id).Select(c=>new SelectListItem() { Text=c.ClassroomName,Value=c.Id.ToString()}).ToList();
@@ -179,7 +180,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             //获取阶段
             List<SelectListItem> g_list= Reconcile_Com.GetGrand_Id(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
-            g_list.Add(new SelectListItem() { Text="--请选择--",Value="0"});
+            g_list.Add(new SelectListItem() { Text="--请选择--",Value="0",Selected=true});
             ViewBag.grlist = g_list;
             return View();
         }
@@ -209,8 +210,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime endtime = Convert.ToDateTime(Request.Form["endtime"]);
 
             EvningSelefstudy_Entity = new EvningSelfStudyManeger();
+            //获取班级集合
+            List<ClassSchedule> class_list= Reconcile_Com.GetClass(IsOld);
             List<EvningSelfStudy> find_e=  EvningSelefstudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == startime).ToList();
-            AjaxResult a= EvningSelefstudy_Entity.ChangDate(find_e, endtime);
+            List<EvningSelfStudy> es = new List<EvningSelfStudy>();
+            foreach (EvningSelfStudy item in find_e)
+            {
+               int count= class_list.Where(c => c.id == item.ClassSchedule_id).ToList().Count;
+                if (count>0)
+                {
+                    es.Add(item);
+                }
+            }
+            AjaxResult a= EvningSelefstudy_Entity.ChangDate(es, endtime);
             return Json(a,JsonRequestBehavior.AllowGet);
         }
 
@@ -219,7 +231,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             //获取阶段
             List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id(IsOld).Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
-            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0" ,Selected=true});
             ViewBag.grlist = g_list;
             return View();
         }

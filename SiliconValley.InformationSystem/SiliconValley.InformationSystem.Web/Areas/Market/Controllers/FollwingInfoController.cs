@@ -31,7 +31,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ConsultTeacher = new ConsultTeacherManeger();
 
             //判断是哪个咨询师
-            f_id = ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+            
+            f_id = ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             return View();
         }
         /// <summary>
@@ -43,28 +44,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ConsultTeacher = new ConsultTeacherManeger();
 
             //判断是哪个咨询师
-            List<ConsultZhuzImageData> ConsultZhuzImageData_data = CM_Entity.GetImageData(f_id.ToString());
-            return Json(ConsultZhuzImageData_data,JsonRequestBehavior.AllowGet);
+            if (f_id!=0)
+            {
+                List<ConsultZhuzImageData> ConsultZhuzImageData_data = CM_Entity.GetImageData(f_id.ToString());
+                return Json(ConsultZhuzImageData_data, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         public ActionResult GetMonData(int MonthName,string Status)
         {
             List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
-            //判断是哪个咨询师         
-            if (Status=="完成量")
+            if (f_id!=0)
             {
-                result=CM_Entity.GetStudentData(MonthName, "1", f_id);
-            }
-            else if (Status == "未完成量")
-            {
-                result=CM_Entity.GetStudentData(MonthName, "2", f_id);
-            }
-            else if (Status == "分量数")
-            {
-                result=CM_Entity.GetStudentData(MonthName, "3", f_id);
-            }
+                //判断是哪个咨询师         
+                if (Status == "完成量")
+                {
+                    result = CM_Entity.GetStudentData(MonthName, "1", f_id);
+                }
+                else if (Status == "未完成量")
+                {
+                    result = CM_Entity.GetStudentData(MonthName, "2", f_id);
+                }
+                else if (Status == "分量数")
+                {
+                    result = CM_Entity.GetStudentData(MonthName, "3", f_id);
+                }
 
-            return Json(result, JsonRequestBehavior.AllowGet);
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return null;
+            }
+             
         }
         /// <summary>
         /// 查询是否有该学生
@@ -75,39 +92,48 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {             
             List<StudentPutOnRecord> stu_list = CM_Entity.GetStudentPutRecored().Where(s=>s.StuName==id).ToList();
             List<StudentPutOnRecord> find_list = new List<StudentPutOnRecord>();
-            List<Consult> find_consult = CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();//获取XX咨询师的分量情况
-            foreach (Consult item2 in find_consult)
+            if (f_id!=0)
             {
-                StudentPutOnRecord find_s= stu_list.Where(s => s.Id == item2.StuName).FirstOrDefault();
-                if (find_s!=null)
+                List<Consult> find_consult = CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();//获取XX咨询师的分量情况
+                foreach (Consult item2 in find_consult)
                 {
-                    find_list.Add(find_s);
-                }
-            }
-            //获取这个学生的跟踪信息次数
-            int j = 0;
-            List<FollwingInfo> find = CM_Entity.GetFollwingManeger().GetList();
-            if (find_consult.Count==1)
-            {
-                int i = 0;
-                foreach (FollwingInfo item in find)
-                {
-                    foreach (Consult c in find_consult)
+                    StudentPutOnRecord find_s = stu_list.Where(s => s.Id == item2.StuName).FirstOrDefault();
+                    if (find_s != null)
                     {
-                        if (item.Consult_Id==c.Id)
-                        {
-                            i++;
-                        }
+                        find_list.Add(find_s);
                     }
                 }
-                j = i;
-                SessionHelper.Session["Number"] = j;
+                //获取这个学生的跟踪信息次数
+                int j = 0;
+                List<FollwingInfo> find = CM_Entity.GetFollwingManeger().GetList();
+                if (find_consult.Count == 1)
+                {
+                    int i = 0;
+                    foreach (FollwingInfo item in find)
+                    {
+                        foreach (Consult c in find_consult)
+                        {
+                            if (item.Consult_Id == c.Id)
+                            {
+                                i++;
+                            }
+                        }
+                    }
+                    j = i;
+                    SessionHelper.Session["Number"] = j;
+                }
+                var jsondata = new
+                {
+                    data = find_list,
+                    Number = j
+                };
+                return Json(jsondata, JsonRequestBehavior.AllowGet);
             }
-            var jsondata = new {
-                data = find_list,
-                Number = j
-            };
-            return Json(jsondata, JsonRequestBehavior.AllowGet);
+            else
+            {
+                return null;
+            }
+   
         }
 
         //这是一个添加页面
@@ -188,24 +214,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //这是一个编辑方法
         public ActionResult EditFunction()
         {
-            try
+            if (f_id!=0)
             {
-                string MyRank = Request.Form["MyRank"];
-                string My_TailAfterSituation = Request.Form["My_TailAfterSituation"];
-                string My_Rmark = Request.Form["My_Rmark"];
-                int F_Id = Convert.ToInt32(Request.Form["F_Id"]);
-                FollwingInfo find_f = CM_Entity.GetFollwingManeger().GetEntity(F_Id);
-                find_f.Rank = MyRank;
-                find_f.Rmark = My_Rmark;
-                find_f.TailAfterSituation = My_TailAfterSituation;
-                CM_Entity.GetFollwingManeger().Update(find_f);
-                //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
-                return Json("ok", JsonRequestBehavior.AllowGet);
+                try
+                {
+                    string MyRank = Request.Form["MyRank"];
+                    string My_TailAfterSituation = Request.Form["My_TailAfterSituation"];
+                    string My_Rmark = Request.Form["My_Rmark"];
+                    int F_Id = Convert.ToInt32(Request.Form["F_Id"]);
+                    FollwingInfo find_f = CM_Entity.GetFollwingManeger().GetEntity(F_Id);
+                    find_f.Rank = MyRank;
+                    find_f.Rmark = My_Rmark;
+                    find_f.TailAfterSituation = My_TailAfterSituation;
+                    CM_Entity.GetFollwingManeger().Update(find_f);
+                    //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "成功编辑了一条跟踪信息数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                    return Json("ok", JsonRequestBehavior.AllowGet);
+                }
+                catch (Exception ex)
+                {
+                    //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                    return Json("系统错误，请重试!!!", JsonRequestBehavior.AllowGet);
+                }
+
             }
-            catch (Exception ex)
+            else
             {
-                //BusHelper.WriteSysLog(Enplo_Entity.GetEntity(UserName.EmpNumber).EmpName + "编辑跟踪信息时出现:"+ex, Entity.Base_SysManage.EnumType.LogType.编辑数据);
-                return Json("系统错误，请重试!!!",JsonRequestBehavior.AllowGet);
+                return null;
             }
              
         }

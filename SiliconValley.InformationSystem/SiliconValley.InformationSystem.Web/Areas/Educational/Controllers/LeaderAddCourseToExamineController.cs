@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         private  CourseBusiness Curriculum_Entity ;
         private  TeacherBusiness Teacher_Entity;
         private ReconcileManeger Reconcile_Entity;
-        // GET: /Educational/LeaderAddCourseToExamine/GreeAddCourse
+        // GET: /Educational/LeaderAddCourseToExamine/LeaderAddCourseToExamineIndex
         public ActionResult LeaderAddCourseToExamineIndex()
         {
             return View();
