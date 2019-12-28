@@ -14,7 +14,7 @@ using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
-    //  /Login/PhoneSMS
+    //  /Login/LoginIndex
     [IgnoreLogin]
     public class LoginController : Controller
     {

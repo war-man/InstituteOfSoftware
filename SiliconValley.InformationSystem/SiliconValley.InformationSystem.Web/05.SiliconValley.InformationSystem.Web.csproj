@@ -288,6 +288,8 @@
     <Compile Include="Areas\Obtainemployment\Controllers\SResearchRecordController.cs" />
     <Compile Include="Areas\Obtainemployment\Controllers\StudnetIntentionController.cs" />
     <Compile Include="Areas\Obtainemployment\ObtainemploymentAreaRegistration.cs" />
+    <Compile Include="Areas\OrThert\Controllers\TMortherController.cs" />
+    <Compile Include="Areas\OrThert\OrThertAreaRegistration.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\ApprovalManagementController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\AttendanceStatisticsController.cs" />
     <Compile Include="Areas\Personnelmatters\Controllers\EmpApprovalController.cs" />
@@ -1360,7 +1362,10 @@
     <Content Include="Areas\Teaching\Views\Class\GetStuHomeWorkDetail.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\RecordStuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
+    <Content Include="Areas\OrThert\Views\web.config" />
+    <Content Include="Areas\Educational\Views\TeacherNight\AddDataView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\business\requestbusiness.js" />
     <Content Include="Scripts\config.js" />
@@ -3037,6 +3042,9 @@
     <Folder Include="Areas\Obtainemployment\Models\" />
     <Folder Include="Areas\Obtainemployment\Views\Distribution\" />
     <Folder Include="Areas\Obtainemployment\Views\Shared\" />
+    <Folder Include="Areas\OrThert\Models\" />
+    <Folder Include="Areas\OrThert\Views\Shared\" />
+    <Folder Include="Areas\OrThert\Views\TMorther\" />
     <Folder Include="Areas\Personnelmatters\Models\" />
     <Folder Include="Areas\Personnelmatters\Views\Shared\" />
     <Folder Include="Areas\Studenteducation\Models\" />

@@ -308,5 +308,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return a;
         }
+
+        /// <summary>
+        /// 获取XX班级在XX日期段的晚自习安排
+        /// </summary>
+        /// <param name="starTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="class_id"></param>
+        /// <returns></returns>
+        public List<EvningSelfStudy> GetConditionEvningData(DateTime starTime,DateTime endTime,int class_id)
+        {
+          return   EvningSelfStudyGetAll().Where(e => e.Anpaidate >= starTime && e.Anpaidate <= e.Anpaidate && e.ClassSchedule_id == class_id).ToList();
+        }
     }
 }
