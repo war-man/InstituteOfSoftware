@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
             var time = msrmanage.GetList().Where(s=>s.IsDel==false).FirstOrDefault().YearAndMonth;
             string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
-            ViewBag.yearandmonth = mytime;
+            ViewBag.yearandmonth = mytime; 
             return View();
         }
         //工资表数据加载
