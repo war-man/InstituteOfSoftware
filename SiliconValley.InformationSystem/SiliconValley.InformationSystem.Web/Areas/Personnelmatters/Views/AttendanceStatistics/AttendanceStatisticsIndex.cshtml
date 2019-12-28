@@ -25,21 +25,21 @@
 </script>
 
 <div>
-    <h3 style="text-align:center;">湖南硅谷云教育科技有限公司考勤统计表</h3>
+    <h3 style="text-align:center;">湖南硅谷云教育科技有限公司--@ViewBag.yearandmonth--考勤统计表</h3>
 
     @*模糊查询*@
     <fieldset>
         <legend>条件查询</legend>
         <form class="layui-form" action="" lay-filter="formtest">
             <div class="layui-row layui-form-item">
-                <div >
+                <div>
                     <label class="layui-form-label">姓名：</label>
                     <div class="layui-input-inline">
                         <input type="text" id="EmpName" name="EmpName" autocomplete="off" class="layui-input">
                     </div>
                 </div>
 
-                <div >
+                <div>
                     <label class="layui-form-label" style="width:100px;">所属部门:</label>
                     <div class="layui-input-inline">
                         <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
@@ -57,7 +57,7 @@
                     </div>
                 </div>
 
-                <div >
+                <div>
                     <label class="layui-form-label" style="width:100px;">员工状态:</label>
                     <div class="layui-input-inline">
                         <select name="empIsDel" id="empIsDel">
@@ -94,9 +94,9 @@
                 , toolbar: '#toolbarDemo'
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
-                , cols: [[{ title: "@ViewBag.yearandmonth" + "   应到勤天数：" + "@ViewBag.DeserveToRegularDays" + "天", colspan: 20 }],
-                    [ { type:'checkbox',width: 80 }
-                    , { field: 'empName', title: '姓名', width: 100, sort: true }
+                , cols: [[{ title: "应到勤天数：" + "@ViewBag.DeserveToRegularDays" + "天", colspan: 20 }],
+                    [
+                      { field: 'empName', title: '姓名', width: 100, sort: true }
                     , { field: 'empDept', title: '所属部门', width: 120, sort: true }
                     , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
                     , { field: 'ToRegularDays', title: '到勤天数',  width: 100 }

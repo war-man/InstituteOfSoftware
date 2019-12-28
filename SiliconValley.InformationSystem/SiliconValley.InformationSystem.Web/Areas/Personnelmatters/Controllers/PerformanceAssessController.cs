@@ -16,6 +16,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         // GET: Personnelmatters/PerformanceAssess
         public ActionResult PerformanceAssessIndex()
         {
+            MeritsCheckManage msrmanage = new MeritsCheckManage();//员工月度工资
+            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+            string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
+            ViewBag.yearandmonth = mytime;
             return View();
         }
 
@@ -87,6 +91,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 年月份及应到勤天数的改变
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult ChangeMCTime()
+        {
+            MeritsCheckManage msrmanage = new MeritsCheckManage();
+            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+            string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+            ViewBag.time = mytime;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ChangeMCTime(string CurrentTime)
+        {
+            var AjaxResultxx = new AjaxResult();
+            MeritsCheckManage msrmanage = new MeritsCheckManage();
+            try
+            {
+                var attlist = msrmanage.GetList().Where(s => s.IsDel == false).ToList();
+                for (int i = 0; i < attlist.Count(); i++)
+                {
+                    attlist[i].YearAndMonth = Convert.ToDateTime(CurrentTime);
+                    msrmanage.Update(attlist[i]);
+                    AjaxResultxx = msrmanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult EditEmpPFAssess(int id) {
             MeritsCheckManage mcmanage = new MeritsCheckManage();

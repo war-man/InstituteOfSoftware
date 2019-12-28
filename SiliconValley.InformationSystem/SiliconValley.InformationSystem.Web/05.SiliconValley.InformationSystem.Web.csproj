@@ -1498,6 +1498,8 @@
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
     <Content Include="Config\MyExcelClass.json" />
     <Content Include="Config\Obempstaff.config" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\EditEmpPFAssess.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\ChangeMCTime.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.ttf" />
