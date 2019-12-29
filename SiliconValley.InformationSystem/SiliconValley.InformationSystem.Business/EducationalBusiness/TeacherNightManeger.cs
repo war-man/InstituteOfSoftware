@@ -66,8 +66,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                this.Insert(new_t);
-                
+                new_t.BeOnDuty_Id=BeOnDuty_Entity.GetSingleBeOnButy("晚自习", false).Id;
+                this.Insert(new_t);                
                 a.Success = true;
                 Redis.RemoveCache("TeacherNight");
             }
@@ -100,8 +100,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             foreach (ClassSchedule c1 in classes)
             {
                 TeacherNight new_t = new TeacherNight();
-                new_t.ClassSchedule_Id = c1.id;
-                new_t.BeOnDuty_Id = BeOnDuty_Entity.GetSingleBeOnButy("晚自习", false).Id;
+                new_t.ClassSchedule_Id = c1.id;              
                 new_t.IsDelete = false;
 
                 //获取班级的任课老师
