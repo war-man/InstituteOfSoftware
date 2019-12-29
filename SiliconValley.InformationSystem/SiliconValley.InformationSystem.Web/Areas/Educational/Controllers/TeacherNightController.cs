@@ -17,7 +17,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     [CheckLogin]
     public class TeacherNightController : Controller
     {
-        // GET: /Educational/TeacherNight/SystemAnpaiFunction
+        // GET: /Educational/TeacherNight/HandAnpaiFunction
 
         TeacherNightManeger TeacherNight_Entity;
         TeacherBusiness Teacher_Entity;
@@ -111,6 +111,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime end = Convert.ToDateTime(times[1]);
             AjaxResult a= TeacherNight_Entity.AnpaiNight(start, end, IsOld);
             return Json(a,JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult HandAnpaiFunction()
+        {
+            AjaxResult a = new AjaxResult();
+            TeacherNight_Entity = new TeacherNightManeger();
+            string timename= Request.Form["timename"];
+            DateTime date = Convert.ToDateTime(Request.Form["mytime"]);
+            int class_id =Convert.ToInt32( Request.Form["classShdule_sele"]);
+            string teacherEmp = Request.Form["teacher_sele"];
+            int classroom_id =Convert.ToInt32( Request.Form["classroom_sele"]);
+            string ramke = Request.Form["ramke"];
+            TeacherNight new_t = new TeacherNight();
+            new_t.OrwatchDate = date;
+            new_t.ClassRoom_id = classroom_id;
+            new_t.ClassSchedule_Id = class_id;
+            new_t.IsDelete = false;
+            new_t.Tearcher_Id = teacherEmp;
+            new_t.Rmark = ramke;
+            //判断是否有重复的数据
+            int count= TeacherNight_Entity.GetAllTeacherNight().Where(tea => tea.ClassSchedule_Id == new_t.ClassSchedule_Id && tea.OrwatchDate == new_t.OrwatchDate).ToList().Count;
+            if (count>0)
+            {
+                a.Success = false;
+                a.Msg = "该班级已安排值班老师";
+            }
+            else
+            {
+               a= TeacherNight_Entity.Add_data(new_t);
+            }
+            return Json(a,JsonRequestBehavior.AllowGet); ;
         }
     }
 }
