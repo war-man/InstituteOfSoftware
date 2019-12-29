@@ -109,7 +109,7 @@
         //正则
         form.verify({
             Cost: function (value, item) { //value：表单的值、item：表单的DOM对象
-                if (/\d+\.?\d{0,2}/.test(value)) {
+                if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
                         return '请输入正确的价格';
                 }
             }

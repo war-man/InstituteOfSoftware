@@ -48,14 +48,14 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label" style="line-height:200px;">内容</label>
                 <div class="layui-input-inline">
-                    @Html.TextAreaFor(a => a.Trainingcontent, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input textl" } })
+                    @Html.TextAreaFor(a => a.Trainingcontent, new Dictionary<string, object>() { { "readonly", "readonly" }, { "lay-verify", "required" }, { "class", "layui-input textl" } })
 
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">日期</label>
                 <div class="layui-input-inline">
-                    @Html.TextBoxFor(a => a.TrainingDate, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input bordel" } })
+                    @Html.TextBoxFor(a => a.TrainingDate, new Dictionary<string, object>() { { "readonly", "readonly" },{ "lay-verify", "required|date" }, { "class", "layui-input bordel" } })
 
                 </div>
             </div>

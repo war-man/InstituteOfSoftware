@@ -83,7 +83,8 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label las">保费</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "class", "layui-input linu" }, { "lay-verify", "Amountofmoney" } })
+                            })
                         </div>
                     </div>
 
@@ -181,13 +182,42 @@
 
         //正则表达式
         form.verify({
-            //StuName: function (value, item) { //value：表单的值、item：表单的DOM对象
-            //    if (/^[\da-zA-z]{6,10}$/.test(value)) {
-            //        return '班级名称由字母或者数字组成,6-10位';
-            //    }
-            //}
+           
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '名称不能输入空格';
+                } else {
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '名称不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '名称首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                        return '名称只能由中文或字母组成';
+                    }
+
+                }
+
+            },
+            Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '保费不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
+                            return '请输入正确的价格';
+                        }
+                    }
+                }
+
+            },
+         
+
         });
-        //ajax
+
        
    
        

@@ -302,7 +302,7 @@
                                 <button type="button" id="Tuition" class="layui-btn layui-btn-fluid mybut">欠费及未缴情况</button>
                             </div>
                             <div>
-                                <button type="button" class="layui-btn layui-btn-fluid mybut">升学考试成绩</button>
+                                <button type="button" id="Entranceexaminationresults" class="layui-btn layui-btn-fluid mybut">升学考试成绩</button>
                             </div>
                         </div>
                     </div>
@@ -420,7 +420,7 @@
 <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 @*//禁F12*@
-<script type="text/javascript">
+@*<script type="text/javascript">
     document.onkeydown = function () {
 
         if (window.event && window.event.keyCode == 123) {
@@ -438,7 +438,7 @@
 
     }
 
-</script>
+</script>*@
 <script>
     //加载学员
     function StudentDate() {
@@ -468,7 +468,7 @@
 
     StudentDate();
     //给头部的班委赋值
-    $.post("/Teachingquality/ClassSchedule/DateMembers", function (dat) {
+    $.post("/Teachingquality/ClassSchedule/DateMembers?ClassID=" + $("#ClassName").text(), function (dat) {
         console.log(dat)
         if (dat.length > 0) {
             for (var i = 0; i < dat.length; i++) {
@@ -565,7 +565,7 @@
         //表格渲染
         table.render({
             elem: '#test'
-            , url: '/Teachingquality/ClassSchedule/AssmeetingsGetDate'
+            , url: '/Teachingquality/ClassSchedule/AssmeetingsGetDate?ClassID=' + $("#ClassName").text()
 
             , id: 'idTest'
             , page: true
@@ -628,7 +628,7 @@
                 title: name,
                 type: 2,
                 area: ['600px', '600px']
-                , content: "/Teachingquality/ClassSchedule/AssmeetingsEntity?id=" + id
+                , content: "/Teachingquality/ClassSchedule/AssmeetingsEntity?id=" + id + "&ClassID=" + $("#ClassName").text()
                 , end: function () { table.reload('idTest'); }
                 , anim: 1,
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
@@ -721,7 +721,7 @@
         $("#Transferoftraunees").click(function () {
             if ($(".color").length == 1) {
                 var x = $($($(".color")[0]).children()[0]).text();
-                var url = "/Teachingquality/ClassSchedule/Shiftwork?StudentID=" + x;
+                var url = "/Teachingquality/ClassSchedule/Shiftwork?StudentID=" + x + "&ClassID=" + $("#ClassName").text();
                 Popup(url, "转班申请", 1000,900);
             } else {
                 layer.alert('请选择一个学员', { icon: 0 });
@@ -904,7 +904,7 @@
                     title: "拆班",
                     type: 2,
                     area: ['700px', '700px']
-                    , content: "/Teachingquality/ClassSchedule/Dismantleclasses?StudentID=" + x
+                    , content: "/Teachingquality/ClassSchedule/Dismantleclasses?StudentID=" + x + "&ClassID="+$("#ClassName").text()
                     , end: function () { StudentDate(); }
                     , anim: 1,
                     //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
@@ -1028,12 +1028,12 @@
                     layui.use(['layer'], function () {
                         var layer = layui.layer;
 
-                        $.post("/Teachingquality/ClassSchedule/AssmeetingsBool?Stuid=" + stuid + "&MenName=" + $(myxx[i]).text(), function (db) {
-
+                        $.post("/Teachingquality/ClassSchedule/AssmeetingsBool?Stuid=" + stuid + "&MenName=" + $(myxx[i]).text() + "&ClassID=" + $("#ClassName").text(), function (db) {
+                            console.log($("#ClassName").text())
                             if (db.Msg != null) {
                                 if (db.Data != null) {
                                     layer.confirm(db.Msg, function (index) {
-                                        ClasscommitteePost(stuid, $(myxx[lo]).text(), "undefined", function () {
+                                        ClasscommitteePost(stuid, $(myxx[lo]).text(), "undefined", $("#ClassName").text(), function () {
                                             $(myxx[lo]).next().text(Name)
                                         })
                                         
@@ -1043,7 +1043,7 @@
                                 }
                             } else {
                               
-                                ClasscommitteePost(stuid, $(myxx[lo]).text(), "undefined", function () {
+                                ClasscommitteePost(stuid, $(myxx[lo]).text(), "undefined", $("#ClassName").text(), function () {
                                     $(myxx[lo]).next().text(Name)
                                 })
                             }
@@ -1061,7 +1061,7 @@
                      
                         // mycars
                         if (zz==1) {
-                            ClasscommitteePost(stuid, "1", "1", function () {
+                            ClasscommitteePost(stuid, "1", "1", $("#ClassName").text(), function () {
                                 for (var w = 1; w < mycars.length; w++) {
                                     $(myxx[mycars[w]]).next().text("未设置");
                                 }

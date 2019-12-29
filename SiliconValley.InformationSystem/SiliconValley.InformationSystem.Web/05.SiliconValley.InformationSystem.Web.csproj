@@ -438,6 +438,8 @@
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
+    <Content Include="Areas\Teachingquality\images\审批.png" />
+    <Content Include="Areas\Teachingquality\js\Print.js" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -1495,6 +1497,11 @@
     <Content Include="Areas\Teaching\Views\Class\RecordStuHomeWorkSubmission.cshtml" />
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\EditEmpPFAssess.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\FeeReport.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Otherexpenses.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Tuitionandfees.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.ttf" />
