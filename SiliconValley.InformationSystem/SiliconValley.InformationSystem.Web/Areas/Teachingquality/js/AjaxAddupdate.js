@@ -406,9 +406,9 @@ function ajaxprice(url, datae,callback) {
 }
 
 //班委业务操作
-function ClasscommitteePost(stuid, MenName, Entity, callback) {
+function ClasscommitteePost(stuid, MenName, Entity,ClassID, callback) {
 
-    $.post("/Teachingquality/ClassSchedule/AddMembers?Stuid=" + stuid + "&MenName=" + MenName + "&Entity=" + Entity, function (db) {
+    $.post("/Teachingquality/ClassSchedule/AddMembers?Stuid=" + stuid + "&MenName=" + MenName + "&Entity=" + Entity + "&ClassID=" + ClassID, function (db) {
         layer.msg(db.Msg);
 
         callback();

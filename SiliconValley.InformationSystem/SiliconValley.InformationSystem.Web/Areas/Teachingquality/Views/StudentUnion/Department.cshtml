@@ -37,7 +37,7 @@
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                             <label class="layui-form-label">部门名称</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.Departmentname, new Dictionary<string, object>() { { "placeholder", "请输入部门名称" }, { "lay-verify", "required" }, { "class", "layui-input " } })
+                                @Html.TextBoxFor(a => a.Departmentname, new Dictionary<string, object>() { { "placeholder", "请输入部门名称" }, { "lay-verify", "required|Name" }, { "class", "layui-input " } })
                             </div>
                             <div id="name" style="margin-top:7px;color:red; display:none;">该名称已重复</div>
                         </div>
@@ -117,6 +117,27 @@
                 layer.alert('请更换一个部门名称', { icon: 0 });
             }
            
+        });
+        //正则
+        form.verify({
+         
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '名称不能输入空格';
+                } else {
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '名称不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '名称首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                        return '名称只能由中文或字母组成';
+                    }
+
+                }
+
+            }
         });
     });
 </script>

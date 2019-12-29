@@ -68,7 +68,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">费用</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" },{ "disabled", "disabled" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" },{ "disabled", "disabled" }, { "class", "layui-input " } })
 
                         </div>
                     </div>
@@ -146,6 +146,16 @@
                
           
             ajaxUniom("/Finance/Pricedetails/Tuitionandfees", db);
+           
+        });
+
+        //正则
+        form.verify({
+            Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
+                    return '请输入正确的价格';
+                }
+            },
            
         });
     });
