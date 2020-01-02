@@ -316,6 +316,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             //拿员工对象
             EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID(user.EmpNumber);
+            //EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID("201908160008");
 
             //拿岗位对象 
             var PositionInfo = dbempstaff.GetPositionByID(employeesInfo.PositionId);
@@ -392,38 +393,36 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// 预资表添加
         /// </summary>
         /// <returns></returns>
-        public ActionResult DoPrefunding(string EmployeeId, float DebitMoney, string transferdata)
+        public ActionResult DoPrefunding(string EmployeeId, float DebitMoney, string strng1)
         {
-            dbprefunding = new PrefundingBusiness();
-
-            dbperinfo = new PerInfoBusiness();
             AjaxResult ajaxResult = new AjaxResult();
-            JArray jArray = JArray.Parse(transferdata);
-            Prefunding myPrefunding = new Prefunding();
-            myPrefunding.EmpNumber = EmployeeId;
-            myPrefunding.IsDel = false;
-            myPrefunding.PerMoney = DebitMoney;
-
-            var datetime = DateTime.Now;
-            var baiozhi = datetime.ToFileTimeUtc().ToString();
-            myPrefunding.PreDate = datetime;
-            myPrefunding.Remark = baiozhi;
             try
             {
+                dbprefunding = new PrefundingBusiness();
+                dbperinfo = new PerInfoBusiness();
+                Prefunding myPrefunding = new Prefunding();
+                myPrefunding.EmpNumber = EmployeeId;
+                myPrefunding.IsDel = false;
+                myPrefunding.PerMoney = DebitMoney;
+
+                var datetime = DateTime.Now;
+                var baiozhi = datetime.ToFileTimeUtc().ToString();
+                myPrefunding.PreDate = datetime;
+                myPrefunding.Remark = baiozhi;
                 dbprefunding.Insert(myPrefunding);
                 BusHelper.WriteSysLog("当员工预资的时候，位于Market区域ChannelStaffController控制器中DoPrefunding方法，添加成功。", EnumType.LogType.添加数据);
                 ajaxResult = dbprefunding.Success("添加成功");
                 dbprefunding = new PrefundingBusiness();
                 var mydata = dbprefunding.GetAll();
                 var dudu = mydata.Where(a => a.Remark == baiozhi).FirstOrDefault();
-                foreach (var item in jArray)
+                List<string> studentnumber= strng1.Split(',').ToList();
+                foreach (var item in studentnumber)
                 {
-                    JObject jdata = (JObject)item;
                     PerInfo perInfo = new PerInfo();
                     perInfo.IsDel = false;
                     perInfo.PreID = dudu.ID;
                     perInfo.Remark = string.Empty;
-                    perInfo.BeianID = int.Parse(jdata["value"].ToString());
+                    perInfo.BeianID = int.Parse(item);
                     try
                     {
                         dbperinfo.Insert(perInfo);
