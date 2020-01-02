@@ -9,7 +9,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    //[CheckLogin]
+    [CheckLogin]
     /// <summary>
     /// 总结
     /// </summary>

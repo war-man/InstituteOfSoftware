@@ -19,6 +19,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
+    [CheckLogin]
     public class ChannelStaffController : Controller
     {
         /// <summary>
