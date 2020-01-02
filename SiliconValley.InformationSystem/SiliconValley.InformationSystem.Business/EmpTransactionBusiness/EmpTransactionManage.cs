@@ -21,8 +21,8 @@ namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
             EmpTransactionManage etmanage = new EmpTransactionManage();
             MoveTypeManage mtmanage = new MoveTypeManage();
             //获取离职异动的id
-           // var delid = mtmanage.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
-            var etlist = etmanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            var delid = mtmanage.GetList().Where(s => s.MoveTypeName == "离职").FirstOrDefault().ID;
+            var etlist = etmanage.GetList().Where(s => s.EmployeeId == empid && s.TransactionType==delid).FirstOrDefault();
             return etlist;
         } 
 
