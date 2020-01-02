@@ -79,8 +79,12 @@
                                     icon: 2,
                                     time: 2000 //2秒关闭（如果不配置，默认是3秒）
                                 });
+                            } else {
+                                layer.msg('操作成功!!', { icon: 1, shade: 0.8 }, function () {
+                                    Flush2();
+                                });
                             }
-                            Flush2()
+                           
                         }
                     });
                 }
@@ -122,6 +126,10 @@
                                 layer.msg(SucData, {
                                     icon: 2,
                                     time: 2000 //2秒关闭（如果不配置，默认是3秒）
+                                });
+                            } else {
+                                layer.msg('操作成功!!', { icon: 1, shade: 0.8 }, function () {
+                                    Flush2();
                                 });
                             }
                         }

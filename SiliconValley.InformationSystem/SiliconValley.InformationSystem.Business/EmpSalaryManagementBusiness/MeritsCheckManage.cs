@@ -7,7 +7,7 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
-   public class MeritsCheckManage:BaseBusiness<MeritsCheck>
+    public class MeritsCheckManage : BaseBusiness<MeritsCheck>
     {
         /// <summary>
         /// 往员工绩效考核表加入员工编号
@@ -22,7 +22,15 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 MeritsCheck ese = new MeritsCheck();
                 ese.EmployeeId = empid;
                 ese.IsDel = false;
-                 ese.YearAndMonth=this.GetList().LastOrDefault().YearAndMonth;
+                if (this.GetList().Count() == 0)
+                {
+                    ese.YearAndMonth = DateTime.Now;
+                }
+                else
+                {
+                    ese.YearAndMonth = this.GetList().LastOrDefault().YearAndMonth;
+                }
+
                 this.Insert(ese);
                 result = true;
                 BusHelper.WriteSysLog("绩效考核表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
@@ -47,7 +55,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             bool result = false;
             try
             {
-               var mc= this.GetList().Where(e => e.EmployeeId == empid).FirstOrDefault();
+                var mc = this.GetList().Where(e => e.EmployeeId == empid).FirstOrDefault();
                 mc.IsDel = true;
                 this.Update(mc);
                 result = true;

@@ -18,11 +18,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult AttendanceStatisticsIndex()
         {
             AttendanceInfoManage msrmanage = new AttendanceInfoManage();
-            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-            string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
-            ViewBag.yearandmonth = mytime;
-            var deserveday = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
-            ViewBag.DeserveToRegularDays = deserveday;
+            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
+                ViewBag.yearandmonth = mytime;
+
+                var deserveday = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
+                ViewBag.DeserveToRegularDays = deserveday;
+            }
+
             return View();
         }
         //获取考勤数据
@@ -104,11 +109,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult ChangeTimeandDays()
         {
             AttendanceInfoManage msrmanage = new AttendanceInfoManage();
-            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-            string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
-            ViewBag.time = mytime;
-            var deserveday = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
-            ViewBag.days = deserveday;
+            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+                ViewBag.time = mytime;
+
+                var deserveday = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
+                ViewBag.days = deserveday;
+            }
             return View();
         }
         [HttpPost]
@@ -196,7 +205,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-       
+
         /// <summary>
         /// Excel文件导入
         /// </summary>
@@ -219,7 +228,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 try
                 {
-                  //  sqlBulkCopy.ColumnMappings.Add(item, Guid.NewGuid().ToString());
+                    //  sqlBulkCopy.ColumnMappings.Add(item, Guid.NewGuid().ToString());
                 }
                 catch (Exception)
                 {
@@ -231,7 +240,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
 
 
-          //  sqlBulkCopy.WriteToServer(table);
+            //  sqlBulkCopy.WriteToServer(table);
 
             return Content("ok");
         }

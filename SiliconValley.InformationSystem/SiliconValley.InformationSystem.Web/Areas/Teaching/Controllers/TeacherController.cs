@@ -72,7 +72,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             var emp = db_teacher.GetEmpByEmpNo(user.EmpNumber);
 
-            ViewBag.empDetail = db_teacher.ConvertToEmpDetailView(emp);
+            if (emp != null)
+            {
+                ViewBag.empDetail = db_teacher.ConvertToEmpDetailView(emp);
+            }
+            else
+            {
+                ViewBag.empDetail = null;
+            }
+
+            
             return View();
         }
 
