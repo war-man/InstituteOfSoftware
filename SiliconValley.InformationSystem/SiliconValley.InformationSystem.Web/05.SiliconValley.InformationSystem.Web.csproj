@@ -267,9 +267,11 @@
     <Compile Include="Areas\Market\Controllers\ConsultController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultTeacherController.cs" />
     <Compile Include="Areas\Market\Controllers\FollwingInfoController.cs" />
+    <Compile Include="Areas\Market\Controllers\InfomationController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
+    <Compile Include="Areas\Market\Controllers\StatusController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\MyEducation\Controllers\EducationController.cs" />
