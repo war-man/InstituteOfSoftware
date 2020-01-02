@@ -450,6 +450,8 @@
     <Content Include="Areas\Teaching\css\zzsc.css" />
     <Content Include="Areas\Teaching\fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Config\ExamCourseconfig.xml" />
+    <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -1164,6 +1166,11 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="Scripts\MenusStyle\css\reset.css" />
+    <Content Include="Scripts\MenusStyle\css\style.css" />
+    <Content Include="Scripts\MenusStyle\img\cd-icons.svg" />
+    <Content Include="Scripts\MenusStyle\js\jquery.min.js" />
+    <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
     <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
@@ -1366,6 +1373,8 @@
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
     <Content Include="Areas\OrThert\Views\web.config" />
     <Content Include="Areas\Educational\Views\TeacherNight\AddDataView.cshtml" />
+    <Content Include="Config\MyExcelClass.json" />
+    <Content Include="Config\Obempstaff.config" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -3015,6 +3024,8 @@
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824033536Admin.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824034132Admin.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824035024Admin.xls" />
+    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年11月13日.rar" />
+    <Content Include="uploadXLSXfile\ComputerTestQuestionsWord\2019年12月12日.rar" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

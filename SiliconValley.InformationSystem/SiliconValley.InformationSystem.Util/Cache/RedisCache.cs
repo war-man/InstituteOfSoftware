@@ -1,5 +1,6 @@
 ﻿using StackExchange.Redis;
 using System;
+using System.Configuration;
 
 namespace SiliconValley.InformationSystem.Util
 {
@@ -15,7 +16,8 @@ namespace SiliconValley.InformationSystem.Util
         public RedisCache()
         {
             _databaseIndex = 0;
-            string config = "106.13.108.40:6379";
+            string config = ConfigurationManager.AppSettings["redisServer"];
+             
             _redisConnection = ConnectionMultiplexer.Connect(config);
         }
 
