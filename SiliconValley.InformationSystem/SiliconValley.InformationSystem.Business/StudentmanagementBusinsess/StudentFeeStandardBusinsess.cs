@@ -680,7 +680,11 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
              var ClassGrade = classschedu.GetEntity(ClassID).grade_Id;
             //拿到应该缴费的阶段
             var Gotoschool = classschedu.RecursionStage(ClassGrade);
+            //拿到最后一个阶段
+           var co= Gotoschool.Where(a => a.CurrentStageID == geand.GetList().Where(w => w.GrandName == "Y1" && w.IsDelete == false).FirstOrDefault().Id).FirstOrDefault();
+            Gotoschool.Remove(co);
             Gotoschool.Add(new GotoschoolStage { CurrentStageID = ClassGrade, NextStageID = 0, ID = 0 });
+           
             var StudentClass = classschedu.FintClassSchedule(ClassID);
             //拿到阶段以及应缴的费用
             foreach (var item in Gotoschool)

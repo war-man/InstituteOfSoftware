@@ -522,6 +522,7 @@ namespace SiliconValley.InformationSystem.Depository
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
         /// <returns></returns>
+        /// <returns></returns>
         public List<T> GetList<T>() where T : class, new()
         {
             return GetIQueryable<T>().ToList();

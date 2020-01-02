@@ -60,11 +60,13 @@
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#starTime'
-                , theme: 'molv'
+                , theme: 'molv',
+                trigger: 'click'
             });
             laydate.render({
                 elem: '#endTime'
-                , theme: 'molv'
+                , theme: 'molv',
+                trigger: 'click'
             });
 
             form.on('select(grand)', function (data) {
@@ -88,11 +90,11 @@
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
                 $.ajax({
-                    url: '/Educational/Reconcile/ClassDataClassChangfunction',
+                    url: '/Educational/EvningSelfStudy/ClassDataClassChangfunction',
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {
-                        if (sucdata == false) {
+                        if (sucdata.Success == false) {
                             layer.msg('系统错误，请重试！！', { icon: 2 });
                         } else {
                             layer.msg('调课成功！！', { icon: 1, shade: 0.8 }, function () {

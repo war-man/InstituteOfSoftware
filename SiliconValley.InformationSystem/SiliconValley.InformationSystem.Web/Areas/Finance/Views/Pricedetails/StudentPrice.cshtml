@@ -75,7 +75,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label">学费</label>
                         <div class="layui-input-inline">
-                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input " } })
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "class", "layui-input " } })
                             <input type="text" style="display:none;" id="Amountofmoney1" name="Amountofmoney1" />
 
                         </div>
@@ -84,7 +84,7 @@
                         <label class="layui-form-label">食宿费</label>
                         <div class="layui-input-inline">
                             <input type="text" style="display:none;" id="Amountofmoneys1" name="Amountofmoneys1" />
-                            <input type="text" class="layui-input" lay-verify="required" name="Amountofmoneys" id="Amountofmoneys" />
+                            <input type="text" class="layui-input" lay-verify="required|Amountofmoney" name="Amountofmoneys" id="Amountofmoneys" />
 
                         </div>
                     </div>
@@ -216,7 +216,31 @@
                 $("#zafei").css("display", "none");
             }
         });
+        //正则
+        form.verify({
+            Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
+                    return '请输入正确的价格';
+                }
+            },
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '名称不能输入空格';
+                } else {
+                    if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                        return '名称不能有特殊字符';
+                    }
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '名称首尾不能出现下划线\'_\'';
+                    }
+                    if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                        return '名称只能由中文或字母组成';
+                    }
 
+                }
+
+            }
+        });
         //监听提交
         form.on('submit(demo1)', function (data) {
             var db = data.field;

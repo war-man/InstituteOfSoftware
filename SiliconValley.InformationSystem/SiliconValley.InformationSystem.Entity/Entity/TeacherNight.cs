@@ -19,11 +19,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int Id { get; set; }
-        public Nullable<int> Tearcher_Id { get; set; }
+        /// <summary>
+        /// 值班老师（员工编号）
+        /// </summary>
+        public string Tearcher_Id { get; set; }//要去数据库修改
         /// <summary>
         /// 班级
         /// </summary>
-        public string ClassSchedule_Id { get; set; }
+        public int ClassSchedule_Id { get; set; } //要去数据库修改
         /// <summary>
         /// 值班情况
         /// </summary>
@@ -31,13 +34,16 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 值班类型
         /// </summary>
-        public Nullable<int> BeOnDuty_Id { get; set; }
+        public int BeOnDuty_Id { get; set; }
         /// <summary>
         /// 安排日期
         /// </summary>
-        public Nullable<System.DateTime> OrwatchDate { get; set; }
+        public DateTime OrwatchDate { get; set; }
         public string Rmark { get; set; }
-        public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 是否审核
+        /// </summary>
+        public bool IsDelete { get; set; }
     
         /// <summary>
         /// 值班时间段

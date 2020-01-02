@@ -57,9 +57,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             bool s = false;
             try
             {
-                this.Insert(r);
-                s = true;
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                int count= AllReconcile().Where(rs => rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id).ToList().Count;
+                if (count<=0)
+                {
+                    this.Insert(r);
+                    s = true;
+                    Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                }
+                
             }
             catch (Exception ex)
             {
@@ -714,7 +719,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             else
             {
                 //集合数据判断
-                Reconcile find_r = AllReconcile().Where(rs => rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate).FirstOrDefault();
+                Reconcile find_r = AllReconcile().Where(rs => rs.Curriculum_Id == r.Curriculum_Id && rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id==r.ClassSchedule_Id).FirstOrDefault();
                 if (find_r != null)
                 {
                     s = true;
@@ -1354,9 +1359,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="xmlfile">Xml文件</param>
         public void NightAnpai(List<ClassSchedule> classes,List<DateTime> times,List<Classroom> classrooms, string xmlfile)
         {
-            int i = 1;
+             int j = 1;
             foreach (DateTime time in times)
             {
+           
+                int i = 1;
                 //判断周六是否要上课
                 if(IsShangKe(xmlfile, time)==false)
                 {
@@ -1365,35 +1372,55 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 EvningSelfStudy r = new EvningSelfStudy();
                 foreach (ClassSchedule c1 in classes)
                 {
+                  
                     foreach (Classroom c2 in classrooms)
                     {
-
-                        string str1 = i % 2 == 0 ? "晚二" : "晚一";
-                        
-                        if (!string.IsNullOrEmpty(str1))
+                
+                        //判断这个教室安排满了没有
+                       int cout =  EvningSelfStudy_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == time && e.Classroom_id == c2.Id).ToList().Count;
+                        if (cout<2 && cout!=2)
                         {
-                            r.curd_name = str1;
-                            r.ClassSchedule_id = c1.id;
-                            r.Anpaidate = time;
-                            r.Classroom_id = c2.Id;                       
-                            r.IsDelete = false;
-                            r.Newdate = DateTime.Now;
-                            //判断今天这个班级是否已经安排这个课程
-                            bool s1 = EvningSelfStudy_Entity.IsAlreadAnpai(r.Anpaidate, r.ClassSchedule_id);
-                            if (!s1)
+                            string str1 = "";
+                            if (j%2==0)
                             {
-                                //安排
-                                EvningSelfStudy_Entity.Add_Data(r);
-                                i++;
-                                break;
+                                str1 = i % 2 == 0 ? "晚二" : "晚一";
+                            }
+                            else
+                            {                                                                
+                                
+                                str1 = i % 2 == 0 ? "晚一" : "晚二";
+                            }                            
+                            if (!string.IsNullOrEmpty(str1))
+                            {
+                                r.curd_name = str1;
+                                r.ClassSchedule_id = c1.id;
+                                r.Anpaidate = time;
+                                r.Classroom_id = c2.Id;
+                                r.IsDelete = false;
+                                r.Newdate = DateTime.Now;
+                                //判断今天这个班级是否已经安排这个课程
+                                bool s1 = EvningSelfStudy_Entity.IsAlreadAnpai(r.Anpaidate, r.ClassSchedule_id);
+                                if (!s1)
+                                {
+                                    //安排
+                                    EvningSelfStudy_Entity.Add_Data(r);
+                                    i++;
+                                    break;
+                                }
+                            }
+                            else
+                            {
+                                continue;
                             }
                         }
                         else
                         {
                             continue;
                         }
+                        
                     }
                 }
+                j++;
             }
         }
         /// <summary>
@@ -1702,7 +1729,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 List<EvningSelfStudy> e_list = new List<EvningSelfStudy>();
                 for (int i = 0; i < addcount; i++)
                 {
-                    dateTime = dateTime.AddDays(1);
+                    if (i==0)
+                    {
+                        dateTime = dateTime.AddDays(0);
+                    }
+                    else
+                    {
+                        dateTime = dateTime.AddDays(1);
+                    }
+                     
                     //判断这个时间是否可以加课
                      GetYear getYear= MyGetYear(dateTime.Year.ToString(), XmlFile);
                     if (dateTime.Month>= getYear.StartmonthName && dateTime.Month<=getYear.EndmonthName)
@@ -1747,7 +1782,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         bool e2 = EvningSelfStudy_Entity.Add_Data(new_eTwo).Success;
                         if (e1==true && e2==true )
                         {
-                            data.Success = false;
+                            COU++;
+                            data.Success = true;
                             data.Msg = "加课成功";
                         }
                         else
@@ -1790,7 +1826,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                        
                      
                 }
-                if (COU==3)
+                if (COU== (addcount-1))
                 {
                     data.Success = true;
                 }
@@ -1808,7 +1844,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     }
                     //清空缓存
                     Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                    for (int i = 0; i < addcount; i++)
+                    for (int i = 1; i <= addcount; i++)
                     {
                         Reconcile r = new Reconcile();
                         r.AnPaiDate = dateTime.AddDays(i);
@@ -1819,11 +1855,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         r.EmployeesInfo_Id = emp_id;
                         r.IsDelete = false;
                         r.NewDate = DateTime.Now;
-                        this.AddData(r);
+                        bool s= this.AddData(r);
+                        if (s==false)
+                        {
+                            break;
+                        }
                         yes++;
                     }
 
-                    if (yes == (addcount - 1))
+                    if (yes == addcount)
                     {
                         data.Success = true;
                     }

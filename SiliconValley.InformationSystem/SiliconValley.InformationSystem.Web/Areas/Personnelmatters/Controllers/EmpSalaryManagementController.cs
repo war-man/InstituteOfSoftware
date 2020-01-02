@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
             var time = msrmanage.GetList().Where(s=>s.IsDel==false).FirstOrDefault().YearAndMonth;
             string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
-            ViewBag.yearandmonth = mytime;
+            ViewBag.yearandmonth = mytime; 
             return View();
         }
         //工资表数据加载
@@ -164,7 +164,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             catch (Exception ex)
             {
                AjaxResultxx= msrmanage.Error(ex.Message);
-            }
+            }   
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
@@ -218,7 +218,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.id = id;
             return View(msr);
         }
-       
+        public ActionResult GetMSRById(int id)
+        {
+            MonthlySalaryRecordManage esemanage = new MonthlySalaryRecordManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var ese = esemanage.GetEntity(id);
+            var newobj = new
+            {
+                ese.Id,
+                ese.EmployeeId,
+                empName = empmanage.GetEntity(ese.EmployeeId).EmpName,
+                deptName = empmanage.GetDeptByEmpid(ese.EmployeeId).DeptName,
+                pName = empmanage.GetPositionByEmpid(ese.EmployeeId).PositionName,
+                ese.Bonus,
+                ese.OvertimeCharges,
+                ese.OtherDeductions,
+                ese.IsDel
+            };
+            return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult EditEmpSalary(MonthlySalaryRecord msr) {
             var AjaxResultxx = new AjaxResult();

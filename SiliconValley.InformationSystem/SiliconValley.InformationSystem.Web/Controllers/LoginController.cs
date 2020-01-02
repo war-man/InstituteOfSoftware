@@ -14,7 +14,7 @@ using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
-    //  /Login/PhoneSMS
+    //  /Login/LoginIndex
     [IgnoreLogin]
     public class LoginController : Controller
     {
@@ -39,6 +39,9 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                     Base_User findu = userinfo.GetList().Where(find => find.UserName == u.UserName && find.Password == pwd).FirstOrDefault();
                     if (findu != null)
                     {
+                        SessionHelper sessionHelper = new SessionHelper();
+
+
                         SessionHelper.Session["UserId"] = findu.UserId;
                         err.Success = true;
                         err.Msg = "登陆成功!";

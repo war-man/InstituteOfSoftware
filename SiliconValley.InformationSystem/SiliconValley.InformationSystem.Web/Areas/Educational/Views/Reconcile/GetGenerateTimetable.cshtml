@@ -37,75 +37,13 @@
     </div>
 @section script{
     <script>
-        function GetDay(date) {
-            // 标准时间 Wed Jul 31 2019 00:00:00 GMT+0800 (中国标准时间)
-            var _date = new Date(date);
-
-            // getDay() 返回表示星期的某一天
-            var num = _date.getDay(_date),
-                week;
-            switch (num) {
-                case 0:
-                    week = "周日";
-                    break;
-                case 1:
-                    week = "周一";
-                    break;
-                case 2:
-                    week = "周二"
-                    break;
-                case 3:
-                    week = "周三"
-                    break;
-                case 4:
-                    week = "周四"
-                    break;
-                case 5:
-                    week = "周五"
-                    break;
-                case 6:
-                    week = "周六"
-                    break;
-                default:
-                    break;
-            };
-            return week;
-        }
         layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#SelectTime'
-                , type: 'date'
-                , done: function (value, date, endDate) {
-                    var dd = new Date(value);
-                    var month = Number(dd.getMonth()) + 1;
-                    var day = GetDay(value);
-                    if (month >= 6 && month <= 9) {
-                        //能选择星期六
-                        if (day == "周日") {
-                            layer.msg('日期不能选择周日', { icon: 2, shade: 0.8 }, function () {
-                                laydate.render({
-                                    elem: '#SelectTime',
-                                    value: "2020-01-01"
-                                });
-                            });
-                        }
-                    } else {
-                        //不能选择星期六
-                        if (day == "周日" || day == "周六") {
-                            layer.msg('日期不能选择周六或周日', { icon: 2, shade: 0.8 }, function () {
-                                laydate.render({
-                                    elem: '#SelectTime',
-                                    value: "2020-01-01"
-                                });
-                            });
-                        }
-                    }
-
-                }
+                , type: 'date'                
             });
-
         });
         function GetKebiao() {
             var time = $("#SelectTime").val();

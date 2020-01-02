@@ -17,6 +17,40 @@
     <div>
         <input type="text" value="@ViewBag.ClassID" style="display:none;" id="ClassID" />
     </div>
+    <form class="layui-form" action="">
+        <div class="layui-container">
+            <div class="layui-row ">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4  layui-col-sm4 layui-col-md4"  style="margin-left:-20px;">
+
+                        <label class="layui-form-label labels">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="Name" lay-verify="Name" class="layui-input" />
+                        </div>
+                        
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">学号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="number" lay-verify="number" class="layui-input" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">总分(>=)</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="Totalscore" lay-verify="Totalscore" style="width:80px;" class="layui-input" />
+                        </div>
+                    </div>
+                </div>
+                <div style="position:absolute;left:90%;top:1px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </form>
     <table class="layui-hide" id="test" lay-filter="test"></table>
 
 </body>
@@ -44,19 +78,67 @@
                 , { field: 'OnBoard', title: '机试 ' }
                
                 , { field: 'Writtenexamination', title: '笔试 ' }
-                , {
-                    field: 'OnBoard', title: '总分', templet: function (c) {
-                        return c.OnBoard + c.Writtenexamination
-                    }
-                }
-                , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+                , { field: 'Totalscore', title: '总分'  }
+             
             ]]
             , page: true
-            , limit: 8
-            , limits: [8, 10, 15]
+            , limit: 5
+            , limits: [5,8, 10]
         });
 
+        //正则表达式
+        form.verify({
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                            return '姓名不能有特殊字符';
+                        }
+                        if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                            return '姓名首尾不能出现下划线\'_\'';
+                        }
+                        if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                            return '姓名只能由中文或字母组成';
+                        }
+                    }
+                }
 
+            },//(^$)|^\d{10}$/
+            Totalscore: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '总分不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var Totalscore = /^\d+$|^\d+[.]?\d+$/;
+                        if (!Totalscore.test(value)) {
+                            return '请输入正确的分数';
+                        }
+                    }
+                }
+
+            },
+            number: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '学号不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var identitydocument = /^\d/;
+                        if (!identitydocument.test(value)) {
+                            return '学号由数字组成';
+                        }
+                    }
+                }
+
+            }
+        });
         //查看班级学员
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
@@ -69,6 +151,23 @@
             }
 
         });
+
+        //查询功能
+        form.on('submit(demo2)', function (data) {
+            var x = data.field;
+            table.reload('idTest', {
+                where: {
+                    identitydocument: x.identitydocument,
+                    Name: x.Name,
+                    grade_Id: x.grade_Id,
+                    Totalscore: x.Totalscore,
+                }, page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+
           });
 
 </script>

@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     [CheckLogin]
     public class ClassScheduleController : Controller
     {
-        private static int? classNumberss = null;
+      
         public static int counts = 0;
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
@@ -241,7 +241,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
 
 
-            classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
+           var classNumberss =int.Parse( Request.QueryString["ClassNumber"]);
          
             ViewBag.ClassName =dbtext.GetEntity( classNumberss).ClassNumber;
             ViewBag.GrandName= Grandcontext.GetEntity(dbtext.GetEntity(classNumberss).grade_Id).GrandName;
@@ -283,7 +283,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //获取班委
         public ActionResult DateMembers()
         {
-            return Json(dbtext.ClassStudentneList((int)classNumberss), JsonRequestBehavior.AllowGet);
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+            return Json(dbtext.ClassStudentneList(ClassID), JsonRequestBehavior.AllowGet);
         }
         //班委数据操作
         public ActionResult AddMembers()
@@ -294,7 +295,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string MenName = Request.QueryString["MenName"];
             //数据操作
             string Entity = Request.QueryString["Entity"];
-         return Json(dbtext.Entityembers(Stuid, MenName, (int)classNumberss, Entity),JsonRequestBehavior.AllowGet);
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+         return Json(dbtext.Entityembers(Stuid, MenName, ClassID, Entity),JsonRequestBehavior.AllowGet);
 
         }
         //班会表单页面
@@ -303,7 +306,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             //undefined
             //string ClassName = Request.QueryString["ClassName"];
-
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
             string uid = Request.QueryString["id"];
             Assmeetings assmeetings = new Assmeetings();
             if (uid!= "undefined")
@@ -316,7 +320,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             else
             {
                 ViewBag.Name = "编辑班会记录";
-                assmeetings.ClassNumber =(int) classNumberss;
+                assmeetings.ClassNumber =ClassID;
                 ViewBag.ClassName = dbtext.GetEntity(assmeetings.ClassNumber).ClassNumber;
                 return View(assmeetings);
             }
@@ -334,14 +338,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             //班委名称
             string MenName = Request.QueryString["MenName"];
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
             //学号
             string Stuid = Request.QueryString["Stuid"];
-            return Json(dbtext.AssmeetingsBool(MenName,(int)classNumberss, Stuid), JsonRequestBehavior.AllowGet);
+            return Json(dbtext.AssmeetingsBool(MenName, ClassID, Stuid), JsonRequestBehavior.AllowGet);
         }
         //班级班会数据
         public ActionResult AssmeetingsGetDate(int page, int limit,string Title,string qBeginTime,string qEndTime)
         {
-            var dataList = dbtext.AssmeetingsList((int)classNumberss) ;
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+
+            var dataList = dbtext.AssmeetingsList(ClassID) ;
             if (!string.IsNullOrEmpty(Title))
             {
                 dataList = dataList.Where(a => a.Title.Contains(Title)).ToList();
@@ -379,6 +388,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult Dismantleclasses()
         {
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
+
             string studentID = Request.QueryString["StudentID"];
            string[] studentIDs= studentID.Split(',');
             var Dismantl=  Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
@@ -390,7 +402,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 List = List.Where(a => a.id != item.FormerClass).ToList();
             }
-            ViewBag.List= List.Where(a=>a.id!= classNumberss).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
+            ViewBag.List= List.Where(a=>a.id!= ClassID).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
             studentID = studentID.Substring(0, studentID.Length - 1);
             string[] stu = studentID.Split(',');
             List<StudentInformation> list = new List<StudentInformation>();
@@ -400,8 +412,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
 
             ViewBag.StudentID = studentID;
-            ViewBag.ClassName = dbtext.FintClassSchedule((int)classNumberss).ClassNumber;
-            ViewBag.ClassID= classNumberss;
+            ViewBag.ClassName = dbtext.FintClassSchedule(ClassID).ClassNumber;
+            ViewBag.ClassID= ClassID;
             ViewBag.Mylist = list;
 
 
@@ -553,6 +565,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult Shiftwork()
         {
+            //班级id
+            int ClassID = int.Parse(Request.QueryString["ClassID"]);
             //是否打印
             string Types = Request.QueryString["Types"];
             if (Types == "1")
@@ -565,14 +579,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             string StudentID = Request.QueryString["StudentID"];
             var Dismantl = Dismantle.GetList().Where(a => a.IsDelete == false).ToList();
-            var List = dbtext.ListGradeidentical(Stuclass.SutdentCLassName(StudentID).ID_ClassName);
+            //var List = dbtext.ListGradeidentical(Stuclass.SutdentCLassName(StudentID).ID_ClassName);
          
-            foreach (var item in Dismantl)
-            {
-                List = List.Where(a => a.id != item.FormerClass).ToList();
-            }
-            ViewBag.List = List.Where(a => a.id != classNumberss).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
-            return View(dbtext.ShiftworkFine(StudentID));
+            //foreach (var item in Dismantl)
+            //{
+            //    List = List.Where(a => a.id != item.FormerClass).ToList();
+            //}
+            //ViewBag.List = List.Where(a => a.id != ClassID).Select(a => new SelectListItem { Value = a.id.ToString(), Text = a.ClassNumber }).ToList();
+           return View(dbtext.ShiftworkFine(StudentID));
         }
         /// <summary>
         /// 转班申请数据提交
@@ -780,7 +794,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
-        /// 升学成绩
+        /// 升学成绩页面
         /// </summary>
         /// <returns></returns>
         [HttpGet]
@@ -789,21 +803,35 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.ClassID = Request.QueryString["ClassID"];
             return View();
         }
-        public ActionResult EntranceexaminationresultsDate(int page, int limit)
+        public ActionResult EntranceexaminationresultsDate(int page, int limit,string Totalscore,string number,string Name)
         {
             int ClassID = int.Parse(Request.QueryString["ClassID"]);
             int grade_Id = dbtext.GetEntity(ClassID).grade_Id;
             ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
             var z = examScoresBusiness.ClassScores(ClassID, grade_Id);
-          var x=  examScoresBusiness.ClassScores(ClassID, grade_Id).Select(a=>new {
-             
-              a.StudentNumber,
-              a.StudentName,
-              student.GetEntity(a.StudentNumber).identitydocument,
-             Sex= student.GetEntity(a.StudentNumber).Sex==false?"女":"男",
-              a.Score.OnBoard,
-              Writtenexamination = a.Score.ChooseScore + a.Score.TextQuestionScore,
+            var x = examScoresBusiness.ClassScores(ClassID, grade_Id).Select(a => new {
+
+                a.StudentNumber,
+                a.StudentName,
+                student.GetEntity(a.StudentNumber).identitydocument,
+                Sex = student.GetEntity(a.StudentNumber).Sex == false ? "女" : "男",
+                a.Score.OnBoard,
+                Writtenexamination = a.Score.ChooseScore + a.Score.TextQuestionScore,
+                Totalscore = a.Score.OnBoard + a.Score.ChooseScore + a.Score.TextQuestionScore
           }).ToList();
+            if (!string.IsNullOrEmpty(Totalscore))
+            {
+                int totalscore = int.Parse(Totalscore);
+                x = x.Where(a => a.Totalscore >= totalscore).ToList();
+            }
+            if (!string.IsNullOrEmpty(number))
+            {
+                x = x.Where(a => a.StudentNumber == number).ToList();
+            }
+            if (!string.IsNullOrEmpty(Name))
+            {
+                x = x.Where(a => a.StudentName.Contains(Name)).ToList();
+            }
             var Myx = x.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {

@@ -16,10 +16,46 @@
 </head>
 <body>
     <div>
-        <form class="layui-form" action="" id="Positive" lay-filter="Positive">
+        <form class="layui-form" action="" id="formtest" lay-filter="formtest">
             <input type="hidden" value="@ViewBag.id"  id="Id" name="Id"/>
-            <div class="layui-container"> 
-                <div class="layui-form-item" style="margin-top:60px;">
+            <div class="layui-container">
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">员工编号:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EmployeeId" id="EmployeeId" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">姓名:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="empName" id="empName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属部门:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="deptName" id="deptName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属岗位:</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="pName" id="pName" readonly style="border:0px;" class="layui-input" />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="layui-form-item">
                     <label class="layui-form-label">加班费用:</label>
                     <div class="layui-input-inline">
                         @Html.TextBoxFor(a => a.OvertimeCharges, new Dictionary<string, object>() { { "class", "layui-input salary" } })
@@ -28,14 +64,14 @@
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">奖金:</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline">
                         @Html.TextBoxFor(a => a.Bonus, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                     </div>
                 </div>
 
                 <div class="layui-form-item">
                     <label class="layui-form-label">其他扣款:</label>
-                    <div class="layui-input-inline" >
+                    <div class="layui-input-inline">
                         @Html.TextBoxFor(a => a.OtherDeductions, new Dictionary<string, object>() { { "class", "layui-input salary" } })
                     </div>
                 </div>
@@ -51,6 +87,24 @@
     </div>
 
     <script>
+        $(function () {
+            loadnetinfo();// 初始化编辑数据加载
+        });
+        function loadnetinfo() {
+            var id = $("#Id").val();
+            $.get("/Personnelmatters/EmpSalaryManagement/GetMSRById/" + id, function (data) {
+                layui.use(['layer', 'form', 'table', 'laydate'], function () {
+                    var form = layui.form;
+                    $("#EmployeeId").val(data.EmployeeId);
+                    $("#empName").val(data.empName);
+                    $("#deptName").val(data.deptName);
+                    $("#pName").val(data.pName);
+
+                    form.val("formtest", data);
+
+                });
+            })
+        }
 
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form

@@ -16,6 +16,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         // GET: Personnelmatters/PerformanceAssess
         public ActionResult PerformanceAssessIndex()
         {
+            MeritsCheckManage msrmanage = new MeritsCheckManage();//员工月度工资
+            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+            string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
+            ViewBag.yearandmonth = mytime;
             return View();
         }
 
@@ -25,10 +29,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult PerformanceAssessShow(int page,int limit) {
+        public ActionResult PerformanceAssessShow(int page,int limit,string AppCondition) {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var mclist = mcmanage.GetList().Where(s=>s.IsDel==false).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string ename = str[0];
+                string deptname = str[1];
+                string pname = str[2];
+                string Empstate = str[3];
+                mclist = mclist.Where(e => emanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(deptname))
+                {
+                    mclist = mclist.Where(e => emanage.GetDeptByEmpid(e.EmployeeId).DeptId == int.Parse(deptname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(pname))
+                {
+                    mclist = mclist.Where(e => emanage.GetPositionByEmpid(e.EmployeeId).Pid == int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(Empstate))
+                {
+                    mclist = mclist.Where(e => emanage.GetInfoByEmpID(e.EmployeeId).IsDel == bool.Parse(Empstate)).ToList();
+                }
+
+            }
             var newlist = mclist.Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in newlist
                          select new
@@ -65,6 +91,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 年月份及应到勤天数的改变
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult ChangeMCTime()
+        {
+            MeritsCheckManage msrmanage = new MeritsCheckManage();
+            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+            string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+            ViewBag.time = mytime;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ChangeMCTime(string CurrentTime)
+        {
+            var AjaxResultxx = new AjaxResult();
+            MeritsCheckManage msrmanage = new MeritsCheckManage();
+            try
+            {
+                var attlist = msrmanage.GetList().Where(s => s.IsDel == false).ToList();
+                for (int i = 0; i < attlist.Count(); i++)
+                {
+                    attlist[i].YearAndMonth = Convert.ToDateTime(CurrentTime);
+                    msrmanage.Update(attlist[i]);
+                    AjaxResultxx = msrmanage.Success();
+                }
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
 
         public ActionResult EditEmpPFAssess(int id) {
             MeritsCheckManage mcmanage = new MeritsCheckManage();

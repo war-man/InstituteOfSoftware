@@ -69,3 +69,4 @@ function formatDate(dates) {
     var second = date.getSeconds();
     return year + "-" + formatTen(month) + "-" + formatTen(day) + " " + formatTen(hour) + ":" + formatTen(minute) + ":" + formatTen(second);
 }
+ 
