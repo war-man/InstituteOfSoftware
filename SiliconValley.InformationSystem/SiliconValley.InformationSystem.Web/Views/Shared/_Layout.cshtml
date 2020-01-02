@@ -19,6 +19,8 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.js"></script>
+    <link href="~/Scripts/MenusStyle/css/reset.css" rel="stylesheet" />
+    <link href="~/Scripts/MenusStyle/css/style.css" rel="stylesheet" />
     @RenderSection("style", false)
 
 </head>
@@ -251,7 +253,7 @@
         <nav class="navbar-default navbar-side" role="navigation">
             @*<div id="sideNav" href=""><i class="fa fa-caret-right"></i></div>*@
             <div class="sidebar-collapse">
-                <ul class="nav" id="main-menu"></ul>
+                <ul class="cd-accordion-menu animated" id="main-menu"></ul>
             </div>
 
         </nav>
@@ -290,7 +292,7 @@
     @RenderSection("script", false)
 </body>
 </html>
-
+<script src="~/Scripts/MenusStyle/js/main.js"></script>
 <script type="text/javascript">
    
 
@@ -312,81 +314,80 @@
                             <li> */
 
     //加载菜单
+    var index = 1;
     function loadMenus() {
 
         for (var i = 0; i < MenuData.length; i++) {
 
             if (MenuData[i].IsShow == true) {
-                var li = $("<li class='test'></li>");
-                var a = $("<a></a>");
+
+
+                var li = $("<li class='has-children'></li>");
+                var input = $('<input type="checkbox" name ="group-' + (i + 1) + '" id="group-' + (i + 1) +'" checked>');
+                var a = $("<label for='group-" + (i + 1)+"'>Group 1</label>");
                 a.text(MenuData[i].Name);
-                a.attr("href", MenuData[i].Url);
-                a.addClass("active-menu");
-                var di = $('<i class="fa fa-sitemap"></i>');
-                var span = $('<span class="fa arrow"></span>');
-                a.append(di);
-                a.append(span);
+                //a.attr("href", MenuData[i].Url);
+                
+                li.append(input);
                 li.append(a);
 
                 //console.log(li);
                 for (var j = 0; j < MenuData[i].SubMenus.length; j++) {
-                    index = 1;
+                    
                     loadSonMenu(MenuData[i], li);
                 }
-
-                console.log(li);
+                
+                console.log(li[0]);
                 $("#main-menu").append(li);
             }
         }
     }
 
-    var index = 1;
-
     function loadSonMenu(Menu, html) {
 
         //console.log(Menu);
 
-
         if (Menu.SubMenus != null) {
-            switch (index) {
-                case 1:
-                    var ul = $('<ul class="nav nav-second-level"></ul>');
-                    break;
-                case 2:
-                    var ul = $('<ul class="nav nav-third-level"></ul>');
-                default:
-            }
+
+            html.addClass("has-children");
+            var ul = $('<ul></ul>');
             
             
             for (var i = 0; i < Menu.SubMenus.length; i++) {
 
-
+                index++;
                 if (Menu.SubMenus[i].IsShow == true) {
                   
-                    var li = $("<li class='test'></li>");
-                    var a = $("<a></a>");
-                    a.text(Menu.SubMenus[i].Name);
-                    //console.log(Menu.SubMenus[i]);
+                    var li = $("<li class='has-children'></li>");
+                    var input = $('<input type="checkbox" name ="sub-group-' + (index) + '" id="sub-group-' + (index) +'" checked>');
+                    var a;
 
-                    a.attr("href", Menu.SubMenus[i].Url);
-                    if (Menu.SubMenus[i].SubMenus != null) {
+                    console.log(Menu.SubMenus[i].Url+'...........');
 
-                        var di = $('<i class="fa fa-sitemap"></i>');
-                        var span = $('<span class="fa arrow"></span>');
-
-                        a.append(di);
-                        a.append(span);
+                    if (Menu.SubMenus[i].Url) {
+                        a = $("<a></a>");
                     }
+                    else {
+                        a = $("<label for='sub-group-" + (index)+"'>Group 1</label>");
+                    }
+
+
+
+                    a.text(Menu.SubMenus[i].Name);
+                    a.attr("href", Menu.SubMenus[i].Url);
+
+                    li.append(input);
+                    li.append(a);
                   
                  
-                    li.append(a);                  
-                    ul.append(li);
-
+                  
                     if (Menu.SubMenus != null) {
                         index++;
                         loadSonMenu(Menu.SubMenus[i], li);
                       
                     }
+
+                    ul.append(li);
                 }
             }
             //console.log(ul);

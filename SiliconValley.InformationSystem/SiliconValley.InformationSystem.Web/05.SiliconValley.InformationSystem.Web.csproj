@@ -1143,6 +1143,11 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="Scripts\MenusStyle\css\reset.css" />
+    <Content Include="Scripts\MenusStyle\css\style.css" />
+    <Content Include="Scripts\MenusStyle\img\cd-icons.svg" />
+    <Content Include="Scripts\MenusStyle\js\jquery.min.js" />
+    <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
