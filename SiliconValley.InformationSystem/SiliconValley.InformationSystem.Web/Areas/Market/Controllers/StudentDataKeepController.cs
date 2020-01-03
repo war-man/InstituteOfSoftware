@@ -200,7 +200,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json(Error("加载数据有误"),JsonRequestBehavior.AllowGet);
             }                            
         }       
-        #region
+       
         //这是一个添加数据的页面
         public ActionResult AddorEdit(string id)
         {
@@ -378,7 +378,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             AjaxResult a= s_Entity.Update_data(olds);
             return Json(a,JsonRequestBehavior.AllowGet);
         }
-        #endregion
+ 
         //将Excel中的数据加载到数据库中
         public bool AddExcelToServer(List<MyExcelClass> list)
         {
@@ -826,9 +826,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             resut = "ok",
                         };
                         //通知备案人备案成功
-                        string number = "13204961361";
-                        string smsText = "备案提示:已备案成功";
-                        string t = PhoneMsgHelper.SendMsg(number, smsText);
+                        //string number = "13204961361";
+                        //string smsText = "备案提示:已备案成功";
+                        //string t = PhoneMsgHelper.SendMsg(number, smsText);
 
                         return Json(datajson, JsonRequestBehavior.AllowGet);
                     }
