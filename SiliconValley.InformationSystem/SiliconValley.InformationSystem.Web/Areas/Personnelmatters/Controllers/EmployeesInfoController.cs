@@ -545,7 +545,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             catch (Exception)
             {
                 AjaxResultxx.Success = false;
-            }
+            } 
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
 
