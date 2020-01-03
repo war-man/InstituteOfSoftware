@@ -1,17 +1,17 @@
 ﻿
 @{
-    Layout = null;
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!DOCTYPE html>
 
 @using SiliconValley.InformationSystem.Entity.ViewEntity
-<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-<script src="~/Scripts/jquery-3.3.1.min.js"></script>
-<script src="~/Scripts/layui/layui.js"></script>
+@*<link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>*@
 <script src="~/Scripts/underscore.js"></script>
 
-<html>
+@*<html>*@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>借款</title>
@@ -45,125 +45,132 @@
     </style>
     <script src="~/Scripts/underscore.js"></script>
 </head>
-<body>
+@*<body>
 
-    <h1 style="text-align:center;height:50px;">申请资金单</h1>
+    <h1 style="text-align:center;height:50px;">申请资金单</h1>*@
 
-    <div class="layui-container">
-        <div>
-            <form class="layui-form" action="">
+<div class="layui-container">
+    <div>
+        <form class="layui-form" action="">
 
-                <div class="layui-container">
+            <div class="layui-container">
 
-                    <fieldset>
-                        <legend>借资单</legend>
-                        <div class="layui-row layui-form-item">
+                <fieldset>
+                    <legend>借资单</legend>
+                    <div class="layui-row layui-form-item">
 
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">部门</label>
-                                <div class="layui-input-inline">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">部门</label>
+                            <div class="layui-input-inline">
 
-                                    <input type="tel" value="@ViewBag.DepInfo.DeptName" name="DeptName" readonly autocomplete="off" class="layui-input noborder">
-                                </div>
+                                <input type="tel" value="@ViewBag.DepInfo.DeptName" name="DeptName" readonly autocomplete="off" style="border:none;background-color:transparent;" class="layui-input noborder ">
                             </div>
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">岗位</label>
-                                <div class="layui-input-inline">
-                                    <input type="tel" value="@ViewBag.PositionInfo.PositionName" name="PositionName" readonly autocomplete="off" class="layui-input noborder">
-                                </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">岗位</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" value="@ViewBag.PositionInfo.PositionName" name="PositionName" readonly autocomplete="off" style="border:none;background-color:transparent;" class="layui-input noborder">
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">借款人</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" value="@ViewBag.employeesInfo.EmpName" name="EmpName" id="EmpName" readonly autocomplete="off" style="border:none;background-color:transparent;" class="layui-input noborder ">
+                                <input type="tel" value="@ViewBag.employeesInfo.EmployeeId" name="EmployeeId" id="EmployeeId" hidden="hidden">
                             </div>
                         </div>
 
-
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">借款人</label>
-                                <div class="layui-input-block">
-                                    <input type="tel" value="@ViewBag.employeesInfo.EmpName" name="EmpName" id="EmpName" readonly autocomplete="off" class="layui-input noborder">
-                                    <input type="tel" value="@ViewBag.employeesInfo.EmployeeId" name="EmployeeId" id="EmployeeId" hidden="hidden">
-                                </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">选择类型</label>
+                            <div class="layui-input-inline">
+                                <input type="radio" name="type" class="yingzi" value="Borrowmoney" title="借资" checked="" lay-filter="yingying">
+                                <input type="radio" name="type" class="yingzi" value="Prefunding" title="预资" lay-filter="yingying">
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">选择类型</label>
-                                <div class="layui-input-block">
-                                    <input type="radio" name="type" class="yingzi" value="Borrowmoney" title="借资" checked="" lay-filter="yingying">
-                                    <input type="radio" name="type" class="yingzi" value="Prefunding" title="预资" lay-filter="yingying">
-                                </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">借资金额</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" name="Money" id="ipt1" placeholder="￥" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item" >
+
+                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                            <label class="layui-form-label" id="textvalue">123</label>
+                            <div class="layui-input-inline" style="width:500px;" id="index">
+
                             </div>
                         </div>
 
-                        <div class="layui-row layui-form-item">
-                            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                                <label class="layui-form-label">借资金额</label>
-                                <div class="layui-input-block">
-                                    <input type="tel" name="Money" id="ipt1" placeholder="￥" autocomplete="off" class="layui-input">
-                                </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" lay-filter="demo1" type="button" id="btn1">添加</button>
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <div class="layui-input-block">
+                                <button class="layui-btn" id="clode">取消</button>
                             </div>
                         </div>
 
-                        <div class="layui-row layui-form-item" id="index">
+                    </div>
 
 
-                        </div>
-
-
-
-                    </fieldset>
-                </div>
-            </form>
-        </div>
-
-        <div>
-
-            <button class="layui-btn" lay-filter="demo1" onclick="DoBorrowMoney()">添加</button>
-
-
-            <button class="layui-btn" id="clode">取消</button>
-
-        </div>
+                </fieldset>
+            </div>
+        </form>
     </div>
 
-    @*普通借资原因*@
-    <script type="text/template" id="Borrowmoneymuban">
+</div>
 
-        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-            <label class="layui-form-label">{{=content}}</label>
-            <div class="layui-input-block">
-                <textarea class="layui-textarea" name="BorrowmoneyReason" id="BorrowmoneyReason"></textarea>
-            </div>
+@*普通借资原因*@
+<script type="text/template" id="Borrowmoneymuban">
+    <textarea class="layui-textarea" name="BorrowmoneyReason" id="BorrowmoneyReason"></textarea>
+</script>
 
-        </div>
-    </script>
+@*预资原因*@
+<script type="text/template" id="muban1">
+    <input type="checkbox" name="studentid" class="mystudentid" lay-skin="primary" title="{{=StuName}}" value="{{=Id}}">
+</script>
 
-    @*预资原因*@
-    <script type="text/template" id="Prefundingmuban">
-        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-            <label class="layui -form-label">{{=content}}</label>
-            <div id="test4" class="demo-transfer"></div>
-        </div>
-    </script>
-
-    <script>
-        var mytransfer;
+<script>
+    layui.use(['transfer', 'layer', 'util', 'form'], function () {
+        var form = layui.form, transfer = layui.transfer, layer = layui.layer, data2 = JSON.parse('@Html.Raw(ViewBag.Student)');
         var type;
         jQuery(function () {
             loadBorrowmoneymuban("借资原因");
+            console.log(data2);
         });
         function loadBorrowmoneymuban(content) {
             $("#index").children().remove();
             var compiled = _.template($("#Borrowmoneymuban").html());
-            var html = compiled({ content: content });
-
+            var html = compiled({});
+            $("#textvalue").text(content);
             $("#index").append($(html));
         }
-
-        function loadPrefunding(content) {
+        function loadregion(content) {
             $("#index").children().remove();
-            var compiled = _.template($("#Prefundingmuban").html());
-            var html = compiled({ content: content });
-            $("#index").append($(html));
+            for (var i = 0; i < data2.length; i++) {
+                var obj = _.template($("#muban1").html());
+                var html = obj({ StuName: data2[i].StuName, Id: data2[i].Id });
+                $("#index").append($(html));
+            }
+            $("#textvalue").text(content);
+            form.render();
         }
+
         $("#ipt1").keyup(function () {
             var reg = $(this).val().match(/\d+\.?\d{0,2}/);
             var txt = '';
@@ -178,43 +185,19 @@
                 $(this).val(v.substr(0, v.length - 1));
             }
         });
-        layui.use(['transfer', 'layer', 'util','form'], function () {
-            var form = layui.form;
-            var transfer = layui.transfer;
-            var layer = layui.layer;
-            var data2 = JSON.parse('@Html.Raw(ViewBag.Student)');
-
-            //单选框监听值
-            form.on('radio(yingying)', function (data) {
-                type = data.value;
-                switch (type) {
-                    case "Borrowmoney":
-                        loadBorrowmoneymuban("借资原因");
-                        break;
-                    case "Prefunding":
-                        loadPrefunding("预资");
-                        transfer.render({
-                            elem: '#test4'
-                            , data: data2
-                            , title: ['可预资学生列表', '已选择学生列表']
-                            , showSearch: true
-                            , id: 'mykey' //定义索引
-                            , parseData: function (res) {
-                                return {
-                                    "value": res.Id //数据值
-                                    , "title": res.StuName //数据标题
-                                    , "disabled": res.disabled  //是否禁用
-                                    , "checked": res.checked //是否选中
-                                }
-                            }
-                        });
-                        mytransfer = transfer;
-                        break;
-                }
-            });
-
+        //单选框监听值
+        form.on('radio(yingying)', function (data) {
+            type = data.value;
+            switch (type) {
+                case "Borrowmoney":
+                    loadBorrowmoneymuban("借资原因");
+                    break;
+                case "Prefunding":
+                    loadregion("预资");
+                    break;
+            }
         });
-        function DoBorrowMoney() {
+        $("#btn1").click(function () {
             var EmployeeId = $("#EmployeeId").val();
             var DebitMoney = $("#ipt1").val();
             switch (type) {
@@ -223,7 +206,7 @@
                     $.ajax({
                         type: "POST",
                         url: "/Market/ChannelStaff/PublicBorrow",
-                        data: {EmployeeId:EmployeeId,DebitMoney:DebitMoney,BorrowmoneyReason:BorrowmoneyReason},
+                        data: { EmployeeId: EmployeeId, DebitMoney: DebitMoney, BorrowmoneyReason: BorrowmoneyReason },
                         async: true,
                         success: function (data) {
                             if (data.Success) {
@@ -250,12 +233,17 @@
                     });
                     break;
                 case "Prefunding":
-                    var transferdata = mytransfer.getData('mykey');
+                    var arr = new Array();
+                    $("input:checkbox[name='studentid']:checked").each(function (i) {
+                        arr[i] = $(this).val();
+                    });
+                    var strng1 = arr.join(",");//将数组合并成字符串
+                    console.log(strng1);
                     $.ajax({
                         type: "POST",
                         url: "/Market/ChannelStaff/DoPrefunding",
-                        data: { EmployeeId: EmployeeId, DebitMoney: DebitMoney, transferdata: JSON.stringify(transferdata) },
-                        async: true,
+                        data: { EmployeeId: EmployeeId, DebitMoney: DebitMoney, strng1:strng1  },
+                        //async: true,
                         success: function (data) {
                             if (data.Success) {
                                 layer.msg('预资成功', {
@@ -279,7 +267,15 @@
                     });
                     break;
             }
-        }
-    </script>
-</body>
-</html>
+            return false;
+        });
+    
+        
+    });
+   
+
+
+
+</script>
+@*</body>*@
+@*</html>*@

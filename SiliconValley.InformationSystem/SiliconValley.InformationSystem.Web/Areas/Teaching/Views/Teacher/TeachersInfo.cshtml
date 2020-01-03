@@ -55,45 +55,52 @@
 
     <div id="teacherInfo">
 
-       
-
-        <!--头像-->
-        <div id="Avatar">
-            <img style="border-radius:50%;" src="@ViewBag.empDetail.Image" width="120" height="120" />
-        </div>
-
-        <div style="margin-left:50px;" id="info">
-
-            <div class="teacherInfoItem EmpName">
-                <label>姓名：</label><span>@ViewBag.empDetail.EmpName</span>
-            </div>
-            <div class="teacherInfoItem EntryTime">
-                <label>入职时间：</label><span>@ViewBag.empDetail.EntryTime</span>
-            </div>
-            <div class="teacherInfoItem DeptName">
-                <label>部门：</label><span>@ViewBag.empDetail.DDAppId.DeptName</span>
-            </div>
-            <div class="teacherInfoItem PositionName">
-                <label>岗位：</label><span>@ViewBag.empDetail.PositionId.PositionName</span>
-            </div>
-            <div class="teacherInfoItem Sex">
-                <label>性别：</label><span>@ViewBag.empDetail.Sex</span>
-            </div>
-            <div class="teacherInfoItem Birthdate">
-                <label>生日：</label><span>@ViewBag.empDetail.Birthdate</span>
-            </div>
-            <div class="teacherInfoItem Education">
-                <label>学历：</label><span>@ViewBag.empDetail.Education</span>
-            </div>
-            <div class="teacherInfoItem Address">
-                <label>住址：</label><span>@ViewBag.empDetail.Address</span>
-            </div>
-            <div class="teacherInfoItem Phone">
-                <label>电话：</label><span>@ViewBag.empDetail.Phone</span>
-            </div>
 
 
-        </div>
+        @{
+            if (@ViewBag.empDetail != null)
+            {
+                <!--头像-->
+                <div id="Avatar">
+                    <img style="border-radius:50%;" src="@ViewBag.empDetail.Image" width="120" height="120" />
+                </div>
+
+                <div style="margin-left:50px;" id="info">
+
+                    <div class="teacherInfoItem EmpName">
+                        <label>姓名：</label><span>@ViewBag.empDetail.EmpName</span>
+                    </div>
+                    <div class="teacherInfoItem EntryTime">
+                        <label>入职时间：</label><span>@ViewBag.empDetail.EntryTime</span>
+                    </div>
+                    <div class="teacherInfoItem DeptName">
+                        <label>部门：</label><span>@ViewBag.empDetail.DDAppId.DeptName</span>
+                    </div>
+                    <div class="teacherInfoItem PositionName">
+                        <label>岗位：</label><span>@ViewBag.empDetail.PositionId.PositionName</span>
+                    </div>
+                    <div class="teacherInfoItem Sex">
+                        <label>性别：</label><span>@ViewBag.empDetail.Sex</span>
+                    </div>
+                    <div class="teacherInfoItem Birthdate">
+                        <label>生日：</label><span>@ViewBag.empDetail.Birthdate</span>
+                    </div>
+                    <div class="teacherInfoItem Education">
+                        <label>学历：</label><span>@ViewBag.empDetail.Education</span>
+                    </div>
+                    <div class="teacherInfoItem Address">
+                        <label>住址：</label><span>@ViewBag.empDetail.Address</span>
+                    </div>
+                    <div class="teacherInfoItem Phone">
+                        <label>电话：</label><span>@ViewBag.empDetail.Phone</span>
+                    </div>
+
+
+                </div>
+            }
+        }
+
+
     </div>
 <div id="table">
 

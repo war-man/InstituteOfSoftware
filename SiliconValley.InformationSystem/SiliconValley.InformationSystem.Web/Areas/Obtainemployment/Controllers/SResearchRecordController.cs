@@ -14,7 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    //[CheckLogin]
+    [CheckLogin]
     /// <summary>
     /// 学生第一次访谈
     /// </summary>

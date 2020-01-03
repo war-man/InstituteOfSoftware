@@ -18,7 +18,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
-
+    [CheckLogin]
     /// <summary>
     /// 市场年度总结
     /// </summary>

@@ -235,6 +235,7 @@
     <Compile Include="Areas\Educational\Controllers\CheckController.cs" />
     <Compile Include="Areas\Educational\Controllers\CheckGoodsController.cs" />
     <Compile Include="Areas\Educational\Controllers\ClassroomController.cs" />
+    <Compile Include="Areas\Educational\Controllers\ClassTeacherKeepController.cs" />
     <Compile Include="Areas\Educational\Controllers\ConvertCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\EvningSelfStudyController.cs" />
     <Compile Include="Areas\Educational\Controllers\GoodsController.cs" />
@@ -267,9 +268,11 @@
     <Compile Include="Areas\Market\Controllers\ConsultController.cs" />
     <Compile Include="Areas\Market\Controllers\ConsultTeacherController.cs" />
     <Compile Include="Areas\Market\Controllers\FollwingInfoController.cs" />
+    <Compile Include="Areas\Market\Controllers\InfomationController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
+    <Compile Include="Areas\Market\Controllers\StatusController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
     <Compile Include="Areas\Market\MarketAreaRegistration.cs" />
     <Compile Include="Areas\MyEducation\Controllers\EducationController.cs" />
@@ -1365,6 +1368,7 @@
     <Content Include="Areas\Market\Views\Consult\ConsultView.cshtml" />
     <Content Include="Areas\OrThert\Views\web.config" />
     <Content Include="Areas\Educational\Views\TeacherNight\AddDataView.cshtml" />
+    <Content Include="Areas\Educational\Views\ClassTeacherKeep\ClassTeacherKeepIndexView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

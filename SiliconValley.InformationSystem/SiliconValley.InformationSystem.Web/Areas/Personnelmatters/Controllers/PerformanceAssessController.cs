@@ -17,9 +17,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult PerformanceAssessIndex()
         {
             MeritsCheckManage msrmanage = new MeritsCheckManage();//员工月度工资
-            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-            string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
-            ViewBag.yearandmonth = mytime;
+            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
+                ViewBag.yearandmonth = mytime;
+            }
+
             return View();
         }
 
@@ -29,10 +33,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult PerformanceAssessShow(int page,int limit,string AppCondition) {
+        public ActionResult PerformanceAssessShow(int page, int limit, string AppCondition)
+        {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var mclist = mcmanage.GetList().Where(s=>s.IsDel==false).ToList();
+            var mclist = mcmanage.GetList().Where(s => s.IsDel == false).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -65,14 +70,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              empName = emanage.GetInfoByEmpID(e.EmployeeId).EmpName,
                              empDept = emanage.GetDept(emanage.GetInfoByEmpID(e.EmployeeId).PositionId).DeptName,
                              empPosition = emanage.GetPositionByEmpid(e.EmployeeId).PositionName,
-                             empIsDel=emanage.GetInfoByEmpID(e.EmployeeId).IsDel,
+                             empIsDel = emanage.GetInfoByEmpID(e.EmployeeId).IsDel,
                              e.YearAndMonth,
                              e.RoutineWork,
-                             routineWorkPropotion=e.RoutineWorkPropotion<=1 && e.RoutineWorkPropotion>0? (e.RoutineWorkPropotion*100)+"%": e.RoutineWorkPropotion>1?e.RoutineWorkPropotion+"%":null,
-                             routineWorkFillRate=e.RoutineWorkFillRate<=1&& e.RoutineWorkFillRate>0?(e.RoutineWorkFillRate*100)+"%":e.RoutineWorkFillRate>1? e.RoutineWorkFillRate + "%":null,
+                             routineWorkPropotion = e.RoutineWorkPropotion <= 1 && e.RoutineWorkPropotion > 0 ? (e.RoutineWorkPropotion * 100) + "%" : e.RoutineWorkPropotion > 1 ? e.RoutineWorkPropotion + "%" : null,
+                             routineWorkFillRate = e.RoutineWorkFillRate <= 1 && e.RoutineWorkFillRate > 0 ? (e.RoutineWorkFillRate * 100) + "%" : e.RoutineWorkFillRate > 1 ? e.RoutineWorkFillRate + "%" : null,
                              e.OtherWork,
-                             otherWorkPropotion=e.OtherWorkPropotion<=1&&e.OtherWorkPropotion>0?(e.OtherWorkPropotion*100)+"%":e.OtherWorkPropotion>1? e.OtherWorkPropotion + "%":null,
-                             otherWorkFillRate=e.OtherWorkFillRate<=1&&e.OtherWorkFillRate>0?(e.OtherWorkFillRate*100)+"%":e.OtherWorkFillRate>1? e.OtherWorkFillRate + "%":null,
+                             otherWorkPropotion = e.OtherWorkPropotion <= 1 && e.OtherWorkPropotion > 0 ? (e.OtherWorkPropotion * 100) + "%" : e.OtherWorkPropotion > 1 ? e.OtherWorkPropotion + "%" : null,
+                             otherWorkFillRate = e.OtherWorkFillRate <= 1 && e.OtherWorkFillRate > 0 ? (e.OtherWorkFillRate * 100) + "%" : e.OtherWorkFillRate > 1 ? e.OtherWorkFillRate + "%" : null,
                              e.SelfReportedScore,
                              e.SuperiorGrade,
                              e.FinalGrade,
@@ -100,9 +105,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult ChangeMCTime()
         {
             MeritsCheckManage msrmanage = new MeritsCheckManage();
-            var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-            string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
-            ViewBag.time = mytime;
+            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+                ViewBag.time = mytime;
+            }
+
             return View();
         }
         [HttpPost]
@@ -129,20 +138,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
 
-        public ActionResult EditEmpPFAssess(int id) {
+        public ActionResult EditEmpPFAssess(int id)
+        {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
-             var mc=mcmanage.GetEntity(id);
+            var mc = mcmanage.GetEntity(id);
             ViewBag.id = id;
             return View(mc);
         }
-        public ActionResult GetMCByid(int id) {
+        public ActionResult GetMCByid(int id)
+        {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var mc = mcmanage.GetEntity(id);
-            var mcobj = new {
+            var mcobj = new
+            {
                 mc.Id,
                 mc.EmployeeId,
-                empName=empmanage.GetInfoByEmpID(mc.EmployeeId).EmpName,
+                empName = empmanage.GetInfoByEmpID(mc.EmployeeId).EmpName,
                 empmanage.GetInfoByEmpID(mc.EmployeeId).Sex,
                 mc.YearAndMonth,
                 mc.RoutineWork,
@@ -157,10 +169,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 mc.Remark,
                 mc.IsDel
             };
-            return Json(mcobj,JsonRequestBehavior.AllowGet);
+            return Json(mcobj, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
-        public ActionResult EditEmpPFAssess(MeritsCheck mc) {
+        public ActionResult EditEmpPFAssess(MeritsCheck mc)
+        {
             var AjaxResultxx = new AjaxResult();
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             try
@@ -176,7 +189,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 AjaxResultxx = mcmanage.Error(ex.Message);
             }
-            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
     }
 }

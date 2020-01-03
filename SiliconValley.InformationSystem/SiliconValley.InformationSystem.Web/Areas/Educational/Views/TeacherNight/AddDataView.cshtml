@@ -46,7 +46,7 @@
                      <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                          <label class="LableCss1">日期:</label>
                          <div class="layui-input-block">
-                             <input type="text" id="times" name="times" class="layui-input" style="width:200px;"/>
+                             <input type="text" id="times" name="times" class="layui-input" style="width:200px;" />
                          </div>
                      </div>
                      <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -68,15 +68,15 @@
                      <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                          <label class="LableCss1">值班老师:</label>
                          <div class="layui-input-block">
-                             @Html.DropDownList("teacher_sele", ViewBag.teacher as IEnumerable<SelectListItem>,new Dictionary<string, object>(){ { "class","layui-select"} })                           
+                             @Html.DropDownList("teacher_sele", ViewBag.teacher as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
                          </div>
-                     </div>                     
+                     </div>
                  </div>
                  <div class="layui-row layui-form-item">
                      <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                          <label class="LableCss1">教室:</label>
                          <div class="layui-input-block">
-                             @Html.DropDownList("classroom_sele", ViewBag.classroom as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "class", "layui-select" } })
+                             @Html.DropDownList("classroom_sele", ViewBag.classroom as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
                          </div>
                      </div>
 
@@ -87,18 +87,24 @@
                          </div>
                      </div>
                  </div>
-             
+
                  <div class="layui-row layui-form-item">
-                     <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                          <label class="LableCss1">值班时间:</label>
                          <div class="layui-input-block">
                              <select name="timename" id="timename" class="layui-select">
                                  <option value="晚一">晚一</option>
                                  <option value="晚二">晚二</option>
                              </select>
-                             </div>
                          </div>
                      </div>
+                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                         <label class="LableCss1">说明:</label>
+                         <div class="layui-input-block">
+                             <textarea name="ramke" id="ramke" class="layui-textarea"></textarea>
+                         </div>
+                     </div>
+                 </div>
 
                  <div class="layui-row layui-form-item">
                      <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center">
@@ -107,8 +113,7 @@
                      </div>
                  </div>
              </form>
-         </div>
-
+         </div>      
      </fieldset>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
@@ -155,7 +160,8 @@
                         } else {
                             layer.close(index);  
                             layer.msg('操作成功', { icon: 1, shade: 0.8 }, function () {
-
+                                window.parent.TableFulsh();
+                                Myclose();
                             });
                         }
                     }
@@ -163,8 +169,33 @@
                 return false;
             });
             //监听（手动安排)提交
-            form.on('submit(handBtn)', function () {
-
+            form.on('submit(handBtn)', function (data) {
+                if (data.field.mytime.length == 0) {
+                    layer.msg('日期必填', { icon: 2 });
+                } else if (data.field.teacher_sele == "0") {
+                    layer.msg('请选择值班老师', { icon: 2 });
+                } else if (data.field.classroom_sele == "0") {
+                    layer.msg('请选择教室', { icon: 2 });
+                } else if (data.field.classShdule_sele == "0") {
+                    layer.msg('请选择班级', { icon: 2 });
+                } else {
+                    $.ajax({
+                        url: '/Educational/TeacherNight/HandAnpaiFunction',
+                        data: data.field,
+                        type: 'POST',
+                        success: function (sudata) {
+                            if (sudata.Success == false) {
+                                layer.msg(sudata.Msg, { icon: 2 });
+                            } else {
+                                layer.msg('操作成功', { icon: 1, shade: 0.8 }, function () {
+                                    window.parent.TableFulsh();
+                                    Myclose();
+                                });
+                            }
+                        }
+                    });
+                }
+                 
             });    
         })
         //关闭弹出层

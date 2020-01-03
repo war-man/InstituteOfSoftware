@@ -10,10 +10,11 @@ using System.Web.Mvc;
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
 
+    [CheckLogin]
+
     /// <summary>
     /// 找生年计划控制器
     /// </summary>
-    [CheckLogin]
     public class SchoolYearPlanController : Controller
     {
         /// <summary>

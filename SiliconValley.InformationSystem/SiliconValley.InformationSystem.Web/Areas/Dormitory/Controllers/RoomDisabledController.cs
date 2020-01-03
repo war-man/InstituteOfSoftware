@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
 {
-    //[CheckLogin]
+    [CheckLogin]
     public class RoomDisabledController : Controller
     {
         private DormInformationBusiness dbdorm;
