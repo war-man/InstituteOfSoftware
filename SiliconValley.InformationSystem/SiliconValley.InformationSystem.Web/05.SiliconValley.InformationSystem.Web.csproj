@@ -438,6 +438,7 @@
     <Content Include="Areas\Obtainemployment\css\mycss.css" />
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
+    <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
     </Content>

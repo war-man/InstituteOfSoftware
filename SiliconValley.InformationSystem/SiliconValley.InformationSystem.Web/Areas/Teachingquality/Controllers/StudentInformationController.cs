@@ -203,8 +203,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
             //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
-            List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
-             // List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true).ToList();
+            //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
+              List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true).ToList();
             try
             {
               
@@ -359,17 +359,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //注册学员编辑学员
         public ActionResult Enti(StudentInformation studentInformation,int List)
         {
-           
-            
+            dbtext.Remove("StudentInformation");
               AjaxResult result = null;
             if (studentInformation.StudentNumber == null)
             {
                 if (Isidentitydocument(studentInformation.identitydocument))
                 {
-
                     try
                     {
-                        
                         studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
                         studentInformation.InsitDate = DateTime.Now; 
                         studentInformation.Password = "000000";
