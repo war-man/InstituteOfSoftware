@@ -252,7 +252,7 @@
         <!--/. NAV TOP  -->
         <nav class="navbar-default navbar-side" role="navigation">
             @*<div id="sideNav" href=""><i class="fa fa-caret-right"></i></div>*@
-            <div class="sidebar-collapse">
+            <div class="sidebar-collapse" id="menudiv">
                 <ul class="cd-accordion-menu animated" id="main-menu"></ul>
             </div>
 
@@ -324,7 +324,7 @@
 
                 var li = $("<li class='has-children'></li>");
                 var input = $('<input type="checkbox" name ="group-' + (i + 1) + '" id="group-' + (i + 1) +'" checked>');
-                var a = $("<label for='group-" + (i + 1)+"'>Group 1</label>");
+                var a = $("<label class='muancss' for='group-" + (i + 1)+"'>Group 1</label>");
                 a.text(MenuData[i].Name);
                 //a.attr("href", MenuData[i].Url);
                 
@@ -365,10 +365,10 @@
                     console.log(Menu.SubMenus[i].Url+'...........');
 
                     if (Menu.SubMenus[i].Url) {
-                        a = $("<a></a>");
+                        a = $("<a class='muancss'></a>");
                     }
                     else {
-                        a = $("<label for='sub-group-" + (index)+"'>Group 1</label>");
+                        a = $("<label class='muancss' for='sub-group-" + (index)+"'>Group 1</label>");
                     }
 
 

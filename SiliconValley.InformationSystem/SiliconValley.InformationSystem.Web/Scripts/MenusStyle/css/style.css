@@ -7,18 +7,10 @@ Primary style
   box-sizing: border-box;
 }
 
-html {
-  font-size: 62.5%;
+.muancss {
+    font-size: 17px!important;
 }
 
-body {
-  font-size: 1.6rem;
-  font-family: "Jaldi", sans-serif;
-  color: #ffffff;
-  background-color: #a0f6aa;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 a {
   color: #a0f6aa;

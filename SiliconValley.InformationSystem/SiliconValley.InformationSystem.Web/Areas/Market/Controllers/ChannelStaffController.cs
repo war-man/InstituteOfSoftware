@@ -331,6 +331,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbbeian = new StudentDataKeepAndRecordBusiness();
             //获取的是他这个备案而且是已经报名的学生集合
             List<StudentPutOnRecord> mystudentlist = dbbeian.GetrReport(user.EmpNumber);
+            //List<StudentPutOnRecord> mystudentlist = dbbeian.GetrReport("201908160008");
             //获取这个员工的预资所有的预资单
             dbprefunding = new PrefundingBusiness();
             dbperinfo = new PerInfoBusiness();

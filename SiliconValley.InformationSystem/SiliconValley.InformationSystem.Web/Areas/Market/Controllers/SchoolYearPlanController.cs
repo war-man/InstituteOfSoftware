@@ -22,10 +22,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// </summary>
         private SchoolYearPlanBusiness dbplan;
         // GET: Market/SchoolYearPlan
-        public ActionResult Index()
-        {
-            return View();
-        }
+
 
         /// <summary>
         /// 显示年度计划列表
