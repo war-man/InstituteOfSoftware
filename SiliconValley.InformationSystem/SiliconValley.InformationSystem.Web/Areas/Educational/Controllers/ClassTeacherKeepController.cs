@@ -115,12 +115,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// 手动安排值班
         /// </summary>
         /// <returns></returns>
-        //public ActionResult HandAnpaiFunction()
-        //{
-        //    //获取值班类型
-        //    string Zhitype=  Request.Form[""];
-        //    //获取班主任
-        //   // string 
-        //}
+        public ActionResult HandAnpaiFunction()
+        {
+            //获取值班类型
+            string Zhitype = Request.Form[""];
+            //获取班主任
+            string teacher = Request.Form[""];
+            //日期
+            DateTime time =Convert.ToDateTime( Request.Form[""]);
+
+            return null;
+        }
     }
 }
