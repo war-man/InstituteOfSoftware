@@ -91,7 +91,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 a.Sex,
                 a.BirthDate,
                 a.identitydocument,
-                ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
+                ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber)==null?"暂无": scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
                 Headmasters = headmasters.Listheadmasters(a.StudentNumber) == null ? "暂无" : headmasters.Listheadmasters(a.StudentNumber).EmpName
 
             }).ToList();

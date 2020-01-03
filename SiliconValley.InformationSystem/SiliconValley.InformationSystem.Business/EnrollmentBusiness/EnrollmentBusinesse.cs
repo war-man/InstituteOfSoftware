@@ -192,7 +192,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
              StudentNumber=  a.StudentNumber,
               Name=  a.Name,
               identitydocument=    a.identitydocument,
-                ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
+                ClassName = scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber)==null?"暂无":scheduleForTraineesBusiness.SutdentCLassName(a.StudentNumber).ClassID,
                 Headmasters = headmasters.Listheadmasters(a.StudentNumber)==null?"暂无" : headmasters.Listheadmasters(a.StudentNumber).EmpName,
                 School =this.GetList().Where(x=>x.IsDelete==false&&x.StudentNumber==a.StudentNumber).FirstOrDefault().School==null?"请补充完整信息": UndergraduateschoolBusiness.GetEntity( this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().School).SchoolName,
                 Registeredbatch = this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().Registeredbatch==null?"请补充完整信息": this.GetList().Where(x => x.IsDelete == false && x.StudentNumber == a.StudentNumber).FirstOrDefault().Registeredbatch,
