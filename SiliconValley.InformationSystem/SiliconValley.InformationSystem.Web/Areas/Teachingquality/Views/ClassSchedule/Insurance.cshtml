@@ -143,27 +143,27 @@
                 , page: true
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'ClassNumber', title: '班级', sort: true }
-                    , { field: 'Nameofinsurer', title: '被保险人姓名' }
-                    , { field: 'Telephonenumber', title: '被保险人电话 ' }
-                    , {
+                    { type: 'checkbox' },
+                     { field: 'ClassNumber', title: '班级', sort: true },
+                     { field: 'Nameofinsurer', title: '被保险人姓名' },
+                     { field: 'Telephonenumber', title: '被保险人电话 ' },
+                     {
                         field: 'Sex', title: '性别', templet: function (c) {
                             if (c.Sex == false) {
                                 return "女";
                             } else { return "男"; }
                         }
-                    }
-                    , {
+                    },
+                     {
                         field: 'Dateofbirth', title: '出生日期', templet: function (c) {
                             return TimeChange(c.Dateofbirth)
                         }
-                    }
+                    },
 
-                    , { field: 'IDcardNo', title: '身份证号码 ' }
-                    , { field: 'NameofGuardian', title: '监护人姓名 ' }
-                    , { field: 'Guardiansphone', title: '监护人电话 ' }
-                    , {
+                     { field: 'IDcardNo', title: '身份证号码 ' },
+                     { field: 'NameofGuardian', title: '监护人姓名 ' },
+                     { field: 'Guardiansphone', title: '监护人电话 ' },
+                     {
                         field: 'Startdate', title: '开始日期', templet: function (c) {
                             if (c.Startdate != null) {
                                 return TimeChange(c.Startdate)
@@ -171,8 +171,8 @@
                             return "数据未更新";
 
                         }
-                    }
-                    , {
+                    },
+                     {
                         field: 'Duedate', title: '到期日期', templet: function (c) {
                             if (c.Duedate != null) {
                                 return TimeChange(c.Duedate)
@@ -180,8 +180,8 @@
                             return "数据未更新";
 
                         }
-                    }
-                    , {
+                    },
+                     {
                         field: 'premium', title: '保费', templet: function (c) {
                             if (c.premium != null) {
                                 return c.premium;
@@ -189,9 +189,9 @@
                             return "数据未更新";
 
                         }
-                    }
+                    },
 
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+                     { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , done: function (res, curr, count) {
                     ////系统时间

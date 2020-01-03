@@ -199,6 +199,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
            
         }
+        RedisCache redis = new RedisCache();
         //获取所有数据
         public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
         {
@@ -359,7 +360,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //注册学员编辑学员
         public ActionResult Enti(StudentInformation studentInformation,int List)
         {
-            dbtext.Remove("StudentInformation");
+            redis.RemoveCache("StudentInformation");
               AjaxResult result = null;
             if (studentInformation.StudentNumber == null)
             {
@@ -374,6 +375,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         studentInformation.IsDelete = false;
                         dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
+                       
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
                         scheduleForTrainees.ClassID = classschedu.GetEntity( List).ClassNumber;//班级名称
                         scheduleForTrainees.ID_ClassName = List;//班级编号
@@ -382,7 +384,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         scheduleForTrainees.AddDate = DateTime.Now;
                         scheduleForTrainees.IsGraduating = false;
                         Stuclass.Insert(scheduleForTrainees);
-                       // Stuclass.Remove("ScheduleForTrainees");
+                        redis.RemoveCache("StudentInformation");
+                        // Stuclass.Remove("ScheduleForTrainees");
                         result = new SuccessResult();
                         result.Msg = "注册成功";
                         result.Success = true;
@@ -418,6 +421,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     studentInformation.InsitDate = x.InsitDate;
                     studentInformation.IsDelete = false;
                     dbtext.Update(studentInformation);
+                    redis.RemoveCache("StudentInformation");
                     result = new SuccessResult();
                         result.Msg = "修改成功";
                         result.Success = true;
