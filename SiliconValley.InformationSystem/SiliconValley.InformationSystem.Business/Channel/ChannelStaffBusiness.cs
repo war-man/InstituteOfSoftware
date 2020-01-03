@@ -190,7 +190,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
                 if (yidong != null)
                 {
                   var  query=   dbstaff.GetEntity(yidong.EmployeeId);
-                    if (dbstaff.IsFuzhiren(query))
+                    if (dbstaff.IsChannelZhuren(query))
                     {
                         zhurenlist.Add(item);
                     }
@@ -199,7 +199,7 @@ namespace SiliconValley.InformationSystem.Business.Channel
                 else
                 {
                     var empinfo = dbstaff.GetInfoByEmpID(item.EmployeesInfomation_Id);
-                    if (dbstaff.IsFuzhiren(empinfo))
+                    if (dbstaff.IsChannelZhuren(empinfo))
                     {
                         zhurenlist.Add(item);
                     }
