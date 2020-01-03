@@ -89,7 +89,8 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                             var permisslist = PermissionManage.GetOperatorPermissionValues();
 
                             SessionHelper.Session["OperatorPermission"] = permisslist;
-
+                            HttpCookie http = new HttpCookie("isfirst", "true");
+                            Response.AppendCookie(http);
 
                             return Json(err, JsonRequestBehavior.AllowGet);
                         }

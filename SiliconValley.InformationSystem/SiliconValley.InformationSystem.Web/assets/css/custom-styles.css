@@ -75,9 +75,9 @@ position: fixed;
 }
 .navbar-side {
   z-index: 1;
-  position: fixed;
+  position: absolute;
   width: 260px;
-  top: 80px;
+  top: 0px;
 }
 #page-wrapper {
   position: relative;

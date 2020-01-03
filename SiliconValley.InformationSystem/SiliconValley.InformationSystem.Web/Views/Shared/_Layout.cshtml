@@ -24,7 +24,7 @@
     @RenderSection("style", false)
 
 </head>
-<body>
+<body style="height:1500px">
     <div id="wrapper">
         <nav class="navbar navbar-default top-navbar" role="navigation">
             <div class="navbar-header">
@@ -323,12 +323,13 @@
 
 
                 var li = $("<li class='has-children'></li>");
-                var input = $('<input type="checkbox" name ="group-' + (i + 1) + '" id="group-' + (i + 1) +'" checked>');
+                var input = $('<input type="checkbox" name ="group-' + (i + 1) + '" id="group-' + (i + 1) +'" checked class="myinput">');
                 var a = $("<label class='muancss' for='group-" + (i + 1)+"'>Group 1</label>");
                 a.text(MenuData[i].Name);
                 //a.attr("href", MenuData[i].Url);
                 
                 li.append(input);
+
                 li.append(a);
 
                 //console.log(li);
@@ -337,10 +338,16 @@
                     loadSonMenu(MenuData[i], li);
                 }
                 
-                console.log(li[0]);
+                //console.log(li[0]);
                 $("#main-menu").append(li);
+
             }
         }
+        console.log(document.cookie);
+        //if () {
+
+        //}
+        clickmyinput();
     }
 
     function loadSonMenu(Menu, html) {
@@ -359,10 +366,10 @@
                 if (Menu.SubMenus[i].IsShow == true) {
                   
                     var li = $("<li class='has-children'></li>");
-                    var input = $('<input type="checkbox" name ="sub-group-' + (index) + '" id="sub-group-' + (index) +'" checked>');
+                    var input = $('<input type="checkbox" name ="sub-group-' + (index) + '" id="sub-group-' + (index) +'" checked  class="myinput">');
                     var a;
 
-                    console.log(Menu.SubMenus[i].Url+'...........');
+                    //console.log(Menu.SubMenus[i].Url+'...........');
 
                     if (Menu.SubMenus[i].Url) {
                         a = $("<a class='muancss'></a>");
@@ -392,7 +399,13 @@
             }
             //console.log(ul);
             html.append(ul);
+            
         }
     }
 
+    function clickmyinput() {
+        $('.myinput').each(function () {
+            $(this).click();
+        });
+    }
 </script>
