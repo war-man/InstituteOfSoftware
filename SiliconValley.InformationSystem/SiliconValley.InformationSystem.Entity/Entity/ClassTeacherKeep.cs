@@ -18,11 +18,25 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int Id { get; set; }
-        public Nullable<int> Headmaster_Id { get; set; }
-        public Nullable<int> BeOnDutyType_Id { get; set; }
+        /// <summary>
+        /// 班主任员工编号
+        /// </summary>
+        public string Headmaster_Id { get; set; } //去数据库修改
+        /// <summary>
+        /// 值班类型
+        /// </summary>
+        public int BeOnDutyType_Id { get; set; }
+        /// <summary>
+        /// 值班情况
+        /// </summary>
         public string BySituation { get; set; }
+ 
         public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> ByDate { get; set; }
+        /// <summary>
+        /// 值班日期
+        /// </summary>
+        public DateTime ByDate { get; set; }
+
         public string Rmark { get; set; }
     }
 }
