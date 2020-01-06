@@ -956,6 +956,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditEmp(EmployeesInfo emp)
         {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            EmpTransactionManage etmanage = new EmpTransactionManage();
+            MoveTypeManage mtmanage = new MoveTypeManage();
             var ajaxresult = new AjaxResult();
             try
             {
@@ -973,14 +975,97 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 else {
                     emp.Image = emp2.Image;
                 }
-
+              
                 empmanage.Update(emp);
                 ajaxresult = empmanage.Success();
+
+                if (ajaxresult.Success)
+                {
+                    //员工转正，直接由人事修改日期的情况下添加该员工异动
+                    if (string.IsNullOrEmpty(emp2.PositiveDate.ToString()))
+                    {
+                        if (!string.IsNullOrEmpty(emp.PositiveDate.ToString()))
+                        {
+                            EmpTransaction et = new EmpTransaction();
+                            et.EmployeeId = emp.EmployeeId;
+                            et.TransactionType = mtmanage.GetmtTypeidByTname("转正");
+                            et.TransactionTime = emp.PositiveDate;
+                            etmanage.Insert(et);
+                            ajaxresult = etmanage.Success();
+                            //员工转正时间修改好之后将该员工的绩效工资及岗位工资修改一下
+                            if (ajaxresult.Success)
+                            {
+                                EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                                var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                                //当该员工的岗位是主任或者是副主任绩效额度为1000，普通员工为500
+                                if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                                {
+                                    ese.PerformancePay = 1000;
+                                }
+                                else
+                                {
+                                    ese.PerformancePay = 500;
+                                }
+                                ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+
+                                esemanage.Update(ese);
+                                ajaxresult = esemanage.Success();
+                            }
+                        }
+                    }
+                    //员工调岗，直接由人事修改日期的情况下添加该员工异动
+                    if (emp.PositionId!=emp2.PositionId) {
+                        EmpTransaction et = new EmpTransaction();
+                        et.EmployeeId = emp.EmployeeId;
+                        et.TransactionType = mtmanage.GetmtTypeidByTname("调岗");
+                        et.TransactionTime = DateTime.Now;
+                        et.PreviousDept = empmanage.GetDeptByPid(emp2.PositionId).DeptId;
+                        et.PreviousPosition = emp2.PositionId;
+                        et.PresentDept = empmanage.GetDeptByPid(emp.PositionId).DeptId;
+                        et.PresentPosition = emp.PositionId;
+                        if (emp.PositiveDate == null)
+                        {
+                            et.PresentSalary = emp.ProbationSalary;
+                        }
+                        else
+                        {
+                            et.PresentSalary = emp.Salary;
+                        }
+
+                        etmanage.Insert(et);
+                        ajaxresult = etmanage.Success();
+                       
+                        if (ajaxresult.Success)
+                        {
+                            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                            var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                            if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                            {
+                                ese.PerformancePay = 1000;
+                            }
+                            else
+                            {
+                                ese.PerformancePay = 500;
+                            }
+                            if (emp.PositiveDate == null)
+                            {
+                                ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                            }
+                            else
+                            {
+                                ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                            }
+                            esemanage.Update(ese);
+                            ajaxresult = esemanage.Success();
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 ajaxresult = empmanage.Error(ex.Message);
             }
+          
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
