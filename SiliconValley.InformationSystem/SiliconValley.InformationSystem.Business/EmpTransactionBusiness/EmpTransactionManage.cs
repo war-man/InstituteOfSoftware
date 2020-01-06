@@ -25,6 +25,5 @@ namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
             var etlist = etmanage.GetList().Where(s => s.EmployeeId == empid && s.TransactionType==delid).FirstOrDefault();
             return etlist;
         } 
-
     }
 }

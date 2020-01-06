@@ -43,7 +43,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         {
             return View();
         }
-        
+
 
         /// <summary>
         /// 账号页面
@@ -51,49 +51,83 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         /// <returns></returns>
         public ActionResult AccountIndex()
         {
-         
+
             return View();
         }
 
-        public ActionResult AccountData(int page, int limit, string empname, string empnumber)
+        public ActionResult AccountData(int page, int limit, string state,/*string empname,*/ string empnumber)
         {
 
             List<Base_User> userlist = new List<Base_User>();
-            if (empname == null && empnumber != null)
+            if (!string.IsNullOrEmpty(empnumber))
             {
-               var templist = db_user.GetList().Where(d => d.EmpNumber == empnumber).ToList();
-
-                if (templist != null)
+                if (state == "on")
                 {
-                    userlist.AddRange(templist);
-                }
 
-            }
+                    var templist = db_user.GetList().Where(d => d.EmpNumber == empnumber).ToList();
 
-            if (empnumber == null && empname != null)
-            {
-
-                ///根据员工名称查询
-                ///
-
-                var templist = db_user.GetList().ToList();
-
-                foreach (var item in templist)
-                {
-                   var tempuser = db_user.ConvetToView(item);
-
-                    if (tempuser != null && tempuser.Emp.EmpName.Contains(empname))
+                    if (templist != null)
                     {
-                        userlist.Add(item);
+                        userlist.AddRange(templist);
                     }
                 }
 
+                else
+                {
+                    //根据员工名称查询
+
+                    var templist = db_user.GetList().ToList();
+
+                    foreach (var item in templist)
+                    {
+                        var tempuser = db_user.ConvetToView(item);
+
+                        if (tempuser != null)
+                        {
+                            if (tempuser.Emp.EmpName.Contains(empnumber))
+                            {
+                                userlist.Add(item);
+                            }
+
+                        }
+                    }
+                }
             }
 
-            if (empname == null && empnumber == null)
-            {
-               var templist = db_user.GetList().ToList();
+            //if (empname == null && empnumber != null)
+            //{
+            //   var templist = db_user.GetList().Where(d => d.EmpNumber == empnumber).ToList();
 
+            //    if (templist != null)
+            //    {
+            //        userlist.AddRange(templist);
+            //    }
+
+            //}
+
+            //if (empnumber == null && empname != null)
+            //{
+
+            //    ///根据员工名称查询
+            //    ///
+
+            //    var templist = db_user.GetList().ToList();
+
+            //    foreach (var item in templist)
+            //    {
+            //       var tempuser = db_user.ConvetToView(item);
+
+            //        if (tempuser != null && tempuser.Emp.EmpName.Contains(empname))
+            //        {
+            //            userlist.Add(item);
+            //        }
+            //    }
+
+            //}
+
+            else
+            {
+                var templist = db_user.GetList().ToList();
                 userlist.AddRange(templist);
             }
 
@@ -106,7 +140,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
             foreach (var item in userlist)
             {
-               var tempobj = db_user.ConvetToView(item);
+                var tempobj = db_user.ConvetToView(item);
 
                 if (tempobj != null)
                 {
@@ -115,11 +149,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             }
 
 
-            var obj = new {
+            var obj = new
+            {
 
                 code = 0,
                 msg = "",
-                count= userlist.Count,
+                count = userlist.Count,
                 data = accountlist
 
             };
@@ -143,7 +178,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             BaseBusiness<Department> dbdep = new BaseBusiness<Department>();
 
             ViewBag.Deplist = dbdep.GetList().Where(d => d.IsDel == false).ToList();
-            
+
             return View();
         }
 
@@ -163,8 +198,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             {
                 //获取所有员工
 
-               emplist.AddRange( dbemp.GetAll());
-                
+                emplist.AddRange(dbemp.GetAll());
+
             }
             else
             {
@@ -173,7 +208,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
             }
 
-            var skiplist = emplist.Skip((page - 1) * limit).Take(limit).ToList() ;
+            var skiplist = emplist.Skip((page - 1) * limit).Take(limit).ToList();
 
             List<EmpDetailView> viewlist = new List<EmpDetailView>();
 
@@ -187,7 +222,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                     viewlist.Add(tempobj);
             }
 
-            var obj = new {
+            var obj = new
+            {
 
                 code = 0,
                 msg = "",
@@ -197,7 +233,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             };
 
             return Json(obj, JsonRequestBehavior.AllowGet);
-            
+
 
         }
 
@@ -238,7 +274,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                     result.Msg = "服务器异常!";
                 }
 
-                
+
             }
 
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -255,7 +291,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         {
             List<Base_SysRole> rolelist = new List<Base_SysRole>();
 
-            if (roleName ==null)
+            if (roleName == null)
             {
                 //获取全部数据
                 rolelist.AddRange(db_role.GetList().ToList());
@@ -263,15 +299,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             }
             else
             {
-                rolelist.AddRange(db_role.GetList().ToList().Where(d=>d.RoleName.Contains(roleName)).ToList());
+                rolelist.AddRange(db_role.GetList().ToList().Where(d => d.RoleName.Contains(roleName)).ToList());
             }
 
 
             var skiplist = rolelist.Skip((page - 1) * limit).Take(limit).ToList();
 
-            var obj = new {
+            var obj = new
+            {
                 code = 0,
-                msg="",
+                msg = "",
                 count = rolelist.Count,
                 data = skiplist
             };
@@ -294,12 +331,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
 
 
-       /// <summary>
-       /// 创建角色
-       /// </summary>
-       /// <param name="roleName">角色名称</param>
-       /// <param name="businessName">业务名称</param>
-       /// <returns></returns>
+        /// <summary>
+        /// 创建角色
+        /// </summary>
+        /// <param name="roleName">角色名称</param>
+        /// <param name="businessName">业务名称</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult createRole(string roleName, string businessName)
         {
@@ -309,7 +346,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
             {
                 result = db_role.createRole(roleName, businessName);
 
-                
+
             }
             catch (Exception ex)
             {
@@ -331,7 +368,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         public ActionResult UserRoelManage(string userId)
         {
             //获取用户
-           var user = db_user.GetList().Where(d => d.UserId == userId).FirstOrDefault();
+            var user = db_user.GetList().Where(d => d.UserId == userId).FirstOrDefault();
 
             ViewBag.user = user;
 
@@ -357,7 +394,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                 ///转换数据类型
                 foreach (var item in allrolelist)
                 {
-                    var temp = new {
+                    var temp = new
+                    {
 
                         value = item.RoleId,
                         title = item.RoleName
@@ -370,7 +408,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                 var HaveRolelis = Base_UserBusiness.GetTheUser(userId);
 
 
-                var tempobj = new {
+                var tempobj = new
+                {
                     alllist = allrolelist_obj,
                     havelist = HaveRolelis
                 };
@@ -379,7 +418,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                 result.Msg = "成功";
                 result.Data = tempobj;
 
-                
+
 
             }
             catch (Exception ex)
@@ -402,7 +441,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         /// <returns></returns>
 
 
-         [HttpPost]
+        [HttpPost]
         public ActionResult SetUserRoles(string userId, List<string> roleIdlist)
         {
 
@@ -449,7 +488,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
         public ActionResult RoleUrlPermiss(string roleId)
         {
             //获取角色
-            var role = db_role.GetList().Where(d=>d.RoleId == roleId).FirstOrDefault();
+            var role = db_role.GetList().Where(d => d.RoleId == roleId).FirstOrDefault();
             ViewBag.role = role;
             return View();
 
@@ -485,7 +524,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
                         secondtree.field = item1.Value;
                         secondtree.title = item1.Name;
-                        secondtree.id = item.Value+item1.Value;
+                        secondtree.id = item.Value + item1.Value;
                         //判断是否有该权限
                         var ischeck = false;
 
@@ -495,7 +534,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                             firsttree.spread = true;
                         }
 
-                        
+
                         secondtree.@checked = ischeck;
 
                         firsttree.children.Add(secondtree);
@@ -518,7 +557,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                 result.Data = null;
             }
 
-            
+
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -539,7 +578,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                 {
                     foreach (var item1 in item.children)
                     {
-                        WillsetPermisslist.Add(item.field+"."+item1.field);
+                        WillsetPermisslist.Add(item.field + "." + item1.field);
                     }
                 }
 
@@ -595,7 +634,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
             var skiplist = resultlist.Skip((page - 1) * limit).Take(limit).ToList();
 
-            var obj = new {
+            var obj = new
+            {
                 code = 0,
                 msg = "",
                 count = resultlist.Count,
@@ -608,14 +648,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
         public ActionResult HaveOtherPermissionData(int page, int limit, string role)
         {
-           var list = db_otherPermission.GetPermissionByRole(role);
+            var list = db_otherPermission.GetPermissionByRole(role);
             var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
 
 
-            var obj = new {
+            var obj = new
+            {
 
                 code = 0,
-                msg="",
+                msg = "",
                 count = list.Count,
                 data = skiplist
             };
@@ -696,7 +737,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
 
             try
             {
-               
+
                 var allpermisslist = PermissionManage.GetAllPermissionModules();
 
                 List<Common.layuitree> treelist = new List<Common.layuitree>();
@@ -714,7 +755,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.BaseSysManage.Controllers
                     {
                         Common.layuitree secondtree = new Common.layuitree();
 
-                        secondtree.field = item.Value +"."+ item1.Value;
+                        secondtree.field = item.Value + "." + item1.Value;
                         secondtree.title = item1.Name;
                         secondtree.id = item.Value + item1.Value;
 
