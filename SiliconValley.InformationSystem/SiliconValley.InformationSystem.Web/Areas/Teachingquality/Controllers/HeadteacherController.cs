@@ -42,13 +42,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         //班主任数据
         public ActionResult GetDate(int page, int limit)
         {
-
-          //  int DepaID = Depa.GetList().Where(a => a.DeptName.Contains("教质部") && a.IsDel == false).FirstOrDefault().DeptId;
+            //当前登陆人
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            //  int DepaID = Depa.GetList().Where(a => a.DeptName.Contains("教质部") && a.IsDel == false).FirstOrDefault().DeptId;
             var list = dbtext.GetList().Where(a=>a.IsDelete==false).ToList();
-            //    List<EmployeesInfo> EmployeesInfoList = new List<EmployeesInfo>();
+            if (user.UserName != "Admin")
+            {
+                //employeesInfoManage.GetDeptByEmpid(user.EmpNumber).DeptId;//部门
+                list= dbtext.GetList().Where(a => a.IsDelete == false && employeesInfoManage.GetDeptByEmpid(a.informatiees_Id).DeptId == employeesInfoManage.GetDeptByEmpid(user.EmpNumber).DeptId).ToList();
+            }
 
-
-        var emp=   employeesInfoManage.GetList().Where(a => a.IsDel == false).ToList();
+           
+                //    List<EmployeesInfo> EmployeesInfoList = new List<EmployeesInfo>();
+                var emp=   employeesInfoManage.GetList().Where(a => a.IsDel == false).ToList();
         var dataList = list.Select(c=>new { c.informatiees_Id, informatiees_Name = employeesInfoManage.GetEntity(c.informatiees_Id).EmpName,
         informatiees_Sex = emp.Where(a=>a.EmployeeId==c.informatiees_Id).FirstOrDefault().Sex ,
         Name = business.GetList().Where(a=>a.Pid== emp.Where(q=>q.EmployeeId==c.informatiees_Id).FirstOrDefault().PositionId&&a.IsDel==false).FirstOrDefault().PositionName,
