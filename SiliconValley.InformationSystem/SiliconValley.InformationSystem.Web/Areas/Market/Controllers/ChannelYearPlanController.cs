@@ -100,6 +100,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             ViewBag.empzhuren = empzhuren;
 
+            ViewBag.yangxiao = Newtonsoft.Json.JsonConvert.SerializeObject(dbempstaff.GetYangxiao());
             return View();
         }
         /// <summary>
@@ -488,7 +489,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         {
                             resultregionname+= dbregion.GetRegionByID(item.RegionID).RegionName+"、";
                         }
-                        resultregionname= resultregionname.Substring(0, resultregionname.Length - 1);
+                        if (resultregionname.Length>1)
+                        {
+                            resultregionname = resultregionname.Substring(0, resultregionname.Length - 1);
+                        }
                         rightView.personalregion = resultregionname;
                     }
 
