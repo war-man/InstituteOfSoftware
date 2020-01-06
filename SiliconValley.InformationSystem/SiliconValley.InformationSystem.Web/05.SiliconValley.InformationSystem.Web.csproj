@@ -271,6 +271,7 @@
     <Compile Include="Areas\Market\Controllers\InfomationController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
+    <Compile Include="Areas\Market\Controllers\RegionController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
     <Compile Include="Areas\Market\Controllers\StatusController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
@@ -1186,7 +1187,6 @@
     <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
-    <Content Include="Scripts\Tangmin_CssAndJs\StudentDatakeep_Css\studentdatakeep.css" />
     <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
     <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
@@ -1388,7 +1388,7 @@
     <Content Include="Areas\OrThert\Views\web.config" />
     <Content Include="Areas\Educational\Views\TeacherNight\AddDataView.cshtml" />
     <Content Include="Areas\Educational\Views\ClassTeacherKeep\ClassTeacherKeepIndexView.cshtml" />
-    <Content Include="Areas\Educational\Views\ClassTeacherKeep\HandAddorEditView.cshtml" />
+    <Content Include="Areas\Market\Views\Region\RegionIndex.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
