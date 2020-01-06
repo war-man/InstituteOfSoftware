@@ -271,6 +271,7 @@
     <Compile Include="Areas\Market\Controllers\InfomationController.cs" />
     <Compile Include="Areas\Market\Controllers\MarketChairController.cs" />
     <Compile Include="Areas\Market\Controllers\NetClientRecordController.cs" />
+    <Compile Include="Areas\Market\Controllers\RegionController.cs" />
     <Compile Include="Areas\Market\Controllers\SchoolYearPlanController.cs" />
     <Compile Include="Areas\Market\Controllers\StatusController.cs" />
     <Compile Include="Areas\Market\Controllers\StudentDataKeepController.cs" />
@@ -1374,6 +1375,7 @@
     <Content Include="Areas\OrThert\Views\web.config" />
     <Content Include="Areas\Educational\Views\TeacherNight\AddDataView.cshtml" />
     <Content Include="Areas\Educational\Views\ClassTeacherKeep\ClassTeacherKeepIndexView.cshtml" />
+    <Content Include="Areas\Market\Views\Region\RegionIndex.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
