@@ -1496,6 +1496,7 @@
     <Content Include="Areas\Educational\Views\ClassTeacherKeep\ClassTeacherKeepIndexView.cshtml" />
     <Content Include="Config\MyExcelClass.json" />
     <Content Include="Config\Obempstaff.config" />
+    <Content Include="Areas\CourseSyllabus\Views\Course\CourseTypeIndex.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

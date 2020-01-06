@@ -655,8 +655,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public List<Curriculum> GetCurriculaOnTeacherNoHave(int teacherid, int majorid)
         {
 
-
-
             var resultlist = new List<Curriculum>();
 
             BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
@@ -702,6 +700,71 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
 
             return resultlist;
+        }
+
+
+
+        /// <summary>
+        /// 获取教员不擅长的公共课
+        /// </summary>
+        /// <returns></returns>
+        public List<Curriculum> GetpublicCurriculaOnTeacherNoHave(int teacherId)
+        {
+            List<Curriculum> result = new List<Curriculum>();
+
+           CourseSyllabusBusiness.CourseBusiness courseBusiness = new CourseSyllabusBusiness.CourseBusiness();
+
+            var alllist = courseBusiness.GetCurriculas().Where(d => d.MajorID == null).ToList(); //所有公共课
+
+            var list1 = GetPublickCurriculaOnTeacher(teacherId); //教员可以上的公共课
+            //排除掉可以上的公共课
+
+
+            if (list1.Count == 0)
+            {
+                result = alllist;
+            }
+            else
+            {
+                foreach (var item in alllist)
+                {
+                    var tempobj = list1.Where(d => d.CurriculumID == item.CurriculumID).FirstOrDefault();
+
+                    if (tempobj == null)
+                    {
+                        result.Add(tempobj);
+                    }
+                }
+            }
+            
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// 获取教员可以上的公共课
+        /// </summary>
+        /// <returns></returns>
+        public List<Curriculum> GetPublickCurriculaOnTeacher(int teacher)
+        {
+            BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
+            CourseSyllabusBusiness.CourseBusiness courseBusiness = new CourseSyllabusBusiness.CourseBusiness();
+            var templist = goodskill_db.GetIQueryable().ToList().Where(d => d.TearchID == teacher).ToList();
+
+            List<Curriculum> result = new List<Curriculum>();
+
+            foreach (var item in templist)
+            {
+               var tempobj = courseBusiness.GetCurriculas().ToList().Where(d => d.CurriculumID == item.Curriculum).FirstOrDefault();
+
+                if (tempobj.MajorID == null)
+                {
+                    result.Add(tempobj);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
