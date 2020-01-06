@@ -214,6 +214,8 @@
     <Compile Include="Areas\Base_SysManage\Controllers\CityController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\CommonController.cs" />
     <Compile Include="Areas\Base_SysManage\Controllers\RapidDevelopmentController.cs" />
+    <Compile Include="Areas\Capital\CapitalAreaRegistration.cs" />
+    <Compile Include="Areas\Capital\Controllers\CapitalController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
     <Compile Include="Areas\Dormitory\Controllers\BasicsController.cs" />
@@ -851,7 +853,6 @@
     <Content Include="Areas\Personnelmatters\Views\web.config" />
     <Content Include="Areas\Finance\Views\web.config" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
-    <Content Include="Areas\Market\Views\ChannelStaff\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
@@ -911,7 +912,6 @@
     <Content Include="Areas\Market\Views\BiddingRecord\AddBiddingRecord.cshtml" />
     <Content Include="Areas\Market\Views\BiddingRecord\EditBR.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffIndex.cshtml" />
-    <Content Include="Areas\Market\Views\ChannelStaff\BorrowMoney.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
     <Content Include="Scripts\css\buttonStyle.css" />
     <Content Include="Scripts\ECharts4.2.1\incubator-echarts-master.zip" />
@@ -1389,6 +1389,9 @@
     <Content Include="Areas\Educational\Views\TeacherNight\AddDataView.cshtml" />
     <Content Include="Areas\Educational\Views\ClassTeacherKeep\ClassTeacherKeepIndexView.cshtml" />
     <Content Include="Areas\Market\Views\Region\RegionIndex.cshtml" />
+    <Content Include="Areas\Capital\Views\web.config" />
+    <Content Include="Areas\Capital\Views\Capital\BorrowMoney.cshtml" />
+    <Content Include="Areas\Capital\Views\Capital\PublicBorrowList.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
@@ -3047,6 +3050,8 @@
     <Folder Include="App_Data\" />
     <Folder Include="Areas\BaseSysManage\Models\" />
     <Folder Include="Areas\BaseSysManage\Views\Shared\" />
+    <Folder Include="Areas\Capital\Models\" />
+    <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Educational\Models\" />
