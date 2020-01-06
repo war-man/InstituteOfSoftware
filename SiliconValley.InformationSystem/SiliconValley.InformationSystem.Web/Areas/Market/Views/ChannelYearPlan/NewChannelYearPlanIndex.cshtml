@@ -900,7 +900,7 @@
                 }
                 return Ratio;
             }
-           var tableIns =  table.render({
+            var tableIns = table.render({
                 elem: '#showtabledata'
                 , url: '' //数据接口
                 , page: true //开启分页
@@ -910,31 +910,30 @@
                 , limits: [15, 30, 45, 60, 75]
                 , cols: [[
                     //标题栏
-                    , { type: 'checkbox' }
-                    , { field: 'StudentName', title: '学生姓名', width: 80}
-                    , { field: 'ClassNo', title: '所在班级', width: 165 }
-                    , { field: 'ProfessionalTeacher', title: '专业课老师', width: 165 }
-                    , { field: 'Headmaster', title: '班主任', width: 100 }
-                    , { field: 'ChannelStaffName', title: '引路人', width: 178 }
-                    , { field: 'OldSchoolName', title: '学校名称', width: 178 }
+                    { field: 'StudentName', title: '学生姓名', width: 95 }
+                    , { field: 'ClassNo', title: '所在班级', width: 95 }
+                    , { field: 'ProfessionalTeacher', title: '专业课老师', width: 95 }
+                    , { field: 'Headmaster', title: '班主任', width: 95 }
+                    , { field: 'ChannelStaffName', title: '引路人', width: 95 }
+                    , { field: 'OldSchoolName', title: '学校名称', width: 225 }
                     , {
-                        field: 'BeianDate', title: '备案时间', width: 178, templet: function (v) {
+                        field: 'BeianDate', title: '备案时间', width: 115, templet: function (v) {
                             return TimeChange(v.BeianDate);
                         }
                     }
                     , {
-                        field: 'GoSchoolDate', title: '上门时间', width: 165, templet: function (v) {
+                        field: 'GoSchoolDate', title: '上门时间', width: 115, templet: function (v) {
                             return TimeChange(v.GoSchoolDate);
                         }
                     }
                     , {
-                        field: 'BaomingDate', title: '报名时间', width: 165, templet: function (v) {
+                        field: 'BaomingDate', title: '报名时间', width: 115, templet: function (v) {
                             return TimeChange(v.BaomingDate);
                         }
                     }
                 ]]
 
-           });
+            });
 
             //手风琴模式
             tree.render({
@@ -990,9 +989,7 @@
                     );
                 }
             });
-        });
-
-        //年度计划下拉框触发事件
+                  //年度计划下拉框触发事件
         $("#grandlist li a").click(function () {
             var grand = $(this).text();
             $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
@@ -1014,6 +1011,9 @@
             LoadECharts(mrdplanID, isteam, mrdempid);
             loadrightandbottom(mrdplanID, isteam, mrdempid,month);
         });
+        });
+
+  
 
 
     </script>

@@ -304,8 +304,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             dbschoolpaln = new SchoolYearPlanBusiness();
             var nowplan = dbschoolpaln.GetPlanByID(planid);
             ChannelReportFormView result = new ChannelReportFormView();
-            priLoadData(EmpinfoID, IsTeam, planid);
-            var querydata = SessionHelper.Session["resultbardata"] as List<ShowEchartsView>;
+            var querydata = priLoadData(EmpinfoID, IsTeam, planid);
             result.ShowEchartsViewData = querydata;
             result.plan = nowplan;
             return Json(result, JsonRequestBehavior.AllowGet);
@@ -317,7 +316,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="IsTeam"></param>
         /// <param name="planid"></param>
         /// <returns></returns>
-        private void priLoadData(string EmpinfoID, bool IsTeam, int planid)
+        private List<ShowEchartsView> priLoadData(string EmpinfoID, bool IsTeam, int planid)
+
         {
             dbschoolpaln = new SchoolYearPlanBusiness();
             dbchannelstaff = new ChannelStaffBusiness();
@@ -333,12 +333,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 if (!string.IsNullOrEmpty(EmpinfoID))
                 {
                     var zhurenTeam = dbarea.GetTeamByEmpID(EmpinfoID, nowplan, data);
-                    SessionHelper.Session["resultbardata"] = this.ResultECharts(zhurenTeam, planid);
+                  return this.ResultECharts(zhurenTeam, planid);
 
                 }
                 else
                 {
-                    SessionHelper.Session["resultbardata"] = this.ResultECharts(data, planid);
+                    return this.ResultECharts(data, planid);
                 }
 
             }
@@ -353,7 +353,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     //展示全年的整体的数据
                     if (yangxiao.EmployeeId == EmpinfoID)
                     {
-                        SessionHelper.Session["resultbardata"] = this.ResultECharts(data, planid);
+                        return  this.ResultECharts(data, planid);
                     }
                     //展示当前这个员工的这一年的业绩
                     else
@@ -361,14 +361,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         List<ChannelStaff> mydata = new List<ChannelStaff>();
                         var channelstaff = dbchannelstaff.GetChannelByEmpID(EmpinfoID);
                         mydata.Add(channelstaff);
-                        SessionHelper.Session["resultbardata"] = this.ResultECharts(mydata, planid);
+                        return this.ResultECharts(mydata, planid);
                     }
 
                 }
                 //显示全部
                 else
                 {
-                    SessionHelper.Session["resultbardata"] = this.ResultECharts(data, planid);
+                    return  this.ResultECharts(data, planid);
                 }
 
             }
@@ -567,7 +567,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 if (nowmonth== 1)
                 {
                    
-                    if (ThePreviousPlan != null)
+                    if (ThePreviousPlan.ID != 0)
                     {
                         circleView.isExistData = true;
                         //查询上一个季度的12月份
