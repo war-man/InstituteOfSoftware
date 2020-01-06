@@ -47,32 +47,42 @@ function loadclassCadres(classnumber1) {
     Ajax("/Teaching/Class/GetClassCadres", { classnumber: classnumber1 }, 'post', function (data) {
         $("#classCadres").html("");
        
-
+       
         if (data.ErrorCode == 200) {
 
+            console.log(data.Data);
+            if (data.Data) {
+                
+                var h3 = $('<h2 style="text-align:center">暂无任何班干部</h2>');
 
-
-            for (var item in data.Data) {
-
-
-                var ClassCadreshtml = _.template($("#ClassCadreshtml").html());
-
-                var name;
-
-                if (data.Data[item] == null || data.Data[item] == undefined) {
-
-                    name = "暂无";
-
-                } else {
-                    name = data.Data[item].Name;
-                }
-
-                var ClassCadresdata = ClassCadreshtml({ CadresName: item, studentname: name });
-
-                $("#classCadres").append($(ClassCadresdata));
-
-
+                
+                $("#classCadres").append(h3);
             }
+            else {
+                for (var item in data.Data) {
+
+
+                    var ClassCadreshtml = _.template($("#ClassCadreshtml").html());
+
+                    var name;
+
+                    if (data.Data[item] == null || data.Data[item] == undefined) {
+
+                        name = "暂无";
+
+                    } else {
+                        name = data.Data[item].Name;
+                    }
+
+                    var ClassCadresdata = ClassCadreshtml({ CadresName: item, studentname: name });
+
+                    $("#classCadres").append($(ClassCadresdata));
+
+
+                }
+            }
+
+          
 
         }
 
