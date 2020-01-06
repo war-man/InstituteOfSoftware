@@ -156,11 +156,11 @@
                                     <div class="layui-tab-item layui-show">
                                         <div class="layui-row layui-form-item">
                                             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-
+                                                <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
                                                 <label class="layui-form-label">跟踪日期:</label>
                                                 <div class="layui-input-block">
                                                     <span class="LableCss1" id="MyDate" name="MyDate">
-                                                        <input type="hidden" id="F_Id" name="F_Id" value="@list[0].Id" />
+
                                                         @list[0].FollwingDate
                                                     </span>
                                                 </div>
@@ -231,7 +231,7 @@
                                             <div class="layui-input-block">
                                                 
                                                 <button class="layui-btn" lay-submit="" lay-filter="edit">编辑</button>
-                                                <button class="layui-btn butCss1" id="no">取消</button>
+                                                <button type="button" class="layui-btn butCss1" id="no">取消</button>
                                             </div>
                                         </div>
                                     </div>
@@ -276,7 +276,7 @@
             form.render(); //更新全部
 
             form.on('submit(edit)', function (data) {
-                // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
                 $.ajax({
                     url: '/Market/FollwingInfo/EditFunction',
                     data: data.field,
