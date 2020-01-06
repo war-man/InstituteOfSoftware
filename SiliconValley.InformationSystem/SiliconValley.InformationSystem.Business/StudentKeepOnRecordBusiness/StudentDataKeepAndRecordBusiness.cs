@@ -365,7 +365,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             var nowplan = Syb_Entity.GetPlanByID(PlanId);
             //拿到下一个计划
             var nextplan = Syb_Entity.GetNextPlan(nowplan);
-            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuStatus_Id == 2).ToList();
+            //获取报名id
+            Statu_Entity = new StuStateManeger();
+            int id= Statu_Entity.GetList().Where(s => s.StatusName == "已报名").FirstOrDefault().Id;
+            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuStatus_Id == id).ToList();
             List<StudentPutOnRecord> resultlist = new List<StudentPutOnRecord>();
             foreach (var item in list_s)
             {
