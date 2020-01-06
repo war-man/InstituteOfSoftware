@@ -106,16 +106,37 @@
                         <div class="layui-input-inline">
 
                             @{
-                                if ((bool)Model.IsEndCurr)
+                                if (Model != null)
                                 {
-                                    <input type="radio" name="IsEndCurr" value="0" title="不是">
-                                    <input type="radio" name="IsEndCurr" value="1" title="是" checked="">
+                                    if (Model.IsEndCurr != null)
+                                    {
+                                        if ((bool)Model.IsEndCurr)
+                                        {
+
+
+                                            <input type="radio" name="IsEndCurr" value="0" title="不是">
+                                            <input type="radio" name="IsEndCurr" value="1" title="是" checked="">
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" name="IsEndCurr" value="0" title="不是" checked="">
+                                            <input type="radio" name="IsEndCurr" value="1" title="是">
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <input type="radio" name="IsEndCurr" value="0" title="不是" checked="">
+                                        <input type="radio" name="IsEndCurr" value="1" title="是">
+                                    }
+
+
                                 }
                                 else
                                 {
                                     <input type="radio" name="IsEndCurr" value="0" title="不是" checked="">
-                                    <input type="radio" name="IsEndCurr" value="1" title="是" >
+                                    <input type="radio" name="IsEndCurr" value="1" title="是">
                                 }
+
                             }
 
                         </div>
@@ -135,5 +156,15 @@
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Areas/Teaching/Scripts/Ajax.js"></script>
     <script src="~/Areas/CourseSyllabus/CourseOperation.js"></script>
+
+    <script>
+        layui.use(['form'], function () {
+
+            var form = layui.form;
+
+            form.render();
+
+        });
+    </script>
 </body>
 </html>
