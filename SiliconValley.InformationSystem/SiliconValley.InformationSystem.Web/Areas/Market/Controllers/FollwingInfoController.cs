@@ -264,7 +264,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             List<StudentData> data = findresult.Select(s => new StudentData() {
                 Id=s.Id,
-                stuSex = s.StuSex == false ? "男" : "女",
+                stuSex = s.StuSex == false ? "女" : "男",
                 StuName = s.StuName,
                 StuPhone = s.StuPhone,
                 StuSchoolName = s.StuSchoolName,
