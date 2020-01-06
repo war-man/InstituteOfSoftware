@@ -149,10 +149,20 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                this.Insert(new_s);             
-                redisCache.RemoveCache("StudentKeepList");
-                a.Success = true;
-                a.Msg = "备案成功";
+                //判断是否已备案
+                int count= GetAllStudentKeepData().Where(s => s.StuName == new_s.StuName && s.StuPhone == new_s.StuPhone).ToList().Count;
+                if (count<=0)
+                {
+                    this.Insert(new_s);
+                    redisCache.RemoveCache("StudentKeepList");
+                    a.Success = true;
+                    a.Msg = "备案成功";
+                }
+                else
+                {
+                    a.Success = false;
+                }
+                 
             }
             catch (Exception ex)
             {

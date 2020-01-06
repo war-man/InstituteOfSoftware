@@ -225,8 +225,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult MonthStudentData(int id)
         {
+            //获取未报名学生
             List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != (SM_Entity.GetStu("已报名").Data as StuStatus).Id).ToList();
-            var data = list_stu.Select(s => new {
+            //获取未分量的学生
+            List<Consult> find_all= CM_Entity.GetIQueryable().ToList();
+            List<StudentPutOnRecord> getNoExit = new List<StudentPutOnRecord>();
+            foreach (StudentPutOnRecord studentdata in list_stu)
+            {
+                Consult findvalue= find_all.Where(a => a.StuName == studentdata.Id).FirstOrDefault();
+                if (findvalue==null)
+                {
+                    getNoExit.Add(studentdata);
+                }
+            }
+            var data = getNoExit.Select(s => new {
                 Id = s.Id,
                 StuName=s.StuName,
                 StuSex = s.StuSex,

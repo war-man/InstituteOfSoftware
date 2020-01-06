@@ -27,6 +27,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             {
                 ConsultTeacher new_c = new ConsultTeacher();
                 new_c.Employees_Id = EmplyeId;
+                new_c.IsDelete = false;
                 //new_c.ConGrade = 5;
                 this.Insert(new_c);
                 result = true;

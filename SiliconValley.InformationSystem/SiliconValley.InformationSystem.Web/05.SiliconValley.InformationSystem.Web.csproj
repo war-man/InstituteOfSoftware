@@ -1168,6 +1168,7 @@
     <Content Include="Scripts\LodopFuncs.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
+    <Content Include="Scripts\Tangmin_CssAndJs\StudentDatakeep_Css\studentdatakeep.css" />
     <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
     <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />

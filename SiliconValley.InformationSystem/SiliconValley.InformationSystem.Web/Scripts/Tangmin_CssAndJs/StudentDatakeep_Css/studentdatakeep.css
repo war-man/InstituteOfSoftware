@@ -1,0 +1,56 @@
+﻿body {
+}
+
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
+.inputCss1
+{
+    height: 38px;
+    line-height: 1.3;
+    line-height: 38px\9;
+    border-width: 1px;
+    border-style: solid;
+    background-color: #fff;
+    border-radius: 2px ;
+    width: 150px;
+}
+
+.spanCssThree1
+{
+    color: red
+}
+
+.spanCss2
+{
+    font-size: 15px;
+    font-weight: normal;
+}
+
+
+
+.legendCss1
+{
+    border: 1px solid #009688;
+}
+
+.divCss1
+{
+    display: inline-block;
+    width: 150px;
+}
+
+.divCss2
+{
+    margin-top: 10px;
+    margin-bottom: 10px
+}
+
+.divCss3
+{
+    text-align: right
+}
