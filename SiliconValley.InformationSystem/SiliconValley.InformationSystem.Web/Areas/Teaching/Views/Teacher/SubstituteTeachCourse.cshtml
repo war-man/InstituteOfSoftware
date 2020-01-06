@@ -143,13 +143,15 @@
                 $("#speclist1").html("");
                 $.post("/Teaching/Teacher/CourseData", { classnumber: classnumber, date: date, specific: spec }, function (result) {
 
+                    console.log(result);
+
                     if (result.ErrorCode == 200) {
 
                         if (result.Data.length == 0) {
                             
                         }
                         else {
-                            isHvaeRescon == true;
+                            isHvaeRescon = true;
                             for (var i = 0; i < result.Data.length; i++) {
 
                                 var dateutc = result.Data[i].AnPaiDate.substr(result.Data[i].AnPaiDate.indexOf('(') + 1, 13);
@@ -237,6 +239,8 @@
 
             ///表单提交 
             form.on('submit(commit)', function (data) {
+
+                console.log(isHvaeRescon);
 
                 if (!isHvaeRescon) {
                     layer.msg('您选择的日期当日没有您的课', { icon: 2 });

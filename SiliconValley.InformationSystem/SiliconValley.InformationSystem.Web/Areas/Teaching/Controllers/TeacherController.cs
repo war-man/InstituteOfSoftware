@@ -1189,7 +1189,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //获取当前登录老师的班级
             TeacherClassBusiness db = new TeacherClassBusiness();
-            var classScadu = db.GetCrrentMyClass(1002); //班级teacher.TeacherID
+            var classScadu = db.GetCrrentMyClass(teacher.TeacherID); //班级teacher.TeacherID
             ViewBag.classList = classScadu;
             //提供专业老师
 
