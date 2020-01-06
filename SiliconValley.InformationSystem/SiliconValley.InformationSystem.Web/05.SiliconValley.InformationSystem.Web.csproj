@@ -1165,7 +1165,25 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.woff2" />
     <Content Include="Scripts\layui\lay\modules\transfer.js" />
+    <Content Include="Scripts\live2d\assets\autoload.js" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.svg" />
+    <Content Include="Scripts\live2d\assets\jquery-ui.min.js" />
+    <Content Include="Scripts\live2d\assets\jquery.min.js" />
+    <Content Include="Scripts\live2d\assets\live2d.js" />
+    <Content Include="Scripts\live2d\assets\live2d.min.js" />
+    <Content Include="Scripts\live2d\assets\waifu-tips.js" />
+    <Content Include="Scripts\live2d\assets\waifu-tips.min.js" />
+    <Content Include="Scripts\live2d\assets\waifu.css" />
+    <Content Include="Scripts\live2d\assets\waifu.min.css" />
+    <Content Include="Scripts\live2d\demo1-default.html" />
+    <Content Include="Scripts\live2d\demo2-autoload.html" />
+    <Content Include="Scripts\live2d\demo3-waifu-tips.html" />
     <Content Include="Scripts\LodopFuncs.js" />
+    <Content Include="Scripts\MenusStyle\css\reset.css" />
+    <Content Include="Scripts\MenusStyle\css\style.css" />
+    <Content Include="Scripts\MenusStyle\img\cd-icons.svg" />
+    <Content Include="Scripts\MenusStyle\js\jquery.min.js" />
+    <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
     <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
@@ -3018,6 +3036,10 @@
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824033536Admin.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824034132Admin.xls" />
     <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824035024Admin.xls" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.eot" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
+    <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
+    <Content Include="Scripts\live2d\assets\waifu-tips.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3062,6 +3084,12 @@
     <Folder Include="Areas\Teaching\Views\Shared\" />
     <Folder Include="Areas\Teaching\Views\StudentHomeWork\" />
     <Folder Include="assets\img\" />
+    <Folder Include="Scripts\layui-v2.5.4\layui\css\modules\laydate\default\" />
+    <Folder Include="Scripts\layui-v2.5.4\layui\css\modules\layer\default\" />
+    <Folder Include="Scripts\layui-v2.5.4\layui\font\" />
+    <Folder Include="Scripts\layui-v2.5.4\layui\images\face\" />
+    <Folder Include="Scripts\layui-v2.5.4\layui\lay\modules\" />
+    <Folder Include="Scripts\layui-v2.5.4\文档与示例\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
