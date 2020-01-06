@@ -1,0 +1,174 @@
+﻿
+@{
+    ViewBag.Title = "RegionIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    #left {
+   
+    }
+</style>
+@*<h2>RegionIndex</h2>*@
+<div>
+    <form class="layui-form" action="">
+        <div class="layui-container">
+            <div class="layui-col-xs7 layui-col-sm7 layui-col-md7">
+                <div class="layui-row layui-form-item">
+                    <label class="layui-form-label">区域：</label>
+                    <div class="layui-input-inline" id="regiondiv" style="width: 76%;">
+                    </div>
+                    <div class="layui-input-inline">
+                        <button class="layui-btn layui-btn-radius layui-btn-primary" style="margin-left: 419px;" type="button" id="btn0" lay-filter="btn0">删除</button>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
+                <div class="layui-row layui-form-item">
+                    <label class="layui-form-label" style="width:119px">添加区域：</label>
+                    <div class="layui-input-inline" style="width:119px;">
+                        <input type="text" name="regionname" id="regionname" required lay-verify="required" placeholder="请输入区域" autocomplete="off" class="layui-input">
+                    </div>
+
+                    <button class="layui-btn layui-btn-radius layui-btn-primary" lay-submit lay-filter="btn1">添加</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+<script type="text/template" id="muban1">
+    <input type="checkbox" name="RegionID" class="myRegion" lay-skin="primary" title="{{=RegionName}}" value="{{=ID}}">
+</script>
+<script src="~/Scripts/underscore.js"></script>
+<script>
+
+
+    layui.use(['transfer', 'layer', 'util'], function () {
+        var $ = layui.$, transfer = layui.transfer, layer = layui.layer, util = layui.util, form = layui.form;
+        var regiondata;
+        jQuery(function () {
+            loadregiondata();
+        });
+
+        function loadregiondata() {
+            $.ajax({
+                url: '/Market/Region/getregion',
+                type:'GET',
+                //async: false,
+                //data: { param0: value },
+                success: function (successdata) {
+                    if (successdata.Success) {
+                        regiondata = successdata.Data;
+                        loadregion();
+                    } else {
+                        layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                },
+                error: function (errordata) {
+                    layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                    });
+                }
+            });
+            
+        }
+
+        function loadregion() {
+            $("#regiondiv").children().remove();
+            for (var i = 0; i < regiondata.length; i++) {
+                var obj = _.template($("#muban1").html());
+                var html = obj({ RegionName: regiondata[i].RegionName, ID: regiondata[i].ID });
+                $("#regiondiv").append($(html));
+            }
+            form.render();
+        }
+
+        $("#btn0").click(function () {
+            var arr = new Array();
+            $("input:checkbox[name='RegionID']:checked").each(function (i) {
+                arr[i] = $(this).val();
+            });
+            if (arr.length > 1) {
+                var delregions = RegionIDs = arr.join(",");//将数组合并成字符串
+                $.ajax({
+                    url: '/Market/Region/delregion',
+                    //async: false,
+                    type: 'POST',
+                    data: { param0: delregions },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('删除完成！', { icon: 6, time: 2000 }, function () {
+                                loadregiondata();
+                            });
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                                loadregiondata();
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+            } else {
+                layer.msg('请先勾选删除区域!', { icon: 6, time: 2000 }, function () {
+
+                });
+
+            }
+        });
+
+     
+
+        form.on('submit(btn1)', function () {
+            var regionname = $('#regionname').val();
+            var iscunzai = false;
+            for (var i = 0; i < regiondata.length; i++) {
+                console.log(regiondata[i].RegionName)
+                if (regiondata[i].RegionName == regionname) {
+                    iscunzai = true;
+                    break;
+                }
+            }
+            if (!iscunzai) {
+                $.ajax({
+                    url: '/Market/Region/addregion',
+                    //async: false,
+                    type: 'POST',
+                    data: { param0: regionname },
+                    success: function (successdata) {
+                        if (successdata.Success) {
+                            layer.msg('录入完成！', { icon: 6, time: 2000 }, function () {
+                                loadregiondata();
+                            });
+                        } else {
+                            layer.msg(successdata.Msg, { icon: 6, time: 2000 }, function () {
+                                loadregiondata();
+                            });
+                        }
+                    },
+                    error: function (errordata) {
+                        layer.msg('网络不佳!', { icon: 6, time: 2000 }, function () {
+
+                        });
+                    }
+                });
+            } else {
+                layer.msg('已经存在该地区!请重新添加', { icon: 6, time: 2000 }, function () {
+                    
+                });
+            }
+            $('#regionname').val("");
+
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+
+    });
+
+
+</script>

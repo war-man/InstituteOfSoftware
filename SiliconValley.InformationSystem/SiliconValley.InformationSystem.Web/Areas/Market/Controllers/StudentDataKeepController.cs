@@ -200,7 +200,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json(Error("加载数据有误"),JsonRequestBehavior.AllowGet);
             }                            
         }       
-        #region
+       
         //这是一个添加数据的页面
         public ActionResult AddorEdit(string id)
         {
@@ -378,7 +378,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             AjaxResult a= s_Entity.Update_data(olds);
             return Json(a,JsonRequestBehavior.AllowGet);
         }
-        #endregion
+ 
         //将Excel中的数据加载到数据库中
         public bool AddExcelToServer(List<MyExcelClass> list)
         {
@@ -417,13 +417,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     s.StuPhone = item1.StuPhone;
                     s.StuSchoolName = item1.StuSchoolName;
                     s.StuStatus_Id = Stustate_Entity.GetIdGiveName("未报名", false).Success==true? (Stustate_Entity.GetIdGiveName("未报名", false).Data as StuStatus).Id:-1;
-                    s_Entity.Add_data(s);
+                    AjaxResult add_result= s_Entity.Add_data(s);                     
                 }
                 Is = true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                BusHelper.WriteSysLog(UserName + "Excel大批量导入数据时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                //BusHelper.WriteSysLog(UserName + "Excel大批量导入数据时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             return Is;
         }
@@ -519,6 +519,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Student =data;
             return View(data);
         }
+       
         #region Excle文件导入
         //获取已备案中的相似数据
         public List<MyExcelClass> SercherStudent(List<MyExcelClass> ex)
@@ -785,9 +786,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                                 old = SercherStudent(equally_list),
                                 news = equally_list
                             };
-                            string number = "13204961361";
-                            string smsText = "备案提示:已备案成功，但是有重复数据";
-                            string t = PhoneMsgHelper.SendMsg(number, smsText);
+                            //string number = "13204961361";
+                            //string smsText = "备案提示:已备案成功，但是有重复数据";
+                            //string t = PhoneMsgHelper.SendMsg(number, smsText);
                             return Json(datajson, JsonRequestBehavior.AllowGet);
                         }
                         else
@@ -826,9 +827,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                             resut = "ok",
                         };
                         //通知备案人备案成功
-                        string number = "13204961361";
-                        string smsText = "备案提示:已备案成功";
-                        string t = PhoneMsgHelper.SendMsg(number, smsText);
+                        //string number = "13204961361";
+                        //string smsText = "备案提示:已备案成功";
+                        //string t = PhoneMsgHelper.SendMsg(number, smsText);
 
                         return Json(datajson, JsonRequestBehavior.AllowGet);
                     }

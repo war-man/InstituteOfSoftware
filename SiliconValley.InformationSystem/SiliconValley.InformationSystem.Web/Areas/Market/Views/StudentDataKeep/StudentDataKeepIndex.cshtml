@@ -6,38 +6,7 @@
 @using SiliconValley.InformationSystem.Entity.MyEntity;
 @model SiliconValley.InformationSystem.Entity.MyEntity.StudentPutOnRecord
 @section style{
-    <style>
-        body .demo-class .layui-layer-title {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
-        .inputCss1 {
-            height: 38px;
-            line-height: 1.3;
-            line-height: 38px\9;
-            border-width: 1px;
-            border-style: solid;
-            background-color: #fff;
-            border-radius: 2px
-        }
-        .spanCssThree1 {
-            color: red
-        }
-        .spanCss2 {
-            font-size: 15px;
-            font-weight: normal;
-        }
-       .inputCss2{
-            border-radius:5px;
-            height:30px;
-        }
-        .layui-unselect
-        {
-            border-radius: 5px;
-            height: 30px;
-        }
-    </style>
+<link href="~/Scripts/Tangmin_CssAndJs/StudentDatakeep_Css/studentdatakeep.css" rel="stylesheet" />
 }
 <script type="text/html" id="toolbarDemo1">
     <div class="layui-btn-container">
@@ -54,47 +23,46 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">查看详情</a>
 </script>
 <form class="layui-form">
-    <fieldset style="border: 1px solid #009688;">
-        <legend style="color:#009688;">简单查询</legend>
+    <fieldset>
         <div class="layui-row">
             <div class="layui-col-sm3">
                 <label class="spanCss2">姓名:</label>
-                <input name="findNamevalue" id="findNamevalue" class="inputCss1 inputCss2" />
+                <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
             </div>
             <div class="layui-col-sm3">
                 <label class="spanCss2">联系电话:</label>
-                <input name="findPhonevalue" id="findPhonevalue" class="inputCss1 inputCss2" />
+                <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
             </div>
             <div class="layui-col-sm3">
                 <label class="spanCss2">信息来源:</label>
-                <div style="display: inline-block;width:150px;">
-                    @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>,new Dictionary<string,object>(){ { "class","inputCss2"} })
+                <div class="divCss1">
+                    @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>,new Dictionary<string,object>(){ })
                 </div>
 
             </div>
             <div class="layui-col-sm3">
                 <label class="spanCss2">所在区域:</label>
-                <div style="display: inline-block;width:150px;">
+                <div class="divCss1">
                     @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>)
                 </div>
                 </div>
             </div>
-        <div class="layui-row" style="margin-top:10px;margin-bottom:10px">
+        <div class="layui-row divCss2">
             <div class="layui-col-sm3">
                 <label class="spanCss2">备案人:</label>
-                <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1 inputCss2" />
+                <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
             </div>
             <div class="layui-col-sm3">
                 <label class="spanCss2">开始时间:</label>
-                <input name="findStartvalue" id="findStartvalue" class="inputCss1 inputCss2" placeholder="YY-MM-DD" />
+                <input name="findStartvalue" id="findStartvalue" class="inputCss1" placeholder="YY-MM-DD" />
             </div>
             <div class="layui-col-sm3">
                 <label class="spanCss2">结束时间:</label>
                 <div style="display: inline-block;width:150px;">
-                    <input name="findEndvalue" id="findEndvalue" class="inputCss1 inputCss2" placeholder="YY-MM-DD" />
+                    <input name="findEndvalue" id="findEndvalue" class="inputCss1" placeholder="YY-MM-DD" />
                 </div>
             </div>
-            <div class="layui-col-sm3" style="text-align:right">
+            <div class="layui-col-sm3 divCss3">
                 <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
             </div>
         </div>

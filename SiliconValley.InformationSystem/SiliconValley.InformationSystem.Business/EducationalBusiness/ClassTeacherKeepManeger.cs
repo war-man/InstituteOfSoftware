@@ -74,5 +74,27 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return IsSuccess;
         }
+        /// <summary>
+        /// 编辑数据
+        /// </summary>
+        /// <param name="new_t"></param>
+        /// <returns></returns>
+        public AjaxResult Edit_data(ClassTeacherKeep new_t)
+        {
+            AjaxResult edit = new AjaxResult();
+            try
+            {
+                this.Update(new_t);
+                redisCache.RemoveCache("ClassTeacherKeepList");
+                edit.Success = true;
+            }
+            catch (Exception ex)
+            {
+                edit.Success = false;
+                edit.Msg = ex.Message;
+            }
+
+            return edit;
+        }
     }
 }

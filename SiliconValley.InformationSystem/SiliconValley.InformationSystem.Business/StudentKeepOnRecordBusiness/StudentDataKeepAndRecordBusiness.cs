@@ -149,10 +149,20 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                this.Insert(new_s);             
-                redisCache.RemoveCache("StudentKeepList");
-                a.Success = true;
-                a.Msg = "备案成功";
+                //判断是否已备案
+                int count= GetAllStudentKeepData().Where(s => s.StuName == new_s.StuName && s.StuPhone == new_s.StuPhone).ToList().Count;
+                if (count<=0)
+                {
+                    this.Insert(new_s);
+                    redisCache.RemoveCache("StudentKeepList");
+                    a.Success = true;
+                    a.Msg = "备案成功";
+                }
+                else
+                {
+                    a.Success = false;
+                }
+                 
             }
             catch (Exception ex)
             {
@@ -355,7 +365,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             var nowplan = Syb_Entity.GetPlanByID(PlanId);
             //拿到下一个计划
             var nextplan = Syb_Entity.GetNextPlan(nowplan);
-            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuStatus_Id == 2).ToList();
+            //获取报名id
+            Statu_Entity = new StuStateManeger();
+            int id= Statu_Entity.GetList().Where(s => s.StatusName == "已报名").FirstOrDefault().Id;
+            List<StudentPutOnRecord> list_s = this.GetList().Where(s => s.EmployeesInfo_Id == EmpId && s.StuStatus_Id == id).ToList();
             List<StudentPutOnRecord> resultlist = new List<StudentPutOnRecord>();
             foreach (var item in list_s)
             {
