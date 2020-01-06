@@ -3,6 +3,7 @@ using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.Psychro;
 using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
+using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -27,6 +28,9 @@ namespace SiliconValley.InformationSystem.Business.Channel
         /// </summary>
         private SchoolYearPlanBusiness dbschoolpaln;
         private ChannelAreaBusiness dbchannelarea;
+        private StuStateManeger Statu_Entity;
+
+
 
         /// <summary>
         /// 得到没有离职的渠道专员
@@ -305,9 +309,12 @@ namespace SiliconValley.InformationSystem.Business.Channel
         public List<StudentPutOnRecord> GetChannelSignUpCount(int month, List<StudentPutOnRecord> data)
         {
             List<StudentPutOnRecord> result = new List<StudentPutOnRecord>();
+            //获取报名id
+            Statu_Entity = new StuStateManeger();
+            int id = Statu_Entity.GetList().Where(s => s.StatusName == "已报名").FirstOrDefault().Id;
             foreach (var item in data)
             {
-                if (item.StuStatus_Id==2)
+                if (item.StuStatus_Id== id)
                 {
                     if (Convert.ToDateTime(item.StatusTime).Month == month)
                     {
