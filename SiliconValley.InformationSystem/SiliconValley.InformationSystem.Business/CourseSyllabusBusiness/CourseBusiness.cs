@@ -207,10 +207,32 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         {
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
-            var courseid = dbteacherclass.GetClassTeachers().Where(d => d.ClassNumber == classid && d.IsDel == false).FirstOrDefault().Skill;
+            
+
+            var course1 = dbteacherclass.GetClassTeachers().Where(d => d.ClassNumber == classid && d.IsDel == false).FirstOrDefault();
+
+            //获取班级阶段
+            var courseid = 0;
+
+            if (course1 == null)
+            {
+                // 获取班级阶段
+
+                BaseBusiness<ClassSchedule> dbclass = new BaseBusiness<ClassSchedule>();
+
+                var classsc = dbclass.GetIQueryable().Where(d => d.id == classid).FirstOrDefault(); //班级对象
+
+                return this.GetCurriculas().Where(d => d.Grand_Id == classsc.grade_Id).ToList().OrderBy(d => d.Sort).ToList().FirstOrDefault();
+
+            }
+            else
+            {
+                courseid = (int)course1.Skill;
+            }
+
             var course = this.GetCurriculas().Where(d => d.CurriculumID == courseid).FirstOrDefault();
 
-             return  this.GetCurriculas().Where(d => d.Grand_Id == course.Grand_Id && d.MajorID == course.MajorID && d.Sort == course.Sort+1).FirstOrDefault();
+            return  this.GetCurriculas().Where(d => d.Grand_Id == course.Grand_Id && d.MajorID == course.MajorID && d.Sort == course.Sort+1).FirstOrDefault();
 
         }
 

@@ -35,7 +35,20 @@ layui.use(['table', 'layer','form'], function () {
             { type: 'radio', fixed: 'left' }
             , { field: 'CourseName', title: '课程名称', sort: true }
             , { field: 'GrandName', title: '阶段', templet: '<div>{{d.Grand.GrandName}}</div>' }
-            , { field: 'SpecialtyName', title: '专业', templet: '<div>{{d.Major.SpecialtyName}}</div>' }   
+            , {
+                field: 'SpecialtyName', title: '专业', templet: function (res) {
+                    
+                    if (res.Major == null) {
+                        return '无专业'
+                    }
+                    else {
+                        return res.Major.SpecialtyName
+                    }
+                   
+                    
+
+                }
+            }   
             , { field: 'TypeName', title: '课程类型', templet: '<div>{{d.CourseType.TypeName}}</div>' }   
             , { field: 'CourseCount', title: '课时', sort: true }
             , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }

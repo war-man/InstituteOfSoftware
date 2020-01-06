@@ -787,7 +787,25 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             try
             {
-                List<Curriculum> currlist = db_teacher.GetTeacherGoodCurriculum(teacherid, majorid);
+                List<Curriculum> currlist = new List<Curriculum>();
+
+                if (majorid == 0)
+                {
+                    //需要加上公共课
+
+                    var publiccOURSE = db_teacher.GetPublickCurriculaOnTeacher(teacherid);
+
+                    if (publiccOURSE != null)
+                    {
+                        currlist.AddRange(publiccOURSE);
+                    }
+                }
+                else
+                {
+                    currlist = db_teacher.GetTeacherGoodCurriculum(teacherid, majorid);
+                }
+
+               
 
                 result.Data = currlist;
                 result.ErrorCode = 200;
@@ -822,7 +840,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             var temp = new List<Curriculum>();
             try
             {
-                 temp = db_teacher.GetCurriculaOnTeacherNoHave(teacherid, majorid);
+                if (majorid == 0)
+                {
+                    temp = db_teacher.GetpublicCurriculaOnTeacherNoHave(teacherid);
+                }
+                else
+                {
+                    temp = db_teacher.GetCurriculaOnTeacherNoHave(teacherid, majorid);
+                }
+
 
                 result.Msg = "成功";
                 result.Data = temp;
@@ -853,6 +879,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
            var arry = ids.Split(',');
 
             var arry1 = arry.ToList();
+
             arry1.RemoveAt(arry.Length - 1);
 
 

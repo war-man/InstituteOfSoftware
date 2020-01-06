@@ -125,6 +125,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             AjaxResult result = new AjaxResult();
 
+            courseView.IsDelete = false;
             if (MajorID == 0)
             {
                 courseView.MajorID = null;
@@ -444,13 +445,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
-            classlist = dbteacherclass.AllClassSchedule();
-
-            ViewBag.classlist = classlist;
+            ViewBag.classlist = dbteacherclass.AllClassSchedule();
 
 
             //提供所有课程
-           ViewBag.courselist = db_course.GetCurriculas();
+            //ViewBag.courselist = db_course.GetCurriculas();
 
             return View();
         }
@@ -461,13 +460,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <returns></returns>
         public ActionResult GetClassNextCourse(int classid)
         {
-          var course =  db_course.GetClassNextCourse(classid);
+            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
-            return Json(course, JsonRequestBehavior.AllowGet);
+           var classschedule = dbteacherclass.AllClassSchedule().Where(d => d.id == classid).FirstOrDefault();
 
+            //判断有没有专业
+            if (classschedule.Major_Id == null)
+            {
+                //获取阶段所有课程
+
+                var courselist = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id).ToList();
+                return Json(courselist, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                //获取阶段专业课程 和公共课
+
+                var courselist = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id && d.MajorID == classschedule.Major_Id).ToList(); //专业课
+                var courselist1 = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id && d.MajorID==null).ToList();//公公课
+
+                List<Curriculum> result = new List<Curriculum>();
+                if (courselist != null)
+                {
+                    result.AddRange(courselist);
+
+                }
+
+                if (courselist1 != null)
+                {
+                    
+                       
+                    result.AddRange(courselist1);
+                }
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
             
         }
-
 
         /// <summary>
         /// 获取删除课程的教员

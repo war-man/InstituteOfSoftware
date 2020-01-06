@@ -40,21 +40,16 @@
                     <label class="layui-form-label">课程:</label>
                     <div class="layui-input-inline">
                         <select id="course" name="course" lay-filter="course">
-                            @{
-                                foreach (var item in ViewBag.courselist as List<Curriculum>)
-                                {
-                                    <option value="@item.CurriculumID">@item.CourseName</option>
-                                }
-                            }
+                           
                         </select>
                     </div>
                 </div>
 
-               
+
             </div>
 
 
-            <div class="layui-form-item" >
+            <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">上课老师:</label>
                     <div class="layui-input-inline">
@@ -70,6 +65,8 @@
                 </div>
 
             </div>
+
+            
 
             <div class="layui-form-item" style="text-align:center;margin-top:150px;">
 
@@ -143,6 +140,32 @@
                 });
 
             });
+
+            form.on('select(classnumber)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/CourseSyllabus/Course/GetClassNextCourse",
+                    data: { classid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#course").empty();
+                            console.log(resultData.data);
+                            $("#course").append(new Option("请选择课程", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#course')
+                                    .append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#course").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
 
             form.on('submit(commit)', function (data) {
               
