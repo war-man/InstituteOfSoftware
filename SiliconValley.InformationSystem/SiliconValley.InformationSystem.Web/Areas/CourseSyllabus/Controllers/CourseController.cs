@@ -460,40 +460,58 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <returns></returns>
         public ActionResult GetClassNextCourse(int classid)
         {
-            TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
+            AjaxResult returnresult = new AjaxResult();
 
-           var classschedule = dbteacherclass.AllClassSchedule().Where(d => d.id == classid).FirstOrDefault();
-
-            //判断有没有专业
-            if (classschedule.Major_Id == null)
+            try
             {
-                //获取阶段所有课程
-
-                var courselist = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id).ToList();
-                return Json(courselist, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                //获取阶段专业课程 和公共课
-
-                var courselist = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id && d.MajorID == classschedule.Major_Id).ToList(); //专业课
-                var courselist1 = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id && d.MajorID==null).ToList();//公公课
-
                 List<Curriculum> result = new List<Curriculum>();
-                if (courselist != null)
-                {
-                    result.AddRange(courselist);
+                TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
-                }
+                var classschedule = dbteacherclass.AllClassSchedule().Where(d => d.id == classid).FirstOrDefault();
 
-                if (courselist1 != null)
+                //判断有没有专业
+                if (classschedule.Major_Id == null)
                 {
+                    //获取阶段所有课程
+
+                    result = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id).ToList();
                     
-                       
-                    result.AddRange(courselist1);
                 }
-                return Json(result, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    //获取阶段专业课程 和公共课
+
+                    var courselist = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id && d.MajorID == classschedule.Major_Id).ToList(); //专业课
+                    var courselist1 = db_course.GetCurriculas().Where(d => d.Grand_Id == classschedule.grade_Id && d.MajorID == null).ToList();//公公课
+
+
+                    if (courselist != null)
+                    {
+                        result.AddRange(courselist);
+
+                    }
+
+                    if (courselist1 != null)
+                    {
+
+
+                        result.AddRange(courselist1);
+                    }
+                }
+
+                returnresult.ErrorCode = 200;
+                returnresult.Data = result;
             }
+            catch (Exception ex)
+            {
+
+                returnresult.ErrorCode = 500;
+                returnresult.Data = null;
+            }
+
+
+            return Json(returnresult, JsonRequestBehavior.AllowGet);
+            
             
         }
 

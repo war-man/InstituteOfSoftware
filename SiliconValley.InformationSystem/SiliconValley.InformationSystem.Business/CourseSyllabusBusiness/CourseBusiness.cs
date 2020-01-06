@@ -138,12 +138,21 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             if (ishavaEnglish)
             {
                 //有英语
-                return this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.MajorID == marjon_id && d.IsDelete == false).ToList();
+                //获取属于这个阶段的课程
+                List<Curriculum> find_list = this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.IsDelete == false).ToList();
+                //获取不属于这个专业的课程
+                List<Curriculum> notof= this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.MajorID!=marjon_id && d.IsDelete == false).ToList();
+                find_list.RemoveAll(d => d.MajorID != marjon_id && d.Grand_Id==grand_id && d.MajorID!=null);
+
+
+                return find_list;
             }
             else
             {
-                //没有英语
-                return this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.MajorID == marjon_id && d.IsDelete == false && d.CourseName!="英语").ToList();
+                //没有英语 
+                List<Curriculum> find_list= this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.IsDelete == false && d.CourseName != "英语").ToList();
+                find_list.RemoveAll(d => d.MajorID != marjon_id && d.Grand_Id == grand_id && d.MajorID != null);
+                return find_list;
             }
            
 
