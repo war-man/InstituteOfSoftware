@@ -17,5 +17,13 @@ namespace SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBus
         public MoveType GetmtById(int id) {
             return this.GetEntity(id);
         }
+        /// <summary>
+        /// 根据类型名称获取类型编号
+        /// </summary>
+        /// <param name="tname"></param>
+        /// <returns></returns>
+        public int GetmtTypeidByTname(string tname) {
+           return this.GetList().Where(s => s.MoveTypeName == tname).FirstOrDefault().ID;
+        }
     }
 }
