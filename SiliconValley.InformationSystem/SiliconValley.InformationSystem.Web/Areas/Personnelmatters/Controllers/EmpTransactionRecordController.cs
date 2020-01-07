@@ -141,24 +141,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的工资及岗位进行修改
                     {
                         emp.PositionId = (int)e.PresentPosition;
-                        if (emp.Salary == null)
+                        if (emp.PositiveDate == null)
                         {
                             emp.ProbationSalary = e.PresentSalary;
-                            empmanage.Update(emp);
-                            ajaxresult = empmanage.Success();
                         }
                         else
                         {
                             emp.Salary = e.PresentSalary;
-                            empmanage.Update(emp);
-                            ajaxresult = empmanage.Success();
                         }
+                        empmanage.Update(emp);
+                        ajaxresult = empmanage.Success();
                     }
                     else if (ajaxresult.Success && e.TransactionType == myype4)
                     {
                         if (ajaxresult.Success)
                         {//异动添加成功后将员工表中的员工工资也改变    
-                            if (emp.Salary == null)
+                            if (emp.PositiveDate == null)
                             {
                                 emp.ProbationSalary = et.PresentSalary;
                             }
@@ -367,6 +365,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             {
                                 ese.PerformancePay = 1000;
                             }
+                            else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                            {
+                                ese.PerformancePay = 3000;
+                            }
                             else
                             {
                                 ese.PerformancePay = 500;
@@ -400,6 +402,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
                             {
                                 ese.PerformancePay = 1000;
+                            }
+                            else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                            {
+                                ese.PerformancePay = 3000;
                             }
                             else
                             {

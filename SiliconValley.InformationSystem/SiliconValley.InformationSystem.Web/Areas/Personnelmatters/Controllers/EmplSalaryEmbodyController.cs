@@ -105,7 +105,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 var myese = esemanage.GetEntity(ese.Id);
                 var emp = emanage.GetInfoByEmpID(ese.EmployeeId);
-                if (!string.IsNullOrEmpty(emp.PositiveDate.ToString()))
+                if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                 {
                     ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary ;
                 }
@@ -152,6 +152,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj,JsonRequestBehavior.AllowGet);
        }
 
+        /// <summary>
+        /// 批量修改员工社保缴费基数和个人社保
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public ActionResult UpdateEmpSSinfo(string list) {
             ViewBag.idlist = list;
             return View();

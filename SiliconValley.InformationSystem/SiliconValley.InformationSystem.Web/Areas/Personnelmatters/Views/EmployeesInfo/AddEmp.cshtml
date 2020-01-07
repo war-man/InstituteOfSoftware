@@ -249,7 +249,7 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">银行卡号:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.BCNum, new Dictionary<string, object>() { { "placeholder", "请输入银行卡号" }, { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.BCNum, new Dictionary<string, object>() { { "lay-verify", "myBCNum" }, { "placeholder", "请输入银行卡号" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
@@ -502,6 +502,16 @@
                         }
                     }
                 },//验证哪天
+                myBCNum: function (value, item) {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        var v = /^(\d{16}|\d{19})$/;
+                        if (!v.test(value)) {
+                            return '银行卡号只有16-19位数字';
+                        }
+                    }
+                },//验证银行卡号
                 CheckDDNum: function (value, item) {
                     if (value == '') {
                         return '';
