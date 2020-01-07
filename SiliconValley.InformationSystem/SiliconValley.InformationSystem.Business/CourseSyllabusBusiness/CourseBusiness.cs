@@ -65,8 +65,17 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             courseView.CourseName = curriculum.CourseName;
             courseView.CourseType = db_coursetype.GetList().Where(d => d.IsDelete == false && d.Id == curriculum.CourseType_Id).FirstOrDefault();
             courseView.CurriculumID = curriculum.CurriculumID;
-            courseView.Grand = db_Grand.GetList().Where(d => d.IsDelete == false && d.Id == curriculum.Grand_Id).FirstOrDefault();
-            courseView.Major = db_Specialty.GetList().Where(d => d.IsDelete == false && d.Id == curriculum.MajorID).FirstOrDefault();
+
+            if (curriculum.Grand_Id != null)
+            {
+                courseView.Grand = db_Grand.GetList().Where(d => d.IsDelete == false && d.Id == curriculum.Grand_Id).FirstOrDefault();
+            }
+
+            if (curriculum.MajorID != null)
+            {
+                courseView.Major = db_Specialty.GetList().Where(d => d.IsDelete == false && d.Id == curriculum.MajorID).FirstOrDefault();
+            }
+            
             courseView.PeriodMoney = curriculum.PeriodMoney;
             courseView.Rmark = curriculum.Rmark;
 
