@@ -84,7 +84,9 @@
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">所属岗位:</label>
                         <div class="layui-input-block">
-                            <select name="PositionId" id="PositionId" lay-verify="required" lay-search=""></select>
+                            <select name="PositionId" id="PositionId" lay-verify="required" lay-search="">
+                                <option value="-1">请先选择所属部门</option>
+                            </select>
                         </div>
                     </div>
 
@@ -508,7 +510,7 @@
                     } else {
                         var v = /^(\d{16}|\d{19})$/;
                         if (!v.test(value)) {
-                            return '银行卡号只有16-19位数字';
+                            return '银行卡号只能是16-19位数字';
                         }
                     }
                 },//验证银行卡号
