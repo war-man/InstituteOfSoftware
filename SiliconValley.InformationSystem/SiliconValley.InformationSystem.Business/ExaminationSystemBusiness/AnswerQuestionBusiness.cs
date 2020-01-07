@@ -52,7 +52,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// </summary>
         /// <param name="">AnswerQuestionBank类</param>
         /// <returns></returns>
-        public AnswerQuestionView ConvertToAnswerQuestionView(AnswerQuestionBank answerQuestionBank)
+        public AnswerQuestionView ConvertToAnswerQuestionView(AnswerQuestionBank answerQuestionBank, bool IsNeedProposition)
         {
             AnswerQuestionView answerQuestionView = new AnswerQuestionView();
 
@@ -63,7 +63,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             answerQuestionView.ID = answerQuestionBank.ID;
             answerQuestionView.IsUsing = answerQuestionBank.IsUsing;
             answerQuestionView.Level = db_questionLevel.AllQuestionLevel().Where(d => d.LevelID == answerQuestionBank.Level).FirstOrDefault();
-            answerQuestionView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers().Where(d => d.TeacherID == answerQuestionBank.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+
+            if (IsNeedProposition)
+            {
+                answerQuestionView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers().Where(d => d.TeacherID == answerQuestionBank.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+
+            }
+            else
+            {
+                answerQuestionView.Proposition = null;
+            }
 
             answerQuestionView.ReferenceAnswer = answerQuestionBank.ReferenceAnswer;
             answerQuestionView.Remark = answerQuestionBank.Remark;

@@ -133,15 +133,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
 
+                var examveiw  = db_exam.ConvertToExaminationView(exam);
 
                 List<ChoiceQuestionTableView> data = new List<ChoiceQuestionTableView>();
                 //判断考试类型
-                if (exam.ExamType == 1)
+                if (examveiw.ExamType.ExamTypeID == 1)
                 {
                     data = db_stuExam.ProductChoiceQuestion(exam, 0);
                 }
 
-                if (exam.ExamType == 2)
+                if (examveiw.ExamType.ExamTypeID == 2)
                 {
 
                     //需要获取课程
@@ -187,14 +188,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 var exam = db_exam.AllExamination().Where(d => d.ID == examid).FirstOrDefault();
+                var examveiw = db_exam.ConvertToExaminationView(exam);
                 List<AnswerQuestionView> data = new List<AnswerQuestionView>();
                 //判断考试类型
-                if (exam.ExamType == 1)
+                if (examveiw.ExamType.ExamTypeID == 1)
                 {
                     data = db_stuExam.productAnswerQuestion(exam, 0);
                 }
 
-                if (exam.ExamType == 2)
+                if (examveiw.ExamType.ExamTypeID == 2)
                 {
 
                     //需要获取课程
@@ -253,12 +255,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 //第一次
 
                 //判断考试类型
-                if (exam.ExamType == 1)
+                if (examview.ExamType.ExamTypeID == 1)
                 {
                     computer = db_stuExam.productComputerQuestion(exam,0);
                 }
 
-                if (exam.ExamType == 2)
+                if (examview.ExamType.ExamTypeID == 2)
                 {
 
                     //需要获取课程

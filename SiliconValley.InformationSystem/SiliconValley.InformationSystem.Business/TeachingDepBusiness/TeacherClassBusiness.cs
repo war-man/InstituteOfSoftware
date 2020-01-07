@@ -167,16 +167,21 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 detailView.GrandName = "";
             }
 
-            var marjor = db_major.GetSpecialtyByID((int)myclass.Major_Id);
 
-            if (marjor != null)
+            if (myclass.Major_Id != null)
             {
-                detailView.MajorName = marjor.SpecialtyName;
+                var marjor = db_major.GetSpecialtyByID((int)myclass.Major_Id);
+                if (marjor != null)
+                {
+                    
+                    detailView.MajorName = marjor.SpecialtyName;
+                }
+                else
+                {
+                    detailView.MajorName = "";
+                }
             }
-            else
-            {
-                detailView.MajorName = "";
-            }
+            
 
 
 

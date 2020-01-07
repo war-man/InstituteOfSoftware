@@ -48,7 +48,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return this.GetList();
         }
 
-        public ComputerTestQuestionsView ConvertToComputerTestQuestionsView(MachTestQuesBank machTestQuesBank)
+        public ComputerTestQuestionsView ConvertToComputerTestQuestionsView(MachTestQuesBank machTestQuesBank,bool IsNeedProposition)
         {
 
             ComputerTestQuestionsView computerTestQuestionsView = new ComputerTestQuestionsView();
@@ -58,7 +58,17 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             computerTestQuestionsView.ID = machTestQuesBank.ID;
             computerTestQuestionsView.IsUsing = machTestQuesBank.IsUsing;
             computerTestQuestionsView.Level = db_questionLevel.AllQuestionLevel().Where(d => d.LevelID == machTestQuesBank.Level).FirstOrDefault();
-            computerTestQuestionsView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers().Where(d => d.TeacherID == machTestQuesBank.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+
+            if (IsNeedProposition)
+            {
+                computerTestQuestionsView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers().Where(d => d.TeacherID == machTestQuesBank.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+
+            }
+
+            else
+            {
+                computerTestQuestionsView.Proposition = null;
+            }
             computerTestQuestionsView.SaveURL = machTestQuesBank.SaveURL;
             computerTestQuestionsView.Title = machTestQuesBank.Title;
 

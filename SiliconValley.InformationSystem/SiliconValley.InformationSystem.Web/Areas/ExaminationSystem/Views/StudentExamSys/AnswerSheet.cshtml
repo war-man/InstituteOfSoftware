@@ -184,7 +184,7 @@
             questionCount = result;
 
             //渲染分数
-            $("#choicesQuestionScores").find(".totalScores").text(TotalScores);
+            $("#choicesQuestionScoress").find(".totalScores").text(TotalScores);
             $("#choicesQuestionScores").find(".itemScores").text((parseInt(TotalScores) / parseInt(questionCount)));
 
 
@@ -200,9 +200,12 @@
             formData.append("examid", examid);
 
             function loadChoiceQuestionData() {
+
                 var index = layer.load(2, { time: 10 * 1000 }); //又换了种风格，并且设定最长等待10秒 
+
                 $.post('/ExaminationSystem/StudentExamSys/ChoiceQuestionData', { examid: examid }, function (RESULT) {
 
+                    console.log(RESULT);
 
                     if (RESULT.ErrorCode == 200) {
                         questionCount += RESULT.Data.data.length;

@@ -51,6 +51,7 @@ function loadclassCadres(classnumber1) {
         if (data.ErrorCode == 200) {
 
             console.log(data.Data);
+            
             if (data.Data) {
                 
                 var h3 = $('<h2 style="text-align:center">暂无任何班干部</h2>');
@@ -59,6 +60,7 @@ function loadclassCadres(classnumber1) {
                 $("#classCadres").append(h3);
             }
             else {
+                
                 for (var item in data.Data) {
 
 

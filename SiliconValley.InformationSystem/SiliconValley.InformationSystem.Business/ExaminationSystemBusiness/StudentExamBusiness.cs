@@ -96,7 +96,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var templist = new List<ChoiceQuestionTableView>();
             foreach (var item in list)
             {
-                templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item));
+                templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item, false));
             }
             List<Curriculum> sourchlist = new List<Curriculum>();
             if (examview.ExamType.ExamTypeID == 1)
@@ -120,8 +120,6 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
 
             
-
-
             //筛选题目
             foreach (var item in templist)
             {
@@ -254,7 +252,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var templist = new List<AnswerQuestionView>();
             foreach (var item in list)
             {
-                templist.Add(db_answerQuextion.ConvertToAnswerQuestionView(item));
+                templist.Add(db_answerQuextion.ConvertToAnswerQuestionView(item, false));
             }
             //筛选出S2的课程
 
@@ -396,7 +394,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             foreach (var item in list)
             {
-                templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item));
+                templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item,false));
             }
 
 

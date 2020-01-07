@@ -54,8 +54,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <summary>
         /// 选择题数据表格实体
         /// </summary>
+        /// <param name="multipleChoiceQuestion"></param>
+        /// <param name="IsNeedProposition">是否需要阅卷人</param>
         /// <returns></returns>
-        public ChoiceQuestionTableView ConvertToChoiceQuestionTableView(MultipleChoiceQuestion multipleChoiceQuestion)
+        public ChoiceQuestionTableView ConvertToChoiceQuestionTableView(MultipleChoiceQuestion multipleChoiceQuestion,bool IsNeedProposition = true)
         {
 
             CourseBusiness courseBusiness = new CourseBusiness();
@@ -76,8 +78,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             choiceQuestionTableView.OptionB = multipleChoiceQuestion.OptionB;
             choiceQuestionTableView.OptionC = multipleChoiceQuestion.OptionC;
             choiceQuestionTableView.OptionD = multipleChoiceQuestion.OptionD;
-            //获取命题人
-            choiceQuestionTableView.Proposition = db_emp.GetList().Where(c=>c.EmployeeId == db_teacher.GetTeachers().Where(d => d.TeacherID == multipleChoiceQuestion.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+            if (IsNeedProposition)
+            {
+                //获取命题人
+                choiceQuestionTableView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers().Where(d => d.TeacherID == multipleChoiceQuestion.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+            }
+            else
+            {
+                choiceQuestionTableView.Proposition = null;
+            }
+            
 
             choiceQuestionTableView.Remark = multipleChoiceQuestion.Remark;
             choiceQuestionTableView.Title = multipleChoiceQuestion.Title;

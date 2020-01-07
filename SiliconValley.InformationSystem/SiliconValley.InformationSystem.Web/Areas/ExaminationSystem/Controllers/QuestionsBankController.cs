@@ -381,7 +381,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             foreach (var item in skiplist)
             {
-               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item);
+               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item, true);
 
                 resultlist.Add(tempobj);
             }
@@ -512,7 +512,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
            var tempobj = db_answerQuestion.AllAnswerQuestion().Where(d => d.ID == id).FirstOrDefault();
 
-            var obj = db_answerQuestion.ConvertToAnswerQuestionView(tempobj);
+            var obj = db_answerQuestion.ConvertToAnswerQuestionView(tempobj, true);
 
 
             return View(obj);
@@ -553,7 +553,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             foreach (var item in skiplist)
             {
 
-               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item);
+               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item, true);
                 resultlist.Add(tempobj);
 
             }
@@ -603,7 +603,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             foreach (var item in skiplist)
             {
 
-                  var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item);
+                  var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item, true);
 
                 resultlist.Add(tempobj);
 
@@ -730,7 +730,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             var obj = db_computerTestQuestion.AllComputerTestQuestion().Where(d=>d.ID==int.Parse( list[0])).FirstOrDefault();
 
-            var result = db_computerTestQuestion.ConvertToComputerTestQuestionsView(obj);
+            var result = db_computerTestQuestion.ConvertToComputerTestQuestionsView(obj, true);
 
             ViewBag.ComputerTestQuestionIds = ids;
 
@@ -818,7 +818,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             foreach (var item in skiplist)
             {
 
-                var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item);
+                var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item, true);
                 resultlist.Add(tempobj);
 
             }
