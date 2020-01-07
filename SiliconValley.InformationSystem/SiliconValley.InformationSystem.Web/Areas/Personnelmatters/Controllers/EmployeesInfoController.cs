@@ -1013,6 +1013,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             }
                         }
                     }
+
                     //员工调岗，直接由人事修改日期的情况下添加该员工异动
                     if (emp.PositionId!=emp2.PositionId) {
                         EmpTransaction et = new EmpTransaction();
@@ -1042,6 +1043,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
                             {
                                 ese.PerformancePay = 1000;
+                            } else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName=="校办") {
+                                ese.PerformancePay = 3000;
                             }
                             else
                             {
@@ -1057,6 +1060,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             }
                             esemanage.Update(ese);
                             ajaxresult = esemanage.Success();
+                        }
+                    }
+
+                    //当员工的社保之前没有值现在添值的情况下则员工绩效额度也要改变
+                    if (string.IsNullOrEmpty(emp2.SSStartMonth.ToString()))
+                    {
+                        if (!string.IsNullOrEmpty(emp.SSStartMonth.ToString()))
+                        {
+                            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                            var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                            if (string.IsNullOrEmpty(emp.ProbationSalary.ToString()))
+                            {//没有实习工资的情况下
+                             //当该员工的岗位是主任或者是副主任绩效额度为1000，普通员工为500
+                                if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                                {
+                                    ese.PerformancePay = 1000;
+                                }
+                                else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                                {
+                                    ese.PerformancePay = 3000;
+                                }
+                                else
+                                {
+                                    ese.PerformancePay = 500;
+                                }
+                            }
+                            else {
+                                ese.PerformancePay = emp.Salary-emp.ProbationSalary;
+                            }
+                            ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                            esemanage.Update(ese);
+                            ajaxresult = esemanage.Success();
+                            
                         }
                     }
                 }
