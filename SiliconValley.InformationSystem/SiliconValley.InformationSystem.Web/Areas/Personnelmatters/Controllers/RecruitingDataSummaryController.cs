@@ -72,14 +72,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetRecruitData(int page, int limit,string AppCondition) {
              AddRecruitData();
             RecruitingDataSummaryManage rdsmanage = new RecruitingDataSummaryManage();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
             var rdslist = rdsmanage.GetList();
             var myrdslist = rdslist.OrderBy(r => r.Id).Skip((page - 1) * limit).Take(limit).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
-                string pname = str[0];
-                string start_time = str[1];
-                string end_time = str[2];
+                string deptid = str[0];
+                string pname = str[1];
+                string start_time = str[2];
+                string end_time = str[3];
+                if (!string.IsNullOrEmpty(deptid))
+                {
+                    myrdslist = myrdslist.Where(e => empmanage.GetDeptByPid((int)e.Pid).DeptId==int.Parse(deptid)).ToList();
+                }
                 if (!string.IsNullOrEmpty(pname) )
                 {
                     myrdslist = myrdslist.Where(e => e.Pid == int.Parse(pname)).ToList();

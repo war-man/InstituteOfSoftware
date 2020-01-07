@@ -34,6 +34,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     {
                         ese.PerformancePay = 1000;
                     }
+                    else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                    {
+                        ese.PerformancePay = 3000;
+                    }
                     else
                     {
                         ese.PerformancePay = 500;
