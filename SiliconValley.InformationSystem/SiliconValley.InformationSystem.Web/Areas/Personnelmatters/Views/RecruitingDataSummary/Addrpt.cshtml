@@ -45,123 +45,135 @@
             <div class="layui-container">
 
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">姓名</label>
+                        <label class="layui-form-label">姓名:</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">应聘岗位</label>
+                        <label class="layui-form-label">应聘部门:</label>
+                        <div class="layui-input-block">
+                            <select name="deptid" id="deptid" lay-filter="deptidfilter" lay-verify="required">
+                                <option value="-1">请选择所属部门</option>
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">应聘岗位:</label>
                         <div class="layui-input-block">
                             <select name="Pid" id="Pid" lay-verify="required" lay-filter="pidfilter">
-                                <option value="-1">请选择应聘的岗位</option>
+                                <option value="-1">请先选择部门</option>
                             </select>
                         </div>
                     </div>
+
+
+                </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">手机号</label>
+                        <label class="layui-form-label">手机号:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.PhoneNumber, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">追踪时间</label>
+                        <label class="layui-form-label">追踪时间:</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.TraceTime, new Dictionary<string, object>() { { "lay-verify", "TraceTime" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">渠道</label>
+                        <label class="layui-form-label">渠道:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.Channel, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <label class="layui-form-label" style="margin-left:-40px;width:120px;">电话沟通结果:</label>
+                    <div class="layui-input-block" style="width:90%;">
+                        @Html.TextBoxFor(a => a.PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input " } })
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">简历类型</label>
+                        <label class="layui-form-label">简历类型:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.ResumeType, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
 
-                </div>
-             
-                <div class="layui-row layui-form-item">
-                        <label class="layui-form-label">电话沟通结果</label>
-                        <div class="layui-input-block" style="width:90%;">
-                            @Html.TextBoxFor(a => a.PhoneCommunicateResult, new Dictionary<string, object>() { { "class", "layui-input " } })
-                        </div>
-                    </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">初试日期</label>
+                        <label class="layui-form-label">初试日期:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.FirstInterviewDate, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">是否面试</label>
+                        <label class="layui-form-label">是否面试:</label>
                         <div class="layui-input-block">
-                            <input type="radio" name="IsInterview" value="True" title="是" >
+                            <input type="radio" name="IsInterview" value="True" title="是">
                             <input type="radio" name="IsInterview" value="False" title="否" checked="">
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">初试结果</label>
+                        <label class="layui-form-label">初试结果:</label>
                         <div class="layui-input-inline">
                             <input type="radio" name="FirstInterviewResult" value="通过" title="通过">
                             <input type="radio" name="FirstInterviewResult" value="未通过" title="未通过" checked="">
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">复试日期</label>
+                        <label class="layui-form-label">复试日期:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.RetestDate, new Dictionary<string, object>() { { "lay-verify", "RetestDate" }, { "class", "layui-input " } })
                         </div>
                     </div>
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">复试结果</label>
+                        <label class="layui-form-label">复试结果:</label>
                         <div class="layui-input-block">
                             <input type="radio" name="RetestResult" value="-1" title="未复试" checked="">
                             <input type="radio" name="RetestResult" value="通过" title="通过">
                             <input type="radio" name="RetestResult" value="未通过" title="未通过">
-                        
+
                         </div>
                     </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">Offer时间</label>
+                        <label class="layui-form-label">Offer时间:</label>
                         <div class="layui-input-inline">
                             @Html.TextBoxFor(a => a.OfferGiveTime, new Dictionary<string, object>() { { "lay-verify", "OfferGiveTime" }, { "class", "layui-input " } })
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">预计入职时间</label>
+                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">预计入职时间:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.PlanEntryTime, new Dictionary<string, object>() { { "lay-verify", "PlanEntryTime" }, { "class", "layui-input " } })
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">是否入职</label>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">是否入职:</label>
                         <div class="layui-input-inline">
-                            <input type="radio" name="IsEntry" value="True" title="是" >
+                            <input type="radio" name="IsEntry" value="True" title="是">
                             <input type="radio" name="IsEntry" value="False" title="否" checked="">
                         </div>
                     </div>
@@ -171,7 +183,7 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">备注</label>
+                        <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
@@ -203,33 +215,34 @@
             });
             laydate.render({
                 elem: '#FirstInterviewDate',
-            }); 
+            });
             laydate.render({
                 elem: '#RetestDate',
-            }); 
+            });
             laydate.render({
                 elem: '#OfferGiveTime',
-            }); 
+            });
             laydate.render({
                 elem: '#PlanEntryTime',
-            }); 
-            //动态绑定岗位属性的下拉框的值
-            $.ajax({
-                url: '/Personnelmatters/RecruitingDataSummary/BindPidSelect',
-                dataType: 'json',
-                type: 'get',
-                success: function (data) {
-                    console.log(data.data);
-                    $.each(data.data, function (index, item) {
-                        $('#Pid').append(new Option(item.PositionName, item.Pid));// 下拉菜单里添加元素
-                    });
-                    layui.form.render("select");
-                    //重新渲染 固定写法
-                }
             });
+            //动态绑定岗位属性的下拉框的值
+            //$.ajax({
+            //    url: '/Personnelmatters/RecruitingDataSummary/BindPidSelect',
+            //    dataType: 'json',
+            //    type: 'get',
+            //    success: function (data) {
+            //        console.log(data.data);
+            //        $.each(data.data, function (index, item) {
+            //            $('#Pid').append(new Option(item.PositionName, item.Pid));// 下拉菜单里添加元素
+            //        });
+            //        layui.form.render("select");
+            //        //重新渲染 固定写法
+            //    }
+            //});
 
             //添加提交
             form.on('submit(demo1)', function (data) {
+                console.log(data.field.Pid);
                 $.post("/Personnelmatters/RecruitingDataSummary/Addrpt", data.field, function (data) {
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function () {
@@ -252,7 +265,63 @@
                 var index = parent.layer.getFrameIndex(window.name);
                 parent.layer.close(index);
             });
-      
+
+        });
+    </script>
+
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+
+                        $("#deptid").append(new Option("请选择部门", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $('#deptid').append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#Pid").empty();
+                            console.log(resultData.data);
+                            $("#Pid").append(new Option("请选择岗位", ""));
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $('#Pid').append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#Pid").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
         });
     </script>
 

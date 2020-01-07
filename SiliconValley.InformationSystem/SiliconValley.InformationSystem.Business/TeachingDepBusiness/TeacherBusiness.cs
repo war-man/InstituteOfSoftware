@@ -1032,7 +1032,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             try
             {
 
-               var obj = this . GetTeachers().Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
+               var obj = this.GetTeachers().Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
 
                 obj.IsDel = true;
 

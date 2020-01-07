@@ -17,7 +17,7 @@
             @*头部工具栏*@
             <script type="text/html" id="toolbarDemo2">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="addRPT">添加招聘追踪数据</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="addRPT"><i class="layui-icon layui-icon-add-1"></i>添加招聘追踪数据</button>
                 </div>
             </script>
             @*操作栏*@
@@ -109,7 +109,7 @@
                 , limits: [1, 3, 6, 9, 12, 15, 18]
                 , limit: 6
                 , cols: [[
-                    , { field: 'Name', title: '姓名', sort: true, width: 90 }
+                      { field: 'Name', title: '姓名', sort: true, width: 90 }
                     , { field: 'pname', title: '应聘岗位', sort: true, width: 120 }
                     , { field: 'PhoneNumber', title: '手机号', width: 96, sort: true }
                     , { field: 'TraceTime', title: '追踪时间', width: 108, sort: true, templet: function (d) { return GetYMD(d.TraceTime); } }

@@ -990,6 +990,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             et.EmployeeId = emp.EmployeeId;
                             et.TransactionType = mtmanage.GetmtTypeidByTname("转正");
                             et.TransactionTime = emp.PositiveDate;
+                            et.IsDel = false;
                             etmanage.Insert(et);
                             ajaxresult = etmanage.Success();
                             //员工转正时间修改好之后将该员工的绩效工资及岗位工资修改一下
@@ -1032,7 +1033,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         {
                             et.PresentSalary = emp.Salary;
                         }
-
+                        et.IsDel = false;
                         etmanage.Insert(et);
                         ajaxresult = etmanage.Success();
                        
