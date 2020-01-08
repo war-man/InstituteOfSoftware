@@ -122,21 +122,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public ActionResult AddMarketDataFunction()
         {
-           List<MarketChair> findm = MarketChair_Entity.GetList().Where(m =>  m.ChairName == null || m.TerCharName == null || m.ChairAddress==null || m.ManCount<=0).ToList();
+           int count= MarketChair_Entity.GetList().Count;
+            if (count<=0)
+            {
+                DateTime d1 = DateTime.Now;
+                MarketChair new_M = new MarketChair() { ChairTime = d1, Employees_Id = UserName.EmpNumber, IsDelete = false, TerCharName = "", ManCount = 0, ChairAddress = "" };
+                MarketChair_Entity.Insert(new_M);
+                return Json("ok", JsonRequestBehavior.AllowGet);
+            }             
+            List<MarketChair> findm = MarketChair_Entity.GetList().Where(m =>  m.ChairName == null || m.TerCharName == null || m.ChairAddress==null || m.ManCount<=0).ToList();
             List<MarketChair> find = findm.Where(m => m.IsDelete == true).ToList();
-            if (find.Count>0)
+            if (find.Count>0 || findm.Count<=0)
             {
                 try
                 {
                     DateTime d1 = DateTime.Now;
                     MarketChair new_M = new MarketChair() { ChairTime = d1, Employees_Id = UserName.EmpNumber, IsDelete = false, TerCharName = "", ManCount = 0, ChairAddress = "" };
                     MarketChair_Entity.Insert(new_M);
-                    BusHelper.WriteSysLog("操作人:" + Employes_Entity.GetEntity( UserName.EmpNumber).EmpName + "触发了添加按钮" , Entity.Base_SysManage.EnumType.LogType.添加数据);
+                   // BusHelper.WriteSysLog("操作人:" + Employes_Entity.GetEntity( UserName.EmpNumber).EmpName + "触发了添加按钮" , Entity.Base_SysManage.EnumType.LogType.添加数据);
                     return Json("ok", JsonRequestBehavior.AllowGet);
                 }
                 catch (Exception ex)
                 {
-                    BusHelper.WriteSysLog("操作人:" + Employes_Entity.GetEntity(UserName.EmpNumber).EmpName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+                    //BusHelper.WriteSysLog("操作人:" + Employes_Entity.GetEntity(UserName.EmpNumber).EmpName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                     return Json("数据有误，请重试!", JsonRequestBehavior.AllowGet);
                 }
             }

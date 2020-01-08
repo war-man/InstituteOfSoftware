@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             Employsinfo_Entity = new EmployeesInfoManage();
             //获取所有咨询师数据
-            List<ConsultTeacher> c_list = Ct_Entiry.GetList();
+            List<ConsultTeacher> c_list = Ct_Entiry.GetList().Where(ct=>ct.IsDelete==false).ToList();
             List<T_ConsultTeacherData> list_data = c_list.Select(c => new T_ConsultTeacherData()
             {
                 Id = c.Id,

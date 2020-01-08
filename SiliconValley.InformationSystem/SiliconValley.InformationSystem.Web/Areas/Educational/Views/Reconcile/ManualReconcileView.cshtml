@@ -474,26 +474,19 @@
             })
             //监听提交
             form.on('submit(childview_add)', function (data) {
-                var dd = new Date(data.field.childview_AnpiDate);
-                if (dd.getMonth() >= 6 && dd.getMonth <= 9 && judgeDate(data.field.childview_AnpiDate) == "周日") {
-                    layer.msg('周日不能安排');
-                } else {
-                    if (judgeDate(data.field.childview_AnpiDate) == "周日" || judgeDate(data.field.childview_AnpiDate) == "周六" ) {
-                        layer.msg('周日或周六不能安排');
-                    } else {
-                        if (data.field.child_class == undefined) {
-                            layer.msg("请选择班级!!!");
-                        } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
-                            layer.msg("请选择或填写课程!!!");
-                        } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
-                            layer.msg("请选择任课老师!!!");
-                        } else if (data.field.childview_AnpiDate == "") {
-                            layer.msg("请选择上课日期!!!");
-                        } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
-                            layer.msg("请选择上课时间段!!!");
-                        } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
-                            layer.msg("请选择教室!!!");
-                        } else {
+                 if (data.field.child_class == undefined) {
+                     layer.msg("请选择班级!!!");
+                 } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
+                     layer.msg("请选择或填写课程!!!");
+                 } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
+                     layer.msg("请选择任课老师!!!");
+                 } else if (data.field.childview_AnpiDate == "") {
+                     layer.msg("请选择上课日期!!!");
+                 } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
+                     layer.msg("请选择上课时间段!!!");
+                 } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
+                     layer.msg("请选择教室!!!");
+                 } else {
                             var indexof = layer.load(1);
                             //提交数据
                             $.ajax({
@@ -516,10 +509,7 @@
                                 }
                             });
                         }
-                    }
-                }
-                  
-                
+                                 
                 return false;
             });
            

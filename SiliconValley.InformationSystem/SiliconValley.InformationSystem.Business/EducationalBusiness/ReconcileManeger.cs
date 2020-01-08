@@ -57,14 +57,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             bool s = false;
             try
             {
-                int count= AllReconcile().Where(rs => rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id).ToList().Count;
+                List<Reconcile> find_list= AllReconcile().Where(rs => rs.AnPaiDate == r.AnPaiDate && rs.ClassSchedule_Id == r.ClassSchedule_Id && rs.Curriculum_Id == r.Curriculum_Id).ToList();
+                int count= find_list.Count;
                 if (count<=0)
                 {
                     this.Insert(r);
                     s = true;
                     Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 }
-                
+                else
+                {
+                    s = true;
+                }                 
             }
             catch (Exception ex)
             {
@@ -107,6 +111,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             Reconcile find_r = this.GetEntity(r.id);             
             try
             {
+                //除了专业课之外的改为自习课
                 if (find_r.Curse_Id.Contains("12") || find_r.Curse_Id.Contains("34"))
                 {
                     find_r.Curriculum_Id = "自习";
@@ -142,31 +147,28 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                         if (r.curdname == "上午12节")
                         {
-                            add.Curse_Id = "上午34节";
+                            find_r.Curse_Id = "上午34节";
                         }
                         else if (r.curdname == "下午12节")
                         {
-                            add.Curse_Id = "上午34节";
+                            find_r.Curse_Id = "下午34节";
                         }
                         else if (r.curdname == "上午34节")
                         {
-                            add.Curse_Id = "上午12节";
+                            find_r.Curse_Id = "上午12节";
                         }
                         else if (r.curdname == "下午34节")
                         {
-                            add.Curse_Id = "上午12节";
+                            find_r.Curse_Id = "下午12节";
                         }
-                        add.EmployeesInfo_Id = find_r.EmployeesInfo_Id;
+                        add.EmployeesInfo_Id = null;
                         add.IsDelete = false;
                         add.NewDate = DateTime.Now;
-                        find_r.Curse_Id = r.curdname;
-                        add.Curriculum_Id = find_r.Curriculum_Id;
+                        add.Curse_Id = r.curdname;
+                        add.Curriculum_Id = "自习";
                         bool s = this.AddData(add);
                         if (s)
-                        {
-                            find_r.EmployeesInfo_Id = null;
-                            find_r.Curse_Id = r.curdname;
-                            find_r.Curriculum_Id = "自习";
+                        {                                                       
                             this.Update(find_r);
 
                             //清空缓存
@@ -301,7 +303,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 //s1，s2的班主任
                 BaseBusiness<Headmaster> basemaster = new BaseBusiness<Headmaster>();
                 List<EmployeesInfo> elist = Reconcile_Com.GetAllNoGoingEMP();
-                List<Headmaster> find_m = basemaster.GetList().Where(m => m.IsDelete == false && m.IsAttend == true).ToList();
+                List<Headmaster> find_m = basemaster.GetList().Where(m => m.IsDelete == false && m.IsAttend == true).ToList();//获取没有辞职的可以上职素课的班主任
                 foreach (EmployeesInfo e1 in elist)
                 {
                     foreach (Headmaster m1 in find_m)
@@ -463,7 +465,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 }
             }
 
-            return list_Teacher;
+            return list_Teacher.Where(c=>c.IsDel==false).ToList();
         }
         /// <summary>
         /// 安排英语老师上课
@@ -1320,7 +1322,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             Position p = basePosition.GetList().Where(b=>b.IsDel==false && b.PositionName==PosionName).FirstOrDefault();
             if (p!=null)
             {
-               return baseEmplo.GetList().Where(b => b.IsDel == false && b.PositionId==p.Pid).ToList();
+               return baseEmplo.GetList().Where(b => b.IsDel == false && b.PositionId==p.Pid).ToList();//根据岗位匹配未辞职的老师
             }
             else
             {
@@ -1451,7 +1453,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     }
                     break;
                 case "英语":                 
-                      sb.Append( AnpaiTeacher(grand_id, currname, timename, time));
+                      sb.Append(AnpaiTeacher(grand_id, currname, timename, time));
                     break;
             }
             //查看这个老师这一天是否有课
@@ -1599,7 +1601,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 }
                 //清空缓存
                 Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                if (index == reconciles.Count)
+                if (index == list.Count)
                 {
                     s = true;
                 }
@@ -1826,7 +1828,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                        
                      
                 }
-                if (COU== (addcount-1))
+                if (COU== addcount)
                 {
                     data.Success = true;
                 }
