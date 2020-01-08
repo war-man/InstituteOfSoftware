@@ -150,6 +150,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             RedisCache redisCache = new RedisCache();
 
             resultlist = redisCache.GetCache<List<Teacher>>("TeacherList");
+            
 
             if (resultlist == null || resultlist.Count == 0)
             {
