@@ -77,7 +77,7 @@
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label las">保费</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "lay-verify", "required" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "lay-verify", "required|Amountofmoney" }, { "class", "layui-input linu" } })
                         </div>
                     </div>  
                 </fieldset>
@@ -168,15 +168,15 @@
 
 
 
-        //正则表达式
+        //正则
         form.verify({
-            //StuName: function (value, item) { //value：表单的值、item：表单的DOM对象
-            //    if (/^[\da-zA-z]{6,10}$/.test(value)) {
-            //        return '班级名称由字母或者数字组成,6-10位';
-            //    }
-            //}
+            Amountofmoney: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/(^[1-9]([0-9]{0,4})(\.[0-9]{1,2})$)|(^[1-9]([0-9]{0,4})$)|(^[0-9]\.[0-9]{1,2}$)/.test(value)) {
+                    return '请输入正确的价格';
+                }
+            }
+           
         });
-        //ajax
 
 
 
