@@ -280,7 +280,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (emp.IdCardNum != null)
                 {
                     emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
-
                 }
                 if (emp.Birthdate != null)
                 {

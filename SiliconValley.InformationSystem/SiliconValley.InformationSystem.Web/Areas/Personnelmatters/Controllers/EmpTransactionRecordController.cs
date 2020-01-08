@@ -316,7 +316,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             bool hm = hmmanage.removeHeadmaster(emp.EmployeeId);
                             ajaxresult.Success = hm;
                         }
-
                         if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
                         {
                             InstructorListBusiness itmanage = new InstructorListBusiness();
@@ -341,7 +340,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             bool s = fmmanage.UpdateFinancialstaff(emp.EmployeeId);
                             ajaxresult.Success = s;
                         }
-
+                        StaffAccdationBusiness sdmanae = new StaffAccdationBusiness();
+                        bool mysd = sdmanae.DelStaffacc(emp.EmployeeId);
+                        ajaxresult.Success = mysd;
                     }
 
                 }
@@ -444,11 +445,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
                             if (emp.PositiveDate == null)
                             {
-                                ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+                                var mysalary = emp.Salary - emp.ProbationSalary;
+                                ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary;
+                                emp.Salary = emp.ProbationSalary + mysalary;
                             }
                             else
                             {
-                                ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+                                ese.PositionSalary = emp.Salary - ese.BaseSalary;
+                            }
+                            if (!string.IsNullOrEmpty(ese.PerformancePay.ToString()))
+                            {
+                                ese.PositionSalary=ese.PositionSalary- ese.PerformancePay;
                             }
 
                             esemanage.Update(ese);
