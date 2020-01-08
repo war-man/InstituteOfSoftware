@@ -313,7 +313,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
                         {
                             HeadmasterBusiness hmmanage = new HeadmasterBusiness();
-                            bool hm = hmmanage.QuitEntity(emp.EmployeeId);
+                            bool hm = hmmanage.removeHeadmaster(emp.EmployeeId);
                             ajaxresult.Success = hm;
                         }
 
