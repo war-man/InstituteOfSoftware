@@ -500,18 +500,18 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <param name="classid"></param>
         /// <returns></returns>
-        public bool entrance(int classid) {
+        public bool entrance(int oldclassid,int newclassid) {
             bool result = false;
             try
             {
-                var data = this.GetEmpclassByclassid(classid);
+                var data = this.GetEmpclassByclassid(oldclassid);
                 if (data == null)
                 {
                     result = true;
                 }
                 else
                 {
-                    data.ClassId = classid;
+                    data.ClassId = newclassid;
                     this.Update(data);
                 }
             }
