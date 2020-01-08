@@ -495,6 +495,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return dbemploymentStaff.GetEntity(empClass.EmpStaffID);
         }
 
+
         /// <summary>
         /// 升学改班级
         /// </summary>
