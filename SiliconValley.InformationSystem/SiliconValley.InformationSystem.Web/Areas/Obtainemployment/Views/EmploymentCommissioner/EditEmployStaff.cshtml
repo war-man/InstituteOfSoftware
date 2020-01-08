@@ -86,26 +86,26 @@
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">带班经验</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="AttendClassStyle">@Model.AttendClassStyle</textarea>
+                        <textarea placeholder="请输入带班经验,长度不超过200" lay-verify="required|title" maxlength="200" class="layui-textarea" name="AttendClassStyle">@Model.AttendClassStyle</textarea>
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">就业经验</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="EmployExperience">@Model.EmployExperience</textarea>
+                        <textarea placeholder="请输入就业经验,长度不超过200" lay-verify="required|title" maxlength="200" class="layui-textarea" name="EmployExperience">@Model.EmployExperience</textarea>
                     </div>
                 </div>
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">工作经验</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="WorkExperience">@Model.WorkExperience</textarea>
+                        <textarea placeholder="请输入工作经验,长度不超过200" lay-verify="required|title" maxlength="200" class="layui-textarea" name="WorkExperience">@Model.WorkExperience</textarea>
                     </div>
                 </div>
 
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">备注</label>
                     <div class="layui-input-block">
-                        <textarea placeholder="请输入内容  长度不超过200" maxlength="200" class="layui-textarea" name="Remark">@Model.Remark</textarea>
+                        <textarea placeholder="请输入备注" maxlength="200" lay-verify="required|title" class="layui-textarea" name="Remark">@Model.Remark</textarea>
                     </div>
                 </div>
 
@@ -144,6 +144,13 @@
             var form = layui.form;
             var laydate = layui.laydate;
 
+            form.verify({
+                title: function (value, item) { //value：表单的值、item：表单的DOM对象
+                    if (value.length < 20) {
+                        return '长度不能低于20';
+                    }
+                }
+            })
             form.on('submit(editEmploystaff)', function (data) {
                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
                 //阻止表单跳转。如果需要表单跳转，去掉这段即可。

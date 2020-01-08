@@ -277,62 +277,88 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
         public ActionResult HttpPostUpdRoom(DormInformation param0, int param1, int param2)
         {
             AjaxResult ajaxResult = new AjaxResult();
-            dbdorm = new DormInformationBusiness();
-            dbroomxml = new RoomdeWithPageXmlHelp();
-            dbtungfloor = new TungFloorBusiness();
-            dbacc = new AccdationinformationBusiness();
-            var fpx = dbtungfloor.GetTungFloorByTungIDAndFloorID(param1, param2);
-            var fpxnb = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.Warehouse);
-            var fpxnb1 = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.VisitRoom);
-            var obj = dbdorm.GetEntity(param0.ID);
-            if (param0.RoomStayTypeId == fpxnb)
+            try
             {
-                obj.RoomStayNumberId = 0;
-                obj.SexType = 0;
-            }
-            if (param0.RoomStayTypeId==fpxnb1)
-            {
-                obj.SexType = 0;
-            }
-            if (dbacc.HasSomeone(param0.ID))
-            {
-                ajaxResult.Success = false;
-                ajaxResult.Msg = "莫瞎鸡巴乱搞";
-
-                /*记录下来是哪个用户登陆进行的一个使用js操作恶意进行的请求*/
-            }
-            else
-            {
-                if (obj.DormInfoName != param0.DormInfoName)
+                dbdorm = new DormInformationBusiness();
+                dbacc = new AccdationinformationBusiness();
+                dbtungfloor = new TungFloorBusiness();
+                var obj = dbdorm.GetEntity(param0.ID);
+                if (!dbacc.HasSomeone(param0.ID))
                 {
                     ajaxResult.Success = false;
-                    ajaxResult.Msg = "莫瞎鸡巴乱搞";
+                    ajaxResult.Msg = "存在人员不能修改。";
 
                     /*记录下来是哪个用户登陆进行的一个使用js操作恶意进行的请求*/
                 }
                 else
                 {
-                    obj.DormInfoName = param0.DormInfoName;
-                    obj.Remark = param0.Remark;
-                    obj.RoomStayNumberId = param0.RoomStayNumberId;
-                    obj.RoomStayTypeId = param0.RoomStayTypeId;
-                    obj.SexType = param0.SexType;
-                    obj.Direction = param0.Direction;
-                    try
+
+                    ///如果修改的是自己
+                    if (obj.DormInfoName == param0.DormInfoName)
                     {
-                        dbdorm.Update(obj);
+                        Update(param0, param1, param2, obj);
                         ajaxResult.Success = true;
                         ajaxResult.Msg = "操作成功";
                     }
-                    catch (Exception ex)
+                    ///如果不是自己
+                    else
                     {
-
-                        ajaxResult.Success = false;
-                        ajaxResult.Msg = "联系管理员";
+                        var fpx = dbtungfloor.GetTungFloorByTungIDAndFloorID(param1, param2);
+                        bool iscun = dbdorm.DuplicateName(fpx.Id, param0.DormInfoName);
+                        if (iscun)
+                        {
+                            ajaxResult.Success = true;
+                            ajaxResult.Msg = "该楼层已经存在该房间号";
+                        }
+                        else
+                        {
+                            Update(param0, param1, param2, obj);
+                            ajaxResult.Success = true;
+                            ajaxResult.Msg = "操作成功";
+                        }
                     }
+
                 }
             }
+            catch (Exception ex)
+            {
+
+                ajaxResult.Success = false;
+                ajaxResult.Msg = "联系管理员";
+            }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 修改
+        /// </summary>
+        /// <param name="param0"></param>
+        /// <param name="param1"></param>
+        /// <param name="param2"></param>
+        public void Update(DormInformation param0, int param1, int param2,DormInformation param3) {
+            dbtungfloor = new TungFloorBusiness();
+            dbroomxml = new RoomdeWithPageXmlHelp();
+            dbdorm = new DormInformationBusiness();
+            var fpx = dbtungfloor.GetTungFloorByTungIDAndFloorID(param1, param2);
+            var fpxnb = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.Warehouse);
+            var fpxnb1 = dbroomxml.GetRoomType(RoomTypeEnum.RoomType.VisitRoom);
+            
+            if (param0.RoomStayTypeId == fpxnb)
+            {
+                param3.RoomStayNumberId = 0;
+                param3.SexType = 0;
+            }
+            if (param0.RoomStayTypeId == fpxnb1)
+            {
+                param3.SexType = 0;
+            }
+            param3.DormInfoName = param0.DormInfoName;
+            param3.Remark = param0.Remark;
+            param3.RoomStayNumberId = param0.RoomStayNumberId;
+            param3.RoomStayTypeId = param0.RoomStayTypeId;
+            param3.SexType = param0.SexType;
+            param3.Direction = param0.Direction;
+            dbdorm.Update(param3);
         }
     }
 }

@@ -75,7 +75,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Capital.Controllers
                 publicBorrowListView.DebitMoney = item.DebitMoney;
                 publicBorrowListView.Debitwhy = item.Debitwhy;
                 publicBorrowListView.ID = item.ID;
-
+                    
                 //拿员工对象
                 EmployeesInfo employeesInfo = dbempstaff.GetEmployeesInfoByID(item.EmpNumber);
 
@@ -102,6 +102,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Capital.Controllers
             return Json(returnObj, JsonRequestBehavior.AllowGet);
 
         }
+
         public ActionResult DoPrefundingList() {
             return View();
         }

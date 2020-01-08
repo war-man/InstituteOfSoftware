@@ -297,6 +297,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             dbtung = new TungBusiness();
             dbfloor = new DormitoryfloorBusiness();
             dbtungfloor = new TungFloorBusiness();
+
             //返回的结果
             resultdtree result = new resultdtree();
 
@@ -310,65 +311,83 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             //最外层的儿子数据
             List<dtreeview> childrendtreedata = new List<dtreeview>();
 
-            for (int i = 0; i < tunglist.Count; i++)
+            if (tunglist.Count>0)
             {
-                dtreeview seconddtree = new dtreeview();
-                try
+                for (int i = 0; i < tunglist.Count; i++)
                 {
-                    Tung fortung = dbtung.GetTungByTungID(tunglist[i].Id);
-                    if (i==0)
+                    dtreeview seconddtree = new dtreeview();
+                    try
                     {
-                       seconddtree.spread = true;
-                    }
-                    seconddtree.nodeId = fortung.Id.ToString();
-                    seconddtree.context = fortung.TungName;
-                    seconddtree.last = false;
-                    seconddtree.parentId = "0";
-                    seconddtree.level = 0;
-                    
+                        Tung fortung = dbtung.GetTungByTungID(tunglist[i].Id);
+                        if (i == 0)
+                        {
+                            seconddtree.spread = true;
+                        }
+                        seconddtree.nodeId = fortung.Id.ToString();
+                        seconddtree.context = fortung.TungName;
+                        seconddtree.last = false;
+                        seconddtree.parentId = "0";
+                        seconddtree.level = 1;
 
-                    List<TungFloor> floorlist = dbtungfloor.GetTungFloorByTungID(tunglist[i].Id);
 
-                    List<dtreeview> floortreelist = new List<dtreeview>();
+                        List<TungFloor> floorlist = dbtungfloor.GetTungFloorByTungID(tunglist[i].Id);
 
-                    foreach (var floor in floorlist)
-                    {
+                        List<dtreeview> floortreelist = new List<dtreeview>();
 
-                        var floorobj = dbfloor.GetDormitoryfloorByFloorID(floor.FloorId);
-                        dtreeview floortree = new dtreeview();
+                        foreach (var floor in floorlist)
+                        {
 
-                        floortree.nodeId = floorobj.ID.ToString();
-                        floortree.context = floorobj.FloorName;
-                        floortree.last = true;
-                        floortree.parentId = tunglist[i].Id.ToString();
-                        floortree.level = 1;
-                        floortreelist.Add(floortree);
+                            var floorobj = dbfloor.GetDormitoryfloorByFloorID(floor.FloorId);
+                            dtreeview floortree = new dtreeview();
+
+                            floortree.nodeId = floorobj.ID.ToString();
+                            floortree.context = floorobj.FloorName;
+                            floortree.last = true;
+                            floortree.parentId = tunglist[i].Id.ToString();
+                            floortree.level = 2;
+                            floortreelist.Add(floortree);
+                           
+
+                        }
+                        if (floortreelist.Count != 0)
+                        {
+                            seconddtree.children = floortreelist;
+                        }
+                        else
+                        {
+                            seconddtree.last = true;
+                        }
                         dtreestatus.code = "200";
                         dtreestatus.message = "操作成功";
 
                     }
-                    if (floortreelist.Count != 0)
+                    catch (Exception ex)
                     {
-                        seconddtree.children = floortreelist;
+                        dtreestatus.code = "1";
+                        dtreestatus.code = "操作失败";
+                        throw;
                     }
-                    else
-                    {
-                        seconddtree.last = true;
-                    }
-
+                    childrendtreedata.Add(seconddtree);
                 }
-                catch (Exception ex)
-                {
-                    dtreestatus.code = "1";
-                    dtreestatus.code = "操作失败";
-                    throw;
-                }
+            }
+            else
+            {
+                dtreeview seconddtree = new dtreeview();
+                seconddtree.children = null;
+                seconddtree.context = "无数据";
+                seconddtree.last = true;
+                seconddtree.level = 1;
+                seconddtree.nodeId = null;
+                seconddtree.parentId = "0";
+                seconddtree.spread = true;
+                dtreestatus.code = "200";
+                dtreestatus.message = "操作成功";
                 childrendtreedata.Add(seconddtree);
             }
+           
 
             result.status = dtreestatus;
             result.data = childrendtreedata;
-
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
