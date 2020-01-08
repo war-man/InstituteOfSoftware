@@ -77,14 +77,26 @@ namespace SiliconValley.InformationSystem.Business.FinaceBusines
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public object DateCostitems(int page, int limit)
+        public object DateCostitems(int page, int limit,string grade_Id,string Typex)
         {
            
             var list = this.GetList().Where(a=>a.Rategory != cisitemesx.GetList().Where(z => z.Name == "其它" && z.IsDelete == false).FirstOrDefault().id).Select(a=>new {
                 a.id,a.Name,a.Amountofmoney,Stage=a.Grand_id>0? Grandcontext.GetEntity(a.Grand_id).GrandName:"暂无",
                 Typex= cisitemesx.GetEntity(a.Rategory).Name,
+                a.Grand_id,
+                a.Rategory,
                 a.IsDelete
             }).ToList();
+            if (!string.IsNullOrEmpty(grade_Id))
+            {
+                int gradeid = int.Parse(grade_Id);
+                list= list.Where(a => a.Grand_id == gradeid).ToList();
+            }
+            if (!string.IsNullOrEmpty(Typex))
+            {
+                int TypexID = int.Parse(Typex);
+                list = list.Where(a => a.Rategory == TypexID).ToList();
+            }
             var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
             var data = new

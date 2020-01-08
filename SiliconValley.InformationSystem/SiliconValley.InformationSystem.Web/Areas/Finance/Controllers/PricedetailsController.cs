@@ -42,7 +42,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         //学员费用明目页面
         public ActionResult Studentfees()
         {
-          
+            //阶段
+            ViewBag.grade_Id = Grandcontext.GetList().Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
+            //商品类别
+            ViewBag.Typex = costitemssX.GetList().Where(a=>a.IsDelete==false&&a.id!= costitemssX.GetList().Where(z => z.Name == "其它" && z.IsDelete == false).FirstOrDefault().id).Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() });
             return View();
         }
     
@@ -69,9 +72,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
           return  costitemsBusiness.BoolName(ids, Name);
         }
         //查询所有名目数据
-        public ActionResult DateCostitems(int page,int limit)
+        public ActionResult DateCostitems(int page,int limit,string grade_Id,string Typex)
         {
-            return Json(costitemsBusiness.DateCostitems(page, limit), JsonRequestBehavior.AllowGet);
+            return Json(costitemsBusiness.DateCostitems(page, limit,grade_Id,Typex), JsonRequestBehavior.AllowGet);
         }
 
         //学费明目类型
