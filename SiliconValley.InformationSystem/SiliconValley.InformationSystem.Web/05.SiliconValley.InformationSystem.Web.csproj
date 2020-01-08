@@ -1500,6 +1500,9 @@
     <Content Include="Areas\CourseSyllabus\Views\Course\CourseTypeIndex.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\ChangeMCTime.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\EditEmpPFAssess.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\FeeReport.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Otherexpenses.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Tuitionandfees.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

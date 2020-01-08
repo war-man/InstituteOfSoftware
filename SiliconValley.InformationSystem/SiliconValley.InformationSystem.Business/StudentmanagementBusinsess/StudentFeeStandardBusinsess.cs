@@ -274,7 +274,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         {
             int countfee = 0;
             var idcost = costitemssX.GetList().Where(a => a.IsDelete == false && a.Name == "学杂费").FirstOrDefault().id;
-            var costitemslist = costitemsBusiness.costitemslist().Where(a => a.Rategory == idcost).ToList();
+            var costitemslist = costitemsBusiness.costitemslist().Where(a => a.Rategory == idcost&&a.IsDelete==false).ToList();
             foreach (var item in costitemslist)
             {
                 if (studentfee.GetList().Where(a => a.IsDelete == false && a.StudenID == studentid && a.Costitemsid == item.id).FirstOrDefault() != null)
@@ -283,7 +283,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 }
             }
 
-            return costitemsBusiness.GetList().Where(a => a.Grand_id == Grand_id).Select(a => new { a.id, a.Name, a.Amountofmoney, Rategory = costitemssX.GetEntity(a.Rategory).Name, countfee }).ToList();
+            return costitemsBusiness.GetList().Where(a => a.Grand_id == Grand_id&&a.IsDelete==false).Select(a => new { a.id, a.Name, a.Amountofmoney, Rategory = costitemssX.GetEntity(a.Rategory).Name, countfee }).ToList();
         }
         /// <summary>
         /// 根据学号获取姓名，性别，班级，身份证，学号
