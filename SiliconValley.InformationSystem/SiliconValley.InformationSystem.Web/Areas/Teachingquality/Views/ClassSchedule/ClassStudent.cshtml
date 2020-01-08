@@ -921,7 +921,7 @@
                 type: 2,
                 area: ['1000px', '700px']
                 , content: "/Teachingquality/ClassSchedule/Entranceexaminationresults?ClassID=" + $("#ClassName").text()
-                , end: function () { StudentDate(); }
+                , end: function () {  }
                 , anim: 1,
                 //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
             });
@@ -951,16 +951,16 @@
             var dbase = {
                 ClassName:@Html.Raw(ViewBag.ClassID),
             };
-            WhateverAdd("/Teachingquality/ClassSchedule/EntitAddClassSchedule", dbase);
-            StudentDate();
+            Gotoschool("/Teachingquality/ClassSchedule/EntitAddClassSchedule", dbase);
+      
         }); 
         //S4毕业
         $("#ClassEnd").click(function () {
             var dbase = {
                 ClassID:@Html.Raw(ViewBag.ClassID),
             };
-           WhateverAdd("/Teachingquality/ClassSchedule/ClassEnd", dbase);
-            StudentDate();
+            Gotoschool("/Teachingquality/ClassSchedule/ClassEnd", dbase);
+          
         });
     });
   
