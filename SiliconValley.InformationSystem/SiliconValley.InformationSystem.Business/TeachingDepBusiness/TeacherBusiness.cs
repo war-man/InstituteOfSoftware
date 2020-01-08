@@ -148,7 +148,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             //从缓存中获取
             RedisCache redisCache = new RedisCache();
-            redisCache.RemoveCache("TeacherList");
+            
             resultlist = redisCache.GetCache<List<Teacher>>("TeacherList");
             
 
