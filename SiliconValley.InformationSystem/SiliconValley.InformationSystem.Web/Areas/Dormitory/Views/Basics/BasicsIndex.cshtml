@@ -34,7 +34,7 @@
 </script>
 @section script{
     <script>
-        var myDTree;
+        var myDTree, table11;
         layui.extend({
             dtree: '{/}/Scripts/dtree2.5.4/layui_ext/dleiool/dtree'
         }).use([ 'layer', 'table', 'dtree', ], function () {
@@ -193,7 +193,7 @@
                 });
             }
 
-            var table11 = table.render({
+            table11 = table.render({
                 elem: '#mytable'
                 , skin: 'line' //行边框风格
                 , even: true //开启隔行背景
@@ -235,14 +235,7 @@
                     , { field: 'Remark', title: '备注', width: 350 }
                 ]]
             });
-            function loadtable11() {
-                table11.reload({
-                    url: '/Dormitory/RoomDisabled/SeachData'
-                    , page: {
-                        curr: 1 //重新从第 1 页开始
-                    }
-                });
-            }
+      
             //头工具栏事件
             table.on('toolbar(mytable)', function (obj) {
                 switch (obj.event) {
@@ -262,6 +255,18 @@
 
         });
 
+        ///加载表格
+        function loadtable() {
+            console.log('join');
+            table11.reload({
+                 url: '/Dormitory/Basics/SeachData'
+                , page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        }
+
+ 
         //加载树
         function loadtree() {
             $.ajax({
@@ -269,6 +274,7 @@
                 type: 'GET',
                 success: function (successdata) {
                     console.log(successdata);
+                    loadtable();
                     // var nodes = JSON.parse(successdata);
                     //console.log(nodes);
                     //可以重载所有基础参数
@@ -284,6 +290,7 @@
                 }
             });
         }
+  
 
 
     </script>

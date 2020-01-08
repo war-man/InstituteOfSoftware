@@ -80,10 +80,11 @@
                 elem: '#EmpStaffTab'
                 , shade: 3
                 , url: '/Obtainemployment/EmploymentCommissioner/SearchData/'
+                , page: true
                 , cols: [[
-                    { type: 'checkbox', fixed: 'left' }
-                    , { field: 'EmploymentStaffID', title: 'ID', hide: true }
-                    , { field: 'EmployeeId', title: '员工编号', sort: true }
+                  
+                    { field: 'EmploymentStaffID', title: 'ID', hide: true }
+                    , { field: 'EmployeeId', title: '员工编号'/*, sort: true*/ }
                     , { field: 'EmpName', title: '姓名' }
                     , { field: 'Sex', title: '性别' }
                     , { field: 'AreaName', title: '就业区域' }
@@ -91,7 +92,7 @@
                     , { field: 'TakeClasses', title: '所带班级' }
                     , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }
                 ]]
-                , page: true
+                
             });
             MrDtableIns = tableIns;
             ////监听行工具事件

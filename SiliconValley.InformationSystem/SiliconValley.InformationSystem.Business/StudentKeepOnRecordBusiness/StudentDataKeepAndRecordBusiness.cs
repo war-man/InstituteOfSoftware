@@ -227,9 +227,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <param name="EmpyId">员工编号</param>
         /// <returns></returns>
         public List<StudentPutOnRecord> GetrReport(string EmpyId)
-        {
+        {    //获取报名id
+            Statu_Entity = new StuStateManeger();
+            int id = Statu_Entity.GetList().Where(s => s.StatusName == "已报名").FirstOrDefault().Id;
             //根据员工获取报名的数据
-            return this.GetList().Where(s => s.StuStatus_Id == 2 && s.EmployeesInfo_Id == EmpyId).ToList();
+            return this.GetList().Where(s => s.StuStatus_Id == id && s.EmployeesInfo_Id == EmpyId).ToList();
         }
         /// <summary>
         /// 获取某一年的每个月的上门量

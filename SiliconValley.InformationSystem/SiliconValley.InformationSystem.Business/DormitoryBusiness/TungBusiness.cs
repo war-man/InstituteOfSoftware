@@ -18,12 +18,11 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         /// </summary>
         /// <returns></returns>
         public List<Tung> GetTungs() {
-            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();                      
         }
 
         /// <summary>
-        /// 根据栋id获取栋对象
-        /// </summary>
+            /// </summary>
         /// <param name="TungID"></param>
         /// <returns></returns>
         public Tung GetTungByTungID(int TungID) {

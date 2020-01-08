@@ -80,7 +80,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
                     {
                         if (dbfloor.verifyname(floorids))
                         {
-                            ajaxResult.Msg = "摸瞎几把乱搞";
+                            ajaxResult.Msg = "名字冲突！";
                             ajaxResult.Success = false;
                         }
                         else
