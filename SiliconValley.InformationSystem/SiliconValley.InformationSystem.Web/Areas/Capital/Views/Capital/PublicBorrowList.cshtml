@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewBag.Title = "PublicBorrowList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="layui-hide" id="table0" lay-filter="table0"></table>
+@section script{
+    <script>
+
+
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer; //layui对象
+
+            //时间转换方法
+            function TimeChange(newtime) {
+                if (newtime == null)
+                    return "";
+                var date = new Date(parseInt(newtime.slice(6)));
+                var year = date.getFullYear();
+                var month = date.getMonth();
+                if (month < 10) {
+                    month = "0" + Number(month + 1);
+                }
+                var day = date.getDate();
+                if (day < 10) {
+                    day = "0" + day;
+                }
+                var result = year + '-' + month + '-' + day;
+                return result;
+            }
+
+
+
+            //展示已知数据
+            var tableIns = table.render({
+                elem: '#table0'
+                , url: '/Capital/Capital/PublicBorrowListData' //数据接口
+                , page: true //开启分页
+                , even: true //开启隔行背景
+                , limit: 15
+                , limits: [15, 30, 45, 60, 75]
+                , cols: [[ //标题栏
+                    {type:'checkbox'}
+                    , { field: 'ID', title: 'ID', width: 165, hide: true }
+                    , { field: 'EmpName', title: '员工姓名', width: 165 }
+                    , { field: 'Phone', title: '员工电话', width: 165 }
+                    , { field: 'DeptName', title: '员工部门', width: 165 }
+                    , { field: 'PositionName', title: '员工职位', width: 165 }
+                    , { field: 'DebitMoney', title: '借资金额', width: 145 }
+                    , { field: 'Debitwhy', title: '借资原因', width: 165 }
+                    , {
+                        field: 'date', title: '借资时间', width: 165, templet: function (v) {
+                            return TimeChange(v.date);
+                        }
+                    }
+                ]]
+
+            });
+
+            //显示条件查询
+            function WhyShow(value) {
+                tableIns.reload({
+                    where: {
+                        whyshow: value
+                    }
+                    , page: {
+                        curr: 1
+                    }
+                });
+            }
+        });
+    </script>
+}
+
+
+

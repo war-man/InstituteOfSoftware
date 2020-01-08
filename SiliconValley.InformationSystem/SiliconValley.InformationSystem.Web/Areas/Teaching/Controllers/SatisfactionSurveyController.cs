@@ -1468,7 +1468,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             //获取班级
 
-            var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList().Where(d=>d.ClassstatusID == null);
+            var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList().Where(d=>d.ClassstatusID == null).ToList();
             
             ViewBag.classlist = classlist;
 

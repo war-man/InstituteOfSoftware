@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
         public bool verifyname(string param0)
         {
             bool result = false;
-            var aa = this.GetDormitoryfloors().Where(a => a.FloorName == param0);
+            var aa = this.GetDormitoryfloors().Where(a => a.FloorName == param0).FirstOrDefault();
             if (aa != null)
             {
                 return true;

@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
     using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView;
     using SiliconValley.InformationSystem.Util;
     using System.IO;
@@ -138,9 +139,45 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         {
             CourseBusiness courseBusiness = new CourseBusiness();
 
-           List<Curriculum> curricullist = courseBusiness.GetCurriculaByMajor(majorid);
+            List<Curriculum> curricullist = new List<Curriculum>();
 
-            return Json(curricullist,JsonRequestBehavior.AllowGet);
+            if (majorid == -1)
+            {
+                //获取公共课
+                curricullist = courseBusiness.GetCurriculas().Where(d => d.MajorID == null).ToList();
+
+
+            }
+            else
+            {
+                curricullist = courseBusiness.GetCurriculaByMajor(majorid);
+            }
+
+
+            // 转化类型
+
+            List<CourseView> resultlist = new List<CourseView>();
+
+            foreach (var item in curricullist)
+            {
+                try
+                {
+                    var tempobj = courseBusiness.ToCourseView(item);
+
+                    if (tempobj != null)
+                    {
+                        resultlist.Add(tempobj);
+                    }
+                }
+                catch (Exception)
+                {
+
+                    
+                }
+                
+            }
+
+            return Json(resultlist, JsonRequestBehavior.AllowGet);
 
         }
 
@@ -344,7 +381,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             foreach (var item in skiplist)
             {
-               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item);
+               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item, true);
 
                 resultlist.Add(tempobj);
             }
@@ -475,7 +512,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
            var tempobj = db_answerQuestion.AllAnswerQuestion().Where(d => d.ID == id).FirstOrDefault();
 
-            var obj = db_answerQuestion.ConvertToAnswerQuestionView(tempobj);
+            var obj = db_answerQuestion.ConvertToAnswerQuestionView(tempobj, true);
 
 
             return View(obj);
@@ -516,7 +553,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             foreach (var item in skiplist)
             {
 
-               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item);
+               var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item, true);
                 resultlist.Add(tempobj);
 
             }
@@ -566,7 +603,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             foreach (var item in skiplist)
             {
 
-                  var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item);
+                  var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item, true);
 
                 resultlist.Add(tempobj);
 
@@ -693,7 +730,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             var obj = db_computerTestQuestion.AllComputerTestQuestion().Where(d=>d.ID==int.Parse( list[0])).FirstOrDefault();
 
-            var result = db_computerTestQuestion.ConvertToComputerTestQuestionsView(obj);
+            var result = db_computerTestQuestion.ConvertToComputerTestQuestionsView(obj, true);
 
             ViewBag.ComputerTestQuestionIds = ids;
 
@@ -703,9 +740,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             ViewBag.ids = ids;
 
-            var question = db_computerTestQuestion.Read_RTF_File(obj.SaveURL);
+            
 
-            ViewBag.Question = question;
+            
 
             return View(result);
 
@@ -781,7 +818,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             foreach (var item in skiplist)
             {
 
-                var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item);
+                var tempobj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item, true);
                 resultlist.Add(tempobj);
 
             }

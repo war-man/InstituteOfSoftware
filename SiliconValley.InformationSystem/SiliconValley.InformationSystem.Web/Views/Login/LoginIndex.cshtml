@@ -75,6 +75,11 @@
     <script src="~/Scripts/js/fun.base.js"></script>
     <script src="~/Scripts/js/script.js"></script>
     <script>
+        $("body").keydown(function (e) {
+            if (e.keyCode==13) {
+              //  $("#studentLoginbtn").click();
+            }
+        })
         //弹出一个注册的弹框
         //function LINK() {
         //    layui.use('layer', function () {

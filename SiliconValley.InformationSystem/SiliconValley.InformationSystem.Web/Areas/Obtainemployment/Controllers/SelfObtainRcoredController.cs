@@ -45,44 +45,41 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult EstablishTree()
         {
 
-            dbquarter = new QuarterBusiness();
-            dbempQuarterClass = new EmpQuarterClassBusiness();
-            dbproClassSchedule = new ProClassSchedule();
-            dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
-            dbemploymentStaff = new EmploymentStaffBusiness();
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-            var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
-            //第一层
-            var querydata = new List<EmploymentYearView>();
-            bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
-            if (!isJurisdiction)
-            {
-                var data = dbquarter.GetQuartersByempid(queryempstaff.ID);
-                querydata = dbquarter.yearplan(data);
-            }
-            else
-            {
-                var data = dbquarter.GetQuarters();
-                querydata = dbquarter.yearplan(data);
-            }
-
-
-
             //返回的结果
             resultdtree result = new resultdtree();
-
             //状态
             dtreestatus dtreestatus = new dtreestatus();
-
             //最外层的儿子数据
             List<dtreeview> childrendtreedata = new List<dtreeview>();
-
-            for (int i = 0; i < querydata.Count; i++)
+            try
             {
+                dbquarter = new QuarterBusiness();
+                dbempQuarterClass = new EmpQuarterClassBusiness();
+                dbproClassSchedule = new ProClassSchedule();
+                dbemploymentJurisdiction = new EmploymentJurisdictionBusiness();
+                dbemploymentStaff = new EmploymentStaffBusiness();
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                var queryempstaff = dbemploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
                 //第一层
-                dtreeview seconddtree = new dtreeview();
-                try
+                var querydata = new List<EmploymentYearView>();
+                bool isJurisdiction = dbemploymentJurisdiction.isstaffJurisdiction(user);
+                if (!isJurisdiction)
                 {
+                    var data = dbquarter.GetQuartersByempid(queryempstaff.ID);
+                    querydata = dbquarter.yearplan(data);
+                }
+                else
+                {
+                    var data = dbquarter.GetQuarters();
+                    querydata = dbquarter.yearplan(data);
+                }
+
+                
+                for (int i = 0; i < querydata.Count; i++)
+                {
+                    //第一层
+                    dtreeview seconddtree = new dtreeview();
+
                     //if (i == 0)
                     //{
                     //    seconddtree.spread = true;
@@ -187,16 +184,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     {
                         seconddtree.last = true;
                     }
-                    dtreestatus.code = "200";
-                    dtreestatus.message = "操作成功";
+                    childrendtreedata.Add(seconddtree);
+                 
                 }
-                catch (Exception ex)
-                {
-                    dtreestatus.code = "1";
-                    dtreestatus.code = "操作失败";
-                    throw;
-                }
-                childrendtreedata.Add(seconddtree);
+
+                dtreestatus.code = "200";
+                dtreestatus.message = "操作成功";
+
+            }
+            catch (Exception ex)
+            {
+                dtreestatus.code = "1";
+                dtreestatus.code = "操作失败";
+                throw;
             }
 
             result.status = dtreestatus;

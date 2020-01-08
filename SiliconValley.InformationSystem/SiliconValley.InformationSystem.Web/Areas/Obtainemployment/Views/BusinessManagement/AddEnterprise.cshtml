@@ -48,110 +48,114 @@
     <div>
         <form class="layui-form" action="">
             <div class="layui-container">
-      
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">公司名</label>
-                            <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "lay-verify", "required|EntNameZz|EntNameOnly" }, { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">公司地址</label>
-                            <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "请输入公司地址" }, { "lay-reqtext", "公司名称不可为空" } })
-                            </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">公司名</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.EntName, new Dictionary<string, object>() { { "lay-verify", "required|EntNameZz|EntNameOnly" }, { "placeholder", "请输入公司名称" }, { "class", "layui-input " }, { "lay-reqtext", "公司名称不可为空" } })
                         </div>
                     </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">联系人姓名</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">联系方式</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone|EntPhoneOnly" }, { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
-                            </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">公司地址</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.EntAddress, new Dictionary<string, object>() { { "class", "layui-input " }, { "lay-verify", "required" }, { "placeholder", "请输入公司地址" }, { "lay-reqtext", "公司名称不可为空" } })
                         </div>
                     </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                            <label class="layui-form-label">公司规模</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="EntScale" value="少于50人" title="少于50人" checked="">
-                                <input type="radio" name="EntScale" value="50-100人" title="50-100人">
-                                <input type="radio" name="EntScale" value="150-500人" title="150-500人">
-                                <input type="radio" name="EntScale" value="500-1000人" title="500-1000人">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
-                            <label class="layui-form-label">公司性质</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="EntNature" value="国企" title="国企">
-                                <input type="radio" name="EntNature" value="外资（欧美）" title="外资（欧美）">
-                                <input type="radio" name="EntNature" value="外资（非欧美）" title="外资（非欧美）">
-                                <input type="radio" name="EntNature" value="上市公司" title="上市公司">
-                                <input type="radio" name="EntNature" value="合资" title="合资">
-                                <input type="radio" name="EntNature" value="民营公司" title="民营公司" checked="">
-                                <input type="radio" name="EntNature" value="外企代表处" title="外企代表处">
-                                <input type="radio" name="EntNature" value="政府机关" title="政府机关">
-                                <input type="radio" name="EntNature" value="事业单位" title="事业单位">
-                                <input type="radio" name="EntNature" value="非营利组织" title="非营利组织">
-                                <input type="radio" name="EntNature" value="创业公司" title="创业公司">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">公司福利</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.EntWelfare, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入公司福利" }, { "class", "layui-input" } })
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
-                    <div class="layui-row layui-form-item" id="Specialty">
-                        <label class="layui-form-label">公司所需要专业选择</label>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">联系人姓名</label>
                         <div class="layui-input-block">
-                            @{
-                                foreach (var item in ViewBag.Sepclist)
-                                {
-                                    <input type="checkbox" lay-filter="checks" name="@item.SpecialtyName" value="@item.Id" title="@item.SpecialtyName">
-                                }
+                            @Html.TextBoxFor(a => a.EntContacts, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入对方联系人名字" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">联系方式</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.EntPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone|EntPhoneOnly" }, { "placeholder", "请输入对方联系方式" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                        <label class="layui-form-label">公司规模</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="EntScale" value="少于50人" title="少于50人" checked="">
+                            <input type="radio" name="EntScale" value="50-100人" title="50-100人">
+                            <input type="radio" name="EntScale" value="150-500人" title="150-500人">
+                            <input type="radio" name="EntScale" value="500-1000人" title="500-1000人">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs11 layui-col-sm11 layui-col-md11">
+                        <label class="layui-form-label">公司性质</label>
+                        <div class="layui-input-block">
+                            <input type="radio" name="EntNature" value="国企" title="国企">
+                            <input type="radio" name="EntNature" value="外资（欧美）" title="外资（欧美）">
+                            <input type="radio" name="EntNature" value="外资（非欧美）" title="外资（非欧美）">
+                            <input type="radio" name="EntNature" value="上市公司" title="上市公司">
+                            <input type="radio" name="EntNature" value="合资" title="合资">
+                            <input type="radio" name="EntNature" value="民营公司" title="民营公司" checked="">
+                            <input type="radio" name="EntNature" value="外企代表处" title="外企代表处">
+                            <input type="radio" name="EntNature" value="政府机关" title="政府机关">
+                            <input type="radio" name="EntNature" value="事业单位" title="事业单位">
+                            <input type="radio" name="EntNature" value="非营利组织" title="非营利组织">
+                            <input type="radio" name="EntNature" value="创业公司" title="创业公司">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">公司福利</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.EntWelfare, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入公司福利" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+                <div class="layui-row layui-form-item" id="Specialty">
+                    <label class="layui-form-label">公司所需要专业选择</label>
+                    <div class="layui-input-block">
+                        @{
+                            foreach (var item in ViewBag.Sepclist)
+                            {
+                                <input type="checkbox" lay-filter="checks" name="@item.SpecialtyName" value="@item.Id" title="@item.SpecialtyName">
                             }
+                        }
+                    </div>
+                </div>
+
+                <div id="list" class="layui-row layui-form-item">
+
+
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
+                </div>
 
-                    <div id="list" class="layui-row layui-form-item">
 
-
-                    </div>
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">备注</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input" } })
-                            </div>
-                        </div>
-                    </div>
-
-         
             </div>
             <div class="layui-form-item">
-                <div class="layui-input-inline">
-                    <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" lay-submit="" lay-filter="demo1">添加</button>
+                    </div>
                 </div>
-                <div class="layui-input-inline">
-                    <button class="layui-btn" id="clode">取消</button>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-input-block">
+                        <button class="layui-btn" id="clode">取消</button>
+                    </div>
                 </div>
             </div>
         </form>
@@ -163,17 +167,17 @@
             <legend class="major">{{=content}}</legend>
             <div class="layui-row layui-form-item">
                 <div class="layui-block">
-             
+
                     <div class="layui-row layui-form-item">
                         <label class="layui-form-label">薪资:</label>
                         <div class="layui-input-block">
                             <input type="text" placeholder="请输入薪资" class="layui-input EntSalary" name="EntSalary{{=content}}">
                         </div>
                     </div>
-                
+
                 </div>
                 <div class="layui-block">
-                   
+
                     <div class="layui-row layui-form-item">
                         <label class="layui-form-label">岗位职责:</label>
                         <div class="layui-input-block">
@@ -184,14 +188,14 @@
 
                 </div>
                 <div class="layui-block">
-                  
+
                     <div class="layui-row layui-form-item">
                         <label class="layui-form-label">任职要求:</label>
                         <div class="layui-input-block">
                             <textarea placeholder="请输入内容" class="layui-textarea Requirements" name="Requirements{{=content}}"></textarea>
                         </div>
                     </div>
-                   
+
                 </div>
 
 
@@ -321,7 +325,7 @@
                 });
 
                 //准备jquery的Ajax（$.Ajax({})）
-                $.post("/BusinessManagement/AddEnterprise", { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) }, function (data) {
+                $.post("/Obtainemployment/BusinessManagement/AddEnterprise", { jsonStr: jsonStr, EntSpeeList: JSON.stringify(EntSpeeArry) }, function (data) {
                     console.log(data);
                     if (data.Success) {
                         layer.msg(data.Msg, { icon: 1 }, function () {

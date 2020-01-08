@@ -118,21 +118,21 @@ Main Components
 }
 .cd-accordion-menu input[type=checkbox]:checked + label::before {
   /* rotate arrow */
-  -webkit-transform: translateY(-50%);
+  /*-webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
   -ms-transform: translateY(-50%);
   -o-transform: translateY(-50%);
-  transform: translateY(-50%);
+  transform: translateY(-50%);*/
 }
 .cd-accordion-menu input[type=checkbox]:checked + label::after {
   /* show open folder icon if item is checked */
-  background-position: -32px 0;
+  /*background-position: -32px 0;*/
 }
 .cd-accordion-menu input[type=checkbox]:checked + label + ul,
 .cd-accordion-menu input[type=checkbox]:checked + label:nth-of-type(n) + ul {
   /* use label:nth-of-type(n) to fix a bug on safari (<= 8.0.8) with multiple adjacent-sibling selectors*/
   /* show children when item is checked */
-  display: block;
+  /*display: block;*/
 }
 .cd-accordion-menu ul label,
 .cd-accordion-menu ul a {

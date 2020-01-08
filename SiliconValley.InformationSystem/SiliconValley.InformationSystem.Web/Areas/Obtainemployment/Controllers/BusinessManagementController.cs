@@ -42,6 +42,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         /// 用户业务类
         /// </summary>
         private Base_UserBusiness base_UserBusiness;
+        private EmploymentStaffBusiness dbEmploymentStaff;
+
         /// <summary>
         /// 判断在企业专业表中，专业id是否对应这个一个企业Id
         /// </summary>
@@ -217,13 +219,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         [HttpPost]
         public ActionResult AddEnterprise(AddEnterpriseView jsonStr, string EntSpeeList)
         {
-            //现在只采用周炯这个员工  员工编号201908150003  专员id 2 区域id 1
+           
             Enter = new EnterpriseInfoBusiness();
             EnterpriseInfo enterpriseInfo = new EnterpriseInfo();
             var AjaxResultss = new AjaxResult();
-
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            dbEmploymentStaff = new EmploymentStaffBusiness();
+            EmploymentStaff staff = dbEmploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+          
             //添加企业基础信息
-            enterpriseInfo.EmpStaffID = 2;
+            enterpriseInfo.EmpStaffID = staff.ID;
             enterpriseInfo.EntAddress = jsonStr.EntAddress;
             enterpriseInfo.EntDate = DateTime.Now;
             enterpriseInfo.EntName = jsonStr.EntName;

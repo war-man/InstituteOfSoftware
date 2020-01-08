@@ -429,8 +429,6 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 return;
             }
 
-
-
             if (proctorList[0] != null)
             {
                 var headmaster = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[0]).FirstOrDefault();
@@ -438,13 +436,18 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 exammroom.Invigilator1 = headmaster.EmployeeId;
             }
 
-            if (proctorList[1] != null)
+            if (proctorList.Count > 1)
             {
-                var headmaster1 = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[1]).FirstOrDefault();
-                exammroom.Invigilator2 = headmaster1.EmployeeId;
+                if (proctorList[1] != null)
+                {
+                    var headmaster1 = db_emp.GetAll().Where(d => d.EmployeeId == proctorList[1]).FirstOrDefault();
+                    exammroom.Invigilator2 = headmaster1.EmployeeId;
 
-               
+
+                }
             }
+
+           
             db_examroom.Update(exammroom);
 
         }
@@ -597,7 +600,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var list = db_computerQuestion.AllComputerTestQuestion();
             foreach (var item in list)
             {
-                var obj = db_computerQuestion.ConvertToComputerTestQuestionsView(item);
+                var obj = db_computerQuestion.ConvertToComputerTestQuestionsView(item,true);
 
                 if (obj != null)
                 {

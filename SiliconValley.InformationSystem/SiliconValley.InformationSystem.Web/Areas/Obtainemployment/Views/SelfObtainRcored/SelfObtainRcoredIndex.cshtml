@@ -101,12 +101,15 @@
                     console.log(res);
                     //console.log($obj);
                     //console.log(first);
-                    empQuarterclassid = res.data[0].children[0].children[0].nodeId;
-                    myleave = 1;
-                    string2 = res.data[0].nodeId;
-                    treedata = res.data;
-                    loadtable();
-                    console.log(empQuarterclassid);
+                    if (res.data.length > 0) {
+                        empQuarterclassid = res.data[0].children[0].children[0].nodeId;
+                        myleave = 1;
+                        string2 = res.data[0].nodeId;
+                        treedata = res.data;
+                        loadtable();
+                        console.log(empQuarterclassid);
+                    }
+                 
                 },
                 formatter: {
                     title: function (data) {  // 示例给有子集的节点返回节点统计

@@ -43,12 +43,13 @@
     <div>
         <form class="layui-form" action="" lay-filter="">
             <div class="layui-container">
+                <input type="hidden" id="TransactionId" name="TransactionId" class="layui-input" />
                 <input type="hidden" id="EmployeeId" name="EmployeeId" class="layui-input" />
                 <div class="layui-row layui-form-item" style="margin-top:20px;">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">员工姓名:</label>
                         <div class="layui-input-block" style="width:200px;">
-                            <input type="text" id="EmpName" name="EmpName" class="layui-input" readonly lay-verify="required"/>
+                            <input type="text" id="EmpName" name="EmpName" class="layui-input" readonly lay-verify="required" />
                             <i class="layui-icon layui-icon-search" id="iconbtn" style="font-size: 25px; color:lightseagreen;float:left;margin:-28px 210px;"></i>
                         </div>
 
@@ -98,7 +99,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">现部门:</label>
                             <div class="layui-input-block">
-                                <input type="text" id="Depart" name="Depart" class="layui-input" style="border:0px" readonly/>
+                                <input type="text" id="Depart" name="Depart" class="layui-input" style="border:0px" readonly />
                             </div>
                         </div>
 

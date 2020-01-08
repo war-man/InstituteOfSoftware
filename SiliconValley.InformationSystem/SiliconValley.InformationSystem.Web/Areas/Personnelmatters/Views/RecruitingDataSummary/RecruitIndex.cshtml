@@ -17,7 +17,7 @@
             @*头部工具栏*@
             <script type="text/html" id="toolbarDemo2">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="addRPT">添加招聘追踪数据</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="addRPT"><i class="layui-icon layui-icon-add-1"></i>添加招聘追踪数据</button>
                 </div>
             </script>
             @*操作栏*@
@@ -28,12 +28,21 @@
         <div class="layui-tab-item">
             <form class="layui-form" action="" lay-filter="formtest">
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">部门:</label>
+                        <div class="layui-input-inline">
+                            <select name="deptid" id="deptid" style="width:130px;" lay-filter="deptidfilter" lay-search="">
+                            </select>
+
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
                         <label class="layui-form-label" style="width:100px;">岗位</label>
                         <div class="layui-input-block">
-                                <select name="Pid" id="Pid" lay-verify="required" lay-filter="pidfilter">
-                                    <option value="">请选择应聘的岗位</option>
-                                </select>
+                            <select name="Pid" id="Pid" lay-filter="pidfilter">
+                                <option value="">请选择应聘的岗位</option>
+                            </select>
                         </div>
                     </div>
 
@@ -42,7 +51,7 @@
                         <div class="layui-inline" style="margin-left:-50px;">
                             <label class="layui-form-label">从：</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM" lay-verify="start_time"  autocomplete="off" class="layui-input">
+                                <input type="text" id="start_time" name="start_time" placeholder="yyyy-MM" lay-verify="start_time" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
@@ -58,7 +67,7 @@
             </form>
 
             <table id="recruitTab" lay-filter="test3"></table>
-            
+
         </div>
 
     </div>
@@ -100,8 +109,8 @@
                 , limits: [1, 3, 6, 9, 12, 15, 18]
                 , limit: 6
                 , cols: [[
-                    , { field: 'Name', title: '姓名', sort: true, width: 58 }
-                    , { field: 'pname', title: '应聘岗位', sort: true, width: 105 }
+                      { field: 'Name', title: '姓名', sort: true, width: 90 }
+                    , { field: 'pname', title: '应聘岗位', sort: true, width: 120 }
                     , { field: 'PhoneNumber', title: '手机号', width: 96, sort: true }
                     , { field: 'TraceTime', title: '追踪时间', width: 108, sort: true, templet: function (d) { return GetYMD(d.TraceTime); } }
                     , { field: 'Channel', title: '渠道', width: 95, sort: true }
@@ -111,12 +120,12 @@
                     , { field: 'IsInterview', title: '是否面试', width: 100, templet: '#switchTp3', unresize: true }
                     , { field: 'FirstInterviewResult', title: '初试结果', width: 100 }
                     , { field: 'RetestDate', title: '复试日期', width: 100, templet: function (d) { return GetYMD(d.RetestDate); } }
-                    , { field: 'RetestResult', title: '复试结果', width: 100, templet:'#result'}
+                    , { field: 'RetestResult', title: '复试结果', width: 100, templet: '#result' }
                     , { field: 'OfferGiveTime', title: 'offer时间', width: 100, templet: function (d) { return changeDateTimeFormat(d.OfferGiveTime); } }
                     , { field: 'PlanEntryTime', title: '预计入职时间', width: 120, templet: function (d) { return GetYMD(d.PlanEntryTime); } }
                     , { field: 'IsEntry', title: '是否入职', width: 100, templet: '#switchTp2', unresize: true }
                     , { field: 'Remark', title: '备注', sort: true, width: 90 }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo'}
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
                 ]]
                 , page: true
             });
@@ -150,7 +159,7 @@
                     url: "/Personnelmatters/RecruitingDataSummary/EditRptIsentry",
                     data: { id: id, isdel: obj.elem.checked },
                     success: function (data) {
-                       // layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+                        // layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
                         layui.table.reload('myRecruitData');
                     }
                 });
@@ -165,7 +174,7 @@
                     url: "/Personnelmatters/RecruitingDataSummary/EditRptIsInterview",
                     data: { id: id, isdel: obj.elem.checked },
                     success: function (data) {
-                       // layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+                        // layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
                         layui.table.reload('myRecruitData');
                     }
                 });
@@ -190,8 +199,8 @@
                 , limit: 6
                 , cols: [[
                     , { field: 'YearAndMonth', title: '月份', sort: true, width: 82, templet: function (d) { return GetYearAndMonth(d.YearAndMonth); } }
-                    , { field: 'pname', title: '岗位', width: 100,sort: true }
-                    , { field: 'PlanRecruitNum', title: '计划招聘人数', width: 115,edit: 'text'}
+                    , { field: 'pname', title: '岗位', width: 100, sort: true }
+                    , { field: 'PlanRecruitNum', title: '计划招聘人数', width: 115, edit: 'text' }
                     , { field: 'ResumeSum', title: '简历总数', width: 100 }
                     , { field: 'OutboundCallSum', title: '电话呼出总数', width: 115 }
                     , { field: 'InstantInviteSum', title: '当月邀约总数', width: 115 }
@@ -202,7 +211,7 @@
                     , { field: 'InstantToFacesRate', title: '当月到面率', width: 105 }
                     , { field: 'InstantInviteRate', title: '当月邀约率', width: 105 }
                     , { field: 'InstantRetestPassrate', title: '当月复试通过率', width: 130 }
-                    , { field: 'EntryRate', title: '入职率',  width: 90 }
+                    , { field: 'EntryRate', title: '入职率', width: 90 }
                     , { field: 'RecruitPercentage', title: '招聘完成率', width: 105 }
                     , { field: 'Remark', title: '备注', width: 150, edit: 'text' }
 
@@ -250,6 +259,7 @@
 
             //模糊查询点击事件
             $("#Conditionselect").click(function () {
+                var deptid = $("#deptid").val();
                 var pname = $("#Pid").val();//员工所属岗位
                 var start_time = $("#start_time").val();//起始时间
                 var end_time = $("#end_time").val();//终止时间
@@ -260,7 +270,7 @@
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }, where: {
-                            AppCondition:  pname +"," + start_time + "," + end_time
+                            AppCondition: deptid + "," + pname + "," + start_time + "," + end_time
                         }
                     });
                 });
@@ -271,7 +281,7 @@
             //日期
             var startTime = laydate.render({
                 elem: '#start_time',
-                format:'yyyy-MM',
+                format: 'yyyy-MM',
                 done: function (value, date) {
                     endTime.config.min = {
                         year: date.year,
@@ -399,6 +409,61 @@
             }
         }
     </script>
+
+    @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
+    <script>
+        layui.use(['form', 'upload', 'layer'], function () {
+            var form = layui.form;
+            $.ajax({
+                url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
+                data: {},
+                dataType: "json",
+                success: function (resultData) {
+                    $("#deptid").empty();
+                    if (resultData.code == 0) {
+                        $("#deptid").append(new Option("请选择部门", ""));
+                        $.each(resultData.data, function (index, item) {
+                            $("#deptid").append(new Option(item.DeptName, item.DeptId));
+                        });
+                    } else {
+                        $("#deptid").append(new Option("暂无数据", ""));
+                    }
+                    layui.form.render("select");
+                }
+            });
+
+            //级联子项目
+            //select 监听
+            form.on('select(deptidfilter)', function (data) {
+                var value = data.value;  //select选中的值
+                $.ajax({
+                    url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
+                    data: { deptid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.code == 0) {
+                            //清空赋值
+                            $("#Pid").empty();
+                            $("#Pid").append(new Option("请选择岗位", ""));
+
+                            $.each(resultData.data, function (index, item) {
+                                //赋值
+                                $("#Pid").append(new Option(item.PositionName, item.Pid));
+                            });
+                        } else {
+                            $("#Pid").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            })
+            layui.form.render("select");
+
+        });
+
+
+    </script>
+
 
 
 }

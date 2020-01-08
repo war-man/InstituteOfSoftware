@@ -25,6 +25,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         private ProClassSchedule dbproClassSchedule;
         private SimulatInterviewBusiness dbsimulatInterview;
         private EmploymentStaffBusiness dbemploymentStaff;
+        private EmploymentStaffBusiness dbEmploymentStaff;
+
         // GET: Obtainemployment/SimulatInterview
         public ActionResult SimulatInterviewIndex()
         {
@@ -156,7 +158,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             {
                 dbsimulatInterview = new SimulatInterviewBusiness();
                 param0.AddDate = DateTime.Now;
-                param0.EntStaffID = 1007;
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+                dbEmploymentStaff = new EmploymentStaffBusiness();
+               EmploymentStaff employmentStaff=  dbEmploymentStaff.GetEmploymentByEmpInfoID(user.EmpNumber);
+                param0.EntStaffID = employmentStaff.ID;
                 param0.IsDel = false;
                 dbsimulatInterview.Insert(param0);
                 ajaxResult.Success = true;

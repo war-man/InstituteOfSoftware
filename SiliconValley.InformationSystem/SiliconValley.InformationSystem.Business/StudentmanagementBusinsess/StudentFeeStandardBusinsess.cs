@@ -756,5 +756,35 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             }
             return listdetailedcs;
         }
+        /// <summary>
+        /// 更改商品状态
+        /// </summary>
+        /// <param name="id">商品id</param>
+        /// <param name="Isdele">正常或者禁用</param>
+        /// <returns></returns>
+        public bool PaymentcommodityIsdele(int id, bool Isdele)
+        {
+            bool bol = true;
+            try
+            {
+                var cost = costitemsBusiness.GetEntity(id);
+                var costlist = costitemsBusiness.GetList().Where(a => a.Grand_id == cost.Grand_id && a.Name == cost.Name && a.Rategory == cost.Rategory && a.IsDelete == false).ToList();
+                foreach (var item in costlist)
+                {
+                    item.IsDelete = true;
+                }
+                costitemsBusiness.Update(costlist);
+                cost.IsDelete = Isdele;
+                costitemsBusiness.Update(cost);
+                BusHelper.WriteSysLog("修改学员学费及其它商品表", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            catch (Exception ex)
+            {
+                bol = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            return bol;
+
+        }
     }
 }

@@ -150,7 +150,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             try
             {
                 var tempobj = db_answerQuestion.AllAnswerQuestion().Where(d => d.ID == id && d.IsUsing == true).FirstOrDefault();
-                var obj = db_answerQuestion.ConvertToAnswerQuestionView(tempobj);
+                var obj = db_answerQuestion.ConvertToAnswerQuestionView(tempobj, true);
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";
@@ -176,7 +176,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             List<AnswerQuestionView> resultlist = new List<AnswerQuestionView>();
             foreach (var item in list)
             {
-                var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item);
+                var tempobj = db_answerQuestion.ConvertToAnswerQuestionView(item, true);
                 resultlist.Add(tempobj);
             }
             var obj = new {
@@ -200,7 +200,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             foreach (var item in list)
             {
-                var objtemp = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item);
+                var objtemp = db_computerTestQuestion.ConvertToComputerTestQuestionsView(item,true);
 
                 resultlist.Add(objtemp);
             }
@@ -223,7 +223,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             {
                 var tempobj = db_computerTestQuestion.AllComputerTestQuestion().Where(d => d.IsUsing == true).FirstOrDefault();
 
-                var obj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(tempobj);
+                var obj = db_computerTestQuestion.ConvertToComputerTestQuestionsView(tempobj, true);
 
                 result.ErrorCode = 200;
                 result.Data = obj;
@@ -398,9 +398,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             {
                 examination.ExamNo = db_examination.ProductExamNumber(examination);
 
+                var examview = db_examination.ConvertToExaminationView(examination);
+
                 db_examination.Insert(examination);
 
-                if (examination.ExamType == 2)
+                if (examview.ExamType.ExamTypeID == 2)
                 {
                     //记录课程
                     db_examination.ExamCouresConfigAdd(examination.ID, course);
@@ -408,8 +410,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
                 }
-
-
 
                 result.ErrorCode = 200;
                 result.Msg = "成功";

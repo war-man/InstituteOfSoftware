@@ -34,6 +34,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     {
                         ese.PerformancePay = 1000;
                     }
+                    else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                    {
+                        ese.PerformancePay = 3000;
+                    }
                     else
                     {
                         ese.PerformancePay = 500;
@@ -41,8 +45,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
                 }
                 else {
-                    ese.PerformancePay = null;
-                    ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary - ese.PerformancePay;
+
+                    ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary;
                 }
                
                             

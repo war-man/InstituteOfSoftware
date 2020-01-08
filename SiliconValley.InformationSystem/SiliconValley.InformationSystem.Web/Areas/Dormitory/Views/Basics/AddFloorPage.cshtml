@@ -153,7 +153,7 @@
                             success: function (successdata) {
                                 $(data.elem).attr("disabled","disabled");
                                 if (successdata.Success) {
-                                    layer.msg('操作成功！2秒后进入主页面', { icon: 6, time: 2000 }, function () {
+                                    layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
 
                                         var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                         parent.layer.close(index); //再执行关闭
@@ -170,7 +170,7 @@
                             }
                         });
                     } else {
-                        layer.msg("你没有选择任何楼层，2秒后进入主页面", { icon: 6, time: 2000 }, function () {
+                        layer.msg("你没有选择任何楼层，", { icon: 6, time: 2000 }, function () {
                             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                             parent.layer.close(index); //再执行关闭
                         })
@@ -183,7 +183,7 @@
                         data: { floorids: data.field.title, isagain: true, tungid: tungid },
                         success: function (successdata) {
                             if (successdata.Success) {
-                                layer.msg('操作成功！</br>进入主页面', { icon: 6, time: 2000 }, function () {
+                                layer.msg('操作成功！', { icon: 6, time: 2000 }, function () {
 
                                     var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
                                     parent.layer.close(index); //再执行关闭

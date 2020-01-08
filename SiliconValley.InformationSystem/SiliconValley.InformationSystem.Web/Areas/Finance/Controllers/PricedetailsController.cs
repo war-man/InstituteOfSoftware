@@ -146,7 +146,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         [HttpPost]
         public ActionResult Tuitionandfees(StudentFeeRecord studentFeeRecord)
         {
-            string aa = "aaa";
+          
             return Json(dbtext.Tuitionandfees(studentFeeRecord),JsonRequestBehavior.AllowGet);
         }
         //学员缴费页面
@@ -295,7 +295,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.TypeID = costitemssX.GetList().Select(a => new SelectListItem { Text = a.Name, Value = a.id.ToString() });
             return View();
         }
-        
         /// <summary>
         /// 获取缴费名目
         /// </summary>
@@ -333,5 +332,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.DateTatal(StudentID, Name, TypeID, qBeginTime, qEndTime), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 更改商品状态
+        /// </summary>
+        /// <param name="id">商品id</param>
+        /// <param name="Isdele">正常或者禁用</param>
+        /// <returns></returns>
+        public ActionResult PaymentcommodityIsdele(int id, bool Isdele)
+        {
+            return Json(dbtext.PaymentcommodityIsdele(id, Isdele), JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

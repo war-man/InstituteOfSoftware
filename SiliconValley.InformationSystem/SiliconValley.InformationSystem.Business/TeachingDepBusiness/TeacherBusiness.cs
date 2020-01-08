@@ -141,7 +141,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// 获取所有教员
         /// </summary>
         /// <returns></returns>
-        public List<Teacher> GetTeachers()
+        public List<Teacher> GetTeachers(bool isContains_Jiaowu = false)
         {
 
             List<Teacher> resultlist = new List<Teacher>();
@@ -171,6 +171,12 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 redisCache.SetCache("TeacherList", resultlist);
             }
 
+            if (isContains_Jiaowu)
+            {
+                return resultlist.OrderByDescending(d => d.TeacherID).ToList();
+            }
+           
+
             //排除掉教务
 
             List<Teacher> returnlist = new List<Teacher>();
@@ -191,8 +197,8 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             }
 
-            
-            return returnlist.OrderByDescending(d=>d.TeacherID) .ToList();
+            return returnlist.OrderByDescending(d => d.TeacherID).ToList();
+
 
         }
         /// <summary>
@@ -1032,7 +1038,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             try
             {
 
-               var obj = this . GetTeachers().Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
+               var obj = this . GetTeachers(true).Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
 
                 obj.IsDel = true;
 
