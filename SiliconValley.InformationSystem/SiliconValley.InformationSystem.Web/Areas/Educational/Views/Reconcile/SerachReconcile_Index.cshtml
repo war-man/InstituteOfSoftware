@@ -214,16 +214,18 @@
                 , toolbar: '#Recon_toolbarDemo'
                 , url: '/Educational/Reconcile/GetReconAllData'
                 , cols: [[
-                     { field: 'class_name', title: '班级', fixed: 'left' }
+                    { type: 'radio'}
+                    , { field: 'class_name', title: '班级' }
                     , { field: 'classroom_name', title: '教室', }
                     , { field: 'currname', title: '课程' }
                     , { field: 'timeName', title: '上课时间段' }
-                    , { field: 'teacher_name', title: '任课老师' }
+                    , { field: 'teacher_name', title: '任课老师' }                    
                     , {
                         field: 'time', title: '日期', templet: function (res) {
                             return TimeChange(res.time);
                         }
                     }
+                    , { field: 'rake', title: '说明' }
                     , { fixed: 'right', title: '操作', toolbar: '#Recon_barDemo', width: 150 }
                 ]]
                 , page: true

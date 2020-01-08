@@ -769,6 +769,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                timeName=r.Curse_Id,
                time=r.AnPaiDate,
                classroom_id=r.ClassRoom_Id,
+               rake=r.Rmark,
                classroom_name=Reconcile_Com.Classroom_Entity.GetEntity( r.ClassRoom_Id).ClassroomName//获取教室名称
             }).ToList();
 
@@ -986,6 +987,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     {
                         a.Msg = "修改排课数据错误！！！";
                     }
+                }
+                else
+                {
+                    a.Success = false;
+                    a.Msg = "修改数据失败！！！";
                 }
                 return Json(a, JsonRequestBehavior.AllowGet);
             }

@@ -42,7 +42,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             {
                 foreach (var item2 in get_t)
                 {
-                    if (item2.TeacherID==item1.TearchID)
+                    if (item2.TeacherID==item1.TearchID && item2.IsDel==false)
                     {
                        bool s= IsOrride(ts,item2.TeacherID);
                         if (s==false)
