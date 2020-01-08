@@ -79,9 +79,11 @@ namespace SiliconValley.InformationSystem.Business.FinaceBusines
         /// <returns></returns>
         public object DateCostitems(int page, int limit)
         {
-            var list = this.GetList().Where(a => a.IsDelete == false).Select(a=>new {
+           
+            var list = this.GetList().Where(a=>a.Rategory != cisitemesx.GetList().Where(z => z.Name == "其它" && z.IsDelete == false).FirstOrDefault().id).Select(a=>new {
                 a.id,a.Name,a.Amountofmoney,Stage=a.Grand_id>0? Grandcontext.GetEntity(a.Grand_id).GrandName:"暂无",
-                Typex= cisitemesx.GetEntity(a.Rategory).Name
+                Typex= cisitemesx.GetEntity(a.Rategory).Name,
+                a.IsDelete
             }).ToList();
             var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();

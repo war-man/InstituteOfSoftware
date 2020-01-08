@@ -14,12 +14,20 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="AddHeadClass"><i class="layui-icon">&#xe613;</i>添加带班</button>
-          </div>
-      
+        </div>
+
     </script>
     @*右边按钮*@
     <script type="text/html" id="barDemo">
         <a class="layui-btn layui-btn-xs" lay-event="select">带班记录</a>
+    </script>
+    @*开关按钮*@
+    <script type="text/html" id="IsAttend">
+        {{#if (d.IsAttend ==true){ }}
+        <input type="checkbox" zid={{d.ID}} checked="checked" lay-skin="switch" lay-filter="switchTest" lay-text="允许|禁止">
+        {{#  }else{ }}
+        <input type="checkbox" zid={{d.ID}}  lay-skin="switch" lay-filter="switchTest" lay-text="允许|禁止">
+        {{#   } }}
     </script>
     <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
     <script>
@@ -42,12 +50,13 @@
                     , { field: 'informatiees_Name', title: '班主任姓名' }
                     , { field: 'informatiees_Sex', title: '班主任性别' }
                     , { field: 'Name', title: '岗位' }
-                    , { field:'DeptName',title:'部门'}
+                    , { field: 'DeptName', title: '部门' }
                     , {
                         field: 'EntryTime', title: '入职日期', templet: function (c) {
                             return TimeChange(c.EntryTime);
                         }
                     }
+                    , { fixed: 'right', title: '是否能上质素课', toolbar: '#IsAttend',width:150 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true
@@ -90,6 +99,27 @@
 
                 window.location = "/Teachingquality/Headteacher/Successionrecord?HeadID=" + data.ID;
 
+            });
+
+            //监听指定开关
+            form.on('switch(switchTest)', function (data) {
+                var check = this.checked == true ? false : true;
+                if (confirm("您确认更改吗？")) {
+                    //点击确定后操作
+                    var dbser = {
+                        Isdele: this.checked,
+                        id: $(data.elem).attr("zid")
+                    };
+                    $.post("/Teachingquality/Headteacher/IsAttend", dbser, function (da) {
+                        if (da == true) {
+                            
+                        }
+                    });
+             
+                } else {
+                    $(this).prop("checked", check)
+                    layui.form.render();
+                }
             });
         })
     </script>

@@ -105,7 +105,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         public List<Costitems> Costlist(string Studentid,int Typeid)
         {
            
-           var lsit= this.GetList().Where(a => a.IsDelete == false && a.StudentNumber == Studentid).ToList();
+           var lsit= this.GetList().Where(a => a.StudentNumber == Studentid&&a.IsDelete==false).ToList();
             List<DetailsofCharges> mylist = new List<DetailsofCharges>();
             foreach (var item in lsit)
             {
@@ -116,23 +116,44 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             {
                 costlist.Add(costitemsBusiness.GetEntity(item.Costitemsid));
             }
-
-            var listtitme = costitemsBusiness.costitemslist().Where(a => a.Rategory == Typeid).ToList();
+           
+            var listtitme = costitemsBusiness.costitemslist().Where(a => a.Rategory == Typeid&&a.IsDelete==false).ToList();
             if (costlist.Count>0)
             {
-                for (int i = listtitme.Count-1; i >=0; i--)
+                //for (int i = listtitme.Count-1; i >=0; i--)
+                //{
+                //    foreach (var item in costlist)
+                //    {
+                //        if (listtitme.Count>0)
+                //        {
+                //            if (listtitme[i].Name == item.Name)
+                //            {
+                //                listtitme.Remove(listtitme[i]);
+                //            }
+                //        }
+                //        else
+                //        {
+                //            break;
+                //        }
+
+                //    }
+                //}
+                foreach (var item in costlist)
                 {
-                    foreach (var item in costlist)
+                    if (listtitme.Count>0)
                     {
-                        if (listtitme.Count>0)
+                        for (int i = listtitme.Count - 1; i >= 0; i--)
                         {
-                            if (listtitme[i].id == item.id)
+                            if (listtitme.Count > 0)
                             {
-                                listtitme.Remove(listtitme[i]);
+                                if (listtitme[i].Name == item.Name)
+                                {
+                                    listtitme.Remove(listtitme[i]);
+                                }
                             }
                         }
-                       
                     }
+                  
                 }
             }
             return listtitme; ;
@@ -389,8 +410,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         /// </summary>
         /// <param name="name">学校名称</param>
         /// <returns></returns>
-        public int BoolUndergraduateschool(string name)
-        {
+        public int BoolUndergraduateschool(string name){
           return  UndergraduateschoolBunsiness.GetList().Where(a => a.IsDelete == false && a.SchoolName == name).ToList().Count();
         }
         /// <summary>
