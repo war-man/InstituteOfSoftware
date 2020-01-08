@@ -455,6 +455,8 @@
     <Content Include="Areas\Teaching\css\zzsc.css" />
     <Content Include="Areas\Teaching\fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Config\ExamCourseconfig.xml" />
+    <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -1511,6 +1513,7 @@
     <Content Include="Areas\Capital\Views\Capital\BorrowMoney.cshtml" />
     <Content Include="Areas\Capital\Views\Capital\PublicBorrowList.cshtml" />
     <Content Include="Areas\Capital\Views\Capital\DoPrefundingList.cshtml" />
+    <Content Include="Config\MyExcelClass.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

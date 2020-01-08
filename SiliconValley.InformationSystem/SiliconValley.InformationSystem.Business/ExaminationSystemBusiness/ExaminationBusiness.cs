@@ -594,7 +594,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return list;
         }
 
-        public List<ComputerTestQuestionsView> AllComputerTestQuestion()
+        public List<ComputerTestQuestionsView> AllComputerTestQuestion(bool IsNeedProposition = true)
         {
             List<ComputerTestQuestionsView> resutlist = new List<ComputerTestQuestionsView>();
             var list = db_computerQuestion.AllComputerTestQuestion();

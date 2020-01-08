@@ -143,13 +143,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public List<Teacher> GetTeachers(bool isContains_Jiaowu = false)
         {
-
+          
             List<Teacher> resultlist = new List<Teacher>();
 
             //从缓存中获取
             RedisCache redisCache = new RedisCache();
-
+            
             resultlist = redisCache.GetCache<List<Teacher>>("TeacherList");
+            
 
             if (resultlist == null || resultlist.Count == 0)
             {
@@ -1038,7 +1039,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             try
             {
 
-               var obj = this . GetTeachers(true).Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
+               var obj = this.GetTeachers(true).Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
 
                 obj.IsDel = true;
 
