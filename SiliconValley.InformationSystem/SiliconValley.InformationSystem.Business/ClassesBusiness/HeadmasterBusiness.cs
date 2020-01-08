@@ -29,6 +29,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             informatiees.IsDelete = false;
             informatiees.AddTime = DateTime.Now;
             informatiees.informatiees_Id = informatiees_Id;
+                informatiees.IsAttend = true;
                 
                 this.Insert(informatiees);
                 BusHelper.WriteSysLog("添加班主任成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
@@ -400,6 +401,31 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             }
             return bol;
             
+        }
+        /// <summary>
+        /// 是否允许或者禁止班主任上质素课
+        /// </summary>
+        /// <param name="id">班主任表主键id</param>
+        /// <param name="Isdele">允许或者拒绝</param>
+        /// <returns></returns>
+        public bool IsAttend(int id,bool Isdele)
+        {
+            bool str=true;
+            try
+            {
+                var headmaster = this.GetEntity(id);
+                headmaster.IsAttend = Isdele;
+                this.Update(headmaster);
+               
+                BusHelper.WriteSysLog("班主任表修改质素课属性数据", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            catch (Exception ex)
+            {
+                str = false;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            return str;
+
         }
     }
 }

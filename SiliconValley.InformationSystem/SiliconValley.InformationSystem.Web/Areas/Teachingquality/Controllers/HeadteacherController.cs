@@ -59,8 +59,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         informatiees_Sex = emp.Where(a=>a.EmployeeId==c.informatiees_Id).FirstOrDefault().Sex ,
         Name = business.GetList().Where(a=>a.Pid== emp.Where(q=>q.EmployeeId==c.informatiees_Id).FirstOrDefault().PositionId&&a.IsDel==false).FirstOrDefault().PositionName,
         EntryTime = emp.Where(a=>a.EmployeeId==c.informatiees_Id).FirstOrDefault().EntryTime,
-            DeptName=   employeesInfoManage.GetDeptByEmpid(dbtext.GetEntity(c.ID).informatiees_Id).DeptName,
-            ID =c.ID
+         DeptName=   employeesInfoManage.GetDeptByEmpid(dbtext.GetEntity(c.ID).informatiees_Id).DeptName,
+         ID =c.ID,
+         c.IsAttend
         }).OrderBy(a => a.informatiees_Id).Skip((page - 1) * limit).Take(limit).ToList();
         //  var x = dbtext.GetList();
         var data = new
@@ -225,10 +226,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             ViewBag.Employees= employeesInfoManage.GetInfoByEmpID(dbtext.GetEntity(HeadID).informatiees_Id);
             return Json(dbtext.SuccessionrecordDate(page, limit, HeadID), JsonRequestBehavior.AllowGet);
         }
-        public string Text()
+        /// <summary>
+        /// 是否允许或者禁止班主任上质素课
+        /// </summary>
+        /// <param name="id">班主任表主键id</param>
+        /// <param name="Isdele">允许或者拒绝</param>
+        /// <returns></returns>
+        public ActionResult IsAttend(int id, bool Isdele)
         {
-          
-            return null;
+            return Json(dbtext.IsAttend(id, Isdele), JsonRequestBehavior.AllowGet);
         }
-    }
+        }
 }

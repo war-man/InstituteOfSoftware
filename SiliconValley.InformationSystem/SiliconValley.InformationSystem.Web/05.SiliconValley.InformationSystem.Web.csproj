@@ -453,6 +453,8 @@
     <Content Include="Areas\Teaching\css\zzsc.css" />
     <Content Include="Areas\Teaching\fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Config\ExamCourseconfig.xml" />
+    <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -1202,7 +1204,6 @@
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
-    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\entxml.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
@@ -1392,6 +1393,12 @@
     <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
     <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
     <Content Include="Areas\Educational\Views\ClassTeacherKeep\HandAddorEditView.cshtml" />
+    <Content Include="Config\UserMapRole.config" />
+    <Content Include="Config\MyExcelClass.json" />
+    <Content Include="Config\Obempstaff.config" />
+    <Content Include="Areas\Finance\Views\Pricedetails\FeeReport.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Otherexpenses.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\Tuitionandfees.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />

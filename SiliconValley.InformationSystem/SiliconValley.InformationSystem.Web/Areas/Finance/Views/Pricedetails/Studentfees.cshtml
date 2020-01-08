@@ -9,11 +9,22 @@
 @section script{
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>录入学费价格</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>录入商品价格</button>
 
 
-
+            @*<input type="checkbox" name="close" lay-skin="switch" lay-text="ON|OFF">*@
         </div>
+    </script>
+
+    <script type="text/html" id="barDemo">
+
+        {{#if (d.IsDelete ==false){ }}
+       
+        <input type="checkbox" zid={{d.id}} checked="checked" lay-skin="switch" lay-filter="switchTest" lay-text="正常|禁用">
+        {{#  }else{ }}
+        <input type="checkbox"   zid={{d.id}}  lay-skin="switch" lay-filter="switchTest" lay-text="正常|禁用">
+        {{#   } }}
+
     </script>
     <script>
         layui.use(['table', 'layer', 'tree', 'form'], function () {
@@ -36,12 +47,13 @@
                     , { field: 'Name', title: '名称 ' }
                     , { field: 'Typex', title: '类别 ' }
                     , { field: 'Amountofmoney', title: '价格 ' }
+                    , { fixed: 'right', title: '状态', toolbar: '#barDemo', width: 100 }
                 ]]
                 , page: true
                 , limit: 8
                 , limits: [8, 10, 15]
             });
-        
+
 
             //监听头部工具栏
             table.on('toolbar(test)', function (obj) {
@@ -61,7 +73,27 @@
 
                 };
             });
-           
+            //监听指定开关
+            form.on('switch(switchTest)', function (data) {
+                var check = this.checked == true ? false : true;
+                if (confirm("是否要更改状态？")) {
+                    //点击确定后操作
+                    var dbser = {
+                        Isdele: check,
+                        id: $(data.elem).attr("zid")
+                    };
+                    $.post("/Finance/Pricedetails/PaymentcommodityIsdele", dbser, function (da) {
+                        if (da == true) {
+                            table.reload('idTest');
+                        }
+                    });
+                    console.log(dbser);
+                } else {
+                    $(this).prop("checked", check )
+                    layui.form.render(); 
+                }
+             
+            });
         });
 
     </script>
