@@ -258,6 +258,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 if (examview.ExamType.ExamTypeID == 1)
                 {
                     computer = db_stuExam.productComputerQuestion(exam,0);
+
+                    candidateInfo.ComputerPaper = computer.ID.ToString() + ",";
+
+                    db_exam.UpdateCandidateInfo(candidateInfo);
                 }
 
                 if (examview.ExamType.ExamTypeID == 2)
@@ -269,7 +273,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                     int courseid = int.Parse(xmlelm.FirstChild.Attributes["id"].Value);
                     computer = db_stuExam.productComputerQuestion(exam, courseid);
+
                     candidateInfo.ComputerPaper = computer.ID.ToString() + ",";
+
                     db_exam.UpdateCandidateInfo(candidateInfo);
                 }
 
@@ -280,7 +286,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             var ar = candidateInfo.ComputerPaper.Split(',');
 
-           var com = db_exam.AllComputerTestQuestion().Where(d => d.ID ==int.Parse( ar[0])).FirstOrDefault();
+           var com = db_exam.AllComputerTestQuestion(IsNeedProposition : false).Where(d => d.ID ==int.Parse( ar[0])).FirstOrDefault();
 
 
             var filename = Path.GetFileName(com.SaveURL);
