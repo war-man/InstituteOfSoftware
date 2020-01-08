@@ -160,13 +160,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                 var temp = this.GetList().Where(d => d.IsDel == false).ToList();
 
-                foreach (var item in temp)
-                {
-                    if (!EmpIsDel(item))
-                    {
-                        resultlist.Add(item);
-                    }
-                }
+                resultlist.AddRange(temp);
 
 
                 redisCache.SetCache("TeacherList", resultlist);
