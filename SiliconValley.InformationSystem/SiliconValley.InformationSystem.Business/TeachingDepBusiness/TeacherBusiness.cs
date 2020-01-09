@@ -127,12 +127,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             Teacher teacher = this.GetList().Where(t => t.TeacherID == id).FirstOrDefault();
 
-
-            if (EmpIsDel(teacher))
-            {
-                return null;
-            }
-
             return teacher;
         }
 
@@ -141,7 +135,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// 获取所有教员
         /// </summary>
         /// <returns></returns>
-        public List<Teacher> GetTeachers(bool isContains_Jiaowu = false)
+        public List<Teacher> GetTeachers(bool isContains_Jiaowu = false ,bool  IsNeedDimission = false)
         {
           
             List<Teacher> resultlist = new List<Teacher>();
@@ -158,23 +152,40 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 resultlist = new List<Teacher>();
 
 
-                var temp = this.GetList().Where(d => d.IsDel == false).ToList();
+               
+                var temp2 = this.GetList().ToList();
 
-                resultlist.AddRange(temp);
-
-
+                resultlist.AddRange(temp2);
+                
                 redisCache.SetCache("TeacherList", resultlist);
+            }
+
+
+            List<Teacher> returnlist = new List<Teacher>();
+
+            if (IsNeedDimission == false)
+            {
+                //不需要离职的
+                var temp1 = resultlist.Where(d => d.IsDel == false).ToList();
+
+                returnlist.AddRange(temp1);
+
+            }
+
+            else
+            {
+                //需要离职的
+                returnlist.AddRange(resultlist);
             }
 
             if (isContains_Jiaowu)
             {
-                return resultlist.OrderByDescending(d => d.TeacherID).ToList();
+                return returnlist.OrderByDescending(d => d.TeacherID).ToList();
             }
-           
 
             //排除掉教务
 
-            List<Teacher> returnlist = new List<Teacher>();
+            List<Teacher> returnlist1 = new List<Teacher>();
 
             foreach (var item in resultlist)
             {
@@ -186,59 +197,27 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 {
                     if (!empview.PositionId.PositionName.Contains("教务"))
                     {
-                        returnlist.Add(item);
+                        returnlist1.Add(item);
                     }
                 }
 
             }
 
-            return returnlist.OrderByDescending(d => d.TeacherID).ToList();
+            return returnlist1.OrderByDescending(d => d.TeacherID).ToList();
 
 
         }
+
+
         /// <summary>
-        /// 获取所有教员
+        /// 是否离职
         /// </summary>
         /// <returns></returns>
-        public List<Teacher> GetTeachers1()
+        public bool IsDimission(int teacherId)
         {
-
-            List<Teacher> resultlist = new List<Teacher>();
-
-            var temp = this.GetList().Where(d => d.IsDel == false).ToList();
-
-            foreach (var item in temp)
-            {
-                if (!EmpIsDel(item))
-                {
-                    resultlist.Add(item);
-                }
-            }
-
-            //排除掉教务
-
-            List<Teacher> returnlist = new List<Teacher>();
-
-            foreach (var item in resultlist)
-            {
-                var emp = this.GetEmpByEmpNo(item.EmployeeId);
-
-                var empview = this.ConvertToEmpDetailView(emp);
-
-                if (empview != null)
-                {
-                    if (!empview.PositionId.PositionName.Contains("教务"))
-                    {
-                        returnlist.Add(item);
-                    }
-                }
-
-            }
-
-
-            return returnlist.OrderByDescending(d => d.TeacherID).ToList();
-
+            return GetTeacherByID(teacherId).IsDel == true;
         }
+       
 
         /// <summary>
         /// / 更具员工编号获取员工
@@ -249,7 +228,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
 
 
-            return db_emp.GetList().Where(d => d.EmployeeId == EmpNo && d.IsDel == false).FirstOrDefault();
+            return db_emp.GetList().Where(d => d.EmployeeId == EmpNo).FirstOrDefault();
         }
 
 
@@ -476,7 +455,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in result)
             {
-                var ss = this.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).ToList();
+                var ss = this.GetTeachers(IsNeedDimission:true).Where(d => d.EmployeeId == item.EmployeeId).ToList();
 
                 if (ss.Count <= 0 || ss == null)
                 {
@@ -516,7 +495,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             var emps = db_emp.GetList().Where(d => d.PositionId == positionId && d.IsDel == false).ToList();
 
-            var teachers = this.GetTeachers();
+            var teachers = this.GetTeachers(IsNeedDimission: true);
 
             foreach (var e in emps)
             {
@@ -562,7 +541,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in onstageBearings)
             {
-                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID).FirstOrDefault());
+                resultlist.Add(this.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == item.TeacherID).FirstOrDefault());
             }
 
             return resultlist;
@@ -596,7 +575,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in onstageBearings)
             {
-                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel == false).FirstOrDefault());
+                resultlist.Add(this.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == item.TeacherID && d.IsDel == false).FirstOrDefault());
             }
 
             return resultlist;
@@ -615,7 +594,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             foreach (var item in ss)
             {
-                resultlist.Add(this.GetTeachers().Where(d => d.TeacherID == item.TeacherID && d.IsDel == false).FirstOrDefault());
+                resultlist.Add(this.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == item.TeacherID && d.IsDel == false).FirstOrDefault());
             }
 
             return resultlist;
@@ -1033,7 +1012,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             try
             {
 
-               var obj = this.GetTeachers(true).Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
+               var obj = this.GetTeachers(isContains_Jiaowu: true, IsNeedDimission: true).Where(db_emp => db_emp.EmployeeId == empid).FirstOrDefault();
 
                 obj.IsDel = true;
 

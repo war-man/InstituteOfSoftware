@@ -83,7 +83,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-            var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+            var teacher = db_teacher.GetTeachers(IsNeedDimission:true).Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
 
             projectview.TeamImte = studetnlist;
             projectview.Tutor = teacher;

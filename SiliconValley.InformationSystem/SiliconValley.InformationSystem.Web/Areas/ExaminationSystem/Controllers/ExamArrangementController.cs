@@ -1396,8 +1396,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                var teacherlist = dbteacher.BrushSelectionByGrand(grand);
 
-                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+
+                List<Teacher> resultlist = new List<Teacher>();
+                //筛选掉离职的
+
                 foreach (var item in teacherlist)
+                {
+                    if ( !dbteacher.IsDimission(item.TeacherID))
+                    {
+                        resultlist.Add(item);
+                    }
+                }
+
+                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+                foreach (var item in resultlist)
                 {
                    var tempemp =  dbteacher.GetEmpByEmpNo(item.EmployeeId);
 
