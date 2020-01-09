@@ -13,6 +13,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 排课实体
+    /// </summary>
     [Table(name: "Reconcile")]
     public partial class Reconcile
     {
@@ -33,6 +37,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<System.DateTime> NewDate { get; set; }
         public string Rmark { get; set; }
+        /// <summary>
+        ///  默认为false
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
         /// <summary>
         /// 排课时间

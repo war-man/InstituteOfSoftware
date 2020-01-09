@@ -13,16 +13,35 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 值班类型
+    /// </summary>
     [Table("BeOnDuty")]
     public partial class BeOnDuty
     {
         
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 类型名称
+        /// </summary>
         public string TypeName { get; set; }
+        /// <summary>
+        /// 费用
+        /// </summary>
         public Nullable<decimal> Cost { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Reak { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
         public Nullable<System.DateTime> AddDate { get; set; }
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
     
 

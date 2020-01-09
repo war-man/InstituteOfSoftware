@@ -14,14 +14,26 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 数据备案学生状态
+    /// </summary>
     [Table(name: "StuStatus")]
     public partial class StuStatus
     {
         
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 数据备案学生状态
+        /// </summary>
         public string StatusName { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Rmark { get; set; }
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
     
     }

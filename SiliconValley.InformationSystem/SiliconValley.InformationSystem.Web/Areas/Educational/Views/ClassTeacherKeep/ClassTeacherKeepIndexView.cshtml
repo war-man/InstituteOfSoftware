@@ -5,6 +5,12 @@
 }
 @section style{
     <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
     </style>
 }
 <div>
@@ -53,7 +59,15 @@
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'hand_adddata':
-                         
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/ClassTeacherKeep/HandAnpaiView',
+                            area: ['680px', '400px'],
+                            title: '全体数据修改'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
                         break;
                     case 'system_adddata':
                         

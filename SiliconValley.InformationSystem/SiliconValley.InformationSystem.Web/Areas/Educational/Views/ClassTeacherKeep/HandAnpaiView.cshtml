@@ -1,0 +1,81 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HandAnpaiView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .linu
+        {
+            width: 200px;
+        }
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <form class="layui-form">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">姓名:</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("emplyess_Id", ViewBag.handmaster as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "grandselect" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">值班类型:</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("type_id", ViewBag.Beonduty as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "grandselect" } })
+                    </div>
+                </div>                
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">值班日期:</label>
+                    <div  class="layui-input-block">
+                        <input type="text" name="Zhibandate" id="Zhibandate" class="layui-input"/>
+                    </div>
+
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">说明:</label>
+                    <div class="layui-input-block" id="div_time">
+                        <textarea name="ramke" id="ramke" class="layui-textarea"></textarea>
+                    </div>
+                </div>              
+            </div>
+            <div class="layui-row layui-form-item" style="text-align:right">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:right">
+                    <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="确定添加" />                     
+                    <input id="Anan2" type="button" class="layui-btn" value="取消关闭" onclick="OrtherView()" />
+                </div>
+            </div>             
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+
+        });
+    </script>
+</body>
+</html>

@@ -13,15 +13,31 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 基础数据类型
+    /// </summary>
     [Table("BaseDataEnum")]
     public partial class BaseDataEnum
     {
         
        [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 名称
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Rmark { get; set; }
+        /// <summary>
+        /// 是否禁用(false--没有禁用，true--已禁用)
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 父级
+        /// </summary>
         public Nullable<int> fatherId { get; set; }
 
     }

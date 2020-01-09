@@ -13,14 +13,30 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 教室实体
+    /// </summary>
     [Table("Classroom")]
     public partial class Classroom
     {
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 教室名称
+        /// </summary>
         public string ClassroomName { get; set; }
+        /// <summary>
+        /// 座位数
+        /// </summary>
         public Nullable<int> Count { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Rmark { get; set; }
+        /// <summary>
+        /// 是否禁用(false--不禁用，true--已禁用)
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
         /// <summary>
         /// 所属校区

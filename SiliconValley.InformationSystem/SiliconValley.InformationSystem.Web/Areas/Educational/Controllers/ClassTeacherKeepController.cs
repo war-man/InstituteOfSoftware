@@ -27,7 +27,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         ReconcileManeger Reconcile_Entity;
         HeadmasterBusiness Headmaster_Entity;
         BeOnDutyManeger BeOnDuty_Entity;
-        // GET: /Educational/ClassTeacherKeep/ClassTeacherTableData
+        // GET: /Educational/ClassTeacherKeep/HandAnpaiView
         static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
         public ActionResult ClassTeacherKeepIndexView()
         {
@@ -67,13 +67,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(jsondata,JsonRequestBehavior.AllowGet);
         }
 
-        
-         
         /// <summary>
-        /// 系统安排班主任晚自习值班
+        /// 获取当前登录人所在的部门的所有班主任
         /// </summary>
         /// <returns></returns>
-        public ActionResult SysAnpaiFunction()
+        public List<EmployeesInfo> GetHandMaster()
         {
             //判断登录人是哪个部门的
             EmployeesInfo_Entity = new EmployeesInfoManage();
@@ -82,21 +80,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             Headmaster_Entity = new HeadmasterBusiness();
             BeOnDuty_Entity = new BeOnDutyManeger();
             ClassTeacherKeep_Entity = new ClassTeacherKeepManeger();
-            int find_postion= EmployeesInfo_Entity.GetEntity(UserName.EmpNumber).PositionId;//获取登录人的岗位
+            int find_postion = EmployeesInfo_Entity.GetEntity(UserName.EmpNumber).PositionId;//获取登录人的岗位
             int find_department = Position_Enity.GetEntity(find_postion).DeptId;//获取登录人的部门
             //获取所有班主任
-            List<Headmaster> find_allheadmastet=  Headmaster_Entity.GetList().Where(h => h.IsDelete == false).ToList();
-             //获取
-             List<EmployeesInfo> list = new List<EmployeesInfo>();
+            List<Headmaster> find_allheadmastet = Headmaster_Entity.GetList().Where(h => h.IsDelete == false).ToList();
+            //获取
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
             foreach (Headmaster item in find_allheadmastet)
             {
                 EmployeesInfo find_e1 = EmployeesInfo_Entity.GetEntity(item.informatiees_Id);
-                int find_depat1= Position_Enity.GetEntity(find_e1.PositionId).DeptId;
-                if (find_depat1== find_department)
+                int find_depat1 = Position_Enity.GetEntity(find_e1.PositionId).DeptId;
+                if (find_depat1 == find_department)
                 {
                     list.Add(find_e1);
                 }
             }
+
+            return list;
+        }
+        /// <summary>
+        /// 系统安排班主任晚自习值班
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult SysAnpaiFunction()
+        {
+            List<EmployeesInfo> list = GetHandMaster();
+
             //获取安排的月份
             string[] dd = Request.Form["time"].Split('到') ;
             DateTime d1 =Convert.ToDateTime(dd[0]);
@@ -195,5 +204,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             return View();
         }
+
+        public ActionResult HandAnpaiView()
+        {
+            BeOnDuty_Entity = new BeOnDutyManeger();
+            //获取班主任
+            List<SelectListItem> selects = GetHandMaster().Select(s => new SelectListItem() { Text = s.EmpName, Value = s.EmployeeId }).ToList();
+            ViewBag.handmaster = selects;
+            //获取值班类型
+            List<SelectListItem> beon_sele= BeOnDuty_Entity.GetList().Select(b => new SelectListItem() { Text = b.TypeName, Value = b.Id.ToString() }).ToList();
+            ViewBag.Beonduty = beon_sele;
+            return View();
+        }
+
     }
 }

@@ -13,15 +13,31 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 分量表
+    /// </summary>
     [Table("Consult")]
     public partial class Consult
     {
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 咨询师编号
+        /// </summary>
         public Nullable<int> TeacherName { get; set; }
+        /// <summary>
+        /// 数据备案编号
+        /// </summary>
         public Nullable<int> StuName { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Rmark { get; set; }
+         
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 分量日期
+        /// </summary>
         public Nullable<System.DateTime> ComDate { get; set; }
     
     }

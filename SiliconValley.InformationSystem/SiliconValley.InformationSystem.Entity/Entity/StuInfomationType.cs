@@ -14,14 +14,26 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 数据备案信息来源实体
+    /// </summary>
     [Table(name: "StuInfomationType")]
     public partial class StuInfomationType
     {
        
     [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 备案数据信息来源
+        /// </summary>
         public string Name { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Rmark { get; set; }
+        /// <summary>
+        /// 是否禁用（false--否，true--禁用）
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
     
         

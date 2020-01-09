@@ -13,16 +13,36 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 咨询跟踪
+    /// </summary>
     [Table(name: "FollwingInfo")]
     public partial class FollwingInfo
     {
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 咨询师编号
+        /// </summary>
         public Nullable<int> Consult_Id { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Rank { get; set; }
+        /// <summary>
+        /// 咨询内容
+        /// </summary>
         public string TailAfterSituation { get; set; }
+        /// <summary>
+        /// 跟踪日期
+        /// </summary>
         public Nullable<System.DateTime> FollwingDate { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Rmark { get; set; }
+         
         public Nullable<bool> IsDelete { get; set; }
     
     }

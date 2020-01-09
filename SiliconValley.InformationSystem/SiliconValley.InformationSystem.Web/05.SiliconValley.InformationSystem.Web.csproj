@@ -1511,6 +1511,7 @@
     <Content Include="Areas\Capital\Views\Capital\BorrowMoney.cshtml" />
     <Content Include="Areas\Capital\Views\Capital\PublicBorrowList.cshtml" />
     <Content Include="Areas\Capital\Views\Capital\DoPrefundingList.cshtml" />
+    <Content Include="Areas\Educational\Views\ClassTeacherKeep\HandAnpaiView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
