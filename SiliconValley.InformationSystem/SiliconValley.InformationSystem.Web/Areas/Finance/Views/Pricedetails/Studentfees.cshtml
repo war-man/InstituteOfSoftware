@@ -4,7 +4,33 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<form class="layui-form" action="">
+    <div class="layui-container">
+        <div class="layui-row ">
+            <div class="layui-row layui-form-item" style="width:60%;">
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="layui-form-label labels">阶段</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("grade_Id", ViewBag.grade_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                    <label class="layui-form-label labels">类别</label>
+                    <div class="layui-input-block">
+                        @Html.DropDownList("Typex", ViewBag.Typex as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                    </div>
+                </div>
+            </div>
 
+            <div style="position:absolute;left:45%;top:1px;">
+                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+            </div>
+
+
+        </div>
+
+    </div>
+</form>
 <table class="layui-hide" id="test" lay-filter="test"></table>
 @section script{
     <script type="text/html" id="toolbarDemo">
@@ -93,6 +119,24 @@
                     layui.form.render(); 
                 }
              
+            });
+
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+                var x = data.field;
+                table.reload('idTest', {
+                    where: {
+                        grade_Id: x.grade_Id,
+                        Typex: x.Typex,
+                    }, page: {
+                        curr: 1
+                    }
+                });
+
+                //  }
+
+
+                return false;
             });
         });
 

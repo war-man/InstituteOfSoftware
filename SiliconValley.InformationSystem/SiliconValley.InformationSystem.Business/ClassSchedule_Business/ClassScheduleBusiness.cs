@@ -768,7 +768,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         public AjaxResult EntitAddClassSchedule(int ClassID)
         {
             empClassBusiness = new EmpClassBusiness();
-           
+        
             AjaxResult result = null;
             try
             {
@@ -777,7 +777,9 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 Hadmst.EndDai(ClassID);
                 var ClassSchedules = this.GetEntity(ClassID);
             var staid = classtatus.GetList().Where(a => a.IsDelete == false && a.TypeName == "升学").FirstOrDefault().id;
+           
             ClassSchedules.ClassstatusID = staid;
+               
             //先修改原来班级
                this.Update(ClassSchedules);
             var x=  GotoschoolStageBusiness.GetList().Where(a => a.CurrentStageID == ClassSchedules.grade_Id).FirstOrDefault();
@@ -808,6 +810,10 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 scheduleForTrainees.AddDate = DateTime.Now;
                 AddScheduleFor.Add(scheduleForTrainees);
             }
+             if(this.GetEntity(ClassID).grade_Id== Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3").FirstOrDefault().Id)
+             {
+                    empClassBusiness.entrance(ClassID, ClassSchedules.id);
+             }
             ss.Update(UpdateScheduleFor);
             ss = new ScheduleForTraineesBusiness();
             ss.Insert(AddScheduleFor);

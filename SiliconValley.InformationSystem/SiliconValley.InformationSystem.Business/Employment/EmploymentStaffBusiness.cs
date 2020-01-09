@@ -229,9 +229,6 @@ namespace SiliconValley.InformationSystem.Business.Employment
                 {
                     data.IsDel = true;
                     this.Update(data);
-                    ///删除宿舍记住信息 调方法
-                    dbstaffAccdation = new StaffAccdationBusiness();
-                    dbstaffAccdation.DelStaffacc(EmpInfoID);
                     ///删除他现在在带的班级
                     dbempClass = new EmpClassBusiness();
                     dbempClass.delempforclass(data.ID);

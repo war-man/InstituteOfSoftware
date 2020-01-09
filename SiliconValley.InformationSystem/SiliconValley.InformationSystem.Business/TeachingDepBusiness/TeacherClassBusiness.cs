@@ -334,7 +334,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             TeacherBusiness db = new TeacherBusiness();
 
-            return db.GetTeachers().Where(x => x.TeacherID == this.GetList().Where(d => d.ClassNumber == dd.ID_ClassName && d.IsDel == false).FirstOrDefault().TeacherID).FirstOrDefault();
+            return db.GetTeachers(IsNeedDimission: true).Where(x => x.TeacherID == this.GetList().Where(d => d.ClassNumber == dd.ID_ClassName && d.IsDel == false).FirstOrDefault().TeacherID).FirstOrDefault();
 
 
 
@@ -381,7 +381,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     }
 
                     ///获取老师对性能
-                    var teacher = db.GetTeachers1().Where(d => d.TeacherID == teachclass.TeacherID).FirstOrDefault();
+                    var teacher = db.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == teachclass.TeacherID).FirstOrDefault();
 
                     return db_teacher.GetEmpByEmpNo(teacher.EmployeeId);
                 }
@@ -402,7 +402,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             var tempobj = this.GetList().Where(d => d.ClassNumber == int.Parse(classNumber)).FirstOrDefault();
             if (tempobj != null)
             {
-                var tempobj1 = db_teacher.GetTeachers().Where(d => d.TeacherID == tempobj.TeacherID).FirstOrDefault();
+                var tempobj1 = db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == tempobj.TeacherID).FirstOrDefault();
                 if (tempobj1 != null)
                 {
                     BaseBusiness<EmployeesInfo> empmanage = new BaseBusiness<EmployeesInfo>();

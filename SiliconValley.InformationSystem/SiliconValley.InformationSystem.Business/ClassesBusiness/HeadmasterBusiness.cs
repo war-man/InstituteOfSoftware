@@ -57,6 +57,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             {
              var x=   this.GetList().Where(a => a.informatiees_Id == informatiees_Id).FirstOrDefault();
                 x.IsDelete = true;
+                this.Update(x);
                 BusHelper.WriteSysLog("修改班主任状态", Entity.Base_SysManage.EnumType.LogType.编辑数据);
 
             }

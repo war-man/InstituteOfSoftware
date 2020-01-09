@@ -103,7 +103,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             {
                 //筛选出S2的课程
 
-                sourchlist = db_Course.GetList().Where(d => d.IsDelete==false && d.Grand_Id == examview.ExamType.GrandID &&d.MajorID == major.Id).ToList();
+                if (major == null)
+                {
+                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID ).ToList();
+                }
+                else
+                {
+                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+                }
+
+                
 
             }
 
@@ -260,8 +269,15 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             if (examview.ExamType.ExamTypeID == 1)
             {
                 //筛选出S2的课程
-
-                sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+                if (major == null)
+                {
+                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+                }
+                else
+                {
+                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+                }
+                
 
             }
 
@@ -404,7 +420,16 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
                 //筛选出S2的课程
 
-                 sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+                if (major == null)
+                {
+                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
+                }
+                else
+                {
+                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
+                }
+
+                
 
             }
 
@@ -438,8 +463,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
 
             Random rendom = new Random();
-            int rdom = rendom.Next(0, questionlist.Count);
+           
             var reslist = questionlist.Where(d => d.Level.LevelID == examview.PaperLevel.LevelID).ToList();
+            int rdom = rendom.Next(0, reslist.Count);
             return reslist[rdom];
 
 

@@ -44,6 +44,11 @@
             
         }
 
+            #teacherInfo .teacherInfoItem {
+                
+                margin-top:30px;
+            }
+
         #table {
             float:left;
             width:80%;
@@ -61,8 +66,8 @@
             if (@ViewBag.empDetail != null)
             {
                 <!--头像-->
-                <div id="Avatar">
-                    <img style="border-radius:50%;" src="@ViewBag.empDetail.Image" width="120" height="120" />
+                <div id="Avatar" >
+                    <img style="border-radius:50%; margin-left:10%;" src="@ViewBag.empDetail.Image" width="150" height="150" />
                 </div>
 
                 <div style="margin-left:50px;" id="info">
