@@ -516,7 +516,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         }
 
         /// <summary>
-        /// 获取删除课程的教员
+        /// 获取擅长课程的教员
         /// </summary>
         /// <param name="courseid"></param>
         /// <returns></returns>
@@ -527,11 +527,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
             try
             {
-                // Base_UserModel user = Base_UserBusiness.GetCurrentUser();
-
-                //SatisfactionSurveyBusiness dbsatis = new SatisfactionSurveyBusiness();
+               
                 TeacherBusiness dbteacher = new TeacherBusiness();
-                 var list = dbteacher.GetTeachers();
+                 var list = dbteacher.GetTeachers(isContains_Jiaowu: false, IsNeedDimission:false);
 
                 List<EmployeesInfo> emplist = new List<EmployeesInfo>();
                 foreach (var item in list)
