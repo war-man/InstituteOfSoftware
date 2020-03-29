@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// 咨询跟踪
+    /// 咨询跟踪表
     /// </summary>
     [Table(name: "FollwingInfo")]
     public partial class FollwingInfo

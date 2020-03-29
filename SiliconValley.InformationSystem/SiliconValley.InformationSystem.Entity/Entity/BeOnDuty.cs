@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// 值班类型
+    /// 值班费用表
     /// </summary>
     [Table("BeOnDuty")]
     public partial class BeOnDuty

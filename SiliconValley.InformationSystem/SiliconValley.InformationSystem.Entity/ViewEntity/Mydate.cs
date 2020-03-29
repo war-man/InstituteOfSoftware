@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 这个类用于处理排课业务的
+    /// </summary>
    public class Mydate
     {
         /// <summary>

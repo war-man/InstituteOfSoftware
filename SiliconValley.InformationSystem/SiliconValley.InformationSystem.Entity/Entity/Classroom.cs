@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// 教室实体
+    /// 教室表
     /// </summary>
     [Table("Classroom")]
     public partial class Classroom
