@@ -216,43 +216,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
-        /// <summary>
-        ///添加员工时获取未禁用的部门信息 
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult BindDeptSelect()
-        {
-            DepartmentManage deptmanage = new DepartmentManage();
-            var deptlist = deptmanage.GetList().Where(d => d.IsDel == false);//获取公司部门数据集
-            var newstr = new
-            {
-                code = 0,
-                msg = "",
-                count = deptlist.Count(),
-                data = deptlist
-            };
-            return Json(newstr, JsonRequestBehavior.AllowGet);
-        }
-
-        /// <summary>
-        /// 员工添加的所属岗位下拉框绑定且是未禁用的
-        /// </summary>
-        /// <param name="deptid"></param>
-        /// <returns></returns>
-        //[HttpPost]
-        public ActionResult BindPositionSelect(int deptid)
-        {
-            PositionManage pmanage = new PositionManage();
-            var plist = pmanage.GetList().Where(d => d.DeptId == deptid && d.IsDel == false);
-            var newstr = new
-            {
-                code = 0,
-                msg = "",
-                count = plist.Count(),
-                data = plist
-            };
-            return Json(newstr, JsonRequestBehavior.AllowGet);
-        }
+      
         /// <summary>
         /// 添加员工
         /// </summary>
@@ -583,6 +547,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(list_Tree, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        ///添加员工时获取未禁用的部门信息 
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BindDeptSelect()
+        {
+            DepartmentManage deptmanage = new DepartmentManage();
+            var deptlist = deptmanage.GetList().Where(d => d.IsDel == false);//获取公司部门数据集
+            var newstr = new
+            {
+                code = 0,
+                msg = "",
+                count = deptlist.Count(),
+                data = deptlist
+            };
+            return Json(newstr, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 员工添加的所属岗位下拉框绑定且是未禁用的
+        /// </summary>
+        /// <param name="deptid"></param>
+        /// <returns></returns>
+        //[HttpPost]
+        public ActionResult BindPositionSelect(int deptid)
+        {
+            PositionManage pmanage = new PositionManage();
+            var plist = pmanage.GetList().Where(d => d.DeptId == deptid && d.IsDel == false);
+            var newstr = new
+            {
+                code = 0,
+                msg = "",
+                count = plist.Count(),
+                data = plist
+            };
+            return Json(newstr, JsonRequestBehavior.AllowGet);
+        }
+
         //部门增加显示页
         public ActionResult DeptUpdate()
         {
@@ -895,6 +897,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult GetempById(string id)
         {
             EmployeesInfoManage emanage = new EmployeesInfoManage();
+            EmpTransactionManage etm = new EmpTransactionManage();
             var e = emanage.GetInfoByEmpID(id);
             var empobj = new
             {
@@ -932,7 +935,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.Material,
                 e.Remark,
                 e.IsDel,
-                e.Image
+                e.Image,
+                deltime = etm.GetDelEmp(e.EmployeeId).TransactionTime,//离职时间
+                delreason = etm.GetDelEmp(e.EmployeeId).Reason//离职原因
                 #endregion
             };
             return Json(empobj, JsonRequestBehavior.AllowGet);
@@ -1104,6 +1109,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
           
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 离职员工详细信息
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public ActionResult LeftEmpDetail(string empid) {
+            return View();
+        }
+
 
         /// <summary>
         /// 生日提醒
