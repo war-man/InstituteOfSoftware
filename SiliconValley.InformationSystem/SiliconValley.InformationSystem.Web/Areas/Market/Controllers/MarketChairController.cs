@@ -96,7 +96,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     Rmark = m.Rmark,
                     IsDelete = m.IsDelete,
                     EmpName = GetEmployesName(m.Employees_Id)
-                }).ToList().OrderByDescending(m => m.Id).Skip((page - 1) * limit).Take(limit);
+                }).ToList().OrderByDescending(m => m.Id).Skip((page - 1) * limit).Take(limit).ToList();
 
                 var JsonData = new
                 {

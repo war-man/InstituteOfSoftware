@@ -212,7 +212,8 @@
                 , toolbar: '#toolbarDemo1'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
-                    { field: 'StuName', title: '姓名' }
+                    { type: 'radio' }
+                    ,{ field: 'StuName', title: '姓名' }
                     , {
                         field: 'StuSex', title: '性别', templet: function (res) {
                             if (res.StuSex == false) {
