@@ -69,6 +69,9 @@
             text-align: center;
             margin-top: 50px;
         }
+        .detail label {
+            font-size:20px;
+        }
     </style>
 </head>
 <body>
@@ -81,7 +84,7 @@
                 <ul>
                     <li><label>答题人-- </label><span>@ViewBag.AnswerSheetInfo.AnswerPerson.Name</span></li>
                     <li><label>考室-- </label><span>@ViewBag.AnswerSheetInfo.Classroom.ClassroomName</span></li>
-                    <li><label>开始时间-- </label><span>@ViewBag.AnswerSheetInfo.BeginDate</span></li>
+                    @*<li><label>开始时间-- </label><span>@ViewBag.AnswerSheetInfo.BeginDate</span></li>*@
                     <li><label>时限-- </label><span>@ViewBag.AnswerSheetInfo.TimeLimit</span></li>
                     <li><label>选择题得分-- </label><span class="choiceQuestionScoreshuode"></span></li>
                     <li><label>笔试题总分-- </label><span>@ViewBag.AnswerSheetInfo.WrittenQuestionScores</span></li>
@@ -94,17 +97,17 @@
         </div>
 
         <div id="choicequestion">
-            <h3 style="text-align:center;">选择题</h3>
+            <h3 style="text-align:center; font-size:18px;" >选择题</h3>
 
 
         </div>
         <div id="AnswerQuestion">
-            <h3 style="text-align:center;">解答题</h3>
+            <h3 style="text-align:center; font-size:18px;">解答题</h3>
 
         </div>
 
         <div id="ComputerQuestion">
-            <h3 style="text-align:center;">机试题</h3>
+            <h3 style="text-align:center; font-size:18px;">机试题</h3>
             <br />
             <br />
             <a class="layui-btn layui-btn-warm" href="/ExaminationSystem/StudentExamSys/ComputerQuestionUpload?examid=@ViewBag.EXAMVIEW.ID">机试题下载</a>
