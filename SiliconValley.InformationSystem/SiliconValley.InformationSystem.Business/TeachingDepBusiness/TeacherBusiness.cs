@@ -187,7 +187,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             List<Teacher> returnlist1 = new List<Teacher>();
 
-            foreach (var item in resultlist)
+            foreach (var item in returnlist)
             {
                var emp = this.GetEmpByEmpNo(item.EmployeeId);
 
