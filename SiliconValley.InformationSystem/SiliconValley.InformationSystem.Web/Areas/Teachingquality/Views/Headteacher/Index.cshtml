@@ -56,6 +56,13 @@
                             return TimeChange(c.EntryTime);
                         }
                     }
+                    , {
+                        field: 'IsDelete', title: '是否离职', templet: function (c) {
+                            if (c.IsDelete) {
+                                return "离职";
+                            } else { return "在职"; }
+                        }
+                    }
                     , { fixed: 'right', title: '是否能上质素课', toolbar: '#IsAttend',width:150 }
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
                 ]]
@@ -71,16 +78,20 @@
                         if (checkStatus.data.length > 0) {
 
                             var id = checkStatus.data[0].ID;
-
-                            layer.open({
-                                title: '班主任接班',
-                                type: 2,
-                                area: ['680px', '540px']
-                                , content: "/Teachingquality/Headteacher/HeadmasterEntity/" + id
-                                , end: function () { table.reload('idTest'); select(); }
-                                , anim: 1,
-                                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-                            });
+                            if (checkStatus.data[0].IsDelete) {
+                                layer.msg("离职班主任不能带班");
+                            } else {
+                                console.log(checkStatus.data[0].IsDelete);
+                                layer.open({
+                                    title: '班主任接班',
+                                    type: 2,
+                                    area: ['680px', '540px']
+                                    , content: "/Teachingquality/Headteacher/HeadmasterEntity/" + id
+                                    , end: function () { table.reload('idTest'); select(); }
+                                    , anim: 1,
+                                    //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+                                });
+                            }
                         } else {
                             layer.alert('请选择一条数据', { icon: 0 });
                         }
