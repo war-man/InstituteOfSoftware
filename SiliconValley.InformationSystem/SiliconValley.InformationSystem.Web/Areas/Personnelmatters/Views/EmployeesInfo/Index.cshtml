@@ -162,12 +162,12 @@
 
              var contractend =@ViewBag.contractEnd;
              if (contractend != 0) {
-                 console.log("到期人数：" + contractend);
+                 //console.log("到期人数：" + contractend);
                  document.getElementById('contractEndbtn').style.display= "block";
              } else {
                  document.getElementById('contractEndbtn').style.display = "none";
              }
-             console.log($("#contractEndbtn").css("display"));
+            // console.log($("#contractEndbtn").css("display"));
         });
       
       //在职员工加载
@@ -257,7 +257,6 @@
                                 url: "/Personnelmatters/EmployeesInfo/EditDateCell",
                                 data: { id: data.EmployeeId, endvalue: value },
                                 success: function (data) {
-                                    console.log(data.Msg);
                                     if (data.Success) {
                                         layui.table.reload('myEmpInfo');
                                     }
@@ -283,7 +282,6 @@
                     url: "/Personnelmatters/EmployeesInfo/EditTableCell",
                     data: { id: data.EmployeeId, Attrbute: field, endvalue: value },
                     success: function (data) {
-                        console.log("单元格结果：" + data);
                         if (data.Success) {
                             layui.table.reload('myEmpInfo');
                         } else {
@@ -298,7 +296,7 @@
             form.on('switch(hunyinDemo)', function (obj) {
 
                 var id = this.value; var name = this.name;
-                console.log(id); console.log(name); console.log(obj.elem.checked);
+                //console.log(id); console.log(name); console.log(obj.elem.checked);
                 $.ajax({
                     type: "get",
                     dataType: "json",
@@ -596,7 +594,6 @@
             //select 监听
             form.on('select(deptidfilter)', function (data) {
                 var value = data.value;  //select选中的值
-                console.log("选中值" + value);
                 $.ajax({
                     url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
                     data: { deptid: value },
@@ -605,7 +602,7 @@
                         if (resultData.code == 0) {
                             //清空赋值
                             $("#PositionId").empty();
-                            console.log(resultData.data);
+                            //console.log(resultData.data);
                             $("#PositionId").append(new Option("请选择岗位", ""));
                             $.each(resultData.data, function (index, item) {
                                 //赋值

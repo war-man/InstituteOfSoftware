@@ -346,87 +346,58 @@
         });
         function loadnetinfo() {
             var id = $("#EmployeeId").val();
-            $.get("/Personnelmatters/EmployeesInfo/GetempById/" + id, function (data) {
-                layui.use(['layer', 'form', 'table','laydate'], function () {
-                    var form = layui.form;
-                    var laydate = layui.laydate;
-                    data.Sex = data.Sex.toString();
-                    data.MaritalStatus = data.MaritalStatus.toString();
-                    data.EntryTime = GetYMD(data.EntryTime);
-                    data.PositiveDate = GetYMD(data.PositiveDate);
-                    data.ContractStartTime = GetYMD(data.ContractStartTime);
-                    data.ContractEndTime = GetYMD(data.ContractEndTime);
-                    data.Birthdate = GetYMD(data.Birthdate);
-                    data.IdCardIndate = GetYMD(data.IdCardIndate);
-                    data.SSStartMonth = GetYearAndMonth(data.SSStartMonth);
-                    if (data.Birthday != null) {
-                        var birthmon = data.Birthday.split(/月/);
-                        var mymonth = birthmon[0];//月份
-                        var mystr = birthmon[1];
-                        var birthstr = mystr.split(/日/);
-                        var myday = birthstr[0];//日期
-                        var myyinyang = birthstr[1];//阴阳历
-                        $("#month").val(mymonth);
-                        $("#day").val(myday);
+            $.ajax({
+                type: "get",
+                dataType: "json",
+                url: "/Personnelmatters/EmployeesInfo/GetempById",
+                data: { id: id },
+                success: function (data) {
+                    console.log(data);
+                    if (data.code == 0) {
+                        var res = data.data;
+                        console.log(res.Sex);
+                        form.val('formtest', {
+                           'Sex' :res.Sex.toString(),
 
-                        $("input[name='yinyang']").each(function () {
-                            if (this.value == myyinyang) {
-                                this.checked = true;
-                                form.render();
-                            }
+                           'MaritalStatus' : res.MaritalStatus.toString(),
+                           'EntryTime' : GetYMD(res.EntryTime),
+                           'PositiveDate' : GetYMD(res.PositiveDate),
+                           'ContractStartTime' : GetYMD(res.ContractStartTime),
+                           'ContractEndTime' :GetYMD(res.ContractEndTime),
+                           'Birthdate' : GetYMD(res.Birthdate),
+                           'IdCardIndate' : GetYMD(res.IdCardIndate),
+                           'SSStartMonth' : GetYearAndMonth(res.SSStartMonth)
+                            //if (res.Birthday != null) {
+                            //    var birthmon = res.Birthday.split(/月/);
+                            //    var mymonth = birthmon[0];//月份
+                            //    var mystr = birthmon[1];
+                            //    var birthstr = mystr.split(/日/);
+                            //    var myday = birthstr[0];//日期
+                            //    var myyinyang = birthstr[1];//阴阳历
+                            //    $("#month").val(mymonth);
+                            //    $("#day").val(myday);
+
+                            //    $("input[name='yinyang']").each(function () {
+                            //        if (this.value == myyinyang) {
+                            //            this.checked = true;
+                            //            form.render();
+                            //        }
+                            //    });
+                            //}
+
+                            //if (res.Image != null) {
+                            //    $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + res.Image;
+
+                            //}
+
                         });
                     }
-                   
-                    if (data.Image != null) {
-                        $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
-                       
-                    }
-                    
-                   
-                    form.val("formtest", data);
-                    //日期
-                    var startTime = laydate.render({
-                        elem: '#ContractStartTime',
-                        done: function (value, date) {
-                            console.log(value);
-                            console.log(date);
-                            endTime.config.min = {
-                                year: date.year,
-                                month: date.month - 1,//关键
-                                date: date.date,
-                                hours: date.hours,
-                                minutes: date.minutes,
-                                seconds: date.seconds
-                            }
-                        }
-                    });//合同起始时间
-                    var endTime = laydate.render({
-                        elem: '#ContractEndTime',
-                        done: function (value, date) {
-                            startTime.config.max = {
-                                year: date.year,
-                                month: date.month - 1,//关键
-                                date: date.date,
-                                hours: date.hours,
-                                minutes: date.minutes,
-                                seconds: date.seconds
-                            }
-                        }
-                    });//合同终止时间
-                    laydate.render({
-                        elem: '#EntryTime',
-
-                    });//入职时间
-                    laydate.render({
-                        elem: '#PositiveDate',
-                        min: data.EntryTime
-                    });//转正日期
-                    laydate.render({
-                        elem: '#SSStartMonth',
-                        type: 'month'
-                    });//社保起始月份
-                });
-            })
+                                           
+                }, error: function () {
+                    layer.msg("可能是因为网络原因操作失败了，请重试，若多次重试不成功，请于网站管理员联系");
+                }
+            });
+         
         }
 
         //异步读取图片并显示
@@ -454,8 +425,49 @@
         layui.use(['form', 'layedit', 'laydate'], function () {
             var form = layui.form
                 , layer = layui.layer
-                , layedit = layui.layedit;              
+                , layedit = layui.layedit,
+                laydate = layui.laydate;              
+            //日期
+            var startTime = laydate.render({
+                elem: '#ContractStartTime',
+                done: function (value, date) {
+                    console.log(value);
+                    console.log(date);
+                    endTime.config.min = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });//合同起始时间
+            var endTime = laydate.render({
+                elem: '#ContractEndTime',
+                done: function (value, date) {
+                    startTime.config.max = {
+                        year: date.year,
+                        month: date.month - 1,//关键
+                        date: date.date,
+                        hours: date.hours,
+                        minutes: date.minutes,
+                        seconds: date.seconds
+                    }
+                }
+            });//合同终止时间
+            laydate.render({
+                elem: '#EntryTime',
 
+            });//入职时间
+            laydate.render({
+                elem: '#PositiveDate',
+               // min: data.EntryTime
+            });//转正日期
+            laydate.render({
+                elem: '#SSStartMonth',
+                type: 'month'
+            });//社保起始月份
 
             //自定义验证
             form.verify({
@@ -630,7 +642,6 @@
      @*部门与岗位的下拉框动态赋值及下拉框二级联动*@
     <script>
         layui.use(['form', 'upload', 'layer'], function () {
-            console.log("开始加载的岗位编号：" + $("#mypid").val());
             var form = layui.form;
             $.ajax({
                 url: '/Personnelmatters/EmployeesInfo/BindDeptSelect',
