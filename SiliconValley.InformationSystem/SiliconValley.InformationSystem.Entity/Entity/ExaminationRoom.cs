@@ -14,15 +14,30 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 考场
+    /// </summary>
     [Table(name: "ExaminationRoom")]
     public partial class ExaminationRoom
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 教室ID
+        /// </summary>
         public Nullable<int> Classroom_Id { get; set; }
+        /// <summary>
+        /// 监考员1
+        /// </summary>
         public string  Invigilator1 { get; set; }
+        /// <summary>
+        /// 监考员2
+        /// </summary>
         public string Invigilator2 { get; set; }
         public string Remark { get; set; }
+        /// <summary>
+        /// 所属考试
+        /// </summary>
         public Nullable<int> Examination { get; set; }
 
        

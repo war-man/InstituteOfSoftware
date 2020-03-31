@@ -13,6 +13,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 教员带班
+    /// </summary>
     [Table("ClassTeacher")]
     public partial class ClassTeacher
     {
@@ -23,6 +27,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 课程id
         /// </summary>
         public Nullable<int> Skill { get; set; }
+
+        /// <summary>
+        /// 班级ID
+        /// </summary>
         public int ClassNumber { get; set; }
         public Nullable<bool> IsDel { get; set; }
 

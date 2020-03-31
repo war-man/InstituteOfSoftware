@@ -98,16 +98,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                             err.Msg = "用户名或密码错误";
                         }
                     }
-
-
-                    
-
-
-
                 }
-
-
-               
             }
             catch (Exception ex)
             {

@@ -13,12 +13,22 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 老师擅长的课程
+    /// </summary>
     [Table(name: "GoodSkill")]
     public partial class GoodSkill
     {
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 教员ID
+        /// </summary>
         public Nullable<int> TearchID { get; set; }
+        /// <summary>
+        /// 课程
+        /// </summary>
         public Nullable<int> Curriculum { get; set; }
         public string Remark { get; set; }
     

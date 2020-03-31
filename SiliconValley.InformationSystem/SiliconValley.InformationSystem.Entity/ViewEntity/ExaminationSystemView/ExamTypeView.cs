@@ -14,7 +14,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
    public class ExamTypeView
     {
         public int ID { get; set; }
+        /// <summary>
+        /// 考试类型
+        /// </summary>
         public  ExamTypeName TypeName { get; set; }
+        /// <summary>
+        /// 阶段
+        /// </summary>
         public Grand GrandID { get; set; }
     }
 }

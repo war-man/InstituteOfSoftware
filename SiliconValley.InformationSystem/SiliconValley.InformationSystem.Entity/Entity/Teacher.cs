@@ -23,12 +23,33 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
        
         [Key]
         public int TeacherID { get; set; }
+        /// <summary>
+        /// 员工编号（外键）
+        /// </summary>
         public string EmployeeId { get; set; }
+        /// <summary>
+        /// 工作经验
+        /// </summary>
         public string WorkExperience { get; set; }
+        /// <summary>
+        /// 项目经验
+        /// </summary>
         public string ProjectExperience { get; set; }
+        /// <summary>
+        /// 教学经验
+        /// </summary>
         public string TeachingExperience { get; set; }
+        /// <summary>
+        /// 带班风格
+        /// </summary>
         public string AttendClassStyle { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDel { get; set; }
+        /// <summary>
+        /// 底课时
+        /// </summary>
         public Nullable<int> MinimumCourseHours { get; set; }
 
        
