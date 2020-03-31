@@ -13,14 +13,28 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 班委表
+    /// </summary>
     [Table(name: "Members")]
     public partial class Members
     {
-
+        /// <summary>
+        /// 班委id
+        /// </summary>
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 班委名称
+        /// </summary>
         public string Nameofmembers { get; set; }
+        /// <summary>
+        /// 是否删除
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
         public Nullable<System.DateTime> Addtime { get; set; }
 
 
