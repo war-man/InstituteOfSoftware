@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 编辑企业视图
+    /// </summary>
     public class EditEnterpriseView
     {
-        //公司id
+        /// <summary>
+        /// 公司id
+        /// </summary>
         public int EntID { get; set; }
         /// <summary>
         /// 操作标号
@@ -17,18 +22,30 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string EntName { get; set; }
 
         public string EntAddress { get; set; }
-        //规模
+        /// <summary>
+        ///  规模
+        /// </summary>
         public string EntScale { get; set; }
-        //性质
+        /// <summary>
+        ///   性质
+        /// </summary>
         public string EntNature { get; set; }
 
-        //福利
+        /// <summary>
+        ///   福利
+        /// </summary>
         public string EntWelfare { get; set; }
-        //企业备注
+        /// <summary>
+        /// 企业备注
+        /// </summary>
         public string Remark { get; set; }
-        //联系人
+        /// <summary>
+        /// 联系人
+        /// </summary>
         public string EntContacts { get; set; }
-        //联系方式
+        /// <summary>
+        /// 联系方式
+        /// </summary>
         public string EntPhone { get; set; }
     }
 }

@@ -11,8 +11,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// </summary>
    public class ListStockGoods
     {
+        /// <summary>
+        /// 物品Id
+        /// </summary>
         public int Id { get; set; }
-
+        /// <summary>
+        /// 物品名称
+        /// </summary>
         public string GoodsName { get; set; }
     }
 }

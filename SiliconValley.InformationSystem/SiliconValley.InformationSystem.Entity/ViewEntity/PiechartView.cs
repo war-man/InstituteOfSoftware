@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 饼图实体
+    /// </summary>
     public class PiechartView
     {
         /// <summary>

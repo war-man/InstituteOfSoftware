@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 晚归登记
+    /// </summary>
   public  class NotreturningLateView
     {
         /// <summary>

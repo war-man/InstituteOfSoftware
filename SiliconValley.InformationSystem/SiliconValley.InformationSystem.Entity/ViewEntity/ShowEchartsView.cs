@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 统计市场老师备案数量、上门量、报名量
+    /// </summary>
    public class ShowEchartsView
     {
         /// <summary>

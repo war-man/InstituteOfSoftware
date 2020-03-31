@@ -7,6 +7,9 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 显示每个咨询师分配了哪些学生
+    /// </summary>
    public class ConsultAndStedent
     {
         /// <summary>

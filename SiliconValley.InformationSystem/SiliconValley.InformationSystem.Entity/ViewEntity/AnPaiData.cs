@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 排课数据
+    /// </summary>
    public class AnPaiData
     {
         /// <summary>

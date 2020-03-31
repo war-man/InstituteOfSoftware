@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+
    public class ClassTableView
     {
 

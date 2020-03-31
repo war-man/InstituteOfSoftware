@@ -5,8 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
-{//成绩模型数据
-  public  class AchievementView
+{
+    /// <summary>
+    /// 成绩模型数据
+    /// </summary>
+    public class AchievementView
     {
         /// <summary>
         /// 考期

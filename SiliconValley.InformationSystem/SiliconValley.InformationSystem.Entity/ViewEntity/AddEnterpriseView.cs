@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 企业视图
+    /// </summary>
    public class AddEnterpriseView
     {
-
-
         public string EntName { get; set; }
 
         public string EntAddress { get; set; }

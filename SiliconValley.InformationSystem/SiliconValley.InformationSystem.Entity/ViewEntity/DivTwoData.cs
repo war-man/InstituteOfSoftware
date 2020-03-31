@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 咨询师分量
+    /// </summary>
    public class DivTwoData
     {
         /// <summary>
@@ -35,7 +38,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
             get; set;
         }
     }
-
+    /// <summary>
+    /// 统计分量完成或未完成的量
+    /// </summary>
     public class ALLDATA
     {
         /// <summary>

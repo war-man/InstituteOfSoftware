@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+   /// <summary>
+   /// 学生保险
+   /// </summary>
    public class InsuranceStudentView
     {
         public string ID { get; set; }

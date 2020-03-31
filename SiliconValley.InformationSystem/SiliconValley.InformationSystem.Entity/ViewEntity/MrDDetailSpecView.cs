@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 招聘
+    /// </summary>
     public class MrDDetailSpecView
     {
         /// <summary>
