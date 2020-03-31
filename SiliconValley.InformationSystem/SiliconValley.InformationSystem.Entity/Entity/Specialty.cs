@@ -23,8 +23,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
        
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 专业名称
+        /// </summary>
         public string SpecialtyName { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
         public string Rmark { get; set; }
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
 
         public bool Equals(Specialty x, Specialty y)
