@@ -2,6 +2,7 @@
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -237,5 +238,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.IsAttend(id, Isdele), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 培训人
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TraineeContro()
+        {
+            //部门
+            ViewBag.department = Depa.GetList().Where(a => a.DeptName.Contains("教质部")).ToList().Select(a => new SelectListItem { Text = a.DeptName, Value = a.DeptId.ToString() }); ;
+            return View();
         }
+        /// <summary>
+        /// 培训人数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="EmployeeId"员工编号></param>
+        /// <param name="EmpName">员工姓名</param>
+        /// <param name="department">部门</param>
+        /// <returns></returns>
+        public ActionResult TraineeDate(int page, int limit, string EmployeeId, string EmpName,string department)
+        {
+
+            return Json(dbtext.TraineeDate(page, limit, EmployeeId, EmpName, department), JsonRequestBehavior.AllowGet); 
+          
+        }
+
+    }
 }

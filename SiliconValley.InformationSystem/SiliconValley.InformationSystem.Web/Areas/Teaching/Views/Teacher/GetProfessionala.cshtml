@@ -3,6 +3,7 @@
     ViewBag.Title = "GetProfessionala";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @section style{
     <style>
         .divTile div {
@@ -14,20 +15,21 @@
             margin-top: 10px;
             background-color: aqua;
         }
-        .divTile div:hover{
-            background-color:honeydew;
-        }
+
+            .divTile div:hover {
+                background-color: honeydew;
+            }
     </style>
 }
 <div class="layui-btn-group">
-    <button type="button" class="layui-btn layui-btn-radius" id="but1">登记职业素养培训课件</button>
+    <button type="button" class="layui-btn layui-btn-radius" id="but1">登记专业老师培训课件</button>
 
 </div>
-<div style="margin-top:10px; width:100%;height:500px;border:2px solid #a0989b;" >
+<div style="margin-top:10px; width:100%;height:500px;border:2px solid #a0989b;">
     <div class="divTile" style="width:99%;margin: 5px auto;text-align:center;">
-    
+
     </div>
-   
+
 </div>
 <div id="demo6" style="margin:0px auto;width:150px;"></div>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
@@ -51,7 +53,7 @@
                         $(".divTile").append(lab);
                     }
                 }
-              
+
 
             });
         }
@@ -63,7 +65,7 @@
             var laypage = layui.laypage;
 
             var procount = '@Html.Raw(ViewBag.professionala)';
-          
+
             //分页
             laypage.render({
                 elem: 'demo6'
@@ -80,33 +82,33 @@
             });
             //登记培训课件
             $("#but1").click(function () {
-                Popup("/Teachingquality/Headteacher/AddProfessionala", "登记职业素养培训课件", 500, 540);
+                Popup("/Teaching/Teacher/AddProfessionala", "登记职业素养培训课件", 500, 540);
             })
             //第一次加载职业素养课件
             GetDateProfessionala(page, limit);
             //$(".Mydiv").on("click", function () {
             //    console.log(this);
             //});
-         
-          
+
+
         })
        //查看职业素养课件内容
         function butprofessin(e) {
-       
+
             var id = $($(e).children()[0]).val();
-            Popup("/Teachingquality/Headteacher/FineProfessionala/" + id, "查看职业素养课件内容", 500, 560);
-           
+            Popup("/Teaching/Teacher/FineProfessionala/" + id, "查看职业素养课件内容", 500, 560);
+
         }
         function parPopup(callback) {
             layer.open({
                 type: 2,
                 area: ["800px", '500px'],
                 title: "获取培训人",
-                content: '/Teachingquality/Headteacher/TraineeContro',
+                content: '/Teaching/Teacher/TraineeContro',
                 end: callback
             });
         }
-        
+
         var empdata;
         function GetPartsItmes(data) {
             empdata = data;

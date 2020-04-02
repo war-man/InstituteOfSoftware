@@ -1,8 +1,8 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
-@model  SiliconValley.InformationSystem.Entity.MyEntity.Professionala
+@model SiliconValley.InformationSystem.Entity.ViewEntity.ProfessionalaView
+
 <!DOCTYPE html>
 
 <html>
@@ -38,6 +38,13 @@
     </div>
     <div class="layui-container" style="text-align:center;">
         <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">培训人</label>
+                <div class="layui-input-inline">
+                    @Html.TextBoxFor(a => a.EmpNameTraine, new Dictionary<string, object>() { { "readonly", "readonly" }, { "class", "layui-input bordel" } })
+
+                </div>
+            </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="layui-form-label">培训标题</label>
                 <div class="layui-input-inline">

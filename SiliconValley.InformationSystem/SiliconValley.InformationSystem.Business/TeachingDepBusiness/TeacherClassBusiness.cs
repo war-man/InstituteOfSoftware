@@ -222,7 +222,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
 
             classTableView.ClassSize = this.GetStudentByClass(classSchedule.id).Count;//班级人数
-                                                                                      //学员班级                                                                                              //学员班级
+            //学员班级     
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
 
             try

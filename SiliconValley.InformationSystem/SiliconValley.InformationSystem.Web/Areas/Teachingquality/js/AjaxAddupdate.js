@@ -48,7 +48,7 @@ function Transaction(url, mytitle, width, hegin) {
     //正在执行中
     function showLoad() {
 
-        return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+        return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 800000 });
 
     }
     //关闭执行中的窗体
