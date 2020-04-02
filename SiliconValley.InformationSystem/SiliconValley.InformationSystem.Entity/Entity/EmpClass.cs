@@ -18,15 +18,25 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 就业专员ID
+        /// </summary>
         public int EmpStaffID { get; set; }
         /// <summary>
         /// 班级id
         /// </summary>
         public int ClassId { get; set; }
         public bool IsDel { get; set; }
+
         public System.DateTime dirDate { get; set; }
         public string Remark { get; set; }
+        /// <summary>
+        /// 开始时间
+        /// </summary>
         public System.DateTime StartTime { get; set; }
+        /// <summary>
+        /// 结束时间
+        /// </summary>
         public Nullable<System.DateTime> EndingTime { get; set; }
 
     }

@@ -425,6 +425,7 @@
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="ViewEntity\StaffOfRoomwithFormdataView.cs" />
+    <Compile Include="ViewEntity\Staff_Cost_StatisticesDetailView.cs" />
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentData.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
@@ -438,6 +439,7 @@
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherData.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
+    <Compile Include="ViewEntity\TeachingItem.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />
     <Compile Include="ViewEntity\TransactionView.cs" />

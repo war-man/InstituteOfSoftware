@@ -147,6 +147,7 @@
     <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
     <Compile Include="EducationalBusiness\Reconcile_Com.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
+    <Compile Include="EducationalBusiness\Staff_Cost_StatisticssBusiness.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\SubstituteTeachCourseManeger.cs" />
     <Compile Include="EducationalBusiness\TeacherNightManeger.cs" />

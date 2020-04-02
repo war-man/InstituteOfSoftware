@@ -250,6 +250,7 @@
     <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\Controllers\ReconcileController.cs" />
     <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
+    <Compile Include="Areas\Educational\Controllers\Staff_Cost_StatisticsController.cs" />
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
     <Compile Include="Areas\Educational\Controllers\SubstituteTeachCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
@@ -1516,6 +1517,7 @@
     <Content Include="Config\MyExcelClass.json" />
     <Content Include="Config\Obempstaff.config" />
     <Content Include="Config\UserMapRole.config" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\Staff_Cost_StatisticsIndex.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

@@ -1,0 +1,217 @@
+﻿
+@{
+    ViewBag.Title = "Staff_Cost_StatisticsIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+    
+    <style>
+        .line-title {
+            display:inline-block;
+            width:30%;
+            border:1px solid blue;
+        }
+
+        #emplist {
+            margin-top:50px;
+        }
+    </style>
+
+    }
+
+<div id="mywarp">
+
+    <div id="title" style="text-align:center;">
+        <button id="createEmpCost" type="button" class="layui-btn layui-btn-radius layui-btn-primary">生成员工费用统计</button>
+        <div class="line-title"></div>
+        <i class="layui-icon layui-icon-chart" style="font-size:35px;"><i style="font-size:25px;">员工费用统计</i> </i>
+        <div class="line-title"></div>
+
+
+    </div>
+
+    <hr />
+    <!--员工列表-->
+    <div id="emplist">
+
+
+
+
+        <div class="list_seccn">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">部门：</label>
+                        <div class="layui-input-inline">
+                            <select name="dep" lay-filter="dep_select" lay-search="">
+
+                                <option value="0">所有</option>
+
+                                @{
+                                    foreach (var item in ViewBag.deps as List<Department>)
+                                    {
+                                        <option value="@item.DeptId">@item.DeptName</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">姓名：</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" id="empName_input" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" style="width:60px;">
+
+
+                        <button id="search" type="button" class="layui-btn layui-btn-primary">查询<i class="layui-icon layui-icon-search"></i></button>
+
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="cost_history">历史统计数据</a>
+            
+        </script>
+
+        <table class="layui-hide tablelist" id="emplist" lay-filter="emplist_filter"></table>
+
+    </div>
+</div>
+
+@section script{
+    
+    <script>
+
+        layui.use(['table', 'layer', 'form'], function () {
+
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+
+
+            ///渲染表格
+            table.render({
+                elem: '#emplist'
+                , id: 'emplist'
+
+                , shade: 3
+                , url: '/Educational/Staff_Cost_Statistics/EmpData?depId=0'
+                , cellMinWidth: 100
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'EmployeeId', title: '员工编号', width: 300 }
+                    , { field: 'EmpName', title: '姓名', width: 300 }
+                    , {
+                        field: 'DepId', title: '所属部门', width: 300, templet: function (res) {
+                            //发送请求获取部门名称
+                            var result = "";
+
+                            $.ajax({
+                                url: '/Educational/Staff_Cost_Statistics/empDep',
+                                data: { EmployeeId: res.EmployeeId },
+                                dataType: 'JSON',
+                                async: false,
+                                type: "POST",
+                                success: function (data) {
+                                    if (data.ErrorCode == 200) {
+
+                                        result = data.Data.DeptName;
+                                    }
+                                    else {
+                                        result = "数据异常";
+                                    }
+
+                                }
+                            });
+                            return result;
+                        }
+                    }
+                    , {
+                        field: 'PositionId', title: '所属岗位', width: 300, templet: function (res) {
+                            var result = "";
+
+
+
+                            $.ajax({
+                                url: '/Educational/Staff_Cost_Statistics/empPosition',
+                                data: { EmployeeId: res.EmployeeId },
+                                dataType: 'JSON',
+                                async: false,
+                                type: "POST",
+                                success: function (data) {
+                                    if (data.ErrorCode == 200) {
+
+                                        result = data.Data.PositionName;
+                                    }
+                                    else {
+                                        result = "数据异常";
+                                    }
+
+                                }
+                            });
+
+                            return result;
+
+                        }
+                    },
+                    { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
+                ]]
+                , page: true
+            });
+
+
+            ///部门筛选员工
+
+            form.on('select(dep_select)', function (data) {
+
+                var depid = data.value;
+
+
+                table.reload('emplist', {
+
+                    url: '/Educational/Staff_Cost_Statistics/EmpData',
+                    where: {
+                        empName:null,
+                        depId: depid
+                    }
+
+                });
+
+            });
+
+
+            //姓名筛选
+
+            $("#search").click(function () {
+
+                var empname = $("#empName_input").val();
+                
+                table.reload('emplist', {
+
+                    url: '/Educational/Staff_Cost_Statistics/EmpData',
+                    where: {
+                        depId:null,
+                        empName: empname
+                    }
+
+                });
+
+            });
+
+        });
+
+
+
+    </script>    
+    
+}
+

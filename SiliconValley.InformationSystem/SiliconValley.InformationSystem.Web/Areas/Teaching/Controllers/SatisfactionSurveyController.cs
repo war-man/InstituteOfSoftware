@@ -844,7 +844,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
         /// <summary>
-        /// 获取我的班级
+        /// 获取
+        /// 
+        /// 班级
         /// </summary>
         /// <returns></returns>
         public ActionResult GetClassNumberByEmp(string EmpID, int limit, int page)
@@ -1360,6 +1362,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             ViewBag.classlist = list;
 
             return View();
+
         }
 
 

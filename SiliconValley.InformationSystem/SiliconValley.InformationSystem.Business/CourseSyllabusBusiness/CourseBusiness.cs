@@ -32,7 +32,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         public List<Curriculum> GetCurriculas()
         {
 
-            return this.GetList().Where(d => d.IsDelete == false).ToList().OrderByDescending(d=>d.CurriculumID).ToList();
+            return this.GetList().Where(d => d.IsDelete == false).ToList().OrderByDescending(d => d.CurriculumID).ToList();
 
         }
 
@@ -43,7 +43,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         /// <returns></returns>
         public List<Curriculum> GetCurriculaByMajor(int majorid)
         {
-           return this.GetCurriculas().Where(d=>d.MajorID==majorid).ToList();
+            return this.GetCurriculas().Where(d => d.MajorID == majorid).ToList();
         }
 
 
@@ -75,7 +75,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             {
                 courseView.Major = db_Specialty.GetList().Where(d => d.IsDelete == false && d.Id == curriculum.MajorID).FirstOrDefault();
             }
-            
+
             courseView.PeriodMoney = curriculum.PeriodMoney;
             courseView.Rmark = curriculum.Rmark;
 
@@ -103,7 +103,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             curriculum.MajorID = courseView.Major.Id;
             curriculum.PeriodMoney = courseView.PeriodMoney;
             curriculum.Rmark = courseView.Rmark;
-            curriculum.IsDelete = courseView.IsDelete ;
+            curriculum.IsDelete = courseView.IsDelete;
 
 
             return curriculum;
@@ -142,7 +142,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         /// <param name="marjon_id">专业Id</param>
         ///  <param name="ishavaEnglish">是否需要显示英语课程(fale--否，true-是)</param>
         /// <returns></returns>
-        public List<Curriculum> GetRelevantCurricul(int grand_id, int? marjon_id,bool ishavaEnglish)
+        public List<Curriculum> GetRelevantCurricul(int grand_id, int? marjon_id, bool ishavaEnglish)
         {
             if (ishavaEnglish)
             {
@@ -150,8 +150,8 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
                 //获取属于这个阶段的课程
                 List<Curriculum> find_list = this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.IsDelete == false).ToList();
                 //获取不属于这个专业的课程
-                List<Curriculum> notof= this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.MajorID!=marjon_id && d.IsDelete == false).ToList();
-                find_list.RemoveAll(d => d.MajorID != marjon_id && d.Grand_Id==grand_id && d.MajorID!=null);
+                List<Curriculum> notof = this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.MajorID != marjon_id && d.IsDelete == false).ToList();
+                find_list.RemoveAll(d => d.MajorID != marjon_id && d.Grand_Id == grand_id && d.MajorID != null);
 
 
                 return find_list;
@@ -159,11 +159,11 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             else
             {
                 //没有英语 
-                List<Curriculum> find_list= this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.IsDelete == false && d.CourseName != "英语").ToList();
+                List<Curriculum> find_list = this.GetCurriculas().OrderBy(d => d.Sort).Where(d => d.Grand_Id == grand_id && d.IsDelete == false && d.CourseName != "英语").ToList();
                 find_list.RemoveAll(d => d.MajorID != marjon_id && d.Grand_Id == grand_id && d.MajorID != null);
                 return find_list;
             }
-           
+
 
         }
 
@@ -201,10 +201,10 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         public ClassCourseView CurrentClassCourse(int classSchedule)
         {
 
-           var obj = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classSchedule && d.IsDel==false).FirstOrDefault();
+            var obj = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classSchedule && d.IsDel == false).FirstOrDefault();
 
             return this.ConvertToView(obj);
-            
+
 
         }
 
@@ -216,7 +216,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         {
             TeacherClassBusiness dbteacherclass = new TeacherClassBusiness();
 
-            
+
 
             var course1 = dbteacherclass.GetClassTeachers().Where(d => d.ClassNumber == classid && d.IsDel == false).FirstOrDefault();
 
@@ -241,7 +241,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
 
             var course = this.GetCurriculas().Where(d => d.CurriculumID == courseid).FirstOrDefault();
 
-            return  this.GetCurriculas().Where(d => d.Grand_Id == course.Grand_Id && d.MajorID == course.MajorID && d.Sort == course.Sort+1).FirstOrDefault();
+            return this.GetCurriculas().Where(d => d.Grand_Id == course.Grand_Id && d.MajorID == course.MajorID && d.Sort == course.Sort + 1).FirstOrDefault();
 
         }
 
@@ -252,7 +252,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         /// <param name="classTeacher"></param>
         public void EditClassCourseArrangment(ClassTeacher classTeacher)
         {
-           var classteacherlist = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classTeacher.ClassNumber && d.IsDel == false).ToList();
+            var classteacherlist = db_classteacher.GetIQueryable().Where(d => d.ClassNumber == classTeacher.ClassNumber && d.IsDel == false).ToList();
 
             if (classteacherlist != null)
             {
@@ -265,7 +265,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
                 }
             }
 
-            
+
             classTeacher.EndDate = null;
             classTeacher.IsDel = false;
 
@@ -276,7 +276,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
 
         public void UsingOrProhibit(string status, int classteacherid)
         {
-           var classteacher =  db_classteacher.GetIQueryable().Where(d => d.ID == classteacherid).FirstOrDefault();
+            var classteacher = db_classteacher.GetIQueryable().Where(d => d.ID == classteacherid).FirstOrDefault();
 
             //如果为启用  则要禁用掉其他的 
 
@@ -309,5 +309,21 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
             }
 
         }
+
+
+        /// <summary>
+        /// 获取课程的类型
+        /// </summary>
+        /// <returns></returns>
+        public CourseType CurseType(int courseId)
+        {
+            var couse =  this.GetEntity(courseId);
+
+            CourseTypeBusiness db_courseTyep = new CourseTypeBusiness();
+
+            return db_courseTyep.GetEntity(couse.CourseType_Id);
+        }
+
+        
     }
 }
