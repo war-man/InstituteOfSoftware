@@ -2,9 +2,7 @@
 @{
     Layout = null;
 }
-@model  SiliconValley.InformationSystem.Entity.MyEntity.Professionala
-<!DOCTYPE html>
-
+@model  SiliconValley.InformationSystem.Entity.Entity.Teachingtraining
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -36,8 +34,8 @@
                         <label class="layui-form-label" id="lab1">培训人</label>
                         @Html.Hidden("Trainee")
 
-                        
-                        <div class="layui-input-inline" >
+
+                        <div class="layui-input-inline">
                             <div id="CLassNames">
                                 <button type="button" style="margin-left:10px;" class="layui-btn layui-btn-sm layui-btn-primary">
                                     <i class="layui-icon" id="ClassName">&#xe615;</i>
@@ -47,7 +45,7 @@
 
 
                         </div>
-                        
+
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label" id="lab1">培训标题</label>
@@ -97,7 +95,7 @@
 </html>
 <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
- 
+
     layui.use(['form', 'layedit', 'laydate', 'upload', 'layer'], function () {
 
         var form = layui.form
@@ -192,16 +190,16 @@
             } else {
                 layer.msg('请点击小图标选择培训人');
             }
-           
-           
+
+
 
         });
         function GetPartsItmes(data) {
-         
+
             $("#Trainee").val(data.id);
             $("#Lists").css("display", "block");
 
-            
+
             $("#CLassNames").css("display", "none");
             $("#Lists").val(data.EmpName + "----" + data.department);
         }
@@ -213,6 +211,6 @@
             });
 
         });
-       
+
     });
 </script>

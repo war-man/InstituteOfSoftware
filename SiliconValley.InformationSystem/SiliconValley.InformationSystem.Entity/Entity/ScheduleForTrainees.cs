@@ -13,19 +13,30 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+    /// <summary>
+    /// 班级学员表
+    /// </summary>
     [Table(name: "ScheduleForTrainees")]
     public partial class ScheduleForTrainees
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 班级名称
+        /// </summary>
         public string ClassID { get; set; }
+        /// <summary>
+        /// 学号
+        /// </summary>
         public string StudentID { get; set; }
         /// <summary>
         /// 是否为当前班级
         /// </summary>
         public Nullable<bool> CurrentClass { get; set; }
-         public DateTime AddDate { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        public DateTime AddDate { get; set; }
         /// <summary>
         /// 班级id
         /// </summary>

@@ -1,0 +1,124 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TraineeContro</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <form class="layui-form" action="">
+        <div class="layui-container">
+            <div class="layui-row ">
+
+
+                <div class="layui-row layui-form-item" style="width:80%;margin-top:20px;">
+
+
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label labels">员工编号</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EmployeeId" autocomplete="off" class="layui-input linu">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label labels">员工姓名</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="EmpName" autocomplete="off" class="layui-input linu">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label labels">部门</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("department", ViewBag.department as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                        </div>
+                    </div>
+                    @*<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="layui-form-label labels">专业</label>
+            <div class="layui-input-block">
+                @Html.DropDownList("Major_Id", ViewBag.Major_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+
+            </div>
+        </div>*@
+
+
+                </div>
+
+                <div style="position:absolute;left:84%;top:1px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </form>
+    <div>
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+     
+    </div>
+</body>
+</html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var Name = $("#text1").val();
+        var form = layui.form;
+        table.render({
+            elem: '#test'
+            , url: '/Teachingquality/Headteacher/TraineeDate'
+            , id: 'idTest'
+            , cols: [[
+                
+                { field: 'EmployeeId', title: '员工编号' },
+                { field: 'EmpName', title: '员工姓名' },
+                { field: 'sex', title: '员工性别' },
+                { field: 'department', title: '部门' },
+               
+                //{ field: 'Major_Id', title: '专业' },
+                
+            ]]
+        });
+        //双击一条数据进行操作
+        table.on('rowDouble(test)', function (obj) {
+
+            var id = obj.data;
+            layer.confirm('您真的要选择吗?', function (index) {
+                parent.GetPartsItmes(id);
+                parent.layer.close(parent.layer.index);
+            });
+
+            //得到当前行数据
+            //obj.del(); //删除当前行
+            //obj.update(fields) //修改当前行数据
+        });
+        //单击一行数据选中
+
+
+        //查询功能
+        form.on('submit(demo2)', function (data) {
+            var x = data.field;
+            console.log(x);
+            table.reload('idTest', {
+                where: {
+                    EmployeeId: x.EmployeeId,
+                    EmpName: x.EmpName,
+                    department: x.department,
+
+                }, page: {
+                    curr: 1
+                }
+            });
+            return false;
+        });
+    });
+</script>

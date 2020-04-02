@@ -291,6 +291,7 @@
     <Compile Include="Entity\TeacheMitoryonduty.cs" />
     <Compile Include="Entity\Teacher.cs" />
     <Compile Include="Entity\TeacherNight.cs" />
+    <Compile Include="Entity\Teachingtraining.cs" />
     <Compile Include="Entity\TecharOnstageBearing.cs" />
     <Compile Include="Entity\TestScore.cs" />
     <Compile Include="Entity\TextAnswer.cs" />
@@ -400,6 +401,7 @@
     <Compile Include="ViewEntity\PieServiceHelper.cs" />
     <Compile Include="ViewEntity\ProBedtimeStudentsView.cs" />
     <Compile Include="ViewEntity\ProClassScheduleView.cs" />
+    <Compile Include="ViewEntity\ProfessionalaView.cs" />
     <Compile Include="ViewEntity\ProjectDetailView.cs" />
     <Compile Include="ViewEntity\ProjectTeamDetailView.cs" />
     <Compile Include="ViewEntity\ProRoomDisabledView.cs" />
@@ -440,6 +442,7 @@
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />
+    <Compile Include="ViewEntity\TraineeDateVIew.cs" />
     <Compile Include="ViewEntity\TransactionView.cs" />
     <Compile Include="ViewEntity\TransferData.cs" />
     <Compile Include="ViewEntity\TungView.cs" />

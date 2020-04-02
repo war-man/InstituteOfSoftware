@@ -323,9 +323,18 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         /// </summary>
         /// <param name="id">id</param>
         /// <returns></returns>
-        public Professionala FineProfessionala(int id)
+        public ProfessionalaView FineProfessionala(int id)
         {
-            return ProfessionalaBusiness.GetEntity(id);
+            var x = ProfessionalaBusiness.GetEntity(id);
+            ProfessionalaView professionala = new ProfessionalaView();
+            professionala.ID = x.ID;
+            professionala.Remarks = x.Remarks;
+            professionala.Trainee = x.Trainee;
+            professionala.Trainingcontent = x.Trainingcontent;
+            professionala.TrainingDate = x.TrainingDate;
+            professionala.TrainingTitle = x.TrainingTitle;
+            professionala.EmpNameTraine = employeesInfoManage.GetEntity(this.GetEntity(x.Trainee).informatiees_Id).EmpName;
+            return professionala;
         }
         /// <summary>
         /// 班主任带班数据
@@ -427,6 +436,56 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             }
             return str;
 
+        }
+        /// <summary>
+        /// 班主任培训人数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="EmployeeId"员工编号></param>
+        /// <param name="EmpName">员工姓名</param>
+        /// <param name="department">部门</param>
+        /// <returns></returns>
+        public object TraineeDate(int page, int limit, string EmployeeId, string EmpName, string department)
+        {
+            List<TraineeDateVIew> listteainees = new List<TraineeDateVIew>();
+            //班主任表
+           var x= this.GetList().Where(a=>a.IsDelete==false).ToList();
+            foreach (var item in x)
+            {
+                TraineeDateVIew traineeDateVIew = new TraineeDateVIew();
+                traineeDateVIew.id = item.ID;
+                traineeDateVIew.EmployeeId = item.informatiees_Id;
+                //拿到员工对象
+                var employee=  employeesInfoManage.GetList().Where(a => a.EmployeeId == item.informatiees_Id).FirstOrDefault();
+                traineeDateVIew.EmpName = employee.EmpName;
+                traineeDateVIew.sex = employee.Sex;
+                traineeDateVIew.department = employeesInfoManage.GetDeptByEmpid(employee.EmployeeId).DeptName;
+                traineeDateVIew.departmentID = employeesInfoManage.GetDeptByEmpid(employee.EmployeeId).DeptId;
+                listteainees.Add(traineeDateVIew);
+            }
+            if (!string.IsNullOrEmpty(EmployeeId))
+            {
+                listteainees = listteainees.Where(a => a.EmployeeId.Contains(EmployeeId)).ToList();
+            }
+            if (!string.IsNullOrEmpty(EmpName))
+            {
+                listteainees = listteainees.Where(a => a.EmpName.Contains(EmpName)).ToList();
+            }
+            if (!string.IsNullOrEmpty(department))
+            {
+                int departmentID = int.Parse(department);
+                listteainees = listteainees.Where(a => a.departmentID==departmentID).ToList();
+            }
+          var   dataList= listteainees.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = listteainees.Count,
+                data = dataList
+            };
+            return data;
         }
     }
 }
