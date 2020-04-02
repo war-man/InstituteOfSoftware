@@ -15,14 +15,23 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// 排课实体
+    /// 排课表
     /// </summary>
     [Table(name: "Reconcile")]
     public partial class Reconcile
     {
+        /// <summary>
+        /// 排课编号
+        /// </summary>
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 教室编号
+        /// </summary>
         public Nullable<int> ClassRoom_Id { get; set; }
+        /// <summary>
+        /// 课程编号
+        /// </summary>
         public string Curriculum_Id { get; set; }
         /// <summary>
         /// 课程时间字段

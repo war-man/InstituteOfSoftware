@@ -13,15 +13,33 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 课程时间表
+    /// </summary>
     [Table("CourseTime")]
     public partial class CourseTime
     {
+        /// <summary>
+        /// 课程时间编号
+        /// </summary>
         [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 基础数据枚举类型表的值
+        /// </summary>
         public Nullable<int> BaseDataEnum_Id { get; set; }
+        /// <summary>
+        /// 课时数
+        /// </summary>
         public Nullable<int> CourseCount { get; set; }
+        /// <summary>
+        /// 其他说明
+        /// </summary>
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
         public Nullable<System.DateTime> AddDate { get; set; }
     
     }

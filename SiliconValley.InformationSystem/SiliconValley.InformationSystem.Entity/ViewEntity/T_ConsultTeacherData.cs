@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 用于显示咨询师信息的实体
+    /// </summary>
    public class T_ConsultTeacherData
     {
        /// <summary>

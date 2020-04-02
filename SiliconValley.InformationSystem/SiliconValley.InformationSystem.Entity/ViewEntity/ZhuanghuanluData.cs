@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 该实体用于存储咨询师的转化率
+    /// </summary>
    public class ZhuanghuanluData
     {
         /// <summary>

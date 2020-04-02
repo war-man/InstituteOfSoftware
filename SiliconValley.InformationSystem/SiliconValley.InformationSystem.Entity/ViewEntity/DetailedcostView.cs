@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 升学缴费
+    /// </summary>
    public class DetailedcostView
     {
         public int id { get; set; }

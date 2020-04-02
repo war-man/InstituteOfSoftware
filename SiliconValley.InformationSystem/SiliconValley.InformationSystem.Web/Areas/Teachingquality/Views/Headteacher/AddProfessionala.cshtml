@@ -32,7 +32,23 @@
                 <legend>基础数据</legend>
 
                 <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label" id="lab1">培训人</label>
+                        @Html.Hidden("Trainee")
 
+                        
+                        <div class="layui-input-inline" >
+                            <div id="CLassNames">
+                                <button type="button" style="margin-left:10px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                    <i class="layui-icon" id="ClassName">&#xe615;</i>
+                                </button>
+                            </div>
+                            <input type="text" class="layui-input linu " id="Lists" style="display:none; border:0px;" readonly="readonly" />
+
+
+                        </div>
+                        
+                    </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
                         <label class="layui-form-label" id="lab1">培训标题</label>
                         <div class="layui-input-inline">
@@ -171,10 +187,32 @@
         var couer = 0;
         //监听提交
         form.on('submit(demo1)', function (data) {
-            ajaxPorfessionala("/Teachingquality/Headteacher/AddProfessionala", data.field)
-
-
+            if (data.Trainee != "") {
+                ajaxPorfessionala("/Teachingquality/Headteacher/AddProfessionala", data.field)
+            } else {
+                layer.msg('请点击小图标选择培训人');
+            }
+           
+           
 
         });
+        function GetPartsItmes(data) {
+         
+            $("#Trainee").val(data.id);
+            $("#Lists").css("display", "block");
+
+            
+            $("#CLassNames").css("display", "none");
+            $("#Lists").val(data.EmpName + "----" + data.department);
+        }
+        //拿到培训人
+        $("#ClassName").click(function () {
+            window.parent.parPopup(function () {
+                var empData = window.parent.getempdate();
+                GetPartsItmes(empData);
+            });
+
+        });
+       
     });
 </script>

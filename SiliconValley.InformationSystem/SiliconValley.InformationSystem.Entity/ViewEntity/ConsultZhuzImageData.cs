@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 月度咨询师分量完成量
+    /// </summary>
    public class ConsultZhuzImageData
     {
         /// <summary>

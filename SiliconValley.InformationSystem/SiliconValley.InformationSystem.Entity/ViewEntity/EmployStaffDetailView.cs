@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 员工详细视图
+    /// </summary>
     public class EmployStaffDetailView
     {
         /// <summary>

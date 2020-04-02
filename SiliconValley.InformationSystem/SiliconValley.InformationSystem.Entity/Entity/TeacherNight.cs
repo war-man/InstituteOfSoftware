@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 教学老师晚自习值班记录表
+    /// </summary>
     [Table(name: "TeacherNight")]
     public partial class TeacherNight
     {

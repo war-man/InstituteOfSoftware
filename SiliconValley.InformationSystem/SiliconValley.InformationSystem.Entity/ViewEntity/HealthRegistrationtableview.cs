@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 卫生登记
+    /// </summary>
    public class HealthRegistrationtableview
     {
         /// <summary>

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 学生报考
+    /// </summary>
   public  class EnrollmentView
     {
         public int id { get; set; }

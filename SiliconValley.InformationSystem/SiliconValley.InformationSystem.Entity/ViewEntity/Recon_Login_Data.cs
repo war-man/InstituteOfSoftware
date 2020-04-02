@@ -7,6 +7,9 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 用于获取哪个校区的教室哪个阶段的教务
+    /// </summary>
    public class Recon_Login_Data
     {
         /// <summary>

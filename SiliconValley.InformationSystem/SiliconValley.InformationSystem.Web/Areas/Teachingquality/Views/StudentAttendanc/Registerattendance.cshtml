@@ -189,33 +189,34 @@
                 console.log(data.field)
                 var button = $('#xue').children().length;
                 var errten = "";
-                $.post("/Teachingquality/StudentAttendanc/Errnt", data.field, function (datas) {
-                    if (datas.length > 0) {
-                        console.log(datas);
-                        for (var i = 0; i < datas.length; i++) {
-                            errten += "学号为:" + datas[i].StudentID + ",姓名为:" + datas[i].Name + "<br/>";
+                console.log($("#StudentID").val());
+                //$.post("/Teachingquality/StudentAttendanc/Errnt", data.field, function (datas) {
+                //    if (datas.length > 0) {
+                //        console.log(datas);
+                //        for (var i = 0; i < datas.length; i++) {
+                //            errten += "学号为:" + datas[i].StudentID + ",姓名为:" + datas[i].Name + "<br/>";
 
-                        }
-                        Errye(errten + "<br/>该数据已存在数据库,页面数据将为您清空，请勿在同一个日期添加相同数据");
-                        document.getElementById("form").reset();
-                        reset();
-                    } else {
-                        //判断是否有查询学员
-                        if (button > 0) {
-                            if (getNowFormatDate(dates) >= getNowFormatDate(date)) {
-                                console.log(data.field);
+                //        }
+                //        Errye(errten + "<br/>该数据已存在数据库,页面数据将为您清空，请勿在同一个日期添加相同数据");
+                //        document.getElementById("form").reset();
+                //        reset();
+                //    } else {
+                //        //判断是否有查询学员
+                //        if (button > 0) {
+                //            if (getNowFormatDate(dates) >= getNowFormatDate(date)) {
+                //                console.log(data.field);
 
-                                ajaxpost("/Teachingquality/StudentAttendanc/Registerattendance", data.field);
-                            } else {
-                                Errye("输入的日期不能超过大于当前日期")
-                            }
-                        } else {
-                            Errye("请使用查询按钮根据班级选择学员")
-                        }
-                    }
+                //                ajaxpost("/Teachingquality/StudentAttendanc/Registerattendance", data.field);
+                //            } else {
+                //                Errye("输入的日期不能超过大于当前日期")
+                //            }
+                //        } else {
+                //            Errye("请使用查询按钮根据班级选择学员")
+                //        }
+                //    }
                
 
-                });
+                //});
             });
             //错误消息提示
             function Errye(err) {

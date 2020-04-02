@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
-    //这个类是学生信息综合类
-   public class My_StudentDataOne
+    /// <summary>
+    /// 这个类是学生信息综合类
+    /// </summary>
+    public class My_StudentDataOne
     {
         /// <summary>
         /// 性别

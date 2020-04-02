@@ -13,9 +13,13 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     {
 
         public int ID { get; set; }
-
+        /// <summary>
+        /// 宿舍名称
+        /// </summary>
         public string DormInfoName { get; set; }
-
+        /// <summary>
+        /// 学生名称
+        /// </summary>
         public string StudentName { get; set; }
     }
 }

@@ -185,32 +185,34 @@
                         var hegin = "";
                         switch (data[0].StatesName) {
                             case "转班":
-                                url = "/Teachingquality/ClassSchedule/Shiftwork?Types=1&ID=" + data[0].ID;
+                                url = "/Teachingquality/ClassSchedule/Shiftwork?Types=1&ID=" + data[0].ID + "&ClassID=" + $("#ClassID").val();
                                 hegin = "900";
                                 width = "1000";
                                 break;
                             case "重修":
-                                url = "/Teachingquality/StudentTransaction/Rebuild?Types=1&ID=" + data[0].ID;
+                                url = "/Teachingquality/StudentTransaction/Rebuild?Types=1&ID=" + data[0].ID + "&ClassID=" + $("#ClassID").val();
                                 hegin = "900";
                                 width = "1000";
                                 break;
                             case "休学":
-                                url = "/Teachingquality/StudentTransaction/Suspensionofschool?ID=" + data[0].ID + "&Types=1";
+                                url = "/Teachingquality/StudentTransaction/Suspensionofschool?ID=" + data[0].ID + "&Types=1" + "&ClassID=" + $("#ClassID").val();
+ 
                                 hegin = "900";
                                 width = "1000";
                                 break;
                             case "复学":
-                                url = "/Teachingquality/StudentTransaction/Resumptionofstudy?Types=1&ID=" + data[0].ID;
+                                url = "/Teachingquality/StudentTransaction/Resumptionofstudy?Types=1&ID=" + data[0].ID + "&ClassID=" + $("#ClassID").val();
+                          
                                 hegin = "900";
                                 width = "1000";
                                 break;
                             case "退学":
-                                url = "/Teachingquality/StudentTransaction/Dropoutofschools?Types=1&ID=" + data[0].ID;
+                                url = "/Teachingquality/StudentTransaction/Dropoutofschools?Types=1&ID=" + data[0].ID + "&ClassID=" + $("#ClassID").val();
                                 hegin = "900";
                                 width = "1000";
                                 break;
                             case "开除":
-                                url = "/Teachingquality/StudentTransaction/Expel?Types=1&ID=" + data[0].ID;
+                                url = "/Teachingquality/StudentTransaction/Expel?Types=1&ID=" + data[0].ID + "&ClassID=" + $("#ClassID").val();
                                 hegin = "600";
                                 width = "1000";
                                 break;

@@ -124,6 +124,10 @@
         </div>
 
         <div class="layui-tab-item">
+            @*操作栏*@
+            <script type="text/html" id="barDemo2">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">离职员工详情</a>
+            </script>
             <table id="emptab2" lay-filter="emptab2"></table>
         </div>
     </div>
@@ -158,12 +162,12 @@
 
              var contractend =@ViewBag.contractEnd;
              if (contractend != 0) {
-                 console.log("到期人数：" + contractend);
+                 //console.log("到期人数：" + contractend);
                  document.getElementById('contractEndbtn').style.display= "block";
              } else {
                  document.getElementById('contractEndbtn').style.display = "none";
              }
-             console.log($("#contractEndbtn").css("display"));
+            // console.log($("#contractEndbtn").css("display"));
         });
       
       //在职员工加载
@@ -253,7 +257,6 @@
                                 url: "/Personnelmatters/EmployeesInfo/EditDateCell",
                                 data: { id: data.EmployeeId, endvalue: value },
                                 success: function (data) {
-                                    console.log(data.Msg);
                                     if (data.Success) {
                                         layui.table.reload('myEmpInfo');
                                     }
@@ -279,7 +282,6 @@
                     url: "/Personnelmatters/EmployeesInfo/EditTableCell",
                     data: { id: data.EmployeeId, Attrbute: field, endvalue: value },
                     success: function (data) {
-                        console.log("单元格结果：" + data);
                         if (data.Success) {
                             layui.table.reload('myEmpInfo');
                         } else {
@@ -294,7 +296,7 @@
             form.on('switch(hunyinDemo)', function (obj) {
 
                 var id = this.value; var name = this.name;
-                console.log(id); console.log(name); console.log(obj.elem.checked);
+                //console.log(id); console.log(name); console.log(obj.elem.checked);
                 $.ajax({
                     type: "get",
                     dataType: "json",
@@ -396,9 +398,25 @@
                     , { field: 'deltime', title: '离职日期', sort: true, width: 120, templet: function (d) { return GetYMD(d.deltime) } }
                     , { field: 'delreason', title: '离职原因', width: 150,sort: true }
                     , { field: 'Remark', title: '备注', sort: true }
-
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo2' }
                 ]]
                 , page: true
+            });
+            //监听行工具事件
+            table.on('tool(emptab2)', function (obj) {
+                var data = obj.data;
+                 if (obj.event === 'detail') {
+                    layer.open({
+                        type: 2,
+                        content: '/Personnelmatters/EmployeesInfo/LeftEmpDetail/?id=' + data.EmployeeId
+                        , area: ['1200px', '730px'],
+                        title: '离职员工详细信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                }
+             
             });
 
 
@@ -576,7 +594,6 @@
             //select 监听
             form.on('select(deptidfilter)', function (data) {
                 var value = data.value;  //select选中的值
-                console.log("选中值" + value);
                 $.ajax({
                     url: "/Personnelmatters/EmployeesInfo/BindPositionSelect",
                     data: { deptid: value },
@@ -585,7 +602,7 @@
                         if (resultData.code == 0) {
                             //清空赋值
                             $("#PositionId").empty();
-                            console.log(resultData.data);
+                            //console.log(resultData.data);
                             $("#PositionId").append(new Option("请选择岗位", ""));
                             $.each(resultData.data, function (index, item) {
                                 //赋值

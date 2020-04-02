@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 加班调休
+    /// </summary>
    public  class MyStaticsData
     {
         //员工编号

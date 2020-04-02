@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// 数据备案学生状态
+    /// 数据备案学生状态表
     /// </summary>
     [Table(name: "StuStatus")]
     public partial class StuStatus

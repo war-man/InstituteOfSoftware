@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
+    /// <summary>
+    /// 学生所在公司或待过的公司
+    /// </summary>
     public class EnterdetailView
     {
         /// <summary>

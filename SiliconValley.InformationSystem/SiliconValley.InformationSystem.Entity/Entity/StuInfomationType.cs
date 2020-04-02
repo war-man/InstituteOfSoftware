@@ -15,12 +15,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     /// <summary>
-    /// 数据备案信息来源实体
+    /// 数据备案信息来源
     /// </summary>
     [Table(name: "StuInfomationType")]
     public partial class StuInfomationType
     {
        
+        /// <summary>
+        /// 备案数据信息编号
+        /// </summary>
     [Key]
         public int Id { get; set; }
         /// <summary>
