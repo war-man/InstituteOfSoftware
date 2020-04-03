@@ -1562,6 +1562,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             try
             {
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
                 //首先判断是否已经存在
 
                var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == int.Parse(classnumber) && d.CurriculumID == Curriculum).ToList();

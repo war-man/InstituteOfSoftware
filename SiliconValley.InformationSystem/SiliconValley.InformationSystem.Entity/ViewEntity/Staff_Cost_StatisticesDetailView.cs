@@ -64,5 +64,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 研发教材数量
         /// </summary>
         public int TeachingMaterial_Node { get; set; }
+
+
     }
 }

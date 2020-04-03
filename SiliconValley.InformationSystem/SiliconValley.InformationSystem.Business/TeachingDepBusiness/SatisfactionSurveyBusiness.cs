@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     /// <summary>
     /// 满意度调查业务类
     /// </summary>
-    public  class SatisfactionSurveyBusiness:BaseBusiness<SatisficingItem>
+    public class SatisfactionSurveyBusiness : BaseBusiness<SatisficingItem>
     {
         CourseBusiness db_course = new CourseBusiness();
 
@@ -53,7 +53,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public List<SatisficingItem> GetAllSatisfactionItems()
         {
 
-            return this.GetList().Where(d=>d.IsDel==false).ToList();
+            return this.GetList().Where(d => d.IsDel == false).ToList();
 
         }
 
@@ -117,25 +117,25 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 foreach (var item in list)
                 {
                     //获取项的类型
-                    var objtype = db_saitemtype.GetList().Where(d => d.ID == satisfactionTypeID && d.DepartmentID ==DepID).FirstOrDefault();
+                    var objtype = db_saitemtype.GetList().Where(d => d.ID == satisfactionTypeID && d.DepartmentID == DepID).FirstOrDefault();
 
                     if (item.ItemType == objtype.ID)
                     {
-                       
-                            resultlist.Add(item);
-                       
+
+                        resultlist.Add(item);
+
                     }
 
                 }
 
             }
 
-           
 
-          
+
+
 
             return resultlist;
-            
+
 
         }
 
@@ -153,7 +153,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             surveyView.ItemContent = satisficingItem.ItemContent;
             surveyView.ItemID = satisficingItem.ItemID;
 
-           var type = db_saitemtype.GetList().Where(d=>d.ID==satisficingItem.ItemType).FirstOrDefault();
+            var type = db_saitemtype.GetList().Where(d => d.ID == satisficingItem.ItemType).FirstOrDefault();
 
             if (type != null)
             {
@@ -165,7 +165,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             }
 
             surveyView.Remark = satisficingItem.Remark;
-            
+
             return surveyView;
         }
 
@@ -175,7 +175,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public List<SatisficingType> GetSatisficingTypes()
         {
-           return db_saitemtype.GetList();
+            return db_saitemtype.GetList();
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// </summary>
         /// <param name="typename">类型名称</param>
         /// <returns></returns>
-        public List<SatisficingType> Screen(string  typename, int depid)
+        public List<SatisficingType> Screen(string typename, int depid)
         {
 
             if (string.IsNullOrEmpty(typename))
@@ -224,12 +224,12 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             //首先删除这个类型下面的具体项
 
-           var list = this.GetAllSatisfactionItems().Where(d => d.ItemType == typeid).ToList();
+            var list = this.GetAllSatisfactionItems().Where(d => d.ItemType == typeid).ToList();
 
-       
-           this.Delete(list);
 
-           var obj = db_saitemtype.GetList().Where(d => d.ID == typeid).FirstOrDefault();
+            this.Delete(list);
+
+            var obj = db_saitemtype.GetList().Where(d => d.ID == typeid).FirstOrDefault();
 
             db_saitemtype.Delete(obj);
 
@@ -241,7 +241,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             SatisfactionSurveyDetailView detailView = new SatisfactionSurveyDetailView();
 
-            var satisficingConfig = db_satisconfig.GetList().Where(d=>d.IsDel==false && d.ID== satisficingResult.SatisficingConfig).FirstOrDefault();
+            var satisficingConfig = db_satisconfig.GetList().Where(d => d.IsDel == false && d.ID == satisficingResult.SatisficingConfig).FirstOrDefault();
 
 
             detailView.Curriculum = db_course.GetCurriculas().Where(d => d.CurriculumID == satisficingConfig.CurriculumID).FirstOrDefault();
@@ -252,29 +252,29 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             detailView.FillInPerson = db_student.GetList().Where(d => d.StudentNumber == satisficingResult.Answerer).FirstOrDefault();
 
-            detailView.investigationDate =(DateTime)satisficingConfig.CreateTime;
+            detailView.investigationDate = (DateTime)satisficingConfig.CreateTime;
 
             detailView.Proposal = satisficingResult.Suggest;
 
             detailView.SurveyResultID = satisficingResult.ID;
 
-          var templist =  db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
+            var templist = db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
 
             foreach (var item in templist)
             {
 
-               detailView.TotalScore += (int)item.Scores;
+                detailView.TotalScore += (int)item.Scores;
 
             }
 
             List<SatisficingResultDetailView> templist1 = new List<SatisficingResultDetailView>();
 
-           var ss = db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
+            var ss = db_satisresultdetail.GetList().Where(d => d.SatisficingBill == satisficingResult.ID).ToList();
 
             foreach (var item in ss)
             {
 
-               var obj1= this.ConvertToSatisfactionSurveyDetailView(item);
+                var obj1 = this.ConvertToSatisfactionSurveyDetailView(item);
 
                 templist1.Add(obj1);
 
@@ -310,15 +310,15 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <param name="empid"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string date , int? Curriculum, string classnumber)
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string date, int? Curriculum, string classnumber)
         {
 
 
             List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
 
-           //判断部门
+            //判断部门
 
-           var emp = db_emp.GetList().Where(d => d.EmployeeId == empid).FirstOrDefault();
+            var emp = db_emp.GetList().Where(d => d.EmployeeId == empid).FirstOrDefault();
 
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
 
@@ -338,7 +338,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 resultlist = SurveyHistoryData(empid, (int)Curriculum, classnumber);
 
             }
-           
+
 
 
             return resultlist;
@@ -350,14 +350,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// 获取满意度调查详细数据 --教员
         /// </summary>
         /// <returns></returns>
-        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid , int Curriculum, string classnumber)
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, int Curriculum, string classnumber)
         {
             List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
             List<SatisficingConfig> templist = new List<SatisficingConfig>();
 
-            if (string.IsNullOrEmpty(classnumber) ||Curriculum == 0)
+            if (string.IsNullOrEmpty(classnumber) || Curriculum == 0)
             {
-                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid ).ToList();
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid).ToList();
             }
             else
             {
@@ -388,14 +388,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
-        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string classnumber,string date)
+        public List<SatisfactionSurveyDetailView> SurveyHistoryData(string empid, string classnumber, string date)
         {
             List<SatisfactionSurveyDetailView> resultlist = new List<SatisfactionSurveyDetailView>();
             List<SatisficingConfig> templist = new List<SatisficingConfig>();
 
             if (classnumber == null)
             {
-                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >=DateTime.Parse(date) && d.CreateTime< DateTime.Parse(date).AddMonths(1)).ToList();
+                templist = db_satisconfig.GetList().Where(d => d.EmployeeId == empid && d.CreateTime >= DateTime.Parse(date) && d.CreateTime < DateTime.Parse(date).AddMonths(1)).ToList();
             }
             else
             {
@@ -433,10 +433,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public SatisficingResult GetSatisficingResultByID(int id)
         {
-
-
-          return  db_satisresult.GetList().Where(d => d.IsDel == false && d.ID == id).FirstOrDefault();
-
+            return db_satisresult.GetList().Where(d => d.IsDel == false && d.ID == id).FirstOrDefault();
 
         }
 
@@ -477,9 +474,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 result = false;
             }
 
-            return result ;
+            return result;
 
-            
+
 
         }
 
@@ -521,7 +518,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <returns></returns>
         public SatisficingResult GetSatisficingResult(string student, int SatisficingConfigId)
         {
-             var result = db_satisresult.GetIQueryable().Where(d => d.Answerer == student && d.SatisficingConfig == SatisficingConfigId).FirstOrDefault();
+            var result = db_satisresult.GetIQueryable().Where(d => d.Answerer == student && d.SatisficingConfig == SatisficingConfigId).FirstOrDefault();
 
             return result;
         }
@@ -532,7 +529,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <param name="student"></param>
         ///   /// <param name="type">教员(teacher), 教职(jiaozhi)</param>
         /// <returns></returns>
-        public List <SatisficingConfig> GetSatisficingConfigsByStudent(string student, string type)
+        public List<SatisficingConfig> GetSatisficingConfigsByStudent(string student, string type)
         {
             List<SatisficingConfig> result = new List<SatisficingConfig>();
 
@@ -541,7 +538,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             //获取学员当前班级
             TeacherClassBusiness db_teaclsss = new TeacherClassBusiness();
 
-           var stuClass = db_teaclsss.GetScheduleByStudent(student);
+            var stuClass = db_teaclsss.GetScheduleByStudent(student);
 
             //var 
 
@@ -549,12 +546,12 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             if (type == "teacher")
             {
-                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id && d.CurriculumID !=null).ToList();
+                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id && d.CurriculumID != null).ToList();
             }
 
             if (type == "jiaozhi")
             {
-                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id && d.CurriculumID ==null).ToList();
+                list = GetSatisficingConfigNoCutOffdate().Where(d => d.ClassNumber == stuClass.id && d.CurriculumID == null).ToList();
             }
 
 
@@ -600,7 +597,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             return view;
         }
 
-       
+
         public bool IsContains(List<EmployeesInfo> sources, EmployeesInfo employeesInfo)
         {
             foreach (var item in sources)
@@ -652,7 +649,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 //var permissions = PermissionManage.GetRolePermissionModules(role);  //获取角色所拥有的的权限
                 BaseBusiness<OtherRoleMapPermissionValue> db_permissrole = new BaseBusiness<OtherRoleMapPermissionValue>();
 
-               var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
+                var permissions = db_permissrole.GetIQueryable().Where(d => d.RoleId == role).ToList();
 
                 foreach (var permission in permissions)
                 {
@@ -665,7 +662,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     var permissionConfig = (XmlElement)xmlRoot.GetElementsByTagName("permissions")[0];
 
                     //获取配置文件中的权限
-                    XmlNodeList  permissNmaes = permissionConfig.ChildNodes;
+                    XmlNodeList permissNmaes = permissionConfig.ChildNodes;
 
                     foreach (XmlElement item in permissNmaes)
                     {
@@ -682,17 +679,17 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                             foreach (var depItem in deplist)
                             {
-                               emplist.AddRange(db_emp.GetEmpsByDeptid(int.Parse(depItem)));
+                                emplist.AddRange(db_emp.GetEmpsByDeptid(int.Parse(depItem)));
                             }
                         }
                     }
-                   
+
                 }
 
 
             }
 
-            List<EmployeesInfo> resultEmplist  = new List<EmployeesInfo>();
+            List<EmployeesInfo> resultEmplist = new List<EmployeesInfo>();
 
             foreach (var item in emplist)
             {
@@ -722,8 +719,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 return this.satisficingConfigs().Where(d => d.EmployeeId == empnumber && ((DateTime)d.CreateTime).Year == surveyDate.Year && ((DateTime)d.CreateTime).Month == surveyDate.Month).ToList();
             }
 
-            
-
         }
 
 
@@ -735,11 +730,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             List<StudentInformation> studentlist = new List<StudentInformation>();
 
-           var list = this.AllsatisficingResults().Where(d => d.SatisficingConfig == SurveyConfigId).ToList();
+            var list = this.AllsatisficingResults().Where(d => d.SatisficingConfig == SurveyConfigId).ToList();
 
             foreach (var item in list)
             {
-               var tempobj = db_student.GetIQueryable().Where(d => d.StudentNumber == item.Answerer).FirstOrDefault();
+                var tempobj = db_student.GetIQueryable().Where(d => d.StudentNumber == item.Answerer).FirstOrDefault();
 
                 if (tempobj != null)
                     studentlist.Add(tempobj);
@@ -749,6 +744,37 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        /// <summary>
+        /// 获取员工满意度统计
+        /// </summary>
+        /// <param name="empnumber"></param>
+        /// <param name="date"></param>
+        public List<SatisfactionSurveyDetailView> SurveyResult_Cost(string empnumber, DateTime date)
+        {
+            List<SatisfactionSurveyDetailView> result = new List<SatisfactionSurveyDetailView>();
+
+            List<SatisficingConfig> configlist = SurveyData_filter(empnumber, date.ToString());
+
+
+            foreach (var item in configlist)
+            {
+                var confgresult = AllsatisficingResults().Where(d => d.SatisficingConfig == item.ID).ToList();
+
+                foreach (var item1 in confgresult)
+                {
+                    var detailview = ConvertToViewModel(item1);
+
+                    if (detailview != null)
+                    {
+                        result.Add(detailview);
+                    }
+                }
+            }
+
+            return result;
+
+
+        }
 
 
 

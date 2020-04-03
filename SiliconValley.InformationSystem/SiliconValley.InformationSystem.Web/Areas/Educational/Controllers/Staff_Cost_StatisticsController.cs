@@ -121,5 +121,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
+
+        public ActionResult ss()
+        {
+            
+            db_staf_Cost.Staff_CostData("202001030008",DateTime.Parse("2020-04-03"));
+            return null;
+        }
     }
 }

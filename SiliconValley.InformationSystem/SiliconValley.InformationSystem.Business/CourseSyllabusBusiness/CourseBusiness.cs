@@ -315,9 +315,9 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         /// 获取课程的类型
         /// </summary>
         /// <returns></returns>
-        public CourseType CurseType(int courseId)
+        public CourseType CurseType(string courseName)
         {
-            var couse =  this.GetEntity(courseId);
+            var couse =  this.GetCurriculas().Where(d=>d.CourseName == courseName).FirstOrDefault();
 
             CourseTypeBusiness db_courseTyep = new CourseTypeBusiness();
 
