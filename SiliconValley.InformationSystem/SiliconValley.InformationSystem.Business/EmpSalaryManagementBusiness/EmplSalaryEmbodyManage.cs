@@ -7,12 +7,30 @@ using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Util;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
    
 
   public  class EmplSalaryEmbodyManage:BaseBusiness<EmplSalaryEmbody>
     {
+        RedisCache rc= new RedisCache();
+        /// <summary>
+        /// 将员工工资体系表的数据存储于redis服务器
+        /// </summary>
+        /// <returns></returns>
+        public List<EmplSalaryEmbody> GetEmpESEData() {
+            rc.RemoveCache("InRedisESEData");
+            List<EmplSalaryEmbody> eselist = new List<EmplSalaryEmbody>();
+            if (eselist==null || eselist.Count==0) {
+                eselist = this.GetList();
+                rc.SetCache("InRedisESEData",eselist);
+            }
+            eselist = rc.GetCache<List<EmplSalaryEmbody>>("InRedisESEData");
+            return eselist;
+         
+        }
+
         /// <summary>
         /// 往员工工资体系表加入员工编号
         /// </summary>
@@ -34,7 +52,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     {
                         ese.PerformancePay = 1000;
                     }
-                    else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                    else if (empmanage.GetDeptByEmpid(empid).DeptName == "校办")
                     {
                         ese.PerformancePay = 3000;
                     }
@@ -47,11 +65,10 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 else {
                     ese.PositionSalary = emp.ProbationSalary - ese.BaseSalary;
                 }
-               
-                            
-
+              
                 ese.IsDel = false;
                 this.Insert(ese);
+                rc.RemoveCache("InRedisESEData");
                 result = true;
                 BusHelper.WriteSysLog("工资体系表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
                 
@@ -61,8 +78,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 result = false;
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
-            return result;
-           
+            return result;          
         }
 
 
@@ -72,12 +88,13 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="empid"></param>
         /// <returns></returns>
         public bool EditEmpSalaryState(string empid) {
-            var ese = this.GetList().Where(e => e.EmployeeId == empid).FirstOrDefault() ;
+            var ese = this.GetEmpESEData().Where(e => e.EmployeeId == empid).FirstOrDefault() ;
             bool result = false;
             try
             {
                 ese.IsDel = true;
                 this.Update(ese);
+                rc.RemoveCache("InRedisESEData");
                 result = true;
                 BusHelper.WriteSysLog("工资体系表禁用该员工成功！", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
@@ -96,7 +113,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="empid"></param>
         /// <returns></returns>
         public EmplSalaryEmbody GetEseByEmpid(string empid) {
-           var ese= this.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+           var ese= this.GetEmpESEData().Where(s => s.EmployeeId == empid).FirstOrDefault();
             return ese;
         }
     }

@@ -28,11 +28,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         //获取员工异动表数据
-        public ActionResult GetEtrData(int page, int limit)
+        public ActionResult GetEtrData(int page, int limit, string AppCondition)
         {
             EmpTransactionManage etmanage = new EmpTransactionManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
             var list = etmanage.GetList().Where(s=>s.IsDel==false).ToList();
+            if (!string.IsNullOrEmpty(AppCondition))
+            {
+                string[] str = AppCondition.Split(',');
+                string ename = str[0];
+                string deptname = str[1];
+                string pname = str[2];
+                string Type = str[3];
+               
+                list = list.Where(e => emanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                if (!string.IsNullOrEmpty(deptname))
+                {
+                    list = list.Where(e => emanage.GetDeptByEmpid(e.EmployeeId).DeptId == int.Parse(deptname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(pname))
+                {
+                    list = list.Where(e => emanage.GetPositionByEmpid(e.EmployeeId).Pid == int.Parse(pname)).ToList();
+                }
+                if (!string.IsNullOrEmpty(Type))
+                {
+                    list = list.Where(e => e.TransactionType==int.Parse(Type)).ToList();
+                }
+            }
             var mylist = list.OrderByDescending(e => e.TransactionId).Skip((page - 1) * limit).Take(limit).ToList();
             var etlist = from e in mylist
                          select new
@@ -125,7 +147,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     var mtype3 = mt.GetList().Where(s => s.MoveTypeName == "调岗").FirstOrDefault().ID;
                     var myype4 = mt.GetList().Where(s => s.MoveTypeName == "加薪").FirstOrDefault().ID;
                     var emp = empmanage.GetEntity(e.EmployeeId);
-                    if (ajaxresult.Success && e.TransactionType == mtype1)//当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
+                    //当异动时间修改好之后且是转正异动的情况下将该员工的转正日期修改
+                    if (ajaxresult.Success && e.TransactionType == mtype1)
                     {
                         emp.PositiveDate = e.TransactionTime;
                         empmanage.Update(emp);
@@ -138,10 +161,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     //    ajaxresult = empmanage.Success();
 
                     //}
-                    else if (ajaxresult.Success && e.TransactionType == mtype3)//当异动时间修改好之后且是调岗异动的情况下将该员工的工资及岗位进行修改
+                    //当异动时间修改好之后且是调岗异动的情况下将该员工的工资及岗位进行修改
+                    else if (ajaxresult.Success && e.TransactionType == mtype3)
                     {
                         emp.PositionId = (int)e.PresentPosition;
-                        if (emp.PositiveDate == null)
+                        if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                         {
                             emp.ProbationSalary = e.PresentSalary;
                         }
@@ -155,8 +179,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     else if (ajaxresult.Success && e.TransactionType == myype4)
                     {
                         if (ajaxresult.Success)
-                        {//异动添加成功后将员工表中的员工工资也改变    
-                            if (emp.PositiveDate == null)
+                        {//异动修改成功后且是加薪异动的情况下将员工表中的员工工资也改变    
+                            if (string.IsNullOrEmpty(emp.PositiveDate.ToString()))
                             {
                                 emp.ProbationSalary = et.PresentSalary;
                             }
@@ -204,14 +228,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         ///  异动信息添加时选择员工
         /// </summary>
         /// <returns></returns>
-        public ActionResult SelectEmp() {
+        public ActionResult SelectEmp(string type) {
+            ViewBag.type = type;
             return View();
         }
-        public ActionResult GetEmpData(int page, int limit)
+        public ActionResult GetEmpData(int page, int limit,string type, string ename)
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            MoveTypeManage mtmanage = new MoveTypeManage();
+            var typename = mtmanage.GetList().Where(s=>s.ID==int.Parse(type)).FirstOrDefault();
+            //当选择的异动类型是离职或调岗或加薪时，只加载在职员工
             var list = empinfo.GetList().Where(e => e.IsDel == false).ToList();
            
+            //当选择的异动类型是转正时，就只加载未转正的在职员工
+            if (typename.MoveTypeName == "转正")
+            {
+                list = list.Where(s =>string.IsNullOrEmpty(s.PositiveDate.ToString())).ToList();
+            }
+            if (!string.IsNullOrEmpty(ename))
+            {
+                list = list.Where(e => e.EmpName.Contains(ename)).ToList();
+            }
             var mylist = list.OrderBy(e => e.EmployeeId).Skip((page - 1) * limit).Take(limit).ToList();
             var newlist = from e in mylist
                           select new
@@ -375,9 +412,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                 ese.PerformancePay = 500;
                             }
                             ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
-
                             esemanage.Update(ese);
                             ajaxresult = esemanage.Success();
+                            //并将该员工绩效分默认改为100
+                            if (ajaxresult.Success)
+                            {
+                                MeritsCheckManage mcmanage = new MeritsCheckManage();
+                                var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
+                                ajaxresult.Success = mcemp;
+                            }
                         }
                     }
                 }
@@ -496,6 +539,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 AjaxResultxx = brmanage.Error(ex.Message);
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 异动类型下拉框绑定
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult BindTypeSelect() {
+            MoveTypeManage mtmanage = new MoveTypeManage();
+            var mtlist= mtmanage.GetList();
+            var newstr = new
+            {
+                code = 0,
+                msg = "",
+                count = mtlist.Count(),
+                data = mtlist
+            };
+            return Json(newstr,JsonRequestBehavior.AllowGet);
         }
     }
 }

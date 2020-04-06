@@ -12,6 +12,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class EmplSalaryEmbodyController : Controller//员工工资体系
     {
+        RedisCache rc=new RedisCache();
         
         // GET: Personnelmatters/EmplSalaryEmbody
         public ActionResult EmpSalaryEmbodyIndex()
@@ -24,7 +25,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var eselist = empsemanage.GetList().Where(s => s.IsDel == false).ToList() ;
+            var eselist = empsemanage.GetEmpESEData().Where(s => s.IsDel == false).ToList() ;
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -118,6 +119,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 
                 ese.IsDel = myese.IsDel;
                 esemanage.Update(ese);
+                rc.RemoveCache("InRedisESEData");
                 AjaxResultxx= esemanage.Success();
             }
             catch (Exception ex)
@@ -175,6 +177,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     ad.ContributionBase =int.Parse(ContributionBase);
                     ad.PersonalSocialSecurity =decimal.Parse(PersonalSocialSecurity);
                     esemanage.Update(ad);
+                    rc.RemoveCache("InRedisESEData"); 
                     AjaxResultxx = esemanage.Success();
                 }
             }
