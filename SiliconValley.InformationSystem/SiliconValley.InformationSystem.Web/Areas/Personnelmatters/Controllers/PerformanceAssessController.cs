@@ -12,14 +12,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class PerformanceAssessController : Controller
     {
+        RedisCache rc = new RedisCache();
         //绩效考核统计
         // GET: Personnelmatters/PerformanceAssess
         public ActionResult PerformanceAssessIndex()
         {
             MeritsCheckManage msrmanage = new MeritsCheckManage();//员工月度工资
-            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            if (msrmanage.GetEmpMCData().Where(s => s.IsDel == false).Count() > 0)
             {
-                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                var time = msrmanage.GetEmpMCData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
                 string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
                 ViewBag.yearandmonth = mytime;
             }
@@ -37,7 +38,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var mclist = mcmanage.GetList().Where(s => s.IsDel == false).ToList();
+            var mclist = mcmanage.GetEmpMCData().Where(s => s.IsDel == false).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -105,9 +106,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult ChangeMCTime()
         {
             MeritsCheckManage msrmanage = new MeritsCheckManage();
-            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            if (msrmanage.GetEmpMCData().Where(s => s.IsDel == false).Count() > 0)
             {
-                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                var time = msrmanage.GetEmpMCData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
                 string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
                 ViewBag.time = mytime;
             }
@@ -121,11 +122,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             MeritsCheckManage msrmanage = new MeritsCheckManage();
             try
             {
-                var attlist = msrmanage.GetList().Where(s => s.IsDel == false).ToList();
+                var attlist = msrmanage.GetEmpMCData().Where(s => s.IsDel == false).ToList();
                 for (int i = 0; i < attlist.Count(); i++)
                 {
                     attlist[i].YearAndMonth = Convert.ToDateTime(CurrentTime);
                     msrmanage.Update(attlist[i]);
+                    rc.RemoveCache("InRedisMCData");
                     AjaxResultxx = msrmanage.Success();
                 }
             }
@@ -183,6 +185,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 mc.YearAndMonth = m.YearAndMonth;
                 mc.IsDel = m.IsDel;
                 mcmanage.Update(mc);
+                rc.RemoveCache("InRedisMCData");
                 AjaxResultxx = mcmanage.Success();
             }
             catch (Exception ex)

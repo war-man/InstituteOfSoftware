@@ -13,125 +13,141 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class EmpSalaryManagementController : Controller
     {
+        RedisCache rc= new RedisCache();
+        //第一次进入月度工资表页面时加载的年月份的方法
+        static string GetFirstTime()
+        {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
+            string mytime = "";
+            if (msrmanage.GetEmpMsrData().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = msrmanage.GetEmpMsrData().Where(s => s.IsDel == false).LastOrDefault().YearAndMonth;
+                mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+            }
+            return mytime;
+        }
+        static string FirstTime = GetFirstTime();
+
         //员工工资管理页面
         // GET: Personnelmatters/EmpSalaryManagement
         public ActionResult SalaryManageIndex()
         {
-            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
-            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
-            {
-                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-                string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
-                ViewBag.yearandmonth = mytime;
-            }
-
+            ViewBag.yearandmonth = FirstTime;
             return View();
         }
         //工资表数据加载
-        public ActionResult EmpSalaryData(int page, int limit, string AppCondition)
+        public ActionResult EmpSalaryData(int page, int limit, string AppCondition, string ymtime)
         {
-            EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
+            ymtime = FirstTime;
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();//员工信息表
-            var eselist = msrmanage.GetList().Where(s => s.IsDel == false).ToList();
-            if (!string.IsNullOrEmpty(AppCondition))
-            {
-                string[] str = AppCondition.Split(',');
-                string ename = str[0];
-                string deptname = str[1];
-                string pname = str[2];
-                string Empstate = str[3];
-                eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
-                if (!string.IsNullOrEmpty(deptname))
-                {
-                    eselist = eselist.Where(e => empmanage.GetDeptByEmpid(e.EmployeeId).DeptId == int.Parse(deptname)).ToList();
-                }
-                if (!string.IsNullOrEmpty(pname))
-                {
-                    eselist = eselist.Where(e => empmanage.GetPositionByEmpid(e.EmployeeId).Pid == int.Parse(pname)).ToList();
-                }
-                if (!string.IsNullOrEmpty(Empstate))
-                {
-                    eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).IsDel == bool.Parse(Empstate)).ToList();
-                }
-
-            }
-            var newlist = eselist.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            List<MonthlySalaryRecord> eselist = new List<MonthlySalaryRecord>() ;
             List<MySalaryObjView> result = new List<MySalaryObjView>();
-
-            foreach (var item in newlist)
-            {
-                MySalaryObjView view = new MySalaryObjView();
-                view.Id = item.Id;//工资编号
-                view.EmployeeId = item.EmployeeId;//员工编号
-                view.empName = empmanage.GetEntity(item.EmployeeId).EmpName;//员工姓名
-                view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;//所属部门
-                view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;//所属岗位
-                view.EmpState = empmanage.GetEntity(item.EmployeeId).IsDel;
-                //拿到该员工工资体系对象
-                var eseobj = msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
-                view.baseSalary = eseobj.BaseSalary;//基本工资
-                view.positionSalary = eseobj.PositionSalary;//岗位工资
-                if (msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth) == null)
+            if (msrmanage.CreateSalTab(ymtime)) {
+                EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表
+              
+                EmployeesInfoManage empmanage = new EmployeesInfoManage();//员工信息表
+                
+                var time = DateTime.Parse(ymtime);
+                eselist = msrmanage.GetEmpMsrData().Where(s => s.IsDel == false && DateTime.Parse(s.YearAndMonth.ToString()).Year == time.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == time.Month).ToList();
+                 
+                if (!string.IsNullOrEmpty(AppCondition))
                 {
-                    view.finalGrade = null;//绩效分
+                    string[] str = AppCondition.Split(',');
+                    string ename = str[0];
+                    string deptname = str[1];
+                    string pname = str[2];
+                    string Empstate = str[3];
+                    eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).EmpName.Contains(ename)).ToList();
+                    if (!string.IsNullOrEmpty(deptname))
+                    {
+                        eselist = eselist.Where(e => empmanage.GetDeptByEmpid(e.EmployeeId).DeptId == int.Parse(deptname)).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(pname))
+                    {
+                        eselist = eselist.Where(e => empmanage.GetPositionByEmpid(e.EmployeeId).Pid == int.Parse(pname)).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(Empstate))
+                    {
+                        eselist = eselist.Where(e => empmanage.GetInfoByEmpID(e.EmployeeId).IsDel == bool.Parse(Empstate)).ToList();
+                    }
 
                 }
-                else
+                var newlist = eselist.OrderBy(s => s.Id).Skip((page - 1) * limit).Take(limit).ToList();              
+
+                foreach (var item in newlist)
                 {
-                    view.finalGrade = msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth).FinalGrade;
+                    MySalaryObjView view = new MySalaryObjView();
+                    view.Id = item.Id;//工资编号
+                    view.EmployeeId = item.EmployeeId;//员工编号
+                    view.empName = empmanage.GetEntity(item.EmployeeId).EmpName;//员工姓名
+                    view.Depart = empmanage.GetDeptByEmpid(item.EmployeeId).DeptName;//所属部门
+                    view.Position = empmanage.GetPositionByEmpid(item.EmployeeId).PositionName;//所属岗位
+                    view.EmpState = empmanage.GetEntity(item.EmployeeId).IsDel;
+                    //拿到该员工工资体系对象
+                    var eseobj = msrmanage.GetEmpsalaryByEmpid(item.EmployeeId);
+                    view.baseSalary = eseobj.BaseSalary;//基本工资
+                    view.positionSalary = eseobj.PositionSalary;//岗位工资
+                    if (msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth) == null)
+                    {
+                        view.finalGrade = null;//绩效分
 
+                    }
+                    else
+                    {
+                        view.finalGrade = msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth).FinalGrade;
+
+                    }
+                    if (view.finalGrade == null)
+                    {
+                        view.PerformanceSalary = null;//绩效工资
+                    }
+                    else
+                    {
+                        view.PerformanceSalary = msrmanage.GetempPerformanceSalary(view.finalGrade, eseobj.PerformancePay);
+                    }
+
+                    view.netbookSubsidy = eseobj.NetbookSubsidy;//笔记本补助
+                    view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;//社保补贴
+                    #region 应发工资1赋值
+                    var one = view.baseSalary + view.positionSalary;
+
+                    view.SalaryOne = msrmanage.GetSalaryone(one, view.PerformanceSalary, view.netbookSubsidy, view.socialSecuritySubsidy);
+                    #endregion
+                    //考勤表对象
+                    var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth);
+                    if (attendobj == null)
+                    {
+                        view.toRegularDays = null;//到勤天数
+                        view.leavedays = null;//请假天数
+                    }
+                    else
+                    {
+                        view.toRegularDays = attendobj.ToRegularDays;
+                        view.leavedays = attendobj.LeaveDays;
+                        view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);//请假扣款
+                        view.TardyWithhold = attendobj.TardyWithhold;//迟到扣款
+                        view.LeaveWithhold = attendobj.LeaveWithhold;//早退扣款
+                        view.NoClockWithhold = attendobj.NoClockWithhold;//缺卡扣款
+                    }
+
+                    view.OvertimeCharges = item.OvertimeCharges;//加班费用
+                    view.Bonus = item.Bonus;//奖金
+
+                    view.OtherDeductions = item.OtherDeductions;//其他扣款
+
+                    #region 应发工资2赋值
+                    view.SalaryTwo = msrmanage.GetSalarytwo(view.SalaryOne, view.OvertimeCharges, view.Bonus, view.LeaveDeductions, view.TardyWithhold, view.LeaveWithhold, view.NoClockWithhold, view.OtherDeductions);
+                    #endregion
+                    view.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;//个人社保
+                    view.PersonalIncomeTax = eseobj.PersonalIncomeTax;//个税
+                    item.Total = msrmanage.GetTotal(view.Id, view.SalaryTwo, view.PersonalSocialSecurity, view.PersonalIncomeTax);
+                    view.Total = item.Total;//合计
+                    view.PayCardSalary = msrmanage.GetPaycardSalary(view.Id, view.Total, view.PersonalSocialSecurity, eseobj.ContributionBase);//工资卡工资
+                    view.CashSalary = msrmanage.GetCashSalary(view.Id, view.Total, view.PayCardSalary);//现金工资
+                    result.Add(view);
                 }
-                if (view.finalGrade == null)
-                {
-                    view.PerformanceSalary = null;//绩效工资
-                }
-                else
-                {
-                    view.PerformanceSalary = msrmanage.GetempPerformanceSalary(view.finalGrade, eseobj.PerformancePay);
-                }
 
-                view.netbookSubsidy = eseobj.NetbookSubsidy;//笔记本补助
-                view.socialSecuritySubsidy = eseobj.SocialSecuritySubsidy;//社保补贴
-                #region 应发工资1赋值
-                var one = view.baseSalary + view.positionSalary;
-
-                view.SalaryOne = msrmanage.GetSalaryone(one, view.PerformanceSalary, view.netbookSubsidy, view.socialSecuritySubsidy);
-                #endregion
-                //考勤表对象
-                var attendobj = msrmanage.GetAttendanceInfoByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth);
-                if (attendobj == null)
-                {
-                    view.toRegularDays = null;//到勤天数
-                    view.leavedays = null;//请假天数
-                }
-                else
-                {
-                    view.toRegularDays = attendobj.ToRegularDays;
-                    view.leavedays = attendobj.LeaveDays;
-                    view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);//请假扣款
-                    view.TardyWithhold = attendobj.TardyWithhold;//迟到扣款
-                    view.LeaveWithhold = attendobj.LeaveWithhold;//早退扣款
-                    view.NoClockWithhold = attendobj.NoClockWithhold;//缺卡扣款
-                }
-
-                view.OvertimeCharges = item.OvertimeCharges;//加班费用
-                view.Bonus = item.Bonus;//奖金
-
-                view.OtherDeductions = item.OtherDeductions;//其他扣款
-
-                #region 应发工资2赋值
-                view.SalaryTwo = msrmanage.GetSalarytwo(view.SalaryOne, view.OvertimeCharges, view.Bonus, view.LeaveDeductions, view.TardyWithhold, view.LeaveWithhold, view.NoClockWithhold, view.OtherDeductions);
-                #endregion
-                view.PersonalSocialSecurity = eseobj.PersonalSocialSecurity;//个人社保
-                view.PersonalIncomeTax = eseobj.PersonalIncomeTax;//个税
-                item.Total = msrmanage.GetTotal(view.Id, view.SalaryTwo, view.PersonalSocialSecurity, view.PersonalIncomeTax);
-                view.Total = item.Total;//合计
-                view.PayCardSalary = msrmanage.GetPaycardSalary(view.Id, view.Total, view.PersonalSocialSecurity, eseobj.ContributionBase);//工资卡工资
-                view.CashSalary = msrmanage.GetCashSalary(view.Id, view.Total, view.PayCardSalary);//现金工资
-                result.Add(view);
-            }
-
+            };
             var newobj = new
             {
                 code = 0,
@@ -139,8 +155,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 count = eselist.Count(),
                 data = result
             };
+
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+        #region 年月份改变于员工月度工资表的变化
+        //月度工作表数据：员工入职时就添加一条该员工的月度工资信息，
+        //如果除了这条数据没有该月份的数据时则添加其他未禁用员工该月的记录
+        //如果除了这条数据还有该月份的数据则只要添加这条就可以
+        //当切换年月份时，循环所有月度工资表数据的月份是否有和选择的月份相匹配的数据，
+        //有的话则进行查询功能，若没有则将所有未禁用的员工添加一次该月份工资，即新月份公子表生成，且月份为选择的月份
 
         /// <summary>
         /// 年月份改变
@@ -148,36 +172,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult UpdateTime()
         {
-            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
-            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
-            {
-                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-                string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
-                ViewBag.time = mytime;
-            }
+            ViewBag.time = GetFirstTime();
             return View();
         }
         [HttpPost]
         public ActionResult UpdateTime(string CurrentTime)
         {
             var AjaxResultxx = new AjaxResult();
+            var newobj = new object();
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
-            try
-            {
-                var msrlist = msrmanage.GetList().Where(s => s.IsDel == false).ToList();
-                for (int i = 0; i < msrlist.Count(); i++)
-                {
-                    msrlist[i].YearAndMonth = Convert.ToDateTime(CurrentTime);
-                    msrmanage.Update(msrlist[i]);
-                    AjaxResultxx = msrmanage.Success();
-                }
-            }
-            catch (Exception ex)
-            {
-                AjaxResultxx = msrmanage.Error(ex.Message);
-            }
+            var msrlist = msrmanage.GetEmpMsrData().Where(s => s.IsDel == false).ToList();
+            var nowtime = DateTime.Parse(CurrentTime);
+            //匹配是否有该月（选择的年月即传过来的参数）的月度工资数据
+            var matchlist = msrlist.Where(m => DateTime.Parse(m.YearAndMonth.ToString()).Year == nowtime.Year && DateTime.Parse(m.YearAndMonth.ToString()).Month == nowtime.Month).ToList();
+
+            AjaxResultxx.Data = matchlist.Count();
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+
+     
+        public ActionResult SalarytableRefresh(string time)
+        {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+            bool result = true;
+                if (msrmanage.CreateSalTab(time))
+                {
+                    result = true;   
+                }
+                else
+                {
+                    result = false;
+                }
+            FirstTime = time;
+            return Json(result,JsonRequestBehavior.AllowGet);
+           
+        }
+
+
+        #endregion
 
         /// <summary>
         /// 工资表中员工禁用
@@ -262,6 +294,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 mobj.Bonus = msr.Bonus;
                 mobj.OtherDeductions = msr.OtherDeductions;
                 msrmanage.Update(mobj);
+                rc.RemoveCache("InRedisMSRData");
                 AjaxResultxx = msrmanage.Success();
             }
             catch (Exception ex)

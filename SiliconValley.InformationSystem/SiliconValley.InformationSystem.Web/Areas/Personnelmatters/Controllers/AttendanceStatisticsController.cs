@@ -13,18 +13,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class AttendanceStatisticsController : Controller
     {
+        RedisCache rc = new RedisCache();
         //考勤统计
         // GET: Personnelmatters/AttendanceStatistics
         public ActionResult AttendanceStatisticsIndex()
         {
             AttendanceInfoManage msrmanage = new AttendanceInfoManage();
-            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            if (msrmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
             {
-                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                var time = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
                 string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
                 ViewBag.yearandmonth = mytime;
 
-                var deserveday = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
+                var deserveday = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
                 ViewBag.DeserveToRegularDays = deserveday;
             }
 
@@ -35,7 +36,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             AttendanceInfoManage attmanage = new AttendanceInfoManage();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var attlist = attmanage.GetList().Where(s => s.IsDel == false).ToList();
+            var attlist = attmanage.GetADInfoData().Where(s => s.IsDel == false).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -109,13 +110,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult ChangeTimeandDays()
         {
             AttendanceInfoManage msrmanage = new AttendanceInfoManage();
-            if (msrmanage.GetList().Where(s => s.IsDel == false).Count() > 0)
+            if (msrmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
             {
-                var time = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                var time = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
                 string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
                 ViewBag.time = mytime;
 
-                var deserveday = msrmanage.GetList().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
+                var deserveday = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
                 ViewBag.days = deserveday;
             }
             return View();
@@ -127,12 +128,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             AttendanceInfoManage msrmanage = new AttendanceInfoManage();
             try
             {
-                var attlist = msrmanage.GetList().Where(s => s.IsDel == false).ToList();
+                var attlist = msrmanage.GetADInfoData().Where(s => s.IsDel == false).ToList();
                 for (int i = 0; i < attlist.Count(); i++)
                 {
                     attlist[i].YearAndMonth = Convert.ToDateTime(CurrentTime);
                     attlist[i].DeserveToRegularDays = ShouldComeDays;
                     msrmanage.Update(attlist[i]);
+                    rc.RemoveCache("InRedisATDData");
                     AjaxResultxx = msrmanage.Success();
                 }
             }
@@ -196,6 +198,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 att.IsDel = a.IsDel;
                 att.EmployeeId = a.EmployeeId;
                 atmanage.Update(att);
+                rc.RemoveCache("InRedisATDData");
                 AjaxResultxx = atmanage.Success();
             }
             catch (Exception ex)
