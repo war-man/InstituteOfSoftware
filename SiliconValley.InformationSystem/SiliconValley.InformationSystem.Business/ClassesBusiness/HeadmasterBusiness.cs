@@ -1,6 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -166,7 +167,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
         {
             //学员班级
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-            var mysex = Hoadclass.GetList().Where(a =>  a.ClassID ==ClassName).ToList();
+            var mysex = Hoadclass.GetList().Where(a =>  a.ClassID ==ClassName && a.EndingTime == null).ToList();
             HeadClass head = new HeadClass();
             if (mysex.Count>1)
             {
@@ -179,12 +180,11 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             var leid = head == null?new Headmaster(): this.GetEntity(head.LeaderID);
             return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
         }
-
         public EmployeesInfo HeadmastaerClassFine(int ClassID)
         {
             //学员班级
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-            var mysex = Hoadclass.GetList().Where(a => a.ClassID == ClassID).ToList();
+            var mysex = Hoadclass.GetList().Where(a => a.ClassID == ClassID&&a.EndingTime==null).ToList();
             HeadClass head = new HeadClass();
            
                 head = mysex.OrderByDescending(a=>a.ID).FirstOrDefault();
@@ -349,14 +349,14 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
            
             return ClassZ.Select(a => new TeamleaderdistributionView
             {
-                HeadmasterName = this.ClassHeadmaster(a.id).EmpName,
+                HeadmasterName = classScheduleBusiness.HeadSraffFine(a.id).EmployeeId==null?"无带班老师": classScheduleBusiness.HeadSraffFine(a.id).EmpName,
               
                 ClassName = classScheduleBusiness.GetEntity(a.id).ClassNumber,
                 ClassID=(int)a.id,
                  Stage= classScheduleBusiness.GetClassGrand((int)a.id, 222),
                  Major= classScheduleBusiness.GetClassGrand((int)a.id, 1),
-                 HeadmasterImages= this.ClassHeadmaster(a.id).Image
-              
+                 HeadmasterImages= classScheduleBusiness.HeadSraffFine(a.id).EmployeeId == null?"": classScheduleBusiness.HeadSraffFine(a.id).Image
+
             }).ToList();
         }
         /// <summary>
@@ -487,5 +487,7 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             };
             return data;
         }
+
+      
     }
 }

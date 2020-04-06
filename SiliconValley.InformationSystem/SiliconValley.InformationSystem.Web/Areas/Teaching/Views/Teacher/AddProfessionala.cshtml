@@ -185,8 +185,10 @@
         var couer = 0;
         //监听提交
         form.on('submit(demo1)', function (data) {
-            if (data.Trainee != "") {
-                ajaxPorfessionala("/Teachingquality/Headteacher/AddProfessionala", data.field)
+            var inttraine = parseInt(data.field.Trainee);
+           
+            if (inttraine>0) {
+                ajaxPorfessionala("/Teaching/Teacher/AddProfessionala", data.field)
             } else {
                 layer.msg('请点击小图标选择培训人');
             }
