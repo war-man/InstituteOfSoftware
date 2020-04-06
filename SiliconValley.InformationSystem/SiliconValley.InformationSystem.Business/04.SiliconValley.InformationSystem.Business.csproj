@@ -97,6 +97,7 @@
     <Compile Include="CourseSchedulingSysBusiness\CurriculumBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
+    <Compile Include="CourseSyllabusBusiness\TeacherHoursCostBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="DormitoryBusiness\AccdationinformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\BenNumberBusiness.cs" />
@@ -138,14 +139,17 @@
     <Compile Include="EducationalBusiness\ClassroomManeger.cs" />
     <Compile Include="EducationalBusiness\ClassTeacherKeepManeger.cs" />
     <Compile Include="EducationalBusiness\CourseTimeManeger.cs" />
+    <Compile Include="EducationalBusiness\DutyCostBusiness.cs" />
     <Compile Include="EducationalBusiness\EvningSelfStudyManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsProvideManeger.cs" />
     <Compile Include="EducationalBusiness\GoodsTypeManeger.cs" />
+    <Compile Include="EducationalBusiness\InternalTrainingCostBusiness.cs" />
     <Compile Include="EducationalBusiness\PurchaseApplyManeger.cs" />
     <Compile Include="EducationalBusiness\PurchaseTypeManeger.cs" />
     <Compile Include="EducationalBusiness\ReconcileManeger.cs" />
     <Compile Include="EducationalBusiness\Reconcile_Com.cs" />
+    <Compile Include="EducationalBusiness\SatisfactionBusiness.cs" />
     <Compile Include="EducationalBusiness\ShppingDetailManeger.cs" />
     <Compile Include="EducationalBusiness\Staff_Cost_StatisticssBusiness.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />

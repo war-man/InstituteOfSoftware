@@ -54,6 +54,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public int Invigilate_Count { get; set; }
 
         /// <summary>
+        /// 值班次数
+        /// </summary>
+        public List<DutyCount> Duty_Count { get; set; }
+
+        /// <summary>
         /// ppt章节数
         /// </summary>
         public int PPT_Node {
@@ -64,6 +69,8 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 研发教材数量
         /// </summary>
         public int TeachingMaterial_Node { get; set; }
+
+
 
 
     }

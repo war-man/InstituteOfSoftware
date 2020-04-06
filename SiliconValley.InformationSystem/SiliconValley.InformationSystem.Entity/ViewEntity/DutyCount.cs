@@ -4,24 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SiliconValley.InformationSystem.Entity.MyEntity;
 namespace SiliconValley.InformationSystem.Entity.ViewEntity
 {
 
+    using SiliconValley.InformationSystem.Entity.MyEntity;
+
     /// <summary>
-    /// 上专业课的次数
+    /// 值班次数
     /// </summary>
-   public class TeachingItem
+    public class DutyCount
     {
-        
         /// <summary>
-        /// 阶段
+        /// 值班类型
         /// </summary>
-        public Grand grand { get; set; }
+        public BeOnDuty DutyType { get; set; }
 
         /// <summary>
-        /// 课时  4节课=1课时
+        /// 值班次数
         /// </summary>
-        public float NodeNumber { get; set; }
+        public float Count { get; set; } 
     }
 }

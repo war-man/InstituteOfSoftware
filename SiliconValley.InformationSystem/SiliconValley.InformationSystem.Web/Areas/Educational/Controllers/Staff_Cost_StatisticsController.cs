@@ -45,7 +45,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// 员工数据
         /// </summary>
         /// <returns></returns>
-        public ActionResult EmpData(int limit, int page,string empName = null, string depId = null )
+        public ActionResult EmpData(int limit, int page,string empName = null, string depId = null)
         {
             //获取筛选之后的员工
             List<EmployeesInfo> emplist = db_staf_Cost.ScreenEmp(EmpName: empName, DepId: depId);

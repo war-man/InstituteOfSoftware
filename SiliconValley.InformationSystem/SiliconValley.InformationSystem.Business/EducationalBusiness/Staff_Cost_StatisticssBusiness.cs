@@ -13,6 +13,8 @@ using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using Newtonsoft.Json.Linq;
+using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
+using System.Xml;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
@@ -140,7 +142,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             if (dep.DeptName.Contains("教学"))
             {
                 //获取到专业课时
-                resultObj.teachingitems = teachingitems(empObj);
+                resultObj.teachingitems = teachingitems(empObj, date);
             }
             else
             {
@@ -152,69 +154,25 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             resultObj.InternalTraining_Count = InternalTraining_Count(empObj);
 
             //获取底课时
-            resultObj.BottomClassHour = CalculationsBottomClassHour(empObj, resultObj.teachingitems);
+            resultObj.BottomClassHour = CalculationsBottomClassHour(empObj, date, resultObj.teachingitems);
 
             //获取满意度调查分数
-            resultObj.SatisfactionScore = CalculationSeurev(emp:empObj,tempdate:date);
-            #region 获取上专业课的课时
+            resultObj.SatisfactionScore = CalculationSeurev(emp: empObj, tempdate: date);
 
-            List<TeachingItem> teachingitems(EmployeesInfo emp)
-            {
+            //获取阅卷份数
+            resultObj.Marking_item = MarkingNumber();
 
-                List<TeachingItem> result = new List<TeachingItem>();
-               var templist = ScreenReconcile(empid, date, type:"skill");
+            //获取监考次数
+            resultObj.Invigilate_Count = InvigilateNumber();
 
-                //获取所有阶段
-                GrandBusiness tempdb_grand = new GrandBusiness();
-                var grandlist = tempdb_grand.AllGrand();
+            //获取值班次数
 
-                foreach (var item in grandlist)
-                {
-                    TeachingItem teachitem = new TeachingItem();
+            resultObj.Duty_Count = Duty_Count(empObj.EmployeeId, date);
 
-                    ///获取到课时
-                    int count = ReconcileGroupByGrand(templist, item);
+            ///研发教材章数
+            resultObj.TeachingMaterial_Node = TeachingMaterial_Node(empObj.EmployeeId, date);
 
-                    teachitem.grand = item;
-
-                    teachitem.NodeNumber = count;
-
-                    result.Add(teachitem);
-                }
-
-                return result;
-
-            }
-
-            #endregion
-
-
-            #region 将排课数据按照阶段分组 获取课时
-            int ReconcileGroupByGrand(List<Reconcile> data, Grand grand)
-            {
-
-                int result = 0;
-
-                foreach (var item in data)
-                {
-                    CourseBusiness tempdb_course = new CourseBusiness();
-
-                    //获取课程的阶段
-
-                    var course = tempdb_course.GetCurriculas().Where(d=>d.CourseName == item.Curriculum_Id).FirstOrDefault();
-
-                    if (course.Grand_Id == grand.Id)
-                    {
-                        result += 4;
-                    }
-
-                }
-
-                return result;
-            }
-
-            #endregion
-
+            resultObj.PPT_Node = PPT_Node(empObj.EmployeeId, date);
 
             #region 获取内训课时
 
@@ -227,7 +185,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     BaseBusiness<Professionala> ProfessionalaBusiness = new BaseBusiness<Professionala>();
 
                     //按照时间筛选出培训记录
-                    var templist = ProfessionalaBusiness.GetList().Where(d=>((DateTime)d.AddTime).Year == date.Year && ((DateTime)d.AddTime).Month == date.Month).ToList();
+                    var templist = ProfessionalaBusiness.GetList().Where(d => ((DateTime)d.AddTime).Year == date.Year && ((DateTime)d.AddTime).Month == date.Month).ToList();
 
                     //获取员工班主任ID
 
@@ -251,7 +209,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     //获取员工 教员ID
                     TeacherBusiness tempdb_teacher = new TeacherBusiness();
 
-                    var teacher = tempdb_teacher.GetTeachers(isContains_Jiaowu: false, IsNeedDimission: true).Where(d=>d.EmployeeId == emp.EmployeeId).FirstOrDefault();
+                    var teacher = tempdb_teacher.GetTeachers(isContains_Jiaowu: false, IsNeedDimission: true).Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
 
                     var resultlist = templist.Where(d => d.Trainee == teacher.TeacherID).ToList();
 
@@ -269,168 +227,66 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             #region 获取职业素养课，语数外 体育 课时
             int otherTeaccher_count()
             {
-               return ScreenReconcile(empObj.EmployeeId, date, type: "other").Count;
+                return ScreenReconcile(empObj.EmployeeId, date, type: "other").Count;
             }
             #endregion
 
-            #region 计算底课时 
-            /* S1S2教学经理，S3教学经理: 如果带1个班底课时为0，如果带2个班则按照标准底课时计算(需要把
-            底课时分摊到每一个工作日，然后在看上两个班级的工作日是多少，得出底课时，如果有小数 向上取整)
-            */
-            float CalculationsBottomClassHour(EmployeesInfo emp, List<TeachingItem> teachingItems)
+
+
+            #region 阅卷份数
+            int MarkingNumber()
             {
-                float result = 0;
-                //获取员工岗位
-                var poo = db_emp.GetPositionByEmpid(emp.EmployeeId);
+                int result = 0;
 
-                //判断这个月所带班情况
+                result = this.ScreenTestScore(empObj, date).Count;
 
-                TeacherClassBusiness tempdb_teacherclass = new TeacherClassBusiness();
-
-                //获取员工 教员ID
-                TeacherBusiness tempdb_teacher = new TeacherBusiness();
-
-                var teacher = tempdb_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
-
-                ///获取到这个月教员所带班级个数
-                ///
-                List< Reconcile>  tempcount = new List<Reconcile>(); //记录带班个数
-                var reconlielist = this.ScreenReconcile(emp.EmployeeId, date, type: "skill");
-
-                //去掉重复项
-                foreach (var item in reconlielist)
-                {
-                    if (!IsContains(tempcount, item))
-                    {
-                        tempcount.Add(item);
-                    }
-                }
-
-                //*************************S1S2教学经理，S3教学经理 的底课时计算方式*********************************
-                if ((dep.DeptName == "s1、s2教学部" && poo.PositionName == "教学主任") || (dep.DeptName == "s3教学部" && poo.PositionName == "教学主任"))
-                {
-                    
-
-                    if (tempcount.Count > 1)
-                    {
-                        //如果带2个班则按照标准底课时计算(需要把底课时分摊到每一个工作日，然后在看上两个班级的工作日是多少，得出底课时，如果有小数 向上取整)
-
-                        //获取到工作日
-                        int workingdateCount = this.WorkingDate(date);
-
-                        //获取标准底课时
-                        var MinimumCourseHours = (float)teacher.MinimumCourseHours;
-
-                        //计算结果
-                        result = MinimumCourseHours / workingdateCount;
-
-
-                    }
-                    else
-                    {
-                        //底课时为0
-                        result = 0;
-                    }
-
-
-                }
-
-
-                else //****************************教员的底课时计算方式******************************
-                {
-                    //当老师有上2种阶段的课程时的计算方式：底课时优先从底阶段减掉，若优先阶段课时不够，则优先级上升
-
-                    var tempnumList = new List<TeachingItem>() ;  //教员这个月的 阶段课程课时
-
-                    foreach (var item in teachingItems)
-                    {
-                        if (item.NodeNumber >= 1)
-                        {
-                            tempnumList.Add(item);
-                        }
-                    }
-
-
-                    float MinimumCourseHours = (float)teacher.MinimumCourseHours;//标准底课时
-
-                    if (tempnumList.Count > 1) //上多个班的情况
-                    {
-                        //底课时优先从底阶段减掉，若优先阶段课时不够，则优先级上升
-
-                        foreach (var item in tempnumList)
-                        {
-                            if (item.grand.GrandName == "S1")
-                            {
-                                if (MinimumCourseHours > 0)
-                                {
-                                    MinimumCourseHours -= item.NodeNumber;
-                                }
-                                else
-                                    break;
-                            }
-
-                            if (item.grand.GrandName == "S2")
-                            {
-                                if (MinimumCourseHours > 0)
-                                {
-                                    MinimumCourseHours -= item.NodeNumber;
-                                }
-                                else
-                                    break;
-                            }
-
-                            if (item.grand.GrandName == "S3")
-                            {
-                                if (MinimumCourseHours > 0)
-                                {
-                                    MinimumCourseHours -= item.NodeNumber;
-                                }
-                                else
-                                    break;
-                            }
-                        }
-
-                    }
-                    else
-                    {
-                        //获取标准底课时
-
-                        result = (float)teacher.MinimumCourseHours;
-                    }
-
-
-                }
                 return result;
             }
             #endregion
 
-            #region 计算满意度分数
-            float CalculationSeurev(EmployeesInfo emp, DateTime tempdate)
+            int InvigilateNumber()
             {
+                int result = 0;
 
-                float result = 0;
+                ExaminationBusiness tempdb_exam = new ExaminationBusiness();
 
-                SatisfactionSurveyBusiness tempdb_datis = new SatisfactionSurveyBusiness();//满意度业务类实例
+                var examlist = tempdb_exam.AllExamination().Where(d => d.BeginDate.Year == date.Year && d.BeginDate.Month == date.Month).ToList();
 
-                List< SatisfactionSurveyDetailView> datalist = tempdb_datis.SurveyResult_Cost(emp.EmployeeId, tempdate);
+                //获取到具体考场
 
-                //开始计算 
+                List<ExaminationRoom> temproomlist = new List<ExaminationRoom>();
 
-                float totalScore = 0; //获取达到总分
-                foreach (var item in datalist)
+                foreach (var item in examlist)
                 {
-                    totalScore += item.TotalScore;
+                    var templist = tempdb_exam.AllExaminationRoom().Where(d => d.Examination == item.ID).ToList();
+
+                    if (templist != null)
+
+                        temproomlist.AddRange(templist);
+
                 }
 
-                result = totalScore / datalist.Count;
-
+                result = GetCount();
 
                 return result;
 
+                #region 得到份数数
+                int GetCount()
+                {
+                    int tempresult1 = 0;
+
+                    foreach (var item in temproomlist)
+                    {
+                        if (item.Invigilator1 == empObj.EmployeeId || item.Invigilator2 == empObj.EmployeeId)
+                            tempresult1++;
+                    }
+
+                    return tempresult1;
+                }
+
+                #endregion
+
             }
-
-            #endregion
-
 
             return resultObj;
         }
@@ -443,7 +299,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="date"></param>
         /// <param name="type">type:0 = 所有；type: skill = 专业；type: other = 其他</param>
         /// <returns></returns>
-        public List<Reconcile> ScreenReconcile(string empid, DateTime date,string type = "0")
+        public List<Reconcile> ScreenReconcile(string empid, DateTime date, string type = "0")
         {
             ReconcileManeger tempdb_reconcile = new ReconcileManeger();
             CourseBusiness db_course = new CourseBusiness();
@@ -451,7 +307,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             //获取当期日期
             var currentData = DateTime.Now;
 
-            var list = tempdb_reconcile.AllReconcile().Where(d=>d.AnPaiDate.Month==date.Month && d.AnPaiDate.Year == date.Year &&d.EmployeesInfo_Id == empid).ToList();
+            var list = tempdb_reconcile.AllReconcile().Where(d => d.AnPaiDate.Month == date.Month && d.AnPaiDate.Year == date.Year && d.EmployeesInfo_Id == empid).ToList();
 
             //定义返回值
             List<Reconcile> result = new List<Reconcile>();
@@ -467,8 +323,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                     foreach (var item in list)
                     {
-                        
-                       var coustype = db_course.CurseType(item.Curriculum_Id);
+
+                        var coustype = db_course.CurseType(item.Curriculum_Id);
 
                         if (coustype.Id == 1)
                         {
@@ -495,7 +351,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
             return result;
-            
+
         }
 
         public bool IsContains(List<Reconcile> sourcs, Reconcile r)
@@ -515,7 +371,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public bool iSHoliday(string date)
         {
-          
+
 
             bool isHoliday = false;
             System.Net.WebClient WebClientObj = new System.Net.WebClient();
@@ -539,85 +395,719 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 isHoliday = false;
             }
-            
+
             return isHoliday;
         }
 
 
-        
+
         /// <summary>
         /// 获取工作日的天数
         /// </summary>
         /// <returns></returns>q
         public int WorkingDate(DateTime date)
         {
-
-            int result = System.Threading.Thread.CurrentThread.CurrentUICulture.Calendar.GetDaysInMonth(date.Year, date.Month); //获取这个月的总天数
+            int result = 0;
 
             ReconcileManeger tempdbR = new ReconcileManeger();
 
-            GetYear find_g = tempdbR.MyGetYear(date.Year.ToString(),System.Web.HttpContext.Current.Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml"));
+            GetYear find_g = tempdbR.MyGetYear(date.Year.ToString(), System.Web.HttpContext.Current.Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml"));
 
             //判断是否为休息日
 
             if (date.Month >= find_g.StartmonthName && date.Month <= find_g.EndmonthName)
             {
                 //单休
-                DateTime dt = new DateTime(date.Year, date.Month, 1); //初始化时间
-                while (dt.Month == date.Month)
-                {
-                    //判读是否为周末
-
-                    if (dt.DayOfWeek == DayOfWeek.Sunday)
-                    {
-                        //总天数减一天
-                        result -= 1;
-                    }
-
-                    dt = dt.AddDays(1);
-                }
+                result = SingleCeaseWorkingDay(date, type: "单休");
             }
             else
             {
-
                 //双休
-
-                DateTime dt = new DateTime(date.Year, date.Month, 1); //初始化时间
-                while (dt.Month == date.Month)
-                {
-                    //判读是否为周末
-
-                    if (dt.DayOfWeek == DayOfWeek.Sunday || dt.DayOfWeek == DayOfWeek.Saturday)
-                    {
-                        //总天数减一天
-                        result -= 1;
-                    }
-                    dt = dt.AddDays(1);
-                    
-                }
+                result = SingleCeaseWorkingDay(date, type: "双休");
             }
 
+            return result;
+        }
+
+
+        /// <summary>
+        ///提供老师月阅卷数量
+        /// </summary>
+        /// <returns></returns>
+        public List<TestScore> ScreenTestScore(EmployeesInfo emp, DateTime date)
+        {
+
+            List<TestScore> resultlist = new List<TestScore>();
+
+            ExamScoresBusiness db_exscore = new ExamScoresBusiness();
+
+            Teacher t = teacher();
+
+            resultlist = db_exscore.AllExamScores().
+
+                Where(d => ((DateTime)d.CreateTime).Year == date.Year && ((DateTime)d.CreateTime).Month == date.Month).
+
+                ToList().Where(d => d.Reviewer == t.TeacherID).ToList();
+
+            return resultlist;
+
+
+            Teacher teacher()
+            {
+                Teacher result = new Teacher();
+
+                TeacherBusiness tempdb = new TeacherBusiness();
+
+                var list = tempdb.GetTeachers(IsNeedDimission: true);
+
+                result = list.Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
+
+                return result;
+            }
+
+        }
+
+        /// <summary>
+        /// 计算工作日天数
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public int SingleCeaseWorkingDay(DateTime date, string type = "单休")
+        {
+            int result = System.Threading.Thread.CurrentThread.CurrentUICulture.Calendar.GetDaysInMonth(date.Year, date.Month); //获取这个月的总天数
 
             DateTime dtt = new DateTime(date.Year, date.Month, 1); //初始化时间
-            //是否法定节假日
-            var isHoliday = this.iSHoliday(dtt.ToString());
 
+            //得出结果
+            return result - CalculationDayNumber();
 
-            while (dtt.Month == date.Month)
+            #region 计算天数和
+            int CalculationDayNumber()
             {
-                //判读是否为周末
+                int num = 0;
 
-                if (isHoliday)
+                while (dtt.Month == date.Month)
                 {
-                    result -= 1;
+                    //是否法定节假日
+                    var isHoliday = this.iSHoliday(dtt.ToString());
+
+                    if (!isHoliday)
+                    {
+                        num++;
+                        continue;
+                    }
+
+                    if (type == "单休")
+                    {
+                        if (dtt.DayOfWeek == DayOfWeek.Sunday)
+                        {
+                            num++;
+                        }
+
+                        continue;
+                    }
+
+                    if (type == "双休")
+                    {
+                        if (dtt.DayOfWeek == DayOfWeek.Sunday || dtt.DayOfWeek == DayOfWeek.Saturday)
+                        {
+                            num++;
+                        }
+
+                        continue;
+                    }
+
+
                 }
-                dtt = dtt.AddDays(1);
+
+                return num;
             }
-           
+            #endregion
+
+
+
+        }
+
+
+        /// <summary>
+        /// 获取上专业课的课时
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public List<TeachingItem> teachingitems(EmployeesInfo emp, DateTime date)
+        {
+
+            var templist = ScreenReconcile(emp.EmployeeId, date, type: "skill");
+
+            //获取所有阶段
+            GrandBusiness tempdb_grand = new GrandBusiness();
+
+            var grandlist = tempdb_grand.AllGrand();
+
+            return GetteachingNum();
+
+
+            List<TeachingItem> GetteachingNum()
+            {
+                List<TeachingItem> result = new List<TeachingItem>();
+
+                foreach (var item in grandlist)
+                {
+                    TeachingItem teachitem = new TeachingItem();
+
+                    ///获取到课时
+                    int count = ReconcileGroupByGrand(templist, item);
+
+                    teachitem.grand = item;
+
+                    teachitem.NodeNumber = count;
+
+                    result.Add(teachitem);
+                }
+
+                return result;
+            }
+
+
+
+        }
+
+
+        #region 将排课数据按照阶段分组 获取课时
+        int ReconcileGroupByGrand(List<Reconcile> data, Grand grand)
+        {
+
+            int result = 0;
+
+            foreach (var item in data)
+            {
+                CourseBusiness tempdb_course = new CourseBusiness();
+
+                //获取课程的阶段
+
+                var course = tempdb_course.GetCurriculas().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
+
+                if (course.Grand_Id == grand.Id)
+                {
+                    result += 4;
+                }
+
+            }
+
+            return result;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// 计算满意度分数
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <param name="tempdate"></param>
+        /// <returns></returns>
+        public float CalculationSeurev(EmployeesInfo emp, DateTime tempdate)
+        {
+
+            float result = 0;
+
+            SatisfactionSurveyBusiness tempdb_datis = new SatisfactionSurveyBusiness();//满意度业务类实例
+
+            List<SatisfactionSurveyDetailView> datalist = tempdb_datis.SurveyResult_Cost(emp.EmployeeId, tempdate);
+
+            //开始计算 
+
+            float totalScore = 0; //获取达到总分
+            foreach (var item in datalist)
+            {
+                totalScore += item.TotalScore;
+            }
+
+            result = totalScore / datalist.Count;
+
+
+            return result;
+
+        }
+
+
+        /// <summary>
+        /// 计算底课时
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <param name="teachingItems"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public float CalculationsBottomClassHour(EmployeesInfo emp, DateTime date, List<TeachingItem> teachingItems = null)
+        {
+
+            #region 计算规则
+            /* S1S2教学经理，S3教学经理: 如果带1个班底课时为0，如果带2个班则按照标准底课时计算(需要把
+            底课时分摊到每一个工作日，然后在看上两个班级的工作日是多少，得出底课时，如果有小数 向上取整)
+            */
+            #endregion
+
+            if (teachingItems == null)
+            {
+                teachingItems = teachingitems(emp, date);
+            }
+
+            float result = 0;
+            //获取员工岗位
+            var poo = db_emp.GetPositionByEmpid(emp.EmployeeId);
+
+            //判断这个月所带班情况
+
+            TeacherClassBusiness tempdb_teacherclass = new TeacherClassBusiness();
+
+            //获取部门
+            var dep = this.GetDeparmentByEmp(emp.EmployeeId);
+
+            //获取员工 教员ID
+            TeacherBusiness tempdb_teacher = new TeacherBusiness();
+
+            var teacher = tempdb_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
+
+            ///获取到这个月教员所带班级个数
+            ///
+            List<Reconcile> tempcount = new List<Reconcile>(); //记录带班个数
+
+            var reconlielist = this.ScreenReconcile(emp.EmployeeId, date, type: "skill");
+
+            //去掉重复项
+            foreach (var item in reconlielist)
+            {
+                if (!IsContains(tempcount, item))
+                {
+                    tempcount.Add(item);
+                }
+            }
+
+            //*************************S1S2教学经理，S3教学经理 的底课时计算方式*********************************
+            if ((dep.DeptName == "s1、s2教学部" && poo.PositionName == "教学主任") || (dep.DeptName == "s3教学部" && poo.PositionName == "教学主任"))
+            {
+                result = bottmTeacherHours_jingli();
+            }
+
+
+            else //****************************教员的底课时计算方式******************************
+            {
+                result = bottomTeacherHours_teacher();
+
+            }
+
+            return result;
+
+
+
+            #region 教学经理底课时计算方式
+            float bottmTeacherHours_jingli()
+            {
+                float tempresult = 0;
+
+                if (tempcount.Count > 1)
+                {
+                    //如果带2个班则按照标准底课时计算(需要把底课时分摊到每一个工作日，然后在看上两个班级的工作日是多少，得出底课时，如果有小数 向上取整)
+
+                    //获取到工作日
+                    int workingdateCount = this.WorkingDate(date);
+
+                    //获取标准底课时
+                    var MinimumCourseHours = (float)teacher.MinimumCourseHours;
+
+                    //计算结果
+                    tempresult = MinimumCourseHours / workingdateCount;
+
+
+                }
+                else
+                {
+                    //底课时为0
+                    tempresult = 0;
+                }
+
+
+                return tempresult;
+            }
+
+            #endregion
+
+            #region 教员底课时计算方式
+
+            float bottomTeacherHours_teacher()
+            {
+                return (float)teacher.MinimumCourseHours;
+            }
+
+
+            #endregion
+
+        }
+
+        /// <summary>
+        /// 费用统计
+        /// </summary>
+        /// <param name="empid">员工</param>
+        /// <param name="date">日期</param>
+        public Cose_StatisticsItems Statistics_Cost(string empid, string date)
+        {
+            Cose_StatisticsItems result = new Cose_StatisticsItems();
+
+            var data = this.Staff_CostData(empid, DateTime.Parse(date));
+
+            ///课时费
+            result.EachingHourCost = (decimal)this.EachingHourCost(data.teachingitems, data.BottomClassHour, data.SatisfactionScore);
+
+            ///值班费
+            result.DutyCost = Duty_Cost(data.Duty_Count);
+
+            /// 监考费
+            result.InvigilateCost = this.InvigilateCost(data.Invigilate_Count);
+
+            ///阅卷费
+            result.MarkingCost = MarkingCost(data.Marking_item);
+
+            ///教材研发费用
+            result.CurriculumDevelopmentCost = CurriculumDevelopmentCost(data.TeachingMaterial_Node) + PPTDevelopmentCost(data.PPT_Node);
 
 
             return result;
         }
 
+        /// <summary>
+        /// 课时费
+        /// </summary>
+        /// <param name="teachingItems">总课时</param>
+        /// <param name="bottomTeacherHours">底课时</param>
+        /// <param name="SurveyCost">满意度分数</param>
+        /// <returns></returns>
+
+        public float EachingHourCost(List<TeachingItem> teachingItems, float bottomTeacherHours, float SurveyScores)
+        {
+
+
+            float result = 0;
+
+            //得到课时
+            List<TeachingItem> teacherHours = TeacherHours(teachingItems, bottomTeacherHours);
+
+            foreach (var item in teacherHours)
+            {
+                TeacherHoursCostBusiness temphour = new TeacherHoursCostBusiness();
+                // 获取到对应的课时费
+                var HourCoose = temphour.teacherHourCosts().Where(d => d.Grand == item.grand.Id).FirstOrDefault();
+
+                //ji算
+                result += item.NodeNumber * (HourCoose.Cost - 5);
+
+            }
+
+            // 加上5元的满意度系数
+
+            float SurveyCost = GetSurveyCost();
+
+            return result + SurveyCost;
+
+
+
+
+            float GetSurveyCost()
+            {
+                float tempresult = 0;
+
+                SatisfactionBusiness tempdb_satis = new SatisfactionBusiness();
+
+                var satislist = tempdb_satis.satisfacctions();
+
+                foreach (var item in satislist)
+                {
+                    if ((float)item.MaxValue >= SurveyScores && SurveyScores >= (float)item.MinValue)
+                    {
+                        tempresult = (float)item.AddMoney;
+
+                        break;
+                    }
+                }
+
+                return tempresult;
+            }
+
+
+
+            /*
+             
+            //总课时-底课时*(对应阶段的课时费-5元的满意度系数);
+
+
+             教员的课时(已减去底课时)
+
+            计算：
+
+            //测试数据
+            S1------10节课
+            S3------2节课
+
+            10*S1阶段课时费+2*S3阶段课时费
+
+            /////////   【 对应阶段的课时费：】
+            ///
+             ((10*S1阶段课时费-5）+ (2*S3阶段课时费-5) ) + 5元满意度系数
+             
+             
+             */
+
+
+
+        }
+
+
+        /// <summary>
+        /// 计算课时   总课时-底课时
+        /// </summary>
+        /// <param name="teachingItems"></param>
+        /// <param name="bottomTeacherHours"></param>
+        /// <returns></returns>
+        public List<TeachingItem> TeacherHours(List<TeachingItem> teachingItems, float bottomTeacherHours)
+        {
+
+            foreach (var item in teachingItems)
+            {
+
+                if (bottomTeacherHours == 0)
+                    break;
+
+                if (item.grand.GrandName == "S1" && item.NodeNumber > 0)
+                {
+                    item.NodeNumber = jisuan(item.NodeNumber);
+                }
+
+                if (item.grand.GrandName == "S2" && item.NodeNumber > 0)
+                {
+                    item.NodeNumber = jisuan(item.NodeNumber);
+
+                }
+
+                if (item.grand.GrandName == "S3" && item.NodeNumber > 0)
+                {
+
+                    item.NodeNumber = jisuan(item.NodeNumber);
+
+                }
+
+                if (item.grand.GrandName == "S4" && item.NodeNumber > 0)
+                {
+
+                    item.NodeNumber = jisuan(item.NodeNumber);
+
+                }
+
+            }
+
+            float jisuan(float NodeNumber)
+            {
+                float tempresult = 0;
+
+                if (NodeNumber - bottomTeacherHours >= 0)
+                {
+                    tempresult = NodeNumber - bottomTeacherHours;
+
+                    //记录底课时
+
+                    bottomTeacherHours = 0;
+                }
+                else
+                {
+                    tempresult = 0;
+                    //记录底课时
+
+                    bottomTeacherHours -= NodeNumber;
+                }
+
+                return tempresult;
+
+            }
+
+            return teachingItems;
+
+
+
+        }
+
+
+        /// <summary>
+        /// 获取值班次数
+        /// </summary>
+        /// <returns></returns>
+        public List<DutyCount> Duty_Count(string empid, DateTime date)
+        {
+            List<DutyCount> result = new List<DutyCount>();
+
+            TeacherNightManeger tempddb_teachernight = new TeacherNightManeger();
+
+            var DutyRecordList = tempddb_teachernight.GetAllTeacherNight().Where(d => d.OrwatchDate.Year == date.Year && d.OrwatchDate.Month == date.Month).ToList().Where(d => d.Tearcher_Id == empid).ToList();
+
+            BeOnDutyManeger tempdb_duty = new BeOnDutyManeger();
+
+            var dytytypelist = tempdb_duty.GetList().Where(d => d.IsDelete == false).ToList();
+
+            foreach (var item in dytytypelist)
+            {
+                var countlist = DutyRecordList.Where(d => d.BeOnDuty_Id == item.Id).ToList();
+
+                DutyCount dutyCount = new DutyCount();
+
+                dutyCount.Count = countlist.Count;
+
+                dutyCount.DutyType = item;
+
+
+                result.Add(dutyCount);
+            }
+
+            return result;
+
+        }
+
+
+        /// <summary>
+        /// 值班费计算
+        /// </summary>
+        /// <param name="dutyCounts"></param>
+        /// <returns></returns>
+        public decimal Duty_Cost(List<DutyCount> dutyCounts)
+        {
+            decimal result = 0;
+
+            foreach (var item in dutyCounts)
+            {
+                result += (decimal)item.Count * item.DutyType.Cost;
+            }
+
+            return result;
+        }
+
+
+        /// <summary>
+        /// 监考费
+        /// </summary>
+        /// <param name="Invigilate_Count"></param>
+        /// <returns></returns>
+        public decimal InvigilateCost(int Invigilate_Count)
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/Cost.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            //获取标准费用
+            var cost = xmlRoot.GetElementsByTagName("InvigilateCost")[0].InnerText;
+
+            return Invigilate_Count * int.Parse(cost);
+
+        }
+
+        /// <summary>
+        /// 阅卷费
+        /// </summary>
+        /// <param name="Marking_Count"></param>
+        /// <returns></returns>
+        public decimal MarkingCost(int Marking_Count)
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/Cost.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            //获取标准费用
+            var cost = xmlRoot.GetElementsByTagName("MarkingCost")[0].InnerText;
+
+            return Marking_Count * int.Parse(cost);
+        }
+
+        /// <summary>
+        /// 内训费用
+        /// </summary>
+        /// <returns></returns>
+        public decimal InternalTrainingCost(int count)
+        {
+            InternalTrainingCostBusiness tempdb = new InternalTrainingCostBusiness();
+
+            var list = tempdb.internalTrainingCosts();
+
+            return 0;
+        }
+
+
+        /// <summary>
+        /// 研发教材章数
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public int TeachingMaterial_Node(string empid, DateTime date)
+        {
+            int result = 0;
+
+            return result;
+        }
+
+        /// <summary>
+        /// ppt数量
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public int PPT_Node(string empid, DateTime date)
+        {
+
+            int result = 0;
+
+            return result;
+        }
+
+        /// <summary>
+        /// 教材研发费用
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public decimal CurriculumDevelopmentCost(int count)
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/Cost.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            //获取标准费用
+            var cost = xmlRoot.GetElementsByTagName("TextBook_NodeCost")[0].InnerText;
+
+            return count * int.Parse(cost);
+
+        }
+        /// <summary>
+        /// PPT研发费用
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public decimal PPTDevelopmentCost(int count)
+        {
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/Cost.xml"));
+
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
+
+            //获取标准费用
+            var cost = xmlRoot.GetElementsByTagName("PPT_NodeCost")[0].InnerText;
+
+            return count * int.Parse(cost);
+        }
     }
 }
