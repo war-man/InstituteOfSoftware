@@ -92,21 +92,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         public string HeadmasreClass()
         {
-            //拿到该班主任负责班级的阶段
-            List<Grand> grands = new List<Grand>();
+            
             //阶段
             GrandBusiness Grandcontext = new GrandBusiness();
+            //拿到该班主任负责班级的阶段
+            List<Grand> grands = Grandcontext.GetList();
             var x1s = dbtext.GetEntity(HeadteID);
             //班主任部门名称
             string DeptName = employeesInfoManage.GetDeptByEmpid(x1s.informatiees_Id).DeptName;
-            if (DeptName.ToLower().Contains("s1"))
-            {
-                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S1" || a.GrandName == "S2"||a.GrandName=="Y1").ToList();
-            }
-            else
-            {
-                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3" || a.GrandName == "S4").ToList();
-            }
+            //if (DeptName.ToLower().Contains("s1"))
+            //{
+            //    grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S1" || a.GrandName == "S2" || a.GrandName == "Y1").ToList();
+            //}
+            //else
+            //{
+            //    grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3" || a.GrandName == "S4").ToList();
+            //}
             //带班人
             object obj = new object();
             //该班主任所有可负责的班级

@@ -1,0 +1,185 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        .div1 {
+            width: 100px;
+            height: 130px;
+            /*background-image: url('/Areas/Courseware/images/wenjin.jpg');*/
+            float: left;
+            margin-left: 10px;
+        }
+
+        .flos {
+            float: left
+        }
+
+        .spa1, .div1 {
+            cursor: pointer;
+        }
+
+        .spa1 {
+            color: #0000CC;
+        }
+    </style>
+}
+    <div class="box">
+        <u class="spa1">首页</u>
+
+    </div>
+<label id="lab1"></label>
+<label id="lab2" style="color:#0000CC"></label>
+    <button type="button" class="layui-btn" id="test1">
+        <i class="layui-icon">&#xe67c;</i>上传文件
+    </button>
+<button id="testListAction">上传</button>
+<div id="MyWenjin" style="margin-top:30px;">
+
+    
+</div>
+<button id="texts">测试</button>
+@section script{
+
+
+    <script>
+        layui.use(['table', 'layer', 'laydate', 'tree', 'upload'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            var upload = layui.upload;
+
+            upload.render({
+                elem: '#test1'
+                , url: '/Courseware/Coursewaremaking/fines'
+                , auto: false //选择文件后不自动上传
+                , accept: 'file'
+                , bindAction: '#testListAction' //指向一个按钮触发上传
+                , data: {
+                    url: function () {
+                        return $("#lab1").text();
+                    }
+                }
+                , choose: function (obj) {
+                    //将每次选择的文件追加到文件队列
+                    var files = obj.pushFile();
+
+                    //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+                    obj.preview(function (index, file, result) {
+              
+                        console.log(file); //得到文件对象
+                        $("#lab2").text(file.name);
+
+                        //obj.resetFile(index, file, '123.jpg'); //重命名文件名，layui 2.3.0 开始新增
+
+                        //这里还可以做一些 append 文件列表 DOM 的操作
+
+                        //obj.upload(index, file); //对上传失败的单个文件重新上传，一般在某个事件中使用
+                        //delete files[index]; //删除列表中对应的文件，一般在某个事件中使用
+                    });
+                }
+               
+                , done: function (res, index, upload) {
+                    $($("#MyWenjin").children()).remove();
+                        data("/" + $("#lab1").text());
+                  
+                }
+            });      
+
+            $.post("/Courseware/Coursewaremaking/CourDate?str=/首页", function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var a1 = data[i].split('.');
+                    if (a1.length > 1) {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
+
+                    } else {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
+                    }
+
+                }
+
+
+            })
+
+
+        })
+        //获取文件夹数据
+        function data(url) {
+            var a1 = url.split('.');
+            
+
+            $($("#MyWenjin").children()).remove()
+            $.post("/Courseware/Coursewaremaking/CourDate?str=" + a1, function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var a1 = data[i].split('.');
+                        if (a1.length > 1) {
+                            $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
+                        } else {
+                            $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
+                        }
+                    }
+                })
+            
+
+
+        }
+        //获取当前文件夹地址
+        function fineName() {
+            var FineName = $($(".box").children());
+            var db_Name = "";
+            for (var i = 0; i < FineName.length; i++) {
+                db_Name += $(FineName[i]).text();
+            }
+            var db = db_Name.split('>');
+            db_Name = "";
+            for (var i = 0; i < db.length; i++) {
+                db_Name += db[i] + "/";
+            }
+            $("#lab1").text(db_Name);
+        }
+        //点击文件夹
+        $("body").on("click", ".div1", function () {
+          
+            var a1 = $($(this).children()[1]).text().split('.');
+            if (a1.length < 2) {
+              
+                if ($($(".box").children()).length < 1) {
+                    $(".box").append($('<u class="spa1">' + $($(this).children()[1]).text() + '</u>'));
+                } else {
+                    $(".box").append($("<spam>&#62;</span>"));
+                    $(".box").append($('<u class="spa1">' + $($(this).children()[1]).text() + '</u>'))
+                }
+                fineName();
+                $($("#MyWenjin").children()).remove()
+                $.post("/Courseware/Coursewaremaking/CourDate?str=/" + $("#lab1").text(), function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var a1 = data[i].split('.');
+                        if (a1.length > 1) {
+                            $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
+                        } else {
+                            $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
+                        }
+                    }
+                })
+            }
+            fineName();
+        })
+        //导航文件夹
+        $("body").on("click", ".spa1", function () {
+            $(this).nextAll().remove();
+            var str = $(this).text();
+            if (str =="首页") {
+                str = "";
+            }
+            fineName();
+            data("/"+$("#lab1").text());
+        });
+
+       
+    </script>
+}

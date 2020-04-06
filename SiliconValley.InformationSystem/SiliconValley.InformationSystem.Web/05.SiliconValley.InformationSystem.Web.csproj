@@ -94,6 +94,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -218,6 +219,8 @@
     <Compile Include="Areas\Capital\Controllers\CapitalController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
+    <Compile Include="Areas\Courseware\Controllers\CoursewaremakingController.cs" />
+    <Compile Include="Areas\Courseware\CoursewareAreaRegistration.cs" />
     <Compile Include="Areas\Dormitory\Controllers\BasicsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\DormitoryInfoController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\EmployeeCheckInController.cs" />
@@ -347,6 +350,8 @@
     <Content Include="Areas\BaseSysManage\css\style.css" />
     <Content Include="Areas\BaseSysManage\js\style.js" />
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
+    <Content Include="Areas\Courseware\images\wenjin.jpg" />
+    <Content Include="Areas\Courseware\images\wen.jpg" />
     <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
     <Content Include="Areas\ExaminationSystem\config\InvigilatorConfig.xml">
       <SubType>Designer</SubType>
@@ -1521,6 +1526,10 @@
     <Content Include="Areas\Teaching\Views\Teacher\GetProfessionala.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\AddProfessionala.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TraineeContro.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Courseware\Views\web.config" />
+    <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
+    <Content Include="Areas\Courseware\首页\ppt课程\教学部\陈海石.docx" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3191,6 +3200,13 @@
     <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Courseware\Models\" />
+    <Folder Include="Areas\Courseware\Views\Shared\" />
+    <Folder Include="Areas\Courseware\首页\ppt课程\教质部\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S1\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S2JAVA\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S2NET\" />
+    <Folder Include="Areas\Courseware\首页\word文档\Y1\" />
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />

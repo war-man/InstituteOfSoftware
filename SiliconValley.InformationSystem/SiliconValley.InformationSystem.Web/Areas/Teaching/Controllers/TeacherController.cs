@@ -1386,6 +1386,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         BaseBusiness<Teachingtraining> ProfessionalaBusiness = new BaseBusiness<Teachingtraining>();
         //员工业务类
         EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+        //人事,部门表
+        BaseBusiness<Department> Depa = new BaseBusiness<Department>();
         //专业老师培训课件添加
         [HttpPost]
         public ActionResult AddProfessionala(Teachingtraining professionala)
@@ -1456,7 +1458,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             professionala.TrainingDate = x.TrainingDate;
             professionala.TrainingTitle = x.TrainingTitle;
             professionala.EmpNameTraine = employeesInfoManage.GetEntity(db_teacher.GetEntity(x.Trainee).EmployeeId).EmpName;
-            return Json(professionala, JsonRequestBehavior.AllowGet);
+            return View(professionala);
         }
         /// <summary>
         /// 培训人页面选择
@@ -1464,6 +1466,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <returns></returns>
         public ActionResult TraineeContro()
         {
+            //部门
+            ViewBag.department = Depa.GetList().Where(a => a.DeptName.Contains("教学部")).ToList().Select(a => new SelectListItem { Text = a.DeptName, Value = a.DeptId.ToString() }); ;
             return View();
         }
         /// <summary>

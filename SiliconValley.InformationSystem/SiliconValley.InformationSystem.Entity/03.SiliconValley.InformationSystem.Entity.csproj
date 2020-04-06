@@ -120,6 +120,7 @@
     <Compile Include="Entity\CoursecategoryY.cs" />
     <Compile Include="Entity\CourseTime.cs" />
     <Compile Include="Entity\CourseType.cs" />
+    <Compile Include="Entity\Coursewaremaking.cs" />
     <Compile Include="Entity\Curriculum.cs" />
     <Compile Include="Entity\DaysOff.cs" />
     <Compile Include="Entity\Debit.cs" />
