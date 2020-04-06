@@ -77,7 +77,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=4.0.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -457,6 +457,7 @@
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
+    <Content Include="Content\Login\style.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -464,6 +465,18 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
     <Content Include="Images\2019090308462490.gif" />
     <Content Include="Images\del.png" />
+    <Content Include="Images\Login\315.gif" />
+    <Content Include="Images\Login\code.jpg" />
+    <Content Include="Images\Login\ewm.jpg" />
+    <Content Include="Images\Login\gov-inco.jpg" />
+    <Content Include="Images\Login\jb.jpg" />
+    <Content Include="Images\Login\jia_foot_icn.png" />
+    <Content Include="Images\Login\member.png" />
+    <Content Include="Images\Login\new.png" />
+    <Content Include="Images\Login\rem-check.png" />
+    <Content Include="Images\Login\slide_btn_bg.png" />
+    <Content Include="Images\Login\wx-confirm.png" />
+    <Content Include="Images\Login\wx-image.png" />
     <Content Include="Images\班级.jpg" />
     <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />

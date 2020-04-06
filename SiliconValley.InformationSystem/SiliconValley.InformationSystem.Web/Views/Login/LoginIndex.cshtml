@@ -9,157 +9,340 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Login</title>
-    <link href="~/Scripts/vendor/layui/css/layui.css" rel="stylesheet" />
-    <link href="~/Scripts/css/main.css" rel="stylesheet" />
-    <style>
-        .bntCss {
-            border: none;
-            font-weight: bold;
-            color: #FFF;
-            margin: 25px 0 0 75px;
-            -webkit-border-radius: 3px;
-            -moz-border-radius: 3px;
-            border-radius: 3px;
-            -webkit-box-shadow: #CCC 0px 0px 5px;
-            -moz-box-shadow: #CCC 0px 0px 5px;
-            box-shadow: #CCC 0px 0px 5px;
-            background: #31b6e7;
-            cursor: pointer;
-            padding: 6px 20px;
-        }
 
-            .bntCss:hover {
-                background: #ff9229;
-            }
-
-        .eject {
-        }
-
-        #studentLoginbtn {
-            cursor:grab;
-        }
-    </style>
 </head>
 <body>
-    <form class="layui-form">
-        <div class="login">
-            <div class="box png">
-                <div class="logo png"></div>
-                <div class="input">
-                    <div class="log">
-                        <div class="name">
-                            <label>用户名</label><input type="text" class="text" id="UserName" placeholder="用户名" name="UserName" tabindex="1" lay-verify="required">
-                        </div>
-                        <div class="pwd">
-                            <label>密　码</label><input type="password" class="text" id="Password" placeholder="密码" name="Password" tabindex="2" lay-verify="required">
-                        </div>
-                        <div>
+    <link rel="stylesheet" type="text/css" href="~/Content/Login/style.css" />
+    <link href="~/Scripts/vendor/layui/css/layui.css" rel="stylesheet" />
+    <style type="text/css">
+        .btn_tab_login {
+            float: right;
+            margin-top: 48px;
+        }
 
-                           
-                            <input type="button" class="submit" loginType="emp" tabindex="3" value="登录" lay-submit lay-filter="subone">
+            .btn_tab_login li {
+                display: inline-block;
+                margin-left: 30px;
+                font-size: 14px;
+            }
 
-                            <span style="margin-left:20px;" id="studentLoginbtn">学员登录>></span>
-                            @*<input type="button" class="bntCss" tabindex="3" value="注册">*@
+                .btn_tab_login li.cur a {
+                    color: #d00;
+                }
+    </style>
+    <script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
+    <script src="~/Scripts/vendor/layui/layui.js"></script>
+    <div id="header">
+        湖南硅谷高科软件学院信息化平台
+    </div>
+
+
+    <style type="text/css">
+        #weixin_login_container iframe {
+            width: 158px;
+            height: 158px;
+        }
+    </style>
+    <div class="login-wrap">
+        <div class="wrap clearfix">
+
+            <div class="form-box fr loginV2" style="display:block;">
+                <ul class="form-tab clearfix">
+                    <li class="tab-li"><a href="javascript:;" tjjj="passport.login_type.wixin_qrcode">微信登录<i class="icon"></i></a></li>
+                    <li class="tab-li cur"><a href="javascript:;" tjjj="passport.login_type.login_name">账号登录</a></li>
+                </ul>
+                <div class="form-con">
+                    <div class="weixin-login" style="display:none;">
+                        <div class="wx-box clearfix">
+                            <a href="javascript:;" class="wx-img-box">
+                                <img class="wx-qrCode" src="/images/Login/ewm.jpg" id="qrCodeImg">
+                                <img class="wx-qrCode-logo" src="/images/Login/ewm.jpg" id="qrCodeLogo">
+                                <img class="statusImg" src="/images/Login/wx-confirm.png" id="statusImg">
+                                <div id="weixin_login_container" style="display:none;"></div>
+                            </a>
+                            <img src="/images/Login/wx-image.png" class="wx-image">
+                        </div>
+                        <p class="wx-text">微信扫一扫  快速登录</p>
+                        <p class="wx-help"><a href="javascript:;" class="help-a">如何使用？</a></p>
+                    </div>
+                    <div class="login-normal" style="display:block;">
+                        <form id="nameLoginForm" class="layui-form" method="post" autocomplete="off" onsubmit="return nameLoginCheck();">
+                            <div class="form-error" style=""><i></i><label class="text"></label></div>
+                            <dl class="clearfix">
+                                <dt>账户名：</dt>
+                                <dd><input type="text" name="UserName" id="normalUser" class="input-text" autocomplete="off" /><span class="placeholder">用户名/邮箱/手机号</span></dd>
+                            </dl>
+                            <dl class="top1 clearfix">
+                                <dt>密<em></em>码：</dt>
+                                <dd><input type="password" name="password" id="normalPassword" class="input-text"><span class="placeholder">请输入密码</span></dd>
+                            </dl>
+
+                            <div class="form-remember">
+
+                                <input name="rememberName" type="checkbox" id="remUser" class="rem-check" style="display:none;" checked="checked">
+                                <span class="rem-box rem-box-r memCheck"><input name="rememberMe" type="checkbox" id="remLogin" class="rem-check">三个月之内免登录</span>
+                            </div>
+                            <div class="btn-box clearfix">
+                                @*<input id="normalSubmit" class="btn-settlement" type=submit value="登    录" tjjj="passport.button.login">*@
+                                <input type="button" class="submit btn-settlement" loginType="emp" tabindex="3" value="登    录" lay-submit lay-filter="subone">
+                            </div>
+                            <div class="link-box clearfix">
+                                <a href="javascript:;" class="register" tjjj="passport.login.fstreg">新用户注册</a>
+                                <a href="javascript:;" class="forget-pass" tjjj="passport.forget.password">忘记密码？</a>
+                            </div>
+                        </form>
+                        <div class="login-short clearfix">
+                            <div class="short-left">
+                                <h3>使用合作账号登录：</h3>
+                                <ul class="clearfix">
+                                    <li class="qq"><a a href="javascript:;" tjjj="passport.login.thd.login.qq"></a></li>
+                                    <li class="sina"><a href="javascript:;" tjjj="passport.login.thd.login.sina"></a></li>
+                                    <li class="weixin"><a href="javascript:;" tjjj="passport.login.thd.login.weixin"></a></li>
+                                </ul>
+                            </div>
+                            <div class="short-right">
+                                <h3>您还可以选择：</h3>
+                                <p class="phone-short clearfix">
+                                    <i class="phone"></i>
+                                    <a href="javascript:;" tjjj="" class="txt phoneLogin">手机快捷登录</a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="air-balloon ab-1 png"></div>
-            <div class="air-balloon ab-2 png"></div>
-            <div class="footer"></div>
+            <!-- -快捷登录 -->
+            <div class="form-box fr shortLogin" style="display:none;">
+                <h5 class="title">快捷登录</h5>
+                <div class="form-con">
+                    <form id="mobileLoginForm" method="post" onsubmit="return mobileLoginCheck();">
+                        <div class="form-error" style=""><i></i><label class="text"></label></div>
+                        <dl class="clearfix">
+                            <dt>手机号：</dt>
+                            <dd><input name="mobile" type="text" id="partnerPhone" autocomplete="off" class="input-text mobile" maxlength="11" onblur="mobileCheck(this);"><span class="placeholder">请输入手机号</span></dd>
+                        </dl>
+                        <dl class="top1 clearfix">
+                            <dt>验证码：</dt>
+                            <dd>
+                                <input name="smsCaptcha" type="text" id="partnerYzm" class="input-yzm" onblur="captchCheck(this);" maxlength="4" autocomplete="off" />
+                                <span class="span-yzm">
+                                    <img id="smsCaptchaImage" src="/images/Login/code.jpg" title="点击图片刷新校验码" alt="点击图片刷新校验码" onclick="changeCode('smsCaptchaImage','partnerYzm');" />
+                                    <a href="javascript:changeCode('smsCaptchaImage','partnerYzm');" class="forget-pass">换一张</a>
+                                </span>
+                            </dd>
+                        </dl>
+                        <dl class="top2 clearfix">
+                            <dt>校验码：</dt>
+                            <dd>
+                                <input name="code" type="text" id="partnerJym" class="input-jym" maxlength="6" autocomplete="off" />
+                                <a id="smsSendButton" href="javascript:sendSms(this);" class="span-jym disabled" tjjj="passport.send.msg">发送短信校验码</a>
+                            </dd>
+                        </dl>
+                        <div class="form-remember">
+
+                            <input name="rememberName" type="checkbox" id="remUser" class="rem-check" style="display:none;" checked="checked">
+                            <span class="rem-box rem-box-r"><input name="rememberMe" type="checkbox" id="remLogin" class="rem-check">三个月之内免登录</span>
+                        </div>
+                        <div class="btn-box clearfix">
+                            <input id="partnerSubmit" class="btn-settlement" type="submit" value="登    录" tjjj="passport.quick.button.login">
+
+                        </div>
+                        <div class="link-box clearfix">
+                            <a href="javascript:;" class="backLogin">返回账号登录>></a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
         </div>
-    </form>
-    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
-    <script src="~/Scripts/vendor/layui/layui.js"></script>
-    <script src="~/Scripts/js/jQuery.js"></script>
-    <script src="~/Scripts/js/fun.base.js"></script>
-    <script src="~/Scripts/js/script.js"></script>
-    <script>
-        $("body").keydown(function (e) {
-            if (e.keyCode==13) {
-              //  $("#studentLoginbtn").click();
-            }
-        })
-        //弹出一个注册的弹框
-        //function LINK() {
-        //    layui.use('layer', function () {
-        //        var layer = layui.layer;
-        //        layer.open({
-        //            type: 2,
-        //            skin: 'eject',
-        //            title: '用户注册',
-        //            area: ['400px', '250px'],
-        //            closeBtn: 0,
-        //            anim: 2,
-        //            content: '/tangmin/UsersInfo/EditorInsertView', //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-        //        });
-        //    });
-        //}
-        //当弹出层关闭时获取数据并赋值
-        function assignment(name, pwd) {
-            $("#UserName")[0].value = name;
-            $("#Password")[0].value = pwd;
-        }
-        //登陆监听
-        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
-            var form = layui.form;
-            var layedit = layui.layedit;
-            var laydate = layui.laydate;
-            var layer = layui.layer;
-            form.on('submit(subone)', function (data) {
-                var myformdata = data.field;//当前容器的全部表单字段，名值对形式：{name: value}
-
-                var loginType = $(".submit").attr("loginType");
-                data.field.loginType = loginType
-
-                $.ajax({
-                    url: "/Login/LoginFunction",
-                    data: myformdata,
-                    type: "POST",
-                    success: function (data) {
-                        if (data.Success == true) {
-                            window.location.href = data.Data;
-                        } else {
-                            //配置一个透明的询问框
-                            alert(data.Msg);
-                        }
-                    }
-                });
-                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
-            });
-
-
-
-            //学员登录设置
-            $("#studentLoginbtn").mouseover(function () {
-
-                $(this).css("color","red");
-            });
-
-            $("#studentLoginbtn").mouseleave(function () {
-
-                $(this).css("color", "");
-            });
-
-            $("#studentLoginbtn").click(function () {
-                var index = layer.load(3, { time: 2000 }); //又换了种风格，并且设定最长等待10秒 
-
-                var loginType = $(".submit").attr("loginType");
-
-                if (loginType == "emp") {
-
-                    $(".submit").attr("loginType", 'student');
-                    $(this).text("员工登录>>");
-                }
-
-                if (loginType == "student") {
-                    $(".submit").attr("loginType", 'emp');
-                    $(this).text("学员登录>>");
-                }
-            });
-        });
-
-    </script>
+    </div>
+    <div id="jia_footer">
+        <div class="jia_foot_info">
+            <div class="jia_foot_con">
+                <p class="jia_foot_link">
+                    <a href="http://www.sucaihuo.com" rel="nofollow" target="_blank">关于我们</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">联系我们</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">媒体报道</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">法律声明</a><span class="jia_split">|</span> <a href="javascript:;/help/0002.html" target="_blank" rel="nofollow">企业文化</a><span class="jia_split">|</span> <a href="javascript:;/link.html" target="_blank" rel="nofollow">友情链接</a><span class="jia_split">|</span> <a href="javascript:;/jmtg/index.html" target="_blank" rel="nofollow">加盟齐家</a><span class="jia_split">|</span> <a href="javascript:;/zhaoshang/" tjjj="sjrz.2" target="_blank" rel="nofollow">入驻齐家</a><span class="jia_split">|</span> <a href="javascript:;/help/0055.html" target="_blank" rel="nofollow">诚聘英才</a><span class="jia_split">|</span> <a href="javascript:;/help/0033.html" target="_blank">网站地图</a><span class="jia_split">|</span> <a href="javascript:;/app/" rel="nofollow" target="_blank">手机齐家</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">素材火钱包</a><span class="jia_split">|</span> <a href="javascript:;/help/" tjjj="bottom.link.help">帮助中心</a><span class="jia_split">|</span> <a href="javascript:;" class="jia_foot_open">更多<i></i></a>
+                </p>
+                <p class="jia_foot_link footnone">
+                    <a href="http://www.sucaihuo.com" target="_blank" tjjj="footer.bottom.1">找装修公司</a><span class="jia_split">|</span> <a href="javascript:;/" target="_blank" tjjj="footer.bottom.2">买建材家居</a><span class="jia_split">|</span> <a href="http://tg.jia.com/" target="_blank" tjjj="footer.bottom.3">齐家团购</a><span class="jia_split">|</span> <a href="javascript:;/baike/" target="_blank" tjjj="footer.bottom.4">家居百科</a><span class="jia_split">|</span> <a href="javascript:;/company/" target="_blank" tjjj="footer.bottom.5">装修公司库</a><span class="jia_split">|</span> <a href="javascript:;/product/" target="_blank" tjjj="footer.bottom.7">产品信息库</a><span class="jia_split">|</span> <a href="javascript:;/baike/xunxi/" target="_blank" tjjj="footer.bottom.9">装修知识</a><span class="jia_split">|</span> <a href="javascript:;/allcategory/" tjjj="2014.foot.allcate">商品分类</a><span class="jia_split">|</span> <a href="javascript:;/list/" tjjj="2014.foot.mallshangpin">所有商品</a><span class="jia_split">|</span> <a href="javascript:;/shanghai/list/shop/" tjjj="2014.foot.dianpu">店铺大全</a><span class="jia_split">|</span><a href="javascript:;/pinpai/" target="_blank" tjjj="footer.bottom.8">品牌库</a>
+                </p>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+
+<script type="text/javascript">
+    var _wx_server_qr_code_count = 0;
+    var _wx_server_qr_code_loaded = false;
+    var _qr_code_limited = '';
+    var _qr_code_wait_time = 20;
+    var flashQrCodeWaitingTimer = null;
+    var getQrCodeStatusTimer = null;
+    var getQrCodeTimer = null;
+    function nameLoginCheck() {
+        var loginName = $("#nameLoginForm").find("#normalUser").eq(0).val();
+        var password = $("#nameLoginForm").find("#normalPassword").eq(0).val();
+        if ($(".tips ").is(":visible")) {
+            return false;
+        }
+        if (loginName == null || loginName == "") {
+            showError("请输入用户名");
+            return false;
+        }
+        if (password == null || password == "") {
+            showError("请输入密码");
+            return false;
+        }
+        if ($("#normalYzm") && $("#nameLoginForm").find("#normalYzm").length > 0) {
+            if ($("#normalYzm").val() == "" || $("#normalYzm").val() == null) {
+                showError("请输入验证码");
+                return false;
+            }
+        }
+        return true;
+    }
+
+    //手机登陆验证
+    function mobileLoginCheck() {
+        var mobile = $("#mobileLoginForm").find("#partnerPhone").eq(0).val();
+        var captch = $("#mobileLoginForm").find("#partnerYzm").eq(0).val();
+        var code = $("#mobileLoginForm").find("#partnerJym").eq(0).val();
+        if (mobile == null || mobile == '' || !(_mobile_reg).test(mobile)) {
+            showError("请填写正确的手机号");
+            return false;
+        }
+        if (captch == null || captch == "" || captch == undefined) {
+            showError("请填写验证码");
+            return false;
+        }
+        if (code == null || code == "") {
+            showError("请填写校验码");
+            return false;
+        }
+        return true;
+    }
+
+    function mobileCheck(obj) {
+        if (!(_mobile_reg).test($("#partnerPhone").val())) {
+            showError("请填写正确的手机号");
+            return;
+        } else {
+            closeError();
+        }
+    }
+
+    //发送短信
+    function sendSms(obj) {
+        alert("信息已发送  www.sucaihuo.com - 素材火");
+    }
+
+    function captchCheck(obj) {
+        if (!(_mobile_reg).test($("#partnerPhone").val())) {
+            showError("请填写正确的手机号");
+            return;
+        }
+        var captch = $(obj).val();
+        if (captch == '' || captch == null) {
+            showError("请填写验证码");
+        } else {
+            checkCaptch(captch,
+                function () {
+                    if (!$("#smsSendButton").hasClass("sending")) {
+                        $("#smsSendButton").removeClass("disabled");
+                    }
+                    closeError();
+                }, function () {
+                    showError("验证码错误");
+                    $("#smsSendButton").addClass("disabled");
+                }
+            );
+        }
+    }
+    $(function () {
+        $(".form-tab li").on("click", function () {
+            var index = $(this).index();
+            $(this).addClass("cur").siblings().removeClass("cur");
+            $(".form-con>div").hide().eq(index).show();
+            if (index == 0) {
+                $(".form-foot").hide();
+            } else {
+                $(".form-foot").show();
+                
+            }
+            $(".form-error").hide();
+        });
+        $(".weixin-login .help-a").hover(
+            function () {
+                $(".wx-img-box,.wx-image").stop();
+                $(this).parents(".weixin-login").find(".wx-img-box").animate({ "marginLeft": "15px" }, 300, function () {
+                    $(this).parents(".weixin-login").find(".wx-image").animate({ "opacity": 1 }, 300);
+                });
+            },
+            function () {
+                $(".wx-img-box,.wx-image").stop();
+                $(this).parents(".weixin-login").find(".wx-image").stop().animate({ "opacity": 0 }, 300, function () {
+                    $(this).parents(".weixin-login").find(".wx-img-box").animate({ "marginLeft": "110px" }, 300);
+                });
+            }
+        );
+
+
+    });
+
+    $('.jia_foot_open').click(function () {
+        $('.footnone').slideToggle();
+        $(this).find('i').toggleClass('footnow');
+    });
+    $('.phoneLogin').click(function () {
+        $('.loginV2').hide();
+        $('.shortLogin').show();
+        $('.form-error').hide();
+    });
+    $('.backLogin').click(function () {
+        $('.login-normal').show();
+        $('.loginV2').show();
+        $('.shortLogin').hide();
+        $('.form-error').hide();
+    });
+    //开启错误提示
+    function showError(error) {
+        $(".form-error").find("label").html(error);
+        $(".form-error").show();
+    }
+
+
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+        var form = layui.form;
+        var layedit = layui.layedit;
+        var laydate = layui.laydate;
+        var layer = layui.layer;
+        form.on('submit(subone)', function (data) {
+            console.log("sdf");
+            var myformdata = data.field;//当前容器的全部表单字段，名值对形式：{name: value}
+
+            var loginType = $(".submit").attr("loginType");
+            data.field.loginType = loginType
+
+            $.ajax({
+                url: "/Login/LoginFunction",
+                data: myformdata,
+                type: "POST",
+                success: function (data) {
+                    if (data.Success == true) {
+                        window.location.href = data.Data;
+                    } else {
+                        //配置一个透明的询问框
+                        alert(data.Msg);
+                    }
+                }
+            });
+            return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+        });
+    });
+
+    
+
+</script>
+
+
 
