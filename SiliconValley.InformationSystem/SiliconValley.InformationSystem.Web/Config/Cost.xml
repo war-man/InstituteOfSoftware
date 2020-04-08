@@ -12,4 +12,7 @@
   <!--教材-->
   <TextBook_NodeCost>400</TextBook_NodeCost>
 
+  <!--内训费-->
+  <InternalTrainingCost>200</InternalTrainingCost>
+
 </root>

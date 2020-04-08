@@ -917,6 +917,8 @@
     <Content Include="Areas\Market\Views\BiddingRecord\EditBR.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
+    <Content Include="Scripts\common\myDatepicker.css" />
+    <Content Include="Scripts\common\myDatepicker.js" />
     <Content Include="Scripts\css\buttonStyle.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.mobile.css" />
@@ -1519,6 +1521,9 @@
     <Content Include="Config\Obempstaff.config" />
     <Content Include="Config\UserMapRole.config" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\Staff_Cost_StatisticsIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\CreateCostStatistics.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3180,6 +3185,7 @@
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
     <Content Include="Scripts\live2d\assets\waifu-tips.json" />
+    <Content Include="uploadXLSXfile\Template\CostStaicTemplate.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3189,6 +3195,7 @@
     <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />

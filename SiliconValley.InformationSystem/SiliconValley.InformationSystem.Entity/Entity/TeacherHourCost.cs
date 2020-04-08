@@ -21,12 +21,12 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// <summary>
         /// 阶段
         /// </summary>
-        public int Grand { get; set; }
+        public int GrandId { get; set; }
 
         /// <summary>
         /// 费用
         /// </summary>
-        public float Cost { get; set; }
+        public  double Cost { get; set; }
 
         public bool IsUsing { get; set; }
         

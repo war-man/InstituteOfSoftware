@@ -38,15 +38,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public decimal MarkingCost { get; set; }
 
+       
         /// <summary>
-        /// S1S2内训费
+        /// 内训费
         /// </summary>
-        public decimal S1S2_InternalTrainingCost { get; set; }
-
-        /// <summary>
-        /// S3S4内训费
-        /// </summary>
-        public decimal S3S4_InternalTrainingCost { get; set; }
+        public decimal InternalTrainingCost { get; set; }
 
 
         /// <summary>

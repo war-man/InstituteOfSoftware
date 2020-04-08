@@ -18,6 +18,9 @@ using System.Xml;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
+    using NPOI.HSSF.UserModel;
+    using NPOI.SS.UserModel;
+    using System.IO;
 
     /// <summary>
     ///员工费用统计--教务处
@@ -667,7 +670,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             //获取员工 教员ID
             TeacherBusiness tempdb_teacher = new TeacherBusiness();
 
-            var teacher = tempdb_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
+            var teacher = tempdb_teacher.GetTeachers(IsNeedDimission: true, isContains_Jiaowu: false).Where(d => d.EmployeeId == emp.EmployeeId).FirstOrDefault();
 
             ///获取到这个月教员所带班级个数
             ///
@@ -691,7 +694,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
 
-            else //****************************教员的底课时计算方式******************************
+            if(dep.DeptName.Contains("教学部")  && !db_emp.GetPobjById( emp.PositionId).PositionName.Contains("教务")) //****************************教员的底课时计算方式******************************
             {
                 result = bottomTeacherHours_teacher();
 
@@ -752,7 +755,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="date">日期</param>
         public Cose_StatisticsItems Statistics_Cost(string empid, string date)
         {
+           
+
             Cose_StatisticsItems result = new Cose_StatisticsItems();
+
+            result.Emp = db_emp.GetInfoByEmpID(empid);
 
             var data = this.Staff_CostData(empid, DateTime.Parse(date));
 
@@ -772,6 +779,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             result.CurriculumDevelopmentCost = CurriculumDevelopmentCost(data.TeachingMaterial_Node) + PPTDevelopmentCost(data.PPT_Node);
 
 
+            ///内训费
+            ///
+            result.InternalTrainingCost = this.InternalTrainingCost(data.InternalTraining_Count);
+
+           
             return result;
         }
 
@@ -781,7 +793,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="teachingItems">总课时</param>
         /// <param name="bottomTeacherHours">底课时</param>
         /// <param name="SurveyCost">满意度分数</param>
-        /// <returns></returns>
+        /// <returns></returns> 
 
         public float EachingHourCost(List<TeachingItem> teachingItems, float bottomTeacherHours, float SurveyScores)
         {
@@ -796,10 +808,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 TeacherHoursCostBusiness temphour = new TeacherHoursCostBusiness();
                 // 获取到对应的课时费
-                var HourCoose = temphour.teacherHourCosts().Where(d => d.Grand == item.grand.Id).FirstOrDefault();
+                var HourCoose = temphour.teacherHourCosts().Where(d => d.GrandId == item.grand.Id).FirstOrDefault();
 
                 //ji算
-                result += item.NodeNumber * (HourCoose.Cost - 5);
+                result += item.NodeNumber * ((float)HourCoose.Cost - 5);
 
             }
 
@@ -1035,11 +1047,19 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public decimal InternalTrainingCost(int count)
         {
-            InternalTrainingCostBusiness tempdb = new InternalTrainingCostBusiness();
+            //读取配置文件
+            XmlDocument xmlDocument = new XmlDocument();
+            xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/Cost.xml"));
 
-            var list = tempdb.internalTrainingCosts();
+            //根节点
+            var xmlRoot = xmlDocument.DocumentElement;
 
-            return 0;
+            //获取标准费用
+            var cost = xmlRoot.GetElementsByTagName("InternalTrainingCost")[0].InnerText;
+
+            return count * int.Parse(cost);
+
+           
         }
 
 
@@ -1051,9 +1071,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public int TeachingMaterial_Node(string empid, DateTime date)
         {
-            int result = 0;
+            
+            BaseBusiness<Coursewaremaking> tempdbb = new BaseBusiness<Coursewaremaking>();
 
-            return result;
+            var templist = tempdbb.GetList().Where(d=>d.Submissiontime.Year == date.Year && d.Submissiontime.Month == date.Month).ToList().Where(d=>d.RampDpersonID == empid && d.MakingType=="Word").ToList();
+
+            return templist == null ? 0 : templist.Count;
+            
         }
 
         /// <summary>
@@ -1065,9 +1089,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public int PPT_Node(string empid, DateTime date)
         {
 
-            int result = 0;
+            BaseBusiness<Coursewaremaking> tempdbb = new BaseBusiness<Coursewaremaking>();
 
-            return result;
+            var templist = tempdbb.GetList().Where(d => d.Submissiontime.Year == date.Year && d.Submissiontime.Month == date.Month).ToList().Where(d => d.RampDpersonID == empid && d.MakingType == "PPT").ToList();
+
+            return templist == null ? 0 : templist.Count;
+
         }
 
         /// <summary>
@@ -1108,6 +1135,159 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             var cost = xmlRoot.GetElementsByTagName("PPT_NodeCost")[0].InnerText;
 
             return count * int.Parse(cost);
+        }
+
+
+        /// <summary>
+        /// 保存到文件
+        /// </summary>
+        /// <returns></returns>
+        public string SaveToExcel(List<Cose_StatisticsItems> data, string fileName)
+        {
+
+            if (data == null)
+            {
+                return null;
+            }
+
+            
+            var workbook = new HSSFWorkbook();
+
+            //创建工作区
+            var sheet = workbook.CreateSheet("费用统计");
+
+            
+            #region 表头样式
+
+            HSSFCellStyle HeadercellStyle = (HSSFCellStyle)workbook.CreateCellStyle();
+            HSSFFont HeadercellFont = (HSSFFont)workbook.CreateFont();
+
+            HeadercellStyle.Alignment = HorizontalAlignment.Center;
+            HeadercellFont.IsBold = true;
+  
+            HeadercellStyle.SetFont(HeadercellFont);
+
+            #endregion
+
+
+            #region 内容样式
+            HSSFCellStyle ContentcellStyle = (HSSFCellStyle)workbook.CreateCellStyle();
+            HSSFFont ContentcellFont = (HSSFFont)workbook.CreateFont();
+
+            ContentcellStyle.Alignment = HorizontalAlignment.Center; 
+            
+
+            #endregion
+            #region 创建表头
+
+            HSSFRow Header = (HSSFRow)sheet.CreateRow(0);
+            Header.HeightInPoints = 40;
+
+            CreateCell(Header, HeadercellStyle, 0, "姓名");
+
+            CreateCell(Header, HeadercellStyle, 1, "职务");
+
+            CreateCell(Header, HeadercellStyle, 2, "课时费");
+
+            CreateCell(Header, HeadercellStyle, 3, "值班费");
+
+            CreateCell(Header, HeadercellStyle, 4, "监考费");
+
+            CreateCell(Header, HeadercellStyle, 5, "阅卷费");
+
+            CreateCell(Header, HeadercellStyle, 6, "内训费");
+
+            CreateCell(Header, HeadercellStyle, 7, "教材研发费");
+
+            CreateCell(Header, HeadercellStyle, 8, "合计");
+            #endregion
+
+            int count = 1;
+
+            int cellCount = typeof(Cose_StatisticsItems).GetType().GetProperties().Count();
+
+            foreach (var item in data)
+            {
+                 //填充数据
+
+                 //创建行
+                 HSSFRow contentRow = (HSSFRow)sheet.CreateRow(count);
+                contentRow.HeightInPoints = 35;
+
+                //填充单元格
+
+                CreateCell(contentRow, ContentcellStyle, 0, item.Emp.EmpName);
+
+                CreateCell(contentRow,ContentcellStyle, 1, db_emp.GetPobjById(item.Emp.PositionId).PositionName);
+
+                CreateCell(contentRow, ContentcellStyle, 2, item.EachingHourCost.ToString());
+
+                CreateCell(contentRow, ContentcellStyle, 3, item.DutyCost.ToString());
+
+                CreateCell(contentRow, ContentcellStyle, 4, item.InvigilateCost.ToString());
+
+                CreateCell(contentRow, ContentcellStyle, 5, item.MarkingCost.ToString());
+
+                CreateCell(contentRow, ContentcellStyle, 6, item.InternalTrainingCost.ToString());
+
+                CreateCell(contentRow, ContentcellStyle, 7, item.CurriculumDevelopmentCost.ToString());
+
+                var total = item.EachingHourCost + item.DutyCost + item.InvigilateCost + item.MarkingCost + item.InternalTrainingCost + item.CurriculumDevelopmentCost;
+
+                CreateCell(contentRow, ContentcellStyle, 8, total.ToString());
+
+                count++;
+            }
+
+            string pathName = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/" + fileName+".xls");
+
+            FileStream stream = new FileStream(pathName, FileMode.Create,FileAccess.ReadWrite);
+
+            workbook.Write(stream);
+
+            stream.Close();
+
+            stream.Dispose();
+
+            workbook.Close();
+
+            return pathName;
+
+
+            void CreateCell(HSSFRow row, HSSFCellStyle TcellStyle, int index, string value)
+            {
+                HSSFCell Header_Name = (HSSFCell)row.CreateCell(index);
+
+                Header_Name.SetCellValue(value);
+
+                Header_Name.CellStyle = TcellStyle;
+            }
+        }
+
+        /// <summary>
+        /// 统计记录——文件
+        /// </summary>path
+        /// <returns>键值对: key=文件名; value = 更新时间</returns>
+        public List<FileInfo> HistoryCostFileData()
+        {
+            List<FileInfo> result = new List<FileInfo>();
+
+            string path = System.Web.HttpContext.Current.Server.MapPath("/Areas/Educational/CostHistoryFiles/");
+
+            DirectoryInfo directory = new DirectoryInfo(path);
+
+            //获取文件夹下所有文件
+            FileInfo [] files = directory.GetFiles();
+
+            
+            foreach (var file in files)
+            {
+                result.Add(file);
+            }
+            
+            return result;
+
+
         }
     }
 }

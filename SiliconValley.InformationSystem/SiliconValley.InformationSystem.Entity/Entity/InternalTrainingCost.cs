@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.Entity
 {
+
+    
     /// <summary>
-    /// 内训费用
+    /// 内训费用  【暂不使用】
     /// </summary>
     public class InternalTrainingCost
     {

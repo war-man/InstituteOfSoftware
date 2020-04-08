@@ -10,11 +10,11 @@
         .line-title {
             display:inline-block;
             width:30%;
-            border:1px solid blue;
+            border:1px solid #808080;
         }
 
-        #emplist {
-            margin-top:50px;
+        #emplistDiv {
+            margin-top: 50px;
         }
     </style>
 
@@ -27,16 +27,15 @@
         <div class="line-title"></div>
         <i class="layui-icon layui-icon-chart" style="font-size:35px;"><i style="font-size:25px;">员工费用统计</i> </i>
         <div class="line-title"></div>
-
+        <button id="HistoryCost" type="button" class="layui-btn layui-btn-radius layui-btn-primary">历史统计数据</button>
 
     </div>
 
     <hr />
     <!--员工列表-->
-    <div id="emplist">
+    <div id="emplistDiv">
 
-
-
+      
 
         <div class="list_seccn">
             <form class="layui-form">
@@ -91,6 +90,7 @@
     
     <script>
 
+       
         layui.use(['table', 'layer', 'form'], function () {
 
             var table = layui.table;
@@ -102,7 +102,6 @@
             table.render({
                 elem: '#emplist'
                 , id: 'emplist'
-
                 , shade: 3
                 , url: '/Educational/Staff_Cost_Statistics/EmpData?depId=0'
                 , cellMinWidth: 100
@@ -209,11 +208,46 @@
 
             $("#createEmpCost").click(function () {
 
-                $.post('/Educational/Staff_Cost_Statistics/ss', {}, function () {
-
+                layer.open({
+                    type: 2,
+                    title: "费用统计",
+                    area: ['1000px', '500px'],
+                    content:'/Educational/Staff_Cost_Statistics/CreateCostStatistics'
                 });
 
             });
+
+            
+            //监听行工具事件
+            table.on('tool(emplist_filter)', function (obj) {
+               
+                var data = obj.data;
+                if (obj.event == 'cost_history') {
+
+                    console.log(data);
+
+                    layer.open({
+                        type: 2,
+                        area: ['1000px', '500px'],
+                        title: "费用统计",
+                        content: '/Educational/Staff_Cost_Statistics/PersonalCostStatics?empid=' + data.EmployeeId
+                    });
+                } 
+               
+            });
+
+            $("#HistoryCost").click(function () {
+
+
+                layer.open({
+                    type: 2,
+                    area: ['1000px', '600px'],
+                    title: "历史记录",
+                    content: '/Educational/Staff_Cost_Statistics/HistoryCost' 
+                });
+
+            });
+
         });
 
 

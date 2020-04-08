@@ -335,6 +335,7 @@
     <Compile Include="ViewEntity\ConsultZhuzImageData.cs" />
     <Compile Include="ViewEntity\ConversationRecordView.cs" />
     <Compile Include="ViewEntity\Cose_StatisticsItems.cs" />
+    <Compile Include="ViewEntity\CostFileView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\DetailedcostView.cs" />
     <Compile Include="ViewEntity\DistinguishView.cs" />

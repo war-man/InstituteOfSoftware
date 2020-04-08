@@ -12,6 +12,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     public class Staff_Cost_StatisticesDetailView
     {
 
+        public Staff_Cost_StatisticesDetailView()
+        {
+            SatisfactionScore = 0;
+            teachingitems = new List<TeachingItem>();
+        }
+
         public EmployeesInfo emp
         {
             get; set;
