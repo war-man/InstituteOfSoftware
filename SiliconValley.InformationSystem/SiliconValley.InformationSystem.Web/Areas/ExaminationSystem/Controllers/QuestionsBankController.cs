@@ -74,6 +74,69 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         }
 
         /// <summary>
+        /// 批量录入
+        /// </summary>
+        /// <param name="excelFile"></param>
+        /// <returns></returns>
+        public ActionResult ChoiceQuestionBatchEntry()
+        {
+            SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+            //提供专业数据
+            ViewBag.Major = specialtyBusiness.GetSpecialties();
+            return View();
+
+        }
+
+        /// <summary>
+        /// 批量录入
+        /// </summary>
+        /// <param name="excelfile"></param>
+        /// <param name="course"></param>
+        /// <returns></returns>
+        [HttpPost]
+
+        public ActionResult ChoiceQuestionBatchEntry(HttpPostedFileBase excelfile, string course)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                Stream filestream = excelfile.InputStream;
+
+                List<MultipleChoiceQuestion> list = db_choiceQuestion.ReadQuestionForExcel(filestream);
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+                foreach (var item in list)
+                {
+                    item.Course = int.Parse(course);
+                    item.CreateTime = DateTime.Now;
+                    item.IsUsing = true;
+                    item.Proposition = teacher.TeacherID;
+                }
+
+                db_choiceQuestion.Insert(list);
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = list.Count;
+            }
+            catch (Exception)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = "0";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+        /// <summary>
         /// 获取选择题数据
         /// </summary>
         /// <returns></returns>

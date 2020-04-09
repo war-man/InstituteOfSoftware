@@ -1524,6 +1524,7 @@
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\CreateCostStatistics.cshtml" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3242,6 +3243,7 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
+    <Folder Include="uploadXLSXfile\ExamtionQuestionBankTemplate\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>
