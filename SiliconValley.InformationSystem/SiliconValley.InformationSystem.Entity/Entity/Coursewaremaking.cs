@@ -52,5 +52,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// 备注
         /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 文件名
+        /// </summary>
+        public string Filename { get; set; }
     }
 }
