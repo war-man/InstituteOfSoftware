@@ -84,7 +84,10 @@
             <i class="layui-icon layui-icon-release">命题</i>
         </button>
         <button class="layui-btn layui-btn-sm" lay-event="UsingOrnoUsing">启用--禁用</button>
-        <button class="layui-btn layui-btn-sm" lay-event="upload">文件录入</button>
+
+        <button class="layui-btn layui-btn-sm" lay-event="upload">批量录入</button>
+
+        <button class="layui-btn layui-btn-sm" lay-event="downloadTemplate">下载题库模板</button>
 
     </div>
 </script>
@@ -290,6 +293,12 @@
 
 
                     });
+
+                    break;
+
+                case 'downloadTemplate':
+
+                   
 
                     break;
             };
