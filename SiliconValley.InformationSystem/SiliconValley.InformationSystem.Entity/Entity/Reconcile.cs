@@ -28,7 +28,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 教室编号
         /// </summary>
-        public Nullable<int> ClassRoom_Id { get; set; }
+        public int ClassRoom_Id { get; set; }
         /// <summary>
         /// 课程编号
         /// </summary>

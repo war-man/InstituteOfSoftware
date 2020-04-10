@@ -1,10 +1,6 @@
 ﻿
 @{
-                /**/
-
-                /**/
-
-                Layout = null;
+    Layout = null;
 }
 
 <!DOCTYPE html>
@@ -12,9 +8,9 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>AddDataView</title>
-    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <title>MasterAddView</title>
     <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
         .hideCss
         {
@@ -56,13 +52,19 @@
         <div id="system_Div">
             <form id="system_form" class="layui-form">
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">日期:</label>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="LableCss1">值班日期:</label>
                         <div class="layui-input-block">
                             <input type="text" id="times" name="times" class="layui-input" style="width:200px;" />
                         </div>
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="LableCss1">操作部门:</label>
+                        <div class="layui-input-block">
+                            
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md6">
                         <button type="submit" class="layui-btn" lay-submit="" lay-filter="sysBtn">点击安排</button>
                     </div>
 
@@ -73,7 +75,7 @@
             <form id="system_form" class="layui-form" lay-filter="hand_addview">
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">日期:</label>
+                        <label class="LableCss1">值班日期:</label>
                         <div class="layui-input-block">
                             <input type="text" id="mytime" name="mytime" class="layui-input" style="width:130px;" />
                         </div>
@@ -81,61 +83,18 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">值班老师:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownList("teacher_sele", ViewBag.teacher as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
+                           
                         </div>
                     </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">值班时间:</label>
-                        <div class="layui-input-block">
-                            <select name="timename" id="timename" class="layui-select">
-                                <option value="晚一">晚一</option>
-                                <option value="晚二">晚二</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">班级:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownList("classShdule_sele", ViewBag.myclass as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">校区:</label>
-                        <div class="layui-input-block">
-                            @Html.DropDownList("SchoolAddress", ViewBag.Schooladdress as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" }, { "lay-filter", "schoolAddress" } })
-                        </div>
-                    </div>
-
+                </div>                
+                <div class="layui-row layui-form-item">                     
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">说明:</label>
                         <div class="layui-input-block">
                             <textarea name="ramke" id="ramke" class="layui-textarea"></textarea>
                         </div>
                     </div>
-                </div>
-                <div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">教室:</label>
-                        <div class="layui-input-block">
-                            <div id="uldiv">
-                                <ul id="ultree"></ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">所选教室:</label>
-                        <div class="layui-input-block">
-                            <input disabled="disabled" id="classroom" class="layui-input" />
-                            <input id="classroom_id" name="classroom" type="hidden" />
-                        </div>
-                    </div>
-                </div>
+                </div>                 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;">
                         <button type="submit" class="layui-btn" lay-submit="" lay-filter="handBtn">点击安排</button>
@@ -148,10 +107,9 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form', 'laydate', 'tree'], function () {
+        layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
-            var tree = layui.tree;
             laydate.render({
                 elem: '#times'
                 , type: 'date'
@@ -216,6 +174,7 @@
                         data: data.field,
                         type: 'POST',
                         success: function (sudata) {
+                            console.log(sudata);
                             if (sudata.Success == false) {
                                 layer.msg(sudata.Msg, { icon: 2 });
                             } else {
@@ -228,44 +187,7 @@
                     });
                 }
                 return false;
-            });
-            //获取教室
-            //渲染
-            function Tree(Successdata) {
-                tree.render({
-                    elem: '#ultree',
-                    data: [{
-                        title: '所有空教室',
-                        id: "-1",
-                        spread: false,
-                        children: Successdata
-                    }],
-                    click: function (obj) {
-                        var dataid = obj.data.id; //得到当前点击的节点数据
-                        if (dataid != "-1") {
-                            $("#classroom")[0].value = obj.data.title;
-                            $("#classroom_id")[0].value = dataid;
-                        } else {
-                            layer.msg("请选择有效的教室!!!", { icon: 2 });
-                        }
-
-                    }
-                });
-            }
-            form.on('select(schoolAddress)', function (data) {
-                if (data.value != "0") {
-                    var data1 = form.val("hand_addview");
-                    var new_data = { "time": data1.mytime, "timename": data1.timename, "schooladdress": data.value };
-                    $.ajax({
-                        url: '/Educational/TeacherNight/GetEmtpyClassroom',
-                        type: 'POST',
-                        data: new_data,
-                        success: function (suc) {
-                            Tree(suc)
-                        }
-                    });
-                }
-            });
+            });             
         })
         //关闭弹出层
         function Myclose() {

@@ -14,11 +14,12 @@
     </style>
 }
 <table id="TeacherNight_table" lay-filter="TeacherNight_table"></table>
+<script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
 <script type="text/html" id="toolbarDemo_Night">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_addNight">添加值班数据</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_timeChange">日期调换</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_time">调课</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_addNight"><i class="layui-icon">&#xe608;</i>添加值班数据</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_timeChange"> <i class="layui-icon">&#xe642;</i>日期更改</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_time"> <i class="layui-icon">&#xe642;</i>上课延迟或提前</button>
     </div>
 </script>
 
@@ -44,11 +45,20 @@
                 , url: '/Educational/TeacherNight/TeacherTableData'
                 , toolbar: '#toolbarDemo_Night' //开启头部工具栏，并为其绑定左侧模板
                 , cols: [[
-                    { type: 'radio ', fixed: 'left' }
-                    , { field: 'OrwatchDate', title: '值班日期' }      
+                      { type: 'radio' }
+                    , {
+                        field: 'OrwatchDate', title: '值班日期', templet: function (res) {
+                            return TimeChange(res.OrwatchDate);
+                        }
+                    }      
                     , { field: 'TearcherName', title: '值班老师'}  
                     , { field: 'ClassNumber', title: '班级' }
-                    , { field: 'ClassroomName', title: '教室'}                         
+                    , { field: 'ClassroomName', title: '教室' }      
+                    , { field: 'timename', title: '值班时间段' }    
+                    , {
+                        field: 'AttendDate', title: '安排日期', templet: function (res) {
+                            return TimeChange(res.AttendDate);
+                        }}    
                     , { field: 'Rmark', title: '备注'}                  
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo_Night', width: 150 }
                 ]]
@@ -70,11 +80,27 @@
                             , skin: 'demo-class'
                         });
                         break;
-                    case 'getCheckData_timeChange':
-                         
+                    case 'getCheckData_timeChange':  
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/TeacherNight/ClassadjustmentView/false'
+                            , area: ['600px', '400px'],
+                            title: '修改日期页面'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
                         break;
                     case 'getCheckData_time':
-                         
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/TeacherNight/ClassadjustmentView/true'
+                            , area: ['600px', '400px'],
+                            title: '日期修改页面'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
                         break;
                     
                 };
@@ -85,19 +111,32 @@
                 var data = obj.data;
                 //console.log(obj)
                 if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
-                        obj.del();
+                    layer.confirm('真的删除行么?', function (index) {
+                        $.ajax({
+                            url: '/Educational/TeacherNight/DeleteFunction/'+data.Id,
+                            type: 'GET',
+                            success: function (suc) {
+                                if (suc.Success == false) {
+                                    layer.msg('删除失败！', { icon: 2 });
+                                } else {
+                                    layer.msg(suc.Msg, { icon: 1, shade: 0.8 }, function () {
+                                        //刷新
+                                        TableFulsh();
+                                    });
+                                }
+                            }
+                        });                        
                         layer.close(index);
                     });
                 } else if (obj.event === 'edit') {
-                    layer.prompt({
-                        formType: 2
-                        , value: data.email
-                    }, function (value, index) {
-                        obj.update({
-                            email: value
-                        });
-                        layer.close(index);
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/TeacherNight/EditView/' + data.Id,
+                        area: ['800px', '500px'],
+                        title: '编辑值班数据',
+                        shade: 0.8,
+                        anim: 4,
+                        skin:'demo-class'
                     });
                 }
             });

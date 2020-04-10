@@ -5,108 +5,129 @@
 }
 
 <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+<link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+<link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
 <style>
-    body .demo-class .layui-layer-title
-    {
-        background: #009688;
-        color: #fff;
-        border: none;
-    }
-
-    #but1
-    {
-        position: absolute;
-        top: 13%;
-        left: 35%;
-        width: 36px;
-        height: 36px;
-        text-align: center;
-        line-height: 36px;
-    }
-
-        #but1:hover
-        {
-            background-color: aqua;
-        }
-
-    #Nation
-    {
-        width: 100px;
-    }
-
-    .linu
-    {
-        width: 200px;
-    }
-
-    .mm
-    {
-        border: 1px solid black;
-    }
-
-    .LableCss1
-    {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        float: left;
-        display: block;
-        padding: 9px 15px;
-        width: 80px;
-        font-weight: 400;
-        line-height: 20px;
-        text-align: right
-    }
-
-    .layButCss1
-    {
-        display: inline-block;
-        height: 38px;
-        line-height: 38px;
-        padding: 0 18px;
-        background-color: #009688;
-        color: #fff;
-        white-space: nowrap;
-        text-align: center;
-        font-size: 14px;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        border: 0px solid #C9C9C9;
-        background-color: #fff;
-        color: #555;
-        height: 18px;
-        line-height: 18px
-    }
-
-    .layui-unselect
-    {
-        width: 130px;
-        border-radius: 5px;
+  .formCss{
+     width:70%;
+     height:50%;   
+     margin-left:15%;
+  }
+  .BtnTureCss{
+  margin-left:30%;
+  margin-top:10%;
+  }
+    .layui-unselect{
+      width:250px;
     }
 </style>
 
-<div id="system_div" style="margin:180px auto;" >
-    <form class="layui-form" id="system_form">        
-            <div class="layui-row layui-form-item">
-                <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
-                    <label class="LableCss1">排课日期:</label>
-                    <div class="layui-input-block">
-                        <input type="text" id="anpaitime" name="anpaitime" class="layui-input" placeholder="排课日期" />
-                    </div>
+<div id="system_div" style="margin:40px auto;" >
+    <form class="layui-form formCss" id="system_form">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="LableCss1">阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段:</label>
+                <div class="layui-input-block">
+                    @Html.DropDownList("ortherGrand", ViewBag.orthergrand as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-unselect" }, { "lay-filter", "ortherGrand" } })
                 </div>
-                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                    <label class="LableCss1">课程类型:</label>
-                    <div id="myclass" class="layui-input-block">                        
-                        @Html.DropDownList("currtype", ViewBag.select as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }})                         
-                    </div>
-                </div>
-                <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                    <div class="layui-input-block">
-                        <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpinomargin" value="确定排课" />
-                    </div>
-                </div>
+            </div>
+        </div>
 
-            </div>         
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="LableCss1">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级:</label>
+                <div class="layui-input-block" id="ortherclass">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="LableCss1">排课日期:</label>
+                <div class="layui-input-block">
+                    <input type="text" id="anpaitime" name="anpaitime" class="layui-input layui-unselect" placeholder="排课日期" />
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="LableCss1">课程类型:</label>
+                <div id="myclass" class="layui-input-block">
+                    @{
+                        List<SelectListItem> C_list = ViewBag.select as List<SelectListItem>;
+                        foreach (SelectListItem l in C_list)
+                        {
+                            <div class="layui-col-sm4">
+                                <input id="currtype" name="currtype" type="radio" value="@l.Value" title="@l.Value" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <label class="LableCss1">上课时间:</label>
+            <div id="MYClssTime" class="layui-input-block" style="width:258px;">
+                
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="LableCss1">所属校区:</label>
+                <div id="myclass" class="layui-input-block">
+                    @{
+                        List<SelectListItem> S_list = ViewBag.schoolAddress as List<SelectListItem>;
+                        int index = 1;
+                        foreach (SelectListItem l in S_list)
+                        {
+                            if (index % 2 == 0)
+                            {
+                                <div class="layui-col-sm8">
+                                    <input id="schooladdress" lay-filter="address" name="schooladdress" type="radio" value="@l.Value" title="@l.Text" />
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="layui-col-sm4">
+                                    <input id="schooladdress" lay-filter="address" name="schooladdress" type="radio" value="@l.Value" title="@l.Text" />
+                                </div>
+                            }
+                            index++;
+                        }
+                    }
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="LableCss1">教&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室:</label>
+                <div class="layui-input-block" id="ortherclass">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-input-block">
+                    <input id="Anan" type="submit" class="layui-btn BtnTureCss" lay-submit="" lay-filter="Anpinomargin" value="确定排课" />
+                </div>
+            </div>
+        </div>
+
     </form>
 </div>
 
@@ -126,6 +147,53 @@
             , trigger: 'click'
         });         
 
+        //获取班级
+        form.on('select(ortherGrand)', function (data) {
+            //清空班级DIV
+            $("#ortherclass")[0].innerHTML = "";
+           
+            if (data.value != "0") {
+                $.ajax({
+                    url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
+                    success: function (sudata) {
+                        //获取班级slect
+                        var classselect = $('<select id="orther_myclass" name="orther_myclass" class="layui-select" lay-filter="orther_bianji"><option value="0" selected>--请选择--</select>');
+                        for (var i = 0; i < sudata.length; i++) {
+                            $('<option value=' + sudata[i].id + '>' + sudata[i].ClassNumber + '<option>').appendTo(classselect);
+                        }
+                        $("#ortherclass").append(classselect);
+                        form.render(); //更新全部
+                    }
+                });
+            }
+        });     
+        //点击班级获取班级上课时间
+        form.on('select(orther_bianji)', function (data) {         
+            if (data.value != "0") {               
+                $.ajax({
+                    url: '/Educational/Reconcile/GetClassTimeName/' +data.value,
+                    success: function (sudata) {
+                        if (sudata.Success == false) {
+                            layer.msg(sudata.Msg, {icon:2});
+                        } else {
+                            $("#MYClssTime")[0].innerHTML = "";
+                            if (sudata.Data = "上午") {
+                                var str = '<div class="layui-col-sm7"><input style="color:black" type = "radio" name = "time" id = "time" value = "下午12节" title = "下午1/2节" ></div><div class="layui-col-sm5"><input style="color:black" type="radio" name="time" id="time" value="下午34节" title="下午3/4节"></div>';
+                                $("#MYClssTime").append($(str));
+                            } else {
+                                var str = '<div class="layui-col-sm7"><input style = "color:black" type = "radio" name = "time" id = "time" value = "上午12节" title = "上午1/2节" ></div><div class="layui-col-sm5"><input style="color:black" type="radio" name="time" id="time" value="上午34节" title="上午3/4节"></div> ';
+                                $("#MYClssTime").append($(str));
+                            }
+                            form.render(); //更新全部
+                        }                                              
+                    }
+                });
+            }
+        });
+
+        form.on('radio(address)', function (data) {
+            alert(data.value); //被点击的radio的value值
+        });  
         //监听提交
         form.on('submit(Anpinomargin)', function (data) {
             var selecvalue = data.field.currtype;

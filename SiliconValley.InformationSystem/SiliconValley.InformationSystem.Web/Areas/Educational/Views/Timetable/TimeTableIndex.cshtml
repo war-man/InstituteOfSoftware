@@ -1,59 +1,132 @@
 ﻿
 @{
-    ViewBag.Title = "GetGenerateTimetable";
+    ViewBag.Title = "TimeTableIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 @using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
 @section style{
     <style>
-      th{
-      width:195px;
-      text-align:center;
-      border:1px solid black;
-      height:40px;
-      }
-        #mytable{
-        z-index:3;
+        th
+        {
+            width: 195px;
+            text-align: center;
+            border: 1px solid black;
+            height: 40px;
         }
- 
+
+        #mytable
+        {
+            z-index: 3;
+        }
     </style>
-    }
-    <div id="time_div" style="margin-bottom:20px;">
-        <form id="reconcile_form" lay-filter="reconcile_form" class="layui-form">
-            <div class="layui-row">
-                <div class="layui-col-sm3">
-                    <input class="layui-input" placeholder="日期" id="SelectTime" name="SelectTime" />
-                </div>
-                <div class="layui-col-sm4" style="margin-left:20px">
-                    <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
-                </div>
+}
+<div id="time_div" style="margin-bottom:20px;">
+    <form id="reconcile_form" lay-filter="reconcile_form" class="layui-form">
+        <div class="layui-row">
+            <div class="layui-col-sm3">
+                <input class="layui-input" placeholder="日期" id="SelectTime" name="SelectTime" />
             </div>
-        </form>
-        
-       
-    </div>
-    <div id="table_div">
-         
-    </div>
+            <div class="layui-col-sm3" style="margin-left:40px;">
+                @{
+                    List<BaseDataEnum> list = ViewBag.Addree as List<BaseDataEnum>;
+                    int index = 0;
+                    foreach (BaseDataEnum i in list)
+                    {
+                        if (index == 0)
+                        {
+                            <input name="campus" id="campus" type="radio" value="@i.Id" title="@i.Name" />
+                        }
+                        else
+                        {
+                            <input name="campus" id="campus" type="radio" value="@i.Id" title="@i.Name" />
+                        }
+
+                    }
+                }
+
+            </div>
+            <div class="layui-col-sm4" style="margin-left:20px">
+                <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="table_div">
+
+</div>
+
 @section script{
     <script>
+        var new_laydate;
+        var dayname;
+        //转换日期格式
+        function TimeFormt(newtime) {
+            var date = new Date(newtime);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+
+            return year + "年" + month + "月" + day + "日"
+        }
+
+        //判断星期几
+        function judgeDate(date) {
+            // 标准时间 Wed Jul 31 2019 00:00:00 GMT+0800 (中国标准时间)
+            var _date = new Date(date);
+            // getDay() 返回表示星期的某一天
+            var num = _date.getDay(_date);
+            var week;
+            switch (num) {
+                case 0:
+                    week = "星期日";
+                    break;
+                case 1:
+                    week = "星期一";
+                    break;
+                case 2:
+                    week = "星期二"
+                    break;
+                case 3:
+                    week = "星期三"
+                    break;
+                case 4:
+                    week = "星期三"
+                    break;
+                case 5:
+                    week = "星期五"
+                    break;
+                case 6:
+                    week = "星期六"
+                    break;
+                default:
+                    break;
+            };
+            return week;
+        }
         layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             laydate.render({
                 elem: '#SelectTime'
-                , type: 'date'                
+                , type: 'date'
+                , done: function (value) {
+                    new_laydate = TimeFormt(value); //得到日期生成的值，如：2017-08-18
+                    dayname = judgeDate(value);
+                }
             });
         });
         function GetKebiao() {
-            var time = $("#SelectTime").val();
+            var formdata = { "SelectTime": $("#SelectTime").val(), "campus": $(":checked").val() };
             $.ajax({
-                url: '/Educational/Reconcile/GetReconcileData/' + time,
+                url: '/Educational/Timetable/GetReconcileData',
+                type: 'POST',
+                data: formdata,
                 success: function (sucdata) {
-                    console.log(sucdata);
                     $('#table_div')[0].innerHTML = "";
                     var recon_table = $('<table id="reconclie_table"></table>');
-                    $('<thead>< tr style = "text-align:center" > <th colspan="10"><span>2019年11月19号</span></th> <th colspan="4"><span>星期二</span></th></tr ></thead >').appendTo(recon_table);
+                    $('<thead>< tr style = "text-align:center" > <th colspan="10"><span>' + new_laydate + '</span></th> <th colspan="4"><span>' + dayname + '</span></th></tr ></thead >').appendTo(recon_table);
                     var tr1 = $('<tr></tr>');
                     $('<th >午别</th ><th>课时</th>').appendTo(tr1);
                     for (var i = 0; i < sucdata.tablethead.length; i++) {
@@ -68,7 +141,7 @@
                         } else {
                             $('<th></th>').appendTo(tr2);
                         }
-                         
+
                     }
                     tr2.appendTo(recon_table);
                     var tr3 = $('<tr></tr>');
@@ -88,7 +161,7 @@
                         } else {
                             $('<th></th>').appendTo(tr4);
                         }
-                         
+
                     }
                     tr4.appendTo(recon_table);
 
@@ -110,7 +183,7 @@
                         } else {
                             $('<th></th>').appendTo(tr6);
                         }
-                         
+
                     }
                     tr6.appendTo(recon_table);
 
@@ -121,19 +194,19 @@
                         } else {
                             $('<th></th>').appendTo(tr7);
                         }
-                                
+
                     }
                     tr7.appendTo(recon_table);
 
                     var tr8 = $('<tr></tr>');
                     $('<th rowspan="2">三四节</th >').appendTo(tr8);
                     for (var i = 0; i < sucdata.MyafternoonTwo.length; i++) {
-                        if (sucdata.MyafternoonTwo[i].ClassName!=null) {
+                        if (sucdata.MyafternoonTwo[i].ClassName != null) {
                             $('<th>' + sucdata.MyafternoonTwo[i].ClassName + '</th>').appendTo(tr8);
                         } else {
                             $('<th></th>').appendTo(tr8);
                         }
-                         
+
                     }
                     tr8.appendTo(recon_table);
 
@@ -144,7 +217,7 @@
                         } else {
                             $('<th></th>').appendTo(tr9);
                         }
-                         
+
                     }
                     tr9.appendTo(recon_table);
 
@@ -157,7 +230,7 @@
                         } else {
                             $('<th></th>').appendTo(tr10);
                         }
-                        
+
                     }
 
                     tr10.appendTo(recon_table);
@@ -171,15 +244,17 @@
                         } else {
                             $('<th></th>').appendTo(tr11);
                         }
-                        
+
                     }
 
                     tr11.appendTo(recon_table);
 
                     recon_table.appendTo($('#table_div'));
                 }
-             });
-         }
+            });
+        }
     </script>
-    }
+}
+
+
 

@@ -37,7 +37,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 课程类型 专业课 军事课 直素课 义务教育课
         /// </summary>
-        public Nullable<int> CourseType_Id { get; set; }
+        public int CourseType_Id { get; set; }
         /// <summary>
         /// 课时
         /// </summary>

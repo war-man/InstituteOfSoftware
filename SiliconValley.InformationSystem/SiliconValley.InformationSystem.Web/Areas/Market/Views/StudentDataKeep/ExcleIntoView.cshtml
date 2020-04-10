@@ -108,7 +108,7 @@
         //导入Excel
         $("#Yes").click(function () {
             var layer = layui.layer;
-            var indexlayer = layer.load();
+            var indexlayer = layer.load(1);
             $.ajax({
                 url: '/Market/StudentDataKeep/IntoServer',
                 dataType: 'json',

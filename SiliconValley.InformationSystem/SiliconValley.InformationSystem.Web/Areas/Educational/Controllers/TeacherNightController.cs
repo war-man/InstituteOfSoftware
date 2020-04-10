@@ -1,8 +1,10 @@
 ﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Business.EducationalBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.PositionBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
@@ -17,63 +19,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     [CheckLogin]
     public class TeacherNightController : Controller
     {
-        // GET: /Educational/TeacherNight/HandAnpaiFunction
+        // GET: /Educational/TeacherNight/TeacherNightViewIndex
 
-        TeacherNightManeger TeacherNight_Entity;
+        TeacherNightManeger TeacherNight_Entity = new TeacherNightManeger();
         TeacherBusiness Teacher_Entity;
-
+        ClassroomManeger Classoom_Entity;
+        BeOnDutyManeger beOnDuty_Entity = new BeOnDutyManeger(); //获取教员晚自习
+        #region  教员晚自习值班
         public ActionResult TeacherNightViewIndex()
         {
             return View();
         }
 
-        static Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();//获取登录人信息
-        static Recon_Login_Data GetBaseData(string Emp)
+        public ActionResult TeacherTableData(int page, int limit)
         {
-            Recon_Login_Data new_re = new Recon_Login_Data();
-            EmployeesInfo employees = Reconcile_Com.Employees_Entity.GetEntity(Emp);
-            //获取部门
-            DepartmentManage department = new DepartmentManage();
-            Department find_d1 = department.GetList().Where(d => d.DeptName == "s1、s2教学部").FirstOrDefault();
-            Department find_d2 = department.GetList().Where(d => d.DeptName == "s3教学部").FirstOrDefault();
-            //获取岗位
-            PositionManage position = new PositionManage();
-            Position find_p = position.GetEntity(employees.PositionId);
-            if (find_p.PositionName == "教务" && find_p.DeptId == find_d1.DeptId)
-            {
-                //s1.s2教务
-                new_re.ClassRoom_Id = Reconcile_Com.ClassSchedule_Entity.BaseDataEnum_Entity.GetSingData("继善高科校区", false).Id;
-                new_re.IsOld = true;
-            }
-            else
-            {
-                //s3教务
-                new_re.ClassRoom_Id = Reconcile_Com.ClassSchedule_Entity.BaseDataEnum_Entity.GetSingData("达嘉维康校区", false).Id;
-                new_re.IsOld = false;
-            }
-            return new_re;
-        }
-        //获取当前登录员是哪个校区的教务
-        static Recon_Login_Data rr = GetBaseData(UserName.EmpNumber);
-        static int base_id = rr.ClassRoom_Id;//确定教室 
-        static bool IsOld = rr.IsOld;//确定教务
-        public ActionResult TeacherTableData(int page,int limit)
-        {
+            int id = beOnDuty_Entity.GetSingleBeOnButy("教员晚自习", false).Id;
             TeacherNight_Entity = new TeacherNightManeger();
-            List<TeacherNight> getall= TeacherNight_Entity.GetAllTeacherNight();
+            List<TeacherNight> getall = TeacherNight_Entity.GetAllTeacherNight().Where(t => t.BeOnDuty_Id == id).OrderByDescending(t => t.Id).ToList();
             var data = getall.OrderByDescending(t => t.Id).Skip((page - 1) * limit).Take(limit).Select(t => new
             {
-                Id=t.Id,
-                IsDelete=t.IsDelete,
-                OrwatchDate=t.OrwatchDate,
-                Rmark=t.Rmark,
-                TearcherName=Reconcile_Com.Employees_Entity.GetEntity( t.Tearcher_Id).EmpName,
-                timename=t.timename,
-                ClassroomName=Reconcile_Com.Classroom_Entity.GetEntity( t.ClassRoom_id).ClassroomName,
-                ClassNumber=Reconcile_Com.ClassSchedule_Entity.GetEntity( t.ClassSchedule_Id).ClassNumber
+                Id = t.Id,
+                IsDelete = t.IsDelete,
+                OrwatchDate = t.OrwatchDate,
+                Rmark = t.Rmark,
+                TearcherName = Reconcile_Com.Employees_Entity.GetEntity(t.Tearcher_Id).EmpName,
+                timename = t.timename,
+                ClassroomName = Reconcile_Com.Classroom_Entity.GetEntity(t.ClassRoom_id).ClassroomName,
+                ClassNumber = Reconcile_Com.ClassSchedule_Entity.GetEntity(t.ClassSchedule_Id).ClassNumber,
+                AttendDate = t.AttendDate
             }).ToList();
-            var jsondata = new { count=getall.Count,code=0,msg="",data=data};
-            return Json(jsondata,JsonRequestBehavior.AllowGet);
+            var jsondata = new { count = getall.Count, code = 0, msg = "", data = data };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult AnpaiTeacherNight()
@@ -81,67 +57,339 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return null;
         }
 
+
         public ActionResult AddDataView()
-        {             
-            //获取所有老师
-            Teacher_Entity = new TeacherBusiness();
-            List<SelectListItem> sle_teacher= Teacher_Entity.GetTeachers().Select(t=>new SelectListItem() { Text=Reconcile_Com.Employees_Entity.GetEntity(t.EmployeeId).EmpName,Value=t.EmployeeId}).ToList();
-            sle_teacher.Add(new SelectListItem() { Text="--请选择--",Value="0",Selected=true});
+        {
+
+            Teacher_Entity = new TeacherBusiness(); //获取所有老师
+            List<SelectListItem> sle_teacher = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Text = Reconcile_Com.Employees_Entity.GetEntity(t.EmployeeId).EmpName, Value = t.EmployeeId }).ToList();
+            sle_teacher.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
             ViewBag.teacher = sle_teacher;
-            //获取教室
-            List<SelectListItem> sle_classroom = Reconcile_Com.Classroom_Entity.GetList().Where(c => c.BaseData_Id == base_id && c.IsDelete == false).Select(c => new SelectListItem()
-            {
-                Text = c.ClassroomName,
-                Value= c.Id.ToString()
-            }).ToList();
-            sle_classroom.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
-            ViewBag.classroom = sle_classroom;
-            //获取班级
-           List<SelectListItem> sle_class= Reconcile_Com.GetClass(IsOld).Select(cl => new SelectListItem() { Text = cl.ClassNumber, Value = cl.id.ToString() }).ToList();
+
+            List<SelectListItem> sle_class = Reconcile_Com.GetClass().Select(cl => new SelectListItem() { Text = cl.ClassNumber, Value = cl.id.ToString() }).ToList();  //获取班级
             sle_class.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
             ViewBag.myclass = sle_class;
+
+
+            BaseDataEnumManeger baseDataEnum_Entity = new BaseDataEnumManeger();//加载校区
+            List<SelectListItem> schooladdress = baseDataEnum_Entity.GetsameFartherData("校区地址").Select(s => new SelectListItem() { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            schooladdress.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
+            ViewBag.Schooladdress = schooladdress.OrderBy(s => s.Value).ToList();
             return View();
         }
+
+        /// <summary>
+        /// 系统自动安排晚自习方法
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult SystemAnpaiFunction()
         {
             TeacherNight_Entity = new TeacherNightManeger();
-            string[] times= Request.Form["times"].Split('到');
+            string[] times = Request.Form["times"].Split('到');
             DateTime start = Convert.ToDateTime(times[0]);
             DateTime end = Convert.ToDateTime(times[1]);
-            AjaxResult a= TeacherNight_Entity.AnpaiNight(start, end, IsOld);
-            return Json(a,JsonRequestBehavior.AllowGet);
+            AjaxResult a = TeacherNight_Entity.AnpaiNight(start, end);
+            return Json(a, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 手动安排晚自习方法
+        /// </summary>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult HandAnpaiFunction()
         {
             AjaxResult a = new AjaxResult();
             TeacherNight_Entity = new TeacherNightManeger();
-            string timename= Request.Form["timename"];
-            DateTime date = Convert.ToDateTime(Request.Form["mytime"]);
-            int class_id =Convert.ToInt32( Request.Form["classShdule_sele"]);
-            string teacherEmp = Request.Form["teacher_sele"];
-            int classroom_id =Convert.ToInt32( Request.Form["classroom_sele"]);
-            string ramke = Request.Form["ramke"];
             TeacherNight new_t = new TeacherNight();
-            new_t.OrwatchDate = date;
-            new_t.ClassRoom_id = classroom_id;
-            new_t.ClassSchedule_Id = class_id;
+            new_t.OrwatchDate = Convert.ToDateTime(Request.Form["mytime"]);
+            new_t.ClassRoom_id = Convert.ToInt32(Request.Form["classroom"]);
+            new_t.ClassSchedule_Id = Convert.ToInt32(Request.Form["classShdule_sele"]);
             new_t.IsDelete = false;
-            new_t.Tearcher_Id = teacherEmp;
-            new_t.Rmark = ramke;
+            new_t.Tearcher_Id = Request.Form["teacher_sele"];
+            new_t.Rmark = Request.Form["ramke"];
+            new_t.timename = Request.Form["timename"];
             //判断是否有重复的数据
-            int count= TeacherNight_Entity.GetAllTeacherNight().Where(tea => tea.ClassSchedule_Id == new_t.ClassSchedule_Id && tea.OrwatchDate == new_t.OrwatchDate).ToList().Count;
-            if (count>0)
+            int count = TeacherNight_Entity.GetAllTeacherNight().Where(tea => tea.ClassSchedule_Id == new_t.ClassSchedule_Id && tea.OrwatchDate == new_t.OrwatchDate).ToList().Count;
+            if (count > 0)
             {
                 a.Success = false;
                 a.Msg = "该班级已安排值班老师";
             }
             else
             {
-               a= TeacherNight_Entity.Add_data(new_t);
+                a = TeacherNight_Entity.Add_data(new_t);
             }
-            return Json(a,JsonRequestBehavior.AllowGet); ;
+            return Json(a, JsonRequestBehavior.AllowGet); ;
         }
+
+        /// <summary>
+        /// 删除数据
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult DeleteFunction(int id)
+        {
+            AjaxResult a = new AjaxResult();
+            TeacherNight_Entity = new TeacherNightManeger();
+            a = TeacherNight_Entity.My_Delete(id);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 编辑页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EditView(int id)
+        {
+            //获取数据
+            TeacherNight_Entity = new TeacherNightManeger();
+            TeacherNight find_data = TeacherNight_Entity.GetEntity(id);
+            ViewBag.time = find_data.OrwatchDate.ToString("yyyy-MM-dd");
+            //获取值班时间
+            List<SelectListItem> timenamelist = new List<SelectListItem>();
+            timenamelist.Add(new SelectListItem() { Text = "晚一", Value = "晚一", Selected = find_data.timename == "晚一" ? true : false });
+            timenamelist.Add(new SelectListItem() { Text = "晚二", Value = "晚二", Selected = find_data.timename == "晚二" ? true : false });
+            Teacher_Entity = new TeacherBusiness();
+            List<SelectListItem> teacherlist = Teacher_Entity.GetTeachers().Select(t => new SelectListItem() { Text = Reconcile_Com.GetEmpName(t.EmployeeId), Value = t.EmployeeId, Selected = find_data.Tearcher_Id == t.EmployeeId ? true : false }).ToList();
+
+            ViewBag.timenamelist = timenamelist;
+            ViewBag.teacherlist = teacherlist;
+            ViewBag.className = Reconcile_Com.GetClassName(Convert.ToInt32(find_data.ClassSchedule_Id));
+
+            BaseDataEnumManeger baseDataEnum_Entity = new BaseDataEnumManeger();//加载校区
+            List<SelectListItem> schooladdress = baseDataEnum_Entity.GetsameFartherData("校区地址").Select(s => new SelectListItem() { Text = s.Name, Value = s.Id.ToString() }).ToList();
+            schooladdress.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
+            ViewBag.Schooladdress = schooladdress.OrderBy(s => s.Value).ToList();
+            Classoom_Entity = new ClassroomManeger();
+            ViewBag.classroom = Classoom_Entity.GetEntity(find_data.ClassRoom_id).ClassroomName;//教室名称
+            return View(find_data);
+        }
+
+        [HttpPost]
+        public ActionResult EditFunction(TeacherNight t)
+        {
+            TeacherNight find = TeacherNight_Entity.GetEntity(t.Id);
+            t.ClassSchedule_Id = find.ClassSchedule_Id;
+            t.BeOnDuty_Id = find.BeOnDuty_Id;
+            t.AttendDate = find.AttendDate;
+            AjaxResult a = TeacherNight_Entity.Edit_Data(t);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult GetEmtpyClassroom()
+        {
+            string timename = Request.Form["timename"];
+            DateTime time = Convert.ToDateTime(Request.Form["time"]);
+            int s_id = Convert.ToInt32(Request.Form["schooladdress"]);
+            List<TreeClass> tree = TeacherNight_Entity.GetEmptyClassroom(timename, time, s_id).Select(c => new TreeClass() { id = c.Id.ToString(), title = c.ClassroomName }).ToList();
+            return Json(tree, JsonRequestBehavior.AllowGet);
+        }
+
+
+        #region 调课或上课日期更换
+        public ActionResult ClassadjustmentView(bool id)
+        {
+            ViewBag.Is = id;//如果是0--》只需要调换日期1-->日期往前推迟或往后推迟
+            return View();
+        }
+
+        public ActionResult ClassadjustmentFunction()
+        {
+            int id = beOnDuty_Entity.GetSingleBeOnButy("教员晚自习", false).Id;
+            DateTime old = Convert.ToDateTime(Request.Form["oldtime"]);
+            DateTime new_old = Convert.ToDateTime(Request.Form["newtime"]);
+            bool Whychangedate = Convert.ToBoolean(Request.Form["mybool"]);
+            List<TeacherNight> list = TeacherNight_Entity.GetAllTeacherNight();
+            int count = (old - new_old).Days;
+            if (Whychangedate)//调课
+            {
+                list = list.Where(t => t.OrwatchDate >= old && t.BeOnDuty_Id == id).ToList();
+            }
+            else //日期更改
+            {
+                list = list.Where(t => t.OrwatchDate == old && t.BeOnDuty_Id == id).ToList();
+            }
+            AjaxResult a = TeacherNight_Entity.Update_Date(Whychangedate, list, count, new_old);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+
+
+        #endregion
+
+
+
+        #region 班主任晚自习值班
+        public ActionResult ClassMasterIndex()
+        {
+            return View();
+        }
+
+        public ActionResult GetClassMasterFunction(int page, int limit)
+        {
+            int id1 = beOnDuty_Entity.GetSingleBeOnButy("周末值班", false).Id;
+            int id2 = beOnDuty_Entity.GetSingleBeOnButy("班主任晚自习", false).Id;
+            TeacherNight_Entity = new TeacherNightManeger();
+            List<TeacherNight> getall = TeacherNight_Entity.GetAllTeacherNight().Where(t => t.BeOnDuty_Id == id1 || t.BeOnDuty_Id == id2).OrderByDescending(t => t.Id).ToList();
+            var data = getall.OrderByDescending(t => t.Id).Skip((page - 1) * limit).Take(limit).Select(t => new
+            {
+                Id = t.Id,
+                OrwatchDate = t.OrwatchDate,
+                Rmark = t.Rmark,
+                TearcherName = Reconcile_Com.Employees_Entity.GetEntity(t.Tearcher_Id).EmpName,
+                timename = t.timename,
+                AttendDate = t.AttendDate
+            }).ToList();
+            var jsondata = new { count = getall.Count, code = 0, msg = "", data = data };
+            return Json(jsondata, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MasterAddView()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// 周末值班
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult WeekenddutyView()
+        {
+            DepartmentManage Deparment_Entity = new DepartmentManage();
+            List<SelectListItem> list = Deparment_Entity.GetDepartments().Where(d => d.DeptName.Contains("教质部") || d.DeptName.Contains("就业部")).Select(d => new SelectListItem() { Text = d.DeptName, Value = d.DeptId.ToString() }).ToList();//获取所有有效的部门
+            list.Add(new SelectListItem() { Text = "--请选择--", Value = "0" });
+            ViewBag.dep = list.OrderBy(d => d.Value).ToList();
+            return View();
+        }
+        [HttpPost]
+        public ActionResult GetDepEmp()
+        {
+            int did = Convert.ToInt32(Request.Form["depid"]);//获取部门id
+            EmployeesInfoManage Employeesinfo_Entity = new EmployeesInfoManage();
+            List<SelectListItem> list = Employeesinfo_Entity.GetEmpsByDeptid(did).Where(e => e.IsDel == false).Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList();//获取所属部门的所有未辞职的员工
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+        [HttpPost]
+        public ActionResult WeekEnddutyFunction()
+        {
+            bool types = Convert.ToBoolean(Request.Form["Type"]);
+            int typeid1 = beOnDuty_Entity.GetSingleBeOnButy("周末值班", false).Id;
+            int typeid2 = beOnDuty_Entity.GetSingleBeOnButy("班主任晚自习", false).Id;
+            string[] tid = Request.Form["tid"].Split(',');//值班老师员工编号
+            DateTime date = Convert.ToDateTime(Request.Form["time"]);//值班日期
+            List<TeacherNight> night = new List<TeacherNight>();
+            foreach (string id in tid)
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    TeacherNight new_t = new TeacherNight();
+                    new_t.AttendDate = DateTime.Now;
+                    new_t.BeOnDuty_Id = types == true ? typeid2 : typeid1;
+                    new_t.IsDelete = false;
+                    new_t.OrwatchDate = date;
+                    new_t.Tearcher_Id = id;
+                    new_t.timename = types == true ? "晚自习值班" : "周末值班";
+                    night.Add(new_t);
+                }
+            }
+
+            AjaxResult a = TeacherNight_Entity.Add_masterdata(night);
+
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EditMasterView(int id)
+        {
+            TeacherNight find = TeacherNight_Entity.GetEntity(id);
+            EmployeesInfoManage e = new EmployeesInfoManage();
+            ViewBag.empName = e.GetEntity(find.Tearcher_Id).EmpName;
+            return View(find);
+        }
+
+        public ActionResult EditMasterFunction(TeacherNight new_t)
+        {
+            TeacherNight find = TeacherNight_Entity.GetEntity(new_t.Id);
+            find.OrwatchDate = new_t.OrwatchDate;
+            AjaxResult a = TeacherNight_Entity.Edit_Data(find);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EditDateView()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult EditDateFuntion()
+        {
+            DateTime time = Convert.ToDateTime(Request.Form["time"]);
+            string idlist = Request.Form["ids"];
+            bool isAll = Convert.ToBoolean(Request.Form["IsAll"]);
+            AjaxResult a = new AjaxResult();
+            List<TeacherNight> list = new List<TeacherNight>();
+            if (isAll) //值班数据全部改为某日期
+            {
+                int id1 = beOnDuty_Entity.GetSingleBeOnButy("周末值班", false).Id;
+                int id2 = beOnDuty_Entity.GetSingleBeOnButy("班主任晚自习", false).Id;
+                List<TeacherNight> getall = TeacherNight_Entity.GetAllTeacherNight().Where(t => t.BeOnDuty_Id == id1 || t.BeOnDuty_Id == id2).OrderByDescending(t => t.Id).ToList();
+                a = TeacherNight_Entity.Update_Date(false, getall, 0, time);
+            }
+            else
+            {
+                string[] list_id = idlist.Split(',');
+                foreach (string id in list_id)
+                {
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        int myid = Convert.ToInt32(id);
+                        list.Add(TeacherNight_Entity.GetEntity(myid));
+                    }
+                }
+               a= TeacherNight_Entity.Update_Date(false, list, 0, time);
+            }
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
+        
+        public ActionResult EditDateChangeView()
+        {
+            return View();
+        }
+
+        public ActionResult EditDateChangeFuntion()
+        {
+            DateTime oldtime = Convert.ToDateTime(Request.Form["old"]);
+            DateTime newtime = Convert.ToDateTime(Request.Form["new"]);
+            string idlist = Request.Form["ids"];
+            bool isAll = Convert.ToBoolean(Request.Form["IsAll"]);
+            int count = (oldtime - newtime).Days;
+            AjaxResult a = new AjaxResult();
+            List<TeacherNight> list = new List<TeacherNight>();
+            if (isAll) //值班数据全部改为某日期
+            {
+                int id1 = beOnDuty_Entity.GetSingleBeOnButy("周末值班", false).Id;
+                int id2 = beOnDuty_Entity.GetSingleBeOnButy("班主任晚自习", false).Id;
+                List<TeacherNight> getall = TeacherNight_Entity.GetAllTeacherNight().Where(t => t.BeOnDuty_Id == id1 || t.BeOnDuty_Id == id2 ).OrderByDescending(t => t.Id).ToList();
+                getall= getall.Where(t => t.OrwatchDate >= oldtime).ToList();
+                list = getall;
+            }
+            else
+            {
+                string[] list_id = idlist.Split(',');
+                foreach (string id in list_id)
+                {
+                    if (!string.IsNullOrEmpty(id))
+                    {
+                        int myid = Convert.ToInt32(id);
+                        list.Add(TeacherNight_Entity.GetEntity(myid));
+                    }
+                }                
+            }
+            a = TeacherNight_Entity.Update_Date(true, list, count, newtime);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }

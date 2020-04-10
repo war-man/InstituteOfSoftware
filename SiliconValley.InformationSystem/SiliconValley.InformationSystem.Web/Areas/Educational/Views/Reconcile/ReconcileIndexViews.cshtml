@@ -36,7 +36,7 @@
 
         .linu
         {
-            width: 200px;
+            width: 130px;
         }
 
         .mm
@@ -83,69 +83,87 @@
             width: 130px;
             border-radius: 5px;
         }
+
+        /*.Back_Color
+        {
+            background-color: rgba(0,0,1,0);
+        }*/
     </style>
 }
 
-<form class="layui-form">
+<form class="layui-form" lay-filter="Reconcileindexform">
     <div class="layui-row layui-form-item">
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="layui-form-label">阶段:</label>
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <label class="layui-form-label">阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段:</label>
             <div class="layui-input-block">
                 @Html.DropDownList("mygrand", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "grandselect" } })
             </div>
         </div>
-        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="layui-form-label">班级:</label>
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <label class="layui-form-label">班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级:</label>
             <div id="myclass" class="layui-input-block">
 
             </div>
         </div>
         <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-            <label class="layui-form-label">专业:</label>
+            <label class="layui-form-label">专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业:</label>
             <div id="marjon" class="layui-input-block">
 
             </div>
         </div>
-        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-            <label class="LableCss1">上课时间段:</label>
-            <div id="ClssTime" class="layui-input-block">
-                <input style="color:black" type="radio" name="time" id="time" value="上午" title="上午" disabled="disabled">
-                <input style="color:black" type="radio" name="time" id="time" value="下午" title="下午" disabled="disabled">
-            </div>
-        </div>         
-    </div>
-    <div class="layui-row layui-form-item">
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="layui-form-label">课程:</label>
+            <label class="LableCss1">上课时间:</label>
+            <div id="ClssTime" class="layui-input-block">
+                <div class="layui-col-md3">
+                    <input style="color:black" type="radio" name="time" id="time" value="上午" title="上午" disabled="disabled">
+                </div>
+                <div class="layui-col-md3">
+                    <input style="color:black" type="radio" name="time" id="time" value="下午" title="下午" disabled="disabled">
+                </div>
+                
+            </div>
+        </div>
+        <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+            <label class="layui-form-label">课&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;程:</label>
             <div id="currr_div" class="layui-input-block">
 
             </div>
 
         </div>
+    </div>
+    <div class="layui-row layui-form-item">
+
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="LableCss1">开始日期:</label>
+            <label class="LableCss1">日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期:</label>
             <div class="layui-input-block" id="div_time">
-                
+
             </div>
         </div>
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="layui-form-label">教室:</label>
+            <label class="LableCss1">校&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;区:</label>
+            <div class="layui-input-block" id="div_time">
+                @Html.DropDownList("schoolAddress", ViewBag.Schooladdress as List<SelectListItem>, new Dictionary<string, object>() { { "class", "linu" }, { "lay-filter", "schooladdress" } })
+            </div>
+        </div>
+        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+            <label class="layui-form-label">教&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室:</label>
             <div id="classroom_div" class="layui-input-block">
 
             </div>
         </div>
         <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-            <label class="LableCss1">任课老师:</label>
+            <label class="LableCss1">老&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;师:</label>
             <div id="teacher_div" class="layui-input-block">
 
             </div>
-        </div>         
+        </div>        
     </div>
-    <div class="layui-row layui-form-item" style="text-align:right">
-        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:right">
-            <input id="Anan" type="submit" class="layui-btn" lay-submit="" lay-filter="Anpai" value="系统排课" />
-            <input id="Anan1" type="button" class="layui-btn" value="手动排课" onclick="OpenNanualView()" />
-            <input id="Anan2" type="button" class="layui-btn" value="其他课程排课" onclick="OrtherView()"/>
+    <div class="layui-row layui-form-item">
+        <div style="text-align:right;width:91%;">            
+                <input id="Anan" type="submit"  class="layui-btn" lay-submit="" lay-filter="Anpai" value="系统排课" />
+                <input id="Anan1" type="button" class="layui-btn" value="手动排课" onclick="OpenNanualView()" />
+                <input id="Anan2" type="button" class="layui-btn" value="其他课程排课" onclick="OrtherView()" style="width:120px;margin-right:10px" />                 
+                       
         </div>
     </div>
     <fieldset>
@@ -157,14 +175,15 @@
 </form>
 @section script{
 <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
-    <script>       
+    <script>           
         function TableFulsh() {
             layui.use('table', function () {
                 var table = layui.table;
                 table.reload('Reconcile_table');
             });
         }
-        layui.use(['form','laydate','table'], function () {
+
+        layui.use(['form', 'laydate', 'table'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             var table = layui.table;
@@ -180,6 +199,7 @@
                 $("#classroom_div")[0].innerHTML = "";
                 //清空教员DIV
                 $("#teacher_div")[0].innerHTML = "";
+                form.val("Reconcileindexform", { "schoolAddress": "0" });   //将下拉框改为初始值
                 if (data.value != "0") {
                     $.ajax({
                         url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
@@ -224,32 +244,17 @@
                                 //获取上课时间段
                                 var timeName = $($("#ClssTime :checked")[0]).val();
                                 var Time = value;
-                                var mydata = { "timeName": timeName, "Time": Time };
                                 var Getdata = { "Time": Time, "Curr": $("#kecheng").val(), "timeName": timeName };
                                 $("#classroom_div")[0].innerHTML = "";
                                 $("#teacher_div")[0].innerHTML = "";
-                                if (value.length > 0) {
-                                    //获取教室
-                                    $.ajax({
-                                        url: '/Educational/Reconcile/GetEmptyRoom',
-                                        type: 'POST',
-                                        data: mydata,
-                                        success: function (suc) {
-                                            var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
-                                            for (var i = 0; i < suc.length; i++) {
-                                                $('<option value=' + suc[i].Id + '>' + suc[i].ClassroomName + '</option>').appendTo(classroom);
-                                            }
-                                            $("#classroom_div").append(classroom);
-                                            form.render(); //更新全部
-                                        }
-                                    });
+                                if (value.length > 0) {                                    
                                     //获取任课老师
                                     $.ajax({
                                         url: '/Educational/Reconcile/GetTeacher',
                                         type: 'POST',
                                         data: Getdata,
                                         success: function (suc) {
-                                            var teachersele = $('<select id="teachersele" name="teachersele"><option value="0">--请选择--</select>');
+                                            var teachersele = $('<select id="teachersele" name="teachersele" class="SelectTeacherCss1"><option value="0">--请选择--</select>');
                                             for (var i = 0; i < suc.length; i++) {
                                                 $('<option value=' + suc[i].Value + '>' + suc[i].Text + '</option>').appendTo(teachersele);
                                             }
@@ -273,7 +278,7 @@
                         url: '/Educational/Reconcile/GetClassDate/' + data.value,
                         success: function (sucdata) {
                             if (sucdata.stataus == "true") {
-                                $("<span class='LableCss1'>" + sucdata.classData.marjoiName + "</span>").appendTo($("#marjon"));//加载专业数据
+                                $('<input  type="text" disabled="disabled"  class="layui-input linu" value=' + sucdata.classData.marjoiName+'>').appendTo($("#marjon"));//加载专业数据
                                 var myselect_c = $("<select name='kecheng' id='kecheng'></select>");
                                 for (var i = 0; i < sucdata.c_list.length; i++) {
                                     $("<option value=" + sucdata.c_list[i].CurriculumID + ">" + sucdata.c_list[i].CourseName + "<option>").appendTo(myselect_c);
@@ -313,6 +318,38 @@
                     $("#teacher_div")[0].innerHTML = "";
                 }                  
             });
+            //根据校区获取空教室
+            form.on('select(schooladdress)', function (data) {               
+                var timenameval = $("input:checked").val();  //获取上课的时间                
+                var dateval = $("#startTime").val(); //获取日期                
+                var schooldaddressval = data.value; //获取校区
+                var MY = { "timenameval": timenameval, "dateval": dateval, "schooldaddressval": schooldaddressval};
+                if (dateval.length <= 0) {
+                    layer.msg('请先选择排课日期!!!', { icon: 2 });
+                  
+                    form.val("Reconcileindexform", { "schoolAddress": "0" });   //将下拉框改为初始值
+                } else if (schooldaddressval == "0") {
+                    layer.msg('请先有效的校区!!!', { icon: 2 });
+                } else {
+                    $("#classroom_div")[0].innerHTML = "";
+                    //加载教室               
+                    $.ajax({
+                        url: '/Educational/Reconcile/GetSchoolEmptyRoom',
+                        type: 'POST',
+                        data: MY,
+                        success: function (suc) {                          
+                            var classroom = $('<select id="myclassroom" name="myclassroom"></select>');
+                            for (var i = 0; i < suc.Data.length; i++) {
+                                $('<option value=' + suc.Data[i].Id + '>' + suc.Data[i].ClassroomName + '</option>').appendTo(classroom);
+                            }
+                            $("#classroom_div").append(classroom);
+                            form.render(); //更新全部
+                        }
+
+                    })
+                }
+                 
+            });
             //table加载
             table.render({
                 elem: '#Reconcile_table'
@@ -342,6 +379,7 @@
                 } else if (mydata.myclassroom == undefined || mydata.myclassroom == 0) {
                     layer.msg('请选择教室！！！', { icon: 2 });
                 } else if (mydata.teachersele == "0" || mydata.teachersele == undefined) {
+                    
                     layer.msg('请选择任课老师！！！', { icon: 2 });
                 } else {
                     var myindexof = layer.load(1);
@@ -349,8 +387,7 @@
                         url: '/Educational/Reconcile/PaikeFunction',
                         type: 'POST',
                         data: mydata,
-                        success: function (Sucdata) {
-                            console.log(Sucdata);
+                        success: function (Sucdata) {                            
                             if (Sucdata.Success == true) {
                                 layer.close(myindexof); 
                                 layer.msg(Sucdata.Msg, { icon: 1,shade:0.8 }, function () {
@@ -393,13 +430,20 @@
             layer.open({
                 type: 2,
                 content: '/Educational/Reconcile/AnpaiNotMarginView'
-                , area: ['800px', '500px'],
+                , area: ['800px', '700px'],
                 title: '其他课程排课页面'
                 , shade: 0.8
                 , anim: 4
                 , skin: 'demo-class'
             });
         }
+
+        $(function () {
+            layui.use(['form'], function () {
+                var form = layui.form;
+                form.val("Reconcileindexform", { "schoolAddress": "0" });   //将下拉框改为初始值
+            });
+        });
     </script>
 }
 

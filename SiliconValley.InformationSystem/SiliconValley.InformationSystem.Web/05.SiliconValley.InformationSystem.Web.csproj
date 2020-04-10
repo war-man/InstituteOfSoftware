@@ -255,6 +255,7 @@
     <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
     <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
+    <Compile Include="Areas\Educational\Controllers\TimetableController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamScoresController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\QuestionsBankController.cs" />
@@ -1321,6 +1322,7 @@
     <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
+    <Content Include="Xmlconfigure\HeadMasterNingth.xml" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\entxml.xml" />
@@ -1339,7 +1341,6 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
@@ -1515,6 +1516,16 @@
     <Content Include="Areas\Capital\Views\Capital\DoPrefundingList.cshtml" />
     <Content Include="Config\MyExcelClass.json" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\EditView.cshtml" />
+    <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\ClassadjustmentView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\ClassMasterIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\MasterAddView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\WeekenddutyView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\EditMasterView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\EditDateView.cshtml" />
+    <Content Include="Areas\Educational\Views\TeacherNight\EditDateChangeView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
