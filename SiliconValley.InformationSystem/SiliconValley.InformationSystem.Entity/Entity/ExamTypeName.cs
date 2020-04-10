@@ -14,6 +14,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
         public int ID { get; set; }
 
+        /// <summary>
+        /// 类型名称  （升学考试，阶段考试）
+        /// </summary>
         public string TypeName { get; set; }
     }
 }

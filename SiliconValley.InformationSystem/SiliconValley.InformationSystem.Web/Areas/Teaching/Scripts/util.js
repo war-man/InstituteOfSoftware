@@ -11,8 +11,6 @@ function formatDate(now) {
 
 function formaDateUtc(dateUtc) {
 
-   
-
     var date = new Date(parseInt(dateUtc));
 
     var year = date.getFullYear();
@@ -20,8 +18,6 @@ function formaDateUtc(dateUtc) {
     var mouth = date.getMonth() + 1;
 
     var day = date.getDate();
-
-    
 
     return year + "年" + mouth + "月" + day + "日";
 

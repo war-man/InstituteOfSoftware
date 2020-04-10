@@ -1,0 +1,226 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ChoiceQuestionBatchEntry</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+        #tipMsg {
+        
+            width:90%;
+            
+            height:40px;
+            text-align:center;
+            color:darkred;
+            font-size:15px;
+            line-height:40px;
+            visibility:hidden;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div>
+        <form id="myform" class="layui-form">
+            <hr />
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">专业：</label>
+                    <div class="layui-input-inline">
+                        <select name="major" lay-filter="major">
+                            <option value="0">请选择</option>
+                            <option value="-1">公共课</option>
+                            @{
+                                foreach (var item in ViewBag.Major as List<Specialty>)
+                                {
+                                    <option value="@item.Id">@item.SpecialtyName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+                    <label class="layui-form-label">课程：</label>
+                    <div class="layui-input-inline">
+                        <select lay-verify="required" name="course" id="course"></select>
+                    </div>
+                </div>
+
+                <div class="layui-inline" style="margin-top:30px;">
+                    <label class="layui-form-label">选择文件：</label>
+                    <div class="layui-input-inline">
+                        <input type="file" id="file" name="excelfile" />
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <div id="tipMsg">
+
+                错误:文件类型错误
+
+            </div>
+
+            <div style="text-align:center;"> 
+                <button style="width:80%; margin-top:60px;" type="button" lay-submit="" id="commit" lay-filter="submit" class="layui-btn layui-btn-radius layui-btn-primary">录入</button> 
+            </div>
+
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+      
+       
+        var formdata = new FormData();
+
+        formdata.append("excelfile", undefined);
+        formdata.append("course", undefined);
+
+    
+        function SetErrorMsg(msg) {
+
+            $("#tipMsg").text(msg);
+
+            $("#tipMsg").css("visibility", 'visible');
+        }
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            //下拉框联动
+            form.on('select(major)', function (data) {
+                var value = data.value;  //select选中的值
+                console.log("选中值" + value);
+                $.ajax({
+                    url: "/ExaminationSystem/QuestionsBank/CourseData",
+                    data: { majorid: value },
+                    dataType: "json",
+                    success: function (resultData) {
+                        if (resultData.length > 0) {
+                            //清空赋值
+                            $("#course").empty();
+                            console.log(resultData);
+                            $("#course").append(new Option("请选择项目", ""));
+                            $.each(resultData, function (index, item) {
+                                var grand_ = item.Grand == null ? "" : item.Grand.GrandName;
+                                var namaC = item.CourseName + '(' + grand_ + ')'
+                                //赋值
+                                $('#course')
+                                    .append(new Option(namaC, item.CurriculumID));
+                            });
+                        } else {
+                            $("#course").empty();
+                            $("#course").append(new Option("暂无数据", ""));
+                        }
+                        layui.form.render("select");
+                    }
+                });
+            });
+            layui.form.render("select");
+
+            //选择文件之后的函数
+            $("#file").change(function (data) {
+
+                var file = this.files[0];
+
+                if (file == undefined) {
+                    formdata.set("excelfile", undefined);
+                    SetErrorMsg("请选择文件");
+                    return;
+
+                }
+                console.log(file);
+                //判断文件类型  application/vnd.ms-excel 或者 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+
+                if (file.type != 'application/vnd.ms-excel' && file.type != 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') {
+                    formdata.set("excelfile", undefined);
+                    SetErrorMsg("错误：文件类型错误  提示：文件类型为 xls、xlsx");
+
+                    return;
+                }
+                // 判断文件大小
+
+                var filesize = file.size;
+
+                if (filesize <= 1024 * 3) {
+                    formdata.set("excelfile", undefined);
+                    SetErrorMsg("错误：文件内容过小");
+                    return;
+                }
+
+                formdata.set("excelfile", file);
+
+                $("#tipMsg").css("visibility", 'hidden');
+
+            });
+
+
+            //点击提交
+            form.on('submit(submit)', function (data) {
+
+                var loadindex = layer.load(1);
+                
+
+                if (formdata.get("excelfile") == undefined) {
+
+                    formdata.set("excelfile", undefined);
+
+                    SetErrorMsg("请选择文件");
+
+                    return;
+                }
+
+                $("#tipMsg").css("visibility", 'hidden');
+
+                
+                formdata.set("course", data.field.course);
+
+                console.log(formdata);
+
+                $.ajax({
+
+                    url: '/ExaminationSystem/QuestionsBank/ChoiceQuestionBatchEntry',
+                    type: 'POST',
+                    data: formdata,
+                    dataType: 'JSON',
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        layer.close(loadindex);
+                        if (data.ErrorCode = 200) {
+
+                            var msg = "录入成功!  录入数量：" + data.Data;
+                            layer.msg(msg, {
+                                icon: 1,
+                                time: 3000 //2秒关闭（如果不配置，默认是3秒）
+                            });
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        layer.close(loadindex);
+                        console.log(textStatus);
+                    }
+                });
+                return false;
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -15,15 +15,31 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations.Schema;
 
     [Table(name: "TestScore")]
+
+    //考试成绩表
+    
     public partial class TestScore
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 考号
+        /// </summary>
         public string CandidateInfo { get; set; }
+        /// <summary>
+        /// 考试
+        /// </summary>
         public Nullable<int> Examination { get; set; }
+        /// <summary>
+        /// 选择题成绩
+        /// </summary>
         public Nullable<float> ChooseScore { get; set; }
         public Nullable<float> TextQuestionScore { get; set; }
         public Nullable<float> OnBoard { get; set; }
+
+        /// <summary>
+        /// 阅卷人
+        /// </summary>
         public Nullable<int> Reviewer { get; set; }
         public string Remark { get; set; }
         public Nullable<System.DateTime> CreateTime { get; set; }

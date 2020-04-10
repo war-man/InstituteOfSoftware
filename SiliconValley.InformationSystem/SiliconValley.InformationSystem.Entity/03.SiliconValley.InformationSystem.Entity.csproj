@@ -189,6 +189,7 @@
     <Compile Include="Entity\InStockGoods.cs" />
     <Compile Include="Entity\InstructorList.cs" />
     <Compile Include="Entity\Instructorsonduty.cs" />
+    <Compile Include="Entity\InternalTrainingCost.cs" />
     <Compile Include="Entity\InterviewRecordsof.cs" />
     <Compile Include="Entity\InterviewStudents.cs" />
     <Compile Include="Entity\IsGoodOrBad.cs" />
@@ -291,6 +292,7 @@
     <Compile Include="Entity\TalentDemandPlan.cs" />
     <Compile Include="Entity\TeacheMitoryonduty.cs" />
     <Compile Include="Entity\Teacher.cs" />
+    <Compile Include="Entity\TeacherHourCost.cs" />
     <Compile Include="Entity\TeacherNight.cs" />
     <Compile Include="Entity\Teachingtraining.cs" />
     <Compile Include="Entity\TecharOnstageBearing.cs" />
@@ -332,6 +334,8 @@
     <Compile Include="ViewEntity\ConsultShowData.cs" />
     <Compile Include="ViewEntity\ConsultZhuzImageData.cs" />
     <Compile Include="ViewEntity\ConversationRecordView.cs" />
+    <Compile Include="ViewEntity\Cose_StatisticsItems.cs" />
+    <Compile Include="ViewEntity\CostFileView.cs" />
     <Compile Include="ViewEntity\CourseView.cs" />
     <Compile Include="ViewEntity\DetailedcostView.cs" />
     <Compile Include="ViewEntity\DistinguishView.cs" />
@@ -340,6 +344,7 @@
     <Compile Include="ViewEntity\DormInfoView.cs" />
     <Compile Include="ViewEntity\dtreestatus.cs" />
     <Compile Include="ViewEntity\dtreeview.cs" />
+    <Compile Include="ViewEntity\DutyCount.cs" />
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmpDetailView.cs" />
@@ -428,6 +433,7 @@
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="ViewEntity\StaffOfRoomwithFormdataView.cs" />
+    <Compile Include="ViewEntity\Staff_Cost_StatisticesDetailView.cs" />
     <Compile Include="ViewEntity\StartingYear.cs" />
     <Compile Include="ViewEntity\StudentData.cs" />
     <Compile Include="ViewEntity\StudentDetailView.cs" />
@@ -441,6 +447,7 @@
     <Compile Include="ViewEntity\TeacherAddModel.cs" />
     <Compile Include="ViewEntity\TeacherData.cs" />
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
+    <Compile Include="ViewEntity\TeachingItem.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />
     <Compile Include="ViewEntity\TraineeDateVIew.cs" />

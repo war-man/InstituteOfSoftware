@@ -94,7 +94,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -219,8 +218,6 @@
     <Compile Include="Areas\Capital\Controllers\CapitalController.cs" />
     <Compile Include="Areas\CourseSyllabus\Controllers\CourseController.cs" />
     <Compile Include="Areas\CourseSyllabus\CourseSyllabusAreaRegistration.cs" />
-    <Compile Include="Areas\Courseware\Controllers\CoursewaremakingController.cs" />
-    <Compile Include="Areas\Courseware\CoursewareAreaRegistration.cs" />
     <Compile Include="Areas\Dormitory\Controllers\BasicsController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\DormitoryInfoController.cs" />
     <Compile Include="Areas\Dormitory\Controllers\EmployeeCheckInController.cs" />
@@ -253,6 +250,7 @@
     <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\Controllers\ReconcileController.cs" />
     <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
+    <Compile Include="Areas\Educational\Controllers\Staff_Cost_StatisticsController.cs" />
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
     <Compile Include="Areas\Educational\Controllers\SubstituteTeachCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
@@ -350,9 +348,6 @@
     <Content Include="Areas\BaseSysManage\css\style.css" />
     <Content Include="Areas\BaseSysManage\js\style.js" />
     <Content Include="Areas\CourseSyllabus\CourseOperation.js" />
-    <Content Include="Areas\Courseware\images\timg.jpg" />
-    <Content Include="Areas\Courseware\images\wenjin.jpg" />
-    <Content Include="Areas\Courseware\images\wen.jpg" />
     <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
     <Content Include="Areas\ExaminationSystem\config\InvigilatorConfig.xml">
       <SubType>Designer</SubType>
@@ -461,6 +456,7 @@
     <Content Include="Areas\Teaching\css\zzsc.css" />
     <Content Include="Areas\Teaching\fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Config\Cost.xml" />
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
@@ -860,7 +856,12 @@
     <Content Include="Areas\Logistics\Views\web.config" />
     <Content Include="Areas\Personnelmatters\Views\web.config" />
     <Content Include="Areas\Finance\Views\web.config" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
     <Content Include="Areas\Teaching\Views\Teacher\TeachersInfo.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Viewdetails.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\Password.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\Index.cshtml" />
     <Content Include="Areas\Teachingquality\Views\ClassSchedule\AddClassSchedule.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\AddorEdit.cshtml" />
@@ -916,6 +917,8 @@
     <Content Include="Areas\Market\Views\BiddingRecord\EditBR.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
+    <Content Include="Scripts\common\myDatepicker.css" />
+    <Content Include="Scripts\common\myDatepicker.js" />
     <Content Include="Scripts\css\buttonStyle.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.mobile.css" />
@@ -1179,6 +1182,7 @@
     <Content Include="Areas\Finance\Views\Pricedetails\Receipt.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\StudentPrice.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Undergraduatefee.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\AddStudentimg.cshtml" />
     <Content Include="Areas\Educational\Views\BeOnDuty\AddBeOnDutyView.cshtml" />
     <Content Include="Areas\Educational\Views\BeOnDuty\BeOnDutyIndexView.cshtml" />
     <Content Include="Areas\Educational\Views\web.config" />
@@ -1514,25 +1518,13 @@
     <Content Include="Areas\Capital\Views\Capital\PublicBorrowList.cshtml" />
     <Content Include="Areas\Capital\Views\Capital\DoPrefundingList.cshtml" />
     <Content Include="Config\MyExcelClass.json" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\Headteacher\TraineeContro.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\GetProfessionala.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\AddProfessionala.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\TraineeContro.cshtml" />
-    <Content Include="Areas\Teaching\Views\Teacher\FineProfessionala.cshtml" />
-    <Content Include="Areas\Courseware\Views\web.config" />
-    <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
-    <Content Include="Areas\Courseware\Views\Coursewaremaking\AddCoursewaremaking.cshtml" />
-    <Content Include="Areas\Courseware\Views\Coursewaremaking\ProducerID.cshtml" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教质部\0030简历1.docx" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\AddStudentimg.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\Password.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentclassView.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\Viewdetails.cshtml" />
+    <Content Include="Config\Obempstaff.config" />
+    <Content Include="Config\UserMapRole.config" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\Staff_Cost_StatisticsIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\CreateCostStatistics.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3194,6 +3186,8 @@
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
     <Content Include="Scripts\live2d\assets\waifu-tips.json" />
+    <Content Include="uploadXLSXfile\Template\CostStaicTemplate.xls" />
+    <Content Include="uploadXLSXfile\ExamtionQuestionBankTemplate\ChoiceQuestionTemplate.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3203,17 +3197,7 @@
     <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
-    <Folder Include="Areas\Courseware\Models\" />
-    <Folder Include="Areas\Courseware\Views\Shared\" />
-    <Folder Include="Areas\Courseware\首页\ppt课程\教学部\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S1\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S2JAVA\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S2NET\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S3JAVA\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S3NET\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S4JAVA\" />
-    <Folder Include="Areas\Courseware\首页\word文档\S4NET\" />
-    <Folder Include="Areas\Courseware\首页\word文档\Y1\" />
+    <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />

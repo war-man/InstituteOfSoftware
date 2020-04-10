@@ -66,7 +66,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (IsNeedProposition)
             {
-                answerQuestionView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == answerQuestionBank.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+                var empid = db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == answerQuestionBank.Proposition).FirstOrDefault().EmployeeId;
+                answerQuestionView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == empid).FirstOrDefault();
 
             }
             else

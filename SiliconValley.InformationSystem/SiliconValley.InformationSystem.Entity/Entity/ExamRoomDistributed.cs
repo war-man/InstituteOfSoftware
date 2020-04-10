@@ -19,8 +19,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 考生考号
+        /// </summary>
         public string CandidateNumber { get; set; }
+        /// <summary>
+        /// 考场ID
+        /// </summary>
         public Nullable<int> ExaminationRoom { get; set; }
+        /// <summary>
+        /// 所属考试
+        /// </summary>
         public int ExamID { get; set; }
 
 

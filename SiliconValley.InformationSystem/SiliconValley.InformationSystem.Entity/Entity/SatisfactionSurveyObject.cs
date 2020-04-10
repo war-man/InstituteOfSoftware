@@ -19,6 +19,9 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         [Key]
         public int Id { get; set; }
         public string ObjectName { get; set; }
+        /// <summary>
+        /// 部门ID 用逗号分割
+        /// </summary>
         public string Depids { get; set; }
     }
 }

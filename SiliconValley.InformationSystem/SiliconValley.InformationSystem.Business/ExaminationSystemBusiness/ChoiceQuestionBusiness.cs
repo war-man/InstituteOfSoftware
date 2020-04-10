@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 {
+    using NPOI.HSSF.UserModel;
+    using NPOI.SS.UserModel;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Util;
+    using System.IO;
+    using NPOI.XSSF.UserModel;
 
 
     /// <summary>
@@ -81,7 +85,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             if (IsNeedProposition)
             {
                 //获取命题人
-                choiceQuestionTableView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == db_teacher.GetTeachers(IsNeedDimission:true).Where(d => d.TeacherID == multipleChoiceQuestion.Proposition).FirstOrDefault().EmployeeId).FirstOrDefault();
+               
+                var empid = db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == multipleChoiceQuestion.Proposition).FirstOrDefault().EmployeeId;
+                choiceQuestionTableView.Proposition = db_emp.GetList().Where(d=>d.EmployeeId == empid).FirstOrDefault();
             }
             else
             {
@@ -182,6 +188,121 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         }
 
+        public List<MultipleChoiceQuestion> ReadQuestionForExcel(Stream stream, string contentType)
+        {
+
+            List<MultipleChoiceQuestion> result = new List<MultipleChoiceQuestion>();
+
+            IWorkbook workbook = null;
+
+            if (contentType == "application/vnd.ms-excel")
+            {
+                workbook = new HSSFWorkbook(stream);
+            }
+
+            if (contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                workbook = new XSSFWorkbook(stream);
+            }
+
+            HSSFSheet sheet = (HSSFSheet)workbook.GetSheetAt(0);
+
+            var num = 0;
+
+            while (true)
+            {
+                num++;
+                var obj = getQuestion(num, sheet);
+                if (obj == null)
+                {
+                    break;
+                }
+
+                result.Add(obj);
+
+            }
+
+            stream.Close();
+            stream.Dispose();
+            workbook.Close();
+
+            return result;
+        }
+
+        const int danwei = 19;
+
+        /// <summary>
+        /// 获取题目
+        /// </summary>
+        /// <param name="Number"></param>
+        /// <param name="sheet"></param>
+        /// <returns></returns>
+        public MultipleChoiceQuestion getQuestion(int Number, HSSFSheet sheet)
+        {
+            MultipleChoiceQuestion result = new MultipleChoiceQuestion();
+
+            //1 0; 2 18 +1; 3 18*2 +1
+
+            int beginRowindex = (danwei * (Number - 1)) + 1;
+
+            //获取题目
+
+            try
+            {
+                string title = sheet.GetRow(beginRowindex + 1).Cells[0].StringCellValue;
+                result.Title = title;
+
+                //获取 是否单选
+                string IsRedio = sheet.GetRow(beginRowindex + 5).Cells[1].StringCellValue;
+                result.IsRadio = IsRedio == "是" ? true : false;
+
+                //获取 难度级别
+                string Level = sheet.GetRow(beginRowindex + 5).Cells[3].StringCellValue;
+
+                switch (Level)
+                {
+                    case "简单":
+                        result.Level = 1;
+                        break;
+                    case "普通":
+                        result.Level = 2;
+                        break;
+                    case "困难":
+                        result.Level = 3;
+                        break;
+                }
+
+                // 获取 参考答案
+                string answer = sheet.GetRow(beginRowindex + 5).Cells[5].StringCellValue;
+                result.Answer = answer;
+
+                // 获取 A 选项
+                string optionA = sheet.GetRow(beginRowindex + 7).Cells[1].StringCellValue;
+                result.OptionA = optionA;
+
+
+                // 获取 B 选项
+                string optionB = sheet.GetRow(beginRowindex + 10).Cells[1].StringCellValue;
+                result.OptionB = optionB;
+
+                // 获取 C 选项
+                string optionC = sheet.GetRow(beginRowindex + 13).Cells[1].StringCellValue;
+                result.OptionC = optionC;
+
+                // 获取 D 选项
+                string optionD = sheet.GetRow(beginRowindex + 16).Cells[1].StringCellValue;
+                result.OptionD = optionD;
+
+            }
+            catch (Exception ex)
+            {
+
+                result = null;
+            }
+
+            return result;
+ 
+        }
 
     }
 }
