@@ -13,7 +13,9 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
-
+   /// <summary>
+   /// 已经弃用
+   /// </summary>
     [Table(name: "ExaminationPaper")]
     public partial class ExaminationPaper
     {

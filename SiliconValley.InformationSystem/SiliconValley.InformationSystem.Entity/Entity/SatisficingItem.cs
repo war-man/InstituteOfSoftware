@@ -16,9 +16,15 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     [Table(name: "SatisficingItem")]
     public partial class SatisficingItem
     {
-
+        /// <summary>
+        /// 调查项
+        /// </summary>
         [Key]
+        
         public int ItemID { get; set; }
+        /// <summary>
+        /// 项内容
+        /// </summary>
         public string ItemContent { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }

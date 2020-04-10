@@ -114,7 +114,8 @@
                             console.log(resultData);
                             $("#course").append(new Option("请选择项目", ""));
                             $.each(resultData, function (index, item) {
-                                var namaC = item.CourseName + '(' + item.Grand.GrandName + ')'
+                                var grand_ = item.Grand == null ? "" : item.Grand.GrandName;
+                                var namaC = item.CourseName + '(' + grand_')'
                                 //赋值
                                 $('#course')
                                     .append(new Option(namaC, item.CurriculumID));

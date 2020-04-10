@@ -27,6 +27,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public string reason { get; set; }
         public Nullable<int> TeacherID { get; set; }
+
         /// <summary>
         /// 班级编号
         /// </summary>

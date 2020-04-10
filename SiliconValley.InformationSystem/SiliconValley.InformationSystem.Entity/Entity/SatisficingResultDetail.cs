@@ -14,13 +14,25 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 满意度调查详细
+    /// </summary>
     [Table(name: "SatisficingResultDetail")]
     public partial class SatisficingResultDetail
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 所属项目
+        /// </summary>
         public Nullable<int> SatisficingBill { get; set; }
+        /// <summary>
+        /// 项内容
+        /// </summary>
         public Nullable<int> SatisficingItem { get; set; }
+        /// <summary>
+        /// 所得分数
+        /// </summary>
         public Nullable<double> Scores { get; set; }
         public string Remark { get; set; }
     

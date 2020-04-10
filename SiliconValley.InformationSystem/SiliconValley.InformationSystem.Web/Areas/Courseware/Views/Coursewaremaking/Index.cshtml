@@ -1,0 +1,489 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        .div1 {
+            width: 100px;
+            height: 130px;
+            /*background-image: url('/Areas/Courseware/images/wenjin.jpg');*/
+            float: left;
+            margin-left: 10px;
+        }
+
+        .flos {
+            float: left
+        }
+
+        .spa1, .div1, .checkid {
+            cursor: pointer;
+        }
+
+        .spa1 {
+            color: #0000CC;
+        }
+
+        tr {
+            border: 1px;
+            border-bottom-style: solid;
+        }
+
+            tr th {
+                width: 70px;
+            }
+
+            tr td {
+                text-align: left;
+                width: 200px;
+            }
+
+            tr th, tr td {
+                height: 30px;
+            }
+
+        .Filedownload {
+            display: none;
+            z-index: 999;
+        }
+
+        .checkid {
+            display: none;
+        }
+    </style>
+}
+
+<fieldset class="layui-elem-field site-demo-button">
+    <legend>业务操作</legend>
+    <div>
+        <button type="button" class="layui-btn" id="texts">上传课件</button>
+        <button type="button" class="layui-btn" id="Batch">批量下载</button>
+        <button type="button" class="layui-btn" id="Datapairs">表格展现</button>
+    </div>
+</fieldset>
+<div id="Datelist" style="display:none;">
+    <form class="layui-form" action="">
+        <div class="layui-container">
+            <div class="layui-row ">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">姓名</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="EmpName" lay-verify="Name" id="ClassNumber" autocomplete="off" class="layui-input linu">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">文件名</label>
+                        <div class="layui-input-inline">
+                            <input type="tel" name="Filename" lay-verify="Name" id="ClassNumber" autocomplete="off" class="layui-input linu">
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">部门</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("DeptId", ViewBag.DeptId as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">阶段</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("StageID", ViewBag.StageID as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4  layui-col-sm4 layui-col-md4">
+
+                        <label class="layui-form-label labels">专业</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("MajorID", ViewBag.MajorID as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label labels">类型</label>
+                        <div class="layui-input-inline">
+                            @Html.DropDownList("MakingType", ViewBag.MakingType as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
+                        </div>
+                    </div>
+                </div>
+
+                <div style="position:absolute;left:97%;top:20px;">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                </div>
+
+
+            </div>
+
+        </div>
+    </form>
+    <table class="layui-hide" id="test"  lay-filter="test"> </table>
+</div>
+
+<div id="fileDate">
+    <div class="box">
+        <u class="spa1">首页</u>
+
+    </div>
+    <label id="lab1" style="display:none;"></label>
+    <label id="lab2" style="color:#0000CC"></label>
+    <div style="width:1000px;float:left;">
+        <div id="MyWenjin" style="margin-top:20px;">
+
+
+
+        </div>
+    </div>
+    <div style="width:500px;float:left;">
+        <table id="table1"></table>
+
+    </div>
+</div>
+
+
+@section script{
+    <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
+    <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+    @*头部按钮*@
+    <script type="text/html" id="toolbarDemo">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">批量下载</button>
+            
+        </div>
+    </script>
+    @*右边按钮操作*@
+    <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">下载</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    </script>
+
+    <script>
+        layui.use(['table', 'layer', 'laydate', 'tree', 'form'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var laydate = layui.laydate;
+            $.post("/Courseware/Coursewaremaking/CourDate?str=/首页", function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var a1 = data[i].split('.');
+                    if (a1.length > 1) {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" value=' + data[i] + ' class="checkid" /></div></div>'));
+
+                    } else {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
+                    }
+
+                }
+
+
+            })
+            //获取数据
+            table.render({
+                elem: '#test'
+                , url: '/Courseware/Coursewaremaking/CourDates'
+                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                , id: 'idTest'
+                , toolbar: '#toolbarDemo' 
+                , page: true
+                , cols: [[
+                    { type: 'checkbox' }
+                    , { field: 'EmpName', title: '姓名' }
+                    , { field: 'EmployeeId', title: '工号' }
+                    , { field: 'DeptName', title: '部门', }
+
+                    //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                    , { field: 'Title', title: '标题' }
+                    , { field: 'Filename', title: '文件名称' }
+                    , { field: 'Filepath', title: '文件路径' }
+                    , { field: 'GrandName', title: '阶段', }
+                    , { field: 'SpecialtyName', title: '专业' }
+                    , { field: 'Chaptersnumber', title: '章节', }
+                    , { field: 'Submissiontime', title: '提交时间', templet: function (c) { return TimeChange(c.Submissiontime) } }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
+                ]]
+            });
+
+            //查询功能
+            form.on('submit(demo2)', function (data) {
+                var x = data.field;
+                console.log(x);
+                table.reload('idTest', {
+                    where: {
+                        EmpName: x.EmpName,
+                        Filename: x.Filename,
+                        MajorID: x.MajorID,
+                        StageID: x.StageID,
+                        MakingType: x.MakingType,
+                        DeptId: x.DeptId
+                    }, page: {
+                        curr: 1
+                    }
+                });
+                return false;
+            });
+
+            //头工具栏事件
+            table.on('toolbar(test)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData':
+                        var data = checkStatus.data;
+                        
+                        for (var i = 0; i < data.length; i++) {
+                            download(data[i].Filename, "/Areas/Courseware/" + data[i].Filepath + data[i].Filename);
+                          
+                        }
+                        console.log(data)
+                       // layer.alert(JSON.stringify(data));
+                        break;
+                    
+                };
+            });
+            //监听行工具事件
+            table.on('tool(test)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么', function (index) {
+                        $.post("/Courseware/Coursewaremaking/Filedeletion/" + data.id + "?yourPath=" + data.Filepath + data.Filename, function (da) {
+                            GetDateProfessionala();
+                            layer.close(index);
+                            
+                        })
+                    });
+                } else if (obj.event === 'edit') {
+                    console.log(data);
+                    download(data.Filename, "/Areas/Courseware/" + data.Filepath + data.Filename);
+                }
+            });
+        }) 
+
+        //获取文件夹数据
+        function data(url) {
+            var a1 = url.split('.');
+
+
+            $($("#MyWenjin").children()).remove()
+            $.post("/Courseware/Coursewaremaking/CourDate?str=" + a1, function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var a1 = data[i].split('.');
+                    if (a1.length > 1) {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" value=' + data[i] + ' class="checkid" /></div></div>'));
+                    } else {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
+                    }
+                }
+            })
+
+
+
+        }
+        //获取当前文件夹地址
+        function fineName() {
+            var FineName = $($(".box").children());
+            var db_Name = "";
+            for (var i = 0; i < FineName.length; i++) {
+                db_Name += $(FineName[i]).text();
+            }
+            var db = db_Name.split('>');
+            db_Name = "";
+            for (var i = 0; i < db.length; i++) {
+                db_Name += db[i] + "/";
+            }
+            $("#lab1").text(db_Name);
+        }
+        //点击文件夹
+        $("body").on("click", ".div1", function () {
+            count = 0;
+            $("#Batch").text("批量下载");
+            var a1 = $($(this).children()).length;
+
+            if (a1 < 3) {
+
+                if ($($(".box").children()).length < 1) {
+                    $(".box").append($('<u class="spa1">' + $($(this).children()[1]).text() + '</u>'));
+                } else {
+                    $(".box").append($("<spam>&#62;</span>"));
+                    $(".box").append($('<u class="spa1">' + $($(this).children()[1]).text() + '</u>'))
+                }
+                fineName();
+                $($("#MyWenjin").children()).remove()
+                $.post("/Courseware/Coursewaremaking/CourDate?str=/" + $("#lab1").text(), function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var a1 = data[i].split('.');
+                        if (a1.length > 1) {
+                            //    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;" class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
+                            $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" value=' + data[i] + ' class="checkid" /></div></div>'));
+
+                            //$("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div></div>'));
+                        } else {
+                            $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
+                        }
+                    }
+                })
+                fineName();
+            } else {
+                var table = $("#table1");
+                $(table.children()).remove();
+                $.post("/Courseware/Coursewaremaking/FineCoursewaremaking?FileName=" + $($(this).children()[2]).text(), function (data) {
+
+
+                    //table.append($("<tr><td>研发人<td/><th>" + data.E + "<th/><tr>"))
+
+                    table.append($("<tr><th>研&nbsp;&nbsp;发&nbsp;&nbsp;人：</th><td>" + data.Emp.EmpName + "<td/></tr>"));
+                    table.append($("<tr><th>部&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;门：</th><td>" + data.department + "<td/></tr>"));
+                    table.append($("<tr><th>阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段：</th><td>" + data.GrandName + "<td/><tr>"));
+                    if (data.SpecialtyName != "") {
+                        table.append($("<tr><th>专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业：</th><td>" + data.SpecialtyName + "<td/><tr>"));
+                    }
+                    table.append($("<tr><th>文&nbsp;&nbsp;件&nbsp;&nbsp;名：</th><td>" + data.Filename + "<td/><tr>"))
+                    table.append($("<tr><th>文件路径：</th><td>" + data.Filepath + "<td/><tr>"))
+                    table.append($("<tr><th>文件类型：</th><td>" + data.MakingType + "<td/><tr>"))
+                    table.append($("<tr><th>文件标题：</th><td>" + data.Title + "<td/><tr>"))
+                    table.append($("<tr><th>上传时间：</th><td>" + TimeChange(data.Submissiontime) + "<td/><tr>"))
+                    table.append($("<tr><th>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</th><td>" + data.Remarks + "<td/><tr>"))
+                })
+            }
+
+        })
+
+        $("body").on("mouseover", ".div1", function () {
+            var img = $($(this).children());
+            $(".Filedownload").css("display", "none");
+            if (img.length > 2) {
+                $(img[0]).css("display", "block")
+            }
+        })
+
+        $("body").on("click", ".checkid", function (e) {
+            e.stopPropagation();
+        })
+        //下载文件
+        $("body").on("click", ".Filedownload", function (e) {
+            var par = $($(this).parent().children()[2]).text();
+            e.stopPropagation();
+            layer.confirm('您确定要下载吗？', {
+
+                btn: ['确定', '取消'] //按钮
+
+            }, function () {
+                window.location.href = "/Courseware/Coursewaremaking/Filedownload?URL=" + $("#lab1").text() + "&filename=" + par;
+                layer.closeAll('dialog');
+            }, function () {
+                layer.closeAll('dialog');
+            });
+        })
+        //鼠标移出时隐藏下载图标
+        $("body").on("mouseout", ".div1", function () {
+
+            $(".Filedownload").css("display", "none");
+
+        })
+        //下载多个文件
+        function download(name, href) {
+            console.log(href);
+            var a = document.createElement("a"), //创建a标签
+                e = document.createEvent("MouseEvents"); //创建鼠标事件对象
+            e.initEvent("click", false, false); //初始化事件对象
+            a.href = href; //设置下载地址
+            a.download = name; //设置下载文件名
+            a.dispatchEvent(e); //给指定的元素，执行事件click事件
+        }
+
+        var count = 0;
+        $("#Batch").click(function () {
+            count++;
+            if (count == 1) {
+                $(".checkid").css("display", "block");
+                $("#Batch").text("开始下载");
+            } else if (count == 2) {
+                count = 0;
+                var checkId = $("input[type='checkbox']:checked");
+                if (checkId.length > 0) {
+
+                    let files = [];
+
+                    for (var i = 0; i < checkId.length; i++) {
+                        download($(checkId[i]).val(), "/Areas/Courseware/" + $("#lab1").text() + $(checkId[i]).val());
+                        files[i] = $(checkId[i]).val();
+                    }
+                    //  var url = "/Courseware/Coursewaremaking/FiledownloadPro" + $("#lab1").text();
+                    $("#Batch").text("批量下载");
+                    $(".checkid").css("display", "none");
+
+                } else {
+                    console.log("暂无可下载文件");
+                }
+            }
+
+
+
+
+        });
+
+
+        //导航文件夹
+        $("body").on("click", ".spa1", function () {
+            $("#Batch").text("批量下载");
+            count = 0;
+            $(this).nextAll().remove();
+            var str = $(this).text();
+            if (str == "首页") {
+                str = "";
+            }
+            fineName();
+            data("/" + $("#lab1").text());
+        });
+
+        function parPopup(callback) {
+            layer.open({
+                type: 2,
+                area: ["800px", '500px'],
+                title: "获取研发人",
+                content: '/Courseware/Coursewaremaking/ProducerID',
+                end: callback
+            });
+        }
+
+        var empdata;
+        function GetPartsItmes(data) {
+            empdata = data;
+        }
+        function getempdate() {
+            return empdata;
+        }
+        //上传课件
+        $("#texts").click(function () {
+            Popup("/Courseware/Coursewaremaking/AddCoursewaremaking", "上传课件", 620, 630);
+
+        });
+        function GetDateProfessionala() {
+            var tb = $("#lab1").text() == "" ? "首页" : $("#lab1").text();
+            data("/" + tb);
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.reload('idTest')
+            });
+        }
+        var dt = 0;
+        //数据展现方式
+        $("#Datapairs").click(function () {
+            var Datelist = $("#Datelist");
+            var fileDate = $("#fileDate");
+            dt++;
+            if (dt == 1) {
+                Datelist.css("display", "block");
+                fileDate.css("display", "none");
+                $(this).text("文件夹展现");
+                $("#Batch").css("visibility", "hidden");
+            } else {
+                dt = 0;
+                Datelist.css("display", "none");
+                fileDate.css("display", "block");
+                $(this).text("表格展现");
+                $("#Batch").css("visibility", "visible");
+            }
+        });
+
+    </script>
+
+}

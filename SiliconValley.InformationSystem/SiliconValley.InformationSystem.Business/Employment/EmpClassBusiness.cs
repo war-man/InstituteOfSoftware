@@ -494,7 +494,21 @@ namespace SiliconValley.InformationSystem.Business.Employment
             dbemploymentStaff = new EmploymentStaffBusiness();
             return dbemploymentStaff.GetEntity(empClass.EmpStaffID);
         }
-
+        /// <summary>
+        /// 根据班级编号返回就业员工2.0
+        /// </summary>
+        /// <param name="classid"></param>
+        /// <returns></returns>
+        public EmploymentStaff GetStaffByClassids(int classid)
+        {
+            EmpClass empClass = this.GetEmpClassByclassid(classid);
+            if (empClass!=null)
+            {
+                dbemploymentStaff = new EmploymentStaffBusiness();
+                return dbemploymentStaff.GetEntity(empClass.EmpStaffID);
+            }return new EmploymentStaff();
+            
+        }
 
         /// <summary>
         /// 升学改班级

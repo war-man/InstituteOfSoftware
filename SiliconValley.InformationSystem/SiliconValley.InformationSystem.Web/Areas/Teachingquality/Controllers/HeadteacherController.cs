@@ -2,6 +2,7 @@
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.DepartmentBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -91,21 +92,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         public string HeadmasreClass()
         {
-            //拿到该班主任负责班级的阶段
-            List<Grand> grands = new List<Grand>();
+            
             //阶段
             GrandBusiness Grandcontext = new GrandBusiness();
+            //拿到该班主任负责班级的阶段
+            List<Grand> grands = Grandcontext.GetList();
             var x1s = dbtext.GetEntity(HeadteID);
             //班主任部门名称
             string DeptName = employeesInfoManage.GetDeptByEmpid(x1s.informatiees_Id).DeptName;
-            if (DeptName.ToLower().Contains("s1"))
-            {
-                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S1" || a.GrandName == "S2"||a.GrandName=="Y1").ToList();
-            }
-            else
-            {
-                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3" || a.GrandName == "S4").ToList();
-            }
+            //if (DeptName.ToLower().Contains("s1"))
+            //{
+            //    grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S1" || a.GrandName == "S2" || a.GrandName == "Y1").ToList();
+            //}
+            //else
+            //{
+            //    grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3" || a.GrandName == "S4").ToList();
+            //}
             //带班人
             object obj = new object();
             //该班主任所有可负责的班级
@@ -237,5 +239,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             return Json(dbtext.IsAttend(id, Isdele), JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 培训人
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TraineeContro()
+        {
+            //部门
+            ViewBag.department = Depa.GetList().Where(a => a.DeptName.Contains("教质部")).ToList().Select(a => new SelectListItem { Text = a.DeptName, Value = a.DeptId.ToString() }); ;
+            return View();
         }
+        /// <summary>
+        /// 培训人数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="EmployeeId"员工编号></param>
+        /// <param name="EmpName">员工姓名</param>
+        /// <param name="department">部门</param>
+        /// <returns></returns>
+        public ActionResult TraineeDate(int page, int limit, string EmployeeId, string EmpName,string department)
+        {
+
+            return Json(dbtext.TraineeDate(page, limit, EmployeeId, EmpName, department), JsonRequestBehavior.AllowGet); 
+          
+        }
+
+    }
 }

@@ -2118,11 +2118,58 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         {
             return this.GetList().Where(a => a.IsDelete == false && a.ClassstatusID == null).ToList();
         }
-
-        public object Entranceexaminationresults()
+        /// <summary>
+        /// 通过班级id获取阶段对象
+        /// </summary>
+        /// <param name="ClassID">班级id</param>
+        /// <returns></returns>
+        public Grand ClassGrand(int ClassID)
         {
-            ExamScoresBusiness examScoresBusiness = new ExamScoresBusiness();
-            return null;
+         return   Grandcontext.GetGrandByID(this.GetEntity(ClassID).grade_Id);
+        }
+        /// <summary>
+        /// 根据班级id获取到带班老师，就业专业及班主任,如果没查到请验证员工编号为空
+        /// </summary>
+        /// <param name="ClaaID">班主任</param>
+        /// <returns></returns>
+        public EmployeesInfo HeadSraffFine( int ClaaID)
+        {
+            //就业专业带班业务类
+            EmpClassBusiness empClassBusiness = new EmpClassBusiness();
+            //就业专业表
+            EmploymentStaffBusiness employmentStaffBusiness = new EmploymentStaffBusiness();
+
+            EmployeesInfo info = new EmployeesInfo();
+            //获取到员工对象
+         
+            if (!this.ClassGrand(ClaaID).GrandName.Contains("S4"))
+            {
+                info = Hadmst.HeadmastaerClassFine(ClaaID) == null ? new EmployeesInfo() : Hadmst.ClassHeadmaster(ClaaID);
+            }
+            else
+            {
+                if (Hadmst.HeadmastaerClassFine(ClaaID)==null)
+                {
+                    //拿到就业专员带班对象返回就业专员表
+                    var empclassid = empClassBusiness.GetStaffByClassids(ClaaID);
+                    if (empclassid.ID>0)//验证就业专员带班是否为空
+                    {
+                        info = employmentStaffBusiness.GetEmpInfoByEmpID(empclassid.ID) == null ? new EmployeesInfo() : employmentStaffBusiness.GetEmpInfoByEmpID(empclassid.ID);
+                    }
+                    else
+                    {
+                        info= new EmployeesInfo();
+                    }
+
+                 
+                }
+                else
+                {
+                    info = Hadmst.ClassHeadmaster(ClaaID);
+                }
+                   
+            }
+            return info;
         }
     }
 }

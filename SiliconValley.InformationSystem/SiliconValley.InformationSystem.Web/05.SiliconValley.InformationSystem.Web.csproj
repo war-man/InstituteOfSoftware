@@ -250,12 +250,12 @@
     <Compile Include="Areas\Educational\Controllers\PurchaseApplyController.cs" />
     <Compile Include="Areas\Educational\Controllers\ReconcileController.cs" />
     <Compile Include="Areas\Educational\Controllers\ShppingDetailController.cs" />
+    <Compile Include="Areas\Educational\Controllers\Staff_Cost_StatisticsController.cs" />
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
     <Compile Include="Areas\Educational\Controllers\SubstituteTeachCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
     <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
-    <Compile Include="Areas\Educational\Controllers\TimetableController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamScoresController.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\QuestionsBankController.cs" />
@@ -456,6 +456,7 @@
     <Content Include="Areas\Teaching\css\zzsc.css" />
     <Content Include="Areas\Teaching\fonts\fontawesome-webfont.svg" />
     <Content Include="Areas\Teaching\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Config\Cost.xml" />
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
@@ -916,6 +917,8 @@
     <Content Include="Areas\Market\Views\BiddingRecord\EditBR.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\ChannelStaffIndex.cshtml" />
     <Content Include="Areas\Market\Views\ChannelStaff\DistributionArea.cshtml" />
+    <Content Include="Scripts\common\myDatepicker.css" />
+    <Content Include="Scripts\common\myDatepicker.js" />
     <Content Include="Scripts\css\buttonStyle.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.mobile.css" />
@@ -1322,7 +1325,6 @@
     <Content Include="uploadXLSXfile\EmpImage\default.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
-    <Content Include="Xmlconfigure\HeadMasterNingth.xml" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
     <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\entxml.xml" />
@@ -1341,6 +1343,7 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
@@ -1515,17 +1518,13 @@
     <Content Include="Areas\Capital\Views\Capital\PublicBorrowList.cshtml" />
     <Content Include="Areas\Capital\Views\Capital\DoPrefundingList.cshtml" />
     <Content Include="Config\MyExcelClass.json" />
-    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditView.cshtml" />
-    <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\ClassadjustmentView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\ClassMasterIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\MasterAddView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\WeekenddutyView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditMasterView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditDateView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditDateChangeView.cshtml" />
+    <Content Include="Config\Obempstaff.config" />
+    <Content Include="Config\UserMapRole.config" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\Staff_Cost_StatisticsIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\CreateCostStatistics.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
+    <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3187,6 +3186,8 @@
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
     <Content Include="Scripts\live2d\assets\waifu-tips.json" />
+    <Content Include="uploadXLSXfile\Template\CostStaicTemplate.xls" />
+    <Content Include="uploadXLSXfile\ExamtionQuestionBankTemplate\ChoiceQuestionTemplate.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3196,6 +3197,7 @@
     <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
     <Folder Include="Areas\Educational\Views\Check\" />

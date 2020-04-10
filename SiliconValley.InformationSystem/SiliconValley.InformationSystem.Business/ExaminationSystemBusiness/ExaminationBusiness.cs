@@ -909,7 +909,5 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             return Deplist;
         }
 
-
-       
     }
 }

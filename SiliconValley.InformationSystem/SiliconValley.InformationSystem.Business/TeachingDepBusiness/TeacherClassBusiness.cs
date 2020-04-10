@@ -173,7 +173,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 var marjor = db_major.GetSpecialtyByID((int)myclass.Major_Id);
                 if (marjor != null)
                 {
-                    
+
                     detailView.MajorName = marjor.SpecialtyName;
                 }
                 else
@@ -181,7 +181,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     detailView.MajorName = "";
                 }
             }
-            
+
 
 
 
@@ -222,7 +222,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
 
             classTableView.ClassSize = this.GetStudentByClass(classSchedule.id).Count;//班级人数
-                                                                                      //学员班级                                                                                              //学员班级
+            //学员班级     
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
 
             try
@@ -310,7 +310,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                         }
                     }
                 }
-      
+
 
             }
 
@@ -349,8 +349,8 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             ProStudentInformationBusiness proStudentInformationBusiness = new ProStudentInformationBusiness();
             EmployeesInfo t = new EmployeesInfo();
-            var query= proStudentInformationBusiness.GetEntity(studentnumber);
-            if (query.State==2)
+            var query = proStudentInformationBusiness.GetEntity(studentnumber);
+            if (query.State == 2)
             {
                 t.EmpName = "";
                 return t;
@@ -385,9 +385,9 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                     return db_teacher.GetEmpByEmpNo(teacher.EmployeeId);
                 }
-               
+
             }
-          
+
 
 
         }
@@ -607,6 +607,42 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        /// <summary>
+        /// 获取教员每个月的上课班的记录 插取排课记录
+        /// </summary>
+        /// <returns></returns>
+        public List<ClassTeacher> TeacherClassCount(int teacherId, DateTime date)
+        {
+           var teacherclass = this.GetIQueryable().Where(d=>d.TeacherID == teacherId && d.BeginDate.Year == date.Year && d.BeginDate.Month == date.Month).ToList();
+
+            var resultlist = new List<ClassTeacher>();
+
+            foreach (var item in teacherclass)
+            {
+                if (!IsContains(item.ClassNumber, resultlist))
+                {
+                    resultlist.Add(item);
+                }
+            }
+
+            return resultlist;
+
+            #region 去掉重复班级
+            bool IsContains(int classid, List<ClassTeacher> list)
+            {
+                foreach (var item in list)
+                {
+                    if (item.ClassNumber == classid)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+            #endregion
+
+        }
 
     }
 }

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!--监考费-->
+  <InvigilateCost>20</InvigilateCost>
+
+  <!--阅卷费-->
+  <MarkingCost>2</MarkingCost>
+
+  <!--PPT-->
+  <PPT_NodeCost>200</PPT_NodeCost>
+
+  <!--教材-->
+  <TextBook_NodeCost>400</TextBook_NodeCost>
+
+  <!--内训费-->
+  <InternalTrainingCost>200</InternalTrainingCost>
+
+</root>

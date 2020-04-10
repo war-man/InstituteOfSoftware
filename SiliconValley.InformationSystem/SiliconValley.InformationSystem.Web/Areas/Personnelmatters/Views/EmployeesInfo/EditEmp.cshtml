@@ -45,7 +45,7 @@
     <div>
         <input type="hidden" id="mypname" value="@ViewBag.pname" />
         <input type="hidden" id="mypid" value="@ViewBag.pid" />
-        <form class="layui-form" action="" lay-filter="formtest">
+        <form class="layui-form" action="" lay-filter="formtest"  enctype="multipart/form-data" >
             <div class="layui-container" style="margin-top:20px;">
 
                 <div class="layui-row layui-form-item">
@@ -348,56 +348,54 @@
             var id = $("#EmployeeId").val();
             $.ajax({
                 type: "get",
+                url: "/Personnelmatters/EmployeesInfo/GetempById/"+id,
+                //data: { id: id },
                 dataType: "json",
-                url: "/Personnelmatters/EmployeesInfo/GetempById",
-                data: { id: id },
+
+                //报错请加入以下三行，则ajax提交无问题
+                cache: false,
+                processData: false,
+                contentType: false,
                 success: function (data) {
-                    console.log(data);
-                    if (data.code == 0) {
-                        var res = data.data;
-                        console.log(res.Sex);
-                        form.val('formtest', {
-                           'Sex' :res.Sex.toString(),
+                    layui.use(['layer', 'form', 'table'], function () {
+                        var form = layui.form;
+                        data.Sex = data.Sex.toString();
+                        data.MaritalStatus = data.MaritalStatus.toString();
+                        data.EntryTime = GetYMD(data.EntryTime);
+                        data.PositiveDate = GetYMD(data.PositiveDate);
+                        data.ContractStartTime = GetYMD(data.ContractStartTime);
+                        data.ContractEndTime = GetYMD(data.ContractEndTime);
+                        data.Birthdate = GetYMD(data.Birthdate);
+                        data.IdCardIndate = GetYMD(data.IdCardIndate);
+                        data.SSStartMonth = GetYearAndMonth(data.SSStartMonth);
+                        if (data.Birthday != null) {
+                            var birthmon = data.Birthday.split(/月/);
+                            var mymonth = birthmon[0];//月份
+                            var mystr = birthmon[1];
+                            var birthstr = mystr.split(/日/);
+                            var myday = birthstr[0];//日期
+                            var myyinyang = birthstr[1];//阴阳历
+                            $("#month").val(mymonth);
+                            $("#day").val(myday);
 
-                           'MaritalStatus' : res.MaritalStatus.toString(),
-                           'EntryTime' : GetYMD(res.EntryTime),
-                           'PositiveDate' : GetYMD(res.PositiveDate),
-                           'ContractStartTime' : GetYMD(res.ContractStartTime),
-                           'ContractEndTime' :GetYMD(res.ContractEndTime),
-                           'Birthdate' : GetYMD(res.Birthdate),
-                           'IdCardIndate' : GetYMD(res.IdCardIndate),
-                           'SSStartMonth' : GetYearAndMonth(res.SSStartMonth)
-                            //if (res.Birthday != null) {
-                            //    var birthmon = res.Birthday.split(/月/);
-                            //    var mymonth = birthmon[0];//月份
-                            //    var mystr = birthmon[1];
-                            //    var birthstr = mystr.split(/日/);
-                            //    var myday = birthstr[0];//日期
-                            //    var myyinyang = birthstr[1];//阴阳历
-                            //    $("#month").val(mymonth);
-                            //    $("#day").val(myday);
+                            $("input[name='yinyang']").each(function () {
+                                if (this.value == myyinyang) {
+                                    this.checked = true;
+                                    form.render();
+                                }
+                            });
+                        }
 
-                            //    $("input[name='yinyang']").each(function () {
-                            //        if (this.value == myyinyang) {
-                            //            this.checked = true;
-                            //            form.render();
-                            //        }
-                            //    });
-                            //}
+                        if (data.Image != null) {
+                            $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + data.Image;
 
-                            //if (res.Image != null) {
-                            //    $("#showImage")[0].src = "../../../uploadXLSXfile/EmpImage/" + res.Image;
-
-                            //}
-
-                        });
-                    }
-                                           
+                        }
+                        form.val("formtest", data);
+                    });
                 }, error: function () {
-                    layer.msg("可能是因为网络原因操作失败了，请重试，若多次重试不成功，请于网站管理员联系");
+                    layer.alert("可能是网络出现了问题，请重复尝试后再联系后台人员!");
                 }
-            });
-         
+            });       
         }
 
         //异步读取图片并显示

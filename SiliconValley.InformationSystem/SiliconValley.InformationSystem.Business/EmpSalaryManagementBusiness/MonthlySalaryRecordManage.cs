@@ -7,32 +7,60 @@ using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Entity.ViewEntity.SalaryView;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
     public class MonthlySalaryRecordManage : BaseBusiness<MonthlySalaryRecord>
     {
+        RedisCache rc = new RedisCache();
         /// <summary>
-        /// 往员工月度工资表加入员工编号
+        /// 将员工月度工资表数据存储到redis服务器中
+        /// </summary>
+        /// <returns></returns>
+        public List<MonthlySalaryRecord> GetEmpMsrData() {
+            rc.RemoveCache("InRedisMSRData");
+            List<MonthlySalaryRecord> msrlist = new List<MonthlySalaryRecord>();
+
+            //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+            //List<Reconcile> get_reconciles_list = new List<Reconcile>();
+            //get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
+            //if (get_reconciles_list == null || get_reconciles_list.Count == 0)
+            //{
+            //    get_reconciles_list = this.GetList();
+            //    Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
+            //}
+            //return get_reconciles_list;
+         
+            if (msrlist==null || msrlist.Count==0) {
+                msrlist = this.GetList();
+                rc.SetCache("InRedisMSRData", msrlist);
+            }
+            msrlist = rc.GetCache<List<MonthlySalaryRecord>>("InRedisMSRData");
+            return msrlist;
+             
+        }
+
+        /// <summary>
+        /// 往员工月度工资表加入员工编号及年月份属性
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
         public bool AddEmpToEmpMonthSalary(string empid)
-        {
+        { 
             bool result = false;
             try
             {
                 MonthlySalaryRecord ese = new MonthlySalaryRecord();
                 ese.EmployeeId = empid;
                 ese.IsDel = false;
-                if (this.GetList().Count()==0) {
-                    ese.YearAndMonth = DateTime.Now;
-                } else {
-                  ese.YearAndMonth = this.GetList().LastOrDefault().YearAndMonth;
-                }
-                this.Insert(ese);
-                result = true;
-                BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+                ese.YearAndMonth = DateTime.Now;
+                if (CreateSalTab(ese.YearAndMonth.ToString())) {
+                    this.Insert(ese); 
+                    rc.RemoveCache("InRedisMSRData");
+                    result = true;
+                    BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
+                }
             }
             catch (Exception ex)
             {
@@ -50,12 +78,13 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <returns></returns>
         public bool EditEmpMS(string empid)
         {
-            var ems = this.GetList().Where(s=>s.EmployeeId==empid).FirstOrDefault();
+            var ems = this.GetEmpMsrData().Where(s=>s.EmployeeId==empid).FirstOrDefault();
             bool result = false;
             try
             {
                 ems.IsDel = true;
                 this.Update(ems);
+                rc.RemoveCache("InRedisMSRData");
                 result = true;
                 BusHelper.WriteSysLog("月度工资表禁用该员工", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
@@ -75,7 +104,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public EmplSalaryEmbody GetEmpsalaryByEmpid(string empid)
         {
             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
-            var ese = esemanage.GetList().Where(s => s.EmployeeId == empid).FirstOrDefault();
+            var ese = esemanage.GetEmpESEData().Where(s => s.EmployeeId == empid).FirstOrDefault();
             return ese;
         }
 
@@ -87,7 +116,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public AttendanceInfo GetAttendanceInfoByEmpid(string empid, DateTime time)
         {
             AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            var att = attmanage.GetList().Where(s => s.EmployeeId == empid && s.YearAndMonth == time).FirstOrDefault();
+            var att = attmanage.GetADInfoData().Where(s => s.EmployeeId == empid && s.YearAndMonth == time).FirstOrDefault();
             return att;
         }
 
@@ -100,8 +129,51 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public MeritsCheck GetMCByEmpid(string empid, DateTime time)
         {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
-            var mcobj = mcmanage.GetList().Where(s => s.EmployeeId == empid && s.YearAndMonth == time).FirstOrDefault();
+            var mcobj = mcmanage.GetEmpMCData().Where(s => s.EmployeeId == empid && s.YearAndMonth == time).FirstOrDefault();
             return mcobj;
+        }
+
+        //工资表生成的方法
+        public bool CreateSalTab(string time)
+        {
+            bool result = false;
+            try
+            {
+                var msrlist = this.GetEmpMsrData().Where(s => s.IsDel == false).ToList();
+                EmployeesInfoManage empmanage = new EmployeesInfoManage();
+                var emplist = empmanage.GetEmpInfoData();
+                var nowtime = DateTime.Parse(time);
+
+                //匹配是否有该月（选择的年月即传过来的参数）的月度工资数据
+                var matchlist = msrlist.Where(m => DateTime.Parse(m.YearAndMonth.ToString()).Year == nowtime.Year && DateTime.Parse(m.YearAndMonth.ToString()).Month == nowtime.Month).ToList();
+
+                if (matchlist.Count()<=0) {
+                    //找到已禁用的或者该月份的员工集合
+                    var forbiddenlist = this.GetEmpMsrData().Where(s => s.IsDel == true || (DateTime.Parse(s.YearAndMonth.ToString()).Year == nowtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == nowtime.Month)).ToList();
+
+                    for (int i = 0; i < forbiddenlist.Count(); i++)
+                    {//将月度工资表中已禁用的员工去员工表中去除
+                        emplist.Remove(emplist.Where(e => e.EmployeeId == forbiddenlist[i].EmployeeId).FirstOrDefault());
+                    }
+                    foreach (var item in emplist)
+                    {//再将未禁用的员工添加到月度工资表中
+                        MonthlySalaryRecord msr = new MonthlySalaryRecord();
+                        msr.EmployeeId = item.EmployeeId;
+                        msr.YearAndMonth = Convert.ToDateTime(time);
+                        msr.IsDel = false;
+                        this.Insert(msr);
+                        rc.RemoveCache("InRedisMSRData");
+                    }
+                }
+
+                result = true;
+            }
+            catch (Exception ex)
+            {
+                result = false;
+            
+            }
+            return result;
         }
 
         /// <summary>
@@ -186,6 +258,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
                         msr.LeaveDeductions = countsalary;
                         this.Update(msr);
+                        rc.RemoveCache("InRedisMSRData");
                         result = this.Success();
                         countsalary = (decimal)Math.Round(Convert.ToDouble(countsalary), 2);
                     }
@@ -282,6 +355,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 var msr = this.GetEntity(id);
                 msr.Total = Total;
                 this.Update(msr);
+                rc.RemoveCache("InRedisMSRData");
                 result = this.Success();
             }
             catch (Exception ex)
@@ -301,8 +375,6 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <returns></returns>
         public decimal? GetPaycardSalary(int id, decimal? total, decimal? PersonalSocialSecurity, decimal? ContributionBase)
         {
-           
-
             decimal? paycardsalary = null;
             if (!string.IsNullOrEmpty(PersonalSocialSecurity.ToString()))
             {     bool result = false;
@@ -319,6 +391,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     }
                     msr.PayCardSalary = paycardsalary;
                     this.Update(msr);
+                    rc.RemoveCache("InRedisMSRData");
                     result = true;
                 }
                 catch (Exception)
@@ -344,8 +417,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public decimal? GetCashSalary(int id, decimal? total, decimal? PaycardSalary)
         {
             bool result=false;
-            decimal? cash = 0;
-           
+            decimal? cash = 0;           
                 try
             {
                 if (!string.IsNullOrEmpty(PaycardSalary.ToString()))
@@ -353,6 +425,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     var msr = this.GetEntity(id);
                     msr.CashSalary = total - PaycardSalary;
                     this.Update(msr);
+                    rc.RemoveCache("InRedisMSRData");
                     result = true;
                     cash = msr.CashSalary;
                 }           
@@ -369,5 +442,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
             return cash;
         }
+
+
     }
 }

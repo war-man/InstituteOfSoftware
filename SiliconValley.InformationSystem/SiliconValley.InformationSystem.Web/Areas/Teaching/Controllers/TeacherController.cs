@@ -16,6 +16,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+    using SiliconValley.InformationSystem.Business;
+    using SiliconValley.InformationSystem.Business.Common;
 
     [CheckLogin]
     public class TeacherController : Controller
@@ -1364,7 +1366,161 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 专业老师培训管理
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetProfessionala()
+        {
+            ViewBag.professionala = ProfessionalaBusiness.GetList().Where(a => a.Isdel== false).ToList().Count;
+            return View();
+        }
 
+        //登记专业老师职业素养课件培训
+        [HttpGet]
+        public ActionResult AddProfessionala()
+        {
+            return View();
+        }
+        //专业老师培训业务类
+        BaseBusiness<Teachingtraining> ProfessionalaBusiness = new BaseBusiness<Teachingtraining>();
+        //员工业务类
+        EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+        //人事,部门表
+        BaseBusiness<Department> Depa = new BaseBusiness<Department>();
+        //专业老师培训课件添加
+        [HttpPost]
+        public ActionResult AddProfessionala(Teachingtraining professionala)
+        {
+            //return Json(dbtext.AddProfessionala(professionala), JsonRequestBehavior.AllowGet);
+            var result = new object();
 
+            try
+            {
+                professionala.Isdel = false;
+                professionala.AddTime = DateTime.Now;
+                ProfessionalaBusiness.Insert(professionala);
+                result = new
+                {
+                    Success = true,
+                    Msg = "录入成功",
+                    page = SessionHelper.Session["Professionalapage"],
+                    limit = SessionHelper.Session["Professionalalimit"]
+                };
+
+                BusHelper.WriteSysLog("专业老师培训加", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                result = new
+                {
+                    Success = false,
+                    Msg = "服务器错误！",
+                    page = SessionHelper.Session["Professionalapage"],
+                    limit = SessionHelper.Session["Professionalalimit"]
+                };
+
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+
+            }
+            return Json(result,JsonRequestBehavior.AllowGet);
+           
+        }
+
+        /// <summary>
+        /// 班主任职业素养培训数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult GetDateProfessionala(int page, int limit)
+        {
+            SessionHelper.Session["Professionalapage"] = page;
+            SessionHelper.Session["Professionalalimit"] = limit;
+            var list = ProfessionalaBusiness.GetList().Where(a => a.Isdel == false).ToList();
+            var x= list.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            return Json(x, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 查询单条专业课老师培训课件
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public ActionResult FineProfessionala(int id)
+        {
+            var x = ProfessionalaBusiness.GetEntity(id);
+            ProfessionalaView professionala = new ProfessionalaView();
+            professionala.ID = x.ID;
+            professionala.Remarks = x.Remarks;
+            professionala.Trainee = x.Trainee;
+            professionala.Trainingcontent = x.Trainingcontent;
+            professionala.TrainingDate = x.TrainingDate;
+            professionala.TrainingTitle = x.TrainingTitle;
+            professionala.EmpNameTraine = employeesInfoManage.GetEntity(db_teacher.GetEntity(x.Trainee).EmployeeId).EmpName;
+            return View(professionala);
+        }
+        /// <summary>
+        /// 培训人页面选择
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TraineeContro()
+        {
+            //部门
+            ViewBag.department = Depa.GetList().Where(a => a.DeptName.Contains("教学部")).ToList().Select(a => new SelectListItem { Text = a.DeptName, Value = a.DeptId.ToString() }); ;
+            return View();
+        }
+        /// <summary>
+        /// 培训人数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="EmployeeId"员工编号></param>
+        /// <param name="EmpName">员工姓名</param>
+        /// <param name="department">部门</param>
+        /// <returns></returns>
+        public ActionResult TraineeDate(int page, int limit, string EmployeeId, string EmpName, string department)
+        {
+            List<TraineeDateVIew> listteainees = new List<TraineeDateVIew>();
+            //专业老师表
+            var x = db_teacher.GetList().Where(a => a.IsDel == false).ToList();
+            foreach (var item in x)
+            {
+                TraineeDateVIew traineeDateVIew = new TraineeDateVIew();
+                traineeDateVIew.id = item.TeacherID;
+                traineeDateVIew.EmployeeId = item.EmployeeId;
+                //拿到员工对象
+                var employee = employeesInfoManage.GetList().Where(a => a.EmployeeId == item.EmployeeId).FirstOrDefault();
+                traineeDateVIew.EmpName = employee.EmpName;
+                traineeDateVIew.sex = employee.Sex;
+                traineeDateVIew.department = employeesInfoManage.GetDeptByEmpid(employee.EmployeeId).DeptName;
+                traineeDateVIew.departmentID = employeesInfoManage.GetDeptByEmpid(employee.EmployeeId).DeptId;
+                listteainees.Add(traineeDateVIew);
+            }
+            if (!string.IsNullOrEmpty(EmployeeId))
+            {
+                listteainees = listteainees.Where(a => a.EmployeeId.Contains(EmployeeId)).ToList();
+            }
+            if (!string.IsNullOrEmpty(EmpName))
+            {
+                listteainees = listteainees.Where(a => a.EmpName.Contains(EmpName)).ToList();
+            }
+            if (!string.IsNullOrEmpty(department))
+            {
+                int departmentID = int.Parse(department);
+                listteainees = listteainees.Where(a => a.departmentID == departmentID).ToList();
+            }
+            var dataList = listteainees.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = listteainees.Count,
+                data = dataList
+            };
+           
+            return Json(data, JsonRequestBehavior.AllowGet);
+
+        }
     }
 }

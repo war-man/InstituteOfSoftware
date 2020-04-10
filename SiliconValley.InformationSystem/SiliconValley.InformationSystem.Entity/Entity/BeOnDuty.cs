@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 费用
         /// </summary>
-        public Nullable<decimal> Cost { get; set; }
+        public decimal Cost { get; set; }
         /// <summary>
         /// 说明
         /// </summary>

@@ -1,0 +1,175 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>CreateCostStatistics</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/common/myDatepicker.css" rel="stylesheet" />
+    <style>
+        .line-title {
+            display: inline-block;
+            width: 30%;
+            border: 1px solid #808080;
+        }
+
+        .btns button {
+            width:150px;
+        }
+
+        #pross {
+            
+            position: fixed;
+
+            margin-top:20px;
+            display:none;
+
+            width:100%;
+
+            z-index:100;
+
+            vertical-align:middle;
+        }
+
+       
+    </style>
+</head>
+<body>
+
+    <div>
+        <div id="title" style="text-align:center;">
+
+            <div class="line-title"></div>
+            <i class="layui-icon layui-icon-chart" style="font-size:35px;"><i style="font-size:18px;">员工费用统计</i> </i>
+            <div class="line-title"></div>
+        </div>
+
+        <div style='display: flex; margin-top:20px;'>
+
+            <hr />
+            <input type="text" id='date-input' class="layui-input" style='display: inline-block; font-size:20px; text-align:center; border:0px solid white;'>
+        </div>
+
+        <hr />
+
+        <div style="height:200px; line-height:200px; text-align:center; ">
+            <tip id="tipMSg" style="font-size:30px; color:green;"></tip>
+        </div>
+
+        <div class="btns" style="width:100%; text-align:center; margin-top:10px;">
+
+            <button id="beginStatistics" class="layui-btn layui-btn-radius layui-btn-primary ">开始统计</button>
+
+            <button id="download"  class="layui-btn layui-btn-radius layui-btn-primary ">保存到文件</button>
+          
+        </div>
+
+        <div id="pross">
+            <!--进度条-->
+            <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="demo">
+                <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+            </div>
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/common/myDatepicker.js"></script>
+
+    <script>
+        //调用日期插件
+        $("#date-input").myDatePicker({
+            'startDate': '2014-01-01 18:45:20',
+            'endDate': (new Date()).Format("yyyy-mm-dd hh:ii:ss"),
+            //指定父元素，不指定默认为body
+            parent: $("#date-input").parent(),
+            //定位方式是否用fixed
+            positionFixed: $("#position-1").is(':checked'),
+
+
+
+        });
+
+        function downloadFile(url) {
+            window.open(url);
+        }
+
+        function downloadFile(url) {
+            location.href = url;
+        }
+
+        layui.use(['layer', 'table', 'element'], function () {
+
+            var layer = layui.layer;
+            var element = layui.element;
+
+            //开始统计
+            $("#beginStatistics").click(function () {
+
+                //获取到日期
+
+                var date = $("#date-input").val();
+
+               
+                $("#pross").css("display", "block");
+
+                var num = 0;
+
+                var test = setInterval(function () {
+
+                    if (num >= 90) {
+
+                        clearInterval(test);
+                    }
+
+                    num += 0.5;
+
+                    element.progress('demo', num+'%');
+
+                }, 2000);
+
+                $("#tipMSg").text("统计中.......");
+
+                $.post('/Educational/Staff_Cost_Statistics/CostStatistics', { date: date }, function (result) {
+
+
+
+                    if (result.ErrorCode == 200) {
+                        clearInterval(test);
+                        element.progress('demo', '100%');
+
+                        $("#tipMSg").text("统计完成！");
+                    }
+                    else {
+                        clearInterval(test);
+                        element.progress('demo', '100%');
+                        $("#tipMSg").text("统计失败！");
+                        layer.msg('统计失败！', {
+                            time: 20000, //20s后自动关闭
+                            btn: ['知道了']
+                        });
+                    }
+
+                });
+
+
+            });
+
+            $("#download").click(function () {
+                var date = $("#date-input").val();
+                href = "/Educational/Staff_Cost_Statistics/DownloadCostStatics?date=" + date;
+
+                downloadFile(href);
+
+            });
+
+            
+        });
+    </script>
+</body>
+</html>

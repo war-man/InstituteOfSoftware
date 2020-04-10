@@ -15,9 +15,6 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     public class ExaminationRoomBusiness:BaseBusiness<ExaminationRoom>
     {
 
-       
-
-       
 
     }
 }

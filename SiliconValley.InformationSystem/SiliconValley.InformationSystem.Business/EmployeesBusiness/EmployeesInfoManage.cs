@@ -9,11 +9,29 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     using SiliconValley.InformationSystem.Business.PositionBusiness;
     using SiliconValley.InformationSystem.Business.DepartmentBusiness;
     using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
+    using SiliconValley.InformationSystem.Util;
+
     /// <summary>
     /// 员工业务类
     /// </summary>
     public class EmployeesInfoManage:BaseBusiness<EmployeesInfo>
     {
+        RedisCache rc;
+        /// <summary>
+        /// 将员工信息表数据存储到redis服务器中
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetEmpInfoData() {
+            rc = new RedisCache();
+            rc.RemoveCache("InRedisEmpInfoData");
+            List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+            if (emplist==null || emplist.Count()==0) {
+                emplist = this.GetList();
+                rc.SetCache("InRedisEmpInfoData",emplist);
+            }
+            emplist = rc.GetCache<List<EmployeesInfo>>("InRedisEmpInfoData");
+            return emplist;
+        }
 
         /// <summary>
         ///  获取所属岗位对象
@@ -88,7 +106,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         //根据岗位编号获取该岗位的员工
         public List<EmployeesInfo> GetEmpByPid(int pid) {
             List<EmployeesInfo> emplist = new List<EmployeesInfo>();
-            foreach (var item in this.GetList())
+            foreach (var item in this.GetEmpInfoData())
             {
                 if (item.PositionId==pid) {
                     emplist.Add(item);
@@ -269,7 +287,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             }
             else
             {
-                employees = this.GetList().Where(e => e.EmpName == name).FirstOrDefault();
+                employees = this.GetEmpInfoData().Where(e => e.EmpName == name).FirstOrDefault();
             }
             return employees;
         }       
