@@ -3187,6 +3187,7 @@
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
     <Content Include="Scripts\live2d\assets\waifu-tips.json" />
     <Content Include="uploadXLSXfile\Template\CostStaicTemplate.xls" />
+    <Content Include="uploadXLSXfile\ExamtionQuestionBankTemplate\ChoiceQuestionTemplate.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3243,7 +3244,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
-    <Folder Include="uploadXLSXfile\ExamtionQuestionBankTemplate\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>

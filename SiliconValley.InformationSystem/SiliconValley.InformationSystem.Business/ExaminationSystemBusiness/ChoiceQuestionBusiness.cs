@@ -14,6 +14,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Util;
     using System.IO;
+    using NPOI.XSSF.UserModel;
 
 
     /// <summary>
@@ -187,11 +188,22 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         }
 
-        public List<MultipleChoiceQuestion> ReadQuestionForExcel(Stream stream)
+        public List<MultipleChoiceQuestion> ReadQuestionForExcel(Stream stream, string contentType)
         {
+
             List<MultipleChoiceQuestion> result = new List<MultipleChoiceQuestion>();
 
-            var workbook = new HSSFWorkbook(stream);
+            IWorkbook workbook = null;
+
+            if (contentType == "application/vnd.ms-excel")
+            {
+                workbook = new HSSFWorkbook(stream);
+            }
+
+            if (contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                workbook = new XSSFWorkbook(stream);
+            }
 
             HSSFSheet sheet = (HSSFSheet)workbook.GetSheetAt(0);
 
@@ -209,6 +221,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 result.Add(obj);
 
             }
+
+            stream.Close();
+            stream.Dispose();
+            workbook.Close();
 
             return result;
         }

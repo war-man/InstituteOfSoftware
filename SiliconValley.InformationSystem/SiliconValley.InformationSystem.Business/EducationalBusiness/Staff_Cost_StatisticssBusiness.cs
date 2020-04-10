@@ -545,29 +545,39 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             var templist = ScreenReconcile(emp.EmployeeId, date, type: "skill");
 
             //获取所有阶段
-            GrandBusiness tempdb_grand = new GrandBusiness();
-
-            var grandlist = tempdb_grand.AllGrand();
-
+           
             return GetteachingNum();
 
 
             List<TeachingItem> GetteachingNum()
             {
+                CourseBusiness tempdb_course = new CourseBusiness();
+
                 List<TeachingItem> result = new List<TeachingItem>();
 
-                foreach (var item in grandlist)
+                foreach (var item in templist)
                 {
-                    TeachingItem teachitem = new TeachingItem();
+                    var course = tempdb_course.GetCurriculas().Where(d => d.CourseName == item.Curriculum_Id).FirstOrDefault();
 
-                    ///获取到课时
-                    int count = ReconcileGroupByGrand(templist, item);
+                    if (IsContains(result, course.CurriculumID))
+                    {
+                        foreach (var item1 in result)
+                        {
+                            if (item1.Course == course.CurriculumID)
+                            {
+                                item1.NodeNumber += 4;
+                            }
+                        }
+                    }
 
-                    teachitem.grand = item;
+                    else
+                    {
+                        //创建新的
+                        TeachingItem teachingItem = new TeachingItem();
+                        teachingItem.Course = course.CurriculumID;
+                        teachingItem.NodeNumber = 4;
+                    }
 
-                    teachitem.NodeNumber = count;
-
-                    result.Add(teachitem);
                 }
 
                 return result;
@@ -575,6 +585,18 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
 
 
+        }
+
+        public bool IsContains(List<TeachingItem> teachingItems, int course)
+        {
+
+            foreach (var item in teachingItems)
+            {
+                if (item.Course == course)
+                    return true;
+            }
+
+            return false;
         }
 
 
@@ -806,12 +828,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             foreach (var item in teacherHours)
             {
-                TeacherHoursCostBusiness temphour = new TeacherHoursCostBusiness();
+                CourseBusiness tempdb_course = new CourseBusiness();
+
+                Curriculum course = tempdb_course.GetCurriculas().Where(d => d.CurriculumID == item.Course).FirstOrDefault();
                 // 获取到对应的课时费
-                var HourCoose = temphour.teacherHourCosts().Where(d => d.GrandId == item.grand.Id).FirstOrDefault();
 
                 //ji算
-                result += item.NodeNumber * ((float)HourCoose.Cost - 5);
+                result += item.NodeNumber * ((float)course.PeriodMoney - 5);
 
             }
 
@@ -882,32 +905,38 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<TeachingItem> TeacherHours(List<TeachingItem> teachingItems, float bottomTeacherHours)
         {
+            CourseBusiness tempdb_course = new CourseBusiness();
+            GrandBusiness tempdb_grand = new GrandBusiness();
 
             foreach (var item in teachingItems)
             {
 
+                var course = tempdb_course.GetCurriculas().Where(d=>d.CurriculumID == item.Course).FirstOrDefault();
+
+                var grand = tempdb_grand.AllGrand().Where(d=>d.Id == course.Grand_Id).FirstOrDefault();
+
                 if (bottomTeacherHours == 0)
                     break;
 
-                if (item.grand.GrandName == "S1" && item.NodeNumber > 0)
+                if (grand.GrandName == "S1" && item.NodeNumber > 0)
                 {
                     item.NodeNumber = jisuan(item.NodeNumber);
                 }
 
-                if (item.grand.GrandName == "S2" && item.NodeNumber > 0)
+                if (grand.GrandName == "S2" && item.NodeNumber > 0)
                 {
                     item.NodeNumber = jisuan(item.NodeNumber);
 
                 }
 
-                if (item.grand.GrandName == "S3" && item.NodeNumber > 0)
+                if (grand.GrandName == "S3" && item.NodeNumber > 0)
                 {
 
                     item.NodeNumber = jisuan(item.NodeNumber);
 
                 }
 
-                if (item.grand.GrandName == "S4" && item.NodeNumber > 0)
+                if (grand.GrandName == "S4" && item.NodeNumber > 0)
                 {
 
                     item.NodeNumber = jisuan(item.NodeNumber);

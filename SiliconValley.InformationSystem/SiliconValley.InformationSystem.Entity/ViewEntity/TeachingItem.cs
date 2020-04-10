@@ -17,7 +17,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 阶段
         /// </summary>
-        public Grand grand { get; set; }
+        public int Course { get; set; }
 
         /// <summary>
         /// 课时  4节课=1课时

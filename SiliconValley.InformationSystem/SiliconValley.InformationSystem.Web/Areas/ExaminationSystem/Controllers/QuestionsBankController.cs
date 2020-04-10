@@ -88,6 +88,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         }
 
         /// <summary>
+        /// 下载选择题模板
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult DownLoadChoiceQuestionTemplate()
+        {
+
+            FileStream filestream = new FileStream(Server.MapPath("/uploadXLSXfile/ExamtionQuestionBankTemplate/ChoiceQuestionTemplate.xls"), FileMode.Open, FileAccess.Read);
+
+           return File(filestream, "xls", "选择题模板.xls");
+     
+
+        }
+
+        /// <summary>
         /// 批量录入
         /// </summary>
         /// <param name="excelfile"></param>
@@ -98,13 +112,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ChoiceQuestionBatchEntry(HttpPostedFileBase excelfile, string course)
         {
 
+   
             AjaxResult result = new AjaxResult();
 
             try
             {
                 Stream filestream = excelfile.InputStream;
 
-                List<MultipleChoiceQuestion> list = db_choiceQuestion.ReadQuestionForExcel(filestream);
+                List<MultipleChoiceQuestion> list = db_choiceQuestion.ReadQuestionForExcel(filestream, excelfile.ContentType);
 
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
