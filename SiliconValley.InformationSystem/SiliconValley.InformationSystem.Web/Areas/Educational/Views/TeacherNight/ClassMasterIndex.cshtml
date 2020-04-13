@@ -61,7 +61,27 @@
             });
         }
 
-         
+        function EditDatebehind(olddate, newdate) {
+            var new_data = { "oldtime": olddate, "ids": ids, "IsAll": IsAll, "newtime": newdate };
+            if (IsAll == true) {
+                var new_data = { "oldtime": date, "IsAll": IsAll, "newtime": newdate};
+            }
+            $.ajax({
+                url: '/Educational/TeacherNight/EditDateChangeFuntion',
+                data: new_data,
+                type: 'POST',
+                success: function (sudata) {
+                    if (sudata.Success == false) {
+                        layer.msg(sudata.Msg, { icon: 2 });
+                    } else {
+                        layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
+                            TableFulsh();
+                        });
+                    }
+                }
+            });
+        }
+
 
         layui.use('table', function () {
             var table = layui.table;
@@ -105,7 +125,7 @@
                         });
                         break;
                     case 'getCheckChange_time':
-                        //大批量修改日期
+                         
                         var checkStatus = table.checkStatus('headmaster_table');
                         if (checkStatus.data.length > 0) {
                             var checkdata = checkStatus.data;
@@ -130,7 +150,7 @@
                          
                         break;
                     case 'getCheckData_time':
-                         //大批量修改日期
+                        
                         var checkStatus = table.checkStatus('headmaster_table');
                         if (checkStatus.data.length > 0) {
                             var checkdata = checkStatus.data;

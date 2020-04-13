@@ -116,6 +116,7 @@
     <Compile Include="CourseSyllabusBusiness\CourseBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\CourseTypeBusiness.cs" />
     <Compile Include="CourseSyllabusBusiness\TeacherHoursCostBusiness.cs" />
+    <Compile Include="Coursewaremaking_Business\CoursewaremakingBusiness.cs" />
     <Compile Include="DepartmentBusiness\DepartmentManage.cs" />
     <Compile Include="DormitoryBusiness\AccdationinformationBusiness.cs" />
     <Compile Include="DormitoryBusiness\BenNumberBusiness.cs" />

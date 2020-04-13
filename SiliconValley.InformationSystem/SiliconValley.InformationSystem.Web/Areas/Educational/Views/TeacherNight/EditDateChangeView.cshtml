@@ -58,7 +58,7 @@
 
             //监听提交
             form.on('submit(EditTrue)', function (data) {
-                window.parent.EditDateFunction(data.field.OrwatchDate);
+                window.parent.EditDatebehind(data.field.oldtime, data.field.newtime);
                 Myclose();
                 return false;
             });

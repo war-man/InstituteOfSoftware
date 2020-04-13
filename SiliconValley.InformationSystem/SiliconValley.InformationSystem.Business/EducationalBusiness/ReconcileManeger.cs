@@ -399,32 +399,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return s;
         }
         /// <summary>
-        /// 随机获取班主任或教官
-        /// </summary>
-        /// <param name="teacher">false--得到的教官,true--班主任</param>
-        /// <param name="s1ors2">哪个部门的教官</param>
-        /// <returns></returns>
-        public EmployeesInfo GetRandMASteacher(bool teacher, bool s1ors2, DateTime time, string timename)
-        {
-            Random r = new Random();
-            List<EmployeesInfo> list1 = GetMasTeacher(time, timename);
-            List<EmployeesInfo> list2 = GetSir(time, timename);
-
-            if (teacher)
-            {
-                //获取职素老师
-                int number = r.Next(0, list1.Count);
-                return list1[number];
-            }
-            else
-            {
-                //获取军事教官
-                int number = r.Next(0, list2.Count);
-                return list2[number];
-            }
-
-        }
-        /// <summary>
         /// 获取可以上哪个阶段课程的老师
         /// </summary>
         /// <param name="grand_id"></param>
@@ -901,89 +875,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
         }
-        /// <summary>
-        /// 判断这个班级是否可以安排英语/职素/军事(true--可以安排，false--不可以安排)
-        /// </summary>
-        /// <param name="class_id"></param>
-        /// <returns></returns>
-        public bool IsOkAnpiKecheng(int class_id)
-        {
-            bool s = true;
-            //获取这个班级是哪个阶段
-            ClassSchedule find_c = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);
-            Grand find_g = Reconcile_Com.Grand_Entity.GetEntity(find_c.grade_Id);
-            //获取班级正在上的课程
-            ClassTeacher find_ct = Reconcile_Com.TeacherClass_Entity.GetList().Where(c => c.ClassNumber == class_id && c.IsDel == false).FirstOrDefault();
-            if (find_ct != null)
-            {
-                int? curr_id = find_ct.Skill;
-                //获取这个班级所在阶段
-                switch (find_g.GrandName)
-                {
-                    case "Y1":
-
-                        break;
-                    case "S1":
-                        //当上完C#考试之后就没有了
-                        //获取C#课程Id
-                        Curriculum find_curr = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("C#", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                        if (find_curr != null)
-                        {
-                            if (find_curr.CurriculumID == curr_id)
-                            {
-                                s = false;
-                            }
-                        }
-                        else
-                        {
-                            s = false;
-                        }
-                        break;
-                    case "S2":
-                        //判断班级是net(C#ADB)专业还是java(javaADB)专业
-                        Specialty find_s1 = Reconcile_Com.Specialty_Entity.GetList().Where(p => p.SpecialtyName.Equals("Java") && p.IsDelete == false).FirstOrDefault();
-                        Specialty find_s2 = Reconcile_Com.Specialty_Entity.GetList().Where(p => p.SpecialtyName.Equals("DotNet") && p.IsDelete == false).FirstOrDefault();
-                        if (find_c.Major_Id == find_s1.Id)
-                        {
-                            //java
-                            //获取javaADB的课程ID
-                            Curriculum find_java = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("Java-ADV", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                            if (find_java.CurriculumID == curr_id)
-                            {
-                                s = false;
-                            }
-                            else
-                            {
-                                s = true;
-                            }
-                        }
-                        else
-                        {
-                            //c#
-                            //获取NetADB的课程ID
-                            Curriculum find_net = Reconcile_Com.Curriculum_Entity.GetList().Where(c => c.CourseName.Equals("C#-ADV", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault();
-                            if (find_net.CurriculumID == curr_id)
-                            {
-                                s = false;
-                            }
-                            else
-                            {
-                                s = true;
-                            }
-                        }
-                        break;
-                    case "S3":
-                        break;
-                    case "S4":
-                        break;
-                }
-            }
-            else
-            {
-                s = true;
-            }
-            return s;
-        }
+ 
         /// <summary>
         /// 判断这个班级在这个日期中的时间段是否有课(false--没有，true--有)
         /// </summary>
@@ -1001,51 +893,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return s;
         }
-        /// <summary>
-        /// 判断这个班级在本周上自习的次数
-        /// </summary>
-        /// <param name="class_id">班级id</param>
-        /// <param name="startime">开始时间</param>
-        /// <param name="endtime">结束时间</param>
-        /// <returns></returns>
-        public int count(int class_id, DateTime startime, DateTime endtime, string currname)
-        {
-            return AllReconcile().Where(r => r.ClassSchedule_Id == class_id && r.AnPaiDate >= startime && r.AnPaiDate <= endtime && r.Curriculum_Id == currname).ToList().Count;
-        }
-        public AjaxResult Thismm(bool IsOld, int base_id, string currname, DateTime starttime, DateTime endtime, string xmlfile)
-        {
-            AjaxResult a = new AjaxResult();
-            try
-            {
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                //获取班级上课时间段
-                int baid1 = Reconcile_Com.GetBase_Id("上课时间类型", "上午");
-                int baid2 = Reconcile_Com.GetBase_Id("上课时间类型", "下午");
-                //英语，班会，职素，军事课
-                List<ClassSchedule> monring = Reconcile_Com.GetAppointClass(IsOld, Reconcile_Com.GetGrand_Id(), baid1);//获取上午班
-                List<ClassSchedule> afternoon = Reconcile_Com.GetAppointClass(IsOld, Reconcile_Com.GetGrand_Id(), baid2);//获取下午班                                                                                                                                                                                                                                
-                List<DateTime> times = new List<DateTime>();
-                int i = 1;
-                while (starttime <= endtime)
-                {
-                    times.Add(starttime);
-                    starttime = starttime.AddDays(i);
-                }
-                if (currname != "晚自习")
-                {
-                    mm(IsOld, base_id, times, currname, monring, "下午", xmlfile);
-                    mm(IsOld, base_id, times, currname, afternoon, "上午", xmlfile);
-                }                
-
-                a.Success = true;
-            }
-            catch (Exception ex)
-            {
-                a.Msg = ex.Message;
-                a.Success = false;
-            }
-            return a;
-        }
+        
+      
         /// <summary>
         ///  判断XX班级在这期间是否上过XX课程(false--没有，ture--有)
         /// </summary>
@@ -1064,179 +913,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return s;
         }
-        /// <summary>
-        /// 安排英语，军事，职素，班会课程
-        /// </summary>
-        /// <param name="IsOld">是否是S1教务操作</param>
-        /// <param name="base_id">S1或S3的教官Id</param>
-        /// <param name="times">时间集合</param>
-        /// <param name="currname">课程名称</param>
-        /// <param name="monring">班级集合</param>
-        /// <param name="timename">时间段</param>
-        /// <param name="xmlfile">xml文件地址</param>
-        public void mm(bool IsOld, int base_id, List<DateTime> times, string currname, List<ClassSchedule> monring, string timename, string xmlfile)
-        {
-            foreach (DateTime time in times)
-            {
-                bool isske = IsShangKe(xmlfile, time);
-                if (isske == false)
-                {
-                    continue;
-                }
-                //获取这个日期下午的空教室 
-                List<Classroom> getroom2 = new List<Classroom>();
-                if (currname == "军事")
-                {
-                    getroom2 = this.GetClassrooms(timename, time).Where(c => c.ClassroomName == "操场").ToList();
-                }
-                else
-                {
-                    getroom2 = this.GetClassrooms(timename, time).Where(c => c.ClassroomName != "报告厅" && c.ClassroomName != "操场").ToList();
-                }
-
-                foreach (ClassSchedule c1 in monring)
-                {
-
-                    foreach (Classroom c2 in getroom2)
-                    {
-                        //看看这个教室排满了没有
-                        string str = RoomTime(c2.Id, time, c1.BaseDataEnum_Id);
-                        if (!string.IsNullOrEmpty(str))
-                        {
-                            Reconcile r = new Reconcile();
-                            if (currname == "自习")
-                            {
-                                r.Curse_Id = str;
-                                r.AnPaiDate = time;
-                                r.ClassRoom_Id = c2.Id;
-                                r.ClassSchedule_Id = c1.id;
-                                r.Curriculum_Id = currname;
-                                r.IsDelete = false;
-                                r.NewDate = DateTime.Now;
-                                r.Curriculum_Id = "自习";
-                                r.EmployeesInfo_Id = null;
-                                //判断这个班在这个时间段是否有课
-                                bool s2 = IshavaOrther(r.ClassSchedule_Id, r.Curse_Id, time);
-                                if (s2 == false)
-                                {
-                                    //判断今天是否安排了自习课
-                                    bool s5 = ToHavaKe(r.ClassSchedule_Id, Convert.ToDateTime(r.AnPaiDate), r.Curriculum_Id);
-                                    if (s5 == false)
-                                    {
-                                        //判断安排自习课的次数
-                                        int cout = count(r.ClassSchedule_Id, times[0], times[times.Count - 1], r.Curriculum_Id);
-                                        if (cout < 3)
-                                        {
-                                            //安排
-                                            this.AddData(r);
-                                            break;
-                                        }
-                                    }
-
-                                }
-                            }
-                            else
-                            {
-                                //判断这个班级是否是Y1,判断课程是否是英语
-                                bool is1 = Reconcile_Com.GetBrand(c1.grade_Id);
-                                if (is1 == true && currname == "英语")
-                                {
-                                    break;
-                                }
-                                //判断这个班级是否在这个期间安排了这个课程
-                                bool Ishavecurr = IsHaveCurr(times[0], times[times.Count - 1], currname, c1.id);
-                                if (Ishavecurr == false)
-                                {
-                                    #region 获取非专老师
-                                    switch (currname)
-                                    {
-                                        case "英语":
-                                            //判断该班级是否可以安排英语课
-                                            bool isok = IsOkAnpiKecheng(c1.id);
-                                            if (isok)
-                                            {
-                                                //获取英语老师                                                                                                
-                                                r.EmployeesInfo_Id = string.IsNullOrEmpty(AnpaiTeacher(c1.grade_Id, currname, str, time)) == true ? null : AnpaiTeacher(c1.grade_Id, currname, str, time);
-                                            }
-                                            break;
-                                        case "班会":
-                                            //获取班会老师
-                                            r.EmployeesInfo_Id = string.IsNullOrEmpty(GetMasterTeacher(c1.id, time, str)) == true ? null : GetMasterTeacher(c1.id, time, str);
-                                            break;
-                                        case "职素":
-                                            //判断该班级是否可以安排职素课
-                                            bool isok2 = IsOkAnpiKecheng(c1.id);
-                                            if (isok2)
-                                            {
-                                                //获取职素老师
-                                                r.EmployeesInfo_Id = GetRandMASteacher(true, IsOld, time, r.Curse_Id) == null ? null : GetRandMASteacher(true, IsOld, time, r.Curse_Id).EmployeeId;
-                                            }
-                                            break;
-                                        case "军事":
-                                            //判断该班级是否可以安排军事课
-                                            bool isok3 = IsOkAnpiKecheng(c1.id);
-                                            if (isok3)
-                                            {
-                                                //获取军事老师
-                                                r.EmployeesInfo_Id = GetRandMASteacher(false, IsOld, time, r.Curse_Id) == null ? null : GetRandMASteacher(false, IsOld, time, r.Curse_Id).EmployeeId;
-                                            }
-                                            break;
-                                    }
-                                    #endregion
-                                    r.Curse_Id = str;
-                                    r.AnPaiDate = time;
-                                    r.ClassRoom_Id = c2.Id;
-                                    r.ClassSchedule_Id = c1.id;
-                                    r.Curriculum_Id = currname;
-                                    r.IsDelete = false;
-                                    r.NewDate = DateTime.Now;
-
-                                    if (r.EmployeesInfo_Id != null || string.IsNullOrEmpty(r.EmployeesInfo_Id) == false)
-                                    {
-                                        //判断这个班在这个时间段是否有课
-                                        bool s2 = IshavaOrther(r.ClassSchedule_Id, r.Curse_Id, time);
-                                        if (s2 == false)
-                                        {
-                                            //查看任课老师是否有冲突
-                                            if (r.Curriculum_Id == "职素" || r.Curriculum_Id == "军事")
-                                            {
-                                                bool s1 = IsHaveClass(r.EmployeesInfo_Id, r.Curse_Id, time);
-                                                if (s1 == false)
-                                                {
-                                                    //安排
-                                                    this.AddData(r);
-                                                    if (r.Curriculum_Id == "军事")
-                                                    {
-                                                        break;
-                                                    }
-
-                                                }
-                                            }
-                                            else
-                                            {
-                                                //安排
-                                                this.AddData(r);
-                                                break;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            break;
-                                        }
-
-                                    }
-
-                                }
-                            }
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
-            }
-        }
+        
         /// <summary>
         /// 获取非专业老师
         /// </summary>
@@ -1279,7 +956,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a;
         }
-        
+
         /// <summary>
         /// 获取单个语数英老师
         /// </summary>
@@ -1714,17 +1391,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             List<Curriculum> find_curr_list = Reconcile_Com.GetbehindCurri(find_curdata);
 
             List<Reconcile> r_list = new List<Reconcile>();
-        
+
             foreach (Curriculum cur in find_curr_list)
             {
                 int Sumcout = Convert.ToInt32(Math.Ceiling(Convert.ToDouble(cur.CourseCount / 4.0))); //获取总节数
-             
+
                 int index = 0;
                 for (int i = 0; i < Sumcout; i++)
                 {
                     index++;
                     if (doublecease == true) //双休
-                    {           
+                    {
                         if (this.IsSaturday(time) == 1)
                         {
                             Sumcout = Sumcout + 2;
@@ -1732,7 +1409,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             i = i + 2;
                             time = time.AddDays(2);
                         }
-                         
+
                     }
                     else //单休
                     {
@@ -1752,7 +1429,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     new_R.EmployeesInfo_Id = empNo;
                     new_R.NewDate = DateTime.Now;
                     new_R.IsDelete = false;
-                    if (index == Sumcout )
+                    if (index == Sumcout)
                     {
                         if (this.IsEndCurr(cur.CourseName))
                         {
@@ -1765,14 +1442,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             new_R.EmployeesInfo_Id = "";
                         }
 
-                    }else
+                    }
+                    else
                     {
                         new_R.Curriculum_Id = cur.CourseName;
                     }
                     r_list.Add(new_R);
                     time = time.AddDays(1);
-                  
-                    if (cur.IsEndCurr == true && index== Sumcout)
+
+                    if (cur.IsEndCurr == true && index == Sumcout)
                     {
                         break;
                     }
@@ -1793,7 +1471,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="classNo"></param>
         /// <param name="grandid"></param>
         /// <returns></returns>
-        public List<Reconcile> MiddleStudentReconcileFunction(bool doublecease, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo,int grandid)
+        public List<Reconcile> MiddleStudentReconcileFunction(bool doublecease, int curNo, DateTime time, string timename, int classroomid, string empNo, int classNo, int grandid)
         {
             Curriculum find_curdata = Reconcile_Com.Curriculum_Entity.GetEntity(curNo);   //获取课程
 
@@ -1813,7 +1491,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 int nomargin = 0;
                 for (int i = 0; i < Sumcout; i++)
                 {
-                    
+
                     Reconcile r = new Reconcile();
                     //判断是否是单休
                     if (doublecease)
@@ -1829,7 +1507,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         else
                         {
                             r.AnPaiDate = time.AddDays(i);
-                        }                        
+                        }
                     }
                     else
                     {
@@ -1935,7 +1613,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     IsMargin = IsMargin ? false : true;
                 }
 
-                if (cur.IsEndCurr==true)
+                if (cur.IsEndCurr == true)
                 {
                     Reconcile mycc = new Reconcile();
                     mycc.AnPaiDate = time.AddDays(1);
@@ -1950,6 +1628,138 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
             return r_list;
+        }
+
+        /// <summary>
+        /// 获取阶段课程
+        /// </summary>
+        /// <param name="grand_id"></param>
+        /// <param name="Marji_id"></param>
+        /// <param name="whyMarjio"></param>
+        /// <returns></returns>
+        public List<Curriculum> GetCurr(int grand_id, bool whyMarjio, int marjoi_id)
+        {
+            int typeid = Reconcile_Com.CourseType_Entity.FindSingeData("专业课", false).Id;
+            List<Curriculum> list = Reconcile_Com.Curriculum_Entity.GetIQueryable().Where(c => c.Grand_Id == grand_id && c.IsDelete == false && c.CourseType_Id == typeid).ToList(); //获取所有有效的课程           
+            List<Curriculum> find_list = new List<Curriculum>();
+            if (whyMarjio)//获取专业课程
+            {
+                //判断是否是Y1/S1
+                GrandBusiness grand_entity = new GrandBusiness();
+                int g_id1 = grand_entity.GetList().Where(g => g.GrandName.Equals("Y1", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Id;
+                int g_id2 = grand_entity.GetList().Where(g => g.GrandName.Equals("S1", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Id;
+                if (grand_id == g_id1 || grand_id == g_id2)
+                {
+                    find_list.AddRange(list);
+                }
+                else
+                {
+                    find_list.AddRange(list.Where(c => c.MajorID == marjoi_id).ToList());//获取相关专业的课程
+                    find_list.AddRange(list.Where(c => c.MajorID == null).ToList());//获取公共课程
+                }
+
+            }
+            else //获取非专业课程
+            {
+                List<Curriculum> find = list.Where(c => c.CourseType_Id != typeid && c.MajorID == null).OrderBy(c => c.CurriculumID).ToList();
+                find_list.AddRange(find);
+
+            }
+            find_list = find_list.OrderBy(c => c.Sort).ToList();
+            return find_list;
+        }
+
+        /// <summary>
+        /// 获取可以上职素课的所有老师(包括就业部老师)
+        /// </summary>
+        /// <param name="MyIsAttend">true--获取可以上班会的老师，false--获取可以上职素课的老师</param>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetMaster_All(bool MyIsAttend)
+        {
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
+            BaseBusiness<Headmaster> headmarster_Entity = new BaseBusiness<Headmaster>();
+            List<EmployeesInfo> emplist = Reconcile_Com.Employees_Entity.GetIQueryable().ToList();//获取所有员工
+            List<Headmaster> headmasterlist = new List<Headmaster>();
+            if (MyIsAttend)//获取可以上班会课的老师
+            {
+                headmasterlist = headmarster_Entity.GetIQueryable().Where(h => h.IsDelete == false).ToList(); //获取所有在职的可以上职素课的班主任
+            }
+            else
+            {
+                headmasterlist = headmarster_Entity.GetIQueryable().Where(h => h.IsDelete == false && h.IsAttend == true).ToList(); //获取所有在职的可以上职素课的班主任
+            }
+             
+            
+            foreach (Headmaster h in headmasterlist)
+            {
+                list.Add(emplist.Where(e => e.EmployeeId == h.informatiees_Id).FirstOrDefault());
+            }
+            list.AddRange( Reconcile_Com.GetObtainTeacher());//获取就业部人员
+            return list;
+        }
+        /// <summary>
+        /// 获取所有的教官
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetInstructorAll()
+        {
+            List<Position> plist= Reconcile_Com.PositionBusiness.GetIQueryable().Where(p => p.PositionName.Contains("教官")).ToList();//获取教官岗位Id
+            List<EmployeesInfo> emplist= Reconcile_Com.Employees_Entity.GetIQueryable().ToList();
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
+            foreach (Position item in plist)
+            {
+               list.AddRange( emplist.Where(e => e.PositionId == item.Pid).ToList());
+            }
+
+            return list;
+        }
+        /// <summary>
+        /// 获取所有的英语老师
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GetEnglishTeacherAll()
+        {
+           int pid= Reconcile_Com.PositionBusiness.GetIQueryable().Where(p => p.PositionName.Contains("英语老师")).FirstOrDefault().Pid;
+           return  Reconcile_Com.Employees_Entity.GetEmpByPid(pid);
+        }
+       
+
+        public List<Reconcile> AnPaiNoMarginFuntion(DateTime time,int class_id,int classroom_id,string emp_id,string timename,int curtype_id,int grand_id)
+        {
+            List<Reconcile> list = new List<Reconcile>();
+            Curriculum find_cur = Reconcile_Com.Curriculum_Entity.GetIQueryable().Where(c => c.CourseType_Id == curtype_id && c.Grand_Id == grand_id).FirstOrDefault(); //根据课程类型/阶段获取课程编号
+            Random r = new Random();
+            int index= r.Next(0, 3);
+            for (int i = 0; i < find_cur.CourseCount; i++)
+            {
+                Reconcile new_r = new Reconcile();
+                new_r.ClassRoom_Id = classroom_id;
+                new_r.ClassSchedule_Id = class_id;
+                new_r.Curriculum_Id = find_cur.CourseName;
+                new_r.Curse_Id = timename;
+                new_r.EmployeesInfo_Id = emp_id;
+                new_r.IsDelete = false;
+                new_r.NewDate = DateTime.Now;
+                if (find_cur.CourseName.Contains("军事")) //两周一次
+                {
+                    //time=time.add
+                }
+                else if (find_cur.CourseName.Contains("班会"))//一周一次 
+                {
+
+                }
+                else if (find_cur.CourseName.Contains("英语"))//每周一次
+                {
+
+                }
+                else if (find_cur.CourseName.Contains("职素"))//高中--两周一次，初中一周一次
+                {
+
+                }
+
+            }
+             
+            return null;
         }
         #endregion
     }

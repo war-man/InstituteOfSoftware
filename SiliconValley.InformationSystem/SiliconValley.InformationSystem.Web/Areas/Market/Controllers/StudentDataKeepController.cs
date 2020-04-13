@@ -613,10 +613,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         create_s.StuStatus_Id = 1;
                         new_listStudent.Add(create_s);
                     }
+                DeleteFile();
                 return new_listStudent;
             }
             else
             {
+                DeleteFile();
                 return new_listStudent;
             }
         }

@@ -360,11 +360,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         public ActionResult EditDateChangeFuntion()
         {
-            DateTime oldtime = Convert.ToDateTime(Request.Form["old"]);
-            DateTime newtime = Convert.ToDateTime(Request.Form["new"]);
+            DateTime oldtime = Convert.ToDateTime(Request.Form["oldtime"]);
+            DateTime newtime = Convert.ToDateTime(Request.Form["newtime"]);
             string idlist = Request.Form["ids"];
             bool isAll = Convert.ToBoolean(Request.Form["IsAll"]);
-            int count = (oldtime - newtime).Days;
+            int count = (newtime-oldtime  ).Days;
             AjaxResult a = new AjaxResult();
             List<TeacherNight> list = new List<TeacherNight>();
             if (isAll) //值班数据全部改为某日期

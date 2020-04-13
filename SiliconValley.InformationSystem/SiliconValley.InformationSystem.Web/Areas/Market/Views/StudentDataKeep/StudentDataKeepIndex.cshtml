@@ -11,10 +11,10 @@
 <script type="text/html" id="toolbarDemo1">
     <div class="layui-btn-container">
         <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
-            <i class="layui-icon">&#xe608;</i> 添加
+            <i class="layui-icon">&#xe624;</i> 添加
         </button>
         <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
-            <i class="layui-icon">&#xe60a;</i> Excel文件导入
+            <i class="layui-icon">&#xe681;</i> Excel文件导入
         </button>
     </div>
 </script>
@@ -22,52 +22,60 @@
     <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">查看详情</a>
 </script>
-<form class="layui-form">
-    <fieldset>
-        <div class="layui-row">
-            <div class="layui-col-sm3">
-                <label class="spanCss2">姓名:</label>
-                <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
-            </div>
-            <div class="layui-col-sm3">
-                <label class="spanCss2">联系电话:</label>
-                <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
-            </div>
-            <div class="layui-col-sm3">
-                <label class="spanCss2">信息来源:</label>
-                <div class="divCss1">
-                    @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>,new Dictionary<string,object>(){ })
+<div class="layui-collapse" lay-accordion>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">数据查询</h2>
+        <div class="layui-colla-content">
+            <form class="layui-form">
+                <div class="layui-row">
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
+                        <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">联系电话:</label>
+                        <input name="findPhonevalue" id="findPhonevalue" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">信息来源:</label>
+                        <div class="divCss1">
+                            @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                        </div>
+
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">所在区域:</label>
+                        <div class="divCss1">
+                            @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>)
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row divCss2">
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">备&nbsp; 案&nbsp;人:</label>
+                        <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">开始时间:</label>
+                        <input name="findStartvalue" id="findStartvalue" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">结束时间:</label>
+                        <div style="display: inline-block;width:150px;">
+                            <input name="findEndvalue" id="findEndvalue" class="inputCss1" />
+                        </div>
+                    </div>
+                    <div class="layui-col-sm2 divCss3">
+                        <button id="searchBtn" type="button" class="layui-btn" style="margin-right:38px;width:150px"><i class="layui-icon">&#xe615;</i> 查询</button>
+                    </div>
                 </div>
 
-            </div>
-            <div class="layui-col-sm3">
-                <label class="spanCss2">所在区域:</label>
-                <div class="divCss1">
-                    @Html.DropDownList("findAreavalue", ViewBag.are as IEnumerable<SelectListItem>)
-                </div>
-                </div>
-            </div>
-        <div class="layui-row divCss2">
-            <div class="layui-col-sm3">
-                <label class="spanCss2">备案人:</label>
-                <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
-            </div>
-            <div class="layui-col-sm3">
-                <label class="spanCss2">开始时间:</label>
-                <input name="findStartvalue" id="findStartvalue" class="inputCss1" placeholder="YY-MM-DD" />
-            </div>
-            <div class="layui-col-sm3">
-                <label class="spanCss2">结束时间:</label>
-                <div style="display: inline-block;width:150px;">
-                    <input name="findEndvalue" id="findEndvalue" class="inputCss1" placeholder="YY-MM-DD" />
-                </div>
-            </div>
-            <div class="layui-col-sm3 divCss3">
-                <button id="searchBtn" type="button" class="layui-btn"><i class="layui-icon">&#xe615;</i> 查询</button>
-            </div>
+            </form>
         </div>
-    </fieldset>
-</form>
+    </div>
+    
+</div>
+ 
 <table id="tabletest1" lay-filter="tabletest1"></table>
 @section script{
     <script>
@@ -154,10 +162,11 @@
                     });                                                 
             });
         });
-        layui.use(['table','laydate','form'], function () {
+        layui.use(['table', 'laydate', 'form','element'], function () {
             var table = layui.table;
             var laydate = layui.laydate;
             var form = layui.form;
+            var element = layui.element;
             //日期
            
             //月份小于10的前面加个0
@@ -263,11 +272,12 @@
                         layer.open({
                             type: 2,
                             content: '/Market/StudentDataKeep/AddorEdit' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                            , area: ['1200px', '700px'],
-                            title: '添加备案信息'
+                            , area: ['950px', '650px'],
+                            title: '添加备案信息页面'
                             , shade: 0.8
                             , anim: 4
                             , skin: 'demo-class'
+                            , scrollbar: false
                         });
                         break;
                     case 'getFileInto':                         
@@ -307,8 +317,8 @@
                 if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
-                        content: '/Market/StudentDataKeep/EditView/' + data.Id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                        , area: ['1000px', '650px'],
+                        content: '/Market/StudentDataKeep/EditView/' + data.Id  
+                        , area: ['900px', '690px'],
                         title: '编辑备案信息'
                         , shade: 0.8
                         , anim: 4
@@ -317,9 +327,9 @@
                 } else if (obj.event === 'del') {
                     layer.open({
                         type: 2,
-                        content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                        , area: ['1000px', '650px'],
-                        title: '编辑备案信息'
+                        content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id  
+                        , area: ['800px', '650px'],
+                        title: '备案数据详情'
                         , shade: 0.8
                         , anim: 4
                         , skin: 'demo-class'

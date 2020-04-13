@@ -8,22 +8,27 @@
 <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
 <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
 <style>
-  .formCss{
-     width:70%;
-     height:50%;   
-     margin-left:15%;
-  }
-  .BtnTureCss{
-  margin-left:30%;
-  margin-top:10%;
-  }
-    .layui-unselect{
-      width:250px;
+    .formCss
+    {
+        width: 70%;
+        height: 50%;
+        margin-left: 15%;
+    }
+
+    .BtnTureCss
+    {
+        margin-left: 30%;
+        margin-top: 10%;
+    }
+
+    .layui-unselect
+    {
+        width: 250px;
     }
 </style>
 
-<div id="system_div" style="margin:40px auto;" >
-    <form class="layui-form formCss" id="system_form">
+<div id="system_div" style="margin:40px auto;">
+    <form class="layui-form formCss" id="system_form" lay-filter="NotMargin_form">
         <div class="layui-row layui-form-item">
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="LableCss1">阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段:</label>
@@ -60,9 +65,7 @@
                         List<SelectListItem> C_list = ViewBag.select as List<SelectListItem>;
                         foreach (SelectListItem l in C_list)
                         {
-                            <div class="layui-col-sm4">
-                                <input id="currtype" name="currtype" type="radio" value="@l.Value" title="@l.Value" />
-                            </div>
+                            <div class="layui-col-sm4"><input id="currtype" name="currtype" type="radio" value="@l.Value" title="@l.Value" lay-filter="typeradio" /></div>
                         }
                     }
                 </div>
@@ -74,10 +77,15 @@
         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
             <label class="LableCss1">上课时间:</label>
             <div id="MYClssTime" class="layui-input-block" style="width:258px;">
-                
+
             </div>
         </div>
+        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+            <label class="LableCss1">老&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;师:</label>
+            <div id="MYteacher" class="layui-input-block">
 
+            </div>
+        </div>
         <div class="layui-row layui-form-item">
 
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -114,7 +122,7 @@
         <div class="layui-row layui-form-item">
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <label class="LableCss1">教&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;室:</label>
-                <div class="layui-input-block" id="ortherclass">
+                <div class="layui-input-block" id="classroom_Div">
 
                 </div>
             </div>
@@ -124,6 +132,7 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                 <div class="layui-input-block">
                     <input id="Anan" type="submit" class="layui-btn BtnTureCss" lay-submit="" lay-filter="Anpinomargin" value="确定排课" />
+                    <input  type="button" class="layui-btn BtnTureCss" onclick="Myclose()" value="取消关闭" />
                 </div>
             </div>
         </div>
@@ -134,6 +143,12 @@
 <script src="~/Scripts/jquery-3.3.1.min.js"></script>
 <script src="~/Scripts/layui/layui.js"></script>
 <script>
+    //关闭弹出层
+    function Myclose() {
+        var layer = layui.layer;
+        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+        parent.layer.close(index); //再执行关闭
+    }
     layui.use(['form', 'laydate'], function () {
         var form = layui.form;
         var laydate = layui.laydate;
@@ -141,17 +156,16 @@
         laydate.render({
             elem: '#anpaitime'
             , type: 'date'
-            , range: '到'
             , format: 'yyyy-MM-dd'
             , theme: 'grid'
             , trigger: 'click'
-        });         
+        });
 
         //获取班级
         form.on('select(ortherGrand)', function (data) {
             //清空班级DIV
             $("#ortherclass")[0].innerHTML = "";
-           
+
             if (data.value != "0") {
                 $.ajax({
                     url: '/Educational/Reconcile/GetClassScheduleSelect/' + data.value,
@@ -166,41 +180,58 @@
                     }
                 });
             }
-        });     
+        });
         //点击班级获取班级上课时间
-        form.on('select(orther_bianji)', function (data) {         
-            if (data.value != "0") {               
+        form.on('select(orther_bianji)', function (data) {
+            if (data.value != "0") {
                 $.ajax({
-                    url: '/Educational/Reconcile/GetClassTimeName/' +data.value,
+                    url: '/Educational/Reconcile/GetClassTimeName/' + data.value,
                     success: function (sudata) {
                         if (sudata.Success == false) {
-                            layer.msg(sudata.Msg, {icon:2});
+                            layer.msg(sudata.Msg, { icon: 2 });
                         } else {
                             $("#MYClssTime")[0].innerHTML = "";
                             if (sudata.Data = "上午") {
-                                var str = '<div class="layui-col-sm7"><input style="color:black" type = "radio" name = "time" id = "time" value = "下午12节" title = "下午1/2节" ></div><div class="layui-col-sm5"><input style="color:black" type="radio" name="time" id="time" value="下午34节" title="下午3/4节"></div>';
+                                var str = '<div class="layui-col-sm7"><input style="color:black" type = "radio" name = "time" id = "time" value = "下午12节" title = "下午1/2节"/></div><div class="layui-col-sm5"><input style="color:black" type="radio" name="time" id="time" value="下午34节" title="下午3/4节" /></div>';
                                 $("#MYClssTime").append($(str));
                             } else {
-                                var str = '<div class="layui-col-sm7"><input style = "color:black" type = "radio" name = "time" id = "time" value = "上午12节" title = "上午1/2节" ></div><div class="layui-col-sm5"><input style="color:black" type="radio" name="time" id="time" value="上午34节" title="上午3/4节"></div> ';
+                                var str = '<div class="layui-col-sm7"><input style = "color:black" type = "radio" name = "time" id = "time" value = "上午12节" title = "上午1/2节" /></div><div class="layui-col-sm5"><input style="color:black" type="radio" name="time" id="time" value="上午34节" title="上午3/4节" /></div> ';
                                 $("#MYClssTime").append($(str));
                             }
                             form.render(); //更新全部
-                        }                                              
+                        }
                     }
                 });
             }
         });
 
         form.on('radio(address)', function (data) {
+            $("classroom_Div")[0].innerHTML = "";
+            var new_data = { "address": data.value };
+            $.ajax({
+                url: '/Educational/Reconcile/EmptyClassRoom',
+                data: new_data,
+                type:'POST',
+                success: function (suc) {
+                    if (suc.length > 0) {
+                        for (var i = 0; i < suc.length; i++) {
+
+                            $('<div class="layui-col-sm4"><input id="teacher_id" name="teacher_id" type="radio" value="' + suc[i].Value + '" title="' + suc[i].Text + '" lay-filter="typeradio"/></div>').appendTo($("#classroom_Div"));
+
+                        }
+                        form.render();
+                    }
+                }
+            });
             alert(data.value); //被点击的radio的value值
-        });  
+        });
         //监听提交
         form.on('submit(Anpinomargin)', function (data) {
             var selecvalue = data.field.currtype;
             if (data.field.anpaitime.length <= 0) {
                 layer.msg('请选择排课时间！', { icon: 2 });
             } else if (selecvalue == "0") {
-             layer.msg('请选择课程类型！', { icon: 2 });
+                layer.msg('请选择课程类型！', { icon: 2 });
             }
             else {
                 var loadindex = layer.load(1);
@@ -223,8 +254,31 @@
                     }
                 });
             }
-             
+
             return false;
+        });
+
+        //获取老师
+        form.on('radio(typeradio)', function (data) {
+            $("#MYteacher")[0].innerHTML = "";
+            var new_data = { "Type": data.value };
+            $.ajax({
+                url: '/Educational/Reconcile/GetMasterAlldata',
+                data: new_data,
+                type: 'POST',
+                success: function (suc) {
+                    if (suc.length > 0) {
+                        for (var i = 0; i < suc.length; i++) {
+
+                             $('<div class="layui-col-sm4"><input id="teacher_id" name="teacher_id" type="radio" value="' + suc[i].Value + '" title="' + suc[i].Text + '" lay-filter="typeradio"/></div>').appendTo($("#MYteacher"));
+
+
+                        }
+                        form.render();
+                    }
+                }
+            });
+
         });
         laydate.render();
     });

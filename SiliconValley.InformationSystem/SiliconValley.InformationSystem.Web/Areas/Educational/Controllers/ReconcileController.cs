@@ -50,7 +50,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(c_list,JsonRequestBehavior.AllowGet);
         }         
         /// <summary>
-        /// 通过班级名称获取班级其他数据
+        /// 获取课程
         /// </summary>
         /// <param name="id">班级名称</param>
         /// <returns></returns>
@@ -68,20 +68,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 string time = Reconcile_Com.ClassSchedule_Entity.GetClassTime(find_c.id);//上课时间类型
                 new_c.ClassDate = time;
                 //获取某个阶段某个专业的所有课程                 
-                
-                if (marjon=="无")
-                {
-                    int grand_id = Reconcile_Com.Grand_Entity.FindNameGetData(grand).Id;
-                   var find_clist = Reconcile_Com.Curriculum_Entity.GetList().Where(c=>c.Grand_Id== grand_id && c.MajorID==null && c.IsDelete==false && c.CourseName!="英语").Select(c => new { CourseName = c.CourseName, CurriculumID = c.CurriculumID }).ToList();
-                    var josndata = new { classData = new_c, c_list = find_clist, stataus = "true" };
-                    return Json(josndata, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    var find_clist = Reconcile_Com.Curriculum_Entity.GetRelevantCurricul(Reconcile_Com.Grand_Entity.FindNameGetData(grand).Id, Reconcile_Com.Specialty_Entity.FindNameSame(marjon).Id,false).Select(c => new { CourseName = c.CourseName, CurriculumID = c.CurriculumID }).ToList();
-                    var josndata = new { classData = new_c, c_list = find_clist, stataus = "true" };
-                    return Json(josndata, JsonRequestBehavior.AllowGet);
-                }                 
+                var find_clist = Reconcile_Entity.GetCurr(find_c.grade_Id, true,Convert.ToInt32( find_c.Major_Id));
+                var josndata = new { classData = new_c, c_list = find_clist, stataus = "true" };
+                return Json(josndata, JsonRequestBehavior.AllowGet);                   
             }
             else
             {
@@ -177,7 +166,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 var mydata = lisr_r.Skip((page - 1) * limit).Take(limit).Select(r => new {
                     Id = r.Id,
                     classname = Reconcile_Com.ClassSchedule_Entity.GetEntity(r.ClassSchedule_Id).ClassNumber,//班级名称
-                    classroom = r.ClassRoom_Id==null?"无": Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id).ClassroomName,//教室
+                    classroom = Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id).ClassroomName,//教室
                     curriName = r.Curriculum_Id,//课程
                     Sketime = r.Curse_Id,//课程时间字段
                     ADate = r.AnPaiDate,
@@ -280,18 +269,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         [HttpPost]
         public ActionResult GetNoMajoiThercher()
         {
-            DateTime anpai = Convert.ToDateTime(Request.Form["Time"]);
-            string currname = Request.Form["Curr"];
-            string timename = Request.Form["timeName"];
-            int class_id =Convert.ToInt32( Request.Form["class_id"]);
+            DateTime anpai = Convert.ToDateTime(Request.Form["Time"]);//获取日期
+            string currname = Request.Form["Curr"];//获取课程类型
+            string timename = Request.Form["timeName"];//获取上课时间
+            int class_id =Convert.ToInt32( Request.Form["class_id"]);//获取班级
             List<EmployeesInfo> e_list = new List<EmployeesInfo>();            
             PositionManage position = new PositionManage();
             ClassSchedule find_c = Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);//获取班级数据
+            int grand_id = find_c.grade_Id;//获取阶段
             switch (currname)
             {               
                 case "职素":
                     //获取可以上职素课的班主任
-                    //如果是S3的就要获取就业部的老师
+                    //如果是S4的就要获取就业部的老师
                     e_list = Reconcile_Entity.GetMasTeacher(anpai, timename);
                     break;
                 case "军事":
@@ -439,40 +429,79 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(time,JsonRequestBehavior.AllowGet);
         }
         #endregion
-        
+
         #region 非专业课排课
-        //public ActionResult AnpaiNotMarginView()
-        //{
-        //    //加载阶段
-        //    List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
-        //    g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
-        //    ViewBag.orthergrand = g_list.OrderBy(g=>g.Value).ToList();
-        //    CurseType_Entity = new CourseTypeBusiness();
-        //    BaseDataEnumManeger dataEnum_Entity = new BaseDataEnumManeger();
-        //    //获取所有有效的课程类型
-        //    List<SelectListItem>  find_cur_list=  CurseType_Entity.GetCourseTypes().Where(c=>!c.TypeName.Contains("专业") && !c.TypeName.Contains("语文") && !c.TypeName.Contains("数学")).Select(c=>new SelectListItem() { Text=c.TypeName,Value=c.TypeName}).ToList();
+        public ActionResult AnpaiNotMarginView()
+        {
+            //加载阶段
+            List<SelectListItem> g_list = Reconcile_Entity.GetEffectiveData().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.orthergrand = g_list.OrderBy(g => g.Value).ToList();
+            CourseTypeBusiness CurseType_Entity = new CourseTypeBusiness();
+            BaseDataEnumManeger dataEnum_Entity = new BaseDataEnumManeger();
+            //获取所有有效的课程类型
+            List<SelectListItem> find_cur_list = CurseType_Entity.GetCourseTypes().Where(c => !c.TypeName.Contains("专业") && !c.TypeName.Contains("语文") && !c.TypeName.Contains("数学")).Select(c => new SelectListItem() { Text = c.TypeName, Value = c.TypeName }).ToList();
+            ViewBag.select = find_cur_list;
 
-        //    find_cur_list.Add(new SelectListItem() { Text = "自习课", Value = "自习课" });
-        //    ViewBag.select = find_cur_list;
+            //获取有效校区
+            List<SelectListItem> schoolAddress = dataEnum_Entity.GetsameFartherData("校区地址").Select(x => new SelectListItem() { Text = x.Name, Value = x.Id.ToString() }).ToList();
 
-        //    //获取有效校区
-        //    List<SelectListItem> schoolAddress = dataEnum_Entity.GetsameFartherData("校区地址").Select(x=>new SelectListItem() { Text=x.Name,Value= x.Id.ToString() }).ToList();
+            ViewBag.schoolAddress = schoolAddress;
 
-        //    ViewBag.schoolAddress = schoolAddress;
+            return View();
+        }
 
-        //    return View();
-        //}
+        /// <summary>
+        /// 获取所有老师
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetMasterAlldata()
+        {
+           string type_name= Request.Form["Type"];
+           
+            List<SelectListItem> Item = new List<SelectListItem>();
+            if (type_name.Contains("职素"))
+            {
+               Item = Reconcile_Entity.GetMaster_All(false).Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList();
+            }else if (type_name.Contains("军事"))
+            {
+                Item = Reconcile_Entity.GetInstructorAll().Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList();
+            }else if (type_name.Contains("英语"))
+            {
+                Item= Reconcile_Entity.GetEnglishTeacherAll().Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList(); ;
+            }else if (type_name.Contains("班会"))
+            {
+                Item = Reconcile_Entity.GetMaster_All(true).Select(e => new SelectListItem() { Text = e.EmpName, Value = e.EmployeeId }).ToList();
+            }
+           
+            return Json(Item, JsonRequestBehavior.AllowGet);
+        }
 
-        //[HttpPost]
-        //public ActionResult AnpaiNotMarginFunction()
-        //{
-        //    string currrtype = Request.Form["currtype"];//获取安排的课程类型
-        //    string[] times = Request.Form["anpaitime"].Split('到');//获取安排的时间
-        //    int SchoolAddress =Convert.ToInt32( Request.Form["schooladdress"]);//获取所属校区
-        //    AjaxResult a = Reconcile_Entity.Thismm(IsOld, base_id, currrtype, Convert.ToDateTime(times[0]), Convert.ToDateTime(times[times.Length - 1]), Server.MapPath("~/Xmlconfigure/Reconcile_XML.xml"));
-        //    return Json(a, JsonRequestBehavior.AllowGet);
-        //}
+        [HttpPost]
+        public ActionResult EmptyClassRoom()
+        {
+            int schoold_Id =Convert.ToInt32( Request.Form[""]);
+            List<SelectListItem> classroomlist= Reconcile_Com.Classroom_Entity.GetAddreeClassRoom(schoold_Id).Select(c=>new SelectListItem() { Text=c.ClassroomName,Value=c.Id.ToString()}).ToList();
+            return Json(classroomlist,JsonRequestBehavior.AllowGet);
+        }
 
+        /// <summary>
+        /// 安排非专业课程
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult AnpaiNotMarginFunction()
+        {
+            string currrtype = Request.Form["currtype"];//获取安排的课程类型
+            string timename =  Request.Form["anpaitime"];//上课时间           
+            int classid =Convert.ToInt32( Request.Form[""]);//获取班级
+            int classroomid = Convert.ToInt32(Request.Form[""]);//获取教室
+            string teacherid = Request.Form[""];//获取老师
+
+            return Json(null, JsonRequestBehavior.AllowGet);
+        }
+
+  
         public ActionResult GetClassTimeName(int id)
         {
             ClassSchedltData new_c = new ClassSchedltData();
