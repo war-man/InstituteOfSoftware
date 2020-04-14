@@ -5,6 +5,7 @@
 }
 
 @section style{
+    <link href="~/Scripts/Tangmin_CssAndJs/StudentDatakeep_Css/studentdatakeep.css" rel="stylesheet" />
 }
 <table id="mytableone" class="layui-table" lay-filter="mytableone"></table>
 <script type="text/html" id="MytoolbarDemoSix">
@@ -37,6 +38,9 @@
                         field: 'Name', title: '名称', edit: 'text'
                     }
                     , {
+                        field: 'Rmark', title: '其他说明', edit: 'text'
+                    }
+                    , {
                         field: 'IsDelete', title: '状态', templet: function (res) {
                             if (res.IsDelete == true) {
                                 return '已禁用'
@@ -61,23 +65,23 @@
             //table1监听单元格编辑
             table.on('edit(mytableone)', function (obj) {
                 var value = obj.value; //得到修改后的值
-                if (value == null || value.length == 0) {
-                    layer.msg('文本框不能为空!', {
-                        icon: 2,
-                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                    });
-                } else {
+                if (value == null || value.length == 0 && obj.field != "Rmark") {
+                    layer.msg('文本框不能为空!', { icon: 2, }, function () { Flush(); });
+                } else if (obj.data.IsDelete == true) {
+                    Flush();
+                    layer.msg('该状态已被禁用，不能修改！！', { icon: 2, }, function () { Flush(); });
+                }
+                else {
                     $.ajax({
                         url: ' /Market/Infomation/EditInfomationType',
-                        data: { 'name': value, 'id': obj.data.Id }
+                        data: { 'name': value, 'id': obj.data.Id, "shuxing": obj.field }
                         , dataType: 'json'
                         , type: 'post'
                         , success: function (SucData) {
                             if (SucData != 'ok') {
-                                layer.msg(SucData, {
-                                    icon: 2,
-                                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                });
+                                layer.msg(SucData, { icon: 2, shade: 0.8 });
+                            } else {
+                                layer.msg('编辑成功！！', { icon: 1, shade: 0.8 });
                             }
                             Flush();
                         }
@@ -90,7 +94,7 @@
                 var mystate = obj.value;
                 var id = $(obj.elem).attr("myid");
                 if (mystate == "false") {
-                    layer.confirm('<h2 class=h2CsOne>禁用了就不能使用了！！！请三思</h2>', { title: '系统温馨提示', skin: 'demo-classOne' }, function (index) {
+                    layer.confirm('是否禁用？', { title: '系统温馨提示', icon: 3 }, function (index) {
                         $.ajax({
                             url: '/Market/Infomation/EditInfomationType',
                             data: { 'state': mystate, 'id': id }
@@ -134,20 +138,15 @@
             table.on('toolbar(mytableone)', function (obj) {
                 switch (obj.event) {
                     case 'MygetCheckDataOne':
-                        $.ajax({
-                            url: '/Market/Infomation/AddInfomationType'
-                            , success: function (SucData) {
-                                if (SucData != "ok") {
-                                    layer.msg(SucData, {
-                                        icon: 2,
-                                        time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                                    });
-                                } else {                                   
-                                        Flush();                               
-                                }
-                            }
+                        layer.open({
+                            type: 2,
+                            content: '/Market/Infomation/AddView'
+                            , area: ['500px', '350px'],
+                            title: '添加信息来源'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
                         });
-                        Flush();
                         break;
                 };
             });

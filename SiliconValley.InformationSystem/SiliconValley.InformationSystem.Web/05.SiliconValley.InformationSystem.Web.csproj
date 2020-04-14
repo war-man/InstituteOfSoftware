@@ -1557,6 +1557,9 @@
     <Content Include="Areas\Educational\Views\TeacherNight\EditView.cshtml" />
     <Content Include="Areas\Educational\Views\TeacherNight\MasterAddView.cshtml" />
     <Content Include="Areas\Educational\Views\TeacherNight\WeekenddutyView.cshtml" />
+    <Content Include="Areas\Market\Views\Status\AddView.cshtml" />
+    <Content Include="Areas\Market\Views\Infomation\AddView.cshtml" />
+    <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

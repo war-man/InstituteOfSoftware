@@ -11,7 +11,7 @@
     line-height: 36px;
 }
 
-    #but1:hover
+#but1:hover
     {
         background-color: aqua;
     }
@@ -76,6 +76,10 @@
     width: 97%;
     height: 100px;
 }
-body {
 
+body .demo-class .layui-layer-title
+{
+    background: #009688;
+    color: #fff;
+    border: none;
 }
