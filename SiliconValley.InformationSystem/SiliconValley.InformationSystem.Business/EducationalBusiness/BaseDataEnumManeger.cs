@@ -54,7 +54,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<BaseDataEnum> GetsameFartherData(string FartherName)
         {
-           BaseDataEnum find_fater= this.GetList().Where(b => b.Name == FartherName && b.fatherId == 0).FirstOrDefault();
+           BaseDataEnum find_fater= this.GetList().Where(b => b.Name == FartherName && b.fatherId == 0 && b.IsDelete==false).FirstOrDefault();
             if (find_fater==null)
             {
                return new List<BaseDataEnum>();

@@ -11,58 +11,54 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 {
     public class AttendanceInfoManage : BaseBusiness<AttendanceInfo>
     {
-        RedisCache rc= new RedisCache();
+        RedisCache rc = new RedisCache();
         /// <summary>
         /// 将员工考勤表数据存储到redis服务器中
         /// </summary>
         /// <returns></returns>
-        public List<AttendanceInfo> GetADInfoData() {
+        public List<AttendanceInfo> GetADInfoData()
+        {
             rc.RemoveCache("InRedisATDData");
             List<AttendanceInfo> atdinfolist = new List<AttendanceInfo>();
-            if (atdinfolist==null || atdinfolist.Count==0) {
+            if (atdinfolist == null || atdinfolist.Count == 0)
+            {
                 atdinfolist = this.GetList();
-                rc.SetCache("InRedisATDData",atdinfolist);
+                rc.SetCache("InRedisATDData", atdinfolist);
             }
             atdinfolist = rc.GetCache<List<AttendanceInfo>>("InRedisATDData");
             return atdinfolist;
         }
         /// <summary>
-        /// 往员工考勤表加入员工编号
+        /// 员工入职时往员工考勤表加入该员工
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool AddEmpToAttendanceInfo(string empid)
-        {
-            bool result = false;
-            try
-            {
-                AttendanceInfo ese = new AttendanceInfo();
-                ese.EmployeeId = empid;
-                ese.IsDel = false;
-                if (this.GetADInfoData().Count()==0) {
-                    ese.YearAndMonth = DateTime.Now;
-                }
-                else
-                {
-             ese.YearAndMonth = this.GetADInfoData().LastOrDefault().YearAndMonth;
-                }
-                this.Insert(ese);
-                rc.RemoveCache("InRedisATDData");
-                result = true;
-                BusHelper.WriteSysLog("考勤表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //public bool AddEmpToAttendanceInfo(string empid)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        AttendanceInfo ese = new AttendanceInfo();
+        //        ese.EmployeeId = empid;
+        //        ese.IsDel = false;
+        //        ese.YearAndMonth = DateTime.Now;
+        //        this.Insert(ese);
+        //        rc.RemoveCache("InRedisATDData");
+        //        result = true;
+        //        BusHelper.WriteSysLog("考勤表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //    }
+        //    return result;
 
-        }
+        //}
 
-         /// <summary>
-        /// 往员工考勤表加入员工编号
+        /// <summary>
+        /// 编辑考勤表禁用员工
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
@@ -71,7 +67,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             bool result = false;
             try
             {
-                var ads= this.GetADInfoData().Where(e => e.EmployeeId == empid).FirstOrDefault();
+                var ads = this.GetADInfoData().Where(e => e.EmployeeId == empid).FirstOrDefault();
                 ads.IsDel = true;
                 this.Update(ads);
                 rc.RemoveCache("InRedisATDData");

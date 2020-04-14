@@ -127,5 +127,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return GetExitsData().Where(c => c.BaseData_Id == id).ToList();
         }
+
+        /// <summary>
+        /// 获取所有有效教室
+        /// </summary>
+        /// <returns></returns>
+        public List<Classroom> GetEffectiveClass()
+        {
+            return GetExitsData().Where(c => c.IsDelete==false).ToList();
+        }
+
     }
 }

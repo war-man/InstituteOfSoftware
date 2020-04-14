@@ -1,0 +1,260 @@
+﻿
+@{
+    ViewBag.Title = "TimeTableIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@section style{
+    <style>
+        th
+        {
+            width: 195px;
+            text-align: center;
+            border: 1px solid black;
+            height: 40px;
+        }
+
+        #mytable
+        {
+            z-index: 3;
+        }
+    </style>
+}
+<div id="time_div" style="margin-bottom:20px;">
+    <form id="reconcile_form" lay-filter="reconcile_form" class="layui-form">
+        <div class="layui-row">
+            <div class="layui-col-sm3">
+                <input class="layui-input" placeholder="日期" id="SelectTime" name="SelectTime" />
+            </div>
+            <div class="layui-col-sm3" style="margin-left:40px;">
+                @{
+                    List<BaseDataEnum> list = ViewBag.Addree as List<BaseDataEnum>;
+                    int index = 0;
+                    foreach (BaseDataEnum i in list)
+                    {
+                        if (index == 0)
+                        {
+                            <input name="campus" id="campus" type="radio" value="@i.Id" title="@i.Name" />
+                        }
+                        else
+                        {
+                            <input name="campus" id="campus" type="radio" value="@i.Id" title="@i.Name" />
+                        }
+
+                    }
+                }
+
+            </div>
+            <div class="layui-col-sm4" style="margin-left:20px">
+                <button type="button" class="layui-btn" onclick="GetKebiao()">获取课表</button>
+            </div>
+        </div>
+    </form>
+</div>
+<div id="table_div">
+
+</div>
+
+@section script{
+    <script>
+        var new_laydate;
+        var dayname;
+        //转换日期格式
+        function TimeFormt(newtime) {
+            var date = new Date(newtime);
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+
+            return year + "年" + month + "月" + day + "日"
+        }
+
+        //判断星期几
+        function judgeDate(date) {
+            // 标准时间 Wed Jul 31 2019 00:00:00 GMT+0800 (中国标准时间)
+            var _date = new Date(date);
+            // getDay() 返回表示星期的某一天
+            var num = _date.getDay(_date);
+            var week;
+            switch (num) {
+                case 0:
+                    week = "星期日";
+                    break;
+                case 1:
+                    week = "星期一";
+                    break;
+                case 2:
+                    week = "星期二"
+                    break;
+                case 3:
+                    week = "星期三"
+                    break;
+                case 4:
+                    week = "星期三"
+                    break;
+                case 5:
+                    week = "星期五"
+                    break;
+                case 6:
+                    week = "星期六"
+                    break;
+                default:
+                    break;
+            };
+            return week;
+        }
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#SelectTime'
+                , type: 'date'
+                , done: function (value) {
+                    new_laydate = TimeFormt(value); //得到日期生成的值，如：2017-08-18
+                    dayname = judgeDate(value);
+                }
+            });
+        });
+        function GetKebiao() {
+            var formdata = { "SelectTime": $("#SelectTime").val(), "campus": $(":checked").val() };
+            $.ajax({
+                url: '/Educational/Timetable/GetReconcileData',
+                type: 'POST',
+                data: formdata,
+                success: function (sucdata) {
+                    $('#table_div')[0].innerHTML = "";
+                    var recon_table = $('<table id="reconclie_table"></table>');
+                    $('<thead>< tr style = "text-align:center" > <th colspan="10"><span>' + new_laydate + '</span></th> <th colspan="4"><span>' + dayname + '</span></th></tr ></thead >').appendTo(recon_table);
+                    var tr1 = $('<tr></tr>');
+                    $('<th >午别</th ><th>课时</th>').appendTo(tr1);
+                    for (var i = 0; i < sucdata.tablethead.length; i++) {
+                        $('<th>' + sucdata.tablethead[i].Text + '</th>').appendTo(tr1);
+                    }
+                    tr1.appendTo(recon_table);
+                    var tr2 = $('<tr></tr>');
+                    $('<th rowspan="4">上午</th ><th rowspan="2">一二节</th>').appendTo(tr2);
+                    for (var i = 0; i < sucdata.MymongingOne.length; i++) {
+                        if (sucdata.MymongingOne[i].ClassName != null) {
+                            $('<th>' + sucdata.MymongingOne[i].ClassName + '</th>').appendTo(tr2);
+                        } else {
+                            $('<th></th>').appendTo(tr2);
+                        }
+
+                    }
+                    tr2.appendTo(recon_table);
+                    var tr3 = $('<tr></tr>');
+                    for (var i = 0; i < sucdata.MymongingOne.length; i++) {
+                        if (sucdata.MymongingOne[i].NeiRong != null) {
+                            $('<th><span>' + sucdata.MymongingOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingOne[i].Teacher + '</span></th>').appendTo(tr3);
+                        } else {
+                            $('<th></th>').appendTo(tr3);
+                        }
+                    }
+                    tr3.appendTo(recon_table);
+                    var tr4 = $('<tr></tr>');
+                    $('<th rowspan="2">三四节</th >').appendTo(tr4);
+                    for (var i = 0; i < sucdata.MymongingTwo.length; i++) {
+                        if (sucdata.MymongingTwo[i].ClassName != null) {
+                            $('<th>' + sucdata.MymongingTwo[i].ClassName + '</th>').appendTo(tr4);
+                        } else {
+                            $('<th></th>').appendTo(tr4);
+                        }
+
+                    }
+                    tr4.appendTo(recon_table);
+
+                    var tr5 = $('<tr></tr>');
+                    for (var i = 0; i < sucdata.MymongingTwo.length; i++) {
+                        if (sucdata.MymongingTwo[i].NeiRong != null) {
+                            $('<th><span>' + sucdata.MymongingTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MymongingTwo[i].Teacher + '</span></th>').appendTo(tr5);
+                        } else {
+                            $('<th></th>').appendTo(tr5);
+                        }
+                    }
+                    tr5.appendTo(recon_table);
+
+                    var tr6 = $('<tr></tr>');
+                    $('<th rowspan="4">下午</th ><th rowspan="2">一二节</th>').appendTo(tr6);
+                    for (var i = 0; i < sucdata.MyafternoonOne.length; i++) {
+                        if (sucdata.MyafternoonOne[i].ClassName != null) {
+                            $('<th>' + sucdata.MyafternoonOne[i].ClassName + '</th>').appendTo(tr6);
+                        } else {
+                            $('<th></th>').appendTo(tr6);
+                        }
+
+                    }
+                    tr6.appendTo(recon_table);
+
+                    var tr7 = $('<tr></tr>');
+                    for (var i = 0; i < sucdata.MyafternoonOne.length; i++) {
+                        if (sucdata.MyafternoonOne[i].NeiRong != null) {
+                            $('<th><span>' + sucdata.MyafternoonOne[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonOne[i].Teacher + '</span></th>').appendTo(tr7);
+                        } else {
+                            $('<th></th>').appendTo(tr7);
+                        }
+
+                    }
+                    tr7.appendTo(recon_table);
+
+                    var tr8 = $('<tr></tr>');
+                    $('<th rowspan="2">三四节</th >').appendTo(tr8);
+                    for (var i = 0; i < sucdata.MyafternoonTwo.length; i++) {
+                        if (sucdata.MyafternoonTwo[i].ClassName != null) {
+                            $('<th>' + sucdata.MyafternoonTwo[i].ClassName + '</th>').appendTo(tr8);
+                        } else {
+                            $('<th></th>').appendTo(tr8);
+                        }
+
+                    }
+                    tr8.appendTo(recon_table);
+
+                    var tr9 = $('<tr></tr>');
+                    for (var i = 0; i < sucdata.MyafternoonTwo.length; i++) {
+                        if (sucdata.MyafternoonTwo[i].NeiRong != null) {
+                            $('<th><span>' + sucdata.MyafternoonTwo[i].NeiRong + '</span><span>/</span><span>' + sucdata.MyafternoonTwo[i].Teacher + '</span></th>').appendTo(tr9);
+                        } else {
+                            $('<th></th>').appendTo(tr9);
+                        }
+
+                    }
+                    tr9.appendTo(recon_table);
+
+                    var tr10 = $('<tr></tr>');
+                    $('<th rowspan="2">晚自习</th ><th>晚一</th>').appendTo(tr10);
+
+                    for (var i = 0; i < sucdata.MyngintOne.length; i++) {
+                        if (sucdata.MyngintOne[i].ClassName != null) {
+                            $('<th>' + sucdata.MyngintOne[i].ClassName + '</th>').appendTo(tr10);
+                        } else {
+                            $('<th></th>').appendTo(tr10);
+                        }
+
+                    }
+
+                    tr10.appendTo(recon_table);
+
+                    var tr11 = $('<tr></tr>');
+                    $(' <th>晚二</th >').appendTo(tr11);
+
+                    for (var i = 0; i < sucdata.MyngintTwo.length; i++) {
+                        if (sucdata.MyngintTwo[i].ClassName != null) {
+                            $('<th>' + sucdata.MyngintTwo[i].ClassName + '</th>').appendTo(tr11);
+                        } else {
+                            $('<th></th>').appendTo(tr11);
+                        }
+
+                    }
+
+                    tr11.appendTo(recon_table);
+
+                    recon_table.appendTo($('#table_div'));
+                }
+            });
+        }
+    </script>
+}
+
+
+

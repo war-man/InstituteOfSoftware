@@ -14,13 +14,22 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    /// <summary>
+    /// 考试类型
+    /// </summary>
     [Table(name: "ExamType")]
     public partial class ExamType
     {
         
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 类型ID
+        /// </summary>
         public int ExamTypeID { get; set; }
+        /// <summary>
+        /// 阶段ID
+        /// </summary>
         public Nullable<int> GrandID { get; set; }
     
     }

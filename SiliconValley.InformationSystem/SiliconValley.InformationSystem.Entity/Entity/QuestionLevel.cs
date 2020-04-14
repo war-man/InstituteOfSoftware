@@ -13,6 +13,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+
+    /// <summary>
+    /// 题目的难度级别
+    /// </summary>
     [Table(name: "QuestionLevel")]
     public partial class QuestionLevel
     {

@@ -6,8 +6,8 @@
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        @*<button class="layui-btn layui-btn-sm" lay-event="addAdsinfo"><i class="layui-icon">&#xe60a;</i>Excel文件导入</button>*@
-        <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange">年月份及应到勤天数改变</button>
+        <button class="layui-btn layui-btn-sm" lay-event="BatchImport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导入</button>
+        <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange"><i class="layui-icon layui-icon-edit"></i>年月份及应到勤天数改变</button>
     </div>
 </script>
 @*操作栏*@
@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:50px;">查询</button>
+                <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:50px;"><i class="layui-icon layui-icon-search"></i>查询</button>
             </div>
         </form>
     </fieldset>
@@ -125,8 +125,8 @@
             table.on('toolbar(CheckingIntab)', function (obj) {
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
-                    case 'addAdsinfo':
-                        AddAdsinfo();
+                    case 'BatchImport':
+                        BatchImport();
                         break;
                     case 'timeanddaysChange':
                         TimeandDaysChange();
@@ -174,15 +174,15 @@
             });
 
         }); 
-        //添加考勤信息
-        function AddAdsinfo() {
+        //批量（导入excel数据）添加考勤信息
+        function BatchImport() {
             layui.use(['layer'], function (args) {
                 var layer = layui.layer;      //layui对象
                 layer.open({
                     type: 2
-                    , area: ["400px", "400px"]
+                    , area: ["800px", "600px"]
                     , title: ""
-                    , content: '/Personnelmatters/AttendanceStatistics/AddAdsInfo'
+                    , content: '/Personnelmatters/AttendanceStatistics/BatchImport'
                     , anim: 2
                 });
 

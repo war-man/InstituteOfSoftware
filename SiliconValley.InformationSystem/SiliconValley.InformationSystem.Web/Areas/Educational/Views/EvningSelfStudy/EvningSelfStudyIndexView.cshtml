@@ -5,6 +5,37 @@
 }
 @section style{
     <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+
+        .inputCss1
+        {
+            width: 90%;
+            height: 25px;
+            color:red;
+            border-bottom:1px solid black;
+        }
+
+        .divCss1
+        {
+            width: 90%;
+            height: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px ;
+            text-align: center;
+            font-size: 22px;
+        }
+        body .layui-layer-demo{
+        }
+        body .layui-layer-demo .layui-layer-btn{
+        position:fixed;
+        margin-left:180px;
+        }
     </style>
 }
     <form class="layui-form">
@@ -31,10 +62,11 @@
 <table id="Eving_table" lay-filter="Eving_table"></table>
 <script type="text/html" id="Ev_toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">班级调课</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData2">全体上课日期调换</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength2">班级上课日期调换</button>
+        <button class="layui-btn layui-btn-sm" lay-event="NightAnpai"> <i class="layui-icon">&#xe608;</i>安排晚自习</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe642;</i>全体调课</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength"><i class="layui-icon">&#xe642;</i>班级调课</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData2"><i class="layui-icon">&#xe642;</i>全体上课日期调换</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength2"><i class="layui-icon">&#xe642;</i>班级上课日期调换</button>
     </div>
 </script>
 
@@ -51,6 +83,23 @@
                 table.reload('Eving_table');
             });
         }
+
+        function Myopen(str) {
+            var layer = layui.layer;
+            //示范一个公告层
+            layer.open({
+                type: 1
+                , title: false //不显示标题栏
+                , closeBtn: false
+                , area: ['600px', '650px']
+                ,skin: 'layui-layer-demo'
+                , shade: 0.8
+                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                , btn: ['知道了']
+                , moveType: 1 //拖拽模式，0或者1
+                , content: str                 
+            });
+        }
         layui.use(['table', 'form', 'laydate'], function () {
             var table = layui.table;
             var form = layui.form;
@@ -60,7 +109,8 @@
                 , url: '/Educational/EvningSelfStudy/EvningTableData'
                 , toolbar: '#Ev_toolbarDemo'
                 , cols: [[
-                      { field: 'ClassSchedule_id', title: '班级' }
+                    { type: 'radio' }
+                    , { field: 'ClassSchedule_id', title: '班级' }
                     , { field: 'ClassroomName', title: '教室' }
                     , { field: 'curd_name', title: '上课时间段' }
                     , {
@@ -79,6 +129,17 @@
             table.on('toolbar(Eving_table)', function (obj) {
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
+                    case 'NightAnpai':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/EvningSelfStudy/AnPaiEvningSelfStudyView',
+                            area: ['680px', '550px'],
+                            title: '晚自习安排'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
                     case 'getCheckData':                         
                         layer.open({
                             type: 2,
@@ -203,6 +264,8 @@
                 });     
                 return false;
             });
+
+
 
         });
     </script>

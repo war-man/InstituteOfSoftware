@@ -21,9 +21,9 @@
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">班级:</label>
-                         @Html.HiddenFor(e=>e.id)
+                        @Html.HiddenFor(e => e.id)
                         <div class="layui-input-block">
-                           @Html.DropDownListFor(e=>e.ClassSchedule_id, ViewBag.Classlist as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "class","layui-select"} })
+                            @Html.DropDownListFor(e => e.ClassSchedule_id, ViewBag.Classlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -48,7 +48,7 @@
 
                         <label class="LableCss1">安排日期:</label>
                         <div class="layui-input-block">
-                            <input type="text" value="@ViewBag.date" class="layui-input" name="Anpaidate" id="Anpaidate"/>                            
+                            <input type="text" value="@ViewBag.date" class="layui-input" name="Anpaidate" id="Anpaidate" />
                         </div>
 
                     </div>
@@ -57,13 +57,15 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">上课老师:</label>
                         <div class="layui-input-block">
-                            <input name="emp_id" id="emp_id" type="text" class="layui-input" readonly="readonly" value="@ViewBag.teacher" style="border:0px"/>
+
+                            @Html.DropDownListFor(e => e.emp_id, ViewBag.tt as List<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
+
                         </div>
                     </div>
                     <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                         <label class="layui-form-label">说明:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(e=>e.Rmark,new Dictionary<string, object>() { { "class", "layui-layui-textarea" } });
+                            @Html.TextAreaFor(e => e.Rmark, new Dictionary<string, object>() { { "class", "layui-layui-textarea" } });
                         </div>
 
                     </div>
@@ -81,7 +83,7 @@
     <script src="~/Scripts/jquery-3.3.1.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form','laydate'], function () {
+        layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
 

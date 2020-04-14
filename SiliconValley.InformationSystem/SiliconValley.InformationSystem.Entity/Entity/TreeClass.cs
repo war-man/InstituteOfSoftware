@@ -13,42 +13,63 @@ namespace SiliconValley.InformationSystem.Entity.Entity
             get;
             set;
         }
-        public string title//节点标题
+        /// <summary>
+        /// 节点标题
+        /// </summary>
+        public string title 
         {
             get;
             set;
         }
 
-        public List<TreeClass> children//子节点
+        /// <summary>
+        /// 子节点
+        /// </summary>
+        public List<TreeClass> children
         {
             get;
             set;
         }
 
-        public string href//url
+        /// <summary>
+        /// url
+        /// </summary>
+        public string href
         {
             get;
             set;
         }
 
-        public bool spread//节点是否初始展开默认false
+        /// <summary>
+        /// 节点是否初始展开默认false
+        /// </summary>
+        public bool spread
         {
             get;
             set;
         }
 
-        public bool @checked//节点是否初始为选中状态 默认false
+        /// <summary>
+        /// 节点是否初始为选中状态 默认false
+        /// </summary>
+        public bool @checked
         {
             get;
             set;
         }
 
-        public bool disable//节点是否为禁用状态 默认false
+        /// <summary>
+        /// 节点是否为禁用状态 默认false
+        /// </summary>
+        public bool disable
         {
             get;
             set;
         }
-        public Nullable<int> grade {//节点级别是多少
+        /// <summary>
+        /// 节点级别是多少
+        /// </summary>
+        public Nullable<int> grade {
             get;
             set;
         }

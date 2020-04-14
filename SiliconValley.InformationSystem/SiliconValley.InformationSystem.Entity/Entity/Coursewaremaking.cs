@@ -8,10 +8,14 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Entity.Entity
 {
+
+
+   
+
     /// <summary>
     /// 课程制作表
     /// </summary>
-   [Table("Coursewaremaking")]
+    [Table("Coursewaremaking")]
   public  class Coursewaremaking
     {
         [Key]

@@ -99,7 +99,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="layui-btn " type="button" id="Conditionselect">查询</button>
+                        <button class="layui-btn " type="button" id="Conditionselect"><i class="layui-icon layui-icon-search"></i>查询</button>
 
                     </div>
 
@@ -108,8 +108,8 @@
             @*头部工具栏*@
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="AddEmps"><i class="layui-icon layui-icon-add-1"></i>添加员工</button>
-                    <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation">部门及岗位管理</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="AddEmps"><i class="layui-icon layui-icon-addition"></i>添加员工</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation"><i class="layui-icon layui-icon-app"></i>部门及岗位管理</button>
 
                 </div>
             </script>
@@ -405,6 +405,7 @@
             //监听行工具事件
             table.on('tool(emptab2)', function (obj) {
                 var data = obj.data;
+                console.log("离职员工：" + data.EmployeeId);
                  if (obj.event === 'detail') {
                     layer.open({
                         type: 2,

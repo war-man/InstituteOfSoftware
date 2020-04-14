@@ -51,22 +51,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public static readonly BaseBusiness<Department> DeparmentBusiness = new BaseBusiness<Department>();
 
         /// <summary>
-        /// 根据阶段名称获取阶段Id
-        /// </summary>
-        /// <param name="s1ors3">ture--获取S1,s2，Y1阶段,false--获取S3，s4阶段</param>
+        /// 获取所有有效的阶段
+        /// </summary>    
         /// <returns></returns>
-        public static List<Grand> GetGrand_Id(bool s1ors3)
+        public static List<Grand> GetGrand_Id()
         {
-            if (s1ors3)
-            {
-                //获取S1，S2,Y1
-                return Grand_Entity.GetList().Where(g => g.GrandName.Equals("S1", StringComparison.CurrentCultureIgnoreCase) || g.GrandName.Equals("S2", StringComparison.CurrentCultureIgnoreCase) || g.GrandName.Equals("Y1", StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
-            else
-            {
-                //获取S3，S4
-                return Grand_Entity.GetList().Where(g => g.GrandName.Equals("S3", StringComparison.CurrentCultureIgnoreCase) || g.GrandName.Equals("S4", StringComparison.CurrentCultureIgnoreCase)).ToList();
-            }
+
+            return Grand_Entity.GetList().Where(g => g.IsDelete == false).ToList();
            
         }
         /// <summary>
@@ -259,6 +250,55 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
            return  PositionBusiness.GetList().Where(p => p.IsDel == false).ToList();
         }
+         
+        /// <summary>
+        /// 获取员工姓名
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string GetEmpName(string id)
+        {
+           return Employees_Entity.GetEntity(id) == null ? "" : Employees_Entity.GetEntity(id).EmpName;
+        }
+        /// <summary>
+        /// 获取班级名称
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string GetClassName(int id)
+        {
+           return ClassSchedule_Entity.GetEntity(id) == null ? "" : ClassSchedule_Entity.GetEntity(id).ClassNumber;
+        }
+        /// <summary>
+        /// 获取所有有效班级
+        /// </summary>
+        /// <returns></returns>
+        public static List<ClassSchedule> GetClass()
+        {
+            List<ClassSchedule> list = new List<ClassSchedule>();
+            list= Reconcile_Com.ClassSchedule_Entity.ClassList();
+            return list;
+        }
+        /// <summary>
+        /// 获取这个阶段的下面所有课程
+        /// </summary>
+        /// <param name="find_c"></param>
+        /// <returns></returns>
+        public static List<Curriculum> GetbehindCurri(Curriculum find_c)
+        {
+            CourseType courseType= CourseType_Entity.GetList().Where(ct => ct.TypeName.Contains("专业")).FirstOrDefault();
+           return Curriculum_Entity.GetList().Where(c =>c.IsDelete==false && c.Grand_Id == find_c.Grand_Id && c.Sort >= find_c.Sort &&c.CourseType_Id== courseType.Id).OrderBy(c=>c.CurriculumID).ToList();
+        }
+        /// <summary>
+        /// 根据课程名称获取课程数据
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Curriculum GetNameGetCur(string name)
+        {
+           return Curriculum_Entity.GetList().Where(c => c.CourseName == name).FirstOrDefault();
+        }
+
         /// <summary>
         /// 判断这个班级应该去达康维嘉校区上晚自习还是继善高科校区上晚自习 (true--继善高科校区,fale--达康维嘉校区)
         /// </summary>
@@ -266,9 +306,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public static bool judgeClass(int class_id)
         {
-            ClassSchedule find= ClassSchedule_Entity.GetEntity(class_id);
-            List<Grand> grand1 = GetGrand_Id(true).Where(g=>g.Id==find.grade_Id).ToList();
-            if (grand1.Count>0)
+            ClassSchedule find = ClassSchedule_Entity.GetEntity(class_id);
+            List<Grand> grand1 = GetGrand_Id().Where(g => g.Id == find.grade_Id).ToList();
+            if (grand1.Count > 0)
             {
                 return true;
             }
@@ -276,26 +316,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 return false;
             }
-        }
-        /// <summary>
-        /// 获取某个校区的有效班级(true--继善,false-达康)
-        /// </summary>
-        /// <param name="s1ors3"></param>
-        /// <returns></returns>
-        public static List<ClassSchedule> GetClass(bool s1ors3)
-        {
-            List<ClassSchedule> list = new List<ClassSchedule>();
-            List<ClassSchedule> class_all = Reconcile_Com.ClassSchedule_Entity.ClassList();
-            List<Grand> grands= GetGrand_Id(s1ors3);
-            foreach (ClassSchedule item in class_all)
-            {
-               int count= grands.Where(g => g.Id == item.grade_Id).ToList().Count;
-                if (count>0)
-                {
-                    list.Add(item);
-                }
-            }
-            return list;
         }
     }
 }

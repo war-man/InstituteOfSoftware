@@ -1,0 +1,218 @@
+﻿
+@{
+    ViewBag.Title = "ClassMasterIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        body .demo-class .layui-layer-title
+        {
+            background: #009688;
+            color: #fff;
+            border: none;
+        }
+    </style>
+}
+<table id="headmaster_table" lay-filter="headmaster_table"></table>
+<script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
+<script type="text/html" id="toolbarDemo_Night">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_week"> <i class="layui-icon">&#xe642;</i>安排值班</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_time"> <i class="layui-icon">&#xe642;</i>修改值班日期</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckChange_time"> <i class="layui-icon">&#xe642;</i>延迟、提前值班日期</button>
+    </div>
+</script>
+
+<script type="text/html" id="barDemo_Night">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+
+@section script{
+    <script>
+        function TableFulsh() {
+            layui.use('table', function () {
+                var table = layui.table;
+                table.reload('headmaster_table');
+            });
+        }
+        var ids = "";
+        var IsAll = false;
+        function EditDateFunction(date) {
+            var new_data = { "time": date, "ids": ids, "IsAll": IsAll };
+            if (IsAll == true) {
+                var new_data = { "time": date,"IsAll": IsAll };
+            }
+            $.ajax({
+                url: '/Educational/TeacherNight/EditDateFuntion',
+                data: new_data,
+                type:'POST',
+                success: function (sudata) {
+                    if (sudata.Success == false) {
+                        layer.msg(sudata.Msg, { icon: 2 });
+                    } else {
+                        layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
+                           TableFulsh();
+                        });
+                    }
+                }
+            });
+        }
+
+        function EditDatebehind(olddate, newdate) {
+            var new_data = { "oldtime": olddate, "ids": ids, "IsAll": IsAll, "newtime": newdate };
+            if (IsAll == true) {
+                var new_data = { "oldtime": date, "IsAll": IsAll, "newtime": newdate};
+            }
+            $.ajax({
+                url: '/Educational/TeacherNight/EditDateChangeFuntion',
+                data: new_data,
+                type: 'POST',
+                success: function (sudata) {
+                    if (sudata.Success == false) {
+                        layer.msg(sudata.Msg, { icon: 2 });
+                    } else {
+                        layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
+                            TableFulsh();
+                        });
+                    }
+                }
+            });
+        }
+
+
+        layui.use('table', function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            table.render({
+                elem: '#headmaster_table'
+                , url: '/Educational/TeacherNight/GetClassMasterFunction'
+                , toolbar: '#toolbarDemo_Night' //开启头部工具栏，并为其绑定左侧模板
+                , cols: [[
+                      { type: 'checkbox' }
+                    , {
+                        field: 'OrwatchDate', title: '值班日期', templet: function (res) {
+                            return TimeChange(res.OrwatchDate);
+                        }
+                    }
+                    , { field: 'TearcherName', title: '值班老师'}
+                    , { field: 'timename', title: '值班类型' }
+                    , {
+                        field: 'AttendDate', title: '安排日期', templet: function (res) {
+                            return TimeChange(res.AttendDate);
+                        }}
+                    , { field: 'Rmark', title: '备注'}
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo_Night', width: 150 }
+                ]]
+                , page: true
+            });
+
+            //头工具栏事件
+            table.on('toolbar(headmaster_table)', function (obj) {
+                var checkStatus = table.checkStatus(obj.config.id);
+                switch (obj.event) {
+                    case 'getCheckData_addNight':
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/TeacherNight/AddDataView'
+                            , area: ['800px', '500px'],
+                            title: '添加值班数据页面'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                        break;
+                    case 'getCheckChange_time':
+                         
+                        var checkStatus = table.checkStatus('headmaster_table');
+                        if (checkStatus.data.length > 0) {
+                            var checkdata = checkStatus.data;
+                            var id = "";
+                            for (var i = 0; i < checkdata.length; i++) {
+                                id += checkdata[i].Id + ",";
+                            }
+                            ids = id;
+                            IsAll = checkStatus.isAll;
+                            layer.open({
+                                type: 2,
+                                content: '/Educational/TeacherNight/EditDateChangeView'
+                                , area: ['600px', '500px']
+                                , title: '延迟、提前值班日期页面'
+                                , shade: 0.8
+                                , anim: 4
+                                , skin: 'demo-class'
+                            });
+                        } else {
+                            layer.msg('请选择数据在进行操作!!!', { icon: 2 });
+                        }
+                         
+                        break;
+                    case 'getCheckData_time':
+                        
+                        var checkStatus = table.checkStatus('headmaster_table');
+                        if (checkStatus.data.length > 0) {
+                            var checkdata = checkStatus.data;
+                            var id = "";
+                            for (var i = 0; i < checkdata.length; i++) {
+                                id += checkdata[i].Id + ",";
+                            }
+                            ids = id;
+                            IsAll = checkStatus.isAll;
+                            layer.open({
+                                type: 2,
+                                content: '/Educational/TeacherNight/EditDateView'
+                                , area: ['450px', '450px'],
+                                title: '安排周末值班页面'
+                                , shade: 0.8
+                                , anim: 4
+                                , skin: 'demo-class'
+                            });
+                        } else {
+                            layer.msg('请选择数据在进行操作!!!', { icon:2 });
+                        }
+                        
+                        break;
+
+                };
+            });
+
+            //监听行工具事件
+            table.on('tool(headmaster_table)', function (obj) {
+                var data = obj.data;
+                //console.log(obj)
+                if (obj.event === 'del') {
+                    layer.confirm('真的删除行么?', function (index) {
+                        $.ajax({
+                            url: '/Educational/TeacherNight/DeleteFunction/'+data.Id,
+                            type: 'GET',
+                            success: function (suc) {
+                                if (suc.Success == false) {
+                                    layer.msg('删除失败！', { icon: 2 });
+                                } else {
+                                    layer.msg(suc.Msg, { icon: 1, shade: 0.8 }, function () {
+                                        //刷新
+                                        TableFulsh();
+                                    });
+                                }
+                            }
+                        });
+                        layer.close(index);
+                    });
+                } else if (obj.event === 'edit') {
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/TeacherNight/EditMasterView/' + data.Id,
+                        area: ['500px', '400px'],
+                        title: '编辑值班数据',
+                        shade: 0.8,
+                        anim: 4,
+                        skin:'demo-class'
+                    });
+                }
+            });
+        });
+    </script>
+}
+

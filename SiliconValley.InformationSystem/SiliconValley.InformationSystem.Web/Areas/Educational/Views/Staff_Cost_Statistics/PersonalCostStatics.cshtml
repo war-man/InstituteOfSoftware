@@ -1,0 +1,201 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/common/myDatepicker.css" rel="stylesheet" />
+    <style>
+        .line-title {
+            display: inline-block;
+            width: 30%;
+            border: 1px solid blue;
+        }
+
+        #data .header, #data .cost {
+            list-style-type: none;
+            text-align: center;
+        }
+
+            #data .header li, #data .cost li{
+                float: left;
+                width: 140px;
+                font-size: 16px;
+            }
+
+            #data .cost li {
+            
+                margin-top:50px;
+            
+            }
+    </style>
+
+</head>
+<body>
+
+    <div id="mywarp">
+
+        <input type="hidden" id="Emp" value="@ViewBag.Emp.EmployeeId" />
+
+        <div id="title" style="text-align:center;">
+
+            <div class="line-title"></div>
+            <i class="layui-icon layui-icon-chart" style="font-size:35px;"><i style="font-size:25px;"><label>@ViewBag.Emp.EmpName</label>费用统计</i> </i>
+            <div class="line-title"></div>
+
+
+        </div>
+
+
+        <div style='display: flex; margin-top:20px;'>
+
+            <hr />
+            <input type="text" id='date-input' class="layui-input" style='display: inline-block; font-size:20px; text-align:center; border:0px solid white;'>
+        </div>
+
+
+        <div id="data" style="margin-top:30px;">
+
+            <ul class="header">
+                <li>课时费</li>
+
+                <li>值班费</li>
+
+                <li>阅卷费</li>
+
+                <li>监考费</li>
+
+                <li>内训费</li>
+
+                <li>课程研发费</li>
+
+                <li>合计</li>
+            </ul>
+
+            <ul class="cost" >
+                <li id="teacherHostCost">0</li>
+
+                <li id="dutyCost">0</li>
+
+                <li id="MarkingCost">0</li>
+
+                <li id="InvigilateCost">0</li>
+
+                <li id="InternalTrainingCost">0</li>
+
+                <li id="CurriculumDevelopmentCost">0</li>
+
+                <li id="total">0</li>
+            </ul>
+
+        </div>
+        <hr />
+
+        <div class="btns" style="width:100%; text-align:center; margin-top:160px;">
+            <button id="beginStatistics" style="width:60%;" class="layui-btn layui-btn-radius layui-btn-primary ">开始统计</button>
+        </div>
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/common/myDatepicker.js"></script>
+
+    <script>
+
+        //调用日期插件
+        $("#date-input").myDatePicker({
+            'startDate': '2014-01-01 18:45:20',
+            'endDate': (new Date()).Format("yyyy-mm-dd hh:ii:ss"),
+            //指定父元素，不指定默认为body
+            parent: $("#date-input").parent(),
+            //定位方式是否用fixed
+            positionFixed: $("#position-1").is(':checked'),
+
+
+
+        });
+
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+
+
+            function SetData(dataObj) {
+
+                if (dataObj == null || dataObj == undefined) {
+
+                    $("#teacherHostCost").text("失败！");
+                    $("#dutyCost").text("失败！");
+                    $("#MarkingCost").text("失败！");
+                    $("#InvigilateCost").text("失败！");
+                    $("#InternalTrainingCost").text("失败！");
+                    $("#CurriculumDevelopmentCost").text("失败！");
+
+                    $("#total").text("失败！");
+
+                    return;
+
+                }
+
+                $("#teacherHostCost").text(dataObj.EachingHourCost +'元');
+                $("#dutyCost").text(dataObj.DutyCost + '元');
+                $("#MarkingCost").text(dataObj.MarkingCost + '元');
+                $("#InvigilateCost").text(dataObj.InvigilateCost + '元');
+                $("#InternalTrainingCost").text(dataObj.InternalTrainingCost + '元');
+                $("#CurriculumDevelopmentCost").text(dataObj.CurriculumDevelopmentCost + '元');
+
+                var total = parseFloat(dataObj.EachingHourCost) + parseFloat(dataObj.DutyCost) + parseFloat(dataObj.MarkingCost) + parseFloat(dataObj.InvigilateCost) + parseFloat(dataObj.InternalTrainingCost) + parseFloat(dataObj.CurriculumDevelopmentCost);
+
+                $("#total").text(total + '元');
+            }
+
+
+            ///开始统计
+            $("#beginStatistics").click(function () {
+
+                var index = layer.load(1, {
+                    shade: [0.1, '#fff'] //0.1透明度的白色背景
+                });
+
+                //获取emp 时间
+
+                var empid = $("#Emp").val();
+
+                var date = $("#date-input").val();
+
+                $.post('/Educational/Staff_Cost_Statistics/PersonalCostStatics', { empid: empid, date: date }, function (result) {
+
+                    layer.close(index);
+
+                    if (result.ErrorCode == 200) {
+
+                        //成功   渲染数据
+                        layer.msg('统计成功！');
+                        SetData(result.Data);
+
+                    }
+
+                    if (result.ErrorCode == 500) {
+                        
+                        layer.msg('统计失败！', { icon: 2 });
+                        SetData(null);
+                    }
+
+                });
+
+
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>

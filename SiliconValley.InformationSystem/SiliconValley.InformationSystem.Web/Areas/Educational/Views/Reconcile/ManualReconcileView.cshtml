@@ -23,7 +23,7 @@
             line-height: 36px;
         }
 
-        #but1:hover
+            #but1:hover
             {
                 background-color: aqua;
             }
@@ -79,38 +79,50 @@
 
         .layui-unselect
         {
-            width: 130px;
+            width: 200px;
             border-radius: 5px;
         }
-        .AreCss1{
-            width:97%;
-            height:100px;
+
+        .AreCss1
+        {
+            width: 97%;
+            height: 100px;
+        }
+
+        .layui-textarea
+        {
+            border-radius: 5px;
+            border-width: 1px;
+            border-style: solid;
+            width: 200px;
+            min-height: 0px;
+            height: 38px;
         }
     </style>
 </head>
 <body>
     <form class="layui-form" style="margin-top:30px;" lay-filter="manual_form">
         <div class="layui-row layui-form-item">
-            <div class="layui-col-x6 layui-col-sm6 layui-col-md6">
-                <label class="layui-form-label">阶段:</label>
+            <div class="layui-col-x4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
                 <div class="layui-input-block">
                     @Html.DropDownList("childview_grand", ViewBag.Child_grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "class", "layui-unselect linu" }, { "lay-filter", "childview_grand" } })
                 </div>
             </div>
-            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                <label class="layui-form-label">班级:</label>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                 <div id="class_childdiv" class="layui-input-block">
 
                 </div>
             </div>
-        </div>
-        <div class="layui-row layui-form-item">
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                <label class="layui-form-label">类型:</label>
+                <label class="layui-form-label">类 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 型:</label>
                 <div class="layui-input-block">
                     @Html.DropDownList("childview_Currtype", ViewBag.Child_typelist as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "class", "layui-unselect linu" }, { "lay-filter", "childview_Currtype" } })
                 </div>
             </div>
+        </div>
+        <div class="layui-row layui-form-item">
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="layui-form-label">课程名称:</label>
                 <div id="childviewcurr_div" class="layui-input-block">
@@ -123,10 +135,8 @@
                     <input type="text" name="childview_AnpiDate" id="childview_AnpiDate" class="layui-input linu" />
                 </div>
             </div>
-        </div>
-        <div class="layui-row layui-form-item">
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                <label class="LableCss1">上课时间段:</label>
+                <label class="LableCss1">上课时间:</label>
                 <div class="layui-input-block">
                     <select id="childview_timetype" lay-filter="childview_timetype" name="childview_timetype">
                         <option value="0">--请选择--</option>
@@ -140,6 +150,8 @@
                     </select>
                 </div>
             </div>
+        </div>
+        <div class="layui-row layui-form-item">
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                 <label class="LableCss1">任课老师:</label>
                 <div id="childteacher_div" class="layui-input-block">
@@ -147,17 +159,23 @@
                 </div>
             </div>
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                <label class="layui-form-label">教室:</label>
-                <div id="childvieroom_div" class="layui-input-block">
-
+                <label class="LableCss1">校 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区:</label>
+                <div class="layui-input-block">
+                    @Html.DropDownList("childschooladdress", ViewBag.schooladdress as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "class", "layui-unselect linu" }, { "lay-filter", "childschool" } })
+                </div>
+            </div>
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label">备 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 注:</label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" name="childview_reak" id="childview_reak"></textarea>
                 </div>
             </div>
         </div>
         <div class="layui-row layui-form-item" style="margin-top:20px;">
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                <label class="layui-form-label">备注:</label>
-                <div class="layui-input-block">
-                    <textarea class="AreCss1" name="childview_reak" id="childview_reak"></textarea>
+                <label class="layui-form-label">教 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 室:</label>
+                <div id="childvieroom_div" class="layui-input-block">
+
                 </div>
             </div>
         </div>
@@ -167,10 +185,10 @@
                     <button type="submit" class="layui-btn" lay-submit="" lay-filter="childview_add">提交</button>
                 </div>
                 <div style="width:45%;float:left;margin-left:60px">
-                    <input type="button" class="layui-btn" value="关闭" onclick="Myclose()"/>
+                    <input type="button" class="layui-btn" value="关闭" onclick="Myclose()" />
                 </div>
-                
-                
+
+
             </div>
         </div>
     </form>
@@ -187,21 +205,21 @@
             }
             var timetype = $("#childview_timetype");
             $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
-            $('<option value="下午12节">上午1/2节</option>').appendTo(timetype);             
-            $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);   
+            $('<option value="下午12节">上午1/2节</option>').appendTo(timetype);
+            $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);
             $('<option value="下午34节">上午3/4节</option>').appendTo(timetype);
             $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
-             
+
         }
-        function My_sametime(num) {   
-            if (num==1) {
+        function My_sametime(num) {
+            if (num == 1) {
                 $("#childview_timetype option").each(function (index, ele) {
                     $(ele).remove();
                 });
-            }               
-                var timetype = $("#childview_timetype");
+            }
+            var timetype = $("#childview_timetype");
             $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
-            if (mytimename.length>0) {
+            if (mytimename.length > 0) {
                 if (mytimename == "上午") {
                     $('<option value="下午34节">下午3/4节</option>').appendTo(timetype);
                     $('<option value="下午12节">下午1/2节</option>').appendTo(timetype);
@@ -209,26 +227,26 @@
                     $('<option value="上午12节">上午1/2节</option>').appendTo(timetype);
                     $('<option value="上午34节">上午3/4节</option>').appendTo(timetype);
                 }
-            }                                
+            }
         }
         //加载上午，下午
         function My_times(num) {
-            var timetype = $("#childview_timetype"); 
-            if (num==1) {
+            var timetype = $("#childview_timetype");
+            if (num == 1) {
                 $("#childview_timetype option").each(function (index, ele) {
                     $(ele).remove();
                 });
                 $('<option value="0" selected="selected">--请选择--</option>').appendTo(timetype);
-            }                                 
+            }
             $('<option value="上午">上午</option>').appendTo(timetype);
-            $('<option value="下午">下午</option>').appendTo(timetype);   
+            $('<option value="下午">下午</option>').appendTo(timetype);
         }
         //指定时间段
         function PostTimesName(name) {
             $("#childview_timetype")[0].innerHTML = "";
-            if (mytimename.length>0) {
+            if (mytimename.length > 0) {
                 $('<option value=' + name + '>' + name + '</option>').appendTo($("#childview_timetype"));
-            }             
+            }
         }
         //加载整天
         function My_zhengtian() {
@@ -245,18 +263,18 @@
                     //清空教室跟任课老师
                     $("#childvieroom_div")[0].innerHTML = "";
                     $("#childvieroom_div")[0].innerHTML = "";
-                    form.val("manual_form", {  
-                        "childview_timetype": "0"                           
+                    form.val("manual_form", {
+                        "childview_timetype": "0"
                     });
                     form.render();
                 }
             });
             var classnumber = 0;
             //阶段点击事件(获取班级)
-            form.on('select(childview_grand)',function (data) {
+            form.on('select(childview_grand)', function (data) {
                 //每当重新选择阶段时，类型，课程名称，任课老师重新设定
                 form.val("manual_form", {
-                    "childview_Currtype": "0"   //给课程类型设为初始值(其他)          
+                    "childview_Currtype": "0"   //给课程类型设为初始值(其他)
                 });
                 $("#childviewcurr_div")[0].innerHTML = "";//将课程div清空
                 $("#childteacher_div")[0].innerHTML = "";//将任课老师div清空
@@ -285,20 +303,20 @@
 
             });
             //上课时间点击事件(获取教室跟任课老师)
-            form.on('select(childview_timetype)',function (data) {
+            form.on('select(childview_timetype)', function (data) {
                 $("#childvieroom_div")[0].innerHTML = "";//教室更新
                 var anpaiTime = $("#childview_AnpiDate").val();
                 var kengcheng = $("#childview_currname").val();
                 if (kengcheng == "0" || kengcheng == undefined || kengcheng == "") {
                     layer.msg('课程不能为空!!!', {}, function () {
                         form.val("manual_form", {
-                            "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                            "childview_timetype": "0"   //给课程类型设为初始值(其他)
                         });
                     });
-                } else if (anpaiTime == "") {                     
+                } else if (anpaiTime == "") {
                     layer.msg('上课日期不能为空!!!', {}, function () {
                         form.val("manual_form", {
-                            "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                            "childview_timetype": "0"   //给课程类型设为初始值(其他)
                         });
                     });
                 }
@@ -327,9 +345,9 @@
                         //通过课程，日期，时间段获取任课老师
                         //获取课程
                         var type = $("#childview_Currtype").val();//获取上课类型
-                        var tt = type.substr(0,2);
+                        var tt = type.substr(0, 2);
                         var curr = $("#childview_currname").val();
-                        var mydata2 = { "Time": anpaiTime, "timeName": data.value, "Curr": curr, "class_id": classnumber}
+                        var mydata2 = { "Time": anpaiTime, "timeName": data.value, "Curr": curr, "class_id": classnumber }
                         if (type != "0") {
                             if (type == "专业课") {
                                 $.ajax({
@@ -346,7 +364,7 @@
                                         form.render(); //更新全部
                                     }
                                 });
-                            } else if (tt != "0" && tt != "专业") {                                
+                            } else if (tt != "0" && tt != "专业") {
                                 //根据其他课程（职素，英语，数学，语文）获取任课老师
                                 var Getdata = { "Curr": tt, "Time": anpaiTime, "timeName": data.value, "class_id": classnumber };
                                 $.ajax({
@@ -366,7 +384,7 @@
                             }
                         }
                     }
-                } 
+                }
             });
             //给班级注册点击事件
             form.on('select(class_child)', function (data) {
@@ -383,7 +401,7 @@
                 } else {
                     //类型=其他
                     form.val("manual_form", {
-                        "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                        "childview_timetype": "0"   //给课程类型设为初始值(其他)
                     });
                     //课程清空
                     $("#childviewcurr_div")[0].innerHTML = "";
@@ -399,12 +417,12 @@
                     $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));
                     //清空教室
                     $("#childvieroom_div")[0].innerHTML = "";
-                }              
+                }
             });
             //获取课程
             form.on('select(childview_Currtype)', function (data) {
                 form.val("manual_form", {
-                    "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                    "childview_timetype": "0"   //给课程类型设为初始值(其他)
                 });
                 form.render(); //更新全部
                 //获取选择的班级是哪一个阶段的,根据阶段获取课程
@@ -412,10 +430,10 @@
                     //如果班级未选择，则清空任课老师div
                     layer.msg('请选择班级!!!', {}, function () {
                         form.val("manual_form", {
-                            "childview_Currtype": "0"   //给课程类型设为初始值(其他)          
+                            "childview_Currtype": "0"   //给课程类型设为初始值(其他)
                         });
                         $("#childteacher_div")[0].innerHTML = "";
-                    });                   
+                    });
                 } else {
                     //如果类型选择的是其他
                     if (data.value == "0") {
@@ -424,7 +442,7 @@
                         My_zhengtian();
                         form.render(); //更新全部
                         $("#childviewcurr_div")[0].innerHTML = "";//清空课程div
-                        $("#childteacher_div")[0].innerHTML = "";//老师重新选择                      
+                        $("#childteacher_div")[0].innerHTML = "";//老师重新选择
                         $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));//课程div初始化
                         $('<input class="layui-input linu" type="text" placeholder="任课老师名称" name="childview_teacher" id="childview_teacher"/>').appendTo($("#childteacher_div"));//任课老师div初始化
                     } else {
@@ -455,7 +473,7 @@
                             $('<input class="layui-input linu" type="text" placeholder="课程名称" name="childview_currname" id="childview_currname"/>').appendTo($("#childviewcurr_div"));
                             $("#childview_currname").attr("disabled", "disabled");
                             $("#childview_currname")[0].value = data.value;
-                        }  
+                        }
 
                     }
 
@@ -465,7 +483,7 @@
             //课程点击事件
             form.on('select(curr_child)', function (data) {
                 form.val("manual_form", {
-                    "childview_timetype": "0"   //给课程类型设为初始值(其他)          
+                    "childview_timetype": "0"   //给课程类型设为初始值(其他)
                 });
                 //任课老师
                 $("#childteacher_div")[0].innerHTML = "";
@@ -474,51 +492,59 @@
             })
             //监听提交
             form.on('submit(childview_add)', function (data) {
-                 if (data.field.child_class == undefined) {
-                     layer.msg("请选择班级!!!");
-                 } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
-                     layer.msg("请选择或填写课程!!!");
-                 } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
-                     layer.msg("请选择任课老师!!!");
-                 } else if (data.field.childview_AnpiDate == "") {
-                     layer.msg("请选择上课日期!!!");
-                 } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
-                     layer.msg("请选择上课时间段!!!");
-                 } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
-                     layer.msg("请选择教室!!!");
-                 } else {
-                            var indexof = layer.load(1);
-                            //提交数据
-                            $.ajax({
-                                url: '/Educational/Reconcile/AddHandDataFunction',
-                                type: 'POST',
-                                data: data.field,
-                                success: function (suc) {
-                                    if (suc == "ok") {
-                                        layer.close(indexof);
-                                        layer.msg('操作成功！！！', { icon: 1, shade: 0.8 }, function () {
-                                            //刷新表单
-                                            window.parent.TableFulsh();
-                                            //关闭弹出层
-                                            Myclose();
-                                        });
-                                    } else {
-                                        layer.close(indexof);
-                                        layer.msg(suc, { icon: 2 });
-                                    }
-                                }
-                            });
+                if (data.field.child_class == undefined) {
+                    layer.msg("请选择班级!!!");
+                } else if (data.field.childview_currname == undefined || data.field.childview_currname == "" || data.field.childview_currname == "--请选择--") {
+                    layer.msg("请选择或填写课程!!!");
+                } else if (data.field.childview_Currtype != "0" && (data.field.teacher_child == undefined || data.field.teacher_child == "")) {
+                    layer.msg("请选择任课老师!!!");
+                } else if (data.field.childview_AnpiDate == "") {
+                    layer.msg("请选择上课日期!!!");
+                } else if (data.field.childview_timetype == "0" && data.field.childview_Currtype != "0") {
+                    layer.msg("请选择上课时间段!!!");
+                } else if (data.field.childview_Currtype == "专业课" && (data.field.childview_room == undefined || data.field.childview_room == "0")) {
+                    layer.msg("请选择教室!!!");
+                } else {
+                    var indexof = layer.load(1);
+                    //提交数据
+                    $.ajax({
+                        url: '/Educational/Reconcile/AddHandDataFunction',
+                        type: 'POST',
+                        data: data.field,
+                        success: function (suc) {
+                            if (suc == "ok") {
+                                layer.close(indexof);
+                                layer.msg('操作成功！！！', { icon: 1, shade: 0.8 }, function () {
+                                    //刷新表单
+                                    window.parent.TableFulsh();
+                                    //关闭弹出层
+                                    Myclose();
+                                });
+                            } else {
+                                layer.close(indexof);
+                                layer.msg(suc, { icon: 2 });
+                            }
                         }
-                                 
+                    });
+                }
+
                 return false;
             });
-           
+            //获取空教室
+            form.on('select(childschool)', function (data) {
+                if (data.value != "0") {
+                    //获取日期
+                    //获取上课时间
+                    //获取校区
+                }
+
+            })
         });
         //关闭弹出层
         function Myclose() {
             var layer = layui.layer;
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            parent.layer.close(index); //再执行关闭   
+            parent.layer.close(index); //再执行关闭
         }
     </script>
 </body>

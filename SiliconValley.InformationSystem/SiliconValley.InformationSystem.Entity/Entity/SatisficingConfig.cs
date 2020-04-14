@@ -13,16 +13,34 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    
+
+    /// <summary>
+    /// 满意度调查配置
+    /// </summary>
     [Table(name: "SatisficingConfig")]
     public partial class SatisficingConfig
     {
 
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 课程
+        /// </summary>
         public Nullable<int> CurriculumID { get; set; }
+        /// <summary>
+        /// 被调查的员工
+        /// </summary>
         public string EmployeeId { get; set; }
+
+        /// <summary>
+        /// 班级
+        /// </summary>
         public int ClassNumber { get; set; }
         public Nullable<System.DateTime> CreateTime { get; set; }
+        /// <summary>
+        /// 是否过期
+        /// </summary>
         public Nullable<bool> IsPastDue { get; set; }
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }

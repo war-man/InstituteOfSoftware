@@ -323,7 +323,6 @@
         </form>
     </div>
 
-
     <script>
 
         $(function () {
@@ -331,7 +330,7 @@
         });
         function loademp() {
             var id = $("#EmployeeId").val();
-
+            console.log("离职员工编号："+id);
             $.get("/Personnelmatters/EmployeesInfo/GetempById/" + id, function (data) {
                 layui.use(['layer', 'form', 'table'], function () {
                     var form = layui.form;

@@ -1,0 +1,267 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AnPaiEvningSelfStudyView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+    <style>
+        .mm{
+        border:1px solid black;
+        margin-bottom:10px;
+        }
+        .hideCss
+        {
+            display: none;
+        }
+        .layui-textare
+        {
+            height: 38px;
+            width: 130px;
+            border-radius: 5px;
+            border-style: solid;
+            border-width: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <fieldset>
+            <legend>类型选择区</legend>
+            <form class="layui-form">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <div class="layui-input-block">
+                            <input type="radio" name="type" title="手动安排" value="2" lay-filter="types" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                        <div id="ClssTime" class="layui-input-block">
+                            <input type="radio" name="type" title="系统安排" value="1" lay-filter="types" checked="checked" />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </fieldset>
+        <fieldset style="height:99%;">
+            <legend>操作区</legend>
+            <div id="system_Div">
+                <form id="evningselfstudyAnpaiform" class="layui-form">
+                    <div class="layui-row layui-form-item" style="margin-top:20px">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center">
+                            <label class="layui-form-label">安排日期:</label>
+                            <div class="layui-input-block">
+                                <input id="time" name="time" class="layui-input" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;margin-top:50px">
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="anpaiEvingstudy">确定</button>
+                            <button type="button" class="layui-btn" onclick="MyClose()">取消关闭</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="hand_Div" class="hideCss">
+                <form id="system_form" class="layui-form" lay-filter="system_form">
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">自习日期:</label>
+                            <div class="layui-input-block">
+                                <input type="text" id="mytime" name="mytime" class="layui-input" style="width:130px;" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">上课老师:</label>
+                            <div class="layui-input-block">
+                                @Html.DropDownList("teacher_sele", ViewBag.teacher as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
+                            <div class="layui-input-block">
+                                @Html.DropDownList("classShdule_sele", ViewBag.myclass as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">自习时间:</label>
+                            <div class="layui-input-block">
+                                <select name="timename" id="timename" class="layui-select">
+                                    <option value="晚一">晚一</option>
+                                    <option value="晚二">晚二</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                  
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">校 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区:</label>
+                            <div class="layui-input-block">                                 
+                                @Html.DropDownList("schooladdress", ViewBag.schoolAddress as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" },{ "lay-filter", "schooladdress"} })
+                            </div>
+                        </div>
+
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">说 &nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
+                            <div class="layui-input-block">
+                                <textarea name="ramke" id="ramke" class="layui-textare"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="LableCss1">教 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 室:</label>
+                            <div id="classroomdiv" class="layui-input-block">
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center">
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="handanpaiEvingstudy">点击安排</button>
+                            <button type="button" class="layui-btn" onclick="MyClose()">取消关闭</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </fieldset>
+        
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
+    <script>
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+            var layer = layui.layer;
+            laydate.render({
+                elem: '#time'
+                , type: 'date'
+                , range: '到'
+                , format: 'yyyy-MM-dd'
+                , theme: 'grid'
+                , trigger: 'click'
+            });
+            laydate.render({
+                elem: '#mytime'
+                , theme: 'grid'
+                , trigger: 'click'
+            });
+            form.on('radio(types)', function (data) {
+                if (data.value == "1") {
+                    $("#system_Div").removeClass("hideCss");
+                    $("#hand_Div").addClass("hideCss");
+                } else if (data.value == "2") {
+                    $("#hand_Div").removeClass("hideCss");
+                    $("#system_Div").addClass("hideCss");
+                }
+            });
+
+            form.render();
+
+            form.on('select(schooladdress)', function (data) {
+                var schoolvalue = data.value;
+                if (schoolvalue!="0") {
+                    var data1 = form.val("system_form");
+                    if (data1.mytime.length <= 0) {
+                        form.val("system_form", { "schooladdress": "0" });
+                        layer.msg('请选择日期!!!', { icon: 2 });                        
+                    } else {
+                        $("#classroomdiv")[0].innerHTML = "";
+                        var new_data = { "timename": data1.timename, "time": data1.mytime, "schooladdres": data1.schooladdress };
+                        $.ajax({
+                            url: '/Educational/EvningSelfStudy/GetEmptyClassroom',
+                            data: new_data,
+                            type: 'POST',
+                            success: function (result) {
+                                var select = $('<select name="classroom" id="classroom"></select>');
+                                for (var i = 0; i < result.length; i++) {
+                                    $('<option value="' + result[i].Id + '">' + result[i].ClassroomName + '</option>').appendTo(select);
+                                }
+                                $("#classroomdiv").append(select);
+                                form.render();
+                            }
+                        });
+                    }
+                    
+ 
+                }
+                
+            });      
+            //监听提交
+            form.on('submit(anpaiEvingstudy)', function (data) {
+                $.ajax({
+                    url: '/Educational/EvningSelfStudy/AnPaiEvningSelfStudyFunction',
+                    type: 'POST',
+                    data: data.field,
+                    success: function (sucdata) {
+                        if (sucdata.Success == false) {                                                      
+                            var str = '<div class="divCss1">';
+                            for (var i = 0; i < sucdata.Data.length; i++) {
+                                str = str + '<div><div style="margin-top:10px;margin-bottom:10px;"><span>日期:<span style="color:red;">' + TimeChange(sucdata.Data[i].date) + '</span><span></div></div><div><span>未安排专业课的班级:</span><br/><div style="margin-top:10px;margin-bottom:10px;"><span class="inputCss1 spanCss1">' + sucdata.Data[i].ClassName + '</span></div><div></div>';                        
+                            }
+                            window.parent.Myopen(str);
+                            MyClose();  
+                        } else {
+                            layer.msg(sucdata.Msg, { icon: 1, shade: 0.8 }, function () {
+                                window.parent.TableFulsh();
+                                MyClose();
+                            });
+                        }
+                    }
+                });
+                return false;
+            });
+
+            form.on('submit(handanpaiEvingstudy)', function (data) {
+               
+                if (data.field.mytime.length <= 0) {
+                    layer.msg('请选择日期！！', { icon: 2 });
+                } else {
+                     $.ajax({
+                    url: '/Educational/EvningSelfStudy/HnadEvningSelfStudyFunction',
+                    type: 'POST',
+                    data: data.field,
+                    success: function (sucdata) {
+                        if (sucdata.Success == false) {
+                            layer.msg('安排失败！！！,请重试', {icon:2});
+                            MyClose();
+                        } else {
+                            layer.msg('安排成功！！！', { icon: 1, shade: 0.8 }, function () {
+                                window.parent.TableFulsh();
+                                MyClose();
+                            });
+                        }
+                    }
+                });
+                }
+                return false;
+            });
+
+        });
+        function MyClose() {
+            var layer = layui.layer;
+            //当你在iframe页面关闭自身时
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+    </script>
+</body>
+</html>

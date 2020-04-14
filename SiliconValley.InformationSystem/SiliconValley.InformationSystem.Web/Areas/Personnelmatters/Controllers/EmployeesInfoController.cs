@@ -311,10 +311,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
                         AjaxResultxx.Success = monthss;
                     }
-                    if (AjaxResultxx.Success) {
-                        bool att = attinfomanage.AddEmpToAttendanceInfo(emp.EmployeeId);//往考勤表添加员工
-                        AjaxResultxx.Success = att;
-                    }
+                   
                     if (AjaxResultxx.Success) {
                         bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
                         AjaxResultxx.Success = mc;
@@ -1135,8 +1132,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public ActionResult LeftEmpDetail(string empid) {
-            return View();
+        public ActionResult LeftEmpDetail(string id) {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var emp = empmanage.GetEntity(id);
+            return View(emp);
         }
 
 
