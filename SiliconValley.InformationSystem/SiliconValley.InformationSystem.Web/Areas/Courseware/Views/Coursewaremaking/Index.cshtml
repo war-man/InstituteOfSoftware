@@ -58,9 +58,9 @@
 <fieldset class="layui-elem-field site-demo-button">
     <legend>业务操作</legend>
     <div>
-        <button type="button" class="layui-btn" id="texts">上传课件</button>
-        <button type="button" class="layui-btn" id="Batch">批量下载</button>
-        <button type="button" class="layui-btn" id="Datapairs">表格展现</button>
+        <button type="button" class="layui-btn " id="texts"><i class="layui-icon">&#xe681;</i> 上传课件</button>
+        <button type="button" class="layui-btn" id="Batch"><i class="layui-icon">&#xe601;</i>批量下载</button>
+        <button type="button" class="layui-btn" id="Datapairs"><i class="layui-icon">&#xe60a;</i>表格展现</button>
     </div>
 </fieldset>
 <div id="Datelist" style="display:none;">
@@ -108,7 +108,7 @@
                 </div>
 
                 <div style="position:absolute;left:97%;top:20px;">
-                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>查询</button>
                 </div>
 
 
@@ -146,7 +146,7 @@
     @*头部按钮*@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">批量下载</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe601;</i>批量下载</button>
             
         </div>
     </script>
@@ -245,7 +245,9 @@
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
                         $.post("/Courseware/Coursewaremaking/Filedeletion/" + data.id + "?yourPath=" + data.Filepath + data.Filename, function (da) {
-                            GetDateProfessionala();
+                            var messg = da == true ? "删除成功！" : "删除失败！";
+                            Tips(da, messg, GetDateProfessionala());
+                          
                             layer.close(index);
                             
                         })
@@ -294,7 +296,8 @@
         //点击文件夹
         $("body").on("click", ".div1", function () {
             count = 0;
-            $("#Batch").text("批量下载");
+            $("#Batch").text("");
+            $("#Batch").append($("<i class='layui-icon'>&#xe601;</i><span>批量下载</span>"));
             var a1 = $($(this).children()).length;
 
             if (a1 < 3) {
@@ -336,10 +339,10 @@
                         table.append($("<tr><th>专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业：</th><td>" + data.SpecialtyName + "<td/><tr>"));
                     }
                     table.append($("<tr><th>文&nbsp;&nbsp;件&nbsp;&nbsp;名：</th><td>" + data.Filename + "<td/><tr>"))
-                    table.append($("<tr><th>文件路径：</th><td>" + data.Filepath + "<td/><tr>"))
-                    table.append($("<tr><th>文件类型：</th><td>" + data.MakingType + "<td/><tr>"))
-                    table.append($("<tr><th>文件标题：</th><td>" + data.Title + "<td/><tr>"))
-                    table.append($("<tr><th>上传时间：</th><td>" + TimeChange(data.Submissiontime) + "<td/><tr>"))
+                    table.append($("<tr><th>文件路径：</th><td>" + data.Filepath + "</td><tr>"))
+                    table.append($("<tr><th>文件类型：</th><td>" + data.MakingType + "</td><tr>"))
+                    table.append($("<tr><th>文件标题：</th><td>" + data.Title + "</td><tr>"))
+                    table.append($("<tr><th>上传时间：</th><td>" + TimeChange(data.Submissiontime) + "</td><tr>"))
                     table.append($("<tr><th>备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注：</th><td>" + data.Remarks + "<td/><tr>"))
                 })
             }
@@ -394,7 +397,8 @@
             count++;
             if (count == 1) {
                 $(".checkid").css("display", "block");
-                $("#Batch").text("开始下载");
+                $("#Batch").text("");
+                $("#Batch").append($("<i class='layui-icon'>&#xe601;</i><span>开始下载</span>"));
             } else if (count == 2) {
                 count = 0;
                 var checkId = $("input[type='checkbox']:checked");
@@ -407,7 +411,8 @@
                         files[i] = $(checkId[i]).val();
                     }
                     //  var url = "/Courseware/Coursewaremaking/FiledownloadPro" + $("#lab1").text();
-                    $("#Batch").text("批量下载");
+                    $("#Batch").text("");
+                    $("#Batch").append($("<i class='layui-icon'>&#xe601;</i><span>批量下载</span>"));
                     $(".checkid").css("display", "none");
 
                 } else {
@@ -423,7 +428,8 @@
 
         //导航文件夹
         $("body").on("click", ".spa1", function () {
-            $("#Batch").text("批量下载");
+            $("#Batch").text("");
+            $("#Batch").append($("<i class='layui-icon'>&#xe601;</i><span>批量下载</span>"));
             count = 0;
             $(this).nextAll().remove();
             var str = $(this).text();
@@ -473,13 +479,17 @@
             if (dt == 1) {
                 Datelist.css("display", "block");
                 fileDate.css("display", "none");
-                $(this).text("文件夹展现");
+                $(this).text("");
+                $(this).append($("<i class='layui-icon'>&#xe60a;</i><span>文件夹展现</span>"));
+                
                 $("#Batch").css("visibility", "hidden");
             } else {
                 dt = 0;
                 Datelist.css("display", "none");
                 fileDate.css("display", "block");
-                $(this).text("表格展现");
+                $(this).text("");
+                $(this).append($("<i class='layui-icon'>&#xe621;</i><span>表格展现</span>"));
+
                 $("#Batch").css("visibility", "visible");
             }
         });

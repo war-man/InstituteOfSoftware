@@ -13,6 +13,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
 {
+    [CheckLogin]
     public class CoursewaremakingController : Controller
     {
         private readonly CoursewaremakingBusiness dbtext;

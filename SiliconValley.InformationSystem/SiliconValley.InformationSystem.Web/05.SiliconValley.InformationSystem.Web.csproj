@@ -1525,7 +1525,6 @@
     <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\AddCoursewaremaking.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\ProducerID.cshtml" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教质部\0030简历1.docx" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\AddStudentimg.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\DataKey.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Index.cshtml" />
@@ -1533,6 +1532,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Registeredtrainees.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentclassView.cshtml" />
     <Content Include="Areas\Teachingquality\Views\StudentInformation\Viewdetails.cshtml" />
+    <Content Include="Areas\Finance\Views\Pricedetails\FeeReport.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3203,9 +3203,11 @@
     <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Courseware\js\" />
     <Folder Include="Areas\Courseware\Models\" />
     <Folder Include="Areas\Courseware\Views\Shared\" />
     <Folder Include="Areas\Courseware\首页\ppt课程\教学部\" />
+    <Folder Include="Areas\Courseware\首页\ppt课程\教质部\" />
     <Folder Include="Areas\Courseware\首页\word文档\S1\" />
     <Folder Include="Areas\Courseware\首页\word文档\S2JAVA\" />
     <Folder Include="Areas\Courseware\首页\word文档\S2NET\" />

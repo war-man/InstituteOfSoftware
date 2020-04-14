@@ -668,3 +668,21 @@ function TransactionAdd(url, datae) {
         }
     });
 }
+//添加数据消息提示
+function Tips(bol, message, dbclick) {
+    if (bol == true) {
+      
+        layer.msg(message, { icon: 1, shade: 0.8 }, function () {
+            dbclick();
+        });
+    } else {
+        layer.msg(message, { icon: 2 }, function () {
+            dbclick();
+        });
+     
+
+    }
+  
+
+  
+}

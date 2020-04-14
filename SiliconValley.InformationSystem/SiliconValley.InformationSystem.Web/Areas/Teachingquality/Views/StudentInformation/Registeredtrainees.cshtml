@@ -17,7 +17,7 @@
         #but1 {
             position: absolute;
             top: 3%;
-            left:35%;
+            left:32%;
             width:36px;
             height:36px;
             text-align:center;
@@ -33,7 +33,7 @@
             width:200px;
         }
         .textar{
-            width:80%;
+            width:82%;
             height:150px;
         }
         .demo1{
@@ -75,7 +75,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
+                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " }, { "style", "width:201px;" } })
                             </div>
                         </div>
                         <div id="but1">
@@ -106,7 +106,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">民族</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" }, { "style", "width:201px;" } })
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">家庭住址</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" }, { "style", "width:201px;" } })
                             </div>
                         </div>
 
@@ -186,8 +186,8 @@
                             @Html.Hidden("List")
                             <input type="text" class="layui-input linu "id="Lists" style="display:none; border:0px;"  readonly="readonly" />
                             <div class="layui-input-inline" id="CLassNames">
-                                <button type="button" style="margin-left:10px;" class="layui-btn layui-btn-sm layui-btn-primary">
-                                    <i class="layui-icon" id="ClassName">&#xe615;</i>
+                                <button type="button" style="width:201px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                    <i class="layui-icon" id="ClassName" style="margin-left:166px;">&#xe615;</i>
                                 </button>
 
 
@@ -225,7 +225,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">学员性格</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "lay-verify", "MyText" }, { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "lay-verify", "MyText" }, { "placeholder", "请输入学员性格" }, { "class", "layui-input" }, { "style", "width:201px;" } })
                             </div>
                         </div>
                     </div>

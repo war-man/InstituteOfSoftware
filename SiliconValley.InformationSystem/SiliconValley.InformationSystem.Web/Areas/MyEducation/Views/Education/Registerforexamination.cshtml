@@ -29,7 +29,7 @@
 </head>
 <body>
     <form class="layui-form" id="addGoodsForm" action="" lay-filter="example">
-        <div class="layui-container" style="margin-top:40px;margin-left:60px;">
+        <div class="layui-container" style="margin-top:40px;margin-left:39px;">
             @{
                 EnrollmentView student = ViewBag.student as EnrollmentView;
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
@@ -81,7 +81,7 @@
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
                 <label class="layui-form-label lables">考期</label>
                 <div class="layui-input-inline">
-                    @Html.TextBoxFor(a => a.Examinationperiod, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入年份+月份" }, { "class", "layui-input " } })
+                    @Html.TextBoxFor(a => a.Examinationperiod, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入年份+月份" }, { "class", "layui-input " },{"style","width:186px;" } })
                 </div>
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="height:50px;">
@@ -103,7 +103,7 @@
                 总计金额： <label id="Cost" style="color:red;">0.00</label>元
             </div>
             <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                <div class="layui-input-block" style="margin-left:154px;margin-top:30px;">
+                <div class="layui-input-block" style="margin-left:172px;margin-top:30px;">
                     <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">确认</button>
                     <button type="reset" class="layui-btn layui-btn-primary" style="margin-left:30px;" id="remove">重置</button>
                 </div>
