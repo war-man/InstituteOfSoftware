@@ -21,6 +21,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
     using NPOI.HSSF.UserModel;
     using NPOI.SS.UserModel;
     using System.IO;
+    using System.Net;
 
     /// <summary>
     ///员工费用统计--教务处
@@ -132,7 +133,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <returns></returns>
 
-        public Staff_Cost_StatisticesDetailView Staff_CostData(string empid, DateTime date)
+        public Staff_Cost_StatisticesDetailView Staff_CostData(string empid, DateTime date, int workingDays)
         {
             //获取这位员工
 
@@ -157,7 +158,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             resultObj.InternalTraining_Count = InternalTraining_Count(empObj);
 
             //获取底课时
-            resultObj.BottomClassHour = CalculationsBottomClassHour(empObj, date, resultObj.teachingitems);
+            resultObj.BottomClassHour = CalculationsBottomClassHour(empObj, date, workingDays, resultObj.teachingitems);
 
             //获取满意度调查分数
             resultObj.SatisfactionScore = CalculationSeurev(emp: empObj, tempdate: date);
@@ -372,17 +373,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// 判断一个日期是否为节假日
         /// </summary>
         /// <returns></returns>
-        public bool iSHoliday(string date)
+        public  bool iSHoliday(string date)
         {
 
 
             bool isHoliday = false;
             System.Net.WebClient WebClientObj = new System.Net.WebClient();
             System.Collections.Specialized.NameValueCollection PostVars = new System.Collections.Specialized.NameValueCollection();
-            PostVars.Add("d", date);//参数
+            PostVars.Add("d", DateTime.Parse(date).ToShortDateString());//参数
             try
             {
-                byte[] byRemoteInfo = WebClientObj.UploadValues(@"http://www.easybots.cn/api/holiday.php", "POST", PostVars);//请求地址,传参方式,参数集合
+                byte[] byRemoteInfo =  WebClientObj.UploadValues("http://easybots.cn/api/holiday.php", "POST", PostVars);//请求地址,传参方式,参数集合
                 string sRemoteInfo = System.Text.Encoding.UTF8.GetString(byRemoteInfo);//获取返回值
                 string result = JObject.Parse(sRemoteInfo)[date].ToString();
                 if (result == "0")
@@ -398,7 +399,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             {
                 isHoliday = false;
             }
+            //string backMsg = "";
+            //WebRequest request = HttpWebRequest.Create("http://www.easybots.cn/api/holiday.php");
 
+            //request.Method = "POST";
+            //request.ContentType = "application/x-www-form-urlencoded;charset=UTF-8";
+            //byte[] dataArray = System.Text.Encoding.UTF8.GetBytes("d="+date);
+
+            //System.Net.WebResponse response = request.GetResponse();
+            //System.IO.Stream responseStream = response.GetResponseStream();
+            //System.IO.StreamReader reader = new System.IO.StreamReader(responseStream, System.Text.Encoding.UTF8);
+            //backMsg = reader.ReadToEnd();
+
+            //reader.Close();
+            //reader.Dispose();
+
+            //responseStream.Close();
+            //responseStream.Dispose();
             return isHoliday;
         }
 
@@ -498,30 +515,38 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     if (!isHoliday)
                     {
                         num++;
+
+                        dtt = dtt.AddDays(1);
                         continue;
+                        
+                        
                     }
 
                     if (type == "单休")
                     {
                         if (dtt.DayOfWeek == DayOfWeek.Sunday)
                         {
+                            dtt = dtt.AddDays(1);
                             num++;
+                            continue;
+                            
                         }
 
-                        continue;
+                        
                     }
 
                     if (type == "双休")
                     {
                         if (dtt.DayOfWeek == DayOfWeek.Sunday || dtt.DayOfWeek == DayOfWeek.Saturday)
                         {
+                            dtt = dtt.AddDays(1);
                             num++;
+                            continue;
                         }
-
-                        continue;
+   
                     }
 
-
+                    dtt = dtt.AddDays(1);
                 }
 
                 return num;
@@ -576,6 +601,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         TeachingItem teachingItem = new TeachingItem();
                         teachingItem.Course = course.CurriculumID;
                         teachingItem.NodeNumber = 4;
+
+                        result.Add(teachingItem);
                     }
 
                 }
@@ -664,7 +691,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="teachingItems"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public float CalculationsBottomClassHour(EmployeesInfo emp, DateTime date, List<TeachingItem> teachingItems = null)
+        public float CalculationsBottomClassHour(EmployeesInfo emp, DateTime date, int workingDays, List<TeachingItem> teachingItems = null)
         {
 
             #region 计算规则
@@ -736,7 +763,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     //如果带2个班则按照标准底课时计算(需要把底课时分摊到每一个工作日，然后在看上两个班级的工作日是多少，得出底课时，如果有小数 向上取整)
 
                     //获取到工作日
-                    int workingdateCount = this.WorkingDate(date);
+
+                    
+
+                    int workingdateCount = string.IsNullOrEmpty(workingDays.ToString()) ? this.WorkingDate(date):workingDays;
 
                     //获取标准底课时
                     var MinimumCourseHours = (float)teacher.MinimumCourseHours;
@@ -775,7 +805,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="empid">员工</param>
         /// <param name="date">日期</param>
-        public Cose_StatisticsItems Statistics_Cost(string empid, string date)
+        public Cose_StatisticsItems Statistics_Cost(string empid, string date, int workingDays)
         {
            
 
@@ -783,7 +813,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             result.Emp = db_emp.GetInfoByEmpID(empid);
 
-            var data = this.Staff_CostData(empid, DateTime.Parse(date));
+            var data = this.Staff_CostData(empid, DateTime.Parse(date), workingDays);
 
             ///课时费
             result.EachingHourCost = (decimal)this.EachingHourCost(data.teachingitems, data.BottomClassHour, data.SatisfactionScore);
@@ -846,7 +876,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
 
 
-
+            // 获取满意度费用
             float GetSurveyCost()
             {
                 float tempresult = 0;
@@ -1164,7 +1194,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             var cost = xmlRoot.GetElementsByTagName("PPT_NodeCost")[0].InnerText;
 
             return count * int.Parse(cost);
-        }
+        } 
 
 
         /// <summary>

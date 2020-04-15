@@ -32,6 +32,8 @@
         <form id="myform" class="layui-form">
             <hr />
 
+            <input type="hidden" id="questionType" value="@ViewBag.QuestionType"/>
+
             <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">专业：</label>
@@ -89,6 +91,7 @@
 
         formdata.append("excelfile", undefined);
         formdata.append("course", undefined);
+        formdata.append("QuestionType", $("#questionType").val());
 
     
         function SetErrorMsg(msg) {

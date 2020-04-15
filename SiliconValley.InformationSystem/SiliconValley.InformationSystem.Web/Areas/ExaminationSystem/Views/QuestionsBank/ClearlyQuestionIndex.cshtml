@@ -81,10 +81,14 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="CreateQuestion">
-            <i class="layui-icon layui-icon-release">命题</i>
+            <i class="layui-icon layui-icon-addition">命题</i>
 
         </button>
-        <button class="layui-btn layui-btn-sm" lay-event="UsingOrnoUsing">启用--禁用</button>
+        <button class="layui-btn layui-btn-sm" lay-event="UsingOrnoUsing"><i class="layui-icon layui-icon-release"></i>启用--禁用</button>
+
+        <button class="layui-btn layui-btn-sm" lay-event="upload"><i class="layui-icon layui-icon-upload-drag"></i>批量录入</button>
+
+        <button class="layui-btn layui-btn-sm" lay-event="downloadTemplate"><i class="layui-icon layui-icon-download-circle"></i>下载题库模板</button>
 
     </div>
 </script>
@@ -96,6 +100,24 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
+<script type="text/html" id="InitHtm">
+
+    <h4 style="text-align:center; margin-top:10px;">默认10个题目</h4>
+    <hr />
+    <form class="layui-form">
+        <div class="layui-inline">
+            <label class="layui-form-label"></label>
+            <div class="layui-input-inline">
+                <input type="number" value="10" id="InitNumber" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <hr />
+        <div style="text-align:center;">
+            <button type="button" id="initBtn" class="layui-btn layui-btn-primary" lay-event="UsingOrnoUsing">初始化</button>
+        </div>
+        
+    </form>
+</script>
 
 @section script{
 
@@ -259,6 +281,34 @@
 
 
                     break;
+
+                case 'upload':
+
+                    layer.open({
+
+                        type: 2,
+                        area: ['680px', '400px'],
+                        title: "批量录入",
+                        content: '/ExaminationSystem/QuestionsBank/ChoiceQuestionBatchEntry?QuestionType=解答题'
+
+
+                    });
+
+
+
+                    break;
+
+                case 'downloadTemplate':
+
+                    layer.open({
+                        type: 1,
+                        title: "初始化",
+                        area: ["300px", "200px"],
+                        content: $("#InitHtm").html()
+
+                    });
+                    
+                    break;
             };
         });
 
@@ -312,6 +362,12 @@
 
 
             }
+        });
+
+        $(document).off("click", "#initBtn").on("click", "#initBtn", function () {
+            window.location.href = '/ExaminationSystem/QuestionsBank/DownLoadChoiceQuestionTemplate?templateType=解答题&init=' + $("#InitNumber").val();
+            var indedx = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(indedx); //再执行关闭  
         });
 
     });

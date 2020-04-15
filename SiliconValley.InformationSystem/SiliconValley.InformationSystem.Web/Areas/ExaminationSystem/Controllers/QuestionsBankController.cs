@@ -78,11 +78,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// </summary>
         /// <param name="excelFile"></param>
         /// <returns></returns>
-        public ActionResult ChoiceQuestionBatchEntry()
+        public ActionResult ChoiceQuestionBatchEntry(string QuestionType)
         {
             SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
             //提供专业数据
             ViewBag.Major = specialtyBusiness.GetSpecialties();
+            ViewBag.QuestionType = QuestionType;
             return View();
 
         }
@@ -91,25 +92,44 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// 下载选择题模板
         /// </summary>
         /// <returns></returns>
-        public ActionResult DownLoadChoiceQuestionTemplate()
+        public ActionResult DownLoadChoiceQuestionTemplate(string templateType, int init = 1)
         {
 
-            FileStream filestream = new FileStream(Server.MapPath("/uploadXLSXfile/ExamtionQuestionBankTemplate/ChoiceQuestionTemplate.xls"), FileMode.Open, FileAccess.Read);
+            string path = "";
+            
 
-           return File(filestream, "xls", "选择题模板.xls");
+            if (templateType == "选择题")
+            {
+                path = Server.MapPath("/uploadXLSXfile/ExamtionQuestionBankTemplate/ChoiceQuestionTemplate.xls");
+
+                //初始化文件
+                db_choiceQuestion.InitQuestionTemplate(init, path);
+            }
+
+            if (templateType == "解答题")
+            {
+                path = Server.MapPath("/uploadXLSXfile/ExamtionQuestionBankTemplate/ClearQuestionTemplate.xls");
+
+                db_answerQuestion.InitQuestionTemplate(init, path);
+            }
+
+            FileStream filestream = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+            return File(filestream, "application/vnd.ms-excel", "题库模板.xls");
      
 
         }
 
-        /// <summary>
-        /// 批量录入
-        /// </summary>
-        /// <param name="excelfile"></param>
-        /// <param name="course"></param>
-        /// <returns></returns>
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="excelfile"></param>
+       /// <param name="course"></param>
+       /// <param name="QuestionType">['选择题、解答题']</param>
+       /// <returns></returns>
         [HttpPost]
 
-        public ActionResult ChoiceQuestionBatchEntry(HttpPostedFileBase excelfile, string course)
+        public ActionResult ChoiceQuestionBatchEntry(HttpPostedFileBase excelfile, string course, string QuestionType)
         {
 
    
@@ -117,9 +137,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
+                
+
                 Stream filestream = excelfile.InputStream;
 
-                List<MultipleChoiceQuestion> list = db_choiceQuestion.ReadQuestionForExcel(filestream, excelfile.ContentType);
+                int count = 0;
+
+                if (QuestionType == "选择题")
+                {
+                    count = InsertChoiceQuestion(filestream);
+                }
+
+                else
+                {
+                    count = InsertAnswerQuestion(filestream);
+                }
+                
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = count;
+            }
+            catch (Exception)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = "0";
+            }
+
+
+            #region 插入选择题
+            int InsertChoiceQuestion(Stream stream)
+            {
+                List<MultipleChoiceQuestion> list = db_choiceQuestion.ReadQuestionForExcel(stream, excelfile.ContentType);
 
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
@@ -135,17 +186,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
                 db_choiceQuestion.Insert(list);
 
-                result.ErrorCode = 200;
-                result.Msg = "成功";
-                result.Data = list.Count;
+                return list.Count;
             }
-            catch (Exception)
-            {
+            #endregion
 
-                result.ErrorCode = 500;
-                result.Msg = "失败";
-                result.Data = "0";
+            #region 插入解答题
+            int InsertAnswerQuestion(Stream stream)
+            {
+                AnswerQuestionBusiness tempdb_answer = new AnswerQuestionBusiness();
+
+                List<AnswerQuestionBank> list = tempdb_answer.ReadQuestionForExcel(stream, excelfile.ContentType);
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+
+                var teacher = db_teacher.GetTeachers().Where(d => d.EmployeeId == user.EmpNumber).FirstOrDefault();
+
+                foreach (var item in list)
+                {
+                    item.Course = int.Parse(course);
+                    item.PropositionDate = DateTime.Now;
+                    item.IsUsing = true;
+                    item.Proposition = teacher.TeacherID;
+                    
+                }
+
+                tempdb_answer.Insert(list);
+
+                return list.Count;
             }
+            #endregion
+
+
 
             return Json(result, JsonRequestBehavior.AllowGet);
 
@@ -444,7 +515,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             return View();
         }
 
+        public ActionResult ClearlyQuestionBatchEntry()
+        {
+            SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+            //提供专业数据
+            ViewBag.Major = specialtyBusiness.GetSpecialties();
+            return View();
 
+        }
         /// <summary>
         /// 解答题表格数据
         /// </summary>
