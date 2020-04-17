@@ -32,7 +32,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
             if (get_reconciles_list == null || get_reconciles_list.Count == 0)
             {
-                get_reconciles_list = this.GetList();
+                get_reconciles_list = this.GetIQueryable().ToList();
                 Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
             }
             return get_reconciles_list;
@@ -1635,15 +1635,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="grand_id"></param>
         /// <param name="Marji_id"></param>
-        /// <param name="whyMarjio"></param>
+        /// <param name="whyMarjio">true---获取专业课程，false--获取非专业课程</param>
         /// <returns></returns>
         public List<Curriculum> GetCurr(int grand_id, bool whyMarjio, int marjoi_id)
         {
             int typeid = Reconcile_Com.CourseType_Entity.FindSingeData("专业课", false).Id;
-            List<Curriculum> list = Reconcile_Com.Curriculum_Entity.GetIQueryable().Where(c => c.Grand_Id == grand_id && c.IsDelete == false && c.CourseType_Id == typeid).ToList(); //获取所有有效的课程           
+            List<Curriculum> list = Reconcile_Com.Curriculum_Entity.GetIQueryable().Where(c => c.IsDelete == false).ToList(); //获取所有有效的课程           
             List<Curriculum> find_list = new List<Curriculum>();
             if (whyMarjio)//获取专业课程
             {
+                list = list.Where(c =>c.CourseType_Id == typeid && c.Grand_Id == grand_id).ToList();
                 //判断是否是Y1/S1
                 GrandBusiness grand_entity = new GrandBusiness();
                 int g_id1 = grand_entity.GetList().Where(g => g.GrandName.Equals("Y1", StringComparison.CurrentCultureIgnoreCase)).FirstOrDefault().Id;
@@ -1654,14 +1655,19 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 }
                 else
                 {
-                    find_list.AddRange(list.Where(c => c.MajorID == marjoi_id).ToList());//获取相关专业的课程
+                    if (marjoi_id!=0)
+                    {
+                        find_list.AddRange(list.Where(c => c.MajorID == marjoi_id).ToList());//获取相关专业的课程
+                    }
+                     
                     find_list.AddRange(list.Where(c => c.MajorID == null).ToList());//获取公共课程
                 }
 
             }
             else //获取非专业课程
             {
-                List<Curriculum> find = list.Where(c => c.CourseType_Id != typeid && c.MajorID == null).OrderBy(c => c.CurriculumID).ToList();
+                list = list.Where(c => c.Grand_Id == grand_id || c.Grand_Id == null).ToList();
+                List<Curriculum> find = list.Where(c => c.CourseType_Id != typeid && c.MajorID==null).OrderBy(c => c.CurriculumID).ToList();
                 find_list.AddRange(find);
 
             }
@@ -1720,16 +1726,32 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<EmployeesInfo> GetEnglishTeacherAll()
         {
            int pid= Reconcile_Com.PositionBusiness.GetIQueryable().Where(p => p.PositionName.Contains("英语老师")).FirstOrDefault().Pid;
-           return  Reconcile_Com.Employees_Entity.GetEmpByPid(pid);
+           return  Reconcile_Com.Employees_Entity.GetEmpByPid(pid).Where(e=>e.IsDel==false).ToList();
         }
        
+        public int Days(DateTime time)
+        {
+            var day = time.DayOfWeek;
+            switch (day)
+            {
+                case DayOfWeek.Friday://星期五
+                    return 5;
+                case DayOfWeek.Monday://星期一
+                    return 1;
+                case DayOfWeek.Thursday://星期四
+                    return 4;
+                case DayOfWeek.Tuesday:
+                    return 2;//星期二
+                case DayOfWeek.Wednesday:
+                    return 3;//星期三
+            }
+            return 0;
+        }
 
-        public List<Reconcile> AnPaiNoMarginFuntion(DateTime time,int class_id,int classroom_id,string emp_id,string timename,int curtype_id,int grand_id)
+        public List<Reconcile> AnPaiNoMarginFuntion(DateTime time,int class_id,int classroom_id,string emp_id,string timename,int curtype_id,int grand_id,int days)
         {
             List<Reconcile> list = new List<Reconcile>();
             Curriculum find_cur = Reconcile_Com.Curriculum_Entity.GetIQueryable().Where(c => c.CourseType_Id == curtype_id && c.Grand_Id == grand_id).FirstOrDefault(); //根据课程类型/阶段获取课程编号
-            Random r = new Random();
-            int index= r.Next(0, 3);
             for (int i = 0; i < find_cur.CourseCount; i++)
             {
                 Reconcile new_r = new Reconcile();
@@ -1742,25 +1764,137 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 new_r.NewDate = DateTime.Now;
                 if (find_cur.CourseName.Contains("军事")) //两周一次
                 {
-                    //time=time.add
+                    if (i==0)
+                    {
+                        while (Days(time)!=days)
+                        {
+                            time = time.AddDays(1);
+                        }
+                    }
+                    else
+                    {
+                        time = time.AddDays(21);
+                    }
+                    new_r.AnPaiDate = time;
                 }
-                else if (find_cur.CourseName.Contains("班会"))//一周一次 
+                else if (find_cur.CourseName.Contains("班会") || find_cur.CourseName.Contains("英语"))//一周一次 
                 {
-
-                }
-                else if (find_cur.CourseName.Contains("英语"))//每周一次
+                    if (i == 0)
+                    {
+                        while (Days(time) != days)
+                        {
+                            time = time.AddDays(1);
+                        }
+                    }
+                    else
+                    {
+                        time = time.AddDays(14);
+                    }
+                    new_r.AnPaiDate = time;
+                }else if (find_cur.CourseName.Contains("职素"))//高中--两周一次，初中一周一次
                 {
-
+                    Grand find_g= Reconcile_Com.Grand_Entity.GetEntity(grand_id);
+                    if (find_g.GrandName.Equals("Y1",StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        //初中
+                        if (i == 0)
+                        {
+                            while (Days(time) != days)
+                            {
+                                time = time.AddDays(1);
+                            }
+                        }
+                        else
+                        {
+                            time = time.AddDays(14);
+                        }
+                        new_r.AnPaiDate = time;
+                    }
+                    else
+                    {
+                        //高中
+                        if (i == 0)
+                        {
+                            while (Days(time) != days)
+                            {
+                                time = time.AddDays(1);
+                            }
+                        }
+                        else
+                        {
+                            time = time.AddDays(21);
+                        }
+                        new_r.AnPaiDate = time;
+                    }
                 }
-                else if (find_cur.CourseName.Contains("职素"))//高中--两周一次，初中一周一次
-                {
-
-                }
-
-            }
-             
-            return null;
+                list.Add(new_r);
+            }             
+            return list;
         }
+       /// <summary>
+       /// 获取所有在职的专业课老师
+       /// </summary>
+       /// <returns></returns>
+        public List<EmployeesInfo> GetTeacherAll()
+        {
+            TeacherBusiness teacher_Entity = new TeacherBusiness();
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
+             List<Teacher> tt_list= Reconcile_Com.Teacher_Entity.GetTeachers();
+             List<EmployeesInfo> ee_list =  Reconcile_Com.Employees_Entity.GetIQueryable().ToList();
+            foreach (Teacher t in tt_list)
+            {
+                list.Add( ee_list.Where(e => e.EmployeeId == t.EmployeeId).FirstOrDefault());
+            }
+
+            return list;
+        }
+       
+
+        public AjaxResult UpdateSingleData(Reconcile reconcile)
+        {
+            StringBuilder ab = new StringBuilder();
+            
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                List<Reconcile> findlist= this.AllReconcile().Where(r => r.ClassRoom_Id == reconcile.ClassRoom_Id && r.Curse_Id == reconcile.Curse_Id && r.ClassSchedule_Id!=reconcile.ClassSchedule_Id).ToList();
+                if (findlist.Count>0)
+                {
+                    for (int i=0;i<findlist.Count;i++)
+                    {
+                        ClassSchedule findclass= Reconcile_Com.ClassSchedule_Entity.GetEntity(findlist[i].ClassSchedule_Id);
+                        if (i==(findlist.Count-1))
+                        {
+                            ab.Append(findclass.ClassNumber);
+                        }
+                        else
+                        {
+                            ab.Append(findclass.ClassNumber + "、");
+                        }
+                         
+                    }
+                    ab.Append("班级已在这个教室安排了课程,请注意查看!!!");
+                    a.Msg = ab.ToString();
+                }
+                else
+                {
+                    a.Msg = "没有冲突数据,修改成功!!";
+                }
+                a.Success = true;
+                this.Update(reconcile);
+                //清空缓存
+                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+            }
+            catch (Exception)
+            {
+
+                a.Success = false;
+                a.Msg = "修改数据有误！，请刷新重试！！";
+            }
+
+            return a;
+        }
+
         #endregion
     }
 }

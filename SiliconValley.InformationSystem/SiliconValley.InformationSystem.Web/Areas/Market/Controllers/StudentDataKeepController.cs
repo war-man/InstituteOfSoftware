@@ -569,17 +569,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     fi.Delete();
                 }
-            }
-            if (namef2!=null)
-            {
-                FileInfo fi = new FileInfo(namef2.ToString());
-                bool ishave = fi.Exists;
-                if (ishave)
-                {
-                    fi.Delete();
-                }
-            }
-            
+            }                      
            
         }
         //获取Excle文件中的值
@@ -623,7 +613,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
         }
         //转型为Excle集合(目的:有些是区域外的，会被处理)
-        public List<MyExcelClass> GetExcel()
+        public bool GetExcel()
         {
             string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
             System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
@@ -646,11 +636,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     create_s.Reak = t.Rows[i][9].ToString();//备注
                     new_listStudent.Add(create_s);
                 }
-                return new_listStudent;
+                DeleteFile();
+                SessionHelper.Session["ExcelData"] = new_listStudent;
+                return true;
             }
             else
             {
-                return new_listStudent;
+                DeleteFile();
+                return false;
             }
         }
         //文件上传页面
@@ -675,14 +668,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ProName.Append(Path.Combine(pfilename, completefilePath));//合并成一个完整的路径;
                 file.SaveAs(ProName.ToString());//上传文件   
                 SessionHelper.Session["filename"] = ProName.ToString();
-                List<MyExcelClass> studentlist = GetExcel();              
-                if (studentlist.Count>0)//如果拿到值说明文件格式是可以读取的
+                bool studentlist = GetExcel();
+                if (studentlist)//说明文件格式是可以读取的
                 {                     
                     var jsondata = new
                     {
                         code = "",
                         msg = "ok",
-                        data = studentlist,
+                        data = SessionHelper.Session["ExcelData"] as List<MyExcelClass>,
                     };
                     return Json(jsondata, JsonRequestBehavior.AllowGet);
                 }
@@ -710,7 +703,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public List<MyExcelClass> Repeatedly(bool IsRepea)
         {
             s_Entity = new StudentDataKeepAndRecordBusiness();
-            List<MyExcelClass> ExcelList = GetExcel();//获取Excle文件数据     
+            List<MyExcelClass> ExcelList = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;//获取Excle文件数据     
             List<StudentPutOnRecord> All_list = s_Entity.GetAllStudentKeepData();//获取备案数据
             List<MyExcelClass> result = new List<MyExcelClass>();                           
                 foreach (StudentPutOnRecord a1 in All_list)
@@ -821,7 +814,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 else
                 {
                     //没有重复的值
-                    List<MyExcelClass> nochongfu_list = GetExcel();
+                    List<MyExcelClass> nochongfu_list = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;
                     if(AddExcelToServer(nochongfu_list))
                     {
                         var datajson = new
@@ -851,7 +844,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             catch (Exception ex)
             {
-                BusHelper.WriteSysLog(s_Entity.Enplo_Entity.GetEntity(UserName).EmpName +"Excel大批量导入数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+               // BusHelper.WriteSysLog(s_Entity.Enplo_Entity.GetEntity(UserName).EmpName +"Excel大批量导入数据时出现:"+ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
                 var datajson = new
                 {
                     resut = "no",

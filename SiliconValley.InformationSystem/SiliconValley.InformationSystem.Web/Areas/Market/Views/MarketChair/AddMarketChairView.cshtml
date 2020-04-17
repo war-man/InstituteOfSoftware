@@ -1,0 +1,131 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddMarketChairView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+    <style>
+        .textareaCss1
+        {
+            height: 38px;
+            width: 200px;
+            line-height: 20px;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div style="margin:20px auto;width:90%;">
+        <form class="layui-form" style="width:100%;">
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">讲&nbsp; 座 &nbsp;人:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ChairName" id="ChairName" class="layui-input linu" lay-verify="required" />
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">参与人员:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="TerCharName" id="TerCharName" class="layui-input linu" lay-verify="required" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">人 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 数:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ManCount" id="ManCount" class="layui-input linu" lay-verify="required|number|numbermin"/>
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">讲座日期:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ChairTime" id="ChairTime" class="layui-input linu" lay-verify="required" />
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">讲座地点:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="ChairAddress" id="ChairAddress" class="layui-input linu" lay-verify="required" />
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">其他说明:</label>
+                    <div class="layui-input-block">
+                        <textarea name="Rmark" id="Rmark" class="textareaCss1"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="layui-form-item" style="margin-top:40px;">
+                <div class="layui-input-block" style="width:280px;text-align:right">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                    <button type="button" class="layui-btn" onclick="MyClose()" id="quxiao">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'layer','laydate'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            var laydate = layui.laydate;
+            laydate.render({
+                elem: '#ChairTime'
+                , type: 'date'
+                , format: 'yyyy-MM-dd'
+                , theme: 'grid'
+                , trigger: 'click'
+            });
+            //自定义验证规则
+            form.verify({
+                numbermin: function (value) {
+                    if (value <= 0) {
+                        return '人数不能为0或是负数！！';
+                    }
+                }                
+            });
+            form.on('submit(tijiao)', function (data) {
+                $.ajax({
+                    url: '/Market/MarketChair/AddFuntion',
+                    type: 'POST',
+                    data: data.field,
+                    success: function (suc) {
+                        if (suc.Success == false) {
+                            layer.msg(suc.Msg, { icon: 2, shade: 0.8 });
+                        } else {
+                            layer.msg(suc.Msg, { icon: 1, shade: 0.8 }, function () {
+                                window.parent.FlushTableSix1();
+                                MyClose();
+                            });
+                        }
+                    }
+                });
+                return false; //阻止表单跳转。如果需要表单跳转，去掉这段即可。
+            });
+        });
+
+        function MyClose() {
+            var layer = layui.layer;
+            //当你在iframe页面关闭自身时
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+    </script>
+</body>
+</html>

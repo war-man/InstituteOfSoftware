@@ -67,7 +67,7 @@
 
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;margin-top:50px">
-                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="anpaiEvingstudy">确定</button>
+                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="anpaiEvingstudy">确定安排</button>
                             <button type="button" class="layui-btn" onclick="MyClose()">取消关闭</button>
                         </div>
                     </div>
@@ -205,7 +205,7 @@
                 }
                 
             });      
-            //监听提交
+            //自动安排
             form.on('submit(anpaiEvingstudy)', function (data) {
                 $.ajax({
                     url: '/Educational/EvningSelfStudy/AnPaiEvningSelfStudyFunction',
@@ -229,7 +229,7 @@
                 });
                 return false;
             });
-
+            //手动安排
             form.on('submit(handanpaiEvingstudy)', function (data) {
                
                 if (data.field.mytime.length <= 0) {

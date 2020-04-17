@@ -1,0 +1,178 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditOrtherViewData</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .hCss1
+        {
+            /*background-color: #009688;*/
+            height:30px;
+            margin-top:10px;
+        }
+        .DivCss3{
+        margin-top:20px;
+        width:100%;
+        text-align:center;
+        }
+    </style>
+</head>
+<body>
+    @{
+        if (ViewBag.curtype == "课程")
+        {
+            List<GrandClass> list = ViewBag.Truecur as List<GrandClass>;
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,1)">课程选择区:</h2>
+                    <div class="layui-colla-content layui-show">
+                        <form class="layui-form">
+                            @{
+                                foreach (GrandClass g1 in list)
+                                {
+                                    <h3 class="hCss1">@g1.Grand_Name</h3>
+                                    foreach (simpleDataClass g2 in g1.Class_list)
+                                    {
+                                        <input name="curid" id="curid" type="radio" value="@g2.Id" title="@g2.name" />
+                                    }
+                                }
+                            }
+
+                            <div class="DivCss3">
+                                <button type="button" class="layui-btn" data-title="课程"  onclick="Onclick(this)">确定</button>
+                            </div>
+                        </form>
+                    
+                    </div>
+                </div>
+            </div>
+
+        }
+        else if (ViewBag.curtype == "老师")
+        {
+            List<SelectListItem> list2 = ViewBag.Teacher as List<SelectListItem>;
+
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,1)">老师选择区:</h2>
+                    <div class="layui-colla-content layui-show">
+                        <form class="layui-form">
+                            <input name="teaid" id="teaid" type="radio" value="-1" title="无" />
+                            @{
+                                foreach (SelectListItem s in list2)
+                                {
+                                    <input name="teaid" id="teaid" type="radio" value="@s.Value" title="@s.Text" />
+                                }
+                            }
+
+                            <div class="DivCss3">
+                                <button type="button" class="layui-btn" data-title="老师" onclick="Onclick(this)">确定</button>
+                            </div>
+                        </form>
+                       
+                    </div>
+                </div>
+            </div>
+
+        }
+        else if (ViewBag.curtype == "班级")
+        {
+            List<GrandClass> list3 = ViewBag.GrandClass as List<GrandClass>;
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,1)">班级选择区:</h2>
+                    <div class="layui-colla-content layui-show">
+                        <form class="layui-form">
+                            @{
+                                foreach (GrandClass g3 in list3)
+                                {
+                                    <h3 class="hCss1">@g3.Grand_Name</h3>
+                                    foreach (simpleDataClass g4 in g3.Class_list)
+                                    {
+                                        <input name="claid" id="claid" type="radio" value="@g4.Id" title="@g4.name" />
+                                    }
+                                }
+
+                            }
+
+                            <div class="DivCss3">
+                                <button type="button" class="layui-btn" data-title="班级" onclick="Onclick(this)">确定</button>
+                            </div>
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+
+
+        }
+        else if (ViewBag.curtype == "教室")
+        {
+            List<GrandClass> list4 = ViewBag.GrandClassRoom as List<GrandClass>;
+
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,1)">教室选择区:</h2>
+                    <div class="layui-colla-content layui-show">
+                        <form class="layui-form">
+                            @{
+                                foreach (GrandClass g5 in list4)
+                                {
+                                    <h3 class="hCss1">@g5.Grand_Name</h3>
+                                    foreach (simpleDataClass g6 in g5.Class_list)
+                                    {
+                                        <input name="rooid" id="rooid" type="radio" value="@g6.Id" title="@g6.name" />
+                                    }
+                                }
+
+                            }
+                                        <div class="DivCss3">
+                                            <button type="button" class="layui-btn"  data-title="教室"  onclick="Onclick(this)">确定</button>
+                                        </div>
+                           
+                        </form>
+                        
+                    </div>
+                </div>
+            </div>
+
+        }
+    }
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        function Onclick(mm) {
+            var layer = layui.layer;
+            var radiolist=$("input:checked");
+            var str = $(mm).attr("data-title"); 
+            var Mymsg = "请选择" + str + "!!!";
+            var Myid=$(radiolist[0]).val();
+           var Myvalue=$(radiolist[0]).attr("title");
+                if (radiolist.length == 0) {
+                    layer.msg(Mymsg, {icon:2,shade:0.8});
+                } else {
+                    window.parent.EditClassData(Myid, Myvalue, str);
+                    Myclose();
+                }
+            return false;
+        }
+        layui.use(['form', 'element'], function () {
+            var form = layui.form;
+            var element = layui.form;
+        });
+        //关闭弹出层
+        function Myclose() {
+            var layer = layui.layer;
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭   
+        }
+    </script>
+</body>
+</html>

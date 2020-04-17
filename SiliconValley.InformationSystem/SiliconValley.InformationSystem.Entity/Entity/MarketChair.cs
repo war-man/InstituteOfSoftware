@@ -43,7 +43,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 讲座日期
         /// </summary>
-        public Nullable<System.DateTime> ChairTime { get; set; }
+        public DateTime ChairTime { get; set; }
         /// <summary>
         /// 登记人
         /// </summary>

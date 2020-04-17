@@ -2,6 +2,7 @@
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     {
 
         private StuStateManeger Stustate_Entity;
-        // GET: /Market/Status/StatusIndexView
+        // GET: /Market/Status/AddStatesFunction
         public ActionResult StatusIndexView()
         {
             return View();
@@ -38,7 +39,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
         //修改状态
-        public ActionResult EditStates(string id, string name, string state)
+        public ActionResult EditStates(string id, string name, string state,string shuxing)
         {
             Stustate_Entity = new StuStateManeger();
             //获取当前上传的操作人
@@ -48,9 +49,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 int Id = Convert.ToInt32(id);
                 StuStatus findstate = Stustate_Entity.GetEntity(Id);
                 StuStatus IsRepart = Stustate_Entity.GetList().Where(s => s.StatusName == name).FirstOrDefault();
-                if (!string.IsNullOrEmpty(name) && findstate != null && IsRepart == null)
+                if (findstate != null && IsRepart == null && shuxing!=null)
                 {
-                    findstate.StatusName = name;
+                    switch (shuxing)
+                    {
+                        case "StatusName":
+                            findstate.StatusName = name;
+                            break;
+                        case "Rmark":
+                            findstate.Rmark = name;
+                            break;
+                    }
+                   
                     Stustate_Entity.Update(findstate);
                 }
                 else if (IsRepart != null)
@@ -78,32 +88,19 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
 
 
-        //添加
-        public ActionResult AddStates()
+        //添加数据方法
+        public ActionResult AddStatesFunction(StuStatus new_s)
         {
             Stustate_Entity = new StuStateManeger();
-            //获取当前上传的操作人
-            string UserName = Base_UserBusiness.GetCurrentUser().UserName;
-            List<StuStatus> Isrepert = Stustate_Entity.GetList().Where(s => s.StatusName == null).ToList();
-            try
-            {
-                if (Isrepert.Count > 0)
-                {
-                    return Json("有信息未填写，请填写之后在添加", JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    Stustate_Entity.Insert(new StuStatus() { IsDelete = false });
-                }
-            }
-            catch (Exception ex)
-            {
-                BusHelper.WriteSysLog("操作人:" + UserName + "出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-                return Json("系统异常，请联系管理员", JsonRequestBehavior.AllowGet);
-            }
-            BusHelper.WriteSysLog("操作人:" + UserName + "触发了添加按钮", Entity.Base_SysManage.EnumType.LogType.添加数据);
-            return Json("ok", JsonRequestBehavior.AllowGet);
+            new_s.IsDelete = false;
+            AjaxResult a= Stustate_Entity.Add_Data(new_s);
+            return Json(a,JsonRequestBehavior.AllowGet);
         }
 
+        //添加页面
+        public ActionResult AddView()
+        {
+            return View();
+        }
     }
 }

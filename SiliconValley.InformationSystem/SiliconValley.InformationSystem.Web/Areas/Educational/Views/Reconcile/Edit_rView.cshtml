@@ -16,9 +16,14 @@
         .textCss1{
         color:red;
         }
-        .AreatCss1{
-        width:90%;
-        height:100px;
+        .AreatCss1
+        {
+            width: 100%;
+            height: 100px;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #fff;
+            border-radius: 2px;
         }
         .postionCs11{
         margin-left:200px;
@@ -34,59 +39,77 @@
         .borCss{
         border:0px;
         }
+        .iCss1
+        {
+            color: #009688;
+            font-size: 30px;
+            position:absolute;
+            margin-top:-35px;
+            margin-left:89%;
+            cursor:pointer;
+        }
+        .layui-unselect
+        {
+            width: 100%;
+            border-radius: 5px;
+        }
+          
     </style>
 </head>
 <body>
-    <div>
-            <form class="layui-form" style="margin-top:50px;" lay-filter="reidt_form">
+    <div style="width:90%;margin:0px auto;margin-top:20px;">
+            <form class="layui-form" lay-filter="reidt_form">
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-x6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">班级:</label>
+                        <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                         <div class="layui-input-block">
                             @Html.HiddenFor(r => r.id)
-                            @Html.TextBoxFor(r => r.class_name, new Dictionary<string, object>() { { "class", "layui-input textCss1 borCss" }, { "disabled", "disabled" } })
+                            @Html.HiddenFor(r=>r.classId)
+                            <input type="text" value="@Model.class_name"  class="layui-input" disabled="disabled" id="className"/>   
+                            <input type="hidden" name="Editclass_id" id="Editclass_id"/>
+                            <i class="layui-icon layui-icon-search iCss1" id="Class_i" data-value="班级"></i>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">教室:</label>
+                        <label class="layui-form-label">教 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 室:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(r => r.classroom_name, new Dictionary<string, object>() { { "class", "layui-input textCss1 borCss" }, { "disabled", "disabled" } })
+                            <input type="text" id="ClassRoomName" value="@Model.classroom_name" disabled="disabled" class="layui-input" />
+                            <input type="hidden" name="Editclassroom_id" id="Editclassroom_id" />
+                            <i class="layui-icon layui-icon-search iCss1" id="Classroom_i" data-value="教室"></i>
                         </div>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">课程:</label>
+                        <label class="layui-form-label">课 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 程:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(r => r.currname, ViewBag.currlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" }, { "lay-filter", "curr" } })
+                            <input type="text" value="@Model.currname" disabled="disabled" class="layui-input" id="curName" />
+                            <input type="hidden" name="EditCurr_id" id="EditCurr_id" />
+                            <i class="layui-icon layui-icon-search iCss1" id="Cur_i" data-value="课程"></i>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">教学老师:</label>
                         @Html.HiddenFor(r => r.teachername)
                         <div id="teacher_div" class="layui-input-block">
-                            @{
-                                if (Model.currname != "自习")
-                                {
-                                    <input name="teacher" id="teacher" class="layui-input textCss1" disabled="disabled" value="@Model.teachername" />
-                                }
-                            }
-
+                            <input type="text" value="@Model.teachername" disabled="disabled" class="layui-input" id="tracherName" />
+                            <input type="hidden" name="EditTeacher_Id" id="EditTeacher_Id" />
+                            <i class="layui-icon layui-icon-search iCss1" id="Teacher_i" data-value="老师"></i>
                         </div>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">上课时间段:</label>
+                        <label class="LableCss1">上课时间:</label>
                         <div id="MytimeName_div" class="layui-input-block">
-                            @Html.TextBoxFor(r => r.curdname, new Dictionary<string, object>() { { "class", "layui-input textCss1 borCss" }, { "disabled", "disabled" } })
+                            @Html.DropDownListFor(r => r.curdname, ViewBag.Time as List<SelectListItem>,new Dictionary<string, object>() { { "class", "layui-input" }})
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">排课日期:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(r => r.anpaidate, new Dictionary<string, object>() { { "class", "layui-input textCss1 borCss" }, { "disabled", "disabled" } })
+                            <input name="anpaidate" id="anpaidate" value="@Model.anpaidate" class="layui-input"/>                           
                         </div>
                     </div>
                 </div>
@@ -117,6 +140,26 @@
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
     <script>
+        //点击图标修改数据 
+        function EditClassData(id, value, str) {
+            if (str == "班级") {
+                //修改班级
+                $("#Editclass_id")[0].value = id;
+                $("#className")[0].value = value;
+            } else if (str == "教室") {
+                //修改教室
+                $("#Editclassroom_id")[0].value = id;
+                $("#ClassRoomName")[0].value = value;
+            } else if (str == "课程") {
+                $("#curName")[0].value = value;
+                $("#EditCurr_id")[0].value = value;
+            } else if (str == "老师") {
+                $("#tracherName")[0].value = value;
+                $("#EditTeacher_Id")[0].value = id;
+            }
+            
+        }
+
         var mm = $("#teachername").val();
         var timename = $("#curdname").val();
         layui.use(['form','laydate'], function () {
@@ -137,44 +180,20 @@
                     type: 'POST',
                     success: function (sud) {
                         if (sud.Success == true) {
-                            layer.msg('操作成功', { icon: 1,shade:0.8 }, function () {
+                            layer.msg(sud.Msg, { icon: 1,shade:0.8 }, function () {
                                 //刷新数据
                                 window.parent.TableFulsh();
                                 Myclose();
                             });
                         } else {
-                            layer.msg('系统错误，请重试!!', { icon: 2 }, function () {
+                            layer.msg(sud.Msg, { icon: 2 }, function () {
                                 //刷新数据
                                 window.parent.TableFulsh();
-                                Myclose();
                             });
                         }
                     }
                 });
                 return false;
-            });
-
-            form.on('select(curr)', function (data) {
-                $("#teacher_div")[0].innerHTML = "";     
-              if (data.value == "自习") {                  
-                  //改变时间段                   
-                  if (timename == "上午") {
-                      $('#MytimeName_div')[0].innerHTML = "";
-                      $('<select name="curdname" id="curdname"><option value="上午12节">上午1、2节</option><option value="上午34节">上午3、4节</option><option value="上午四节">上午四节</option></select>').appendTo($('#MytimeName_div'));
-                  } else if (timename == "下午") {
-                      $('#MytimeName_div')[0].innerHTML = "";
-                      $('<select name="curdname" id="curdname"><option value="下午12节">下午1、2节</option><option value="下午34节">下午3、4节</option><option value="下午四节">下午四节</option></select></select>').appendTo($('#MytimeName_div'));                    
-                  }
-                  form.render();
-              } else {
-                  if (mm.length > 0) {
-                      $('<input name="teacher" id="teacher" class="layui-input textCss1" disabled="disabled" />').appendTo($("#teacher_div"));
-                      $("#teacher")[0].value = mm;
-                  } else {
-                      $("#teacher_div")[0].innerHTML = "";
-                      $('<div class="divCss1"><input name="teacher" id="teacher" class="layui-input linu " disabled="disabled" lay-verify="required"/>  <i onclick="cck()" class="layui-icon layui-icon-search postionCs11" style="font-size: 25px; color:lightseagreen;"></div>').appendTo($("#teacher_div"));
-                  }                   
-              }                              
             });
            
         });
@@ -207,7 +226,30 @@
                 });
             });
         }
-      
+
+        function IClick(ele) {
+            var curtype = $(ele).attr("data-value");
+            curtype = curtype + "," + $("#classId").val();
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: '/Educational/Reconcile/EditOrtherViewData/' + curtype
+                ,area: ['500px', '400px']
+                ,title: '选择数据'
+                , shade: 0.8
+                , anim: 4
+                , skin: 'demo-class'
+            });
+        }
+
+        //找到所有I标签
+        $(function () {
+            $("i").each(function (index, value) {
+                $(value).attr("onclick", "IClick(this)");
+            });
+        });
+         
+        
     </script>
 </body>
 </html>

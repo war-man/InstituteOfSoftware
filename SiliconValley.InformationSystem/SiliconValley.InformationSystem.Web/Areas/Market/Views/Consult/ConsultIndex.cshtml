@@ -431,8 +431,8 @@
         function InputClick(studentid) {
             layui.use('layer', function () {
                 var layer = layui.layer;
-                layer.confirm('<span>是否查看跟踪信息？</span>',
-                    { icon: 3, title: '系统温馨提示', skin: 'demo-class2', shade: 0.8 },
+                layer.confirm('是否查看跟踪信息？',
+                    { icon: 3, title: '系统温馨提示', shade: 0.8 },
                     function (index) {
                         //打开详情页面
                         layer.close(index);//关闭弹出层
