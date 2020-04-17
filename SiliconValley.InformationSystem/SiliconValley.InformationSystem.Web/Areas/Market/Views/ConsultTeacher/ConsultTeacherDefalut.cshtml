@@ -24,10 +24,10 @@
     <form class="layui-form myformCssServer1" lay-filter="MyFormServer1">
         <div class="layui-row">
             <div class="layui-col-sm2">
-                <label class="layui-form-label">姓名:</label>
+                <label class="layui-form-label">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
             </div>
             <div class="layui-col-sm3">
-                <span name="EmpName" id="EmpName" class="layui-form-label"   lay-filter="filter"></span>
+                <input name="EmpName" id="EmpName" lay-filter="filter" disabled="disabled" class="layui-input"/>              
             </div>
 
             <div class="layui-col-sm6" style="text-align:center;width:200px;">
@@ -40,16 +40,16 @@
                 <label class="layui-form-label">联系电话:</label>
             </div>
             <div class="layui-col-sm3">
-                <span name="Phone" id="Phone" class="layui-form-label"   lay-filter="filter"></span>
+                <input name="Phone" id="Phone"  lay-filter="filter" disabled="disabled" class="layui-input" />
             </div>
         </div>
         <br />
         <div class="layui-row">
             <div class="layui-col-sm2">
-                <label class="layui-form-label">学历:</label>
+                <label class="layui-form-label">学 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 历:</label>
             </div>
             <div class="layui-col-sm3">
-                <span name="Education" id="Education" class="layui-form-label"   lay-filter="filter"></span>
+                <input name="Education" id="Education" lay-filter="filter" disabled="disabled" class="layui-input" />              
             </div>
         </div>
         <br />
@@ -68,7 +68,7 @@
                 <label class="layui-form-label">政治面貌:</label>
             </div>
             <div class="layui-col-sm3">
-                <span name="Politicsstatus" id="Politicsstatus" class="layui-form-label" lay-filter="filter"></span>
+                <input name="Politicsstatus" id="Politicsstatus" lay-filter="filter" disabled="disabled" class="layui-input" />
             </div>
 
             <div class="layui-col-sm5" style="text-align:center">
@@ -84,7 +84,7 @@
             <div class="layui-col-sm2">
                 <label class="layui-form-label">工作状态:</label>
             </div>
-            <div class="layui-col-sm3">
+            <div class="layui-col-sm5">
                 <input type="radio" name="IsZhizhi" id="IsZhizhi" class="layui-input" title="在职" value="false" lay-filter="filter"/>
                 <input type="radio" name="IsZhizhi" id="IsZhizhi" class="layui-input" title="离职" value="true" lay-filter="filter" />
             </div>
@@ -103,7 +103,7 @@
                 <label class="layui-form-label">工作经验:</label>
             </div>
             <div class="layui-col-sm6">
-                <textarea style="width: 685px; height: 80px;" id="workExperence" name="workExperence" readonly="readonly" lay-filter="filter">
+                <textarea style="width: 695px; height: 80px;" id="workExperence" name="workExperence" readonly="readonly" lay-filter="filter">
 
                </textarea>
             </div>
@@ -111,19 +111,22 @@
         <br />
         <div class="layui-row">
             <div class="layui-col-sm2">
-                <label class="layui-form-label">评价:</label>
+                <label class="layui-form-label">评 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 价:</label>
             </div>
             <div class="layui-col-sm6">
-                <textarea style="width: 685px; height: 80px;" id="Rmark" name="Rmark">
+                <textarea style="width: 695px; height: 80px;" id="Rmark" name="Rmark">
 
               </textarea>
             </div>
         </div>
         <br />
         <br />
-        <div class="layui-row" style="float:right;">
-            <button class="layui-btn" lay-submit="" lay-filter="IsOk">修改</button>
-            <button type="button" id="No" class="layui-btn">取消</button>
+        <div class="layui-row">
+            <div style="width:57%;text-align:right">
+                <button class="layui-btn" lay-submit="" lay-filter="IsOk">修改</button>
+                <button type="button" id="No" class="layui-btn">取消</button>
+            </div>
+           
             <input type="hidden"id="Id" name="Id"/>
             <input type="hidden" name="dd" />
         </div>

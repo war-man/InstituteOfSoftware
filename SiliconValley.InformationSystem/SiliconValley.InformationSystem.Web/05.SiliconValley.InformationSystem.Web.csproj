@@ -1334,7 +1334,6 @@
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
-    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\entxml.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
@@ -1560,6 +1559,8 @@
     <Content Include="Areas\Market\Views\Status\AddView.cshtml" />
     <Content Include="Areas\Market\Views\Infomation\AddView.cshtml" />
     <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\EditOrtherViewData.cshtml" />
+    <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

@@ -371,6 +371,7 @@
     <Compile Include="ViewEntity\flooralloryes.cs" />
     <Compile Include="ViewEntity\floorview.cs" />
     <Compile Include="ViewEntity\GetYear.cs" />
+    <Compile Include="ViewEntity\GrandClass.cs" />
     <Compile Include="ViewEntity\HealthRegistrationtableview.cs" />
     <Compile Include="ViewEntity\InsuranceStudentView.cs" />
     <Compile Include="ViewEntity\InsuranceView.cs" />
@@ -432,6 +433,7 @@
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\ShowEchartsView.cs" />
     <Compile Include="ViewEntity\ShowyearnameView.cs" />
+    <Compile Include="ViewEntity\simpleDataClass.cs" />
     <Compile Include="ViewEntity\StaffaccdationView.cs" />
     <Compile Include="ViewEntity\StaffOfRoomwithFormdataView.cs" />
     <Compile Include="ViewEntity\Staff_Cost_StatisticesDetailView.cs" />
