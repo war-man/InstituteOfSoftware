@@ -354,7 +354,6 @@
     <Content Include="Areas\Courseware\images\timg.jpg" />
     <Content Include="Areas\Courseware\images\wen.jpg" />
     <Content Include="Areas\Courseware\images\wenjin.jpg" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教质部\0033登陆页面.aspx" />
     <Content Include="Areas\Dormitory\Script\operationdormxml.js" />
     <Content Include="Areas\ExaminationSystem\config\InvigilatorConfig.xml">
       <SubType>Designer</SubType>
@@ -1334,7 +1333,6 @@
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
-    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\entxml.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
@@ -1351,7 +1349,6 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
@@ -1533,21 +1530,10 @@
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
-    <Content Include="Areas\Courseware\undefined游戏点卡在线销售系统需求文档.doc" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\AddCoursewaremaking.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\ProducerID.cshtml" />
     <Content Include="Areas\Courseware\Views\web.config" />
-    <Content Include="Areas\Courseware\简历1.docx" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教学部\0007简历1.docx" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教学部\0011S1S2教质部.docx" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教学部\0028S1S2教质部.docx" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教质部\0030UserDataInfo.ini" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教质部\0030简历1.docx" />
-    <Content Include="Areas\Courseware\首页\ppt课程\教质部\0031简历1.docx" />
-    <Content Include="Areas\Courseware\首页\word文档\Y1\0011游戏点卡在线销售系统需求文档.doc" />
-    <Content Include="Areas\Courseware\首页\word文档\Y1\0012简历1.docx" />
-    <Content Include="Areas\Courseware\首页\word文档\Y1\0033简历1.docx" />
     <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
     <Content Include="Areas\Educational\Views\TeacherNight\ClassadjustmentView.cshtml" />
     <Content Include="Areas\Educational\Views\TeacherNight\ClassMasterIndex.cshtml" />
@@ -3178,6 +3164,10 @@
     <Folder Include="Areas\Capital\Views\Shared\" />
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
+    <Folder Include="Areas\Courseware\js\" />
+    <Folder Include="Areas\Courseware\首页\ppt课程\教学部\" />
+    <Folder Include="Areas\Courseware\首页\ppt课程\教质部\" />
+    <Folder Include="Areas\Courseware\首页\word文档\Y1\" />
     <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
     <Folder Include="Areas\Educational\Views\CheckGoods\" />
