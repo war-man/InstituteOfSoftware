@@ -1233,10 +1233,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             HSSFCellStyle ContentcellStyle = (HSSFCellStyle)workbook.CreateCellStyle();
             HSSFFont ContentcellFont = (HSSFFont)workbook.CreateFont();
 
-            ContentcellStyle.Alignment = HorizontalAlignment.Center; 
-            
-
+            ContentcellStyle.Alignment = HorizontalAlignment.Center;          
             #endregion
+
             #region 创建表头
 
             HSSFRow Header = (HSSFRow)sheet.CreateRow(0);

@@ -212,7 +212,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             ISheet sheet = (ISheet)workbook.GetSheetAt(0);
 
             #endregion
-
+             
             var num = 0;
 
             // 循环获取题目
@@ -230,8 +230,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             }
 
-            stream.Close();
-            stream.Dispose();
+            stream.Close();  
+            stream.Dispose(); 
             workbook.Close();
 
             return result;
