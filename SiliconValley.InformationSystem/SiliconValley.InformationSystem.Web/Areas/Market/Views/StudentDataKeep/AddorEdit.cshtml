@@ -210,7 +210,7 @@
                     </div>
                 </div>
        
-        <div class="layui-form-item" style="margin-top:40px;">
+                <div class="layui-form-item" style="margin-top:40px;">
             <div class="layui-input-block" style="width:30%;margin-left:43%">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
                 <button type="button" class="layui-btn" id="quxiao">取消</button>
@@ -262,8 +262,8 @@
                             layer.open({
                                 type: 2,
                                 content: '/Market/StudentDataKeep/StudentSomeData/' + name  
-                                , area: ['900px', '600px'],
-                                title: '疑似数据显示！'
+                                , area: ['700px', '600px']
+                                ,title: '疑似数据显示!'
                                 , shade: 0.8
                                 , anim: 4
                                 , skin: 'demo-class3'
@@ -285,13 +285,26 @@
         //日期
         laydate.render({
             elem: '#StuDateTime'
+            , type: 'date'
+            , format: 'yyyy-MM-dd'
+            , theme: 'grid'
+            , trigger: 'click'
         });
         laydate.render({
             elem: '#StuVisit'
+            , type: 'date'
+            , format: 'yyyy-MM-dd'
+            , theme: 'grid'
+            , trigger: 'click'
         });
         laydate.render({
-            elem:'#StuBirthy'
+            elem: '#StuBirthy'
+            , type: 'date'
+            , format: 'yyyy-MM-dd'
+            , theme: 'grid'
+            , trigger: 'click'
         });
+         
 
         //监听是否上门单选按钮事件
         form.on('radio(radio1)', function (data) {

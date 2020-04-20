@@ -13,7 +13,6 @@
             margin-top: 20px auto;
             width: 800px;
         }
-
         .item
         {
             position: absolute;
@@ -61,33 +60,41 @@
         }
     </style>
 }
-@*<input id="l" type="button" value="left" class="layui-btn">
-<input id="r" type="button" value="right" class="layui-btn">*@
  
-    <div style=" width:500px; display:inline-block;">
-        <!-- Single button -->
-        <label>咨询师：</label>
-        <div class="btn-group layui-container layui-form" style="width:120px;">
-            <div class="dropdown">
-                <button  class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                     --请选择-- 
-                    <span class="caret"></span>
-                </button>
-                <ul id="Myul" class="dropdown-menu" aria-labelledby="dropdownMenu1" value="6">
-                    @{
-                        foreach (T_ConsultTeacherData item2 in ViewBag.data as List<T_ConsultTeacherData>)
-                        {
-                            <li myid="@item2.Id">@item2.EmpName</li>
-                        }
-                    }
-                </ul>
+   
+    <div class="layui-collapse" lay-accordion>
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">简单查询</h2>
+            <div class="layui-colla-content">
+                <form class="layui-form">
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <div class="layui-col-sm2">
+                                <label class="layui-form-label">咨询师:</label>
+                                <div class="layui-input-block">
+                                    <select id="Myinput" name="Myinput" class="layui-select">
+                                        <option value="0">--请选择--</option>
+                                        @{
+                                            foreach (T_ConsultTeacherData item2 in ViewBag.data as List<T_ConsultTeacherData>)
+                                            {
+                                                <option myid="@item2.Id" value="@item2.Id">@item2.EmpName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-col-sm2" style="text-align:right">
+                                <button id="serchBtn1" type="button" class="layui-btn">查询</button>
+                                <input type="hidden" name="Myinput" id="Myinput" />
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+             
             </div>
         </div>
-        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-        <input type="hidden" name="Myinput" id="Myinput"/>
-        <hr />
     </div>
- 
 <div class="divMyCss">
     <div id="show">
         @{
@@ -179,16 +186,7 @@
 
                 }
             }
-
-            //document.getElementById("l").onclick = function () {
-            //    cR = (cR + r + 2 * Math.PI) % (2 * Math.PI);
-            //    timer || (timer = setInterval(rotate, 10));//往左旋转
-            //}
-            //document.getElementById("r").onclick = function () {
-            //    cR = (cR - r + 2 * Math.PI) % (2 * Math.PI);
-            //    timer || (timer = setInterval(rotate, 10));//往右旋转
-            //}
-
+            
             rotate();
 
             window.setInterval(function () {
@@ -202,7 +200,8 @@
             $("#serchBtn1").click(function () {
                 //获取Id
                 var id = $("#Myinput").val();
-                if (id == null || id.length==0) {
+                console.log(id);
+                if (id == 0) {
                     layui.use('layer', function () {
                         var layer = layui.layer;
                         layer.msg("请选择咨询师!!!", { icon:2 })
@@ -224,20 +223,13 @@
                            
             });
 
-            //给下拉框注册点击事件
-            $("li").click(function () {
-                $("#dropdownMenu1")[0].innerText = this.innerText;     
-                var id = this.getAttribute("myid");
-                $("#Myinput").val(id);
-            });
-
             //给imag注册点击事件
             $(".item").click(function (event) {
                var id=event.currentTarget.getAttribute("myid");
                 layui.use('layer', function () {
                     var layer = layui.layer;
-                    layer.confirm('<span class=spanCssone>是否查看详情？</span>',
-                        { icon: 3, title: '系统温馨提示', skin: 'demo-class', shade: 0.8 },
+                    layer.confirm('是否查看详情？',
+                        { icon: 3, title: '系统温馨提示', shade: 0.8 },
                         function (index) {
                             //打开详情页面
                             layer.close(index);//关闭弹出层
@@ -258,5 +250,10 @@
         function Flush() {
             location.reload([true]);  
         }
+
+        layui.use(['form', 'element'], function () {
+            var form = layui.form;
+            var element = layui.element;
+        })
     </script>
 }

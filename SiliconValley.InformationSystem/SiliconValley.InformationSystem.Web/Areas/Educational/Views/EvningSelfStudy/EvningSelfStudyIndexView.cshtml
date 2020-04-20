@@ -38,27 +38,35 @@
         }
     </style>
 }
-    <form class="layui-form">
-        <label class="LableCss1">阶段:</label>
-        <div style="display:inline-block;width:200px">
-            @Html.DropDownList("grandTwo", ViewBag.grlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grandTwo" } })
-        </div>
-        <label class="LableCss1">班级:</label>
-        <div style="display:inline-block;width:200px">
-            <div id="form_class">
+    <div class="layui-collapse">
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">简单查询</h2>
+            <div class="layui-colla-content">
+                <form class="layui-form">
+                    <label class="LableCss1">阶段:</label>
+                    <div style="display:inline-block;width:200px">
+                        @Html.DropDownList("grandTwo", ViewBag.grlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grandTwo" } })
+                    </div>
+                    <label class="LableCss1">班级:</label>
+                    <div style="display:inline-block;width:200px">
+                        <div id="form_class">
 
+                        </div>
+                    </div>
+                    <label class="LableCss1">开始日期:</label>
+                    <div style="width:150px;display:inline-block">
+                        <input type="text" name="onetime" id="onetime" class="layui-input" />
+                    </div>
+                    <label class="LableCss1">结束日期:</label>
+                    <div style="width:150px;display:inline-block">
+                        <input type="text" name="twotime" id="twotime" class="layui-input" />
+                    </div>
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="sercher">查询</button>
+                </form>
             </div>
-        </div>
-        <label class="LableCss1">开始日期:</label>
-        <div style="width:150px;display:inline-block">
-            <input type="text" name="onetime" id="onetime" class="layui-input" />
-        </div>
-        <label class="LableCss1">结束日期:</label>
-        <div style="width:150px;display:inline-block">
-            <input type="text" name="twotime" id="twotime" class="layui-input" />
-        </div>
-        <button type="submit" class="layui-btn" lay-submit="" lay-filter="sercher">查询</button>
-    </form>
+        </div>       
+    </div>
+  
 <table id="Eving_table" lay-filter="Eving_table"></table>
 <script type="text/html" id="Ev_toolbarDemo">
     <div class="layui-btn-container">
@@ -100,10 +108,12 @@
                 , content: str                 
             });
         }
-        layui.use(['table', 'form', 'laydate'], function () {
+        layui.use(['table', 'form', 'laydate','element'], function () {
             var table = layui.table;
             var form = layui.form;
+            var element = layui.element;
             var date_my = 0;
+            var grandid = 0;
             table.render({
                 elem: '#Eving_table'
                 , url: '/Educational/EvningSelfStudy/EvningTableData'
@@ -220,6 +230,7 @@
             });
 
             form.on('select(grandTwo)', function (data) {
+                grandid = data.value;
                 $("#form_class")[0].innerHTML = "";
                 if (data.value != "0") {
                     $.ajax({
@@ -250,7 +261,7 @@
                 , theme: 'molv'
             });
 
-            //监听提交
+            //查询
             form.on('submit(sercher)', function (data) {
                 layui.use('table', function () {
                     var table = layui.table;
@@ -258,7 +269,8 @@
                         where: {
                             "class_selectone": $("#class_selectone").val(),
                             "onetime": $("#onetime").val(),
-                            "twotime": $("#twotime").val()
+                            "twotime": $("#twotime").val(),
+                            "Grand": grandid
                         }                         
                     });
                 });     

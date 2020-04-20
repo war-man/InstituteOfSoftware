@@ -8,6 +8,7 @@ using SiliconValley.InformationSystem.Business.MarketChair_Business;//获取市�
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;//获取员工实体
 using SiliconValley.InformationSystem.Business.Common;//获取日志实体
 using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -53,7 +54,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
             }
         }
-        // GET: /Market/MarketChair/MarketChairIndex
+        // GET: /Market/MarketChair/AddMarketChairView
         public ActionResult MarketChairIndex()
         {
             return View();
@@ -116,43 +117,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
            
         }
-        /// <summary>
-        /// 添加一行文本框让用户填写数据
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult AddMarketDataFunction()
-        {
-           int count= MarketChair_Entity.GetList().Count;
-            if (count<=0)
-            {
-                DateTime d1 = DateTime.Now;
-                MarketChair new_M = new MarketChair() { ChairTime = d1, Employees_Id = UserName.EmpNumber, IsDelete = false, TerCharName = "", ManCount = 0, ChairAddress = "" };
-                MarketChair_Entity.Insert(new_M);
-                return Json("ok", JsonRequestBehavior.AllowGet);
-            }             
-            List<MarketChair> findm = MarketChair_Entity.GetList().Where(m =>  m.ChairName == null || m.TerCharName == null || m.ChairAddress==null || m.ManCount<=0).ToList();
-            List<MarketChair> find = findm.Where(m => m.IsDelete == true).ToList();
-            if (find.Count>0 || findm.Count<=0)
-            {
-                try
-                {
-                    DateTime d1 = DateTime.Now;
-                    MarketChair new_M = new MarketChair() { ChairTime = d1, Employees_Id = UserName.EmpNumber, IsDelete = false, TerCharName = "", ManCount = 0, ChairAddress = "" };
-                    MarketChair_Entity.Insert(new_M);
-                   // BusHelper.WriteSysLog("操作人:" + Employes_Entity.GetEntity( UserName.EmpNumber).EmpName + "触发了添加按钮" , Entity.Base_SysManage.EnumType.LogType.添加数据);
-                    return Json("ok", JsonRequestBehavior.AllowGet);
-                }
-                catch (Exception ex)
-                {
-                    //BusHelper.WriteSysLog("操作人:" + Employes_Entity.GetEntity(UserName.EmpNumber).EmpName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-                    return Json("数据有误，请重试!", JsonRequestBehavior.AllowGet);
-                }
-            }
-            else
-            {                
-                return Json("有信息未补充完，请先填写！！！", JsonRequestBehavior.AllowGet);               
-            }                        
-        }
+ 
         [HttpPost]
         public ActionResult EditMarketDataFunction()
         {
@@ -230,5 +195,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 添加页面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult AddMarketChairView()
+        {
+            return View();
+        }
+
+        public ActionResult AddFuntion(MarketChair new_m)
+        {
+            new_m.IsDelete = false;
+            new_m.Employees_Id = UserName.EmpNumber;
+            AjaxResult a = MarketChair_Entity.Add_data(new_m);
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
    }
 }

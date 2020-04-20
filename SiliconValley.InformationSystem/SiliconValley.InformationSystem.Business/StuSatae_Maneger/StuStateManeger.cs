@@ -71,5 +71,34 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
             }                       
                 return new_a;            
         }
+
+
+        public AjaxResult Add_Data(StuStatus new_s)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+               StuStatus find= this.GetList().Where(s => s.StatusName == new_s.StatusName).FirstOrDefault();
+                if (find==null)
+                {
+                    this.Insert(new_s);
+                    a.Msg = "添加成功！！";
+                    a.Success = true;
+                }
+                else
+                {
+                    a.Success = false;
+                    a.Msg = "已有该状态名称！！";
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = "数据错误，请刷新重试!!";
+            }
+
+            return a;
+        }
     }
 }

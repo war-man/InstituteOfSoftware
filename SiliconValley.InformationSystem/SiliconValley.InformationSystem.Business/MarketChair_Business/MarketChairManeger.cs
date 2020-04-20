@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.MarketChair_Business
 {
@@ -36,5 +37,30 @@ namespace SiliconValley.InformationSystem.Business.MarketChair_Business
         {
             return list.Select(m => Convert.ToDateTime(m.ChairTime).Month).Where(m => m == monthName).ToList().Count;
         }
+
+        /// <summary>
+        /// 添加数据
+        /// </summary>
+        /// <param name="new_m"></param>
+        /// <returns></returns>
+        public AjaxResult Add_data(MarketChair new_m)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Insert(new_m);
+                a.Success = true;
+                a.Msg = "添加成功！！！";
+            }
+            catch (Exception)
+            {
+
+                a.Success = false;
+                a.Msg = "添加数据异常，请刷新重试！！！";
+            }
+
+            return a;
+        }
+
     }
 }

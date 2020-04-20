@@ -43,5 +43,9 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 其他说明
         /// </summary>
         public string ramak { get; set; }
+        /// <summary>
+        /// 班级编号
+        /// </summary>
+        public int classId { get; set; }
     }   
 }

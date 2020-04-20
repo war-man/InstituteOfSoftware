@@ -33,13 +33,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         public ActionResult EvningTableData(int page, int limit)
         {
-            List<EvningSelfStudy> Evn_list = EvningSelefstudy_Entity.EvningSelfStudyGetAll();//获取所有晚自习排课数据
+            List<EvningSelfStudy> Evn_list = EvningSelefstudy_Entity.EvningSelfStudyGetAll().OrderByDescending(e => e.id).ToList();//获取所有晚自习排课数据
             List<Grand> glist = Reconcile_Com.GetGrand_Id();
 
             string c_id = Request.QueryString["class_selectone"];
             string startime = Request.QueryString["onetime"];
             string endtime = Request.QueryString["twotime"];
-            if (!string.IsNullOrEmpty(c_id))
+            string grandid = Request.QueryString["Grand"];
+            if (!string.IsNullOrEmpty(c_id) && c_id!="0")
             {
                 int class_id = int.Parse(c_id);
                 Evn_list = Evn_list.Where(e => e.ClassSchedule_id == class_id).ToList();
@@ -54,7 +55,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 DateTime d2 = Convert.ToDateTime(endtime);
                 Evn_list = Evn_list.Where(e => e.Anpaidate <= d2).ToList();
             }
-            var data = Evn_list.Skip((page - 1) * limit).Take(limit).OrderByDescending(e => e.id).Select(e => new
+            if (!string.IsNullOrEmpty(grandid) && grandid!="0")
+            {
+                int grand_id = Convert.ToInt32(grandid);
+                Evn_list = Evn_list.Where(e => Reconcile_Com.ClassSchedule_Entity.GetEntity(e.ClassSchedule_id).grade_Id == grand_id).ToList();
+            }
+            var data = Evn_list.Skip((page - 1) * limit).Take(limit).Select(e => new
             {
                 Id = e.id,
                 EmpName = string.IsNullOrEmpty(e.emp_id) == true ? null : Reconcile_Com.Employees_Entity.GetEntity(e.emp_id).EmpName,
