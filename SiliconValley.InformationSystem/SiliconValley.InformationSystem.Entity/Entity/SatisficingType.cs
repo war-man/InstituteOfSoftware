@@ -20,7 +20,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
       
         [Key]
         public int ID { get; set; }
+
         public string TypeName { get; set; }
+        /// <summary>
+        /// 部门ID
+        /// </summary>
         public Nullable<int> DepartmentID { get; set; }
     
      

@@ -26,25 +26,25 @@ function judgeDate(date) {
     var week;
     switch (num) {
         case 0:
-            week = "周日";
+            week = "星期日";
             break;
         case 1:
-            week = "周一";
+            week = "星期一";
             break;
         case 2:
-            week = "周二"
+            week = "星期二"
             break;
         case 3:
-            week = "周三"
+            week = "星期三"
             break;
         case 4:
-            week = "周四"
+            week = "星期三"
             break;
         case 5:
-            week = "周五"
+            week = "星期五"
             break;
         case 6:
-            week = "周六"
+            week = "星期六"
             break;
         default:
             break;
@@ -68,5 +68,15 @@ function formatDate(dates) {
     var minute = date.getMinutes();
     var second = date.getSeconds();
     return year + "-" + formatTen(month) + "-" + formatTen(day) + " " + formatTen(hour) + ":" + formatTen(minute) + ":" + formatTen(second);
+}
+
+//转换日期格式
+function TimeFormt(newtime) {
+    var date = new Date(newtime);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var day = date.getDate();
+
+    return year + "年" + month +"月"+ day +"日"
 }
  

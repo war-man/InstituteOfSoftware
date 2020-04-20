@@ -80,7 +80,7 @@
             });
             //登记培训课件
             $("#but1").click(function () {
-                Popup("/Teachingquality/Headteacher/AddProfessionala", "登记职业素养培训课件", 500, 500);
+                Popup("/Teachingquality/Headteacher/AddProfessionala", "登记职业素养培训课件", 500, 540);
             })
             //第一次加载职业素养课件
             GetDateProfessionala(page, limit);
@@ -94,8 +94,25 @@
         function butprofessin(e) {
        
             var id = $($(e).children()[0]).val();
-            Popup("/Teachingquality/Headteacher/FineProfessionala/" + id, "查看职业素养课件内容", 500, 520);
+            Popup("/Teachingquality/Headteacher/FineProfessionala/" + id, "查看职业素养课件内容", 500, 560);
            
+        }
+        function parPopup(callback) {
+            layer.open({
+                type: 2,
+                area: ["800px", '500px'],
+                title: "获取培训人",
+                content: '/Teachingquality/Headteacher/TraineeContro',
+                end: callback
+            });
+        }
+        
+        var empdata;
+        function GetPartsItmes(data) {
+            empdata = data;
+        }
+        function getempdate() {
+            return empdata;
         }
     </script>
 }

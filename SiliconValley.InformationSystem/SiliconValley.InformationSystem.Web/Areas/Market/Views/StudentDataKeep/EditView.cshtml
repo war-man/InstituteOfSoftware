@@ -10,31 +10,9 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>EditView</title>
-    <style>
-        #but1 {
-            position: absolute;
-            top: 13%;
-            left: 35%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-
-        #but1:hover {
-                background-color: aqua;
-            }
-
-        #Nation {
-            width: 100px;
-        }
-
+    <style> 
         .linu {
             width: 200px;
-        }
-
-        .mm {
-            border: 1px solid black;
         }
 
         .LableCss1 {
@@ -51,36 +29,9 @@
 
         .TextAreCss1 {
             height: 80px;
-        }
-
-        .butCss1 {
-            float: right;
-            margin-right: 100px;
-        }
-
-        .butCss2 {
-            border: 0px solid black;
-        }
-
-        .layButCss1 {
-            display: inline-block;
-            height: 38px;
-            line-height: 38px;
-            padding: 0 18px;
-            background-color: #009688;
-            color: #fff;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-            border: 0px solid #C9C9C9;
-            background-color: #fff;
-            color: #555;
-            height: 18px;
-            line-height: 18px
-        }
+            width:91%;
+           
+        }    
 
         body .demo-class .layui-layer-title {
             background: #009688;
@@ -89,45 +40,43 @@
         }
         .layui-unselect
         {
-            width: 150px;
+            width: 200px;
         }
     </style>
 </head>
 <body>
-    <div>
-        <form class="layui-form" lay-filter="myform1">
-            <div class="layui-container">
-
+    <div style="margin:20px auto;width:90%;">
+        <form class="layui-form" lay-filter="myform1" style="margin:0px auto;width:90%">            
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">姓名</label><input type="hidden" id="Id" name="Id" value="@ViewBag.id"/>
+                        <label class="layui-form-label">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label><input type="hidden" id="Id" name="Id" value="@ViewBag.id"/>
                         <div class="layui-input-block">                          
-                            <span name="StuName" id="StuName" class="LableCss1" style="color:red"></span>
+                            <input name="StuName" id="StuName" class="layui-input linu" style="color:red" disabled="disabled"/> 
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">性别</label>
+                        <label class="layui-form-label">性 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 别:</label>
                         <div class="layui-input-block">
-                            <input id="Sexone" type="radio" name="StuSex" value="true" title="男" checked="checked">
-                            <input id="Sextwo" type="radio" name="StuSex" value="false" title="女">
+                            <div class="layui-col-sm5">
+                                <input id="Sexone" type="radio" name="StuSex" value="true" title="男" checked="checked">
+                            </div>
+                            <div class="layui-col-sm3">
+                                <input id="Sextwo" type="radio" name="StuSex" value="false" title="女">
+                            </div>                                                      
                         </div>
                     </div>
 
                 </div>
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">电话</label>
+                        <label class="layui-form-label">电 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 话:</label>
                         <div class="layui-input-block">            
-                            <span name="StuPhone" id="StuPhone" class="LableCss1" style="color:red"></span>
+                            <input name="StuPhone" id="StuPhone" class="layui-input linu" style="color:red" disabled="disabled"/> 
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
-                        <label class="LableCss1">出生日期</label>
+                        <label class="LableCss1">出生日期:</label>
                         <div class="layui-input-block">
                             <input name="StuBirthy" id="StuBirthy" placeholder="YY-MM-DD" lay-verify="StuBirthy|content" class="layui-input linu"/>
                         </div>
@@ -136,13 +85,13 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">学校名称</label>
+                        <label class="LableCss1">学校名称:</label>
                         <div class="layui-input-block">
                             <input name="StuSchoolName" id="StuSchoolName" class="layui-input linu" placeholder="学校名称"/>
                         </div>
                     </div>
                     <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                        <label class="layui-form-label">学历</label>
+                        <label class="layui-form-label">学 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 历:</label>
                         <div class="layui-input-block">
                             <select style="width:200px;" class="layui-select" id="StuEducational" name="StuEducational">
                                 <option value="初中">初中</option>
@@ -157,13 +106,13 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">家庭住址</label>
+                        <label class="LableCss1">家庭住址:</label>
                         <div class="layui-input-block">
-                            <input name="StuAddress" id="StuAddress" placeholder="家庭住址" class="layui-input"/>
+                            <input name="StuAddress" id="StuAddress" placeholder="家庭住址" class="layui-input linu"/>
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">微信</label>
+                        <label class="layui-form-label">微 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 信:</label>
                         <div class="layui-input-block">
                             <input name="StuWeiXin" id="StuWeiXin" placeholder="微信" class="layui-input linu"/>
                         </div>
@@ -171,13 +120,13 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">QQ</label>
+                        <label class="layui-form-label">Q &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q:</label>
                         <div class="layui-input-block">
                             <input name="StuQQ" id="StuQQ" class="layui-input linu" placeholder="QQ"/>
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="LableCss1">信息来源</label>
+                        <label class="LableCss1">信息来源:</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>)
                         </div>
@@ -185,14 +134,14 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">录入人员</label>
+                        <label class="LableCss1">录入人员:</label>
                         <div class="layui-input-block">
-                            <span id="StuEntering_1" name="StuEntering_1" class="LableCss1"></span>
+                            <input id="StuEntering_1" name="StuEntering_1" class="layui-input linu" disabled="disabled"/> 
                             <input type="hidden" id="StuEntering" name="StuEntering" />
                         </div>
                     </div>
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label">所在区域</label>
+                        <label class="layui-form-label">所在区域:</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(s => s.Region_id, ViewBag.area as IEnumerable<SelectListItem>)
                         </div>
@@ -200,16 +149,18 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="LableCss1">是否上门</label>
+                        <label class="LableCss1">是否上门:</label>
                         <div class="layui-input-block">
-                            <input id="visitone" type="radio" name="StuIsGoto" value="true" title="是" checked="checked" lay-filter="radio1" readonly="readonly">
-                            <input id="visitwo" type="radio" name="StuIsGoto" value="false" title="否" lay-filter="radio1" readonly="readonly">
+                            <div class="layui-col-sm5">
+                                <input id="visitone" type="radio" name="StuIsGoto" value="true" title="是" checked="checked" lay-filter="radio1" readonly="readonly">
+                            </div>
+                            <div class="layui-col-sm3">
+                                <input id="visitwo" type="radio" name="StuIsGoto" value="false" title="否" lay-filter="radio1" readonly="readonly">
+                            </div>                                                       
                         </div>
-
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">上门日期</label>
+                        <label class="LableCss1">上门日期:</label>
                         <div class="layui-input-block">
                             <input name="StuVisit" id="StuVisit" lay-verify="StuDateTime|IsVisit|content" placeholder="YY-MM-DD" class="layui-input linu"/>
                         </div>
@@ -217,34 +168,35 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">学生状态</label>
+                        <label class="LableCss1">学生状态:</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
                             
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">备案人</label>
+                        <label class="layui-form-label">备案 &nbsp; 人:</label>
                         <div class="layui-input-block">
                             <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />
-                            <span name="e_Name" id="e_Name" class="LableCss1"></span>
+                            <input name="e_Name" id="e_Name" class="layui-input linu" disabled="disabled" /> 
                         </div>
                     </div>                    
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-                        <label class="layui-form-label">说明</label>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
                         <div class="layui-input-block">
                             <input name="Reak" id="Reak" placeholder="说明" class="layui-input TextAreCss1"/>
                         </div>
                     </div>
                 </div>
-
-            </div>
+            
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="xiugai">修改</button>
-                    <button type="button" class="layui-btn butCss1" id="quxiao">取消</button>
+                    <div style="width:30%;margin:0px auto">
+                        <button class="layui-btn" lay-submit="" lay-filter="xiugai">修改</button>
+                        <button type="button" class="layui-btn" id="quxiao">取消</button>
+                    </div>                   
                 </div>
             </div>
             <input name="have" id="have" type="hidden" value="no"/>

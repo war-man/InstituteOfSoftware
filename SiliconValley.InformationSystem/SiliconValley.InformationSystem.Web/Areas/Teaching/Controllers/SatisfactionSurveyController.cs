@@ -844,7 +844,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
         /// <summary>
-        /// 获取我的班级
+        /// 获取
+        /// 
+        /// 班级
         /// </summary>
         /// <returns></returns>
         public ActionResult GetClassNumberByEmp(string EmpID, int limit, int page)
@@ -1360,6 +1362,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             ViewBag.classlist = list;
 
             return View();
+
         }
 
 
@@ -1559,6 +1562,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             try
             {
                 Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
                 //首先判断是否已经存在
 
                var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == int.Parse(classnumber) && d.CurriculumID == Curriculum).ToList();

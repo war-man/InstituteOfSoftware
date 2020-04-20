@@ -174,13 +174,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //阶段
             GrandBusiness Grandcontext = new GrandBusiness();
             //阶段id
-            var GranID = Grandcontext.GetList().Where(a => a.GrandName == "S1" || a.GrandName == "Y1").ToList(); ;
-            List<ClassSchedule> classSchedules = new List<ClassSchedule>();
-            foreach (var item in GranID)
-            {
-                classSchedules.AddRange(classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassstatusID == null && a.grade_Id == item.Id).ToList());
-            }
-            ViewBag.List = classSchedules.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
+            //  var GranID = Grandcontext.GetList().Where(a => a.GrandName == "S1" || a.GrandName == "Y1").ToList(); ;
+            //List<ClassSchedule> classSchedules = new List<ClassSchedule>();
+            //foreach (var item in GranID)
+            //{
+            //    classSchedules.AddRange(classschedu.GetList().Where(a => a.IsDelete == false && a.ClassStatus == false && a.ClassstatusID == null && a.grade_Id == item.Id).ToList());
+            //}
+            //ViewBag.List = classSchedules.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id)&&id!= "undefined")
             {
@@ -358,7 +358,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             
         }
         //注册学员编辑学员
-        public ActionResult Enti(StudentInformation studentInformation,int List)
+        public ActionResult Enti(StudentInformation studentInformation,int? List)
         {
             redis.RemoveCache("StudentInformation");
               AjaxResult result = null;
@@ -378,7 +378,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                        
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
                         scheduleForTrainees.ClassID = classschedu.GetEntity( List).ClassNumber;//班级名称
-                        scheduleForTrainees.ID_ClassName = List;//班级编号
+                        scheduleForTrainees.ID_ClassName = (int)List;//班级编号
                         scheduleForTrainees.CurrentClass = true;
                         scheduleForTrainees.StudentID = studentInformation.StudentNumber;
                         scheduleForTrainees.AddDate = DateTime.Now;
@@ -610,6 +610,81 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
           return  dbtext.boolImg(studentid);
         }
-      
+        /// <summary>
+        /// 获取班级
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult StudentclassView()
+        {
+            //阶段
+            GrandBusiness Grandcontext = new GrandBusiness();
+            var Techarco = Techarcontext.GetList();
+
+            Specialty specialty = new Specialty();
+            specialty.SpecialtyName = "无";
+
+
+            Techarco.Add(specialty);
+            //专业
+            ViewBag.Major_Id = Techarco.OrderBy(a => a.Id).Select(a => new SelectListItem { Text = a.SpecialtyName, Value = a.Id.ToString() });
+            //阶段
+            ViewBag.Stage = Grandcontext.GetList().Where(a=>a.IsDelete==false).Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
+            return View();
+            
+        }
+
+        /// <summary>
+        /// 获取班级
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
+        public ActionResult Classlist(int page, int limit,  string Stage_id, string Major_Id)
+        {
+            //阶段
+            GrandBusiness Grandcontext = new GrandBusiness();
+
+          
+
+            var MyClass = classschedu.ClassList();
+
+         
+            if (!string.IsNullOrEmpty(Stage_id))
+            {
+                int stage = int.Parse(Stage_id);
+
+                MyClass = MyClass.Where(a => a.grade_Id == stage).ToList();
+            }
+            if (!string.IsNullOrEmpty(Major_Id))
+            {
+                if (Major_Id == "0")
+                {
+                    MyClass = MyClass.Where(a => a.Major_Id == null).ToList();
+                }
+                else
+                {
+                    int major = int.Parse(Major_Id);
+                    MyClass = MyClass.Where(a => a.Major_Id == major).ToList();
+                }
+
+            }
+            var dataList = MyClass.Select(a => new
+            {
+                //  a.BaseDataEnum_Id,
+                a.id,
+                ClassNumber = a.ClassNumber,
+                grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
+                Major_Id = a.Major_Id == null ? "暂无专业" : Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
+                stuclasss = Stuclass.GetList().Where(c => c.ID_ClassName == a.id && c.CurrentClass == true).Count()//班级人数
+            }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = MyClass.Count,
+                data = dataList
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -11,35 +11,9 @@
     <title>AddFollwingInfo</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
-        #but1
-        {
-            position: absolute;
-            top: 13%;
-            left: 35%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-
-            #but1:hover
-            {
-                background-color: aqua;
-            }
-
-        #Nation
-        {
-            width: 100px;
-        }
-
         .linu
         {
             width: 200px;
-        }
-
-        .mm
-        {
-            border: 1px solid black;
         }
 
         .LableCss1
@@ -64,126 +38,86 @@
         {
             float: right;
             margin-right: 100px;
-        }
-
-        .butCss2
-        {
-            border: 0px solid black;
-        }
-
-        .layButCss1
-        {
-            display: inline-block;
-            height: 38px;
-            line-height: 38px;
-            padding: 0 18px;
-            background-color: #009688;
-            color: #fff;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-            border: 0px solid #C9C9C9;
-            background-color: #fff;
-            color: #555;
-            height: 18px;
-            line-height: 18px
-        }
-
-        body .demo-class .layui-layer-title
-        {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
-
-        body .demo-class2 .layui-layer-title
-        {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
+        } 
     </style>
 </head>
 <body>
-    <div>
-        <form class="layui-form" style="margin-top:40px">
-            <div class="layui-container">
+    <div style="width:90%;margin:0px auto;margin-top:40px;">
+        <form class="layui-form">
 
-                <div class="layui-row layui-form-item">
+            <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">学生姓名:</label>
-                        <div class="layui-input-block">
-                             <input type="text"  class="layui-input linu" readonly="readonly" style="border:0px solid black" value="@ViewBag.Name"/>
-                        </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">学生姓名:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input linu" readonly="readonly"  value="@ViewBag.Name" />
                     </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
-                        <label class="layui-form-label">性别:</label>
-                        <div class="layui-input-block">
-                            @{
-                                if (ViewBag.Sex)
-                                {
-                                    <span class="LableCss1">男</span>
-                                }
-                                else
-                                {
-                                    <span class="LableCss1">女</span>                                     
-                                }
+                    <label class="layui-form-label">学生性别:</label>
+                    <div class="layui-input-block">
+                        @{
+                            if (ViewBag.Sex)
+                            {
+                                <input type="text" class="layui-input" readonly="readonly" style="width:100%" disabled="disabled" value="男" />
                             }
+                            else
+                            {
+                                <input type="text" class="layui-input" readonly="readonly" style="width:100%" disabled="disabled" value="女" />
+                            }
+                        }
 
-                        </div>
-                    </div>
-
-                </div>
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="LableCss1">跟踪次数:</label>
-                        <div class="layui-input-block">
-                            <input type="text" class="layui-input linu" style="border:0px solid black" readonly="readonly" value="@ViewBag.Number"/>
-                        </div>
-
-                    </div>
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="LableCss1">学生等级:</label>
-                        <div class="layui-input-block">
-                            <select name="Rank" id="Rank">
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-                        <label class="layui-form-label">跟踪情况:</label>
-                        <div class="layui-input-block">
-                            @Html.TextArea("TailAfterSituation", new Dictionary<string, object>() { { "placeholder", "跟踪情况描述" }, { "class", "layui-input TextAreCss1" }, { "lay-verify","required" } })
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-
-                        <label class="layui-form-label">说明</label>
-                        <div class="layui-input-block">
-                            @Html.TextArea("Rmark", new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
-                        </div>
                     </div>
                 </div>
 
             </div>
-            <div class="layui-form-item" style="margin-top:80px;">
+            <div class="layui-row layui-form-item">
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+                    <label class="LableCss1">跟踪次数:</label>
+                    <div class="layui-input-block">
+                        <input type="text" class="layui-input linu" readonly="readonly" value="@ViewBag.Number" />
+                    </div>
+
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">学生等级:</label>
+                    <div class="layui-input-block">
+                        <select name="Rank" id="Rank">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">跟踪情况:</label>
+                    <div class="layui-input-block">
+                        @Html.TextArea("TailAfterSituation", new Dictionary<string, object>() { { "placeholder", "跟踪情况描述" }, { "class", "layui-input TextAreCss1" }, { "lay-verify", "required" } })
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="layui-form-label">其他说明:</label>
+                    <div class="layui-input-block">
+                        @Html.TextArea("Rmark", new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="margin-top:100px;">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
-                    <button class="layui-btn butCss1" id="quxiao">取消</button>
+                    <div style="width:65%;text-align:right">
+                        <button class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
+                        <button class="layui-btn butCss1" id="quxiao">取消</button>
+                    </div>
+
                 </div>
             </div>
 
@@ -193,11 +127,11 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form','layer'], function () {
+        layui.use(['form', 'layer'], function () {
             var form = layui.form;
             var layer = layui.layer;
             form.on('submit(tijiao)', function (data) {
-               // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+                // console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
                 $.ajax({
                     url: '/Market/FollwingInfo/AddFunction',
                     data: data.field,
@@ -206,10 +140,10 @@
                         if (SucData != "ok") {
                             layer.msg(SucData, { icon: 2 });
                         } else {
-                            layer.msg('添加成功', { icon: 1 ,shade:0.8}, function () {
+                            layer.msg('添加成功', { icon: 1, shade: 0.8 }, function () {
                                 var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                                parent.layer.close(index); //再执行关闭                                 
-                            });                               
+                                parent.layer.close(index); //再执行关闭
+                            });
                         }
                     }
                 });
@@ -221,7 +155,7 @@
         $("#quxiao").click(function () {
             //当你在iframe页面关闭自身时
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-            parent.layer.close(index); //再执行关闭   
+            parent.layer.close(index); //再执行关闭
         });
     </script>
 </body>

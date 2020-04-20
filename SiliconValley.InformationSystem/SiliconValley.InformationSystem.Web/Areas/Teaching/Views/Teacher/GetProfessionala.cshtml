@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "GetProfessionala";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        .divTile div {
+            width: 200px;
+            height: 200px;
+            border: 1px solid #b200ff;
+            float: left;
+            margin-left: 15px;
+            margin-top: 10px;
+            background-color: aqua;
+        }
+
+            .divTile div:hover {
+                background-color: honeydew;
+            }
+    </style>
+}
+<div class="layui-btn-group">
+    <button type="button" class="layui-btn layui-btn-radius" id="but1">登记专业老师培训课件</button>
+
+</div>
+<div style="margin-top:10px; width:100%;height:500px;border:2px solid #a0989b;">
+    <div class="divTile" style="width:99%;margin: 5px auto;text-align:center;">
+
+    </div>
+
+</div>
+<div id="demo6" style="margin:0px auto;width:150px;"></div>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+@section script{
+
+    <script>
+        var page = 1;
+        var limit = 14;
+
+        //加载培训数据
+        function GetDateProfessionala(page, limit) {
+            var obj = {
+                page: page,
+                limit: limit
+            }
+        $.post("GetDateProfessionala", obj, function (data) {
+                if (data.length > 0) {
+                    $(".divTile").children().remove();
+                    for (var i = 0; i < data.length; i++) {
+                        var lab = $("<div onclick='butprofessin(this)'> <input style='display: none' value=" + data[i].ID + " /><label style='font-size:10pt; margin-top:80px;'>" + data[i].TrainingTitle + "</label><label style='font-size:10pt; color:red; margin-left: 100px; margin-top:20px;'>" + TimeChange(data[i].TrainingDate) + "</label></div>")
+                        $(".divTile").append(lab);
+                    }
+                }
+
+
+            });
+        }
+        layui.use(['table', 'layer', 'tree', 'form','laypage'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var form = layui.form;
+            var tree = layui.tree;
+            var laypage = layui.laypage;
+
+            var procount = '@Html.Raw(ViewBag.professionala)';
+
+            //分页
+            laypage.render({
+                elem: 'demo6'
+                , count: procount
+                , limit: limit
+                , curr: page
+                , layout: ['prev', 'next']
+                , jump: function (obj, first) {
+                    if (!first) {
+                        GetDateProfessionala(obj.curr, obj.limit);
+                        //layer.msg('第 ' + obj.curr + ' 页');
+                    }
+                }
+            });
+            //登记培训课件
+            $("#but1").click(function () {
+                Popup("/Teaching/Teacher/AddProfessionala", "登记职业素养培训课件", 500, 540);
+            })
+            //第一次加载职业素养课件
+            GetDateProfessionala(page, limit);
+            //$(".Mydiv").on("click", function () {
+            //    console.log(this);
+            //});
+
+
+        })
+       //查看职业素养课件内容
+        function butprofessin(e) {
+
+            var id = $($(e).children()[0]).val();
+            Popup("/Teaching/Teacher/FineProfessionala/" + id, "查看职业素养课件内容", 500, 560);
+
+        }
+        function parPopup(callback) {
+            layer.open({
+                type: 2,
+                area: ["800px", '500px'],
+                title: "获取培训人",
+                content: '/Teaching/Teacher/TraineeContro',
+                end: callback
+            });
+        }
+
+        var empdata;
+        function GetPartsItmes(data) {
+            empdata = data;
+        }
+        function getempdate() {
+            return empdata;
+        }
+    </script>
+}
+

@@ -14,11 +14,17 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 课程类型
+    /// </summary>
     [Table("CourseType")]
     public partial class CourseType
     {
          [Key]
         public int Id { get; set; }
+        /// <summary>
+        /// 类型名称
+        /// </summary>
         public string TypeName { get; set; }
         public string Rmark { get; set; }
         public Nullable<bool> IsDelete { get; set; }

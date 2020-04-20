@@ -186,13 +186,19 @@
             });//身份证有效期
 
             $("#iconbtn").click(function () {
-                layer.open({
-                    type: 2
-                    , area: ["700px", "360px"]
-                    , title: "选择员工"
-                    , content: '/Personnelmatters/EmpTransactionRecord/SelectEmp'
-                    , anim: 2
-                });
+                var type = $("#TransactionType").val();
+                if (type == -1) {
+                    layer.msg('请先选择异动类型');
+                } else {
+                    layer.open({
+                        type: 2
+                        , area: ["700px", "400px"]
+                        , title: "选择员工"
+                        , content: '/Personnelmatters/EmpTransactionRecord/SelectEmp/?type=' + type
+                        , anim: 2
+                    });
+                }
+                
             });
 
             //将选择的员工信息从弹出层获取，并赋值给相应的属性
@@ -216,10 +222,8 @@
                             document.getElementById('Raises').style.display = "none";
                         }
                     }
-
                 });
-
-              
+             
             });
 
             //添加异动信息提交
@@ -248,6 +252,7 @@
             //关闭部门添加页面
             $("#btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
+              //  parent.layui.table.reload('myETR');
                 parent.layer.close(index);
             });
         });

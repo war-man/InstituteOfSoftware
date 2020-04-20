@@ -24,14 +24,7 @@
             float:right;
             display:inline-block;
             margin-top:20px;
-        }
-        
-        .MytdCss1
-        {
-            height:30px;
-            border: 1px solid #009688;
-            width:10%;
-        }
+        }              
         .BtnCssthree
         {
             margin-top: 40px;
@@ -63,15 +56,17 @@
             <fieldset id="fieldDiv2" class="fieldsetCssTwo1">
                 <legend class="legendCssTwo1">文件选择区</legend>
                 <button type="button" class="layui-btn" id="test3"><i class="layui-icon"></i>选择Excel文件</button>
-                <a href="/Market/StudentDataKeep/DownFile" class="layui-btn"><i class="layui-icon">&#xe601;</i>文件下载</a>
+                <a href="/Market/StudentDataKeep/DownFile" class="layui-btn"><i class="layui-icon">&#xe601;</i>模板下载</a>
             </fieldset>
             <fieldset id="fielsone" class="fieldsetCssTwo1" style="height:480px;">
                 <legend id="contentone" class="legendCssTwo1">文件内容显示区</legend>
                 <table id="tabletest2" lay-filter="tabletest2"></table>
             </fieldset>
-            <div id="InputDiv" class="divCssTwo1">
-                <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入" > 
-                <button type="button" class="layui-btn" id="No" name="No" onclick="myclose()">取消</button>
+            <div>
+                <div id="InputDiv" style="width:60%;text-align:right;margin-top:20px">
+                    <input type="button" class="layui-btn" id="Yes" name="Yes" disabled="disabled" value="确定导入">
+                    <button type="button" class="layui-btn" id="No" name="No" onclick="myclose()">取消</button>
+                </div>               
             </div>
         </form>
     </div>
@@ -108,7 +103,7 @@
         //导入Excel
         $("#Yes").click(function () {
             var layer = layui.layer;
-            var indexlayer = layer.load();
+            var indexlayer = layer.load(1);
             $.ajax({
                 url: '/Market/StudentDataKeep/IntoServer',
                 dataType: 'json',

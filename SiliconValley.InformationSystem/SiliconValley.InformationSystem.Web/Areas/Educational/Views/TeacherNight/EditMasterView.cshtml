@@ -1,0 +1,86 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.MyEntity
+@model  SiliconValley.InformationSystem.Entity.MyEntity.TeacherNight
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EditMasterView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+</head>
+<body>
+    <form id="addmaster_form" class="layui-form" lay-filter="addmaster_form" style="margin-top:20px">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <label class="LableCss1">值班日期:</label>
+                <div class="layui-input-block">
+                    <input type="hidden" value="@Model.Id" id="Id" name="Id" />
+                    @{
+                        DateTime date = Model.OrwatchDate;
+                        string d = date.Year + "-" + date.Month + "-" + date.Day;
+                    }
+                    <input type="text" id="OrwatchDate" name="OrwatchDate" value="@d" class="layui-input" style="width:130px;" lay-verify="required" />
+                </div>
+            </div>
+            <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <label class="LableCss1">值班老师:</label>
+                <div class="layui-input-block">
+                    <input type="text" id="Tearcher_Id" name="Tearcher_Id" class="layui-input" style="width:130px;" value="@ViewBag.empName" disabled="disabled"/>
+                </div>
+            </div>
+        </div>         
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="EditTrue">点击修改</button>
+                <button type="button" class="layui-btn" onclick="Myclose()">取消关闭</button>
+            </div>
+        </div>
+    </form>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'laydate'], function () {
+            var form = layui.form;
+            var laydate = layui.laydate;
+
+            laydate.render({
+                elem: '#OrwatchDate'
+                , trigger: 'click'
+            });
+
+            form.render();
+
+            //监听提交
+            form.on('submit(EditTrue)', function (data) {
+                    $.ajax({
+                        url: '/Educational/TeacherNight/EditMasterFunction',
+                        data: data.field,
+                        type: 'POST',
+                        success: function (sudata) {
+                            if (sudata.Success == false) {
+                                layer.msg(sudata.Msg, { icon: 2 });
+                            } else {
+                                layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
+                                    window.parent.TableFulsh();
+                                    Myclose();
+                                });
+                            }
+                        }
+                    });
+                return false;
+            });
+        })
+        //关闭弹出层
+        function Myclose() {
+            var layer = layui.layer;
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+        }
+    </script>
+</body>
+</html>

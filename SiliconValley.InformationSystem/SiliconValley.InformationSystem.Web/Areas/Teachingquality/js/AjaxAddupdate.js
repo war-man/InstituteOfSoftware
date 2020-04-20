@@ -48,7 +48,7 @@ function Transaction(url, mytitle, width, hegin) {
     //正在执行中
     function showLoad() {
 
-        return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+        return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 800000 });
 
     }
     //关闭执行中的窗体
@@ -667,4 +667,22 @@ function TransactionAdd(url, datae) {
             });
         }
     });
+}
+//添加数据消息提示
+function Tips(bol, message, dbclick) {
+    if (bol == true) {
+      
+        layer.msg(message, { icon: 1, shade: 0.8 }, function () {
+            dbclick();
+        });
+    } else {
+        layer.msg(message, { icon: 2 }, function () {
+            dbclick();
+        });
+     
+
+    }
+  
+
+  
 }

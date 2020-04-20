@@ -14,7 +14,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public Specialty Major { get; set; }
         public string CourseName { get; set; }
         public CourseType CourseType { get; set; }
-        public int ? CourseCount { get; set; }
+        public int? CourseCount { get; set; }
         public decimal ? PeriodMoney { get; set; }
         public string Rmark { get; set; }
 

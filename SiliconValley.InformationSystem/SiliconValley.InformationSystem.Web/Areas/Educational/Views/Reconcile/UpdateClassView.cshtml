@@ -10,19 +10,28 @@
     <meta name="viewport" content="width=device-width" />
     <title>UpdateClassView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .DivCss1
+        {
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <form class="layui-form" style="margin-top:40px" lay-filter="form_classData">
+    <div class="DivCss1">
+        <form class="layui-form"  lay-filter="form_classData">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">阶段:</label>
+                    <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
                     <div class="layui-input-block">
                         @Html.DropDownList("glist", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grand" } })
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">班级:</label>
+                    <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                     <div id="Myclass_Div" class="layui-input-block">
 
                     </div>
@@ -31,15 +40,9 @@
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">上课时间段:</label>
+                    <label class="layui-form-label">上课时间:</label>
                     <div class="layui-input-block">
-                      @{ 
-                          List<BaseDataEnum> b_list = ViewBag.baseE as List<BaseDataEnum>;
-                          foreach (BaseDataEnum item in b_list)
-                          {
-                              <input type="radio" name="time" value="@item.Name" title="@item.Name"/>
-                          }
-                      }
+                        @Html.DropDownList("time", ViewBag.baseE as List<SelectListItem>,new Dictionary<string, object>() { { "class","layui-select"} })                         
                     </div>
                 </div>
                 
@@ -91,6 +94,7 @@
                                     time: "下午"
                                 });
                             }
+                            form.render();
                         }
                     });
                 }
@@ -98,7 +102,8 @@
             })
             //监听提交
             form.on('submit(Update_clasTime)', function (data) {
-                if (data.field.class_select == "0") {
+              
+                if (data.field.class_select == "0" || data.field.class_select == undefined) {
                     layer.msg('请选择班级！！', { icon: 2 });
                 } else {
                     $.ajax({

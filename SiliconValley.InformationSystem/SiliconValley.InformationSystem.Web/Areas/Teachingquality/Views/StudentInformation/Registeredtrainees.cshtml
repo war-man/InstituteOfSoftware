@@ -17,7 +17,7 @@
         #but1 {
             position: absolute;
             top: 3%;
-            left:35%;
+            left:32%;
             width:36px;
             height:36px;
             text-align:center;
@@ -33,7 +33,7 @@
             width:200px;
         }
         .textar{
-            width:80%;
+            width:82%;
             height:150px;
         }
         .demo1{
@@ -48,7 +48,7 @@
 
 
     <h1 style="text-align:center;height:50px;">@ViewBag.Name</h1>
- 
+
     <input type="text" id="StudentID" value="@ViewBag.StudentID" style="display:none;" />
     <div>
 
@@ -75,7 +75,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " } })
+                                @Html.TextBoxFor(a => a.Name, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入姓名" }, { "class", "layui-input " }, { "style", "width:201px;" } })
                             </div>
                         </div>
                         <div id="but1">
@@ -106,7 +106,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">民族</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Nation, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入民族" }, { "class", "layui-input" }, { "style", "width:201px;" } })
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">家庭住址</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" }, { "style", "width:201px;" } })
                             </div>
                         </div>
 
@@ -180,11 +180,17 @@
                         </div>
                     </div>
                     <div class="layui-row layui-form-item" id="clssa" style="margin-top:-15px;display:none">
-
+                     
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths">
                             <label class="layui-form-label">班级</label>
-                            <div class="layui-input-inline">
-                                @Html.DropDownList("List", ViewBag.List as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" }, { "name", "list" } })
+                            @Html.Hidden("List")
+                            <input type="text" class="layui-input linu "id="Lists" style="display:none; border:0px;"  readonly="readonly" />
+                            <div class="layui-input-inline" id="CLassNames">
+                                <button type="button" style="width:201px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                    <i class="layui-icon" id="ClassName" style="margin-left:166px;">&#xe615;</i>
+                                </button>
+
+
                             </div>
                         </div>
 
@@ -219,7 +225,7 @@
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">学员性格</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "lay-verify", "MyText" }, { "placeholder", "请输入学员性格" }, { "class", "layui-input" } })
+                                @Html.TextBoxFor(a => a.Traine, new Dictionary<string, object>() { { "lay-verify", "MyText" }, { "placeholder", "请输入学员性格" }, { "class", "layui-input" }, { "style", "width:201px;" } })
                             </div>
                         </div>
                     </div>
@@ -253,7 +259,7 @@
 
         </form>
     </div>
-
+    <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
     <script>
 
         if ($("#StudentID").val() != false) {
@@ -311,8 +317,8 @@
             //clssa
 
         }
-        layui.use(['form', 'layedit', 'laydate','upload', 'layer'], function () {
-       
+        layui.use(['form', 'layedit', 'laydate', 'upload', 'layer'], function () {
+
             var form = layui.form
                 , layer = layui.layer
                 , layedit = layui.layedit
@@ -331,24 +337,24 @@
             var $ = layui.jquery
                 , upload = layui.upload;
 
-       
+
             //搜索名字
             $("#but1").click(function () {
-               
+
                 var name = $("#Name").val();
-             
-              //  if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
-              //      return '姓名只能由中文或字母组成';
-              //  } if (!/(^\_)|(\__)|(\_+$)/.test(name)) {
-              //      return '姓名首尾不能出现下划线\'_\'';
-              //  }
-              //  if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
-                 
-              //      return '姓名不能有特殊字符';
-              //  }
-              //if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
-              //      return '姓名只能由中文或字母组成';
-              //  }
+
+                //  if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
+                //      return '姓名只能由中文或字母组成';
+                //  } if (!/(^\_)|(\__)|(\_+$)/.test(name)) {
+                //      return '姓名首尾不能出现下划线\'_\'';
+                //  }
+                //  if (!/^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$/.test(name)) {
+
+                //      return '姓名不能有特殊字符';
+                //  }
+                //if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(name)) {
+                //      return '姓名只能由中文或字母组成';
+                //  }
                 if (name == "") {
                     layer.alert('姓名不能为空！！！');
 
@@ -370,7 +376,7 @@
                                     Errye("该学员已注册，请勿重复注册！！");
                                 }
                             });
-                          
+
 
                         } else {
 
@@ -380,7 +386,7 @@
 
                 }
 
-             
+
 
             });
 
@@ -401,8 +407,9 @@
                         }
                         if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
                             return '内容只能由中文或字母组成';
-                        }}
-                  
+                        }
+                    }
+
                 },
                 WeChat: function (value) {
                     if (!/^[^\s]*$/.test(value)) {
@@ -414,8 +421,9 @@
                             if (!/^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/.test(value)) {
                                 return '请输入正确的微信号码';
                             }
-                        }}
-                  
+                        }
+                    }
+
                 },
                 QQ: function (value) {
                     if (!/^[^\s]*$/.test(value)) {
@@ -427,8 +435,9 @@
                             if (!/^[1-9]\d{4,9}$/.test(value)) {
                                 return '请输入正确的QQ号码';
                             }
-                        }}
-                    
+                        }
+                    }
+
                 },
                 MyText: function (value) {
                     if (!/^[^\s]*$/.test(value)) {
@@ -440,11 +449,12 @@
                             if (!/[\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*/.test(value)) {
                                 return '输入内容不规范';
                             }
-                        }}
-                 
+                        }
+                    }
+
                 }
 
-             
+
             });//Guardian
             //错误消息提示
             function Errye(err) {
@@ -457,7 +467,7 @@
             //正在执行中
             function showLoad() {
 
-                return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 150000 });
+                return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 200000 });
 
             }
             //关闭执行中的窗体
@@ -485,13 +495,21 @@
             function Ages(sheng) {
                 //生日
                 var ss = sheng.substring(6, sheng.length - 4);
-               var n= ss.substring(0, ss.length - 4);
-               var y= ss.substring(4, ss.length - 2);
+                var n = ss.substring(0, ss.length - 4);
+                var y = ss.substring(4, ss.length - 2);
                 var r = ss.substring(6);
                 ss = n + "-" + y + "-" + r;
                 return ss;
-              
+
             }
+
+            //拿到班级号
+            $("#ClassName").click(function () {
+                console.log("aaa");
+                Popup("/Teachingquality/StudentInformation/StudentclassView","获取新的班级", 800, 500);
+
+            });
+
             //提示消息
             var couer = 0;
             //监听提交
@@ -503,14 +521,15 @@
                 //return false;
                 var mydate = new Date();
                 var id = $("#textid").val();
-           
+
                 if (getNowFormatDate(mydate) < Ages(data.field.identitydocument) || getNowFormatDate(new Date()) < data.field.BirthDate) {
                     console.log("text1");
                     Errye("身份证或生日错误!!!");
                 } else {
                     function text() {
+                        //修改学员信息
                         if ($("#StudentID").val() != false) {
-
+                            console.info(data.field);
                             $.ajax({
                                 url: '/Teachingquality/StudentInformation/Enti',
                                 type: 'POST',
@@ -574,90 +593,96 @@
 
 
                                 var i;
-                                $.ajax({
-                                    url: '/Teachingquality/StudentInformation/Enti',
-                                    type: 'POST',
-                                    async: true,
-                                    cache: false,
-                                    timeout: 2000,
-                                    data: data.field,
-                                    beforeSend: function () {
-                                        i = showLoad();
-                                    },
-                                    success: function (data) {
-                                        //  closeLoad(i);
-                                        //    closeLoad(i);
-                                        if (data.Success == true) {
-                                            closeLoad(i);
-                                            layer.open({
-                                                type: 1
-                                                , title: false //不显示标题栏
-                                                , closeBtn: false
-                                                , area: '300px;'
-                                                , shade: 0.8
-                                                , id: 'LAY_layuipro' //设定一个id，防止重复弹出
-                                                , btn: ['继续注册', '返回上一层']
-                                                , btnAlign: 'c'
-                                                , moveType: 1 //拖拽模式，0或者1
-                                                , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册成功<br><br>学号为：' + data.Data + '<br><br>初始密码为：000000<br><br>请牢记学号及密码！！！</div>'
+                                if ($("#List").val() != "") {
+                                    $.ajax({
+                                        url: '/Teachingquality/StudentInformation/Enti',
+                                        type: 'POST',
+                                        async: true,
+                                        cache: false,
+                                        timeout: 2000,
+                                        data: data.field,
+                                        beforeSend: function () {
+                                            i = showLoad();
+                                        },
+                                        success: function (data) {
+                                            //  closeLoad(i);
+                                            //    closeLoad(i);
+                                            if (data.Success == true) {
+                                                closeLoad(i);
+                                                layer.open({
+                                                    type: 1
+                                                    , title: false //不显示标题栏
+                                                    , closeBtn: false
+                                                    , area: '300px;'
+                                                    , shade: 0.8
+                                                    , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                                                    , btn: ['继续注册', '返回上一层']
+                                                    , btnAlign: 'c'
+                                                    , moveType: 1 //拖拽模式，0或者1
+                                                    , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注册成功<br><br>学号为：' + data.Data + '<br><br>初始密码为：000000<br><br>请牢记学号及密码！！！</div>'
 
-                                                , success: function (layero) {
-                                                    $("#textid").val("");
-                                                    var btn = layero.find('.layui-layer-btn');
-                                                    btn.find('.layui-layer-btn0').click(function () {
-                                                        $("#Name").val("");//姓名
-                                                        $("#Telephone").val("");//电话
-                                                        $("#Reack").val("");//备注
-                                                        $("#identitydocument").val("");//身份证
-                                                        $("#Nation").val("");//民族
-                                                        $("#Traine").val("");//学员性格
-                                                        $("#Hobby").val("");//兴趣爱好
-                                                        $("#Familyaddress").val("");//家庭住址
-                                                        $("#WeChat").val("");//微信
-                                                        $("#qq").val("");//qq
-                                                        $("#BirthDate").val("");//出生日期
-                                                        $("#Guardian").val("");//亲属姓名
-                                                        $("#liden").css("display", "block");
-                                                    });
-                                                    btn.find('.layui-layer-btn1').click(function () {
-                                                        var index = parent.layer.getFrameIndex(window.name);
-                                                        parent.layer.close(index);
-                                                    });
-                                                }
+                                                    , success: function (layero) {
+                                                        $("#textid").val("");
+                                                        var btn = layero.find('.layui-layer-btn');
+                                                        btn.find('.layui-layer-btn0').click(function () {
+                                                            $("#Name").val("");//姓名
+                                                            $("#Telephone").val("");//电话
+                                                            $("#Reack").val("");//备注
+                                                            $("#identitydocument").val("");//身份证
+                                                            $("#Nation").val("");//民族
+                                                            $("#Traine").val("");//学员性格
+                                                            $("#Hobby").val("");//兴趣爱好
+                                                            $("#Familyaddress").val("");//家庭住址
+                                                            $("#WeChat").val("");//微信
+                                                            $("#qq").val("");//qq
+                                                            $("#BirthDate").val("");//出生日期
+                                                            $("#Guardian").val("");//亲属姓名
+                                                            $("#liden").css("display", "block");
+                                                        });
+                                                        btn.find('.layui-layer-btn1').click(function () {
+                                                            var index = parent.layer.getFrameIndex(window.name);
+                                                            parent.layer.close(index);
+                                                        });
+                                                    }
 
-                                            });
-                                        } else {
+                                                });
+                                            } else {
+                                                closeLoad(i);
+                                                layer.msg(data.Msg, {
+                                                    time: 5000, //20s后自动关闭
+
+                                                    btn: ['确定']
+                                                });
+                                            }
+
+
+
+                                        }
+                                        , error: function (xmlhttprequest, textstatus, message) {
                                             closeLoad(i);
-                                            layer.msg(data.Msg, {
+                                            layer.msg("您的网络出现问题，请稍后再试！！！", {
                                                 time: 5000, //20s后自动关闭
 
                                                 btn: ['确定']
                                             });
                                         }
+                                    })
+                                } else {
+                                    layer.msg("请点击小图标选择新班级！！！", {
+                                        time: 5000, //20s后自动关闭
 
-
-
-                                    }
-                                    , error: function (xmlhttprequest, textstatus, message) {
-                                        closeLoad(i);
-                                        layer.msg("您的网络出现问题，请稍后再试！！！", {
-                                            time: 5000, //20s后自动关闭
-
-                                            btn: ['确定']
-                                        });
-                                    }
-                                })
+                                        btn: ['确定']
+                                    });
+                                }
+                               
 
                             } else {
                                 // layer.alert('请', { icon: 0 });
-                                layer.msg("请点击小图标进行注册！！！", {
-                                    time: 5000, //20s后自动关闭
-
-                                    btn: ['确定']
-                                });
+                              
                             }
                         }
                     }
+                  //注册学员信息
                     if (Ages(data.field.identitydocument) == data.field.BirthDate) {
                         text();
                     } else {
@@ -669,15 +694,15 @@
                         } else {
                             text();
                         }
-                       
+
                     }
-                   
-                        //BirthDate
-                     
-                   
-             
+
+                    //BirthDate
+
+
+
                 }
-        
+
 
 
             });
@@ -740,7 +765,16 @@
             return result;
         }
 
+        function GetPartsItmes(data) {
 
+            $("#List").val(data.id);
+            $("#Lists").css("display", "block");
+    
+            console.log(data.id);
+            $("#CLassNames").css("display", "none");
+            $("#Lists").val(data.ClassNumber);
+        }
+     
     </script>
 
 

@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 班级
         /// </summary>
-        public int ClassSchedule_Id { get; set; } //要去数据库修改
+        public System.Nullable<int> ClassSchedule_Id { get; set; } //要去数据库修改
         /// <summary>
         /// 值班情况
         /// </summary>
@@ -39,9 +39,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public int BeOnDuty_Id { get; set; }
         /// <summary>
-        /// 安排日期
+        /// 值班日期
         /// </summary>
         public DateTime OrwatchDate { get; set; }
+
         public string Rmark { get; set; }
         /// <summary>
         /// 是否审核
@@ -55,7 +56,10 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 教室
         /// </summary>
-        public int ClassRoom_id { get; set; }
-
+        public System.Nullable<int> ClassRoom_id { get; set; }
+        /// <summary>
+        /// 安排日期
+        /// </summary>
+        public DateTime AttendDate { get; set; }
     }
 }

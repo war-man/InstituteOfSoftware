@@ -10,20 +10,48 @@
     <meta name="viewport" content="width=device-width" />
     <title>UpdateClassTeacher</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-    <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+    <style>
+        .DivCss1
+        {
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .layui-unselect
+        {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+    </style>
 </head>
 <body>
-    <div>
-        <form class="layui-form" style="margin-top:40px" lay-filter="form_classTeacherData">
+    <div class="DivCss1">
+        <form class="layui-form" lay-filter="form_classTeacherData">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">阶段:</label>
+                    <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
                     <div class="layui-input-block">
                         @Html.DropDownList("glist", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grand" } })
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">班级:</label>
+                    <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                     <div id="Myclass_Div" class="layui-input-block">
 
                     </div>
@@ -31,17 +59,31 @@
 
             </div>
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">开始日期:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="startime" id="startime" class="layui-input" lay-verify="required"/>
+                    </div>
+                </div>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">任课老师:</label>
-                    <div id="div_teavher12" class="layui-input-block">
-                        
+                    <div class="layui-input-block">
+                        <div class="layui-collapse">
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,0.2)">老师选择区:</h2>
+                                <div class="layui-colla-content" id="div_teavher12">
+
+                                </div>
+                            </div>                            
+                        </div>
                     </div>
                 </div>
 
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;margin-top:50px">
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="Update_clasTacher">确定修改</button>
+                    <button id="updatbtn" type="submit" class="layui-btn" lay-submit="" lay-filter="Update_clasTacher">确定修改</button>
                     <button type="button" class="layui-btn" onclick="MyClose()">取消关闭</button>
                 </div>
             </div>
@@ -50,8 +92,15 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form'], function () {
+        layui.use(['form','laydate','element'], function () {
             var form = layui.form;
+            var s = true;
+            var laydate = layui.laydate;
+            var element = layui.element;
+            laydate.render({
+                elem: '#startime'
+                , theme: 'molv'
+            });
             form.on('select(grand)', function (data) {
                 $("#Myclass_Div")[0].innerHTML = "";
                 if (data.value != "0") {
@@ -69,52 +118,59 @@
                     });
                 }
             });
-            //点击班级
+            //获取任课老师
             form.on('select(bianji2)', function (data) {
+                var indexx = layer.load(1);
                 $("#div_teavher12")[0].innerHTML = "";
-                if (data.value!="0") {
+                if (data.value != "0") {
                     $.ajax({
                         url: '/Educational/Reconcile/GetTecherAll/' + data.value,
-                        success: function (sucdata) {
-                            var ss = $('<select name="teacher_id" name="teacher_id"><option value="0">--请选择--</option></select>');
-                            for (var i = 0; i < sucdata.list_teacher.length; i++) {
-                                $('<option value=' + sucdata.list_teacher[i].Teacher_id + '>' + sucdata.list_teacher[i].Name + '</option>').appendTo(ss);
-                            }
-                            $("#div_teavher12").append(ss);
+                        success: function (sucdata) {                                                                         
                             if (sucdata.t_id == "0") {
-                                layer.msg('该班级没有安排老师上专业课！！！', { icon:2 });
+                                s = false;
+                                layer.msg('该班级没有安排老师上专业课！！！', { icon: 2, shade: 0.8 }, function () {
+                                    layer.close(indexx);
+                                });
                             } else {
+                                for (var i = 0; i < sucdata.list_teacher.length; i++) {
+                                    $('<input type="radio" value=' + sucdata.list_teacher[i].Teacher_id + ' title=' + sucdata.list_teacher[i].Name + ' name="teacher_id" id="teacher_id" />').appendTo($("#div_teavher12"));
+                                } 
                                 //给表单赋值
-                                form.val("form_classTeacherData", {  
+                                form.val("form_classTeacherData", {
                                     "teacher_id": sucdata.t_id.toString()
                                 });
+                                layer.close(indexx);
                             }
                             form.render();
                         }
                     });
                 }
-
             })
             //监听提交
             form.on('submit(Update_clasTacher)', function (data) {
                 if (data.field.class_select == "0") {
                     layer.msg('请选择班级！！', { icon: 2 });
                 } else {
-                    $.ajax({
-                        url: '/Educational/Reconcile/UpdateClassTeacherFuntion',
-                        type: 'POST',
-                        data: data.field,
-                        success: function (sucdata) {
-                            if (sucdata.Success == false) {
-                                layer.msg(sucdata.Msg, { icon: 2 });
-                            } else {
-                                layer.msg('修改成功！！', { icon: 1, shade: 0.8 }, function () {
-                                    window.parent.TableFulsh();
-                                    MyClose();
-                                });
+                    if (s == true) {
+                        $.ajax({
+                            url: '/Educational/Reconcile/UpdateClassTeacherFuntion',
+                            type: 'POST',
+                            data: data.field,
+                            success: function (sucdata) {
+                                if (sucdata.Success == false) {
+                                    layer.msg(sucdata.Msg, { icon: 2 });
+                                } else {
+                                    layer.msg('修改成功！！', { icon: 1, shade: 0.8 }, function () {
+                                        window.parent.TableFulsh();
+                                        MyClose();
+                                    });
+                                }
                             }
-                        }
-                    });
+                        });
+                    } else {
+                        layer.msg('该班级没有安排任课老师，不能修改', {icon:2,shade:0.8});
+                    }
+                     
                 }
 
                 return false;

@@ -16,13 +16,13 @@
         <form class="layui-form" style="margin-top:40px">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">阶段:</label>
+                    <label class="layui-form-label">阶 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 段:</label>
                     <div class="layui-input-block">
                         @Html.DropDownList("glist", ViewBag.grandlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "grand" } })
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">班级:</label>
+                    <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
                     <div id="Myclass_Div" class="layui-input-block">
 
                     </div>
@@ -87,21 +87,26 @@
 
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
-                $.ajax({
-                    url: '/Educational/Reconcile/ChangClassDataFunction',
-                    type: 'POST',
-                    data: data.field,
-                    success: function (sucdata) {
-                        if (sucdata == false) {
-                            layer.msg('系统错误，请重试！！', { icon: 2 });
-                        } else {
-                            layer.msg('调课成功！！', { icon: 1, shade: 0.8 }, function () {
-                                window.parent.TableFulsh();
-                                MyClose();
-                            });
+                if (data.field.class_select == "0" || data.field.classselect == undefined) {
+                    layer.msg('请选择班级!!!', { icon: 2, shade: 0.8 });
+                } else {
+                    $.ajax({
+                        url: '/Educational/Reconcile/ChangClassDataFunction',
+                        type: 'POST',
+                        data: data.field,
+                        success: function (sucdata) {
+                            if (sucdata == false) {
+                                layer.msg('系统错误，请重试！！', { icon: 2 });
+                            } else {
+                                layer.msg('调课成功！！', { icon: 1, shade: 0.8 }, function () {
+                                    window.parent.TableFulsh();
+                                    MyClose();
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
+                 
                 return false;
             });
         });

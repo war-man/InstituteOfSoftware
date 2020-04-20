@@ -1,6 +1,8 @@
 ﻿
 @{
-    Layout = null;
+                /**/
+
+                Layout = null;
 }
 
 @model  SiliconValley.InformationSystem.Entity.Entity.EvningSelfStudy
@@ -11,24 +13,52 @@
     <meta name="viewport" content="width=device-width" />
     <title>UpdateEvning</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-    <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+    <style>
+        .DivCss1
+        {
+            margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+        }
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+
+        .Text
+        {
+            height: 38px;
+            border-width: 1px;
+            border-style: solid;
+            background-color: #fff;
+            width:100%;
+        }
+    </style>
 </head>
 <body>
-    <div>
-        <form class="layui-form" style="margin-top:30px;">
-            <div class="layui-container">
+    <div class="DivCss1">
+        <form class="layui-form">
+            
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">班级:</label>
-                         @Html.HiddenFor(e=>e.id)
+                        <label class="layui-form-label">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
+                        @Html.HiddenFor(e => e.id)
                         <div class="layui-input-block">
-                           @Html.DropDownListFor(e=>e.ClassSchedule_id, ViewBag.Classlist as IEnumerable<SelectListItem>,new Dictionary<string, object>() { { "class","layui-select"} })
+                            @Html.DropDownListFor(e => e.ClassSchedule_id, ViewBag.Classlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">教室</label>
+                        <label class="layui-form-label">教 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 室:</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(e => e.Classroom_id, ViewBag.classroom as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
                         </div>
@@ -36,10 +66,8 @@
 
                 </div>
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">上课时间段</label>
+                        <label class="layui-form-label">上课时间:</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(e => e.curd_name, ViewBag.timename as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
                         </div>
@@ -48,7 +76,7 @@
 
                         <label class="LableCss1">安排日期:</label>
                         <div class="layui-input-block">
-                            <input type="text" value="@ViewBag.date" class="layui-input" name="Anpaidate" id="Anpaidate"/>                            
+                            <input type="text" value="@ViewBag.date" class="layui-input" name="Anpaidate" id="Anpaidate" />
                         </div>
 
                     </div>
@@ -57,19 +85,19 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">上课老师:</label>
                         <div class="layui-input-block">
-                            <input name="emp_id" id="emp_id" type="text" class="layui-input" readonly="readonly" value="@ViewBag.teacher" style="border:0px"/>
+
+                            @Html.DropDownListFor(e => e.emp_id, ViewBag.tt as List<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" } })
+
                         </div>
                     </div>
-                    <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                        <label class="layui-form-label">说明:</label>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
                         <div class="layui-input-block">
-                            @Html.TextAreaFor(e=>e.Rmark,new Dictionary<string, object>() { { "class", "layui-layui-textarea" } });
+                            @Html.TextAreaFor(e => e.Rmark, new Dictionary<string, object>() { { "class", "Text" } });
                         </div>
 
                     </div>
                 </div>
-            </div>
-
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs16 layui-col-sm16 layui-col-md16" style="text-align:center;margin-top:20px;">
                     <button type="submit" class="layui-btn" lay-submit="" lay-filter="update_ev">确定修改</button>
@@ -81,7 +109,7 @@
     <script src="~/Scripts/jquery-3.3.1.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form','laydate'], function () {
+        layui.use(['form', 'laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
 

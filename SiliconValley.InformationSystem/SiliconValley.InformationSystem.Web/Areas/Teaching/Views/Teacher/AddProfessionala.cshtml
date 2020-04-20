@@ -1,0 +1,218 @@
+﻿
+@{
+    Layout = null;
+}
+@model  SiliconValley.InformationSystem.Entity.Entity.Teachingtraining
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddProfessionala</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .Nation {
+            width: 300px;
+            height: 100px;
+        }
+
+        .mysql {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <form class="layui-form" action="" id="form">
+        <div class="layui-container">
+            <fieldset>
+
+                <legend>基础数据</legend>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label" id="lab1">培训人</label>
+                        @Html.Hidden("Trainee")
+
+
+                        <div class="layui-input-inline">
+                            <div id="CLassNames">
+                                <button type="button" style="margin-left:10px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                    <i class="layui-icon" id="ClassName">&#xe615;</i>
+                                </button>
+                            </div>
+                            <input type="text" class="layui-input linu " id="Lists" style="display:none; border:0px;" readonly="readonly" />
+
+
+                        </div>
+
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label" id="lab1">培训标题</label>
+                        <div class="layui-input-inline">
+
+                            @Html.TextBoxFor(a => a.TrainingTitle, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入培训标题" }, { "class", "layui-input bordel" } })
+
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">培训日期</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.TrainingDate, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">培训内容</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Trainingcontent, new Dictionary<string, object>() { { "placeholder", "请输入培训内容" }, { "lay-verify", "required" }, { "class", "llayui-textarea Nation" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-block">
+                            @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入备注" }, { "class", "llayui-textarea Nation" } })
+                        </div>
+                    </div>
+
+                </div>
+
+
+
+
+            </fieldset>
+        </div>
+        <div class="layui-row layui-form-item" style="margin-top:20px;">
+            <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+
+    layui.use(['form', 'layedit', 'laydate', 'upload', 'layer'], function () {
+
+        var form = layui.form
+            , layer = layui.layer
+            , layedit = layui.layedit
+            , laydate = layui.laydate;
+
+        //日期正则
+        var curDate = new Date();
+        var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+        laydate.render({
+            elem: '#TrainingDate'
+            , format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var endTime = new Date(value).getTime();
+                if (endTime > curDate.getTime()) {
+                    layer.msg('结束时间不能大于当前时间');
+                    $('#TrainingDate').val(curYearMonthrDay);
+                }
+            }
+        });
+
+        var $ = layui.jquery
+            , upload = layui.upload;
+
+
+
+
+        //正则表达式
+        form.verify({
+            //微信正则 /^[a-zA-Z]([-_a-zA-Z0-9]{5,19})+$/
+            //qq正则  /^[1-9]\d{4,9}$/
+            //中文 [\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*
+            Name: function (value, item) { //value：表单的值、item：表单的DOM对象
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    //if (!new RegExp("^[a-zA-Z0-9_\u4e00-\u9fa5\\s·]+$").test(value)) {
+                    //    return '内容不能有特殊字符';
+                    //}
+                    if (/(^\_)|(\__)|(\_+$)/.test(value)) {
+                        return '内容首尾不能出现下划线\'_\'';
+                    }
+                    //if (!/^[a-zA-Z\u4e00-\u9fa5]+$/.test(value)) {
+                    //    return '内容只能由中文或字母组成';
+                    //}
+                }
+
+            },
+
+            MyText: function (value) {
+                if (!/^[^\s]*$/.test(value)) {
+                    return '内容不能输入空格';
+                } else {
+                    if (value == '') {
+                        return '';
+                    } else {
+                        if (!/[\u4e00-\u9fa5][a-z,\u4e00-\u9fa5]*/.test(value)) {
+                            return '输入内容不规范';
+                        }
+                    }
+                }
+
+            }
+
+
+        });
+
+        //年月日
+        function getNowFormatDate(date) {
+
+            var seperator1 = "-";
+            var year = date.getFullYear();
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
+
+        //提示消息
+        var couer = 0;
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var inttraine = parseInt(data.field.Trainee);
+           
+            if (inttraine>0) {
+                ajaxPorfessionala("/Teaching/Teacher/AddProfessionala", data.field)
+            } else {
+                layer.msg('请点击小图标选择培训人');
+            }
+
+
+
+        });
+        function GetPartsItmes(data) {
+
+            $("#Trainee").val(data.id);
+            $("#Lists").css("display", "block");
+
+
+            $("#CLassNames").css("display", "none");
+            $("#Lists").val(data.EmpName + "----" + data.department);
+        }
+        //拿到培训人
+        $("#ClassName").click(function () {
+            window.parent.parPopup(function () {
+                var empData = window.parent.getempdate();
+                GetPartsItmes(empData);
+            });
+
+        });
+
+    });
+</script>

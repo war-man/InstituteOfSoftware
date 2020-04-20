@@ -2,84 +2,6 @@
 @{
     Layout = null;
 }
-<style>
-    #but1 {
-        position: absolute;
-        top: 13%;
-        left: 35%;
-        width: 36px;
-        height: 36px;
-        text-align: center;
-        line-height: 36px;
-    }
-
-    #but1:hover {
-            background-color: aqua;
-        }
-
-    #Nation {
-        width: 100px;
-    }
-
-    .linu {
-        width: 200px;
-    }
-
-    .mm {
-        border: 1px solid black;
-    }
-
-    .LableCss1 {
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        float: left;
-        display: block;
-        padding: 9px 15px;
-        width: 80px;
-        font-weight: 400;
-        line-height: 20px;
-        text-align: right
-    }
-
-    .TextAreCss1 {
-        height: 80px;
-    }
-
-    .butCss1 {
-        float: right;
-        margin-right: 100px;
-    }
-
-    .butCss2 {
-        border: 0px solid black;
-    }
-
-    .layButCss1 {
-        display: inline-block;
-        height: 38px;
-        line-height: 38px;
-        padding: 0 18px;
-        background-color: #009688;
-        color: #fff;
-        white-space: nowrap;
-        text-align: center;
-        font-size: 14px;
-        border: none;
-        border-radius: 2px;
-        cursor: pointer;
-        border: 0px solid #C9C9C9;
-        background-color: #fff;
-        color: #555;
-        height: 18px;
-        line-height: 18px
-    }
-
-    body .demo-class .layui-layer-title {
-        background: #009688;
-        color: #fff;
-        border: none;
-    }
-</style>
 <!DOCTYPE html>
 @model SiliconValley.InformationSystem.Entity.MyEntity.StudentPutOnRecord
 @using SiliconValley.InformationSystem.Entity.MyEntity;
@@ -89,30 +11,9 @@
     <title>LookDetailsView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
-        #but1 {
-            position: absolute;
-            top: 13%;
-            left: 35%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-
-            #but1:hover {
-                background-color: aqua;
-            }
-
-        #Nation {
-            width: 100px;
-        }
 
         .linu {
             width: 200px;
-        }
-
-        .mm {
-            border: 1px solid black;
         }
 
         .LableCss1 {
@@ -130,82 +31,36 @@
         .TextAreCss1 {
             height: 80px;
         }
-
-        .butCss1 {
-            float: right;
-            margin-right: 100px;
-        }
-
-        .butCss2 {
-            border: 0px solid black;
-        }
-
-        .layButCss1 {
-            display: inline-block;
-            height: 38px;
-            line-height: 38px;
-            padding: 0 18px;
-            background-color: #009688;
-            color: #fff;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-            border: 0px solid #C9C9C9;
-            background-color: #fff;
-            color: #555;
-            height: 18px;
-            line-height: 18px
-        }
-
-        body .demo-class .layui-layer-title {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
     </style>
 </head>
 <body>
-    <div>
-        <form class="layui-form" lay-filter="myform2">
-            <div class="layui-container">
+    <div style="margin:20px auto;width:90%;">
+        <form class="layui-form" lay-filter="myform2" style="width:98%;margin:0px auto;">           
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">姓名</label>
+                        <label class="layui-form-label">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
                         <div class="layui-input-block">
-                            <span name="StuName" id="StuName" class="LableCss1">
-
-                            </span>
+                            <input name="StuName" id="StuName" class="layui-input linu" disabled="disabled"/> 
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">性别</label>
+                        <label class="layui-form-label">性 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 别:</label>
                         <div class="layui-input-block">
-                            <span name="StuSex" id="StuSex" class="LableCss1">
-
-                            </span>
+                            <input name="StuSex" id="StuSex" class="layui-input linu" disabled="disabled" />  
                         </div>
                     </div>
-
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">电话</label>
+                        <label class="layui-form-label">电 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 话:</label>
                         <div class="layui-input-block">
-                            <span name="StuPhone" id="StuPhone" class="LableCss1">
-
-                            </span>
+                            <input name="StuPhone" id="StuPhone" class="layui-input linu" disabled="disabled"/> 
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">出生日期</label>
                         <div class="layui-input-block">
-                            <span name="StuBirthy" id="StuBirthy" class="LableCss1">
-
-                            </span>
+                            <input name="StuBirthy" id="StuBirthy"class="layui-input linu" disabled="disabled" /> 
                         </div>
                     </div>
                 </div>
@@ -213,17 +68,13 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">学校名称</label>
                         <div class="layui-input-block">
-                            <span name="StuSchoolName" id="StuSchoolName" class="LableCss1">
-
-                            </span>
+                            <input name="StuSchoolName" id="StuSchoolName" class="layui-input linu" disabled="disabled" /> 
                         </div>
                     </div>
-                    <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
-                        <label class="layui-form-label">学历</label>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">学 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 历:</label>
                         <div class="layui-input-block">                          
-                            <span id="StuEducational" name="StuEducational" class="LableCss1">
-
-                            </span>
+                            <input id="StuEducational" name="StuEducational" class="layui-input linu" disabled="disabled" />
                         </div>
 
                     </div>
@@ -232,123 +83,93 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">家庭住址</label>
                         <div class="layui-input-block">
-                            <span name="StuAddress" id="StuAddress" class="LableCss1">
-
-                            </span>
+                            <input name="StuAddress" id="StuAddress" class="layui-input linu" disabled="disabled" /> 
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">微信</label>
+                        <label class="layui-form-label">微 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 信:</label>
                         <div class="layui-input-block">
-                            <span class="LableCss1" name="StuWeiXin" id="StuWeiXin">
-
-                            </span>
+                            <input class="layui-input linu" disabled="disabled" name="StuWeiXin" id="StuWeiXin" />  
                         </div>
 
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">QQ</label>
+                        <label class="layui-form-label">Q &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q:</label>
                         <div class="layui-input-block">
-                            <span name="StuQQ" id="StuQQ" class="LableCss1">
-
-                            </span>
+                            <input name="StuQQ" id="StuQQ" class="layui-input linu" disabled="disabled" />  
                         </div>
                     </div>
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="LableCss1">信息来源</label>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">信息来源:</label>
                         <div class="layui-input-block">
-                            <span class="LableCss1" id="InfomationTypeName" name="InfomationTypeName">
-
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
-                        <label class="LableCss1">录入人员</label>
-                        <div class="layui-input-block">
-                            <span id="StuEntering_1" name="StuEntering_1" class="LableCss1">
-
-                            </span>
- 
-                        </div>
-                    </div>
-                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
-                        <label class="LableCss1">备案日期</label>
-                        <div class="layui-input-block">
-                       
-                            <span id="StuDateTime" name="StuDateTime" class="LableCss1">
-
-                            </span>
+                            <input class="layui-input linu" disabled="disabled" id="InfomationTypeName" name="InfomationTypeName" /> 
                         </div>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="LableCss1">是否上门</label>
+                        <label class="LableCss1">录入人员:</label>
                         <div class="layui-input-block">
-                            <span  name="StuIsGoto" id="StuIsGoto" class="LableCss1">
-
-                            </span>
+                            <input id="StuEntering_1" name="StuEntering_1" class="layui-input linu" disabled="disabled" />  
                         </div>
-
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">上门日期</label>
-                        <div class="layui-input-block">
-                            <span class="LableCss1" name="StuVisit" id="StuVisit">
-
-                            </span>
+                        <label class="LableCss1">备案日期:</label>
+                        <div class="layui-input-block">                       
+                            <input id="StuDateTime" name="StuDateTime" class="layui-input linu" disabled="disabled" /> 
                         </div>
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
-                        <label class="LableCss1">学生状态</label>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">是否上门:</label>
+                        <div class="layui-input-block">
+                            <input  name="StuIsGoto" id="StuIsGoto" class="layui-input linu" disabled="disabled" /> 
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">上门日期:</label>
+                        <div class="layui-input-block">
+                            <input class="layui-input linu" disabled="disabled" name="StuVisit" id="StuVisit" />
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="LableCss1">学生状态:</label>
                         <div class="layui-input-block">                        
-                            <span class="LableCss1" name="StatusName" id="StatusName">
-
-                            </span>
+                            <input class="layui-input linu" disabled="disabled" name="StatusName" id="StatusName" />
                         </div>
                     </div>
-                    <div class="layui-col-xs5 layui-col-sm5 layui-col-md5">
-                        <label class="layui-form-label">备案人</label>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">备案 &nbsp; 人:</label>
                         <div class="layui-input-block">
-                            <span name="e_Name" id="e_Name" class="LableCss1">
-
-                            </span>
+                            <input name="e_Name" id="e_Name" class="layui-input linu" disabled="disabled" />
                         </div>
                     </div>                   
                 </div>
                 <div class="layui-row layui-form-item">
-
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
-                        <label class="layui-form-label">备注</label>
+                        <label class="layui-form-label">备 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 注:</label>
                         <div class="layui-input-block">
-                            <span name="Reak" id="Reak" class="LableCss1">
-
-                            </span>
+                            <input name="Reak" id="Reak" class="layui-input linu" disabled="disabled" />
                         </div>
                     </div>  
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
 
-                        <label class="layui-form-label">区域</label>
+                        <label class="layui-form-label">区 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 域:</label>
                         <div class="layui-input-block">
-                            <span name="reginname" id="reginname" class="LableCss1">
-                                @ViewBag.regin
-                            </span>
+                            <input name="reginname" id="reginname" class="layui-input linu" disabled="disabled" value="@ViewBag.regin">                               
                         </div>
                     </div>
-                </div>
-
-            </div>
+                </div>            
             <div class="layui-form-item">
-                <div class="layui-input-block">                  
-                    <button type="button" class="layui-btn butCss1" id="quxiao">关闭</button>
+                <div class="layui-input-block" style="margin-top:30px;">      
+                    <div style="width:30%;margin:0px auto ">
+                        <button type="button" class="layui-btn" id="quxiao">关闭</button>
+                    </div>                  
                 </div>
             </div>
         </form>
@@ -429,23 +250,23 @@
                     if (this.success != "学生ID未拿到") {
                         var date1 = new Date(parseInt(successdata.StuDateTime.slice(6)));
                         successdata.StuBirthy = TimeChange(successdata.StuBirthy);
-                        $("#StuName")[0].innerText = successdata.StuName;
-                        $("#StuSex")[0].innerText = successdata.StuSex.toString() == "true" ? "男" : "女";
-                        $("#StuPhone")[0].innerText = successdata.StuPhone;
-                        $("#StuBirthy")[0].innerText = successdata.StuBirthy;
-                        $("#StuSchoolName")[0].innerText = successdata.StuSchoolName;
-                        $("#StuEducational")[0].innerText = successdata.StuEducational;
-                        $("#StuAddress")[0].innerText = successdata.StuAddress;
-                        $("#StuWeiXin")[0].innerText = successdata.StuWeiXin;
-                        $("#StuQQ")[0].innerText = successdata.StuQQ;
-                        $("#InfomationTypeName")[0].innerText = successdata.InfomationTypeName;
-                        $("#StuEntering_1")[0].innerText = successdata.StuEntering_1;
-                        $("#StuDateTime")[0].innerText = formatDate(date1);
-                        $("#StuIsGoto")[0].innerText = successdata.StuIsGoto.toString() == "true" ? "是" : "否";
-                        $("#StuVisit")[0].innerText = TimeChange(successdata.StuVisit);
-                        $("#StatusName")[0].innerText = successdata.StatusName;
-                        $("#e_Name")[0].innerText = successdata.e_Name;
-                        $("#Reak")[0].innerText = successdata.Reak;
+                        $("#StuName")[0].value = successdata.StuName;
+                        $("#StuSex")[0].value = successdata.StuSex.toString() == "true" ? "男" : "女";
+                        $("#StuPhone")[0].value = successdata.StuPhone;
+                        $("#StuBirthy")[0].value = successdata.StuBirthy;
+                        $("#StuSchoolName")[0].value = successdata.StuSchoolName;
+                        $("#StuEducational")[0].value = successdata.StuEducational;
+                        $("#StuAddress")[0].value = successdata.StuAddress;
+                        $("#StuWeiXin")[0].value = successdata.StuWeiXin;
+                        $("#StuQQ")[0].value = successdata.StuQQ;
+                        $("#InfomationTypeName")[0].value = successdata.InfomationTypeName;
+                        $("#StuEntering_1")[0].value = successdata.StuEntering_1;
+                        $("#StuDateTime")[0].value = formatDate(date1);
+                        $("#StuIsGoto")[0].value = successdata.StuIsGoto.toString() == "true" ? "是" : "否";
+                        $("#StuVisit")[0].value = TimeChange(successdata.StuVisit);
+                        $("#StatusName")[0].value = successdata.StatusName;
+                        $("#e_Name")[0].value = successdata.e_Name;
+                        $("#Reak")[0].value = successdata.Reak;
                     } else {
                         layui.use(['layer'], function () {
                             var layer = layui.layer;

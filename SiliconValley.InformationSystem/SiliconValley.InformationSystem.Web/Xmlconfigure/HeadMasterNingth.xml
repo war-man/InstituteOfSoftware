@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Nngth>
+  <Beonduty>
+    <department name="s1、s2" count="2"></department>
+    <department name="s3" count="2"></department>
+    <department name="s4" count="1"></department>
+  </Beonduty>
+</Nngth>

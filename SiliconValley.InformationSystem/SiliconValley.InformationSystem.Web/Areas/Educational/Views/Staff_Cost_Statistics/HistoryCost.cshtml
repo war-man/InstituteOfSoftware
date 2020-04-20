@@ -1,0 +1,110 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>HistoryCost</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+
+    <style>
+
+        .line-title {
+            display: inline-block;
+            width: 30%;
+            border: 1px solid #808080;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="mywarp">
+        <div id="title" style="text-align:center;">
+
+            <div class="line-title"></div>
+            <i class="layui-icon layui-icon-chart" style="font-size:25px;"><i style="font-size:25px;">历史统计记录</i> </i>
+            <div class="line-title"></div>
+        </div>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="download">下载 </a>
+
+        </script>
+
+        <hr />
+        <table class="layui-hide tablelist" id="filelist" lay-filter="filelist_filter"></table>
+
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Scripts/Util.js"></script>
+
+
+    <script>
+
+        layui.use(['table', 'layer'], function () {
+
+            var table = layui.table;
+            var layer = layui.layer;
+
+            table.render({
+                elem: '#filelist'
+                , id: 'filelist'
+                , shade: 3
+                , url: '/Educational/Staff_Cost_Statistics/HistoryCostFileData'
+                , cellMinWidth: 100
+                , cols: [[
+                    { type: 'radio', fixed: 'left' }
+                    , { field: 'filename', title: '文件名称', width: 300 }
+
+                    , {
+                        field: 'lastupdatetime', title: '最新跟新记录', width: 300, templet: function (row) {
+
+                            var utc = row.lastupdatetime.substr(row.lastupdatetime.indexOf('(') + 1, 13);
+
+                            var date = new Date(parseInt(utc));
+
+                            var year = date.getFullYear();
+
+                            var mouth = date.getMonth();
+
+                            var day = date.getDate();
+
+                            return year + '年 ' + mouth + "月 " + day +'日';
+
+                        }
+                    }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150, width: 300 }
+                ]]
+                , page: true
+            });
+
+            //监听行工具事件
+            table.on('tool(filelist_filter)', function (obj) {
+
+                var data = obj.data;
+                if (obj.event == 'download') {
+
+                    //下载
+
+                    //获取文件名称
+
+                    var filename = data.filename;
+
+                    window.location.href  ="/Educational/Staff_Cost_Statistics/DownloadCostStatics?Dfilename=" + filename;
+
+                }
+
+            });
+
+
+        });
+
+    </script>
+</body>
+</html>

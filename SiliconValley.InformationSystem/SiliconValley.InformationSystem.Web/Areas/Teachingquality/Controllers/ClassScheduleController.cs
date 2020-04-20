@@ -159,7 +159,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
                 BaseDataEnum_Id = BanseDatea.GetEntity(a.BaseDataEnum_Id).Name,//专业课时间
                 Major_Id = a.Major_Id==null?"暂无专业": Techarcontext.GetEntity(a.Major_Id).SpecialtyName,//专业
-                HeadmasterName= Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
+                 
+                HeadmasterName = classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault() != null?"班级已升学或毕业":dbtext.HeadSraffFine(a.id).EmployeeId==null?"未设置班主任": dbtext.HeadSraffFine(a.id).EmpName,
+                //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
                 IsBool = classtatus.GetList().Where(c=>c.IsDelete==false&&c.id==a.ClassstatusID).FirstOrDefault()==null?"正常":classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
                  stuclasss = Stuclass.GetList().Where(c=>c.ID_ClassName==a.id&&c.CurrentClass==true).Count()//班级人数
             }).OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();

@@ -1,0 +1,429 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.Entity.Coursewaremaking
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddCoursewaremaking</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .div1 {
+            width: 50px;
+            height: 80px;
+            /*background-image: url('/Areas/Courseware/images/wenjin.jpg');*/
+            float: left;
+            margin-left: 10px;
+        }
+
+        .flos {
+            float: left
+        }
+
+        .spa1, .div1 {
+            cursor: pointer;
+        }
+
+        .spa1 {
+            color: #0000CC;
+        }
+
+        img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .fizs {
+            font-size: 8pt;
+        }
+
+        .widths {
+            padding: 7px;
+        }
+
+        .textar {
+            width: 477px;
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box" style="margin-left:42px;z-index:-1;">
+        <u class="spa1">首页</u>
+
+    </div>
+
+
+    <div style="position:absolute;color:red;left:430px;">
+        @*操作流程：<br />
+            第一步请选择文件<br />
+            第二步请选择路径<br />
+            第三步请择研发人<br />
+            第四步填写课件信息<br />*@
+        @*注意：<br />
+            如果有相同的文件将会被替换掉<br />
+            每个人的文件都会系统前面加四位数字<br />
+            以免重复文件被替换。*@
+    </div>
+
+
+
+    <div class="layui-form" lay-filter="example">
+        <div class="layui-row layui-form-item" style="width:600px;">
+            <div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
+                    <label class="layui-form-label">文&nbsp;件&nbsp;选&nbsp;择</label>
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn" id="test1">
+                            <i class="layui-icon">&#xe67c;</i>选择文件
+                        </button>
+                        <input type="text" class="layui-input linu " name="Filename" id="lab2" style="display:none; border:0px;width:300px;color:#0000CC;" readonly="readonly" />
+
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
+                    <label class="layui-form-label">文件夹选择</label>
+                    <div class="layui-input-block">
+                        <div id="MyWenjin" style="margin-top:30px;">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
+                    <label class="layui-form-label">文件夹路径</label>
+                    <div class="layui-input-block">
+
+                        <input type="text" class="layui-input linu " name="Filepath" id="lab1" style=" border:0px;width:300px;" readonly="readonly" />
+
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths">
+                    <label class="layui-form-label">研&nbsp;&nbsp;&nbsp;&nbsp;发&nbsp;&nbsp;&nbsp;人</label>
+                    @Html.Hidden("RampDpersonID")
+                    @Html.Hidden("department")
+                    <div class="layui-input-block">
+                        <div id="CLassNames">
+                            <button type="button" class="layui-btn layui-btn-sm layui-btn-primary" style="width:176px;height:36px;">
+                                <i class="layui-icon" style="margin-left:143px;" id="ClassName">&#xe615;</i>
+                            </button>
+                        </div>
+                        <input type="text" class="layui-input linu " id="Lists" style="display:none; border:0px;width:300px;" readonly="readonly" />
+
+
+                    </div>
+
+                </div>
+
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths">
+                    <label class="layui-form-label">课&nbsp;件&nbsp;类&nbsp;型</label>
+                    <div class="layui-input-block">
+
+                        @Html.DropDownListFor(a => a.MakingType, ViewBag.MakingType as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths">
+                    <label class="layui-form-label">课&nbsp;件&nbsp;标&nbsp;题</label>
+                    <div class="layui-input-block">
+                        @Html.TextBoxFor(a => a.Title, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入课件标题" }, { "class", "layui-input" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths" id="StaID" style="display:none;">
+                    <label class="layui-form-label">阶&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;段</label>
+                    <div class="layui-input-block">
+
+                        @Html.DropDownListFor(a => a.StageID, ViewBag.StageID as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" }, { "class", "wid" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6 widths" style="display:none;" id="domes">
+
+                </div>
+
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6  widths">
+                    <label class="layui-form-label">章&nbsp;&nbsp;&nbsp;&nbsp;节&nbsp;&nbsp;&nbsp;数</label>
+                    <div class="layui-input-block">
+                        @Html.TextBoxFor(a => a.Chaptersnumber, new Dictionary<string, object>() { { "lay-verify", "required|number" }, { "placeholder", "请输入章节" }, { "class", "layui-input wid" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
+                    <label class="layui-form-label">备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注</label>
+                    <div class="layui-input-block">
+
+                        @Html.TextAreaFor(a => a.Remarks, new Dictionary<string, object>() { { "placeholder", "请输入内容" }, { "class", "llayui-textarea textar " } })
+                    </div>
+                </div>
+
+                <div style="position:absolute;top:500px;">
+                    <div class="layui-input-block" style="padding:20px;margin-left:146px;text-align:center;width:300px;">
+                        <button class="layui-btn" lay-submit="" type="button" style="left:20px;" id="testListAction" lay-filter="demo1">提交</button>
+                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        <button class="layui-btn" type="button">取消</button>
+
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+</html>
+<script type="text/template" id="studenthtml">
+
+    <label class="layui-form-label">专&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;业</label>
+    <div class="layui-input-block">
+        @Html.DropDownListFor(a => a.MajorID, ViewBag.MajorID as SelectList, "请选择", new Dictionary<string, object>() { { "lay-verify", "required" } })
+    </div>
+
+</script>
+<script src="~/Scripts/underscore.js"></script>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+<script>
+    layui.use(['layer', 'layedit', 'tree', 'form', 'upload'], function () {
+
+        var layer = layui.layer;
+        var form = layui.form;
+        var laydate = layui.laydate;
+        var layedit = layui.layedit;
+        var upload = layui.upload;
+
+        function dataCou() {
+            return false;
+        }
+
+        upload.render({
+            elem: '#test1'
+            , url: '/Courseware/Coursewaremaking/AddCoursewaremaking'
+            , auto: false //选择文件后不自动上传
+            , accept: 'file'
+            , bindAction: '#testListAction' //指向一个按钮触发上传
+            , data: {
+                url: function () {
+                    dataCou();
+                }
+            }
+            , choose: function (obj) {
+                //将每次选择的文件追加到文件队列
+                var files = obj.pushFile();
+
+                //预读本地文件，如果是多文件，则会遍历。(不支持ie8/9)
+                obj.preview(function (index, file, result) {
+
+                    $("#test1").css("display", "none");
+                    $("#lab2").val(file.name);
+                    $("#lab2").css("display", "block");
+
+                    //obj.resetFile(index, file, '123.jpg'); //重命名文件名，layui 2.3.0 开始新增
+
+                    //这里还可以做一些 append 文件列表 DOM 的操作
+
+                    //obj.upload(index, file); //对上传失败的单个文件重新上传，一般在某个事件中使用
+                    //delete files[index]; //删除列表中对应的文件，一般在某个事件中使用
+
+
+
+
+                });
+            }
+
+            , done: function (res, index, upload) {
+                $($("#MyWenjin").children()).remove();
+                data("/" + $("#lab1").val());
+                var bot = res == true ? "课件上传成功" : "课件上传失败";
+                parent.GetDateProfessionala();
+                var messg = res == true ? "课件上传成功" : "课件上传失败";
+
+                Tips(res, messg, function () {
+                    parent.GetDateProfessionala();
+                    //假设这是iframe页
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭        
+                   
+                });
+
+            }
+            , before: function () {//上传前的回调
+                var data = form.val('example');
+                var Filepath = data.Filepath;
+                var file = data.Filename;
+                if (Filepath != "" && file != "" && data.MakingType != "" && data.StageID != "" && data.Title != "" && data.Chaptersnumber != "") {
+                    this.data = data;
+
+                } else {
+                    layer.stopPropagation();//阻止发送请求
+
+                }
+
+            }
+        });
+
+        $.post("/Courseware/Coursewaremaking/CourDate?str=/首页", function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var a1 = data[i].split('.');
+                if (a1.length > 1) {
+                    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div class="fizs">' + data[i] + '</div></div>'));
+
+                } else {
+                    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div class="fizs">' + data[i] + '</div></div>'));
+                }
+
+            }
+
+
+        })
+
+        //这个是专业是否显示
+        function Tuition() {
+            $($("#domes").children()).remove();
+            $("#domes").css("display", "block");
+            var templates = _.template($("#studenthtml").html());
+            var dates = templates({});
+            $("#domes").append($(dates));
+            form.render();
+        }
+        //监听阶段下拉框
+        form.on('select(Stage)', function (data) {
+            var str = $("#department").val();
+
+            if (str.match(RegExp(/教学/))) {
+                if ($(this).text() != "S1" && $(this).text() != "Y1") {
+
+                    Tuition();
+                } else {
+
+                    $($("#domes").children()).remove();
+                    $("#domes").css("display", "none");
+                }
+            }
+        });
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+
+
+            //Filepath文件路径
+            //file 文件
+            var Filepath = data.field.Filepath;
+            var file = data.field.Filename;
+            if (Filepath != "" && file != "") {
+                //$.post("/Courseware/Coursewaremaking/AddCoursewaremaking", data.field, function (da) {
+                //    console.log(da);
+                //});
+            } else {
+                var ernn = Filepath == "" ? "请选择文件路径!!!" : "请选择文件!!!";
+                layer.msg(ernn);
+
+            }
+        });
+
+    })
+    //获取文件夹数据
+    function data(url) {
+        var a1 = url.split('.');
+
+
+        $($("#MyWenjin").children()).remove()
+        $.post("/Courseware/Coursewaremaking/CourDate?str=" + a1, function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var a1 = data[i].split('.');
+                if (a1.length > 1) {
+                    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div class="fizs">' + data[i] + '</div></div>'));
+                } else {
+                    $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div class="fizs">' + data[i] + '</div></div>'));
+                }
+            }
+        })
+
+
+
+    }
+    //获取当前文件夹地址
+    function fineName() {
+        var FineName = $($(".box").children());
+        var db_Name = "";
+        for (var i = 0; i < FineName.length; i++) {
+            db_Name += $(FineName[i]).text();
+        }
+        var db = db_Name.split('>');
+        db_Name = "";
+        for (var i = 0; i < db.length; i++) {
+            db_Name += db[i] + "/";
+        }
+
+        $("#lab1").val(db_Name);
+    }
+    //点击文件夹
+    $("body").on("click", ".div1", function () {
+
+        var a1 = $($(this).children()[1]).text().split('.');
+        if (a1.length < 2) {
+
+            if ($($(".box").children()).length < 1) {
+                $(".box").append($('<u class="spa1">' + $($(this).children()[1]).text() + '</u>'));
+            } else {
+                $(".box").append($("<spam>&#62;</span>"));
+                $(".box").append($('<u class="spa1">' + $($(this).children()[1]).text() + '</u>'))
+            }
+            fineName();
+            $($("#MyWenjin").children()).remove()
+            $.post("/Courseware/Coursewaremaking/CourDate?str=/" + $("#lab1").val(), function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var a2 = data[i].split('.');
+                    if (a2.length > 1) {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wen.jpg" /><div class="fizs">' + data[i] + '</div></div>'));
+                    } else {
+                        $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div class="fizs">' + data[i] + '</div></div>'));
+                    }
+
+                }
+
+                if ($($("#MyWenjin").children()).length == 0) {
+                    $("#MyWenjin").append($('<div style="color:red;"> 该文件夹里面是空的!</div>'));
+                }
+            })
+
+
+        }
+        fineName();
+    })
+    //导航文件夹
+    $("body").on("click", ".spa1", function () {
+        $(this).nextAll().remove();
+        var str = $(this).text();
+        if (str == "首页") {
+            str = "";
+        }
+        fineName();
+        data("/" + $("#lab1").val());
+    });
+
+    function GetPartsItmes(data) {
+
+        $("#RampDpersonID").val(data.EmployeeId);
+        $("#Lists").css("display", "block");
+
+
+        $("#CLassNames").css("display", "none");
+        var empyeeid = data.EmployeeId.toString().substring(data.EmployeeId.length - 4);
+
+        $("#Lists").val(data.EmpName + "--" + empyeeid + "----" + data.department);
+        $("#department").val(data.department);
+    }
+    //拿到培训人
+    $("#ClassName").click(function () {
+        window.parent.parPopup(function () {
+            var empData = window.parent.getempdate();
+            GetPartsItmes(empData);
+            $("#StaID").css("display", "block");
+        });
+
+    });
+</script>
