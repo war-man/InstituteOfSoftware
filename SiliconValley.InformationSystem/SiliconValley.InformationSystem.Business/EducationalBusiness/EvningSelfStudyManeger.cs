@@ -63,19 +63,30 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public AjaxResult Add_Data(List<EvningSelfStudy> e_list)
         {
             AjaxResult a = new AjaxResult();
+            List<EvningSelfStudy> ore = new List<EvningSelfStudy>();//获取没有重复数据的集合
             try
             {
+                int index = 0;
                 foreach (EvningSelfStudy new_e in e_list)
                 {
                     int count = EvningSelfStudyGetAll().Where(e1 => e1.Classroom_id == new_e.Classroom_id && e1.ClassSchedule_id == new_e.ClassSchedule_id && e1.curd_name == new_e.curd_name && e1.Anpaidate == new_e.Anpaidate).ToList().Count;
                     if (count <= 0)
                     {
-                        this.Insert(new_e);
-                        EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
-                        a.Success = true;
-                    }
+                        ore.Add(new_e);
+                        index++;
+                    }                     
                 }
-                a.Msg = "晚自习安排成功！！！";
+                this.Insert(ore);
+                EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+                a.Success = true;
+                if (index==0) {
+                    a.Msg = "晚自习安排成功！！！，没有发现重复数据";
+                }
+                else
+                {
+                    a.Msg = "晚自习安排成功！！！，重复数据"+index+"条，已排除";
+                }
+              
             }
             catch (Exception ex)
             {
@@ -341,8 +352,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             StringBuilder msg = new StringBuilder();
             List<EvningSelfStudy> ev_list = new List<EvningSelfStudy>();
             int curtypeid = Reconcile_Com.CourseType_Entity.FindSingeData("专业课", false).Id;//获取课程类型id
+            int curtypeid2 = Reconcile_Com.CourseType_Entity.FindSingeData("语文课", false).Id; 
+            int curtypeid3 = Reconcile_Com.CourseType_Entity.FindSingeData("数学课", false).Id; 
+            int curtypeid4 = Reconcile_Com.CourseType_Entity.FindSingeData("英语课", false).Id; 
             List<Reconcile> Recon_all = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= startime && r.AnPaiDate <= endtime && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) != null).ToList();
-            Recon_all = Recon_all.Where(r => Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid).OrderBy(r => r.AnPaiDate).ToList();//获取这个时间段上专业课的排课数据
+            Recon_all = Recon_all.Where(r => Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid2 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid3 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid4).OrderBy(r => r.AnPaiDate).ToList();//获取这个时间段上专业课的排课数据
             List<ClassSchedule> classSchedule_all = Reconcile_Com.GetClass();//获取所有有效的班级
 
             int timenameindex = 0;
@@ -417,20 +431,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                                     }
 
                                 }
-                            }
-
-                            timenameindex = timenameindex == 0 ? 1 : 0;
+                            }                            
                         }
                     }
                     startime = startime.AddDays(1);
                     new_e.ClassName = classname;
-                    emotylist.Add(new_e);
+                    if (classname.Count>0)
+                    {
+                        emotylist.Add(new_e);
+                    }                    
                 }
                 else
                 {
                     startime = startime.AddDays(1);
                 }
-            }         
+                timenameindex = timenameindex == 0 ? 1 : 0;
+            }
+            
             if (emotylist.Count > 0)
             {
                 a.Data = emotylist;

@@ -207,11 +207,13 @@
             });      
             //自动安排
             form.on('submit(anpaiEvingstudy)', function (data) {
+                var indexmy = layer.load(1);
                 $.ajax({
                     url: '/Educational/EvningSelfStudy/AnPaiEvningSelfStudyFunction',
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {
+                        layer.close(indexmy);    
                         if (sucdata.Success == false) {                                                      
                             var str = '<div class="divCss1">';
                             for (var i = 0; i < sucdata.Data.length; i++) {

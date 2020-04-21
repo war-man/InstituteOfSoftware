@@ -117,7 +117,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             else
             {
                 List<EvningSelfStudy> list = a.Data as List<EvningSelfStudy>;
-                EvningSelefstudy_Entity.Add_Data(list);
+                a= EvningSelefstudy_Entity.Add_Data(list);
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
 
