@@ -105,14 +105,13 @@
                     , { field: 'WorkAbsentNum', title: '上班缺卡次数',width: 135}
                     , { field: 'WorkAbsentRecord', title: '上班缺卡记录',  width: 135 }
                     , { field: 'OffDutyAbsentNum', title: '下班缺卡次数', width: 135 }
-                        , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录', width: 135 }
-                        , { field: 'NoClockWithhold', title: '缺卡扣款/元', width: 115 }
+                    , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录', width: 135 }
                     , { field: 'TardyNum', title: '迟到次数',  width: 100 }
-                        , { field: 'TardyRecord', title: '迟到记录', width: 100 }
-                        , { field: 'TardyWithhold', title: '迟到扣款/元', width: 115 }
+                    , { field: 'TardyRecord', title: '迟到记录', width: 100 }
+                    , { field: 'TardyWithhold', title: '迟到扣款/元', width: 115 }
                     , { field: 'LeaveEarlyNum', title: '早退次数',  width: 100 }
-                        , { field: 'LeaveEarlyRecord', title: '早退记录', width: 100 }
-                        , { field: 'LeaveWithhold', title: '早退扣款/元', width: 115 }
+                    , { field: 'LeaveEarlyRecord', title: '早退记录', width: 100 }
+                 , { field: 'LeaveWithhold', title: '早退扣款/元', width: 115 }
                     , { field: 'Remark', title: '备注', width: 140 }
                     , { field: 'empIsDel', title: '员工状态', sort: true, width: 110, templet: '#empstate' }
                     , { title: '操作', toolbar: '#barDemo', width: 100, fixed: 'right' }
@@ -141,7 +140,7 @@
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/AttendanceStatistics/EditAttendanceInfo/?id=' + data.AttendanceId
-                        , area: ["1000px", "600px"]
+                        , area: ["400px", "400px"]
                         , title: '编辑员工考勤信息'
                         , shade: 0.8
                         , anim: 4
@@ -180,8 +179,8 @@
                 var layer = layui.layer;      //layui对象
                 layer.open({
                     type: 2
-                    , area: ["800px", "600px"]
-                    , title: ""
+                    , area: ["400px", "400px"]
+                    , title: "批量导入"
                     , content: '/Personnelmatters/AttendanceStatistics/BatchImport'
                     , anim: 2
                 });

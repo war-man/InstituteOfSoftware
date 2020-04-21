@@ -90,12 +90,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     if (msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth) == null)
                     {
                         view.finalGrade = null;//绩效分
-
                     }
                     else
                     {
                         view.finalGrade = msrmanage.GetMCByEmpid(item.EmployeeId, (DateTime)item.YearAndMonth).FinalGrade;
-
                     }
                     if (view.finalGrade == null)
                     {
@@ -124,10 +122,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     {
                         view.toRegularDays = attendobj.ToRegularDays;
                         view.leavedays = attendobj.LeaveDays;
-                        view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);//请假扣款
+                        if (view.leavedays > 0)
+                        {
+                            view.LeaveDeductions = msrmanage.GetLeaveDeductions(view.Id, one, view.PerformanceSalary, attendobj.DeserveToRegularDays, view.leavedays);//请假扣款
+                        }
+                        else {
+                            view.LeaveDeductions = null;
+                        }
                         view.TardyWithhold = attendobj.TardyWithhold;//迟到扣款
                         view.LeaveWithhold = attendobj.LeaveWithhold;//早退扣款
-                        view.NoClockWithhold = attendobj.NoClockWithhold;//缺卡扣款
+                        var NoClocknum = attendobj.WorkAbsentNum + attendobj.OffDutyAbsentNum;
+                        if (NoClocknum > 3)
+                        {
+                            view.NoClockWithhold = msrmanage.GetNoClockWithhold(view.Id, one, view.PerformanceSalary,attendobj.DeserveToRegularDays);//缺卡扣款
+                        }
+                        else {
+                            view.NoClockWithhold = null;
+                        }
                     }
 
                     view.OvertimeCharges = item.OvertimeCharges;//加班费用
