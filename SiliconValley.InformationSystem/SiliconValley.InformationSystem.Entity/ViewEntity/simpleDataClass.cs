@@ -11,8 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// </summary>
    public class simpleDataClass
     {
-       public int Id { get; set; }
+        public int Id { get; set; }
 
         public string name { get; set; }
+        /// <summary>
+        /// 其他字符串类型的Id
+        /// </summary>
+        public string PID { get; set; }
     }
 }

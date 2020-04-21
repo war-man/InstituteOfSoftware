@@ -118,6 +118,8 @@
             });
         });
         function GetKebiao() {
+            var layer = layui.layer;
+            var index= layer.load(1);
             var formdata = { "SelectTime": $("#SelectTime").val(), "campus": $(":checked").val() };
             $.ajax({
                 url: '/Educational/Timetable/GetReconcileData',
@@ -250,8 +252,11 @@
                     tr11.appendTo(recon_table);
 
                     recon_table.appendTo($('#table_div'));
+
+                    layer.close(index);
                 }
             });
+
         }
     </script>
 }
