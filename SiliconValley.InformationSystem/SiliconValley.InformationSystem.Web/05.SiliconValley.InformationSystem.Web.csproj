@@ -1525,6 +1525,10 @@
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\ChangeMCTime.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\EditEmpPFAssess.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\BatchImport.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

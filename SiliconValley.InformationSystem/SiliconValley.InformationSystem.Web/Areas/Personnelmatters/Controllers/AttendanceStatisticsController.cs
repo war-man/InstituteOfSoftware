@@ -16,30 +16,47 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class AttendanceStatisticsController : Controller
     {
+        AttendanceInfoManage atdmanage = new AttendanceInfoManage();
+        EmployeesInfoManage empmanage = new EmployeesInfoManage();
         RedisCache rc = new RedisCache();
+
+        //第一次进入月度工资表页面时加载的年月份的方法
+        static string GetFirstTime()
+        {
+            AttendanceInfoManage atdmanage = new AttendanceInfoManage();//员工月度工资
+            string mytime = "";
+            if (atdmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = atdmanage.GetADInfoData().Where(s => s.IsDel == false).LastOrDefault().YearAndMonth;
+                mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+            }
+            return mytime;
+        }
+        //第一次进入页面加载的应到勤天数
+        static string GetFirstDeserveToRegularDays()
+        {
+            AttendanceInfoManage atdmanage = new AttendanceInfoManage();//员工月度工资
+            string myDeserveToRegularDays = "";
+            if (atdmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
+            {
+                myDeserveToRegularDays = atdmanage.GetADInfoData().Where(s => s.IsDel == false).LastOrDefault().DeserveToRegularDays.ToString();
+            }
+            return myDeserveToRegularDays;
+        }
+        static string FirstTime = GetFirstTime();
+        static string Firstshouldday = GetFirstDeserveToRegularDays();
         //考勤统计
         // GET: Personnelmatters/AttendanceStatistics
         public ActionResult AttendanceStatisticsIndex()
         {
-            AttendanceInfoManage msrmanage = new AttendanceInfoManage();
-            if (msrmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
-            {
-                var time = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
-                string mytime = DateTime.Parse(time.ToString()).Year + "年" + DateTime.Parse(time.ToString()).Month + "月";
-                ViewBag.yearandmonth = mytime;
-
-                var deserveday = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
-                ViewBag.DeserveToRegularDays = deserveday;
-            }
-
+            ViewBag.yearandmonth = FirstTime;
+            ViewBag.DeserveToRegularDays = Firstshouldday;
             return View();
         }
         //获取考勤数据
         public ActionResult GetCheckingInData(int page, int limit, string AppCondition)
         {
-            AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var attlist = attmanage.GetADInfoData().Where(s => s.IsDel == false).ToList();
+            var attlist = atdmanage.GetADInfoData().Where(s => s.IsDel == false).ToList();
             if (!string.IsNullOrEmpty(AppCondition))
             {
                 string[] str = AppCondition.Split(',');
@@ -89,7 +106,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.Remark,
                              e.IsDel,
                              e.DeserveToRegularDays,
-                             e.NoClockWithhold,
                              e.TardyWithhold,
                              e.LeaveWithhold
                              #endregion
@@ -112,14 +128,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         [HttpGet]
         public ActionResult ChangeTimeandDays()
         {
-            AttendanceInfoManage msrmanage = new AttendanceInfoManage();
-            if (msrmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
+            if (atdmanage.GetADInfoData().Where(s => s.IsDel == false).Count() > 0)
             {
-                var time = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
+                var time = atdmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
                 string mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
                 ViewBag.time = mytime;
 
-                var deserveday = msrmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
+                var deserveday = atdmanage.GetADInfoData().Where(s => s.IsDel == false).FirstOrDefault().DeserveToRegularDays;
                 ViewBag.days = deserveday;
             }
             return View();
@@ -128,22 +143,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult ChangeTimeandDays(string CurrentTime, int ShouldComeDays)
         {
             var AjaxResultxx = new AjaxResult();
-            AttendanceInfoManage msrmanage = new AttendanceInfoManage();
             try
             {
-                var attlist = msrmanage.GetADInfoData().Where(s => s.IsDel == false).ToList();
+                var attlist = atdmanage.GetADInfoData().Where(s => s.IsDel == false).ToList();
                 for (int i = 0; i < attlist.Count(); i++)
                 {
                     attlist[i].YearAndMonth = Convert.ToDateTime(CurrentTime);
                     attlist[i].DeserveToRegularDays = ShouldComeDays;
-                    msrmanage.Update(attlist[i]);
+                    atdmanage.Update(attlist[i]);
                     rc.RemoveCache("InRedisATDData");
-                    AjaxResultxx = msrmanage.Success();
+                    AjaxResultxx = atdmanage.Success();
                 }
             }
             catch (Exception ex)
             {
-                AjaxResultxx = msrmanage.Error(ex.Message);
+                AjaxResultxx = atdmanage.Error(ex.Message);
             }
 
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
@@ -151,24 +165,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
         public ActionResult EditAttendanceInfo(int id)
         {
-            AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            var att = attmanage.GetEntity(id);
+            var att = atdmanage.GetEntity(id);
             return View(att);
         }
         public ActionResult GetAttById(int id)
         {
-            AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            EmployeesInfoManage emanage = new EmployeesInfoManage();
-            var att = attmanage.GetEntity(id);
+            var att = atdmanage.GetEntity(id);
             var newobj = new
             {
                 #region 考勤表赋值
                 att.AttendanceId,
                 att.EmployeeId,
-                empName = emanage.GetInfoByEmpID(att.EmployeeId).EmpName,
-                esex = emanage.GetInfoByEmpID(att.EmployeeId).Sex,
-                dname = emanage.GetDeptByEmpid(att.EmployeeId).DeptName,
-                pname = emanage.GetPositionByEmpid(att.EmployeeId).PositionName,
+                empName = empmanage.GetInfoByEmpID(att.EmployeeId).EmpName,
+                esex = empmanage.GetInfoByEmpID(att.EmployeeId).Sex,
+                dname = empmanage.GetDeptByEmpid(att.EmployeeId).DeptName,
+                pname = empmanage.GetPositionByEmpid(att.EmployeeId).PositionName,
                 att.ToRegularDays,
                 att.LeaveDays,
                 att.WorkAbsentNum,
@@ -192,21 +203,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditAttendanceInfo(AttendanceInfo att)
         {
             var AjaxResultxx = new AjaxResult();
-            AttendanceInfoManage atmanage = new AttendanceInfoManage();
             try
             {
-                var a = atmanage.GetEntity(att.AttendanceId);
+                var a = atdmanage.GetEntity(att.AttendanceId);
                 att.YearAndMonth = a.YearAndMonth;
                 att.DeserveToRegularDays = a.DeserveToRegularDays;
                 att.IsDel = a.IsDel;
                 att.EmployeeId = a.EmployeeId;
-                atmanage.Update(att);
+                atdmanage.Update(att);
                 rc.RemoveCache("InRedisATDData");
-                AjaxResultxx = atmanage.Success();
+                AjaxResultxx = atdmanage.Success();
             }
             catch (Exception ex)
             {
-                AjaxResultxx = atmanage.Error(ex.Message);
+                AjaxResultxx = atdmanage.Error(ex.Message);
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
@@ -214,6 +224,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult BatchImport()
         {
             return View();
+        }
+        /// <summary>
+        /// 批量录入
+        /// </summary>
+        /// <param name="excelfile"></param>
+        /// <param name="course"></param>
+        /// <returns></returns>
+        [HttpPost]
+
+        public ActionResult BatchImport(HttpPostedFileBase excelfile)
+        {
+            Stream filestream = excelfile.InputStream;
+
+            var result = atdmanage.ImportDataFormExcel(filestream, excelfile.ContentType);
+
+           // Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         //获取Excle文件中的值
