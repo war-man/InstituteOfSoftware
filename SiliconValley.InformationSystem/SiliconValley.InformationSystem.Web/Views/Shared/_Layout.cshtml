@@ -23,7 +23,7 @@
             right: -17px;
             bottom: 0;
             
-            width: 1000px;
+          
             overflow-y: auto;
         }
         
@@ -429,13 +429,15 @@
         console.log(MenuData);
         var menu = $("#menu");
         for (var i = 0; i < MenuData.length; i++) {
-            var li = $('<li id="menu-comunicacao"></li>');
-            var a = ('<a href="#"><i class="fa fa-smile-o"></i> <span>' + MenuData[i].Name + '</span><span class="fa fa-angle-double-right" style="float: right"></span></a>')
-            li.append(a);
-         
+
+            if (MenuData[i].IsShow == true) {
+                var li = $('<li id="menu-comunicacao"></li>');
+                var a = ('<a href="#"><i class="fa fa-smile-o"></i> <span>' + MenuData[i].Name + '</span><span class="fa fa-angle-double-right" style="float: right"></span></a>')
+                li.append(a);
+                menu.append(li);
+                loadSonMenu(MenuData[i].SubMenus, li);
+            }
            
-            menu.append(li);
-            loadSonMenu(MenuData[i].SubMenus, li);
         }
        
     }
@@ -453,29 +455,30 @@
         if (Menu.length != null) {
             var ul = $('<ul id="menu-comunicacao-sub" ></ul>');
             for (var i = 0; i < Menu.length; i++) {
-                
-             
+                if (Menu[i].IsShow == true) {
                     if (Menu[i].Url) {
-                       
+
                         var li1 = $('<li id="menu-mensagens"  style="width:200px"></li>');
-                        var a1 = $('<a  href=' + Menu[i].Url + '>' + Menu[i].Name+'</a>')
-                      
+                        var a1 = $('<a  href=' + Menu[i].Url + '>' + Menu[i].Name + '</a>')
+
                         li1.append(a1);
                         ul.append(li1);
-                      
-                       
-                     }
+
+                    }
                     else {
-                     
+
                         var li = $('<li id="menu-mensagens"  style="width:150px"></li>');
                         var a = $('<a href="#">' + Menu[i].Name + ' <i class="fa fa-angle-right" style="float: right; margin-right: -8px; margin-top: 2px;"></i></a>');
-                    
+
                         li.append(a);
                         ul.append(li);
                         loadSonMenu(Menu[i].SubMenus, li);
                     }
-                  
-              
+
+
+                }
+             
+                 
             }
            
             //console.log(ul);
