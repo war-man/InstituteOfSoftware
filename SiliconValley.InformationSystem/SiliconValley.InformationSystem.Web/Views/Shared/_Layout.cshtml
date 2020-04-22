@@ -8,8 +8,7 @@
     <style>
 
         .outer-container {
-            width: 960px;
-           
+          
             height: 580px;
             position: relative;
             overflow: hidden;
@@ -22,6 +21,7 @@
             right: -17px;
             bottom: 0;
             overflow-y: auto;
+            overflow-x:hidden;
         }
         
     </style>
@@ -441,11 +441,13 @@
 
     //scroll
 
-    $(window).scroll(function (event) {
-        console.log("滚动");
-})
-    $("body").on("scroll", ".menu", function () {
-        console.log("滚动");
+    $("#menu").on({
+        mouseover: function () {
+            $(".outer-container").attr("style", "width:960px;")
+        },
+        mouseout: function () {
+            $(".outer-container").attr("style", "width:222px;")
+        }
     });
     function loadSonMenu(Menu, html) {
        
