@@ -285,7 +285,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     rc.RemoveCache("InRedisATDData");
                    ajaxresult.Success=true;
                    ajaxresult.ErrorCode = 200;
-                   ajaxresult.Msg = "成功";
+                   ajaxresult.Msg = atd.YearAndMonth.ToString()+","+atd.DeserveToRegularDays;
                    ajaxresult.Data = mateviewlist.Count();
                 }
             }

@@ -307,10 +307,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 }//给财务部员工表添加员工
                     bool ss = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
                     AjaxResultxx.Success = ss;
-                    if (AjaxResultxx.Success) {
-                        bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
-                        AjaxResultxx.Success = monthss;
-                    }
+                    //if (AjaxResultxx.Success) {
+                    //    bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
+                    //    AjaxResultxx.Success = monthss;
+                    //}
                    
                     if (AjaxResultxx.Success) {
                         bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
