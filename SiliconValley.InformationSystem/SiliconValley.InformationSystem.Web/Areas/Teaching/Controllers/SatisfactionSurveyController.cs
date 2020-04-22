@@ -439,14 +439,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         
         public ActionResult SurveyHistoryData(int limit, int page)
         {
+            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-            
+            //获取这些员工所在的部门
 
-           var configList = db_survey.satisficingConfigs();
+            List<EmployeesInfo> emplist = db_survey.GetMyDepEmp(user);
 
-            var skiplist = configList.Skip((page - 1) * limit).Take(limit).ToList();
+            var configtempList = db_survey.satisficingConfigs();
+
+            var configList = new List<SatisficingConfig>();
+
+            foreach (var item in emplist)
+            {
+               var templist = configtempList.Where(d=>d.EmployeeId == item.EmployeeId).ToList();
+
+                if (templist != null)
+                {
+                    configList.AddRange(templist);
+                }
+            }
+
+            var skiplist = configList.OrderByDescending(d=>d.CreateTime).Skip((page - 1) * limit).Take(limit).ToList();
+
             List<SatisfactionSurveyDetailView> detaillist = new List<SatisfactionSurveyDetailView>();
-
 
             foreach (var item in skiplist)
             {
@@ -460,7 +475,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                         detaillist.Add(detail);
                 }
             }
-
             var obj = new {
                 code=0,
                 msg="",
@@ -468,9 +482,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 data = detaillist
 
             };
-
-
-
             return Json(obj, JsonRequestBehavior.AllowGet);
 
         }
@@ -1879,16 +1890,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                     }
                 }
-
-
-
             }
             catch (Exception ex)
             {
                 
             }
-
-
             var objresult = new
             {
 

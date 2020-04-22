@@ -15,6 +15,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     using SiliconValley.InformationSystem.Util;
     using System.IO;
     using NPOI.XSSF.UserModel;
+    using NPOI.SS.Util;
 
 
     /// <summary>
@@ -193,25 +194,32 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             List<MultipleChoiceQuestion> result = new List<MultipleChoiceQuestion>();
 
+            #region 创建excel实例
             IWorkbook workbook = null;
 
             if (contentType == "application/vnd.ms-excel")
             {
+                // 2003版本
                 workbook = new HSSFWorkbook(stream);
             }
 
             if (contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             {
+                // 2007版本
                 workbook = new XSSFWorkbook(stream);
             }
 
-            HSSFSheet sheet = (HSSFSheet)workbook.GetSheetAt(0);
+            ISheet sheet = (ISheet)workbook.GetSheetAt(0);
 
+            #endregion
+             
             var num = 0;
 
+            // 循环获取题目
             while (true)
             {
                 num++;
+                // 获取题目
                 var obj = getQuestion(num, sheet);
                 if (obj == null)
                 {
@@ -222,13 +230,14 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             }
 
-            stream.Close();
-            stream.Dispose();
+            stream.Close();  
+            stream.Dispose(); 
             workbook.Close();
 
             return result;
         }
 
+        //一个题目占19行
         const int danwei = 19;
 
         /// <summary>
@@ -237,7 +246,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <param name="Number"></param>
         /// <param name="sheet"></param>
         /// <returns></returns>
-        public MultipleChoiceQuestion getQuestion(int Number, HSSFSheet sheet)
+        public MultipleChoiceQuestion getQuestion(int Number, ISheet sheet)
         {
             MultipleChoiceQuestion result = new MultipleChoiceQuestion();
 
@@ -250,8 +259,13 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             try
             {
                 string title = sheet.GetRow(beginRowindex + 1).Cells[0].StringCellValue;
-                result.Title = title;
 
+                if (string.IsNullOrEmpty(title))
+                {
+                    return null;
+                }
+                result.Title = title;
+                
                 //获取 是否单选
                 string IsRedio = sheet.GetRow(beginRowindex + 5).Cells[1].StringCellValue;
                 result.IsRadio = IsRedio == "是" ? true : false;
@@ -302,6 +316,179 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             return result;
  
+        }
+
+        /// <summary>
+        /// 初始化Excel
+        /// </summary>
+        /// <param name="initCount"></param>
+        /// <returns></returns>
+        public bool InitQuestionTemplate(int QuestionNumber, string path)
+        {  
+            try
+            {
+                FileStream filestream = new FileStream(path, FileMode.Create, FileAccess.ReadWrite);
+
+                HSSFWorkbook workbook = new HSSFWorkbook();
+
+                //创建工作簿
+                ISheet sheet = (ISheet)workbook.CreateSheet();
+
+                for (int i = 0; i < QuestionNumber; i++)
+                {
+                    //1 0,   2 ,20  19*i+1
+
+                    int beginIndex = danwei * i + 1;
+
+                    Console.WriteLine(beginIndex.ToString());
+
+                    //创建行
+                    HSSFRow row_title = (HSSFRow)sheet.CreateRow(beginIndex);
+
+                    HSSFCellStyle style = (HSSFCellStyle)workbook.CreateCellStyle();
+
+                    HSSFFont font = (HSSFFont)workbook.CreateFont();
+
+                    font.IsBold = true;
+
+                    style.Alignment = HorizontalAlignment.Center;
+
+                    style.SetFont(font);
+
+                    HSSFCell cell_title = (HSSFCell)row_title.CreateCell(0);
+
+                    cell_title.CellStyle = style;
+
+                    cell_title.SetCellValue("题目");
+
+                    CellRangeAddress title_range = new CellRangeAddress(beginIndex, beginIndex, 0, 9);
+
+                    sheet.AddMergedRegion(title_range);
+
+
+                    //创建题目内容行
+                    HSSFRow row_titleContent = (HSSFRow)sheet.CreateRow(beginIndex + 1);
+
+                    CellRangeAddress titleContent_range = new CellRangeAddress(beginIndex + 1, beginIndex + 3, 0, 9);
+
+                    sheet.AddMergedRegion(titleContent_range);
+
+                    //创建 单选、难度、答案
+                    HSSFRow row_isRadio_Level_Answer = (HSSFRow)sheet.CreateRow(beginIndex + 5);
+
+                    HSSFCell cell_isRadio = (HSSFCell)row_isRadio_Level_Answer.CreateCell(1);
+
+                    cell_isRadio.SetCellValue("单选");
+
+                    cell_isRadio.CellStyle = style;
+
+                    HSSFCell cell_isRadio_defaultValue = (HSSFCell)row_isRadio_Level_Answer.CreateCell(2);
+
+                    cell_isRadio_defaultValue.SetCellValue("是");
+
+                    HSSFCell cell_level = (HSSFCell)row_isRadio_Level_Answer.CreateCell(4);
+
+                    cell_level.SetCellValue("难度");
+
+                    cell_level.CellStyle = style;
+
+                    HSSFCell cell_levelContent = (HSSFCell)row_isRadio_Level_Answer.CreateCell(5);
+
+                    cell_levelContent.SetCellValue("普通");
+
+                    HSSFCell cell_answer = (HSSFCell)row_isRadio_Level_Answer.CreateCell(7);
+
+                    cell_answer.SetCellValue("答案");
+
+                    cell_answer.CellStyle = style;
+
+                    //创建 选项区域
+
+                    //选项A
+                    HSSFRow row_optionA = (HSSFRow)sheet.CreateRow(beginIndex + 7);
+
+                    HSSFCell cell_optionA = (HSSFCell)row_optionA.CreateCell(0);
+
+                    cell_optionA.SetCellValue("A");
+
+                    cell_optionA.CellStyle = style;
+
+                    CellRangeAddress optionARange = new CellRangeAddress(beginIndex + 7, beginIndex + 8, 0, 0);
+
+                    sheet.AddMergedRegion(optionARange);
+
+                    CellRangeAddress optionA_Content_Range = new CellRangeAddress(beginIndex + 7, beginIndex + 8, 1, 9);
+
+                    sheet.AddMergedRegion(optionA_Content_Range);
+
+                    //选项B
+                    HSSFRow row_optionB = (HSSFRow)sheet.CreateRow(beginIndex + 10);
+
+                    HSSFCell cell_optionB = (HSSFCell)row_optionB.CreateCell(0);
+
+                    cell_optionB.SetCellValue("B");
+
+                    cell_optionB.CellStyle = style;
+
+                    CellRangeAddress optionBRange = new CellRangeAddress(beginIndex + 10, beginIndex + 11, 0, 0);
+
+                    sheet.AddMergedRegion(optionBRange);
+
+                    CellRangeAddress optionB_Content_Range = new CellRangeAddress(beginIndex + 10, beginIndex + 11, 1, 9);
+
+                    sheet.AddMergedRegion(optionB_Content_Range);
+
+                    //选项C
+                    HSSFRow row_optionC = (HSSFRow)sheet.CreateRow(beginIndex + 13);
+
+                    HSSFCell cell_optionC = (HSSFCell)row_optionC.CreateCell(0);
+
+                    cell_optionC.SetCellValue("C");
+
+                    cell_optionC.CellStyle = style;
+
+                    CellRangeAddress optionCRange = new CellRangeAddress(beginIndex + 13, beginIndex + 14, 0, 0);
+
+                    sheet.AddMergedRegion(optionCRange);
+
+                    CellRangeAddress optionC_Content_Range = new CellRangeAddress(beginIndex + 13, beginIndex + 14, 1, 9);
+
+                    sheet.AddMergedRegion(optionC_Content_Range);
+
+                    //选项D
+                    HSSFRow row_optionD = (HSSFRow)sheet.CreateRow(beginIndex + 16);
+
+                    HSSFCell cell_optionD = (HSSFCell)row_optionD.CreateCell(0);
+
+                    cell_optionD.SetCellValue("D");
+
+                    cell_optionD.CellStyle = style;
+
+                    CellRangeAddress optionDRange = new CellRangeAddress(beginIndex + 16, beginIndex + 17, 0, 0);
+
+                    sheet.AddMergedRegion(optionDRange);
+
+                    CellRangeAddress optionD_Content_Range = new CellRangeAddress(beginIndex + 16, beginIndex + 17, 1, 9);
+
+                    sheet.AddMergedRegion(optionD_Content_Range);
+                }
+
+                workbook.Write(filestream);
+
+                workbook.Close();
+
+                filestream.Close();
+
+                filestream.Dispose();
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+
+                return false;
+            }
         }
 
     }

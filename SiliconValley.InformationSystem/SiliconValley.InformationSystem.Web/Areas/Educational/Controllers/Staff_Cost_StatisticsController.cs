@@ -125,10 +125,32 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
         }
 
-        public ActionResult ss()
+        /// <summary>
+        /// 获取工作日天数
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult WorkingDays(string date)
         {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                int Days = db_staf_Cost.WorkingDate(DateTime.Parse(date));
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = Days.ToString();
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
             
-            return null;
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 
@@ -146,7 +168,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult CostStatistics(string date)
+        public ActionResult CostStatistics(string date, int workingDays)
         {
 
             AjaxResult resultObj = new AjaxResult();
@@ -161,7 +183,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
                 foreach (var item in list)
                 {
-                    var obj = db_staf_Cost.Statistics_Cost(item.EmployeeId, date);
+                    var obj = db_staf_Cost.Statistics_Cost(item.EmployeeId, date, workingDays);
 
                     result.Add(obj);
                 }
@@ -223,13 +245,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         }
 
         [HttpPost]
-        public ActionResult PersonalCostStatics(string empid, string date)
+        public ActionResult PersonalCostStatics(string empid, string date, int workingDays)
         {
             AjaxResult result = new AjaxResult();
 
             try
             {
-                var costItems = db_staf_Cost.Statistics_Cost(empid, date);
+                var costItems = db_staf_Cost.Statistics_Cost(empid, date,workingDays);
 
                 result.Data = costItems;
                 result.ErrorCode = 200;
@@ -243,9 +265,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 result.Msg = "失败";
             }
 
-
             return Json(result, JsonRequestBehavior.AllowGet);
-
         }
 
 

@@ -60,6 +60,30 @@
         </div>
 
 
+        <div style="height:40px; line-height:40px; text-align:center;">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style=" width:400px;">
+                        <label style="width:150px;" class="layui-form-label">确认工作日天数</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="number" id="dayNumber" lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" style=" width:40px;">
+                        <label style="width:50px; color:blue;" id="flush" class="layui-form-label">刷新</label>
+                        <div class="layui-input-inline">
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </form>
+
+
+        </div>
+
         <div id="data" style="margin-top:30px;">
 
             <ul class="header">
@@ -78,7 +102,7 @@
                 <li>合计</li>
             </ul>
 
-            <ul class="cost" >
+            <ul class="cost">
                 <li id="teacherHostCost">0</li>
 
                 <li id="dutyCost">0</li>
@@ -97,7 +121,7 @@
         </div>
         <hr />
 
-        <div class="btns" style="width:100%; text-align:center; margin-top:160px;">
+        <div class="btns" style="width:100%; text-align:center; margin-top:120px;">
             <button id="beginStatistics" style="width:60%;" class="layui-btn layui-btn-radius layui-btn-primary ">开始统计</button>
         </div>
     </div>
@@ -120,12 +144,54 @@
 
 
         });
+        //获取工作日天数
+        function WorkingDay(date, callback) {
 
+            $.post("/Educational/Staff_Cost_Statistics/WorkingDays", { date: date }, function (result) {
+
+                callback(result);
+
+            });
+        }
         layui.use(['layer'], function () {
 
             var layer = layui.layer;
 
+            var lodeindex = layer.load(1, { time: 10 * 1000 });
+            var date = $("#date-input").val();
+            WorkingDay(date, function (result) {
 
+                layer.close(lodeindex);
+
+                if (result.ErrorCode == 200) {
+
+                    $("#dayNumber").val(result.Data);
+                }
+                else {
+
+                    $("#dayNumber").val("0");
+                }
+            });
+
+            //刷新
+            $("#flush").click(function () {
+                var date1 = $("#date-input").val();
+                var lodeindex = layer.load(1, { time: 10 * 1000 });
+
+                WorkingDay(date1, function (result) {
+
+                    layer.close(lodeindex);
+
+                    if (result.ErrorCode == 200) {
+
+                        $("#dayNumber").val(result.Data);
+                    }
+                    else {
+
+                        $("#dayNumber").val("0");
+                    }
+                });
+            });
 
             function SetData(dataObj) {
 
@@ -154,7 +220,7 @@
                 var total = parseFloat(dataObj.EachingHourCost) + parseFloat(dataObj.DutyCost) + parseFloat(dataObj.MarkingCost) + parseFloat(dataObj.InvigilateCost) + parseFloat(dataObj.InternalTrainingCost) + parseFloat(dataObj.CurriculumDevelopmentCost);
 
                 $("#total").text(total + '元');
-            }
+            } 
 
 
             ///开始统计
@@ -164,13 +230,15 @@
                     shade: [0.1, '#fff'] //0.1透明度的白色背景
                 });
 
-                //获取emp 时间
+                //获取emp 时
 
                 var empid = $("#Emp").val();
 
                 var date = $("#date-input").val();
 
-                $.post('/Educational/Staff_Cost_Statistics/PersonalCostStatics', { empid: empid, date: date }, function (result) {
+                var workingDays = $("#dayNumber").val();
+
+                $.post('/Educational/Staff_Cost_Statistics/PersonalCostStatics', { empid: empid, date: date, workingDays: workingDays }, function (result) {
 
                     layer.close(index);
 

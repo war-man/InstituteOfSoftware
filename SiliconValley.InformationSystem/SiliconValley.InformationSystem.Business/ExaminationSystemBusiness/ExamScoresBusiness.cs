@@ -304,8 +304,6 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             view.StudentNumber = candidInfo.StudentID;
 
             return view;
-
-
         }
 
 
