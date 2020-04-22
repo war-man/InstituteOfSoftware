@@ -25,6 +25,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string StudentNO { get; set; }
 
         /// <summary>
+        /// 就业时间
+        /// </summary>
+        public DateTime employedDate { get; set; }
+
+        /// <summary>
         /// 未就业原因
         /// </summary>
         public string NoReasons { get; set; }

@@ -1,5 +1,7 @@
-﻿using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -33,7 +35,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult EstablishTree()
         {
 
-            dbquarter = new QuarterBusiness();
+            dbquarter = new QuarterBusiness(); 
             var result = dbquarter.loadtree();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -64,6 +66,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 ajaxResult.Msg = "请联系信息部成员！";
             }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 就业率
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EmploymentRatio()
+        {
+            // 专业 班级 专员
+          
+
+            return View();
         }
     }
 }
