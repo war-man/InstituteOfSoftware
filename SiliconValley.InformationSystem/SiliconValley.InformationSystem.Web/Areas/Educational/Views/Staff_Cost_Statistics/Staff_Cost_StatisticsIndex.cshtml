@@ -20,71 +20,71 @@
 
     }
 
-<div id="mywarp">
+    <div id="mywarp">
+        
+        <div id="title" style="text-align:center;">
+            <button id="createEmpCost" type="button" class="layui-btn layui-btn-radius layui-btn-primary"><i class="layui-icon layui-icon-chart"></i>生成员工费用统计</button>
+            <div class="line-title"></div>
+            <i class="layui-icon layui-icon-chart" style="font-size:35px;"><i style="font-size:25px;">员工费用统计</i> </i>
+            <div class="line-title"></div>
+            <button id="HistoryCost" type="button" class="layui-btn layui-btn-radius layui-btn-primary"><i class="layui-icon layui-icon-log"></i>历史统计数据</button>
 
-    <div id="title" style="text-align:center;">
-        <button id="createEmpCost" type="button" class="layui-btn layui-btn-radius layui-btn-primary">生成员工费用统计</button>
-        <div class="line-title"></div>
-        <i class="layui-icon layui-icon-chart" style="font-size:35px;"><i style="font-size:25px;">员工费用统计</i> </i>
-        <div class="line-title"></div>
-        <button id="HistoryCost" type="button" class="layui-btn layui-btn-radius layui-btn-primary">历史统计数据</button>
-
-    </div>
-
-    <hr />
-    <!--员工列表-->
-    <div id="emplistDiv">
-
-      
-
-        <div class="list_seccn">
-            <form class="layui-form">
-                <div class="layui-form-item">
-                    <div class="layui-inline">
-                        <label class="layui-form-label">部门：</label>
-                        <div class="layui-input-inline">
-                            <select name="dep" lay-filter="dep_select" lay-search="">
-
-                                <option value="0">所有</option>
-
-                                @{
-                                    foreach (var item in ViewBag.deps as List<Department>)
-                                    {
-                                        <option value="@item.DeptId">@item.DeptName</option>
-                                    }
-                                }
-
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="layui-inline">
-                        <label class="layui-form-label">姓名：</label>
-                        <div class="layui-input-inline">
-                            <input type="tel" id="empName_input" autocomplete="off" class="layui-input">
-                        </div>
-                    </div>
-
-                    <div class="layui-inline" style="width:60px;">
-
-
-                        <button id="search" type="button" class="layui-btn layui-btn-primary">查询<i class="layui-icon layui-icon-search"></i></button>
-
-                    </div>
-                </div>
-            </form>
         </div>
 
-        <script type="text/html" id="barDemo">
-            <a class="layui-btn layui-btn-xs" lay-event="cost_history">历史统计数据</a>
-            
-        </script>
+        <hr />
+        <!--员工列表-->
+        <div id="emplistDiv">
 
-        <table class="layui-hide tablelist" id="emplist" lay-filter="emplist_filter"></table>
 
+
+            <div class="list_seccn">
+                <form class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">部门：</label>
+                            <div class="layui-input-inline">
+                                <select name="dep" lay-filter="dep_select" lay-search="">
+
+                                    <option value="0">所有</option>
+
+                                    @{
+                                        foreach (var item in ViewBag.deps as List<Department>)
+                                        {
+                                            <option value="@item.DeptId">@item.DeptName</option>
+                                        }
+                                    }
+
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="layui-inline">
+                            <label class="layui-form-label">姓名：</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" id="empName_input" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+
+                        <div class="layui-inline" style="width:60px;">
+
+
+                            <button id="search" type="button" class="layui-btn layui-btn-primary">查询<i class="layui-icon layui-icon-search"></i></button>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="cost_history">历史统计数据</a>
+
+            </script>
+
+            <table class="layui-hide tablelist" id="emplist" lay-filter="emplist_filter"></table>
+
+        </div>
     </div>
-</div>
 
 @section script{
     
@@ -245,7 +245,7 @@
                     title: "历史记录",
                     content: '/Educational/Staff_Cost_Statistics/HistoryCost' 
                 });
-
+                0
             });
 
         });

@@ -22,7 +22,7 @@
                 startDate:'2014-01-01 00:00:00',
                 endDate:(new Date()).Format("yyyy-mm-dd hh:ii:ss"),
                 onDateChange:function(value,lastValue){
-
+                    
                 },
                 parent:'body',
                 positionFixed:false

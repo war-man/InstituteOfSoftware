@@ -35,7 +35,14 @@
 
             vertical-align:middle;
         }
+        #flush :hover{
+        
+            color:red;
+        }
 
+        #flush {
+            cursor:pointer;
+        }
        
     </style>
 </head>
@@ -57,7 +64,33 @@
 
         <hr />
 
-        <div style="height:200px; line-height:200px; text-align:center; ">
+        <div style="height:40px; line-height:40px; text-align:center;">
+            <form class="layui-form">
+                <div class="layui-form-item">
+                    <div class="layui-inline" style=" width:400px;">
+                        <label style="width:150px;" class="layui-form-label">确认工作日天数</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="number" id="dayNumber" lay-verify="required" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline" style=" width:40px;">
+                        <label style="width:50px; color:blue;" id="flush" class="layui-form-label">刷新</label>
+                        <div class="layui-input-inline">
+                            
+                        </div>
+                    </div>
+                </div>
+
+               
+            </form>
+
+            
+        </div>
+
+        <hr />
+
+        <div style="height:180px; line-height:180px; text-align:center; ">
             <tip id="tipMSg" style="font-size:30px; color:green;"></tip>
         </div>
 
@@ -65,8 +98,8 @@
 
             <button id="beginStatistics" class="layui-btn layui-btn-radius layui-btn-primary ">开始统计</button>
 
-            <button id="download"  class="layui-btn layui-btn-radius layui-btn-primary ">保存到文件</button>
-          
+            <button id="download" class="layui-btn layui-btn-radius layui-btn-primary ">保存到文件</button>
+
         </div>
 
         <div id="pross">
@@ -90,10 +123,17 @@
             parent: $("#date-input").parent(),
             //定位方式是否用fixed
             positionFixed: $("#position-1").is(':checked'),
-
-
-
         });
+
+        //获取工作日天数
+        function WorkingDay(date, callback) {
+            
+            $.post("/Educational/Staff_Cost_Statistics/WorkingDays", { date: date }, function (result) {
+
+                callback(result);
+
+            });
+        }
 
         function downloadFile(url) {
             window.open(url);
@@ -103,10 +143,54 @@
             location.href = url;
         }
 
+
+        var date = $("#date-input").val();
+     
         layui.use(['layer', 'table', 'element'], function () {
 
             var layer = layui.layer;
             var element = layui.element;
+
+
+            var lodeindex = layer.load(1, { time: 10 * 1000 });
+            WorkingDay(date, function (result) {
+
+                layer.close(lodeindex);
+
+                if (result.ErrorCode == 200) {
+
+                    $("#dayNumber").val(result.Data);
+                }
+                else {
+
+                    $("#dayNumber").val("0");
+                }
+            });
+
+            $(document).off("change", "#date-input").on("change", "#date-input", function () {
+                alert("dd");
+
+            });
+
+            //刷新
+            $("#flush").click(function () {
+                var date1 = $("#date-input").val();
+                var lodeindex = layer.load(1, { time: 10 * 1000 });
+
+                WorkingDay(date1, function (result) {
+
+                    layer.close(lodeindex);
+
+                    if (result.ErrorCode == 200) {
+
+                        $("#dayNumber").val(result.Data);
+                    }
+                    else {
+
+                        $("#dayNumber").val("0");
+                    }
+                });
+            });
 
             //开始统计
             $("#beginStatistics").click(function () {
@@ -115,7 +199,8 @@
 
                 var date = $("#date-input").val();
 
-               
+                var days = $("#dayNumber").val();
+
                 $("#pross").css("display", "block");
 
                 var num = 0;
@@ -129,13 +214,13 @@
 
                     num += 0.5;
 
-                    element.progress('demo', num+'%');
+                    element.progress('demo', num + '%');
 
                 }, 2000);
 
                 $("#tipMSg").text("统计中.......");
 
-                $.post('/Educational/Staff_Cost_Statistics/CostStatistics', { date: date }, function (result) {
+                $.post('/Educational/Staff_Cost_Statistics/CostStatistics', { date: date, workingDays: days }, function (result) {
 
 
 
@@ -168,7 +253,7 @@
 
             });
 
-            
+
         });
     </script>
 </body>

@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using System;
@@ -244,7 +245,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             view.Salary = intention.Salary;
             view.StudentName = dbproStudentInformation.GetEntity(studentno).Name;
             view.StudentNO = studentno;
-            EmployeesInfo employeesInfo= dbproStudentInformation.GetEEmpinfoByStudentNumber(studentno);
+            EmployeesInfo employeesInfo = dbproStudentInformation.GetEEmpinfoByStudentNumber(studentno);
             view.empname = employeesInfo.EmpName;
 
             switch (queryobj.EmploymentState)
@@ -365,7 +366,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public List<EmpStaffAndStuView> Conversioned(string year, int empid)
         {
             int paramyear = int.Parse(year);
-            List<EmpStaffAndStu> data = this.GetAllByYear(paramyear,empid);
+            List<EmpStaffAndStu> data = this.GetAllByYear(paramyear, empid);
             return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
         }
         /// <summary>
@@ -381,7 +382,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <summary>
         /// 获取正在带带学生转化过后i的数据
         /// </summary>
-        public List<EmpStaffAndStuView> Conversioned(bool isJurisdiction,int empid)
+        public List<EmpStaffAndStuView> Conversioned(bool isJurisdiction, int empid)
         {
             List<EmpStaffAndStu> data = new List<EmpStaffAndStu>();
             if (isJurisdiction)
@@ -392,7 +393,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             {
                 data = this.GetisingByempid(empid);
             }
-            
+
             return this.EmpStaffAndStuConversionEmpStaffAndStuView(data);
         }
 
@@ -410,7 +411,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// </summary>
         /// <returns></returns>
         public List<EmpStaffAndStu> GetEmpStaffAndStusByempid(int empid) {
-          return  this.GetEmpStaffAndStus().Where(a => a.EmpStaffID == empid).ToList();
+            return this.GetEmpStaffAndStus().Where(a => a.EmpStaffID == empid).ToList();
         }
 
         /// <summary>
@@ -502,7 +503,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="param0"></param>
         /// <returns></returns>
         public List<EmpStaffAndStu> GetEmpstaffAndStuinfodataByQuarterid(int param0) {
-          return  this.GetEmpStaffAndStus().Where(a => a.Ising == true&a.QuarterID==param0).ToList();
+            return this.GetEmpStaffAndStus().Where(a => a.Ising == true & a.QuarterID == param0).ToList();
         }
         /// <summary>
         /// 获取全部得数据中被带得记录 根据计划id 进行筛选
@@ -512,7 +513,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         public List<EmpStaffAndStu> GetEmpstaffAndStuinfodataByyear(int param0)
         {
             dbquarter = new QuarterBusiness();
-            var list= dbquarter.GetQuartersByYear(param0);
+            var list = dbquarter.GetQuartersByYear(param0);
             List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
             foreach (var item in list)
             {
@@ -521,25 +522,64 @@ namespace SiliconValley.InformationSystem.Business.Employment
             }
             return result;
         }
-        public List<EmpStaffAndStu> GetEmploymentSummaryData(bool isyear,int param0,int? empid) {
+        public List<EmpStaffAndStu> GetEmploymentSummaryData(bool isyear, int param0, int? empid) {
 
             List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
             if (isyear)
             {
-                result= this.GetEmpstaffAndStuinfodataByyear(param0);
+                result = this.GetEmpstaffAndStuinfodataByyear(param0);
             }
             else
             {
-                result= this.GetEmpstaffAndStuinfodataByQuarterid(param0);
+                result = this.GetEmpstaffAndStuinfodataByQuarterid(param0);
             }
-            if (empid!=null)
+            if (empid != null)
             {
-                result= result.Where(a => a.EmpStaffID == empid).ToList();
+                result = result.Where(a => a.EmpStaffID == empid).ToList();
             }
 
             return result;
 
         }
         #endregion
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="majorid"></param>
+        /// <param name="Year"></param>
+        /// <param name="type">自主就业，安排就业</param>
+        /// <returns></returns>
+        public List<EmpStaffAndStu> EmploymentRatio(int majorid, string type ,string Year = null)
+        {
+            
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+
+            //List<EmpStaffAndStu> allist = new List<EmpStaffAndStu>();
+
+            //dbemploySituation = new EmploySituationBusiness();
+            //if (date == null)
+            //    allist = this.GetEmpStaffAndStus();
+            //else
+            //    allist = this.GetEmpStaffAndStus().Where(d=> dbemploySituation.GetSituationByStudentno(d.Studentno).FirstOrDefault().employedDate.Year);
+
+
+            //var dbproScheduleForTrainees = new ProScheduleForTrainees();
+            //var class_db = new ClassScheduleBusiness();
+            //foreach (var item in allist)
+            //{
+            //    //获取到班级
+            //    ScheduleForTrainees Trainees = dbproScheduleForTrainees.GetTraineesByStudentNumber(item.Studentno);
+
+            //    var classObj = class_db.GetList().Where(d => d.id == Trainees.ID_ClassName).FirstOrDefault();
+
+            //    if (majorid == classObj.Major_Id)
+
+            //        result.Add(item);
+
+            //}
+
+            return result;
+        }
+
     }
 }
