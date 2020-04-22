@@ -126,8 +126,8 @@
                             <dd>
                                 <input name="smsCaptcha" type="text" id="partnerYzm" class="input-yzm" onblur="captchCheck(this);" maxlength="4" autocomplete="off" />
                                 <span class="span-yzm">
-                                    <img id="smsCaptchaImage" src="/images/Login/code.jpg" title="点击图片刷新校验码" alt="点击图片刷新校验码" onclick="changeCode('smsCaptchaImage','partnerYzm');" />
-                                    <a href="javascript:changeCode('smsCaptchaImage','partnerYzm');" class="forget-pass">换一张</a>
+                                    <img id="smsCaptchaImage" src="/login/getcode" title="点击图片刷新校验码" alt="点击图片刷新校验码" onclick="changeCode();" />
+                                    <a href="javascript:changeCode();" class="forget-pass">换一张</a>
                                 </span>
                             </dd>
                         </dl>
@@ -202,6 +202,12 @@
         return true;
     }
 
+    //切换验证码
+    function changeCode() {
+        var r = Math.random();
+        $("#smsCaptchaImage").attr("src", "/login/getcode?r=" + r);
+    }
+
     //手机登陆验证
     function mobileLoginCheck() {
         var mobile = $("#mobileLoginForm").find("#partnerPhone").eq(0).val();
@@ -233,7 +239,8 @@
 
     //发送短信
     function sendSms(obj) {
-        alert("信息已发送  www.sucaihuo.com - 素材火");
+        var pn = $("#partnerPhone").val();
+        alert("校验码已发送至  "+pn);
     }
 
     function captchCheck(obj) {

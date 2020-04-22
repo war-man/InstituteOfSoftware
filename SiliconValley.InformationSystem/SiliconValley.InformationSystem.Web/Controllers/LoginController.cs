@@ -12,6 +12,9 @@ using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Web.Common;
+using System.Drawing;
+using System.IO;
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
     //  /Login/LoginIndex
@@ -114,6 +117,20 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             string smsText = "达磊，下雨了！！！";
             string t = PhoneMsgHelper.SendMsg(number, smsText);
             return View();
+        }
+
+        /// <summary>
+        /// 产生手机登录验证码
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetCode()
+        {
+            string code = LoginHelper.Code(4);
+            Bitmap image = LoginHelper.CreateCodeImage(code);
+            MemoryStream ms = new MemoryStream();
+            image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            byte[] bytes = ms.ToArray();
+            return File(bytes, "image/Jpeg");
         }
     }
 }
