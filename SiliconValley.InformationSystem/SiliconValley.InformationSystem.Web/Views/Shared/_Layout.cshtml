@@ -5,297 +5,393 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title></title>
+    <style>
+
+
+        /*.outer-container {
+            width: 230px;
+            height: 1000px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .inner-container {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: -17px;
+            bottom: 0;
+             
+            overflow-y: auto;
+            overflow-x:auto;
+        }*/
+      
+    </style>
     <!-- Bootstrap Styles-->
     <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
-    <!-- FontAwesome Styles-->
-    <link href="~/assets/css/font-awesome.css" rel="stylesheet" />
-    <!-- Morris Chart Styles-->
-    <link href="~/assets/js/morris/morris-0.4.3.min.css" rel="stylesheet" />
-    <!-- Custom Styles-->
-    <link href="~/assets/css/custom-styles.css" rel="stylesheet" />
-    <!-- Google Fonts-->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+
+
     @*<link href="~/Scripts/vendor/bootstrap/bootstrap.min.css" rel="stylesheet" />*@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.js"></script>
-    <link href="~/Scripts/MenusStyle/css/reset.css" rel="stylesheet" />
-    <link href="~/Scripts/MenusStyle/css/style.css" rel="stylesheet" />
+
+
+
+    <script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+    <!-- Bootstrap Core CSS -->
+    <link href="~/Tree/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
+    <!-- Custom CSS -->
+    <link href="~/Tree/css/style.css" rel='stylesheet' type='text/css' />
+    <!-- Graph CSS -->
+    <link href="~/Tree/css/font-awesome.css" rel="stylesheet">
+    <!-- jQuery -->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:700,500,300,100italic,100,400' rel='stylesheet' type='text/css'>
+    <!-- lined-icons -->
+    <link rel="stylesheet" href="~/Tree/css/icon-font.min.css" type='text/css' />
+    <!-- //lined-icons -->
+    <script src="~/Tree/js/jquery-1.10.2.min.js"></script>
+    <script src="~/Tree/js/amcharts.js"></script>
+    <script src="~/Tree/js/serial.js"></script>
+    <script src="~/Tree/js/light.js"></script>
+    <script src="~/Tree/js/radar.js"></script>
+    <link href="~/Tree/css/barChart.css" rel='stylesheet' type='text/css' />
+    <link href="~/Tree/css/fabochart.css" rel='stylesheet' type='text/css' />
     @RenderSection("style", false)
+    @RenderSection("script", false);
 
+    <link href="~/Tree/css/style.css" rel='stylesheet' type='text/css' />
 </head>
-<body style="height:1500px">
-    <div id="wrapper">
-        <nav class="navbar navbar-default top-navbar" role="navigation">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="index.html"><i class="fa fa-comments"></i> <strong>MASTER </strong></a>
-            </div>
+<body scroll="no" >
+    <div class="page-container">
+        <!--/content-inner-->
+        <div class="left-content">
+            <div class="inner-content">
+                <!-- header-starts -->
+                <div class="header-section">
+                    <!--menu-right-->
+                    <div class="top_menu">
+                        <div class="main-search">
+                            <form>
+                                <input type="text" value="Search" onFocus="this.value = '';" onBlur="if (this.value == '') {this.value = 'Search';}" class="text" />
+                                <input type="submit" value="">
+                            </form>
+                            <div class="close"><img src="images/cross.png" /></div>
+                        </div>
+                        <div class="srch"></div>
+                        <script type="text/javascript">
+                            $('.main-search').hide();
+                            $('button').click(function () {
+                                $('.main-search').show();
+                                $('.main-search text').focus();
+                            }
+                            );
+                            $('.close').click(function () {
+                                $('.main-search').hide();
+                            });
+                        </script>
+                        <!--/profile_details-->
+                        <div class="profile_details_left">
+                            <ul class="nofitications-dropdown">
+                                <li class="dropdown note dra-down">
+                                    <div id="dd" class="wrapper-dropdown-3" tabindex="1">
+                                        <span>Italy</span>
+                                        <ul class="dropdown">
+                                            <li><a class="deutsch">France</a></li>
+                                            <li><a class="english"> Italy</a></li>
+                                            <li><a class="espana">Brazil</a></li>
+                                            <li><a class="russian">Usa</a></li>
 
-            <ul class="nav navbar-top-links navbar-right">
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-                        <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-messages">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Doe</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Today</em>
-                                    </span>
-                                </div>
-                                <div>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem Ipsum has been the industry's standard dummy text ever since an kwilnw...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <strong>John Smith</strong>
-                                    <span class="pull-right text-muted">
-                                        <em>Yesterday</em>
-                                    </span>
-                                </div>
-                                <div>Lorem Ipsum has been the industry's standard dummy text ever since the...</div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>Read All Messages</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-messages -->
-                </li>
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-                        <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-tasks">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <p>
-                                        <strong>Task 1</strong>
-                                        <span class="pull-right text-muted">60% Complete</span>
-                                    </p>
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (success)</span>
-                                        </div>
+                                        </ul>
                                     </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <p>
-                                        <strong>Task 2</strong>
-                                        <span class="pull-right text-muted">28% Complete</span>
-                                    </p>
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" style="width: 28%">
-                                            <span class="sr-only">28% Complete</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <p>
-                                        <strong>Task 3</strong>
-                                        <span class="pull-right text-muted">60% Complete</span>
-                                    </p>
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%">
-                                            <span class="sr-only">60% Complete (warning)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <p>
-                                        <strong>Task 4</strong>
-                                        <span class="pull-right text-muted">85% Complete</span>
-                                    </p>
-                                    <div class="progress progress-striped active">
-                                        <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100" style="width: 85%">
-                                            <span class="sr-only">85% Complete (danger)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>See All Tasks</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-tasks -->
-                </li>
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-                        <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-alerts">
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-comment fa-fw"></i> New Comment
-                                    <span class="pull-right text-muted small">4 min</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-twitter fa-fw"></i> 3 New Followers
-                                    <span class="pull-right text-muted small">12 min</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-envelope fa-fw"></i> Message Sent
-                                    <span class="pull-right text-muted small">4 min</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-tasks fa-fw"></i> New Task
-                                    <span class="pull-right text-muted small">4 min</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#">
-                                <div>
-                                    <i class="fa fa-upload fa-fw"></i> Server Rebooted
-                                    <span class="pull-right text-muted small">4 min</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a class="text-center" href="#">
-                                <strong>See All Alerts</strong>
-                                <i class="fa fa-angle-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-alerts -->
-                </li>
-                <!-- /.dropdown -->
-                <li class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" aria-expanded="false">
-                        <i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
-                    </a>
-                    <ul class="dropdown-menu dropdown-user">
-                        <li>
-                            <a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a>
-                        </li>
-                        <li>
-                            <a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a>
-                        </li>
-                        <li class="divider"></li>
-                        <li>
-                            <a href="#"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
-                        </li>
-                    </ul>
-                    <!-- /.dropdown-user -->
-                </li>
-                <!-- /.dropdown -->
-            </ul>
-        </nav>
-        <!--/. NAV TOP  -->
-        <nav class="navbar-default navbar-side" role="navigation">
-            @*<div id="sideNav" href=""><i class="fa fa-caret-right"></i></div>*@
-            <div class="sidebar-collapse" id="menudiv">
-                <ul class="cd-accordion-menu animated" id="main-menu"></ul>
-            </div>
+                                    <script type="text/javascript">
 
-        </nav>
-        <!-- /. NAV SIDE  -->
-        <div id="page-wrapper">
-            <div id="page-inner">
-                @RenderBody()
+                                        function DropDown(el) {
+                                            this.dd = el;
+                                            this.placeholder = this.dd.children('span');
+                                            this.opts = this.dd.find('ul.dropdown > li');
+                                            this.val = '';
+                                            this.index = -1;
+                                            this.initEvents();
+                                        }
+                                        DropDown.prototype = {
+                                            initEvents: function () {
+                                                var obj = this;
+
+                                                obj.dd.on('click', function (event) {
+                                                    $(this).toggleClass('active');
+                                                    return false;
+                                                });
+
+                                                obj.opts.on('click', function () {
+                                                    var opt = $(this);
+                                                    obj.val = opt.text();
+                                                    obj.index = opt.index();
+                                                    obj.placeholder.text(obj.val);
+                                                });
+                                            },
+                                            getValue: function () {
+                                                return this.val;
+                                            },
+                                            getIndex: function () {
+                                                return this.index;
+                                            }
+                                        }
+
+                                        $(function () {
+
+                                            var dd = new DropDown($('#dd'));
+
+                                            $(document).click(function () {
+                                                // all dropdowns
+                                                $('.wrapper-dropdown-3').removeClass('active');
+                                            });
+
+                                        });
+
+                                    </script>
+                                </li>
+                                <li class="dropdown note">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i> <span class="badge">3</span></a>
+
+
+                                    <ul class="dropdown-menu two first">
+                                        <li>
+                                            <div class="notification_header">
+                                                <h3>You have 3 new messages  </h3>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="user_img"><img src="images/1.jpg" alt=""></div>
+                                                <div class="notification_desc">
+                                                    <p>Lorem ipsum dolor sit amet</p>
+                                                    <p><span>1 hour ago</span></p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </li>
+                                        <li class="odd">
+                                            <a href="#">
+                                                <div class="user_img"><img src="images/in.jpg" alt=""></div>
+                                                <div class="notification_desc">
+                                                    <p>Lorem ipsum dolor sit amet </p>
+                                                    <p><span>1 hour ago</span></p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="user_img"><img src="images/in1.jpg" alt=""></div>
+                                                <div class="notification_desc">
+                                                    <p>Lorem ipsum dolor sit amet </p>
+                                                    <p><span>1 hour ago</span></p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="notification_bottom">
+                                                <a href="#">See all messages</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+
+                                <li class="dropdown note">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell-o"></i> <span class="badge">5</span></a>
+
+                                    <ul class="dropdown-menu two">
+                                        <li>
+                                            <div class="notification_header">
+                                                <h3>You have 5 new notification</h3>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="user_img"><img src="images/in.jpg" alt=""></div>
+                                                <div class="notification_desc">
+                                                    <p>Lorem ipsum dolor sit amet</p>
+                                                    <p><span>1 hour ago</span></p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </li>
+                                        <li class="odd">
+                                            <a href="#">
+                                                <div class="user_img"><img src="images/in5.jpg" alt=""></div>
+                                                <div class="notification_desc">
+                                                    <p>Lorem ipsum dolor sit amet </p>
+                                                    <p><span>1 hour ago</span></p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="user_img"><img src="images/in8.jpg" alt=""></div>
+                                                <div class="notification_desc">
+                                                    <p>Lorem ipsum dolor sit amet </p>
+                                                    <p><span>1 hour ago</span></p>
+                                                </div>
+                                                <div class="clearfix"></div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="notification_bottom">
+                                                <a href="#">See all notification</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown note">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-tasks"></i> <span class="badge blue1">9</span></a>
+                                    <ul class="dropdown-menu two">
+                                        <li>
+                                            <div class="notification_header">
+                                                <h3>You have 9 pending task</h3>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="task-info">
+                                                    <span class="task-desc">Database update</span><span class="percentage">40%</span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div class="progress progress-striped active">
+                                                    <div class="bar yellow" style="width:40%;"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="task-info">
+                                                    <span class="task-desc">Dashboard done</span><span class="percentage">90%</span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+
+                                                <div class="progress progress-striped active">
+                                                    <div class="bar green" style="width:90%;"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="task-info">
+                                                    <span class="task-desc">Mobile App</span><span class="percentage">33%</span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div class="progress progress-striped active">
+                                                    <div class="bar red" style="width: 33%;"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <div class="task-info">
+                                                    <span class="task-desc">Issues fixed</span><span class="percentage">80%</span>
+                                                    <div class="clearfix"></div>
+                                                </div>
+                                                <div class="progress progress-striped active">
+                                                    <div class="bar  blue" style="width: 80%;"></div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="notification_bottom">
+                                                <a href="#">See all pending task</a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <div class="clearfix"></div>
+                            </ul>
+                        </div>
+                        <div class="clearfix" style="height:60px;"></div>
+                        <!--//profile_details-->
+                    </div>
+                    <!--//menu-right-->
+                    <div class="clearfix"></div>
+                </div>
+                <!-- //header-ends -->
+                <div class="outter-wp" >
+                    @RenderBody()
+                </div>
+                <!--footer section start-->
+                <footer>
+                    <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+                </footer>
+                <!--footer section end-->
             </div>
-            <!-- /. PAGE INNER  -->
         </div>
-        <!-- /. PAGE WRAPPER  -->
+        <!--//content-inner-->
+        <!--/sidebar-menu-->
+        <div class="sidebar-menu">
+            <header class="logo">
+                <a href="#" class="sidebar-icon"> <span class="fa fa-bars"></span> </a> <a href="index.html">
+                    <span id="logo"> <h1>信息化系统</h1></span>
+                    <!--<img id="logo" src="" alt="Logo"/>-->
+                </a>
+            </header>
+            <div style="border-top:1px solid rgba(69, 74, 84, 0.7)"></div>
+            <!--/down-->
+            <div class="down">
+                <a href="index.html"><img src="images/admin.jpg"></a>
+                <a href="index.html"><span class=" name-caret">陈海石</span></a>
+                <p>账号:202014255245456</p>
+                <input type="button" value="点击滚动" id="button1">
+                <input type="button" value="隐藏滚动" id="button2" style="margin-top: 0">
+                <ul>
+                    <li><a class="tooltips" href="index.html"><span>Profile</span><i class="lnr lnr-user"></i></a></li>
+                    <li><a class="tooltips" href="index.html"><span>Settings</span><i class="lnr lnr-cog"></i></a></li>
+                    <li><a class="tooltips" href="index.html"><span>Log out</span><i class="lnr lnr-power-switch"></i></a></li>
+                </ul>
+            </div>
+            <!--//down-->
+            <div >     </div>
+        <div class="menu outer-container"  >
+
+            <ul id="menu" class="inner-container" ></ul>
+        </div>
     </div>
+        <div class="clearfix"></div>
+    </div>
+    <script>
+        //$("#menu").scroll(function () {
+        //    console.log("a");
+        //    //overflow-x:auto;
+        //});
+        var toggle = true;
 
-    <!-- /. WRAPPER  -->
-    <!-- JS Scripts-->
-    <!-- jQuery Js -->
-    @*<script src="~/assets/js/jquery-1.10.2.js"></script>*@
-    
-    <!-- Bootstrap Js -->
-    <script src="~/assets/js/bootstrap.min.js"></script>
+        $(".sidebar-icon").click(function () {
+            if (toggle) {
+                $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
+                $("#menu span").css({ "position": "absolute" });
+            }
+            else {
+                $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
+                setTimeout(function () {
+                    $("#menu span").css({ "position": "relative" });
+                }, 400);
+            }
 
-    <!-- Metis Menu Js -->
-    <script src="~/assets/js/jquery.metisMenu.js"></script>
-    <!-- Morris Chart Js -->
-    <script src="~/assets/js/morris/raphael-2.1.0.min.js"></script>
-    <script src="~/assets/js/morris/morris.js"></script>
-
-
-    <script src="~/assets/js/easypiechart.js"></script>
-    <script src="~/assets/js/easypiechart-data.js"></script>
-
-
-    <!-- Custom Js -->
-    <script src="~/assets/js/custom-scripts.js"></script>
-
-    @RenderSection("script", false)
+            toggle = !toggle;
+        });
+        $("#button1").click(function () {
+            $("#menu").css("overflow", "auto");
+        })
+      
+    </script>
 </body>
+
 </html>
-<script src="~/Scripts/MenusStyle/js/main.js"></script>
+
 <script type="text/javascript">
    
-
+    $("#menu").scroll(function () {
+        console.log("aa");
+    });
     var MenuData;
     $.get('/Base_SysManage/Base_SysMenu/LoadMenus', function (data) {
 
@@ -316,87 +412,58 @@
     //加载菜单
     var index = 1;
     function loadMenus() {
-
+        console.log(MenuData);
+        var menu = $("#menu");
         for (var i = 0; i < MenuData.length; i++) {
-
-            if (MenuData[i].IsShow == true) {
-
-
-                var li = $("<li class='has-children'></li>");
-                var input = $('<input type="checkbox" name ="group-' + (i + 1) + '" id="group-' + (i + 1) +'" checked class="myinput">');
-                var a = $("<label class='muancss' for='group-" + (i + 1)+"'>Group 1</label>");
-                a.text(MenuData[i].Name);
-                //a.attr("href", MenuData[i].Url);
-                
-                li.append(input);
-
-                li.append(a);
-
-                //console.log(li);
-                for (var j = 0; j < MenuData[i].SubMenus.length; j++) {
-                    
-                    loadSonMenu(MenuData[i], li);
-                }
-                
-                //console.log(li[0]);
-                $("#main-menu").append(li);
-
-            }
+            var li = $('<li id="menu-comunicacao"></li>');
+            var a = ('<a href="#"><i class="fa fa-smile-o"></i> <span>' + MenuData[i].Name + '</span><span class="fa fa-angle-double-right" style="float: right"></span></a>')
+            li.append(a);
+         
+           
+            menu.append(li);
+            loadSonMenu(MenuData[i].SubMenus, li);
         }
-        //console.log(document.cookie);
-        //if () {
-
-        //}
-        clickmyinput();
+       
     }
 
+    //scroll
+
+    $(window).scroll(function (event) {
+        console.log("滚动");
+})
+    $("body").on("scroll", ".menu", function () {
+        console.log("滚动");
+    });
     function loadSonMenu(Menu, html) {
-
-        //console.log(Menu);
-
-        if (Menu.SubMenus != null) {
-
-            html.addClass("has-children");
-            var ul = $('<ul></ul>');
-            
-            
-            for (var i = 0; i < Menu.SubMenus.length; i++) {
-
-                index++;
-                if (Menu.SubMenus[i].IsShow == true) {
-                  
-                    var li = $("<li class='has-children'></li>");
-                    var input = $('<input type="checkbox" name ="sub-group-' + (index) + '" id="sub-group-' + (index) +'" checked  class="myinput">');
-                    var a;
-
-                    //console.log(Menu.SubMenus[i].Url+'...........');
-
-                    if (Menu.SubMenus[i].Url) {
-                        a = $("<a class='muancss'></a>");
-                    }
-                    else {
-                        a = $("<label class='muancss' for='sub-group-" + (index)+"'>Group 1</label>");
-                    }
-
-
-
-                    a.text(Menu.SubMenus[i].Name);
-                    a.attr("href", Menu.SubMenus[i].Url);
-
-                    li.append(input);
-                    li.append(a);
-                  
-                 
-                  
-                    if (Menu.SubMenus != null) {
-                        index++;
-                        loadSonMenu(Menu.SubMenus[i], li);
+       
+        if (Menu.length != null) {
+            var ul = $('<ul id="menu-comunicacao-sub"></ul>');
+            for (var i = 0; i < Menu.length; i++) {
+                
+             
+                    if (Menu[i].Url) {
+                       
+                        var li = $('<li id="menu-mensagens"  style="width:200px"></li>');
+                        var a =  $('<a href=' + Menu[i].Url + '>' + Menu[i].Name+'</a>')
                       
+                        li.append(a);
+                        ul.append(li);
+                      
+                       
+                     }
+                    else {
+                     
+                        var li = $('<li id="menu-mensagens"  style="width:150px"></li>');
+                        var a = $('<a href="#">' + Menu[i].Name + ' <i class="fa fa-angle-right" style="float: right; margin-right: -8px; margin-top: 2px;"></i></a>');
+                    
+                        li.append(a);
+                        ul.append(li);
+                        loadSonMenu(Menu[i].SubMenus, li);
                     }
-
-                    ul.append(li);
-                }
+                  
+              
             }
+           
             //console.log(ul);
             html.append(ul);
             

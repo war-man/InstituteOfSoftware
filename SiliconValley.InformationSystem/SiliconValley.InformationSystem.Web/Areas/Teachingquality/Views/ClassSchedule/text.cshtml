@@ -7,58 +7,105 @@
     <link href="~/Areas/Teachingquality/Styles/demo.css" rel="stylesheet" />
     <script src="~/Areas/Teachingquality/js/Tdrag.js"></script>
     <title></title>
+    <style>
 
+        .one {
+            width: 300px;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .two {
+            width: 318px;
+            height: 200px;
+            overflow-y: scroll;
+        }
+
+        .three {
+            width: 300px;
+        }
+    </style>
 
 </head>
 
 <body>
-    <div>11111</div>
+    <div class="one">
+
+        <div class="two">
+
+            <ul class="three">
+
+                <li>22222</li>
+
+                <li>33333</li>
+
+                <li>44444</li>
+
+                <li>55555</li>
+
+                <li>66666</li>
+
+                <li>77777</li>
+                <li>33333</li>
+
+                <li>44444</li>
+
+                <li>55555</li>
+
+                <li>66666</li>
+
+                <li>77777</li>
+                <li>33333</li>
+
+                <li>44444</li>
+
+                <li>55555</li>
+
+                <li>66666</li>
+
+                <li>77777</li>
+                <li>33333</li>
+
+                <li>44444</li>
+
+                <li>55555</li>
+
+                <li>66666</li>
+
+                <li>77777</li>
+                <li>33333</li>
+
+                <li>44444222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222</li>
+
+                <li>66666</li>
+
+                <li>55555</li>
+
+                <li>66666</li>
+
+                <li>77777</li>
+                <li>33333</li>
+
+                <li>44444</li>
+
+                <li>55555</li>
+
+                <li>66666</li>
+
+                <li>77777</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+   
+
+
+
 </body>
 </html>
 <script>
-    window.onload = function () {
-        var oDiv = document.getElementsByTagName("div")[0];
-
-        /*鼠标点击的位置距离DIV左边的距离 */
-        var disX = 0;
-        /*鼠标点击的位置距离DIV顶部的距离*/
-        var disY = 0;
-        oDiv.onmousedown = function () {
-            var e = e || window.event;
-            disX = e.clientX - oDiv.offsetLeft;
-            disY = e.clientY - oDiv.offsetTop;
-
-            document.onmousemove = function (e) {
-                var e = e || window.event;
-                // 横轴坐标
-                var leftX = e.clientX - disX;
-                // 纵轴坐标
-                var topY = e.clientY - disY;
-
-                if (leftX < 0) {
-                    leftX = 0;
-                }
-                /* 获取浏览器视口大小 document.document.documentElement.clientWidth*/
-                else if (leftX > document.documentElement.clientWidth - oDiv.offsetWidth) {
-                    leftX = document.document.documentElement.clientWidth - oDiv.offsetWidth;
-                }
-
-                if (topY < 0) {
-                    topY = 0;
-                }
-                else if (topY > document.documentElement.clientHeight - oDiv.offsetHeight) {
-                    topY = document.documentElement.clientHeight - oDiv.offsetHeight;
-                }
-                oDiv.style.left = leftX + "px";
-                oDiv.style.top = topY + "px";
-            }
-            document.onmouseup = function () {
-                document.onmousemove = null;
-                document.onmouseup = null;
-            }
-        }
-    }
-
-
+  
    
 </script>
