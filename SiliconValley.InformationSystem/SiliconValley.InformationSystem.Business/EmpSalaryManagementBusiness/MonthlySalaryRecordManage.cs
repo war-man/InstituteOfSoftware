@@ -45,31 +45,31 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool AddEmpToEmpMonthSalary(string empid)
-        { 
-            bool result = false;
-            try
-            {
-                MonthlySalaryRecord ese = new MonthlySalaryRecord();
-                ese.EmployeeId = empid;
-                ese.IsDel = false;
-                ese.YearAndMonth = DateTime.Now;
-                if (CreateSalTab(ese.YearAndMonth.ToString())) {
-                    this.Insert(ese); 
-                    rc.RemoveCache("InRedisMSRData");
-                    result = true;
-                    BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //public bool AddEmpToEmpMonthSalary(string empid)
+        //{ 
+        //    bool result = false;
+        //    try
+        //    {
+        //        MonthlySalaryRecord ese = new MonthlySalaryRecord();
+        //        ese.EmployeeId = empid;
+        //        ese.IsDel = false;
+        //        ese.YearAndMonth = DateTime.Now;
+        //        if (CreateSalTab(ese.YearAndMonth.ToString())) {
+        //            this.Insert(ese); 
+        //            rc.RemoveCache("InRedisMSRData");
+        //            result = true;
+        //            BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            return result;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //    }
+        //    return result;
 
-        }
+        //}
 
         /// <summary>
         /// 去除该员工

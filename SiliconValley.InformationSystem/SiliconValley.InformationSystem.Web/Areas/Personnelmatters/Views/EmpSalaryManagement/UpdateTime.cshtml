@@ -76,7 +76,7 @@
                 var time = data.field.CurrentTime;
                 $.post("/Personnelmatters/EmpSalaryManagement/UpdateTime", currenttime, function (data) {
                     var count = data.Data;
-                    if (data.Data > 0) {//说明有该月份的数据，则显示数据就好
+                    if (count > 0) {//说明有该月份的数据，则显示数据就好
                         layer.confirm('确认查看' + time + '月份的工资表吗？', function (index) {
                             $.post('/Personnelmatters/EmpSalaryManagement/SalarytableRefresh', { 'time': time }, function (da) {
                                 if (da) {

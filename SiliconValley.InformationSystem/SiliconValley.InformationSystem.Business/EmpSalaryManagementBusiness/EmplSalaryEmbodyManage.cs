@@ -45,7 +45,26 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
 
                 EmployeesInfoManage empmanage = new EmployeesInfoManage();
                 var emp=empmanage.GetEntity(empid);
-                ese.BaseSalary = 2000;
+                if (!string.IsNullOrEmpty(emp.PositiveDate.ToString()))
+                {
+                    if (emp.Salary < 2000)
+                    {
+                        ese.BaseSalary = emp.Salary;
+                    }
+                    else {
+                        ese.BaseSalary = 2000;
+                    }
+                }
+                else {
+                    if ( emp.ProbationSalary<2000) {
+                        ese.BaseSalary = emp.ProbationSalary;
+                    }
+                    else
+                    {
+                        ese.BaseSalary = 2000;
+                    }
+                }
+              
                 if (emp.PositiveDate == emp.EntryTime)
                 {
                     if (empmanage.GetPositionByEmpid(empid).PositionName.Contains("主任"))

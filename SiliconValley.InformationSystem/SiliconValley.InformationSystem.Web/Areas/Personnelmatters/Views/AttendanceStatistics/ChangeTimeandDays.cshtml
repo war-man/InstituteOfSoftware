@@ -27,13 +27,13 @@
 
                 </div>
 
-                <div class="layui-form-item">
+                @*<div class="layui-form-item">
                     <label class="layui-form-label">应到勤天数:</label>
                     <div class="layui-input-block">
                         <input type="text" id="ShouldComeDays" name="ShouldComeDays" class="layui-input" value="@ViewBag.days" lay-verify="myday" />
                     </div>
 
-                </div>
+                </div>*@
 
             </div>
 
@@ -80,15 +80,25 @@
             //提交
             form.on('submit(demo1)', function (data) {
                 console.log(data);
-                $.post("/Personnelmatters/AttendanceStatistics/ChangeTimeandDays", data.field, function (data) {
+                var choicetime = data.field;
+                $.post("/Personnelmatters/AttendanceStatistics/ChangeTimeandDays", choicetime, function (data) {
                     if (data.Success) {
-                        layer.alert("编辑成功!", { icon: 1 }, function () {
-                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
-                            window.parent.location.reload();
-                            parent.layer.close(index);
-                        });
-                    } else {
-                        layer.alert("编辑失败!");
+                        var count = data.Data;
+                        if (count > 0) {//说明有该月份的数据，则显示数据就好
+                            layer.alert("查询成功!", { icon: 1 }, function (index) {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                window.parent.location.reload();
+                                parent.layer.close(index);
+                            });
+
+                        } else {
+                            layer.alert("没有该月份的考勤记录！", { icon: 1 }, function () {
+                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                window.parent.location.reload();
+                                parent.layer.close(index);
+
+                            });
+                        }
                     }
                 });
                 return false;
@@ -97,7 +107,7 @@
             //关闭页面
             $("#btnclose1").click(function () {
                 var index = parent.layer.getFrameIndex(window.name);
-                parent.layui.table.reload('myAttendanceinfo');
+                window.parent.location.reload();
                 parent.layer.close(index);
             });
         });
