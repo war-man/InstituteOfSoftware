@@ -40,6 +40,7 @@ namespace SiliconValley.InformationSystem.Util
                 get
                 {
                     string cacheKey = BuildCacheKey(index);
+
                     return CacheHelper.Cache.GetCache(cacheKey);
                 }
                 set

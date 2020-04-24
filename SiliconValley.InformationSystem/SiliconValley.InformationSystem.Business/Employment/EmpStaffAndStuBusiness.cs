@@ -549,35 +549,90 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="Year"></param>
         /// <param name="type">自主就业，安排就业</param>
         /// <returns></returns>
-        public List<EmpStaffAndStu> EmploymentRatio(int majorid, string type ,string Year = null)
+        public List<EmpStaffAndStu> EmploymentRatio(int majorid ,string Year = null)
         {
             
             List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
 
-            //List<EmpStaffAndStu> allist = new List<EmpStaffAndStu>();
+            List<EmpStaffAndStu> allist = new List<EmpStaffAndStu>();
 
-            //dbemploySituation = new EmploySituationBusiness();
-            //if (date == null)
-            //    allist = this.GetEmpStaffAndStus();
-            //else
-            //    allist = this.GetEmpStaffAndStus().Where(d=> dbemploySituation.GetSituationByStudentno(d.Studentno).FirstOrDefault().employedDate.Year);
+            dbemploySituation = new EmploySituationBusiness();
+            if (Year == null)
+                allist = this.GetEmpStaffAndStus();
+            else
+                allist = this.GetEmpStaffAndStus().Where(d => ((DateTime)d.Date).Year == int.Parse(Year)).ToList();
 
 
-            //var dbproScheduleForTrainees = new ProScheduleForTrainees();
-            //var class_db = new ClassScheduleBusiness();
-            //foreach (var item in allist)
-            //{
-            //    //获取到班级
-            //    ScheduleForTrainees Trainees = dbproScheduleForTrainees.GetTraineesByStudentNumber(item.Studentno);
+            var dbproScheduleForTrainees = new ProScheduleForTrainees();
+            var class_db = new ClassScheduleBusiness();
+            foreach (var item in allist)
+            {
+                //获取到班级
+                ScheduleForTrainees Trainees = dbproScheduleForTrainees.GetTraineesByStudentNumber(item.Studentno);
 
-            //    var classObj = class_db.GetList().Where(d => d.id == Trainees.ID_ClassName).FirstOrDefault();
+                var classObj = class_db.GetList().Where(d => d.id == Trainees.ID_ClassName).FirstOrDefault();
 
-            //    if (majorid == classObj.Major_Id)
+                if (majorid == classObj.Major_Id)
 
-            //        result.Add(item);
+                    result.Add(item);
 
-            //}
+            }
 
+            return result;
+        }
+
+        public List<EmpStaffAndStu> EmploymentRatio(int classid)
+        {
+
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+
+            List<EmpStaffAndStu> allist = new List<EmpStaffAndStu>();
+
+            dbemploySituation = new EmploySituationBusiness();
+          
+            allist = this.GetEmpStaffAndStus();
+          
+            var dbproScheduleForTrainees = new ProScheduleForTrainees();
+            var class_db = new ClassScheduleBusiness();
+            foreach (var item in allist)
+            {
+                //获取到班级
+                ScheduleForTrainees Trainees = dbproScheduleForTrainees.GetTraineesByStudentNumber(item.Studentno);
+
+                var classObj = class_db.GetList().Where(d => d.id == Trainees.ID_ClassName).FirstOrDefault();
+
+                if (classid == classObj.id)
+
+                    result.Add(item);
+            }
+
+            return result;
+        }
+        public List<EmpStaffAndStu> EmploymentRatio(string Year)
+        {
+
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+
+            dbemploySituation = new EmploySituationBusiness();
+
+            if (Year == null)
+                result = this.GetEmpStaffAndStus();
+            else
+                result = this.GetEmpStaffAndStus().Where(d => ((DateTime)d.Date).Year == int.Parse(Year)).ToList();
+            return result;
+        }
+
+        public List<EmpStaffAndStu> EmploymentRatio(string Year, string StaffId)
+        {
+
+            List<EmpStaffAndStu> result = new List<EmpStaffAndStu>();
+
+            dbemploySituation = new EmploySituationBusiness();
+
+            if (Year == null)
+                result = this.GetEmpStaffAndStus().Where(d=>d.EmpStaffID == int.Parse(StaffId)).ToList();
+            else
+                result = this.GetEmpStaffAndStus().Where(d => ((DateTime)d.Date).Year == int.Parse(Year) && d.EmpStaffID == int.Parse(StaffId)).ToList();
             return result;
         }
 
