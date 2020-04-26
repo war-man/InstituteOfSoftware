@@ -201,7 +201,7 @@
             table.on('tool(Eving_table)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'del') {
-                    layer.confirm('真的删除行么', function (index) {
+                    layer.confirm('真的删除行么', {icon:3},function (index) {
                         $.ajax({
                             url: '/Educational/EvningSelfStudy/Delete/'+data.Id,
                             success: function (sudata) {

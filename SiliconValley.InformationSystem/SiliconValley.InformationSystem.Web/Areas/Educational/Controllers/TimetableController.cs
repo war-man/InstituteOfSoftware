@@ -15,12 +15,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational
     /// </summary>
     public class TimetableController : Controller
     {
-        // GET: /Educational/Timetable/TimeTableIndex
-         
-       
-        BaseDataEnumManeger BaseDataEnum_Entity ;
+        // GET: /Educational/Timetable/TiShiView
+        TimeTableManeger TimeTable = new TimeTableManeger();
+        BaseDataEnumManeger BaseDataEnum_Entity;
         ClassroomManeger Classroom_Entity;
-        TimeTableManeger TimeTable;   
         
         public ActionResult TimeTableIndex()
         {
@@ -35,7 +33,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational
         {
             DateTime time = Convert.ToDateTime(Request.Form["SelectTime"]);//获取日期
             int classid = Convert.ToInt32(Request.Form["campus"]);//获取校区
-            TimeTable = new TimeTableManeger();
             Classroom_Entity = new ClassroomManeger();
             //获取选择校区的所有教室
             List<Classroom> c_list = Classroom_Entity.GetAddreeClassRoom(classid);
@@ -47,10 +44,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational
             List<AnPaiData> afternoonOne = TimeTable.GetPaiDatas(time, "下午12节", c_list);
             List<AnPaiData> afternoonTwo = TimeTable.GetPaiDatas(time, "下午34节", c_list);
             //晚自习
-            List<AnPaiData> ngintone = ReconcileManeger.EvningSelfStudy_Entity.getAppoint("晚一", time, c_list);
-            List<AnPaiData> nginttwo = ReconcileManeger.EvningSelfStudy_Entity.getAppoint("晚二", time, c_list);
+            List<AnPaiData> ngintone = TimeTable.GetPaiDatas(time,"晚一", c_list);
+            List<AnPaiData> nginttwo = TimeTable.GetPaiDatas(time,"晚二", c_list);
             var datajson = new { tablethead = tabledata, MymongingOne = mongingOne, MymongingTwo = mongingTwo, MyafternoonOne = afternoonOne, MyafternoonTwo = afternoonTwo, MyngintOne = ngintone, MyngintTwo = nginttwo };
             return Json(datajson, JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 让用户选择要编辑的班级
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult TiShiView(string id)
+        {
+            string[] rid = id.Split(',');
+            List<AnPaiData> data= TimeTable.GetClassName(rid);
+            ViewBag.data = data;
+            return View();
+        }
+
+
+        public ActionResult TishEvningView(string id)
+        {
+            List<AnPaiData> list = TimeTable.GetEvningClassName(id.Split(','));
+            ViewBag.list = list;
+            return View();
         }
     }
 }

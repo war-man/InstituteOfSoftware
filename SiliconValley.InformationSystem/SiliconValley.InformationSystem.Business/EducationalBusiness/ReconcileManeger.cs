@@ -27,6 +27,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<Reconcile> AllReconcile()
         {
+          
+
             Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             List<Reconcile> get_reconciles_list = new List<Reconcile>();
             get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");

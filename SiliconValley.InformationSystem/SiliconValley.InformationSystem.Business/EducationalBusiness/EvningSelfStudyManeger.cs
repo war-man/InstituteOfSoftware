@@ -46,6 +46,21 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     this.Insert(e);
                     EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
                     a.Success = true;
+                    if (e.emp_id!=null)//如果安排的老师上课，则要去值班表添加值班信息
+                    {
+                        TeacherNight newteachernightdata = new TeacherNight();
+                        newteachernightdata.OrwatchDate = e.Anpaidate;
+                        newteachernightdata.IsDelete = false;
+                        newteachernightdata.AttendDate = DateTime.Now;
+                        BeOnDutyManeger bb = new BeOnDutyManeger();
+                        newteachernightdata.BeOnDuty_Id = bb.GetSingleBeOnButy("教员晚自习", false).Id;
+                        newteachernightdata.Tearcher_Id = e.emp_id;
+                        newteachernightdata.timename = e.curd_name;
+                        newteachernightdata.ClassSchedule_Id = e.ClassSchedule_id;
+                        newteachernightdata.ClassRoom_id = e.Classroom_id;
+                       a = TeacherNightandEvningStudet.AddTeacherNighData(newteachernightdata);
+                    }
+                    
                 }
             }
             catch (Exception ex)
@@ -55,6 +70,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return a;
         }
+
+        /// <summary>
+        /// 清除缓存
+        /// </summary>
+        public void DeleteRedis()
+        {
+            EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
+        }
+      
         /// <summary>
         /// 添加多个数据
         /// </summary>
@@ -110,6 +134,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 if (find_e != null)
                 {
                     this.Delete(find_e);
+                    //判断是否有老师值班，如果值班就将值班数据删除
+                    if (find_e.emp_id!=null)
+                    {
+                        TeacherNightandEvningStudet.SetTeacherNightData(find_e.Anpaidate, null, find_e.ClassSchedule_id, find_e.Classroom_id,find_e.Anpaidate,find_e.curd_name,find_e.ClassSchedule_id);
+                    }                     
                     EvningSelfStudyManeger.redisCache.RemoveCache("EvningSelfStudyList");
                     a.Success = true;
                 }
@@ -150,6 +179,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         }
         public AjaxResult Update_DataTwo(EvningSelfStudy new_e)
         {
+            EvningSelfStudy find= this.GetEntity(new_e.id);//原来的数据
             AjaxResult a = new AjaxResult();
             try
             {
@@ -158,6 +188,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     new_e.emp_id = null;
                 }
                 this.Update(new_e);
+                //改变值班数据
+                TeacherNightandEvningStudet.SetTeacherNightData(find.Anpaidate, new_e.emp_id, find.ClassSchedule_id, new_e.Classroom_id, new_e.Anpaidate, new_e.curd_name,new_e.ClassSchedule_id);
                 redisCache.RemoveCache("EvningSelfStudyList");
                 a.Success = true;
             }
@@ -187,23 +219,23 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="time">日期</param>
         /// <param name="roomlist">教室集合</param>
         /// <returns></returns>
-        public List<AnPaiData> getAppoint(string timename, DateTime time, List<Classroom> roomlist)
-        {
-            List<AnPaiData> list = new List<AnPaiData>();
-            foreach (Classroom item in roomlist)
-            {
-                EvningSelfStudy fine = EvningSelfStudyGetAll().Where(e => e.curd_name == timename && e.Anpaidate == time && e.Classroom_id == item.Id).FirstOrDefault();
-                AnPaiData a = new AnPaiData();
-                if (fine != null)
-                {
-                    a.NeiRong = "晚自习";
-                    a.ClassName = Reconcile_Com.ClassSchedule_Entity.GetEntity(fine.ClassSchedule_id).ClassNumber;
-                    a.class_Id = fine.ClassSchedule_id;
-                }
-                list.Add(a);
-            }
-            return list;
-        }
+        //public List<AnPaiData> getAppoint(string timename, DateTime time, List<Classroom> roomlist)
+        //{
+        //    List<AnPaiData> list = new List<AnPaiData>();
+        //    foreach (Classroom item in roomlist)
+        //    {
+        //        EvningSelfStudy fine = EvningSelfStudyGetAll().Where(e => e.curd_name == timename && e.Anpaidate == time && e.Classroom_id == item.Id).FirstOrDefault();
+        //        AnPaiData a = new AnPaiData();
+        //        if (fine != null)
+        //        {
+        //            a.NeiRong = "晚自习";
+        //            a.ClassName = Reconcile_Com.ClassSchedule_Entity.GetEntity(fine.ClassSchedule_id).ClassNumber;
+        //            a.R_Id = fine.id.ToString();
+        //        }
+        //        list.Add(a);
+        //    }
+        //    return list;
+        //}
         /// <summary>
         /// 获取XX日期XX教室晚自习安排
         /// </summary>
@@ -508,6 +540,37 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
 
             return list;
+        }
+
+        /// <summary>
+        /// 获取这个时间的晚自习安排数据
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public List<EvningSelfStudy> GetTimeData(DateTime time)
+        {
+           return EvningSelfStudyGetAll().Where(e => e.Anpaidate == time).ToList();
+        }
+
+        /// <summary>
+        /// 获取提示用户的班级
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public List<AnPaiData> GetClassname(string[] ids)
+        {
+            List<AnPaiData> a_list = new List<AnPaiData>();
+            foreach (string id in ids)
+            {
+                int myid = Convert.ToInt32(id);
+                EvningSelfStudy find= this.GetEntity(myid);
+                AnPaiData a = new AnPaiData();
+                a.R_Id = find.id.ToString();
+                a.ClassName = Reconcile_Com.ClassSchedule_Entity.GetEntity(find.ClassSchedule_id).ClassNumber;
+                a_list.Add(a);
+            }
+
+            return a_list;
         }
     }
 }

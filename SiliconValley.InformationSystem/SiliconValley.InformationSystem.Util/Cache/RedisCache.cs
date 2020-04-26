@@ -30,7 +30,7 @@ namespace SiliconValley.InformationSystem.Util
         public RedisCache(string config, int databaseIndex = 0)
         {
             _databaseIndex = databaseIndex;
-            _redisConnection = ConnectionMultiplexer.Connect(config);
+            _redisConnection = ConnectionMultiplexer.Connect(config); 
         }
 
         private ConnectionMultiplexer _redisConnection { get; }

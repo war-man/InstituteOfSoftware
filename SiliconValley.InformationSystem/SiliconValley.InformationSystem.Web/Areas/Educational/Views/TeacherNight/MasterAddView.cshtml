@@ -27,89 +27,52 @@
     </style>
 </head>
 <body>
-    <fieldset>
-        <legend>类型选择区</legend>
-        <form class="layui-form">
+    <div id="hand_Div" class="hideCss">
+        <form id="system_form" class="layui-form" lay-filter="hand_addview">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-
+                    <label class="LableCss1">值班日期:</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="type" title="手动安排" value="2" lay-filter="types" />
+                        <input type="text" id="mytime" name="mytime" class="layui-input" />
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">值班老师:</label>
+                    <div class="layui-input-block">
+                        <div class="layui-collapse" lay-accordion>
+                            <div class="layui-colla-item">
+                                <h2 class="layui-colla-title">老师选择区:</h2>
+                                <div class="layui-colla-content layui-show">
 
-                    <div id="ClssTime" class="layui-input-block">
-                        <input type="radio" name="type" title="系统安排" value="1" lay-filter="types" checked="checked" />
+                                </div>
+                            </div>                            
+                        </div>
                     </div>
                 </div>
-
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="LableCss1">说明:</label>
+                    <div class="layui-input-block">
+                        <textarea name="ramke" id="ramke" class="layui-textarea"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;">
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="handBtn">点击安排</button>
+                    <button type="button" class="layui-btn" onclick="Myclose()">取消关闭</button>
+                </div>
             </div>
         </form>
-    </fieldset>
-    <fieldset style="height:98%;border-bottom:0px">
-        <legend>操作区</legend>
-        <div id="system_Div">
-            <form id="system_form" class="layui-form">
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="LableCss1">值班日期:</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="times" name="times" class="layui-input" style="width:200px;" />
-                        </div>
-                    </div>
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="LableCss1">操作部门:</label>
-                        <div class="layui-input-block">
-                            
-                        </div>
-                    </div>
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md6">
-                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="sysBtn">点击安排</button>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-        <div id="hand_Div" class="hideCss">
-            <form id="system_form" class="layui-form" lay-filter="hand_addview">
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">值班日期:</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="mytime" name="mytime" class="layui-input" style="width:130px;" />
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">值班老师:</label>
-                        <div class="layui-input-block">
-                           
-                        </div>
-                    </div>
-                </div>                
-                <div class="layui-row layui-form-item">                     
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">说明:</label>
-                        <div class="layui-input-block">
-                            <textarea name="ramke" id="ramke" class="layui-textarea"></textarea>
-                        </div>
-                    </div>
-                </div>                 
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center;">
-                        <button type="submit" class="layui-btn" lay-submit="" lay-filter="handBtn">点击安排</button>
-                        <button type="button" class="layui-btn" onclick="Myclose()">取消关闭</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </fieldset>
+    </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
-        layui.use(['form', 'laydate'], function () {
+        layui.use(['form', 'laydate','element'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
+            var element = layui.element;
             laydate.render({
                 elem: '#times'
                 , type: 'date'
@@ -121,17 +84,7 @@
             laydate.render({
                 elem: '#mytime'
                 , trigger: 'click'
-            });
-            form.on('radio(types)', function (data) {
-                if (data.value == "1") {
-                    $("#system_Div").removeClass("hideCss");
-                    $("#hand_Div").addClass("hideCss");
-                } else if (data.value == "2") {
-                    $("#hand_Div").removeClass("hideCss");
-                    $("#system_Div").addClass("hideCss");
-                }
-            });
-
+            });             
             form.render();
 
             //监听(系统安排)提交
@@ -187,7 +140,7 @@
                     });
                 }
                 return false;
-            });             
+            });
         })
         //关闭弹出层
         function Myclose() {
