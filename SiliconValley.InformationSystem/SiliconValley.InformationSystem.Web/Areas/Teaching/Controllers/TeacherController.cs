@@ -156,24 +156,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             var list = new List<Teacher>();
 
             if (major == 0 && grand == 0)
-            {
-
-              
-                list = db_teacher.GetTeachers().Where(d => d.IsDel == false).ToList().Skip((page - 1) * limit).Take(limit).ToList().OrderBy(d => d.TeacherID).ToList();
+            { 
+                list = db_teacher.GetTeachers().Where(d => d.IsDel == false).ToList().ToList().OrderBy(d => d.TeacherID).ToList();
             }
             else
             {
-                list = db_teacher.getTeacherByMajorAndGrand(major, grand).Skip((page - 1) * limit).Take(limit).ToList().OrderBy(d => d.TeacherID).ToList();
+                list = db_teacher.getTeacherByMajorAndGrand(major, grand).ToList().OrderBy(d => d.TeacherID).ToList();
             }
 
-          
-           
+            var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
 
             var returnlist = new List<object>();
 
 
             //组装返回对象
-            foreach (var item in list)
+            foreach (var item in skiplist)
             {
                 var emp = db_emp.GetList().Where(t => t.EmployeeId == item.EmployeeId &&t.IsDel==false).FirstOrDefault();
 

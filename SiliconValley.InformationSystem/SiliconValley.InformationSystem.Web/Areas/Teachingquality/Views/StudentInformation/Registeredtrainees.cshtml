@@ -40,6 +40,11 @@
             width:100px;
             height:100px;
         }
+        .layui-form-radio {
+        
+            margin: 8px -3px 0 0;
+         
+        }
     </style>
 
 </head>
@@ -59,9 +64,9 @@
 
 
                     <legend>基础信息</legend>
+               
 
-
-                    <div class="layui-row layui-form-item">
+                    <div class="layui-row layui-form-item" >
 
 
                         <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" id="nba">
@@ -71,6 +76,7 @@
 
 
                             </div>
+
                         </div>
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">姓名</label>
@@ -117,19 +123,7 @@
                                 @Html.TextBoxFor(a => a.Telephone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
                             </div>
                         </div>
-                    </div>
-                    <div class="layui-row layui-form-item">
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label" style="margin-top:18px;">亲属关系</label>
-                            <div class="layui-input-block">
-                                <input type="radio" name="Sexs" value="父亲" title="父亲" checked="checked">
-                                <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
-                                <input type="radio" name="Sexs" value="爷爷" title="爷爷">
-                                <input type="radio" name="Sexs" value="奶奶" title="奶奶">
-                            </div>
-
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6" style="margin-top:18px;">
                             <label class="layui-form-label">亲属姓名</label>
                             <div class="layui-input-block">
                                 @Html.TextBoxFor(a => a.Guardian, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请输入亲属姓名" }, { "class", "layui-input linu" } })
@@ -137,29 +131,6 @@
                         </div>
                     </div>
                     <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">亲属电话号</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Familyphone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
-                            </div>
-                        </div>
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">家庭住址</label>
-                            <div class="layui-input-block">
-                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" }, { "style", "width:201px;" } })
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <div class="layui-row layui-form-item">
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">出生日期</label>
-                            <div class="layui-input-block">
-
-                                @Html.TextBoxFor(a => a.BirthDate, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
-                            </div>
-                        </div>
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="layui-form-label">学员学历</label>
 
@@ -178,15 +149,53 @@
                                 @Html.RadioButtonFor(model => model.Education, "本科", new { id = "wc" })
                             </div>
                         </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label" style="margin-top:18px;">亲属关系</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="Sexs" value="父亲" title="父亲" checked="checked">
+                                <input type="radio" name="Sexs" value="母亲" title="母亲"><br />
+                                <input type="radio" name="Sexs" value="爷爷" title="爷爷">
+                                <input type="radio" name="Sexs" value="奶奶" title="奶奶">
+                            </div>
+
+                        </div>
+
                     </div>
-                    <div class="layui-row layui-form-item" id="clssa" style="margin-top:-15px;display:none">
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">亲属电话号</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Familyphone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "请输入手机号码" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">出生日期</label>
+                            <div class="layui-input-block">
+
+                                @Html.TextBoxFor(a => a.BirthDate, new Dictionary<string, object>() { { "lay-verify", "date" }, { "autocomplete", "off" }, { "placeholder", "年-月-日" }, { "class", "layui-input linu" } })
+                            </div>
+                        </div>
+
                      
-                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths">
+
+                    </div>
+
+                    <div class="layui-row layui-form-item">
+                      
+                    </div>
+                    <div class="layui-row layui-form-item" >
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                            <label class="layui-form-label">家庭住址</label>
+                            <div class="layui-input-block">
+                                @Html.TextBoxFor(a => a.Familyaddress, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入家庭住址" }, { "class", "layui-input" }, { "style", "width:201px;" } })
+                            </div>
+                        </div>
+                        <div class="layui-col-xs6 layui-col-sm6 layui-col-md widths" id="clssa" style="display:none">
                             <label class="layui-form-label">班级</label>
                             @Html.Hidden("List")
-                            <input type="text" class="layui-input linu "id="Lists" style="display:none; border:0px;"  readonly="readonly" />
+                            <input type="text" class="layui-input linu " id="Lists" style="display:none; border:0px;" readonly="readonly" />
                             <div class="layui-input-inline" id="CLassNames">
-                                <button type="button" style="width:201px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                <button type="button" style="width:201px;height:38px;" class="layui-btn layui-btn-sm layui-btn-primary">
                                     <i class="layui-icon" id="ClassName" style="margin-left:166px;">&#xe615;</i>
                                 </button>
 

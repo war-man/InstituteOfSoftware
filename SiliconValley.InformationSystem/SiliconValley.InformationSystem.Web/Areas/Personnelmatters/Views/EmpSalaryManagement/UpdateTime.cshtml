@@ -31,8 +31,8 @@
 
             <div class="layui-form-item" style="margin-left:50px;margin-top:70px;">
                 <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-warm" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
-                    <button class="layui-btn layui-btn-warm" id="btnclose1">关闭</button>
+                    <button class="layui-btn " lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                    <button class="layui-btn " id="btnclose1">关闭</button>
                 </div>
             </div>
         </form>
@@ -76,7 +76,7 @@
                 var time = data.field.CurrentTime;
                 $.post("/Personnelmatters/EmpSalaryManagement/UpdateTime", currenttime, function (data) {
                     var count = data.Data;
-                    if (data.Data > 0) {//说明有该月份的数据，则显示数据就好
+                    if (count > 0) {//说明有该月份的数据，则显示数据就好
                         layer.confirm('确认查看' + time + '月份的工资表吗？', function (index) {
                             $.post('/Personnelmatters/EmpSalaryManagement/SalarytableRefresh', { 'time': time }, function (da) {
                                 if (da) {

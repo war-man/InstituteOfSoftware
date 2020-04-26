@@ -45,31 +45,31 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool AddEmpToEmpMonthSalary(string empid)
-        { 
-            bool result = false;
-            try
-            {
-                MonthlySalaryRecord ese = new MonthlySalaryRecord();
-                ese.EmployeeId = empid;
-                ese.IsDel = false;
-                ese.YearAndMonth = DateTime.Now;
-                if (CreateSalTab(ese.YearAndMonth.ToString())) {
-                    this.Insert(ese); 
-                    rc.RemoveCache("InRedisMSRData");
-                    result = true;
-                    BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //public bool AddEmpToEmpMonthSalary(string empid)
+        //{ 
+        //    bool result = false;
+        //    try
+        //    {
+        //        MonthlySalaryRecord ese = new MonthlySalaryRecord();
+        //        ese.EmployeeId = empid;
+        //        ese.IsDel = false;
+        //        ese.YearAndMonth = DateTime.Now;
+        //        if (CreateSalTab(ese.YearAndMonth.ToString())) {
+        //            this.Insert(ese); 
+        //            rc.RemoveCache("InRedisMSRData");
+        //            result = true;
+        //            BusHelper.WriteSysLog("月度工资表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
-                }
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            return result;
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //    }
+        //    return result;
 
-        }
+        //}
 
         /// <summary>
         /// 去除该员工
@@ -104,19 +104,20 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public EmplSalaryEmbody GetEmpsalaryByEmpid(string empid)
         {
             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+
             var ese = esemanage.GetEmpESEData().Where(s => s.EmployeeId == empid).FirstOrDefault();
             return ese;
         }
 
         /// <summary>
-        /// 根据员工编号获取考勤统计表中的该员工对象
+        /// 根据员工编号获取考勤统计表中对应月份的该员工对象
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
         public AttendanceInfo GetAttendanceInfoByEmpid(string empid, DateTime time)
         {
             AttendanceInfoManage attmanage = new AttendanceInfoManage();
-            var att = attmanage.GetADInfoData().Where(s => s.EmployeeId == empid && s.YearAndMonth == time).FirstOrDefault();
+            var att = attmanage.GetADInfoData().Where(s => s.EmployeeId == empid && DateTime.Parse(s.YearAndMonth.ToString()).Year == time.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == time.Month).FirstOrDefault();
             return att;
         }
 
@@ -129,7 +130,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public MeritsCheck GetMCByEmpid(string empid, DateTime time)
         {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
-            var mcobj = mcmanage.GetEmpMCData().Where(s => s.EmployeeId == empid && s.YearAndMonth == time).FirstOrDefault();
+            var mcobj = mcmanage.GetEmpMCData().Where(s => s.EmployeeId == empid && DateTime.Parse(s.YearAndMonth.ToString()).Year == time.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == time.Month).FirstOrDefault();
             return mcobj;
         }
 
@@ -238,7 +239,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public decimal? GetLeaveDeductions(int id, decimal? one, decimal? persalary, decimal? shouldday, decimal? leaveday)
         {
             AjaxResult result = new AjaxResult();
-            decimal? countsalary;
+            decimal? countsalary=one;
             var msr = this.GetEntity(id);
             try
             {
@@ -246,12 +247,9 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 {
                     if (!string.IsNullOrEmpty(persalary.ToString()))
                     {
-                        countsalary = one + persalary;
+                        countsalary = countsalary + persalary;
                     }
-                    else
-                    {
-                        countsalary = one;
-                    }
+                    
                     if (!string.IsNullOrEmpty(leaveday.ToString()))
                     {
                         countsalary = countsalary / shouldday * leaveday;
@@ -271,6 +269,51 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     countsalary = null;
                 }
              
+
+            }
+            catch (Exception ex)
+            {
+                result = this.Error(ex.Message);
+                countsalary = null;
+            }
+
+            return countsalary;
+        }
+
+        /// <summary>
+        /// 计算缺卡扣款
+        /// </summary>
+        /// <param name="one">基本工资+岗位工资</param>
+        /// <param name="persalary">绩效工资</param>
+        /// <param name="shouldday">应出勤天数</param>
+        /// <param name="leaveday">请假天数</param>
+        /// <returns></returns>
+        public decimal? GetNoClockWithhold(int id, decimal? one, decimal? persalary, decimal? shouldday)
+        {
+            AjaxResult result = new AjaxResult();
+            decimal? countsalary=one;
+            var msr = this.GetEntity(id);
+            try
+            {
+                if (!string.IsNullOrEmpty(shouldday.ToString()))
+                {
+                    if (!string.IsNullOrEmpty(persalary.ToString()))
+                    {
+                        countsalary = countsalary + persalary;
+                       
+                    }
+                    countsalary = countsalary / shouldday / 2;
+                    msr.NoClockWithhold = countsalary;
+                    this.Update(msr);
+                    rc.RemoveCache("InRedisMSRData");
+                    result = this.Success();
+                    countsalary = (decimal)Math.Round(Convert.ToDouble(countsalary), 2);
+                }
+                else
+                {
+                    countsalary = null;
+                }
+
 
             }
             catch (Exception ex)

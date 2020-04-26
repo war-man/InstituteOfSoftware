@@ -7,7 +7,7 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="BatchImport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导入</button>
-        <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange"><i class="layui-icon layui-icon-edit"></i>年月份及应到勤天数改变</button>
+        <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange"><i class="layui-icon layui-icon-search"></i>查看记录</button>
     </div>
 </script>
 @*操作栏*@
@@ -25,7 +25,7 @@
 </script>
 
 <div>
-    <h2 style="text-align:center;">湖南硅谷云教育科技有限公司--@ViewBag.yearandmonth--考勤统计表</h2>
+    <h2 style="text-align:center;">湖南硅谷云教育科技有限公司--@ViewBag.yearandmonth--月考勤统计表</h2>
 
     @*模糊查询*@
     <fieldset>
@@ -105,14 +105,13 @@
                     , { field: 'WorkAbsentNum', title: '上班缺卡次数',width: 135}
                     , { field: 'WorkAbsentRecord', title: '上班缺卡记录',  width: 135 }
                     , { field: 'OffDutyAbsentNum', title: '下班缺卡次数', width: 135 }
-                        , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录', width: 135 }
-                        , { field: 'NoClockWithhold', title: '缺卡扣款/元', width: 115 }
+                    , { field: 'OffDutyAbsentRecord', title: '下班缺卡记录', width: 135 }
                     , { field: 'TardyNum', title: '迟到次数',  width: 100 }
-                        , { field: 'TardyRecord', title: '迟到记录', width: 100 }
-                        , { field: 'TardyWithhold', title: '迟到扣款/元', width: 115 }
+                    , { field: 'TardyRecord', title: '迟到记录', width: 100 }
+                    , { field: 'TardyWithhold', title: '迟到扣款/元', width: 115 }
                     , { field: 'LeaveEarlyNum', title: '早退次数',  width: 100 }
-                        , { field: 'LeaveEarlyRecord', title: '早退记录', width: 100 }
-                        , { field: 'LeaveWithhold', title: '早退扣款/元', width: 115 }
+                    , { field: 'LeaveEarlyRecord', title: '早退记录', width: 100 }
+                 , { field: 'LeaveWithhold', title: '早退扣款/元', width: 115 }
                     , { field: 'Remark', title: '备注', width: 140 }
                     , { field: 'empIsDel', title: '员工状态', sort: true, width: 110, templet: '#empstate' }
                     , { title: '操作', toolbar: '#barDemo', width: 100, fixed: 'right' }
@@ -137,6 +136,7 @@
             //监听行工具事件
             table.on('tool(CheckingIntab)', function (obj) {
                 var data = obj.data;
+                console.log("考勤编号:" + data.AttendanceId);
                 if (obj.event === 'edit') {
                     layer.open({
                         type: 2,
@@ -180,8 +180,8 @@
                 var layer = layui.layer;      //layui对象
                 layer.open({
                     type: 2
-                    , area: ["800px", "600px"]
-                    , title: ""
+                    , area: ["400px", "400px"]
+                    , title: "批量导入"
                     , content: '/Personnelmatters/AttendanceStatistics/BatchImport'
                     , anim: 2
                 });

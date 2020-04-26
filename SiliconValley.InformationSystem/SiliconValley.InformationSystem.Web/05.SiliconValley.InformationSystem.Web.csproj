@@ -77,7 +77,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=4.0.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -256,7 +256,6 @@
     <Compile Include="Areas\Educational\Controllers\StockInfoController.cs" />
     <Compile Include="Areas\Educational\Controllers\SubstituteTeachCourseController.cs" />
     <Compile Include="Areas\Educational\Controllers\TeacherNightController.cs" />
-    <Compile Include="Areas\Educational\Controllers\TimetableController.cs" />
     <Compile Include="Areas\Educational\Controllers\WarehouseController.cs" />
     <Compile Include="Areas\Educational\EducationalAreaRegistration.cs" />
     <Compile Include="Areas\ExaminationSystem\Controllers\ExamArrangementController.cs" />
@@ -465,7 +464,6 @@
     <Content Include="Config\Cost.xml" />
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
-    <Content Include="Content\Login\style.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -473,18 +471,6 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
     <Content Include="Images\2019090308462490.gif" />
     <Content Include="Images\del.png" />
-    <Content Include="Images\Login\315.gif" />
-    <Content Include="Images\Login\code.jpg" />
-    <Content Include="Images\Login\ewm.jpg" />
-    <Content Include="Images\Login\gov-inco.jpg" />
-    <Content Include="Images\Login\jb.jpg" />
-    <Content Include="Images\Login\jia_foot_icn.png" />
-    <Content Include="Images\Login\member.png" />
-    <Content Include="Images\Login\new.png" />
-    <Content Include="Images\Login\rem-check.png" />
-    <Content Include="Images\Login\slide_btn_bg.png" />
-    <Content Include="Images\Login\wx-confirm.png" />
-    <Content Include="Images\Login\wx-image.png" />
     <Content Include="Images\班级.jpg" />
     <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />
@@ -1330,7 +1316,19 @@
     <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
-    <Content Include="Scripts\Tangmin_CssAndJs\StudentDatakeep_Css\studentdatakeep.css" />
+    <Content Include="Tree\css\atlas.css" />
+    <Content Include="Tree\css\bars.css" />
+    <Content Include="Tree\css\bootstrap-markdown.min.css" />
+    <Content Include="Tree\css\bootstrap.min.css" />
+    <Content Include="Tree\css\chocolat.css" />
+    <Content Include="Tree\css\clndr.css" />
+    <Content Include="Tree\css\fabochart.css" />
+    <Content Include="Tree\css\font-awesome.css" />
+    <Content Include="Tree\css\icon-font.min.css" />
+    <Content Include="Tree\css\jqvmap.css" />
+    <Content Include="Tree\css\popuo-box.css" />
+    <Content Include="Tree\css\style.css" />
+    <Content Include="Tree\css\vroom.css" />
     <Content Include="uploadXLSXfile\EmpImage\1.jpg" />
     <Content Include="uploadXLSXfile\EmpImage\20191119044919.jpeg" />
     <Content Include="uploadXLSXfile\EmpImage\20191120032855.jpeg" />
@@ -1346,6 +1344,7 @@
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1709JA肖战.jpg" />
     <Content Include="uploadXLSXfile\SelfObtainRcoredImg\1908NA舒克.png" />
     <Content Include="Xmlconfigure\Reconcile_XML.xml" />
+    <Content Include="xmlfile\EIntentionClass.xml" />
     <Content Include="xmlfile\entxml.xml" />
     <Content Include="xmlfile\Pointsdeductionproject.xml" />
     <Content Include="xmlfile\RoomdeWithPage.xml" />
@@ -1362,6 +1361,7 @@
     <Content Include="Areas\Educational\Views\GoodsProvide\UpdateReturnDate.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddPurchaseApplyDetailsData.cshtml" />
     <Content Include="Areas\Educational\Views\PurchaseApply\AddView.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\GetGenerateTimetable.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ManualReconcileView.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\ReconcileIndexViews.cshtml" />
     <Content Include="Areas\Educational\Views\StockInfo\StockInfoIndexView.cshtml" />
@@ -1543,27 +1543,11 @@
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\EmploymentRatio.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\AddCoursewaremaking.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\ProducerID.cshtml" />
     <Content Include="Areas\Courseware\Views\web.config" />
-    <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\ClassadjustmentView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\ClassMasterIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditDateChangeView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditDateView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditMasterView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\MasterAddView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\WeekenddutyView.cshtml" />
-    <Content Include="Areas\Market\Views\Status\AddView.cshtml" />
-    <Content Include="Areas\Market\Views\Infomation\AddView.cshtml" />
-    <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\EditOrtherViewData.cshtml" />
-    <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\HightStudentAnpaiView.cshtml" />
-    <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
-    <Content Include="Areas\Educational\Views\Timetable\TishEvningView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3170,6 +3154,57 @@
     <Content Include="uploadXLSXfile\湖南硅谷云教育科技有限公司_考勤报表_20191101-20191130%281%29.xlsx" />
     <Content Include="Views\Home\rtest.cshtml" />
     <Content Include="Views\Student\Index.cshtml" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191008092643徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191008095155徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191008095230徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009084240徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009084731徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009085105徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191009085444徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213060629阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213060640阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213064942阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213065820阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213070938阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213071439阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213071939阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213072151阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191213072956阳亮ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\20191223104849徐宝平ErrorExcel.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191008094926Admin" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191009085432Admin" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191023022943xiaohua" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191208070155Admin" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191208070324Admin" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\20191213064909yangxue" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019上线测试20191223104726wangdan.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191208065846Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191208070244Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213060621yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213064939yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213065802yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213070424yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213070926yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213071431yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213071936yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213072148yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191213072948yangxue.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191217073652Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191217073734Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191217073825Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\2019测试20191217073944Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008091940Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008091940Admin.xls~merged" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008092640Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008094137Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191008095100Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009084236Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009084715Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009085102Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\Ex120191009085442Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824033536Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824034132Admin.xls" />
+    <Content Include="uploadXLSXfile\ConsultUploadfile\ExcleTemplate%281%2920190824035024Admin.xls" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.eot" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.ttf" />
     <Content Include="Scripts\live2d\assets\flat-ui-icons-regular.woff" />
@@ -3186,8 +3221,16 @@
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Courseware\js\" />
+    <Folder Include="Areas\Courseware\Models\" />
+    <Folder Include="Areas\Courseware\Views\Shared\" />
     <Folder Include="Areas\Courseware\首页\ppt课程\教学部\" />
     <Folder Include="Areas\Courseware\首页\ppt课程\教质部\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S1\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S2JAVA\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S2NET\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S3JAVA\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S3NET\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S4NET\" />
     <Folder Include="Areas\Courseware\首页\word文档\Y1\" />
     <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
@@ -3236,7 +3279,6 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Css\" />
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
-    <Folder Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>
