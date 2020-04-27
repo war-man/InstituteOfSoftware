@@ -4,12 +4,12 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>湖南硅谷高科软件学员信息化</title>
     <style>
 
         .outer-container {
           
-            height: 580px;
+            height: 661px;
             position: relative;
             overflow: hidden;
         }
@@ -40,7 +40,7 @@
     <!-- Bootstrap Core CSS -->
     <link href="~/Tree/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
     <!-- Custom CSS -->
-    <link href="~/Tree/css/style.css" rel='stylesheet' type='text/css' />
+
     <!-- Graph CSS -->
     <link href="~/Tree/css/font-awesome.css" rel="stylesheet">
     <!-- jQuery -->
@@ -313,7 +313,8 @@
                     <div class="clearfix"></div>
                 </div>
                 <!-- //header-ends -->
-                <div class="outter-wp"  >
+                <div class="outter-wp" style="overflow:auto;">
+                
                     @RenderBody()
                 </div>
                 <!--footer section start-->
@@ -335,14 +336,14 @@
             <div style="border-top:1px solid rgba(69, 74, 84, 0.7)"></div>
             <!--/down-->
             <div class="down">
-                <a href="index.html"><img src="images/admin.jpg"></a>
-                <a href="index.html"><span class=" name-caret">陈海石</span></a>
-                <p>账号:202014255245456</p>
+                <a href="#"><img  id="Image"  style="width:100px;"/></a>
+                <a href="#"><span class=" name-caret" id="EmpName"></span></a>
+                <p id="EmployeeId"</p>
            
                 <ul>
-                    <li><a class="tooltips" href="index.html"><span>Profile</span><i class="lnr lnr-user"></i></a></li>
-                    <li><a class="tooltips" href="index.html"><span>Settings</span><i class="lnr lnr-cog"></i></a></li>
-                    <li><a class="tooltips" href="index.html"><span>Log out</span><i class="lnr lnr-power-switch"></i></a></li>
+                    <li><a class="tooltips" href="#"><span>开发中</span><i class="lnr lnr-user"></i></a></li>
+                    <li><a class="tooltips" href="#"><span>开发中</span><i class="lnr lnr-cog"></i></a></li>
+                    <li><a class="tooltips" href="#"><span>开发中</span><i class="lnr lnr-power-switch"></i></a></li>
                 </ul>
             </div>
             <!--//down-->
@@ -370,7 +371,7 @@
         $(".sidebar-icon").click(function () {
             if (toggle) {
                 $("#menu").attr("style", "width:65px;")
-                $(".outer-container").attr("style", "height:770px;")
+                $(".outer-container").attr("style", "height:850px;")
                 $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
                 $("#menu span").css({ "position": "absolute" });
              
@@ -382,7 +383,7 @@
                     $("#menu span").css({ "position": "relative" });
                   
                     $("#menu").attr("style", "width:230px;")
-                    $(".outer-container").attr("style", "height:580px;")
+                    $(".outer-container").attr("style", "height:661px;")
                 }, 400);
                
             }
@@ -392,7 +393,8 @@
         $("#button1").click(function () {
             $("#menu").css("overflow", "auto");
         })
-      
+
+         
     </script>
 </body>
 
@@ -400,8 +402,13 @@
 
 <script type="text/javascript">
    
-    $("#menu").scroll(function () {
-        console.log("aa");
+    //UserClass
+    $.post('/Base_SysManage/Base_SysMenu/UserClass', function (data) {
+        console.log(data);
+        //~/uploadXLSXfile/EmpImage/1.jpg
+        $("#EmployeeId").text(data.EmployeeId);
+        $("#EmpName").text(data.EmpName);
+        $("#Image").attr("src", "/uploadXLSXfile/EmpImage/" + data.Image)
     });
     var MenuData;
     $.get('/Base_SysManage/Base_SysMenu/LoadMenus', function (data) {
@@ -429,7 +436,9 @@
 
             if (MenuData[i].IsShow == true) {
                 var li = $('<li id="menu-comunicacao"></li>');
-                var a = ('<a href="#"><i class="fa fa-smile-o"></i> <span>' + MenuData[i].Name + '</span><span class="fa fa-angle-double-right" style="float: right"></span></a>')
+              
+                    var a = ('<a href="#"><i class="fa ' + MenuData[i].Icon + '"></i> <span>' + MenuData[i].Name + '</span><span class="fa fa-angle-double-right" style="float: right"></span></a>')
+                
                 li.append(a);
                 menu.append(li);
                 loadSonMenu(MenuData[i].SubMenus, li);
@@ -443,10 +452,13 @@
 
     $("#menu").on({
         mouseover: function () {
-            $(".outer-container").attr("style", "width:960px;")
+            $(".outer-container").css("width", "4000px");
+          //  $(".outer-container").attr("style", "width:960px;")
+
         },
         mouseout: function () {
-            $(".outer-container").attr("style", "width:222px;")
+            $(".outer-container").css("width", "222px");
+            //$(".outer-container").attr("style", "width:222px;")
         }
     });
     function loadSonMenu(Menu, html) {

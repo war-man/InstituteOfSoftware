@@ -41,7 +41,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                     {
                         SessionHelper sessionHelper = new SessionHelper();
 
-
+                        
                         SessionHelper.Session["UserId"] = findu.UserId;
                         err.Success = true;
                         err.Msg = "登陆成功!";
