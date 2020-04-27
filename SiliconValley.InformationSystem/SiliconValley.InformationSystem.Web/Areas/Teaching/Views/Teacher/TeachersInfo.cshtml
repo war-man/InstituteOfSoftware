@@ -369,13 +369,10 @@
 
                                 layer.close(index);
                             }
-
                         });
-
                         break;
                 };
             });
-
 
             //监听行工具事件
             table.on('tool(teacherlist_filter)', function (obj) {
@@ -393,10 +390,7 @@
                         area: ["1000px", "900px"],
                         content: "/Teaching/Teacher/TeacherDetailView/" + id,
                         end: function () {
-
-
                         }
-
                     });
                 } else if (obj.event === 'edit') {
                     layer.open({

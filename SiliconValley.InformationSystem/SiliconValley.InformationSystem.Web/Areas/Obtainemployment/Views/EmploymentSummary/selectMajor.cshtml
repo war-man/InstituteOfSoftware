@@ -1,0 +1,55 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>selectMajor</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div style="text-align:center;">
+        @{
+            foreach (var item in ViewBag.majors as List<Specialty>)
+            {
+                <button class="layui-btn layui-btn-primary majorbtn" majorid ="@item.Id">@item.SpecialtyName</button>
+            }
+        }
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+        layui.use(['layer'], function () {
+
+            var layer = layui.layer;
+
+            $(".majorbtn").dblclick(function () {
+
+                var majorid = $(this).attr("majorid");
+                var majorname = $(this).text();
+                var major = {
+                    majorid : majorid,
+                    majorname :majorname
+                };
+
+                window.parent.setMajorobj(major);
+
+                //关闭
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+
+            });
+
+        });
+
+
+    </script>
+
+</body>
+</html>
