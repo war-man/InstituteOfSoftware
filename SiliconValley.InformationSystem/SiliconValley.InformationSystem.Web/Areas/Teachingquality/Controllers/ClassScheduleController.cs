@@ -30,11 +30,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     [CheckLogin]
     public class ClassScheduleController : Controller
     {
-      
-        public static int counts = 0;
+
+
+        public static int counts;
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
         {
+            counts = 0;
             dbtext = new ClassScheduleBusiness();
 
         }

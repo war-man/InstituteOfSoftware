@@ -34,16 +34,21 @@
                         <input lay-filter="IsLast" type="radio" name="IsLast" value="不是" title="不是" checked="">
                     </div>
                 </div>
-
+                <div class="layui-inline">
+                    <label class="layui-form-label">图标：</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Icon" lay-verify="required" class="layui-input">
+                    </div>
+                </div>
                 <div id="url" class="layui-inline">
                     <label class="layui-form-label">url：</label>
                     <div class="layui-input-inline">
-                        <input type="text" name="url"  class="layui-input">
+                        <input type="text" name="url" class="layui-input">
                     </div>
                 </div>
 
             </div>
-            <button class="layui-btn layui-btn-primary"  lay-submit lay-filter="add" type="button">添加</button>
+            <button type="button" class="layui-btn layui-btn-primary" lay-submit="" lay-filter="add">添加</button>
         </form>
 
 
@@ -114,7 +119,7 @@
                     parentName = parentNode.title;
                 }
 
-                $.post("/BaseSysManage/Base_Permission/addMenu", { MenuName: data.field.menuname, ParentMenu: parentName, url: url, permiss: permissss}, function (result) {
+                $.post("/BaseSysManage/Base_Permission/addMenu", { MenuName: data.field.menuname, Icon: data.field.Icon, ParentMenu: parentName, url: url, permiss: permissss}, function (result) {
 
                     if (result == "1") {
                         layer.msg("创建成功", {icon:1});

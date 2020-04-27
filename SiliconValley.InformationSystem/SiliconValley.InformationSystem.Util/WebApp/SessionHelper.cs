@@ -7,6 +7,10 @@ namespace SiliconValley.InformationSystem.Util
     /// </summary>
     public class SessionHelper
     {
+        /// <summary>
+        /// 存放Session标志的Cookie名
+        /// </summary>
+        public static string SessionCookieName { get; } = $"{GlobalSwitch.ProjectName}.ASP.NET_Session_Id";
         #region 私有成员
 
         private static string CacheModuleName { get; } = "Session";
@@ -20,10 +24,7 @@ namespace SiliconValley.InformationSystem.Util
 
         #region 外部成员
 
-        /// <summary>
-        /// 存放Session标志的Cookie名
-        /// </summary>
-        public static string SessionCookieName { get; } = $"{GlobalSwitch.ProjectName}.ASP.NET_Session_Id";
+       
 
         /// <summary>
         /// 当前Session

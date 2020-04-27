@@ -1,5 +1,7 @@
 ﻿using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.Common;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -228,6 +230,20 @@ namespace SiliconValley.InformationSystem.Web
             SetSubMenuShow(resList, userPermissions, 1);
 
             return resList;
+        }
+        /// <summary>
+        /// 获取登陆人信息
+        /// </summary>
+        /// <returns></returns>
+        public static EmployeesInfo UserClass()
+        {
+            //员工表
+            EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+            //session["UserId"] = user.UserId;
+            Base_UserBusiness base_UserBusiness = new Base_UserBusiness();
+           var empid=  base_UserBusiness.GetList().Where(a => a.UserId == Operator.UserId).FirstOrDefault().EmpNumber;
+            return employeesInfoManage.GetEntity(empid);
+            
         }
 
         #endregion
