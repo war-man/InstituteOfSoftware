@@ -181,11 +181,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
 
         #region 年月份改变于员工月度工资表的变化
-        //月度工作表数据：员工入职时就添加一条该员工的月度工资信息，
-        //如果除了这条数据没有该月份的数据时则添加其他未禁用员工该月的记录
-        //如果除了这条数据还有该月份的数据则只要添加这条就可以
+
         //当切换年月份时，循环所有月度工资表数据的月份是否有和选择的月份相匹配的数据，
-        //有的话则进行查询功能，若没有则将所有未禁用的员工添加一次该月份工资，即新月份公子表生成，且月份为选择的月份
+        //有的话则进行查询功能，若没有则将所有未禁用的员工添加一次该月份工资，即新月份工资表生成，且月份为选择的月份
 
         /// <summary>
         /// 年月份改变
@@ -206,12 +204,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var nowtime = DateTime.Parse(CurrentTime);
             //匹配是否有该月（选择的年月即传过来的参数）的月度工资数据
             var matchlist = msrlist.Where(m => DateTime.Parse(m.YearAndMonth.ToString()).Year == nowtime.Year && DateTime.Parse(m.YearAndMonth.ToString()).Month == nowtime.Month).ToList();
-
             AjaxResultxx.Data = matchlist.Count();
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// 年月份改变后工资表刷新
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        [HttpPost]
         public ActionResult SalarytableRefresh(string time)
         {
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
@@ -250,9 +252,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 string[] ids = list.Split(',');
                 for (int i = 0; i < ids.Length - 1; i++)
                 {
-                    string id = ids[i];
-                    var ad = msrmanage.GetEntity(int.Parse(id));
-                    AjaxResultxx.Success = msrmanage.EditEmpMS(ad.EmployeeId);
+                    int id =Convert.ToInt32(ids[i]);
+                    AjaxResultxx.Success = msrmanage.EditEmpMS(id);
+                    var ad = msrmanage.GetEntity(id);
                     if (AjaxResultxx.Success)
                     {
                         bool e = esemanage.EditEmpSalaryState(ad.EmployeeId);//员工体系表禁用该员工
@@ -260,12 +262,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     }
                     if (AjaxResultxx.Success)
                     {
-                        bool a = admanage.EditEmpStateToAds(ad.EmployeeId);//员工考勤表禁用该员工
+                        bool a = admanage.EditEmpStateToAds(ad.EmployeeId,ad.YearAndMonth.ToString());//员工考勤表禁用该员工
                         AjaxResultxx.Success = a;
                     }
                     if (AjaxResultxx.Success)
                     {
-                        bool e = mcmanage.EditEmpStateToMC(ad.EmployeeId);//员工绩效表禁用该员工
+                        bool e = mcmanage.EditEmpStateToMC(ad.EmployeeId, ad.YearAndMonth.ToString());//员工绩效表禁用该员工
                         AjaxResultxx.Success = e;
                     }
                 }
@@ -299,9 +301,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 ese.Bonus,
                 ese.OvertimeCharges,
                 ese.OtherDeductions,
-                ese.IsDel
+                ese.IsDel,
+                ese.IsApproval
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 查看选择编辑的数据是否已审核发放
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult GetIsApprovalState(int id) {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var isapproval = msrmanage.GetEntity(id).IsApproval;
+                AjaxResultxx.Data = isapproval;
+            }
+            catch (Exception ex)
+            {
+
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+         
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public ActionResult EditEmpSalary(MonthlySalaryRecord msr)
@@ -324,5 +348,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+
+     
     }
 }

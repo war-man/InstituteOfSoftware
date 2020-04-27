@@ -17,7 +17,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// 将员工月度工资表数据存储到redis服务器中
         /// </summary>
         /// <returns></returns>
-        public List<MonthlySalaryRecord> GetEmpMsrData() {
+        public List<MonthlySalaryRecord> GetEmpMsrData()
+        {
             rc.RemoveCache("InRedisMSRData");
             List<MonthlySalaryRecord> msrlist = new List<MonthlySalaryRecord>();
 
@@ -30,14 +31,15 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             //    Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
             //}
             //return get_reconciles_list;
-         
-            if (msrlist==null || msrlist.Count==0) {
+
+            if (msrlist == null || msrlist.Count == 0)
+            {
                 msrlist = this.GetList();
                 rc.SetCache("InRedisMSRData", msrlist);
             }
             msrlist = rc.GetCache<List<MonthlySalaryRecord>>("InRedisMSRData");
             return msrlist;
-             
+
         }
 
         /// <summary>
@@ -72,13 +74,13 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         //}
 
         /// <summary>
-        /// 去除该员工
+        /// 去除员工月度工资表中的该员工
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool EditEmpMS(string empid)
+        public bool EditEmpMS(int id)
         {
-            var ems = this.GetEmpMsrData().Where(s=>s.EmployeeId==empid).FirstOrDefault();
+            var ems = this.GetEmpMsrData().Where(s => s.Id == id).FirstOrDefault();
             bool result = false;
             try
             {
@@ -148,7 +150,8 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                 //匹配是否有该月（选择的年月即传过来的参数）的月度工资数据
                 var matchlist = msrlist.Where(m => DateTime.Parse(m.YearAndMonth.ToString()).Year == nowtime.Year && DateTime.Parse(m.YearAndMonth.ToString()).Month == nowtime.Month).ToList();
 
-                if (matchlist.Count()<=0) {
+                if (matchlist.Count() <= 0)
+                {
                     //找到已禁用的或者该月份的员工集合
                     var forbiddenlist = this.GetEmpMsrData().Where(s => s.IsDel == true || (DateTime.Parse(s.YearAndMonth.ToString()).Year == nowtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == nowtime.Month)).ToList();
 
@@ -162,6 +165,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                         msr.EmployeeId = item.EmployeeId;
                         msr.YearAndMonth = Convert.ToDateTime(time);
                         msr.IsDel = false;
+                        msr.IsApproval = false;
                         this.Insert(msr);
                         rc.RemoveCache("InRedisMSRData");
                     }
@@ -172,7 +176,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             catch (Exception ex)
             {
                 result = false;
-            
+
             }
             return result;
         }
@@ -239,7 +243,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public decimal? GetLeaveDeductions(int id, decimal? one, decimal? persalary, decimal? shouldday, decimal? leaveday)
         {
             AjaxResult result = new AjaxResult();
-            decimal? countsalary=one;
+            decimal? countsalary = one;
             var msr = this.GetEntity(id);
             try
             {
@@ -249,7 +253,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     {
                         countsalary = countsalary + persalary;
                     }
-                    
+
                     if (!string.IsNullOrEmpty(leaveday.ToString()))
                     {
                         countsalary = countsalary / shouldday * leaveday;
@@ -265,10 +269,11 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                         countsalary = null;
                     }
                 }
-                else {
+                else
+                {
                     countsalary = null;
                 }
-             
+
 
             }
             catch (Exception ex)
@@ -291,7 +296,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         public decimal? GetNoClockWithhold(int id, decimal? one, decimal? persalary, decimal? shouldday)
         {
             AjaxResult result = new AjaxResult();
-            decimal? countsalary=one;
+            decimal? countsalary = one;
             var msr = this.GetEntity(id);
             try
             {
@@ -300,7 +305,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     if (!string.IsNullOrEmpty(persalary.ToString()))
                     {
                         countsalary = countsalary + persalary;
-                       
+
                     }
                     countsalary = countsalary / shouldday / 2;
                     msr.NoClockWithhold = countsalary;
@@ -420,28 +425,20 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         {
             decimal? paycardsalary = null;
             if (!string.IsNullOrEmpty(PersonalSocialSecurity.ToString()))
-            {     bool result = false;
-                try
-                { 
-                    var msr = this.GetEntity(id);
-                    if (total <= ContributionBase)
-                    {
-                        paycardsalary = total;
-                    }
-                    else
-                    {
-                        paycardsalary = ContributionBase - PersonalSocialSecurity;
-                    }
-                    msr.PayCardSalary = paycardsalary;
-                    this.Update(msr);
-                    rc.RemoveCache("InRedisMSRData");
-                    result = true;
-                }
-                catch (Exception)
-                {
-                    result = false;
-                }
+            {
 
+                var msr = this.GetEntity(id);
+                if (total <= ContributionBase)
+                {
+                    paycardsalary = total;
+                }
+                else
+                {
+                    paycardsalary = ContributionBase - PersonalSocialSecurity;
+                }
+                msr.PayCardSalary = paycardsalary;
+                this.Update(msr);
+                rc.RemoveCache("InRedisMSRData");
             }
             else
             {
@@ -459,9 +456,9 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <returns></returns>
         public decimal? GetCashSalary(int id, decimal? total, decimal? PaycardSalary)
         {
-            bool result=false;
-            decimal? cash = 0;           
-                try
+
+            decimal? cash = 0;
+            try
             {
                 if (!string.IsNullOrEmpty(PaycardSalary.ToString()))
                 {
@@ -469,23 +466,21 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     msr.CashSalary = total - PaycardSalary;
                     this.Update(msr);
                     rc.RemoveCache("InRedisMSRData");
-                    result = true;
                     cash = msr.CashSalary;
-                }           
-            else {
-                cash = total;
-            }
-            }
-                catch (Exception)
-                {
-                result = false;
-                cash = null;
                 }
-          
+                else
+                {
+                    cash = total;
+                }
+            }
+            catch (Exception)
+            {
+
+                cash = null;
+            }
 
             return cash;
         }
-
 
     }
 }

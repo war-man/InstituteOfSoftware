@@ -38,6 +38,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> PayCardSalary { get; set; }//工资卡工资
         public Nullable<decimal> CashSalary { get; set; }//现金工资
         public Nullable<bool> IsDel { get; set; }
-       
+        public Nullable<bool> IsApproval { get; set; }//是否已审批
+
+
     }
 }

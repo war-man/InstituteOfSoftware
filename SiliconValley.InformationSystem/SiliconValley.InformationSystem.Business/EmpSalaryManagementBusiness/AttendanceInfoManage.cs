@@ -68,12 +68,13 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool EditEmpStateToAds(string empid)
+        public bool EditEmpStateToAds(string empid,string time)
         {
             bool result = false;
             try
             {
-                var ads = this.GetADInfoData().Where(e => e.EmployeeId == empid).FirstOrDefault();
+                var ymtime = DateTime.Parse(time);
+                var ads = this.GetADInfoData().Where(e => e.EmployeeId == empid &&DateTime.Parse(e.YearAndMonth.ToString()).Year==ymtime.Year&& DateTime.Parse(e.YearAndMonth.ToString()).Month==ymtime.Month).FirstOrDefault();
                 ads.IsDel = true;
                 this.Update(ads);
                 rc.RemoveCache("InRedisATDData");

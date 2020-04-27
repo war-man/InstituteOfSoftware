@@ -68,12 +68,13 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool EditEmpStateToMC(string empid)
+        public bool EditEmpStateToMC(string empid,string time)
         {
             bool result = false;
             try
             {
-                var mc = this.GetEmpMCData().Where(e => e.EmployeeId == empid).FirstOrDefault();
+                var ymtime = DateTime.Parse(time);
+                var mc = this.GetEmpMCData().Where(e => e.EmployeeId == empid&&DateTime.Parse(e.YearAndMonth.ToString()).Year==ymtime.Year&&DateTime.Parse(e.YearAndMonth.ToString()).Month==ymtime.Month).FirstOrDefault();
                 mc.IsDel = true;
                 this.Update(mc);
                 rc.RemoveCache("InRedisMCData");

@@ -107,7 +107,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// <param name="empid"></param>
         /// <returns></returns>
         public bool EditEmpSalaryState(string empid) {
-            var ese = this.GetEmpESEData().Where(e => e.EmployeeId == empid).FirstOrDefault() ;
+            var ese = this.GetEmpESEData().Where(e => e.EmployeeId == empid ).FirstOrDefault() ;
             bool result = false;
             try
             {
