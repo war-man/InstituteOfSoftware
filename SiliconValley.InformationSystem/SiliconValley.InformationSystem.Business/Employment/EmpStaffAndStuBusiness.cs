@@ -557,7 +557,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
             List<EmpStaffAndStu> allist = new List<EmpStaffAndStu>();
 
             dbemploySituation = new EmploySituationBusiness();
-            if (Year == null)
+            if (string.IsNullOrEmpty(Year))
                 allist = this.GetEmpStaffAndStus();
             else
                 allist = this.GetEmpStaffAndStus().Where(d => ((DateTime)d.Date).Year == int.Parse(Year)).ToList();
@@ -615,7 +615,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
             dbemploySituation = new EmploySituationBusiness();
 
-            if (Year == null)
+            if (string.IsNullOrEmpty(Year))
                 result = this.GetEmpStaffAndStus();
             else
                 result = this.GetEmpStaffAndStus().Where(d => ((DateTime)d.Date).Year == int.Parse(Year)).ToList();

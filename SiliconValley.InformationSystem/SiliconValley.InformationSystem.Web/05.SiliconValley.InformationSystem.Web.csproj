@@ -1548,6 +1548,8 @@
     <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\ProducerID.cshtml" />
     <Content Include="Areas\Courseware\Views\web.config" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\selectGraduationClass.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\selectMajor.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

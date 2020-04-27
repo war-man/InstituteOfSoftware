@@ -1,7 +1,9 @@
 ﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using SiliconValley.InformationSystem.Util;
 using System;
@@ -181,6 +183,79 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return datalist;
         }
 
+
+        /// <summary>
+        /// 获取毕业班级
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GraduationClass()
+        {
+            EmpClassBusiness db_empclass = new EmpClassBusiness();
+
+            //毕业班级
+           var classlist = db_empclass.GetClassFormServer().Where(d=>d.ClassStatus == true).ToList();
+
+            var db_major = new SpecialtyBusiness();
+
+            List<object> templist = new List<object>();
+
+            //var tempobj1 = new
+            //{
+
+            //    classname = "1710",
+            //    classid ="11",
+            //    major = "java",
+            //    heammaster ="杨雪",
+            //    graduationDate = "2020/02/03" 
+
+            //};
+
+            //templist.Add(tempobj1);
+            foreach (var item in classlist)
+            {
+                var tempemp = new EmployeesInfoManage();
+                var stuffemp = db_empclass.GetStaffByClassid(item.id);
+                var emp = tempemp.GetInfoByEmpID(stuffemp.EmployeesInfo_Id);
+
+
+                var tempobj = new {
+
+                    classname = item.ClassNumber,
+                    classid = item.id,
+                    major = db_major.GetSpecialties().Where(d => d.Id == item.Major_Id).FirstOrDefault().SpecialtyName,
+                    heammaster = emp.EmpName,
+                    graduationDate = db_empclass.GetEmpClassFormServer().Where(d=>d.ClassId == item.id).FirstOrDefault().EndingTime
+
+                };
+
+                templist.Add(tempobj);
+            }
+
+            var obj = new {
+                code = 0,
+                msg = "",
+                count = classlist.Count,
+                data = templist
+
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+           
+        }
+
+        public ActionResult selectGraduationClass()
+        {
+            return View();
+        }
+
+        public ActionResult selectMajor()
+        {
+            var db_major = new SpecialtyBusiness();
+            ViewBag.majors = db_major.GetSpecialties();
+            return View();
+        }
+
+    
 
     }
 }

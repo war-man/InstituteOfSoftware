@@ -41,7 +41,7 @@
                 <div class="layui-input-block">
                     <input  type="radio" name="ratio" value="YearRatio" lay-filter="ratio" title="年度就业率" checked="">
                     <input type="radio" name="ratio" value="ClassRatio" lay-filter="ratio" title="班级就业率">
-                    <input  type="radio" name="ratio" value="StaffRatio" lay-filter="ratio" title="专员就业率">
+                    <input  type="radio" name="ratio" value="StaffRatio" lay-filter="ratio" title="专业就业率">
                 </div>
             </div>
         </form>
@@ -110,16 +110,14 @@
                 <label class="layui-form-label">班级：</label>
                 <div class="layui-input-inline">
 
-                    <input type="text" readonly class="layui-input">
+                    <input type="text" id="className" readonly class="layui-input">
                     
                 </div>
             </div>
             <div class="layui-inline">
                 <button type="button" id="selectClass" class="layui-btn layui-btn-primary">选择班级<i class="layui-icon layui-icon-search"></i></button>
             </div>
-            <div class="layui-inline">
-                <button type="button" id="commit" class="layui-btn layui-btn-primary">确定</button>
-            </div>
+           
         </div>
     </div>
 </script>
@@ -130,18 +128,18 @@
             <div class="layui-inline">
                 <label class="layui-form-label">年份：</label>
                 <div class="layui-input-inline">
-                    <input type="date" class="layui-input">
+                    <input type="text" id="year" class="layui-input">
                 </div>
             </div>
 
             <div class="layui-inline">
                 <label class="layui-form-label">专业：</label>
                 <div class="layui-input-inline">
-                    <input type="text" class="layui-input">
+                    <input type="text" id="majorinput" readonly class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
-                <button type="button" id="commit" class="layui-btn layui-btn-primary">确定</button>
+                <button type="button" id="selectMajor" class="layui-btn layui-btn-primary">选择专业<i class="layui-icon layui-icon-search"></i></button>
             </div>
         </div>
     </div>
@@ -151,15 +149,22 @@
     
     <script>
 
-        function loadtemplate(html) {
-
-            $("#filter form").html("");
-
-            $("#filter form").html(html);
-
-            form.render();
+        var classobj;
+        var majorobj;
+        function setClassid(in_classobj) {
+            classobj = in_classobj;
         }
 
+        function getclassobj() {
+            return classobj;
+        }
+
+        function setMajorobj(in_majorobj) {
+            majorobj = in_majorobj;
+        }
+        function getmajorobj() {
+            return majorobj;
+        }
         ///生成url
         function generateURL(whereJson) {
 
@@ -177,12 +182,19 @@
 
         }
        
-        generateURL({"dd":"ss"});
-        layui.use(['form', 'table'], function(){
-
+        layui.use(['form', 'table','layer'], function(){
+            var layer = layui.layer;
             var table = layui.table;
             var form = layui.form;
 
+            function loadtemplate(html) {
+
+                $("#filter form").html("");
+
+                $("#filter form").html(html);
+
+                form.render();
+            }
             function render(dataurl ,elem) {
                 table.render({
                     elem: elem
@@ -193,11 +205,7 @@
                         { type: 'checkbox', fixed: 'left' }
                         , { field: 'ID', title: '编号', width: 80, fixed: 'left', unresize: true, sort: true }
                         , { field: 'StudentName', title: '学员', width: 120, edit: 'text' }
-                        , {
-                            field: 'StudentNO', title: '学员编号', width: 150, edit: 'text', templet: function (res) {
-                                return '<em>' + res.email + '</em>'
-                            }
-                        }
+                        , { field: 'StudentNO', title: '学员编号', width: 150, edit: 'text',}
                         , { field: 'classno', title: '班级', width: 80, edit: 'text', sort: true }
                         , { field: 'empname', title: '就业专员', width: 100 }
                         , { field: 'EmploymentState', title: '状态' }
@@ -205,6 +213,29 @@
                         , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
                     ]]
                     , page: true
+                });
+            }
+
+            ///选择班级
+            function selectClass(callback) {
+
+                layer.open({
+
+                    type: 2,
+                    area: ["800px", "600px"],
+                    title: "毕业班级",
+                    content: "/Obtainemployment/EmploymentSummary/selectGraduationClass",
+                    end: callback
+                });
+            }
+
+            function selectMajor(callback) {
+                layer.open({
+                    type: 2,
+                    area: ["800px", "200px"],
+                    title: "专业",
+                    content: "/Obtainemployment/EmploymentSummary/selectMajor",
+                    end: callback
                 });
             }
 
@@ -218,10 +249,13 @@
                     case "ClassRatio":
                         var temphtml = $("#classratiofitler").html();
                         loadtemplate(temphtml);
+
+                        $("#selectClass").click();
                         break;
                     case "StaffRatio":
                         var temphtml = $("#staffratiofitler").html();
                         loadtemplate(temphtml);
+                        $("#selectMajor").click();
                         break;
                 }
             });
@@ -240,18 +274,69 @@
 
             $(document).off("click", "#yearratiobtn").on("click", "#yearratiobtn", function () {
 
-                var year = $(this).val();
+                var year = $("#year").val();
+                var alredyurl = generateURL({ "type": "already", "Year": year });
 
-                table.reload('employment', {
-                    url: '/Obtainemployment/EmploymentSummary/YearEmploymentRatioData'
-                    , where: {
-                        type: 'already'
-                        , Year: year
+                var noturl = generateURL({ "type": "not", "Year": year });
+
+                render(alredyurl, "#alreadyemployment");
+                render(noturl, "#notemployment");
+
+
+            });
+            $(document).off("click", "#selectClass").on("click", "#selectClass", function () {
+
+                selectClass(function () {
+
+                    var classobjtemp = getclassobj();
+
+                    if (classobjtemp == undefined) {
+
+                        layer.msg("没有选择班级", {icon:2});
+
+                        return;
                     }
-                   
+
+                    $("#className").val(classobjtemp.classname);
+
+                    //发送请求
+                    var alredyurl = generateURL({ "type": "already", "classid": classobjtemp.classid });
+
+                    var noturl = generateURL({ "type": "not", "classid": classobjtemp.classid });
+
+                    render(alredyurl, "#alreadyemployment");
+                    render(noturl, "#notemployment");
                 });
 
             });
+            $(document).off("click", "#selectMajor").on("click", "#selectMajor", function () {
+
+                selectMajor(function () {
+
+                    var major = getmajorobj();
+
+                    if (major == undefined) {
+
+                        layer.msg("没有选择专业", {icon: 2});
+
+                        return;
+                    }
+
+                    $("#majorinput").val(major.majorname);
+
+                    var cyear = $("#year").val();
+
+                    //发送请求
+                    var alredyurl = generateURL({ "type": "already", "majorid": major.majorid, Year: cyear });
+
+                    var noturl = generateURL({ "type": "not", "majorid": major.majorid, Year: cyear  });
+
+                    render(alredyurl, "#alreadyemployment");
+                    render(noturl, "#notemployment");
+                });
+
+            });
+
 
         });
 

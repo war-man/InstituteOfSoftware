@@ -16,7 +16,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 {
     //  /Login/LoginIndex
     [IgnoreLogin]
-    public class LoginController : Controller
+    public class LoginController : BaseMvcController
     {
         UsersInfoManeger userinfo = new UsersInfoManeger();
         // GET: Login
@@ -39,9 +39,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
                     Base_User findu = userinfo.GetList().Where(find => find.UserName == u.UserName && find.Password == pwd).FirstOrDefault();
                     if (findu != null)
                     {
-                        SessionHelper sessionHelper = new SessionHelper();
-
-
+                        
                         SessionHelper.Session["UserId"] = findu.UserId;
                         err.Success = true;
                         err.Msg = "登陆成功!";
