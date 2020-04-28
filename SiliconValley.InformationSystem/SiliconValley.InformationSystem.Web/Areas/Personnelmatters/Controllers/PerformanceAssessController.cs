@@ -13,11 +13,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     public class PerformanceAssessController : Controller
     {
         RedisCache rc = new RedisCache();
+        //第一次进入月度工资表页面时加载的年月份的方法
+        static string GetFirstTime()
+        {
+            MeritsCheckManage msrmanage = new MeritsCheckManage();
+            string mytime = "";
+            if (msrmanage.GetEmpMCData().Where(s => s.IsDel == false).Count() > 0)
+            {
+                var time = msrmanage.GetEmpMCData().Where(s => s.IsDel == false).LastOrDefault().YearAndMonth;
+                mytime = DateTime.Parse(time.ToString()).Year + "-" + DateTime.Parse(time.ToString()).Month;
+            }
+            else
+            {
+                mytime = "";
+            }
+            return mytime;
+        }
+        static string FirstTime = GetFirstTime();
+
         //绩效考核统计
         // GET: Personnelmatters/PerformanceAssess
         public ActionResult PerformanceAssessIndex()
         {
-            MeritsCheckManage msrmanage = new MeritsCheckManage();//员工月度工资
+            MeritsCheckManage msrmanage = new MeritsCheckManage();//员工绩效考核
             if (msrmanage.GetEmpMCData().Where(s => s.IsDel == false).Count() > 0)
             {
                 var time = msrmanage.GetEmpMCData().Where(s => s.IsDel == false).FirstOrDefault().YearAndMonth;
@@ -34,7 +52,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult PerformanceAssessShow(int page, int limit, string AppCondition)
+        public ActionResult PerformanceAssessShow(int page, int limit, string AppCondition,string time)
         {
             MeritsCheckManage mcmanage = new MeritsCheckManage();
             EmployeesInfoManage emanage = new EmployeesInfoManage();
