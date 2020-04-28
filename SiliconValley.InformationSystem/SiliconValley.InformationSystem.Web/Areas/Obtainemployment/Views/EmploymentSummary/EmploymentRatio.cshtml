@@ -25,6 +25,7 @@
             width:49%;
             height:400px;
         }
+
         #notemploymenttable {
             display: inline-block;
             width: 50%;
@@ -34,14 +35,15 @@
     
 }
 <div id="mywarp">
-
+    
     <div id="ratiotype">
         <form class="layui-form">
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <input  type="radio" name="ratio" value="YearRatio" lay-filter="ratio" title="年度就业率" checked="">
+                    <input type="radio" name="ratio" value="YearRatio" lay-filter="ratio" title="年度就业率" checked="">
                     <input type="radio" name="ratio" value="ClassRatio" lay-filter="ratio" title="班级就业率">
-                    <input  type="radio" name="ratio" value="StaffRatio" lay-filter="ratio" title="专业就业率">
+                    <input type="radio" name="ratio" value="MajorRatio" lay-filter="ratio" title="专业就业率">
+                    <input type="radio" name="ratio" value="StaffRatio" lay-filter="ratio" title="专员就业率">
                 </div>
             </div>
         </form>
@@ -69,17 +71,25 @@
 
     <hr style="border:1px solid #c8c2c2;" />
 
+    <div id="radioDiv" style="text-align:center;">
+       
+        <h3 style="text-align:center;">就业率 <label  id="radioH"></label></h3>
+    </div>
+
     <div>
 
         <div id="alreadyemploymenttable">
 
-            <h3 style="text-align:center;">已就业学员</h3>
+            <h4 style="text-align:center; color:gray;">已就业学员 <label class="count" style="color:green;"></label></h4>
+            <hr />
             <table class="layui-hide" id="alreadyemployment" lay-filter="alreadyemployment"></table>
+
         </div>
 
         <div id="notemploymenttable">
 
-            <h3 style="text-align:center;">未就业学员</h3>
+            <h4 style="text-align:center; color:gray;">未就业学员  <label class="count" style="color:red;"></label></h4>
+            <hr />
             <table class="layui-hide" id="notemployment" lay-filter="notemployment"></table>
         </div>
 
@@ -122,7 +132,7 @@
     </div>
 </script>
 
-<script type="text/template" id="staffratiofitler">
+<script type="text/template" id="majorratiofitler">
     <div>
         <div class="layui-form-item">
             <div class="layui-inline">
@@ -145,16 +155,42 @@
     </div>
 </script>
 
+<script type="text/template" id="staffratiofitler">
+    <div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年份：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="year" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">专员：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="stuffinput" readonly class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <button type="button" id="selectstuff" class="layui-btn layui-btn-primary">选择专员<i class="layui-icon layui-icon-search"></i></button>
+            </div>
+        </div>
+    </div>
+</script>
+
 @section script{
     
     <script>
 
+        var Inteval = 0;
+
         var classobj;
         var majorobj;
+        var empobj;
+
         function setClassid(in_classobj) {
             classobj = in_classobj;
         }
-
         function getclassobj() {
             return classobj;
         }
@@ -165,10 +201,18 @@
         function getmajorobj() {
             return majorobj;
         }
-        ///生成url
-        function generateURL(whereJson) {
 
-            var url = '/Obtainemployment/EmploymentSummary/YearEmploymentRatioData?';
+        function setEmpobj(in_empobj) {
+            empobj = in_empobj;
+        }
+
+        function getEmpobj() {
+            return empobj;
+        }
+        ///生成url
+        function generateURL(actionName, whereJson) {
+
+            var url = '/Obtainemployment/EmploymentSummary/' + actionName + '?';
 
             for (var key in whereJson) {
 
@@ -213,6 +257,27 @@
                         , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150 }
                     ]]
                     , page: true
+                    , parseData: function (res) {
+
+                        $(elem).parent().find(".count").text(res.count);
+                        $(elem).parent().find(".count").attr("value", res.count);
+                        Inteval ++ ;
+
+                        if (Inteval >= 2) {
+
+                            //计算就业率
+                            var alerdycount = $("#alreadyemploymenttable .count").attr("value");
+                            var notcount = $("#notemploymenttable .count").attr("value");
+                            console.log(alerdycount);
+                            console.log(notcount);
+                            var radio = (alerdycount / (alerdycount + notcount)) * 100;
+                            console.log(radio);
+                            $("#radioH").text(radio + '%');
+
+
+                        }
+
+                    }
                 });
             }
 
@@ -239,12 +304,25 @@
                 });
             }
 
+            function selectStuff(callback) {
+                layer.open({
+
+                    type: 2,
+                    area: ["600px", "600px"],
+                    title: "就业专员",
+                    content: "/Obtainemployment/EmploymentSummary/selectStuff",
+                    end: callback
+                });
+            }
+
             form.on('radio(ratio)', function (data) {
 
                 switch (data.value) {
                     case "YearRatio":
                         var temphtml = $("#yearratiofitler").html();
                         loadtemplate(temphtml);
+
+                        $("#yearratiobtn").click();
                         break;
                     case "ClassRatio":
                         var temphtml = $("#classratiofitler").html();
@@ -252,10 +330,17 @@
 
                         $("#selectClass").click();
                         break;
+                    case "MajorRatio":
+                        var temphtml = $("#majorratiofitler").html();
+                        loadtemplate(temphtml);
+
+                        $("#selectMajor").click();
+                        break;
                     case "StaffRatio":
                         var temphtml = $("#staffratiofitler").html();
                         loadtemplate(temphtml);
-                        $("#selectMajor").click();
+
+                        $("#selectstuff").click();
                         break;
                 }
             });
@@ -264,20 +349,20 @@
 
             var date = new Date();
 
-            var alredyurl = generateURL({ "type": "already", "Year": date.getFullYear() });
+            var alredyurl = generateURL("YearEmploymentRatioData",{ "type": "already", "Year": date.getFullYear() });
 
-            var noturl = generateURL({ "type": "not", "Year": date.getFullYear() });
+            var noturl = generateURL("YearEmploymentRatioData",{ "type": "not", "Year": date.getFullYear() });
                 
              //已就业学员
             render(alredyurl, "#alreadyemployment");
             render(noturl, "#notemployment");
 
-            $(document).off("click", "#yearratiobtn").on("click", "#yearratiobtn", function () {
-
+            $(document).off("click", "#yearratiobtn").on("click", "#yearratiobtn", function ()0
+                Inteval = 0;
                 var year = $("#year").val();
-                var alredyurl = generateURL({ "type": "already", "Year": year });
+                var alredyurl = generateURL("YearEmploymentRatioData",{ "type": "already", "Year": year });
 
-                var noturl = generateURL({ "type": "not", "Year": year });
+                var noturl = generateURL("YearEmploymentRatioData",{ "type": "not", "Year": year });
 
                 render(alredyurl, "#alreadyemployment");
                 render(noturl, "#notemployment");
@@ -285,7 +370,7 @@
 
             });
             $(document).off("click", "#selectClass").on("click", "#selectClass", function () {
-
+                Inteval = 0;
                 selectClass(function () {
 
                     var classobjtemp = getclassobj();
@@ -300,9 +385,9 @@
                     $("#className").val(classobjtemp.classname);
 
                     //发送请求
-                    var alredyurl = generateURL({ "type": "already", "classid": classobjtemp.classid });
+                    var alredyurl = generateURL("ClassEmploymentRatioData",{ "type": "already", "classid": classobjtemp.classid });
 
-                    var noturl = generateURL({ "type": "not", "classid": classobjtemp.classid });
+                    var noturl = generateURL("ClassEmploymentRatioData",{ "type": "not", "classid": classobjtemp.classid });
 
                     render(alredyurl, "#alreadyemployment");
                     render(noturl, "#notemployment");
@@ -310,7 +395,7 @@
 
             });
             $(document).off("click", "#selectMajor").on("click", "#selectMajor", function () {
-
+                Inteval = 0;
                 selectMajor(function () {
 
                     var major = getmajorobj();
@@ -327,16 +412,39 @@
                     var cyear = $("#year").val();
 
                     //发送请求
-                    var alredyurl = generateURL({ "type": "already", "majorid": major.majorid, Year: cyear });
+                    var alredyurl = generateURL("MajorEmploymentRatioData",{ "type": "already", "majorid": major.majorid, Year: cyear });
 
-                    var noturl = generateURL({ "type": "not", "majorid": major.majorid, Year: cyear  });
+                    var noturl = generateURL("MajorEmploymentRatioData",{ "type": "not", "majorid": major.majorid, Year: cyear  });
 
                     render(alredyurl, "#alreadyemployment");
                     render(noturl, "#notemployment");
                 });
 
             });
+            $(document).off("click", "#selectstuff").on("click", "#selectstuff", function () {
+                Inteval = 0;
+                selectStuff(function () {
 
+                    var empdata = getEmpobj();
+
+                    if (empdata == undefined) {
+
+                        layer.msg("没有选择专员!", {icon: 2});
+
+                        return;
+                    }
+
+                    $("#stuffinput").val(empdata.EmpName);
+
+                    var cyear = $("#year").val();
+
+                    var alredyurl = generateURL("StuffEmploymentRatioData", { "type": "already", "Year": cyear, "empnumber": empdata.EmployeeId  });
+
+                    var noturl = generateURL("StuffEmploymentRatioData", { "type": "not", "Year": cyear, "empnumber": empdata.EmployeeId });
+                    render(alredyurl, "#alreadyemployment");
+                    render(noturl, "#notemployment");
+                });
+            });
 
         });
 
