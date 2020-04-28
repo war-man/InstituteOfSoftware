@@ -357,7 +357,7 @@
             render(alredyurl, "#alreadyemployment");
             render(noturl, "#notemployment");
 
-            $(document).off("click", "#yearratiobtn").on("click", "#yearratiobtn", function ()
+            $(document).off("click", "#yearratiobtn").on("click", "#yearratiobtn", function () {
                 Inteval = 0;
                 var year = $("#year").val();
                 var alredyurl = generateURL("YearEmploymentRatioData",{ "type": "already", "Year": year });
