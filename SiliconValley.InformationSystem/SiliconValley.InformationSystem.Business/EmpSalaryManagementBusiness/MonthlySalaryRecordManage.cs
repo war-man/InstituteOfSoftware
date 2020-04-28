@@ -22,16 +22,6 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
             rc.RemoveCache("InRedisMSRData");
             List<MonthlySalaryRecord> msrlist = new List<MonthlySalaryRecord>();
 
-            //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-            //List<Reconcile> get_reconciles_list = new List<Reconcile>();
-            //get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
-            //if (get_reconciles_list == null || get_reconciles_list.Count == 0)
-            //{
-            //    get_reconciles_list = this.GetList();
-            //    Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
-            //}
-            //return get_reconciles_list;
-
             if (msrlist == null || msrlist.Count == 0)
             {
                 msrlist = this.GetList();
