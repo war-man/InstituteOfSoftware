@@ -1258,15 +1258,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// 用于用户修改员工信息的编辑页（电话号码/现住地址/图片）
         /// </summary>
         /// <returns></returns>
-        public ActionResult EditEmpAttr(string empid) {
+        [HttpGet]
+        public ActionResult EditEmpAttr(string id) {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp = empmanage.GetInfoByEmpID(empid);
-            ViewBag.empid = empid;
+            var emp = empmanage.GetInfoByEmpID(id);
+           
             return View(emp);
         }
 
         [HttpPost]
         public ActionResult EditEmpAttr(EmployeesInfo emp) {
+            string EmployeeId = Request.QueryString["EmployeeId"];
             var ajaxresult = new AjaxResult();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             try
@@ -1281,6 +1283,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 emp2.Address = emp.Address;
                
                 empmanage.Update(emp2);
+                ajaxresult = empmanage.Success();
             }
             catch (Exception ex)
             {

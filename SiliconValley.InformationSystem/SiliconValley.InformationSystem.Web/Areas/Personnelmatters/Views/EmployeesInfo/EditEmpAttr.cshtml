@@ -17,21 +17,22 @@
 </head>
 <body>
     <div>
-        <input type="hidden" id="myempid" value="@ViewBag.empid" />
+      
+        @Html.Hidden("EmployeeId")
         <form class="layui-form" action="" lay-filter="formtest" enctype="multipart/form-data">
-            <div class="layui-container" style="margin-top:20px;">
+            <div class="layui-container"  style="margin-top:20px;">
 
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">姓名:</label>
-                        <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.EmpName, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        <div class="layui-input-block" >
+                            @Html.TextBoxFor(a => a.EmpName, new Dictionary<string, object>() { { "class", "layui-input " }, { "readonly", "readonly" },{ "style", "border:0px;" } })
                         </div>
                     </div>
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属部门:</label>
+                        <label class="layui-form-label" >所属部门:</label>
                         <div class="layui-input-block">
                             <input type="text" id="dname" name="dname" readonly class="layui-input" style="border:0px;" />
                         </div>
@@ -42,7 +43,7 @@
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label" style="width:100px;margin-left:-20px;">所属岗位:</label>
+                        <label class="layui-form-label">所属岗位:</label>
                         <div class="layui-input-block">
                             <input type="text" id="pname" name="pname" readonly class="layui-input" style="border:0px;" />
                         </div>
@@ -50,7 +51,7 @@
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">手机号码:</label>
-                        <div class="layui-input-block" style="width:190px;">
+                        <div class="layui-input-block" >
                             @Html.TextBoxFor(a => a.Phone, new Dictionary<string, object>() { { "lay-verify", "myUrgentPhone" }, { "class", "layui-input" } })
                         </div>
                     </div>
@@ -60,34 +61,33 @@
               
                 <div class="layui-row layui-form-item">
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">现居地址:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.Address, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="margin-top:10px;">
                         <label class="layui-form-label">图片:</label>
-                        <div class="layui-input-block">
-                            <input type="file" id="MyImage" name="MyImage" />
-                            <div style="border:0px solid #808080;width:400px;height:200px;">
-                                <img id="showImage" style="width:400px;height:200px;" />
+                        <div class="layui-input-block" style="margin-left:50px;">
+                            <input type="file" id="MyImage" name="MyImage" style="margin-top:10px;" />
+                            <div style="border:0px solid #808080;">
+                                <img id="showImage" style="width:200px;height:200px;" />
 
                             </div>
                         </div>
                     </div>
-
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <div class="layui-input-block" style="margin-top:20px;margin-left:150px;">
+                            <button class="layui-btn " lay-submit="" type="button" lay-filter="demo1" >立即提交</button>
+                            <button class="layui-btn " id="btnclose1" style="margin-left:20px;">关闭</button>
+                        </div>
+                    </div>
+                </div>
                 </div>
 
-            </div>
-
-            <div class="layui-form-item" style="margin-left:400px;margin-top:20px;">
-                <div class="layui-input-block">
-                    <button class="layui-btn " lay-submit="" type="button" lay-filter="demo1">立即提交</button>
-                    <button class="layui-btn " id="btnclose1">关闭</button>
-                </div>
-            </div>
+         
         </form>
     </div>
 
@@ -96,10 +96,10 @@
             loadnetinfo();// 初始化编辑数据加载
         });
         function loadnetinfo() {
-            var id = $("#myempid").val();
+           
             $.ajax({
                 type: "get",
-                url: "/Personnelmatters/EmployeesInfo/GetempById/" + id,
+                url: "/Personnelmatters/EmployeesInfo/GetempById/" + $("#EmployeeId").val(),
                 //data: { id: id },
                 dataType: "json",
 
@@ -176,7 +176,7 @@
 
                 $.ajax({
                     type: "post",
-                    url: "/Personnelmatters/EmployeesInfo/EditEmpAttr",
+                    url: "/Personnelmatters/EmployeesInfo/EditEmpAttr?EmployeeId=" + $("#EmployeeId").val(),
                     data: fd,
                     dataType: "json",
 

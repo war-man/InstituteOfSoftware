@@ -142,7 +142,7 @@ namespace SiliconValley.InformationSystem.Business
         public List<T> Redislist()
         {
             List<T> list = new List<T>();
-            var x = Service.GetList<T>();
+          
             RedisCache redis = new RedisCache();
             list = redis.GetCache<List<T>>(typeof(T).ToString());
             if (list != null)
@@ -151,6 +151,7 @@ namespace SiliconValley.InformationSystem.Business
             }
             else
             {
+                var x = Service.GetList<T>();
                 redis.SetCache(typeof(T).ToString(), x);
                 list = redis.GetCache<List<T>>(typeof(T).ToString());
                 return list;

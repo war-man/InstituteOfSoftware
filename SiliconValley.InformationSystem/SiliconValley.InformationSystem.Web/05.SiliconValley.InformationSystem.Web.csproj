@@ -63,6 +63,12 @@
     <Reference Include="EntityFramework6.Npgsql">
       <HintPath>..\..\..\..\GIT\SiliconValleyInformationFramwork\Code\SiliconValley.InformationSystem\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
@@ -1656,6 +1662,7 @@
     <Content Include="Areas\Educational\Views\Reconcile\EditOrtherViewData.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\HightStudentAnpaiView.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmpAttr.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3381,6 +3388,14 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SignalRChat_Common\SignalRChat_Common.csproj">
+      <Project>{d305a3ec-96ad-415e-998b-789097686c08}</Project>
+      <Name>SignalRChat_Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SignalRChat_Model\SignalRChat_Model.csproj">
+      <Project>{469f9301-044c-443f-9cbd-9f63ad9be807}</Project>
+      <Name>SignalRChat_Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Business\04.SiliconValley.InformationSystem.Business.csproj">
       <Project>{572473ad-730a-4e3b-9ae5-078d96dacdac}</Project>
       <Name>04.SiliconValley.InformationSystem.Business</Name>
