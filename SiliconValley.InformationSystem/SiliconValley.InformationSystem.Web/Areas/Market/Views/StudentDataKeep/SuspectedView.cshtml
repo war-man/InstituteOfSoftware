@@ -1,0 +1,199 @@
+﻿
+@{
+    ViewBag.Title = "SuspectedView";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section style{
+    <style>
+        span:hover
+        {
+            color: red;
+        }
+
+        .iCss
+        {
+            color: #009688;
+        }
+
+        .DivCss
+        {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            height: 700px;
+        }
+
+        .layui-colla-title
+        {
+            position: relative;
+            padding: 0 15px 0 35px;
+            color: #333;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            font-size: 14px;
+            overflow: hidden;
+            height: 15px;
+            line-height: 15px;
+        }
+
+        .BtnCss1
+        {
+            margin-top: 5%;
+            background-color: rgba(255,255,255,0.2);
+            margin-left: 40px;
+        }
+
+        .DivCss2{
+        display:none;
+        }
+        .DivCss3{
+        width:260px;
+        height:210px;
+        }
+    </style>
+}
+<div class="DivCss">
+    <div>
+        <div style="display:flex;flex-direction:row">
+            <div style="width:85%;border-bottom:1px solid #e7e6e6;border-top:1px solid #e7e6e6">
+
+                <span>备案人姓名:</span> <input type="text" id="Name" class="layui-input" style="width:130px;display:inline-block" /><button id="SerchBtn" style="margin-left:140px;height:36px;" type="button" class="layui-btn">查询</button>
+
+            </div>
+            <div id="BigloadDiv" style="flex:1;text-align:right" class="DivCss2">
+                 <button type="button" id="BigBtn" class="layui-btn"><i class="layui-icon">&#xe601;</i>批量下载</button> 
+            </div>
+        </div>
+
+        <div style="width:100%;height:70%;" id="FileListDiv">
+             
+        </div>
+        <div id="BtnDiv" style="text-align:center;" class="DivCss2">
+            <input id="SumInput" type="hidden" />
+            <button id="Del" class="BtnCss1" type="button"><i class="layui-icon">&#xe603;</i>上一页</button><button id="Add" class="BtnCss1" type="button">下一页<i class="layui-icon">&#xe602;</i></button>
+        </div>
+    </div>
+</div>
+
+
+@section script{
+    <script>
+
+       
+        layui.use(['form', 'element'], function () {
+            var form = layui.form;
+            var element = layui.element;
+ 
+            form.on('checkbox(checkinput)', function (data) {
+                $("#BigloadDiv").removeClass("DivCss2");
+            });        
+        });
+        $(function () {
+            //将文件加载供用户选择
+            function FileUiLoad(page, limit, filename) {
+                $("#BtnDiv").addClass("DivCss2");
+                $("#BigloadDiv").addClass("DivCss2");
+                layui.use(['layer','form'], function () {
+                    var layer = layui.layer;
+                    var index = layer.load(1);
+                    var form = layui.form;
+                    $.ajax({
+                        url: '/Market/StudentDataKeep/PageData',
+                        data: { "limit": limit, "page": page, "filename": filename },
+                        type: 'POST',
+                        success: function (suc) {
+                            $("#FileListDiv")[0].innerHTML = "";
+                            $("#SumInput")[0].value = suc.count;
+                            $("#Del")[0].value = suc.page;
+                            $("#Add")[0].value = suc.page;
+                            if (suc.data.length > 0) {
+                                for (var i = 0; i < suc.data.length; i++) {
+                                    $(' <div class="layui-col-sm2 DivCss3"><div style="width:130px;height:200px;text-align:center;"><i class="layui-icon iCss" style="font-size: 100px;">&#xe655;</i><div style="text-align:center"><a href="/Market/StudentDataKeep/LoadFile?id=' + suc.data[i].Value + '"><span style="cursor:pointer">' + suc.data[i].Text + '</span></a></div><form class="layui-form"><input type="checkbox" lay-filter="checkinput" lay-skin="primary" value="' + suc.data[i].Value + '"></form></div></div>').appendTo($("#FileListDiv"))
+                                }
+                            }
+
+                            $("#BtnDiv").removeClass("DivCss2");
+                            form.render();
+                            layer.close(index);
+                        }
+                    });
+                });
+               
+               
+            }
+
+            $("#Add").click(function () {
+                //下一页
+                var sum = $("#SumInput").val();
+                var page = $("#Add").val();
+                if (page <sum) {
+                    page = Number(page) + 1;
+                    FileUiLoad(page, 12);
+                } else {
+                    var layer = layui.layer;
+                    layer.msg('已经是最后一页了!!', { icon: 5, shade: 0.8 });
+                }
+            });
+
+            $("#Del").click(function () {
+                //上一页
+                var page = $("#Del").val();
+
+                if (page <= 1) {
+                    var layer = layui.layer;
+                    layer.msg('已经是第一页了!!', { icon: 5, shade: 0.8 });
+                } else {
+                    page = Number(page) - 1;
+
+                    FileUiLoad(page, 12);
+                }
+            });
+
+            //查询
+            $("#SerchBtn").click(function () {
+                var filename = $("#Name").val();
+                FileUiLoad(1, 12, filename);
+            });
+
+            //大批量下载
+            $("#BigBtn").click(function () {
+                var str = "";
+               var count = $(":checked").length;
+                $(":checked").each(function (indexs, ele) {
+                    str = str + $(ele).val() + ",";
+                });
+                if (count > 3) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('最多只能选择3个文件', { icon: 2, shade: 0.8 });
+                    });
+                } else if (count == 0) {
+                    layui.use('layer', function () {
+                        var layer = layui.layer;
+                        layer.msg('请选择要下载的文件', { icon: 2, shade: 0.8 });
+                    });
+                } else {
+
+                    var files = str.split(",");
+                    files.forEach(url => {
+                        if (url!="") {
+                            let a = document.createElement('a') // 创建a标签
+                            let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
+                            e.initEvent('click', false, false) // 初始化事件对象
+                            a.href = "/Market/StudentDataKeep/LoadFile?id=" + url // 设置下载地址
+                            a.download = '' // 设置下载文件名
+                            a.dispatchEvent(e);                             
+                        }
+                        
+                    });
+                }
+  
+            });
+            FileUiLoad(1, 12);
+        });
+
+         
+    </script>
+}
+

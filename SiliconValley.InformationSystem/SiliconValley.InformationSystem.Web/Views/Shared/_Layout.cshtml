@@ -7,23 +7,23 @@
     <title></title>
     <style>
 
-        .outer-container {
-          
+        .outer-container
+        {
             height: 580px;
             position: relative;
             overflow: hidden;
         }
 
-        .inner-container {
+        .inner-container
+        {
             position: absolute;
             left: 0px;
             top: 0;
             right: -17px;
             bottom: 0;
             overflow-y: auto;
-            overflow-x:hidden;
+            overflow-x: hidden;
         }
-        
     </style>
     <!-- Bootstrap Styles-->
     <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
@@ -56,11 +56,11 @@
     <link href="~/Tree/css/barChart.css" rel='stylesheet' type='text/css' />
     <link href="~/Tree/css/fabochart.css" rel='stylesheet' type='text/css' />
     @RenderSection("style", false)
-    @RenderSection("script", false);
+
 
     <link href="~/Tree/css/style.css" rel='stylesheet' type='text/css' />
 </head>
-<body scroll="no" >
+<body scroll="no">
     <div class="page-container">
         <!--/content-inner-->
         <div class="left-content">
@@ -313,7 +313,7 @@
                     <div class="clearfix"></div>
                 </div>
                 <!-- //header-ends -->
-                <div class="outter-wp"  >
+                <div class="outter-wp">
                     @RenderBody()
                 </div>
                 <!--footer section start-->
@@ -338,7 +338,7 @@
                 <a href="index.html"><img src="images/admin.jpg"></a>
                 <a href="index.html"><span class=" name-caret">陈海石</span></a>
                 <p>账号:202014255245456</p>
-           
+
                 <ul>
                     <li><a class="tooltips" href="index.html"><span>Profile</span><i class="lnr lnr-user"></i></a></li>
                     <li><a class="tooltips" href="index.html"><span>Settings</span><i class="lnr lnr-cog"></i></a></li>
@@ -346,18 +346,18 @@
                 </ul>
             </div>
             <!--//down-->
-            <div >     </div>
+            <div>     </div>
             <div class="outer-container">
-                <div class="inner-container"  >
-                    <div class="menu " style="width:230px;"  >
+                <div class="inner-container">
+                    <div class="menu " style="width:230px;">
 
                         <ul id="menu"></ul>
                     </div>
                 </div>
             </div>
-            
-      
-    </div>
+
+
+        </div>
         <div class="clearfix"></div>
     </div>
     <script>
@@ -373,18 +373,18 @@
                 $(".outer-container").attr("style", "height:770px;")
                 $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
                 $("#menu span").css({ "position": "absolute" });
-             
+
                 console.log("1");
             }
             else {
                 $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
                 setTimeout(function () {
                     $("#menu span").css({ "position": "relative" });
-                  
+
                     $("#menu").attr("style", "width:230px;")
                     $(".outer-container").attr("style", "height:580px;")
                 }, 400);
-               
+
             }
 
             toggle = !toggle;
@@ -392,10 +392,11 @@
         $("#button1").click(function () {
             $("#menu").css("overflow", "auto");
         })
-      
-    </script>
-</body>
 
+    </script>
+    @RenderSection("script", false);
+</body>
+ 
 </html>
 
 <script type="text/javascript">
