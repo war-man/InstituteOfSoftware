@@ -166,7 +166,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
 
             }
-            else if (string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(ClassName)) { list = dbtext.Mylist("StudentAttendance"); }
+            else if (string.IsNullOrEmpty(Name) && string.IsNullOrEmpty(ClassName)) { list = dbtext.GetList(); }
           
             if (!string.IsNullOrEmpty(qBeginTime))
             {
@@ -249,7 +249,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result = new SuccessResult();
                 result.Msg = "记录成功";
                 result.Success = true;
-                dbtext.Remove("StudentAttendance");
+                dbtext.GetList();
                 BusHelper.WriteSysLog("出勤记录成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             catch (Exception ex)
@@ -273,7 +273,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string tu = studentAttendanc.StudentID.Substring(0, studentAttendanc.StudentID.Length - 1);
             //转成数组
             string[] stu = tu.Split(',');
-            var list = dbtext.Mylist("StudentAttendance");
+            var list = dbtext.GetList();
             List<StudentAttendance> mylist = new List<StudentAttendance>();
             for (int i = 0; i < stu.Length; i++)
             {

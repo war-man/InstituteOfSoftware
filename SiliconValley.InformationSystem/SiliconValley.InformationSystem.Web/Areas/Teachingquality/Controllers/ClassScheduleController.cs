@@ -32,11 +32,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     {
 
 
-        public static int counts;
+        public static int counts = 0;
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
         {
-            counts = 0;
+            
             dbtext = new ClassScheduleBusiness();
 
         }
@@ -220,6 +220,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     classSchedule.ClassStatus = false;
                     classSchedule.IsDelete = false;
                     dbtext.Insert(classSchedule);
+                  
                     retus = new SuccessResult();
                     retus.Success = true;
                     retus.Msg = "开设成功";

@@ -313,13 +313,13 @@
                     <div class="clearfix"></div>
                 </div>
                 <!-- //header-ends -->
-                <div class="outter-wp" style="overflow:auto;">
+                <div class="outter-wp" style="overflow:hidden;">
                 
                     @RenderBody()
                 </div>
                 <!--footer section start-->
                 <footer>
-                    <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+                    <p style="color:#000000;">版权所属公司：<a href="https://xin.baidu.com/company_detail_20452183185658?rq=ef&pd=ee&from=ps" title="湖南硅谷云教育科技有限公司">湖南硅谷云教育科技有限公司</a>  <a href="http://www.beian.miit.gov.cn/" target="_blank" title="湘ICP备17003047号-3">湘ICP备17003047号-3</a></p>
                 </footer>
                 <!--footer section end-->
             </div>
@@ -375,7 +375,7 @@
                 $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
                 $("#menu span").css({ "position": "absolute" });
              
-                console.log("1");
+                
             }
             else {
                 $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
@@ -404,7 +404,7 @@
    
     //UserClass
     $.post('/Base_SysManage/Base_SysMenu/UserClass', function (data) {
-        console.log(data);
+       
         //~/uploadXLSXfile/EmpImage/1.jpg
         $("#EmployeeId").text(data.EmployeeId);
         $("#EmpName").text(data.EmpName);
@@ -469,7 +469,7 @@
                 if (Menu[i].IsShow == true) {
                     if (Menu[i].Url) {
 
-                        var li1 = $('<li id="menu-mensagens"  style="width:200px"></li>');
+                        var li1 = $('<li id="menu-mensagens"  style="width:150px"></li>');
                         var a1 = $('<a  href=' + Menu[i].Url + '>' + Menu[i].Name + '</a>')
 
                         li1.append(a1);
