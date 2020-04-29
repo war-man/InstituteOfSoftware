@@ -61,7 +61,7 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework6.Npgsql">
-      <HintPath>..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <HintPath>..\..\..\..\GIT\SiliconValleyInformationFramwork\Code\SiliconValley.InformationSystem\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
@@ -75,9 +75,8 @@
     <Reference Include="MySql.Data.Entity.EF6">
       <HintPath>..\packages\MySql.Data.Entity.6.10.8\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=4.0.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -452,11 +451,6 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
-    <Content Include="Areas\Teachingquality\images\db618f149fc242299c9ebac0576ca2a1_th.jpg" />
-    <Content Include="Areas\Teachingquality\images\guigu.png" />
-    <Content Include="Areas\Teachingquality\images\审批.png" />
-    <Content Include="Areas\Teachingquality\js\priceview.js" />
-    <Content Include="Areas\Teachingquality\js\Print.js" />
     <Content Include="Areas\Teachingquality\StuImages\2019年10月14日.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
@@ -1661,7 +1655,7 @@
     <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\EditOrtherViewData.cshtml" />
     <Content Include="Areas\Educational\Views\Reconcile\HightStudentAnpaiView.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentTransaction\Changedata.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmpAttr.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

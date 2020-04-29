@@ -168,7 +168,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 result.Add(view);
             }
 
-
             var newobj = new
             {
                 code = 0,
