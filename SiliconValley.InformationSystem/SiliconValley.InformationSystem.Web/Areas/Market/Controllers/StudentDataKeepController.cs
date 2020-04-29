@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
     [CheckLogin]
     public class StudentDataKeepController : BaseMvcController
     {
-        // GET: /Market/StudentDataKeep/DelteInfomationType
+        // GET: /Market/StudentDataKeep/FielsPath
         #region 创建实体
         //创建一个用于操作数据的备案实体
         private StudentDataKeepAndRecordBusiness s_Entity;
@@ -749,7 +749,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     {
                         //有重复的值                                
                         //获取当前年月日
-                        string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + equally_list[1].EmployeesInfo_Id + "ErrorExcel.xls";
+                        string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + equally_list[1].EmployeesInfo_Id + ".xls";
                         string path = "~/uploadXLSXfile/ConsultUploadfile/ConflictExcel/" + filename;
                         SessionHelper.Session["filename2"] = path;
                         //获取表头数据
@@ -865,7 +865,88 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             FileStream stream = new FileStream(rr, FileMode.Open);
              return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
-         
-        #endregion               
+
+        #endregion
+
+
+        #region 疑似数据业务
+        public ActionResult SuspectedView()
+        {
+            return View();
+        }
+        
+        /// <summary>
+        /// 文件下载
+        /// </summary>
+        /// <returns></returns>
+        public void LoadFile()
+        {
+
+            string id = Request.QueryString["id"];
+            if (!string.IsNullOrEmpty(id) && id!= "undefined")
+            {                 
+                        string path = Server.MapPath("~/uploadXLSXfile/ConsultUploadfile/ConflictExcel/" + id);
+
+                        FileStream fs = new FileStream(path, FileMode.Open);
+                        byte[] bytes = new byte[(int)fs.Length];
+                        fs.Read(bytes, 0, bytes.Length);
+                        fs.Close();
+                        //二进制流数据（如常见的文件下载）
+                        Response.ContentType = "application/octet-stream";
+                        //通知浏览器下载文件而不是打开 
+                        Response.AddHeader("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(id, System.Text.Encoding.UTF8));
+                        Response.BinaryWrite(bytes);
+                        Response.Flush();
+                        Response.End();
+                    
+            }             
+        }
+       
+        public ActionResult PageData()
+        {
+            int page = Convert.ToInt32(Request.Form["page"]);
+            int limit = Convert.ToInt32(Request.Form["limit"]);
+            string filename = Request.Form["filename"];
+            System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(Server.MapPath("~/uploadXLSXfile/ConsultUploadfile/ConflictExcel"));
+            FileInfo[] files = di.GetFiles();
+            List<SelectListItem> FilesName = new List<SelectListItem>();
+            foreach (FileInfo f in files)
+            {
+                SelectListItem s = new SelectListItem();
+                int lenth = f.Name.Length;
+                s.Text = f.Name.Substring(0, 4) + "年" + f.Name.Substring(4, 2) + "月" + f.Name.Substring(6, 2) + "日" + f.Name.Substring(14, lenth - 14);
+                s.Value = f.Name;
+                FilesName.Add(s);
+            }
+
+            if (!string.IsNullOrEmpty(filename))
+            {
+                FilesName = FilesName.Where(f => f.Value.Contains(filename)).ToList();
+            }
+            int count= Convert.ToInt32(Math.Ceiling(FilesName.Count / 12.0));
+            List<SelectListItem> selectdata  = FilesName.Skip(((Convert.ToInt32(page) - 1) * Convert.ToInt32(limit))).Take(Convert.ToInt32(limit)).ToList();
+
+            var data = new { count= count ,data= selectdata ,page=page};
+
+            return Json(data,JsonRequestBehavior.AllowGet);
+        }
+        
+        [HttpPost]
+        public ActionResult FielsPath()
+        {
+            string name = Request.Form["id"];
+            List<string> list = new List<string>();
+            string[] names = name.Split(',');
+            foreach (string id in names)
+            {
+                if (!string.IsNullOrEmpty(id))
+                {
+                    list.Add(Server.MapPath("~/uploadXLSXfile/ConsultUploadfile/ConflictExcel/" + id));
+                }
+            }
+
+            return Json(list, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
     }
 }
