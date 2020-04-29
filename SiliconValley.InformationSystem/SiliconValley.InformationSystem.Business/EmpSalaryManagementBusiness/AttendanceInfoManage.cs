@@ -193,7 +193,7 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     string workeddays = getrow.GetCell(2).NumericCellValue.ToString();
                     //获取第三行"请假天数"列的数据
                    // ICell leaveddays_cell = sheet.GetRow(num).GetCell(3);
-                   string leaveddays = getrow.GetCell(3) == null ? null : getrow.GetCell(3).NumericCellValue.ToString();
+                    string leaveddays = getrow.GetCell(3) == null ? null : getrow.GetCell(3).NumericCellValue.ToString();
                     //获取第三行"上班缺卡次数"列的数据
                     string workAbsentNum = getrow.GetCell(4)==null? null : getrow.GetCell(4).NumericCellValue.ToString();
                     //获取第三行"上班缺卡记录"列的数据
@@ -218,21 +218,21 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
                     string remark = getrow.GetCell(14) == null ? null : getrow.GetCell(14).StringCellValue;
 
                     matd.YearAndMonth = Convert.ToDateTime(time);
-                    matd.DeserveToRegularDays = Convert.ToDecimal(DeserveToRegularDays);
+                    matd.DeserveToRegularDays =Convert.ToDecimal(DeserveToRegularDays);
                     matd.EmpName = name;
                     matd.EmpDDid = Convert.ToInt32(ddid);
                     matd.ToRegularDays = Convert.ToInt32(workeddays);
-                    matd.LeaveDays = Convert.ToInt32(leaveddays);
-                    matd.WorkAbsentNum = Convert.ToInt32(workAbsentNum);
+                    matd.LeaveDays =leaveddays== null ?matd.LeaveDays= null: Convert.ToDecimal(leaveddays);
+                    matd.WorkAbsentNum = workAbsentNum==null ? matd.WorkAbsentNum= null: Convert.ToInt32(workAbsentNum);
                     matd.WorkAbsentRecord = workAbsentRecord;
-                    matd.OffDutyAbsentNum = Convert.ToInt32(offDutyAbsentNum);
+                    matd.OffDutyAbsentNum =offDutyAbsentNum==null?matd.OffDutyAbsentNum= null: Convert.ToInt32(offDutyAbsentNum);
                     matd.OffDutyAbsentRecord = OffDutyAbsentRecord;
-                    matd.TardyNum = Convert.ToInt32(tardyNum);
+                    matd.TardyNum =tardyNum==null?matd.TardyNum=null: Convert.ToInt32(tardyNum);
                     matd.TardyRecord = tardyRecord;
-                    matd.TardyWithhold = Convert.ToInt32(tardyWithhold);
-                    matd.LeaveEarlyNum = Convert.ToInt32(leaveEarlyNum);
+                    matd.TardyWithhold =tardyWithhold==null?matd.TardyWithhold=null: Convert.ToInt32(tardyWithhold);
+                    matd.LeaveEarlyNum =leaveEarlyNum==null?matd.LeaveEarlyNum=null: Convert.ToInt32(leaveEarlyNum);
                     matd.LeaveEarlyRecord = leaveEarlyRecord;
-                    matd.LeaveWithhold = Convert.ToInt32(leaveWithhold);
+                    matd.LeaveWithhold =leaveWithhold==null?matd.LeaveWithhold=null: Convert.ToInt32(leaveWithhold);
                     matd.Remark = remark;
 
                     result.Add(matd);

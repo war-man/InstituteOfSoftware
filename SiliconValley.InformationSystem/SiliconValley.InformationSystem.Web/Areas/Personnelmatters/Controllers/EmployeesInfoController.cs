@@ -38,7 +38,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult Index()
         {
             ViewBag.birth = GetTheGodOfLongevity().Count();
-            ViewBag.contractEnd = ContractEndRemind().Count();          
+            ViewBag.contractEnd = ContractEndRemind().Count();
             return View();
         }
 
@@ -209,7 +209,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
 
-
+        #region 添加员工相关action
 
         //添加员工页面显示
         [HttpGet]
@@ -217,7 +217,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             return View();
         }
-      
+
         /// <summary>
         /// 添加员工
         /// </summary>
@@ -258,7 +258,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 else {
                     emp.Image = null;
                 }
-                if (emp.ProbationSalary==null) {
+                if (emp.ProbationSalary == null) {
                     emp.PositiveDate = emp.EntryTime;//当该员工的试用期工资为空时（即没有试用期)，该员工的转正时间即等同于该员工入职时间
                 }
                 empinfo.Insert(emp);
@@ -268,62 +268,62 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 if (AjaxResultxx.Success) {
                     var dname = empinfo.GetDept(emp.PositionId).DeptName;//获取该员工所属部门名称
                     var pname = empinfo.GetPosition(emp.PositionId).PositionName;//获取该员工所属岗位名称
-                if (dname.Equals("就业部"))
-                {
-                    bool s = esmanage.AddEmploystaff(emp.EmployeeId);//给就业部员工表添加员工
-                    AjaxResultxx.Success = s;
-                }
-                if (dname.Equals("市场部"))
-                {
-                    bool s = csmanage.AddChannelStaff(emp.EmployeeId);
-                    AjaxResultxx.Success = s;
-                }//给市场部员工表添加员工
-                if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && !pname.Equals("教官"))
-                {
-                    bool s = hm.AddHeadmaster(emp.EmployeeId);
-                    AjaxResultxx.Success = s;
+                    if (dname.Equals("就业部"))
+                    {
+                        bool s = esmanage.AddEmploystaff(emp.EmployeeId);//给就业部员工表添加员工
+                        AjaxResultxx.Success = s;
+                    }
+                    if (dname.Equals("市场部"))
+                    {
+                        bool s = csmanage.AddChannelStaff(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
+                    }//给市场部员工表添加员工
+                    if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
+                    {
+                        bool s = hm.AddHeadmaster(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
                     }//给两个教质部员工表添加除教官外的员工
-                if ((dname.Equals("s1、s2教质部")|| dname.Equals("s3教质部")) && pname.Equals("教官"))
+                    if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
                     {
                         bool s = itmanage.AddInstructorList(emp.EmployeeId);
                         AjaxResultxx.Success = s;
                     }//给教官员工表添加教官
-                if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
-                {
-                    bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
-                    AjaxResultxx.Success = s;
-                }//给咨询部员工表添加除咨询助理外的员工
-                if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部")|| dname.Equals("s4教学部"))//给三个教学部员工表添加员工
-                {
-                    Teacher tea = new Teacher();
-                    tea.EmployeeId = emp.EmployeeId;
-                    bool s = teamanage.AddTeacher(tea);
-                    AjaxResultxx.Success = s;
-                }
-                if (dname.Equals("财务部"))
-                {
-                    bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
-                    AjaxResultxx.Success = s;
-                }//给财务部员工表添加员工
+                    if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
+                    {
+                        bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
+                    }//给咨询部员工表添加除咨询助理外的员工
+                    if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))//给三个教学部员工表添加员工
+                    {
+                        Teacher tea = new Teacher();
+                        tea.EmployeeId = emp.EmployeeId;
+                        bool s = teamanage.AddTeacher(tea);
+                        AjaxResultxx.Success = s;
+                    }
+                    if (dname.Equals("财务部"))
+                    {
+                        bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
+                        AjaxResultxx.Success = s;
+                    }//给财务部员工表添加员工
                     bool ss = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
                     AjaxResultxx.Success = ss;
                     //if (AjaxResultxx.Success) {
                     //    bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
                     //    AjaxResultxx.Success = monthss;
                     //}
-                   
+
                     if (AjaxResultxx.Success) {
                         bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
                         AjaxResultxx.Success = mc;
                         if (AjaxResultxx.Success && !string.IsNullOrEmpty(emp.PositiveDate.ToString())) {
                             //并将该员工绩效分默认改为100
-                                var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
+                            var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
                             AjaxResultxx.Success = mcemp;
-                           
+
                         }
                     }
-                   
-                }    
+
+                }
             }
             catch (Exception ex)
             {
@@ -507,17 +507,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 var emplist = empmanage.GetEmpInfoData();
-                if (emplist.Where(s=>s.DDAppId==int.Parse(ddnum)).Count()>0) {
+                if (emplist.Where(s => s.DDAppId == int.Parse(ddnum)).Count() > 0) {
                     AjaxResultxx.Success = true;
                 }
             }
             catch (Exception)
             {
                 AjaxResultxx.Success = false;
-            } 
-            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion
 
         #region 部门及岗位相关业务
         //部门及岗位管理页面显示
@@ -702,9 +702,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             var AjaxResultxx = new AjaxResult();
             try
             {
-                foreach (var d in deptmanage.GetList().Where(s => s.DeptId == deptid && s.IsDel==false))
+                foreach (var d in deptmanage.GetList().Where(s => s.DeptId == deptid && s.IsDel == false))
                 {
-                    if (pname == d.PositionName && d.IsDel==false)
+                    if (pname == d.PositionName && d.IsDel == false)
                     {
                         AjaxResultxx = deptmanage.Success();
                     }
@@ -914,8 +914,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.EmpName,
                 e.PositionId,
                 dname = emanage.GetDept((int)e.PositionId).DeptName,
-                pname = emanage.GetPosition((int)e.PositionId).PositionName,               
-               deptid = emanage.GetDept((int)e.PositionId).DeptId,
+                pname = emanage.GetPosition((int)e.PositionId).PositionName,
+                deptid = emanage.GetDept((int)e.PositionId).DeptId,
                 e.Sex,
                 e.Age,
                 e.Nation,
@@ -943,8 +943,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.Remark,
                 e.IsDel,
                 e.Image,
-                deltime = etmobj==null?null:etmobj.TransactionTime,//离职时间
-                delreason = etmobj==null?null:etmobj.Reason//离职原因
+                deltime = etmobj == null ? null : etmobj.TransactionTime,//离职时间
+                delreason = etmobj == null ? null : etmobj.Reason//离职原因
                 #endregion
             };
             return Json(empobj, JsonRequestBehavior.AllowGet);
@@ -958,7 +958,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         public ActionResult EditEmp(string id)
         {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var emp =empmanage.GetInfoByEmpID(id);
+            var emp = empmanage.GetInfoByEmpID(id);
             ViewBag.pid = emp.PositionId;
             ViewBag.pname = empmanage.GetPobjById(emp.PositionId).PositionName;
             return View(emp);
@@ -973,11 +973,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             try
             {
                 var emp2 = empmanage.GetInfoByEmpID(emp.EmployeeId);
-                if (emp.IdCardNum!=null) {
+                if (emp.IdCardNum != null) {
                     emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
                     emp.Age = Convert.ToInt32(GetAge((DateTime)emp.Birthdate, DateTime.Now));
                 }
-               
+
                 emp.IsDel = emp2.IsDel;
                 if (emp.Image != "undefined")
                 {
@@ -986,7 +986,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 else {
                     emp.Image = emp2.Image;
                 }
-              
+
                 empmanage.Update(emp);
                 ajaxresult = empmanage.Success();
 
@@ -1037,7 +1037,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     }
 
                     //员工调岗，直接由人事修改日期的情况下添加该员工异动
-                    if (emp.PositionId!=emp2.PositionId) {
+                    if (emp.PositionId != emp2.PositionId) {
                         EmpTransaction et = new EmpTransaction();
                         et.EmployeeId = emp.EmployeeId;
                         et.TransactionType = mtmanage.GetmtTypeidByTname("调岗");
@@ -1057,7 +1057,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         et.IsDel = false;
                         etmanage.Insert(et);
                         ajaxresult = etmanage.Success();
-                       
+
                         if (ajaxresult.Success)
                         {
                             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
@@ -1065,7 +1065,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
                             {
                                 ese.PerformancePay = 1000;
-                            } else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName=="校办") {
+                            } else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办") {
                                 ese.PerformancePay = 3000;
                             }
                             else
@@ -1109,12 +1109,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                 }
                             }
                             else {
-                                ese.PerformancePay = emp.Salary-emp.ProbationSalary;
+                                ese.PerformancePay = emp.Salary - emp.ProbationSalary;
                             }
                             ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
                             esemanage.Update(ese);
                             ajaxresult = esemanage.Success();
-                            
+
                         }
                     }
                 }
@@ -1123,7 +1123,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             {
                 ajaxresult = empmanage.Error(ex.Message);
             }
-          
+
             return Json(ajaxresult, JsonRequestBehavior.AllowGet);
         }
 
@@ -1147,16 +1147,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.birthemps = GetTheGodOfLongevity();
             return View();
         }
-       /// <summary>
-       /// 获取所有当天生日的员工
-       /// </summary>
-       /// <returns></returns>
+        /// <summary>
+        /// 获取所有当天生日的员工
+        /// </summary>
+        /// <returns></returns>
         public List<EmployeesInfo> GetTheGodOfLongevity() {
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
             List<EmployeesInfo> luckdog = new List<EmployeesInfo>();
-            var myemplist = empmanage.GetEmpInfoData().Where(s=>s.IsDel==false).ToList();
+            var myemplist = empmanage.GetEmpInfoData().Where(s => s.IsDel == false).ToList();
 
-           string lunardate = GetLunarCalendar();
+            string lunardate = GetLunarCalendar();
             string[] lunar = lunardate.Split('/');//分割获取到的当前日期的农历日期
             var lunarmonth = lunar[0];//获取当前农历月份
             var lunarday = lunar[1];//获取当前农历日期
@@ -1182,20 +1182,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     }
                     if (myyinyang == "阳历")
                     {
-                        if (int.Parse(mymonth) == month && int.Parse(myday)==day)
+                        if (int.Parse(mymonth) == month && int.Parse(myday) == day)
                         {
                             luckdog.Add(myemplist[i]);
                         }
                     }
                 }
-               
+
             }
             return luckdog;
-        } 
-    /// <summary>
-    /// 获取当前农历的年月日
-    /// </summary>
-    /// <returns></returns>
+        }
+        /// <summary>
+        /// 获取当前农历的年月日
+        /// </summary>
+        /// <returns></returns>
         public string GetLunarCalendar() {
             ChineseLunisolarCalendar ChineseCalendar = new ChineseLunisolarCalendar();
             int year = ChineseCalendar.GetYear(DateTime.Now);
@@ -1203,7 +1203,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             int month = ChineseCalendar.GetMonth(DateTime.Now);
             //int leapMonth = ChineseCalendar.GetLeapMonth(year);
 
-            string date = string.Format("{0}/{1}", month , day);
+            string date = string.Format("{0}/{1}", month, day);
             return date;
         }
 
@@ -1212,31 +1212,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
 
-       /// <summary>
-       /// "合同到期提醒",获取一个月内（小于等于30天）合同将过期的员工
-       /// </summary>
-       /// <returns></returns>
+        /// <summary>
+        /// "合同到期提醒",获取一个月内（小于等于30天）合同将过期的员工
+        /// </summary>
+        /// <returns></returns>
         public List<EmployeesInfo> ContractEndRemind()
 
         {
             //找到所有一个月内即将过期的员工，返回员工集合
             List<EmployeesInfo> ContractendingEmp = new List<EmployeesInfo>();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();
-            var empsum = empmanage.GetEmpInfoData().Where(s=>s.IsDel==false).ToList();
+            var empsum = empmanage.GetEmpInfoData().Where(s => s.IsDel == false).ToList();
             var nowtime = DateTime.Now;
             for (int i = 0; i < empsum.Count(); i++)
             {
-                DateTime endtime =Convert.ToDateTime(empsum[i].ContractEndTime);
+                DateTime endtime = Convert.ToDateTime(empsum[i].ContractEndTime);
                 TimeSpan ts = endtime - nowtime;
                 //相差的天数 
                 var diffday = ts.Days;
-                if (diffday<=30 && diffday>=0) {
+                if (diffday <= 30 && diffday >= 0) {
                     ContractendingEmp.Add(empsum[i]);
                 }
             }
             return ContractendingEmp;
         }
-    
+
 
         // 图片上传
         public string ImageUpload()
@@ -1254,6 +1254,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return completefilePath;
         }
 
+        /// <summary>
+        /// 用于用户修改员工信息的编辑页（电话号码/现住地址/图片）
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EditEmpAttr(string empid) {
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            var emp = empmanage.GetInfoByEmpID(empid);
+            ViewBag.empid = empid;
+            return View(emp);
+        }
+
+        [HttpPost]
+        public ActionResult EditEmpAttr(EmployeesInfo emp) {
+            var ajaxresult = new AjaxResult();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            try
+            {
+                var emp2 = empmanage.GetInfoByEmpID(emp.EmployeeId);
+                if (emp.Image != "undefined")
+                {
+                    emp.Image = ImageUpload();
+                    emp2.Image = emp.Image;
+                }
+                emp2.Phone = emp.Phone;
+                emp2.Address = emp.Address;
+               
+                empmanage.Update(emp2);
+            }
+            catch (Exception ex)
+            {
+                ajaxresult = empmanage.Error(ex.Message);
+            }
+            return Json(ajaxresult,JsonRequestBehavior.AllowGet);
+        }
 
     }
 }
