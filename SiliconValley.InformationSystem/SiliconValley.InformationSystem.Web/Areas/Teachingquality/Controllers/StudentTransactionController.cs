@@ -67,6 +67,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(dbtext.TransactionDate(page, limit, ClassID,TypeName,StudentID,Name, IsaDopt), JsonRequestBehavior.AllowGet);
         }
         /// <summary>
+        /// 获取已审核的异动数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="TypeName"></param>
+        /// <param name="StudentID"></param>
+        /// <param name="Name"></param>
+        /// <param name="IsaDopt"></param>
+        /// <param name="ClassID"></param>
+        /// <returns></returns>
+        public ActionResult TransactionDatePro(int page, int limit, string TypeName,  string Name, string IsaDopt, string ClassID)
+        {
+            return Json(dbtext.TransactionDatepro(page, limit, TypeName, Name, IsaDopt, ClassID), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
         /// 转班详细数据
         /// </summary>
         /// <returns></returns>
@@ -433,5 +448,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             return View(dbtext.Transactiondetails(ID));
         }
+        //异动数据页面
+        public ActionResult Changedata()
+        {
+            ViewBag.Types = BasicdatBusiness.GetList().Where(a => a.IsDetele == false && a.Name != "毕业").Select(a => new SelectListItem { Value = a.ID.ToString(), Text = a.Name });
+
+            return View();
+        }
+        public ActionResult ClassProDate()
+        {
+            string ClassName = Request.QueryString["ClassName"];
+            return Json(dbtext.ClassProDate(ClassName), JsonRequestBehavior.AllowGet);
+        }
+        
     }
 }
