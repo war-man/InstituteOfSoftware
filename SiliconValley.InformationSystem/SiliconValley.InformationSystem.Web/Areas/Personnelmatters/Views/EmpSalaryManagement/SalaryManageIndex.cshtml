@@ -4,10 +4,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="timeUpdate"><i class="layui-icon layui-icon-edit"></i>年月份改变</button>
+        <button class="layui-btn layui-btn-sm" lay-event="Approved"><i class="layui-icon layui-icon-edit"></i>确认审批</button>
         <button class="layui-btn layui-btn-sm" lay-event="forbiddenEmp"><i class="layui-icon layui-icon-fonts-del"></i>禁用</button>
     </div>
 </script>
@@ -133,6 +135,10 @@
                     case 'timeUpdate':
                         TimeUpdate();
                         break;
+                    case 'Approved':
+                        var time ='@ViewBag.yearandmonth' ;
+                        ConfirmApproval(time);
+                        break;
                     case 'forbiddenEmp':
                         var data = checkStatus.data;
                         console.log(data);
@@ -156,16 +162,71 @@
             table.on('tool(salarytab)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'edit') {
+                    var id = data.Id;
+                    console.log("公子编号：" + id);
+                    $.post('/Personnelmatters/EmpSalaryManagement/JudgeIsApproval', { 'id': id }, function (da) {
+                        if (da.ErrorCode == 200) {
+                            if (da.Success) {
+                                layer.msg("该员工本月工资已确认审批了，不可编辑！", {
+                                    icon: 1,
+                                    time: 5000 //2秒关闭（如果不配置，默认是3秒）
+                                }, function () {
+                                 var index = parent.layer.getFrameIndex(window.name);
+                                 parent.layui.table.reload('mySalaryStatistics');
+                                 parent.layer.close(index);
+                               });
+                            }
+                            else {
+                                layer.open({
+                                    type: 2,
+                                    content: '/Personnelmatters/EmpSalaryManagement/EditEmpSalary/?id=' + id
+                                    , area: ["500px", "500px"]
+                                    , title: '编辑员工月度工资信息'
+                                    , shade: 0.8
+                                    , anim: 4
+                                    , skin: 'demo-class'
+                                });
+                            }
+                        } else {
+                            layer.alert("系统出错，请多次尝试后");
+                        }
+                        
+                    })
+                    //$.ajax({
+                    //    url: '/Personnelmatters/EmpSalaryManagement/JudgeIsApproval',
+                    //    type: 'POST',
+                    //    data: id,
+                    //    dataType: 'JSON',
+                    //    contentType: false,
+                    //    processData: false,
+                    //    success: function (data) {
+                    //        if (data.success) {
+                    //            layer.alert("该员工本月工资已确认审批了，不可编辑！", { icon: 1 }, function () {
+                    //                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    //                parent.layer.close(index);
 
-                    layer.open({
-                        type: 2,
-                        content: '/Personnelmatters/EmpSalaryManagement/EditEmpSalary/?id=' + data.Id
-                        , area: ["500px", "500px"]
-                        , title: '编辑员工月度工资信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
+                    //            });
+                    //        } else {
+                    //            layer.open({
+                    //                type: 2,
+                    //                content: '/Personnelmatters/EmpSalaryManagement/EditEmpSalary/?id=' + id
+                    //                , area: ["500px", "500px"]
+                    //                , title: '编辑员工月度工资信息'
+                    //                , shade: 0.8
+                    //                , anim: 4
+                    //                , skin: 'demo-class'
+                    //            });
+                    //        }
+                    //    },
+                    //    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    //        console.log(textStatus);
+
+                    //        var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    //        window.parent.location.reload();
+                    //        parent.layer.close(index);
+                    //    }
+                    //});
+
                 }
 
             });
@@ -209,7 +270,28 @@
 
         }
 
-        //禁用员工的方法
+        //"确认审批"按钮事件
+        function ConfirmApproval(time) {
+            layer.confirm('确认都已审批了吗？', function (index) {
+                $.post('/Personnelmatters/EmpSalaryManagement/ConfirmApproval', { 'time': time }, function (da) {
+                    if (da) {
+                        layer.alert("操作成功!", { icon: 1 }, function (index) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.alert("操作失败!");
+                    }
+                })
+
+
+            });
+
+        }
+
+        //"禁用"员工的按钮事件
         function delSalaryEmpinfo(data) {
             var list = "";
             for (var i = 0; i < data.length; i++) {
