@@ -8,7 +8,7 @@
     <style>
 
 
-        /*.outer-container {
+        .outer-container {
             width: 230px;
             height: 1000px;
             position: relative;
@@ -16,7 +16,7 @@
         }
 
         .inner-container {
-            position: absolute;
+            position:relative;
             left: 0;
             top: 0;
             right: -17px;
@@ -24,7 +24,7 @@
              
             overflow-y: auto;
             overflow-x:auto;
-        }*/
+        }
       
     </style>
     <!-- Bootstrap Styles-->
@@ -438,8 +438,7 @@
        
         if (Menu.length != null) {
             var ul = $('<ul id="menu-comunicacao-sub"></ul>');
-            for (var i = 0; i < Menu.length; i++) {
-                
+            for (var i = 0; i < Menu.length; i++) {                
              
                     if (Menu[i].Url) {
                        
