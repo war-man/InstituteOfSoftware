@@ -157,6 +157,19 @@
     </script>
 
     <script>
+        // 获取浏览器的所有配置文件
+
+        //ProfilesIni allProfiles = new ProfilesIni();
+        //// "Selenium" 是之前创建的profile，不带任何插件，也未对浏览器做任何默认配置
+        //FirefoxProfile profile = allProfiles.getProfile("selenium");
+        //// 设置是否显示下载进度框
+        //profile.setPreference("browser.download.manager.showWhenStarting", false);
+        //// browser.download.folderList 设置Firefox的默认 下载 文件夹。0是桌面；1是“我的下载”；2是自定义
+        //profile.setPreference("browser.download.folderList", 2);
+        //// 设置浏览器的默认下载文件夹以及路径,如果使用自定义路径，必须要将browser.download.folderList设置为2
+        //profile.setPreference("browser.download.dir", "E:\\");
+        //// 设置哪种类型的文件下载不询问直接下载
+        //profile.setPreference("browser.helperApps.neverAsk.saveToDisk",  "application/zip,text/plain,application/vnd.ms-excel,text/csv,text/comma-separated-values,application/octet-stream,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.openxmlformats-officedocument.wordprocessingml.document");
         layui.use(['table', 'layer', 'laydate', 'tree', 'form'], function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -384,9 +397,11 @@
             $(".Filedownload").css("display", "none");
 
         })
+
+
         //下载多个文件
         function download(name, href) {
-            console.log(href);
+          
             var a = document.createElement("a"), //创建a标签
                 e = document.createEvent("MouseEvents"); //创建鼠标事件对象
             e.initEvent("click", false, false); //初始化事件对象
@@ -410,6 +425,8 @@
                     let files = [];
 
                     for (var i = 0; i < checkId.length; i++) {
+                        var evt = document.createEvent('HTMLEvents')//创建事件
+                        evt.initEvent('click', false, false)//初始化事件，绑定点击事件，不冒泡，不阻止浏览器默认行为
                         download($(checkId[i]).val(), "/Areas/Courseware/" + $("#lab1").text() + $(checkId[i]).val());
                         files[i] = $(checkId[i]).val();
                     }

@@ -132,7 +132,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Insert(T entity)
         {
             Service.Insert<T>(entity);
-            Redislist();
+            RedisRemove();
         }
         /// <summary>
         /// Name缓存的名称 查询所有缓存数据
