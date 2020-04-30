@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = null;
+}
+
+@using SiliconValley.InformationSystem.Entity.ViewEntity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TiShiView</title>
+
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+        <form class="layui-form">
+            @{ 
+                List<AnPaiData> list = ViewBag.data as List<AnPaiData>;
+
+                foreach (AnPaiData a in list)
+                {
+                    <input lay-filter="radioinput" type="radio" name="classname" id="classname" value="@a.R_Id" title="@a.ClassName"/>
+                }
+            }
+        </form>
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;
+            var layer = layui.layer;
+            form.on('radio(radioinput)', function (data) {                
+                //console.log(data.value); //被点击的radio的value值
+                window.parent.SetmyidValue(data.value);
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            });  
+        });
+    </script>
+</body>
+</html>

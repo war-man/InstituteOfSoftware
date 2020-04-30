@@ -292,7 +292,7 @@
             } else if (data.field.days == null || data.field.days <= 0) {
                 layer.msg('请选择上课星期！', { icon: 2 });
             } else {
-                console.log(data.field);
+               // console.log(data.field);
                 var loadindex = layer.load(1);
                 $.ajax({
                     url: '/Educational/Reconcile/AnpaiNotMarginFunction',

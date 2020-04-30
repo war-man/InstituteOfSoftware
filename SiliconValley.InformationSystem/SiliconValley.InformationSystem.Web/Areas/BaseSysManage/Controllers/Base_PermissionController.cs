@@ -316,7 +316,7 @@ item1.Value;
         /// <returns></returns>
         /// 
         [HttpPost]
-        public ActionResult addMenu(string MenuName, string ParentMenu, string url, string permiss)
+        public ActionResult addMenu(string MenuName, string ParentMenu, string url, string permiss,string Icon)
         {
             
             //加载 url xml
@@ -330,8 +330,11 @@ item1.Value;
                 //一级菜单
                 var elem = xmlDocument.CreateElement("FirstMenu");
                 var attrName = xmlDocument.CreateAttribute("Name");
+               var Icons= xmlDocument.CreateAttribute("Icon");
                 attrName.Value = MenuName;
+                Icons.Value = Icon;
                 elem.SetAttributeNode(attrName);
+                elem.SetAttributeNode(Icons);
                 if (url == "")
                 {
                     //表示不是最后一级

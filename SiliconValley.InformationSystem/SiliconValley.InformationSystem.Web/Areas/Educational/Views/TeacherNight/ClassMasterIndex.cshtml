@@ -18,7 +18,7 @@
 <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
 <script type="text/html" id="toolbarDemo_Night">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_week"> <i class="layui-icon">&#xe642;</i>安排值班</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData_week"> <i class="layui-icon">&#xe624;</i>安排值班</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData_time"> <i class="layui-icon">&#xe642;</i>修改值班日期</button>
         <button class="layui-btn layui-btn-sm" lay-event="getCheckChange_time"> <i class="layui-icon">&#xe642;</i>延迟、提前值班日期</button>
     </div>
@@ -113,11 +113,11 @@
             table.on('toolbar(headmaster_table)', function (obj) {
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
-                    case 'getCheckData_addNight':
+                    case 'getCheckData_week':
                         layer.open({
                             type: 2,
-                            content: '/Educational/TeacherNight/AddDataView'
-                            , area: ['800px', '500px'],
+                            content: '/Educational/TeacherNight/WeekenddutyView'
+                            , area: ['800px', '400px'],
                             title: '添加值班数据页面'
                             , shade: 0.8
                             , anim: 4
@@ -138,7 +138,7 @@
                             layer.open({
                                 type: 2,
                                 content: '/Educational/TeacherNight/EditDateChangeView'
-                                , area: ['600px', '500px']
+                                , area: ['600px', '300px']
                                 , title: '延迟、提前值班日期页面'
                                 , shade: 0.8
                                 , anim: 4
@@ -163,7 +163,7 @@
                             layer.open({
                                 type: 2,
                                 content: '/Educational/TeacherNight/EditDateView'
-                                , area: ['450px', '450px'],
+                                , area: ['450px', '200px'],
                                 title: '安排周末值班页面'
                                 , shade: 0.8
                                 , anim: 4
@@ -204,7 +204,7 @@
                     layer.open({
                         type: 2,
                         content: '/Educational/TeacherNight/EditMasterView/' + data.Id,
-                        area: ['500px', '400px'],
+                        area: ['500px', '200px'],
                         title: '编辑值班数据',
                         shade: 0.8,
                         anim: 4,

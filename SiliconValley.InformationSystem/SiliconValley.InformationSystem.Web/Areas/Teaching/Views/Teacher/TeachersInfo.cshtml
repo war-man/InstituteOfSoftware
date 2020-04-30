@@ -110,68 +110,81 @@
 <div id="table">
 
 
-    <div style=" width:500px; display:inline-block;">
-
-        <!-- Single button -->
-        <label>专业：</label>
-        <div class="btn-group layui-container" style="width:120px;">
-
-            <button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectMajor" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                选择专业 <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="majorlist">
-                <li><a href="#" majorid="0">不限</a></li>
-                @{
-                    foreach (var item in ViewBag.majors)
-                    {
-                        <li><a href="javascript:void(0);" majorid="@item.Id">@item.SpecialtyName</a></li>
-                    }
-                }
-
-            </ul>
-        </div>
-
-
-        <label>阶段：</label>
-        <div class="btn-group layui-container" style="width:120px;">
-
-            <button type="button" class="btn btn-default dropdown-toggle" id="selectGrand" grandid="0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                选择阶段 <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" id="grandlist">
-                <li><a href="#" grandid="0">不限</a></li>
-                @{
-                    foreach (var item in ViewBag.grands)
-                    {
-                        <li><a href="2:void(0);" grandid="@item.Id">@item.GrandName</a></li>
-                    }
-                }
-
-            </ul>
-        </div>
-
-        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-    </div>
-
-    <div style="display:inline-block;width:500px;" class="form-inline">
-
-        <div class="form-group">
-            <input type="text" class="form-control" id="name" placeholder="输入姓名">
-        </div>
-
-        <div class="form-group">
-            <input type="tel" class="form-control" id="phone" lay-verify="phone" placeholder="电话">
-        </div>
-
-        <button id="serchBtn2" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-
-    </div>
-
     <div style="display:inline-block;">
 
-        <div><i style="font-size:20px;" class="layui-icon layui-icon-chart">教员总人数:<span id="TotalCount">100</span>人</i></div>
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">专业</label>
+                    <div class="layui-input-inline">
+                        <select id="selectMajor" name="majorlist">
+                            <option value="0">不限</option>
+                            @{
+                                foreach (var item in ViewBag.majors)
+                                {
+                                    <option value="@item.Id">@item.SpecialtyName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
 
+                <div class="layui-inline">
+                    <label class="layui-form-label">专业</label>
+                    <div class="layui-input-inline">
+                        <select id="grandlist" name="grandlist">
+                            <option value="0">不限</option>
+                            @{
+                                foreach (var item in ViewBag.grands)
+                                {
+                                    <option value="@item.Id">@item.GrandName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+
+                    <div class="layui-input-inline">
+                        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+                    </div>
+                </div>
+
+                <div class="layui-inline">
+
+                    <div class="layui-input-inline">
+                        <div><i style="font-size:20px;" class="layui-icon layui-icon-chart">教员总人数:<span id="TotalCount">100</span>人</i></div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+    <div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="tel" id="phone" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                
+                <div class="layui-input-inline">
+                    <button id="serchBtn2" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
    
 
@@ -356,13 +369,10 @@
 
                                 layer.close(index);
                             }
-
                         });
-
                         break;
                 };
             });
-
 
             //监听行工具事件
             table.on('tool(teacherlist_filter)', function (obj) {
@@ -377,13 +387,10 @@
                     layer.open({
                         skin: "demo-class",
                         type: 2,
-                        area: ["1300px", "1000px"],
+                        area: ["1000px", "900px"],
                         content: "/Teaching/Teacher/TeacherDetailView/" + id,
                         end: function () {
-
-
                         }
-
                     });
                 } else if (obj.event === 'edit') {
                     layer.open({
@@ -391,7 +398,7 @@
                         type: 2,
                         cancel: function () {
                         },
-                        area: ["1200px", "1000px"],
+                        area: ["1000px", "800px"],
                         content: "/Teaching/Teacher/Operating/" + id,
                         end: function () {
 
@@ -454,10 +461,10 @@
             $("#serchBtn1").click(function () {
 
                 //获取 专业ID
-                var majorid = $("#selectMajor").attr("majorid");
-
+                var majorid = $("#selectMajor").val();
+              
                 //获取阶段ID
-                var grandid = $("#selectGrand").attr("grandid");
+                var grandid = $("#grandlist").val();
 
                 //发送请求
                 table.reload('Teacherlist', {

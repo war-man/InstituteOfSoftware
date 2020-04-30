@@ -116,7 +116,7 @@
 
         </div>
     </form>
-    <table class="layui-hide" id="test"  lay-filter="test"> </table>
+    <table class="layui-hide" id="test" lay-filter="test"> </table>
 </div>
 
 <div id="fileDate">
@@ -140,14 +140,14 @@
 </div>
 
 
-@section script{
+@section script{}
     <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
     <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
     @*头部按钮*@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe601;</i>批量下载</button>
-            
+
         </div>
     </script>
     @*右边按钮操作*@
@@ -163,11 +163,12 @@
             var form = layui.form;
             var laydate = layui.laydate;
             $.post("/Courseware/Coursewaremaking/CourDate?str=/首页", function (data) {
+               
                 for (var i = 0; i < data.length; i++) {
                     var a1 = data[i].split('.');
                     if (a1.length > 1) {
                         $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <div style="position:absolute; margin-left:32px;margin-top:39px;"class="Filedownload"><img src="/Areas/Courseware/images/timg.jpg" style="background:none;" /></div><img src="/Areas/Courseware/images/wen.jpg" /><div>' + data[i] + '</div>  <div style="position:absolute;margin-top:0%;margin-left:3%;"><input type="checkbox" value=' + data[i] + ' class="checkid" /></div></div>'));
-
+                    
                     } else {
                         $("#MyWenjin").append($('<div class="div1" style="text-align:center;"> <img src="/Areas/Courseware/images/wenjin.jpg" /><div>' + data[i] + '</div></div>'));
                     }
@@ -176,13 +177,14 @@
 
 
             })
+        
             //获取数据
             table.render({
                 elem: '#test'
                 , url: '/Courseware/Coursewaremaking/CourDates'
                 , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , id: 'idTest'
-                , toolbar: '#toolbarDemo' 
+                , toolbar: '#toolbarDemo'
                 , page: true
                 , cols: [[
                     { type: 'checkbox' }
@@ -201,7 +203,7 @@
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
                 ]]
             });
-
+        
             //查询功能
             form.on('submit(demo2)', function (data) {
                 var x = data.field;
@@ -220,24 +222,24 @@
                 });
                 return false;
             });
-
+        
             //头工具栏事件
             table.on('toolbar(test)', function (obj) {
                 var checkStatus = table.checkStatus(obj.config.id);
                 switch (obj.event) {
                     case 'getCheckData':
                         var data = checkStatus.data;
-                        
+
                         for (var i = 0; i < data.length; i++) {
                             download(data[i].Filename, "/Areas/Courseware/" + data[i].Filepath + data[i].Filename);
-                          
+
                         }
                         console.log(data)
-                       // layer.alert(JSON.stringify(data));
+                        // layer.alert(JSON.stringify(data));
                         break;
-                    
+
                 };
-            });
+            }); 
             //监听行工具事件
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
@@ -247,9 +249,9 @@
                         $.post("/Courseware/Coursewaremaking/Filedeletion/" + data.id + "?yourPath=" + data.Filepath + data.Filename, function (da) {
                             var messg = da == true ? "删除成功！" : "删除失败！";
                             Tips(da, messg, GetDateProfessionala());
-                          
+
                             layer.close(index);
-                            
+
                         })
                     });
                 } else if (obj.event === 'edit') {
@@ -257,7 +259,7 @@
                     download(data.Filename, "/Areas/Courseware/" + data.Filepath + data.Filename);
                 }
             });
-        }) 
+        })
 
         //获取文件夹数据
         function data(url) {
@@ -295,6 +297,7 @@
         }
         //点击文件夹
         $("body").on("click", ".div1", function () {
+            console.log("aaa");
             count = 0;
             $("#Batch").text("");
             $("#Batch").append($("<i class='layui-icon'>&#xe601;</i><span>批量下载</span>"));
@@ -348,7 +351,7 @@
             }
 
         })
-
+      
         $("body").on("mouseover", ".div1", function () {
             var img = $($(this).children());
             $(".Filedownload").css("display", "none");
@@ -481,7 +484,7 @@
                 fileDate.css("display", "none");
                 $(this).text("");
                 $(this).append($("<i class='layui-icon'>&#xe60a;</i><span>文件夹展现</span>"));
-                
+
                 $("#Batch").css("visibility", "hidden");
             } else {
                 dt = 0;
@@ -493,7 +496,7 @@
                 $("#Batch").css("visibility", "visible");
             }
         });
-
+        console.log("aaa");
     </script>
 
-}
+

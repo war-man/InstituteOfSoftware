@@ -12,7 +12,7 @@ namespace SiliconValley.InformationSystem.Web
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapMvcAttributeRoutes();
+            //routes.MapMvcAttributeRoutes();
 
             /*
              注册所有区域
@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Web
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                defaults: new { controller = "Login", action = "LoginIndex", id = UrlParameter.Optional }
             );
         }
     }

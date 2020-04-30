@@ -173,6 +173,7 @@
     <Compile Include="EducationalBusiness\Staff_Cost_StatisticssBusiness.cs" />
     <Compile Include="EducationalBusiness\StockInfoManeger.cs" />
     <Compile Include="EducationalBusiness\SubstituteTeachCourseManeger.cs" />
+    <Compile Include="EducationalBusiness\TeacherNightandEvningStudet.cs" />
     <Compile Include="EducationalBusiness\TeacherNightManeger.cs" />
     <Compile Include="EducationalBusiness\TimeTableManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />

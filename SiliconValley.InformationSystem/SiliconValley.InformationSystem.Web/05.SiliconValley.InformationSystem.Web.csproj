@@ -61,7 +61,13 @@
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework6.Npgsql">
-      <HintPath>..\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+      <HintPath>..\..\..\..\GIT\SiliconValleyInformationFramwork\Code\SiliconValley.InformationSystem\packages\EntityFramework6.Npgsql.3.2.0\lib\net45\EntityFramework6.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\..\..\聊天室\SignalRChat\bin\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
@@ -75,9 +81,8 @@
     <Reference Include="MySql.Data.Entity.EF6">
       <HintPath>..\packages\MySql.Data.Entity.6.10.8\lib\net452\MySql.Data.Entity.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Npgsql, Version=4.0.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -453,6 +458,7 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
+    <Content Include="Areas\Teachingquality\StuImages\2019年10月14日.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -474,18 +480,6 @@
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.svg" />
     <Content Include="Images\2019090308462490.gif" />
     <Content Include="Images\del.png" />
-    <Content Include="Images\Login\315.gif" />
-    <Content Include="Images\Login\code.jpg" />
-    <Content Include="Images\Login\ewm.jpg" />
-    <Content Include="Images\Login\gov-inco.jpg" />
-    <Content Include="Images\Login\jb.jpg" />
-    <Content Include="Images\Login\jia_foot_icn.png" />
-    <Content Include="Images\Login\member.png" />
-    <Content Include="Images\Login\new.png" />
-    <Content Include="Images\Login\rem-check.png" />
-    <Content Include="Images\Login\slide_btn_bg.png" />
-    <Content Include="Images\Login\wx-confirm.png" />
-    <Content Include="Images\Login\wx-image.png" />
     <Content Include="Images\班级.jpg" />
     <Content Include="Areas\Teachingquality\images\77e5233c03e544179e6564b413f4c47b.jpeg" />
     <Content Include="Areas\Teachingquality\js\AjaxAddupdate.js" />
@@ -1331,7 +1325,6 @@
     <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
-    <Content Include="Scripts\Tangmin_CssAndJs\StudentDatakeep_Css\studentdatakeep.css" />
     <Content Include="Tree\css\atlas.css" />
     <Content Include="Tree\css\bars.css" />
     <Content Include="Tree\css\bootstrap-markdown.min.css" />
@@ -1650,28 +1643,27 @@
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\PersonalCostStatics.cshtml" />
     <Content Include="Areas\Educational\Views\Staff_Cost_Statistics\HistoryCost.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\QuestionsBank\ChoiceQuestionBatchEntry.cshtml" />
+    <Content Include="Areas\Obtainemployment\Views\EmploymentSummary\EmploymentRatio.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\AddCoursewaremaking.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\Index.cshtml" />
     <Content Include="Areas\Courseware\Views\Coursewaremaking\ProducerID.cshtml" />
     <Content Include="Areas\Courseware\Views\web.config" />
-    <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\ClassadjustmentView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\ClassMasterIndex.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditDateChangeView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditDateView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditMasterView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\EditView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\MasterAddView.cshtml" />
-    <Content Include="Areas\Educational\Views\TeacherNight\WeekenddutyView.cshtml" />
-    <Content Include="Areas\Market\Views\Status\AddView.cshtml" />
-    <Content Include="Areas\Market\Views\Infomation\AddView.cshtml" />
-    <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
-    <Content Include="Areas\Educational\Views\Reconcile\EditOrtherViewData.cshtml" />
-    <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\Successionrecord.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Headteacher\TraineeContro.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentclassView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\FineProfessionala.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\AddProfessionala.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\GetProfessionala.cshtml" />
+    <Content Include="Areas\Teaching\Views\Teacher\TraineeContro.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\FeeReport.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Otherexpenses.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Tuitionandfees.cshtml" />
-    <Content Include="Areas\Teachingquality\Views\StudentInformation\StudentclassView.cshtml" />
+    <Content Include="Areas\Educational\Views\Timetable\TimeTableIndex.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\EditOrtherViewData.cshtml" />
+    <Content Include="Areas\Educational\Views\Reconcile\HightStudentAnpaiView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmpAttr.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3321,8 +3313,16 @@
     <Folder Include="Areas\CourseSyllabus\Models\" />
     <Folder Include="Areas\CourseSyllabus\Views\Shared\" />
     <Folder Include="Areas\Courseware\js\" />
+    <Folder Include="Areas\Courseware\Models\" />
+    <Folder Include="Areas\Courseware\Views\Shared\" />
     <Folder Include="Areas\Courseware\首页\ppt课程\教学部\" />
     <Folder Include="Areas\Courseware\首页\ppt课程\教质部\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S1\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S2JAVA\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S2NET\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S3JAVA\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S3NET\" />
+    <Folder Include="Areas\Courseware\首页\word文档\S4NET\" />
     <Folder Include="Areas\Courseware\首页\word文档\Y1\" />
     <Folder Include="Areas\Educational\CostHistoryFiles\" />
     <Folder Include="Areas\Educational\Models\" />
@@ -3360,6 +3360,7 @@
     <Folder Include="Areas\Teaching\Images\MajorLogoImages\" />
     <Folder Include="Areas\Teaching\Models\" />
     <Folder Include="Areas\Teaching\Views\Shared\" />
+    <Folder Include="Areas\Teaching\Views\StudentDataKeep\" />
     <Folder Include="Areas\Teaching\Views\StudentHomeWork\" />
     <Folder Include="assets\img\" />
     <Folder Include="Scripts\layui-v2.5.4\layui\css\modules\laydate\default\" />
@@ -3388,6 +3389,14 @@
     <Content Include="Scripts\jquery-3.3.1.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SignalRChat_Common\SignalRChat_Common.csproj">
+      <Project>{d305a3ec-96ad-415e-998b-789097686c08}</Project>
+      <Name>SignalRChat_Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SignalRChat_Model\SignalRChat_Model.csproj">
+      <Project>{469f9301-044c-443f-9cbd-9f63ad9be807}</Project>
+      <Name>SignalRChat_Model</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SiliconValley.InformationSystem.Business\04.SiliconValley.InformationSystem.Business.csproj">
       <Project>{572473ad-730a-4e3b-9ae5-078d96dacdac}</Project>
       <Name>04.SiliconValley.InformationSystem.Business</Name>

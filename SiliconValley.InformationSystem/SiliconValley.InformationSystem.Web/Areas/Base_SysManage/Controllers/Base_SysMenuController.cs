@@ -31,5 +31,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Base_SysManage.Controllers
 
             return Json(menus, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 获取登陆人信息
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult UserClass()
+        {
+           
+            //session["UserId"] = user.UserId;
+         return Json(SystemMenuManage.UserClass(), JsonRequestBehavior.AllowGet);
+        }
     }
 }

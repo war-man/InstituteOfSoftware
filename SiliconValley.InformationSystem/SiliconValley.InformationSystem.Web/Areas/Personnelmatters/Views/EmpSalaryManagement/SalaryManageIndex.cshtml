@@ -156,6 +156,7 @@
             table.on('tool(salarytab)', function (obj) {
                 var data = obj.data;
                 if (obj.event === 'edit') {
+
                     layer.open({
                         type: 2,
                         content: '/Personnelmatters/EmpSalaryManagement/EditEmpSalary/?id=' + data.Id
@@ -196,7 +197,6 @@
         function TimeUpdate() {
             layui.use(['layer'], function (args) {
                 var layer = layui.layer;      //layui对象
-
                 layer.open({
                     type: 2
                     , area: ["400px", "300px"]
@@ -215,6 +215,7 @@
             for (var i = 0; i < data.length; i++) {
 
                 list += data[i].Id + ",";
+                console.log(list);
             }
             $.post("/Personnelmatters/EmpSalaryManagement/DeleteSalaryManageEmp", { 'list': list }, function (da) {
                 console.log(da);

@@ -205,7 +205,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
             //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
-              List<StudentInformation> list = dbtext.Mylist("StudentInformation").Where(a=>a.IsDelete!=true).ToList();
+              List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
             try
             {
               
@@ -346,7 +346,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public bool Isidentitydocument(string identitydocument)
         {
         
-           var x= dbtext.Mylist("StudentInformation").Where(a => a.identitydocument == identitydocument&& a.IsDelete != true).ToList();
+           var x= dbtext.GetList().Where(a => a.identitydocument == identitydocument&& a.IsDelete != true).ToList();
             if (x.Count>0)
             {
                 return false;
@@ -375,7 +375,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         studentInformation.IsDelete = false;
                         dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
-                       
+                     
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
                         scheduleForTrainees.ClassID = classschedu.GetEntity( List).ClassNumber;//班级名称
                         scheduleForTrainees.ID_ClassName = (int)List;//班级编号
@@ -421,7 +421,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     studentInformation.InsitDate = x.InsitDate;
                     studentInformation.IsDelete = false;
                     dbtext.Update(studentInformation);
-                    redis.RemoveCache("StudentInformation");
+                    dbtext.GetList();
                     result = new SuccessResult();
                         result.Msg = "修改成功";
                         result.Success = true;
@@ -502,7 +502,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult Password(StudentInformation student)
         {
-          var x=  dbtext.Mylist("StudentInformation").Where(a => a.StudentNumber == student.StudentNumber&& a.IsDelete != true).FirstOrDefault();
+          var x=  dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber&& a.IsDelete != true).FirstOrDefault();
             x.Password = student.Password;
             AjaxResult result = null;
             try
@@ -511,7 +511,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result = new SuccessResult();
                 result.Success = true;
                 result.Msg = "修改成功";
-                dbtext.Remove("StudentInformation");
+               
                 BusHelper.WriteSysLog("修改学员密码成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)

@@ -11,35 +11,10 @@
     <title>AddorEditView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
-        #but1
-        {
-            position: absolute;
-            top: 13%;
-            left: 35%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-
-        #but1:hover
-            {
-                background-color: aqua;
-            }
-
-        #Nation
-        {
-            width: 100px;
-        }
 
         .linu
         {
-            width: 200px;
-        }
-
-        .mm
-        {
-            border: 1px solid black;
+            width: 100%;
         }
 
         .LableCss1
@@ -57,64 +32,11 @@
 
         .TextAreCss1
         {
-            height: 80px;
-        }
-
-        .butCss1
-        {
-            float: right;
-            margin-right: 100px;
-        }
-
-        .butCss2
-        {
-            border: 0px solid black;
-        }
-
-        .layButCss1
-        {
-            display: inline-block;
             height: 38px;
-            line-height: 38px;
-            padding: 0 18px;
-            background-color: #009688;
-            color: #fff;
-            white-space: nowrap;
-            text-align: center;
-            font-size: 14px;
-            border: none;
-            border-radius: 2px;
-            cursor: pointer;
-            border: 0px solid #C9C9C9;
-            background-color: #fff;
-            color: #555;
-            height: 18px;
-            line-height: 18px
         }
-
-        body .demo-class .layui-layer-title
-        {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
-
-        body .demo-class2 .layui-layer-title
-        {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
-
-        body .demo-class3 .layui-layer-title
-        {
-            background-color: #c02828;
-            color: #fff;
-        }
-
         .layui-unselect
         {
-            width: 150px;
+            width: 100%;
         }
     </style>
 </head>
@@ -123,17 +45,17 @@
         <div class="layui-container">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">名称:</label>
+                    <label class="layui-form-label">名 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称:</label>
                     <div class="layui-input-block">
                         @{
                             if (Model != null)
                             {
                                 <input type="hidden" id="Id" name="Id" value="@Model.Id" />
-                                <input type="text" id="ClassroomName" name="ClassroomName" readonly="readonly" placeholder="名称" class="layui-input linu" style="border:0px" value="@Model.ClassroomName"/>
+                                <input type="text" id="ClassroomName" name="ClassroomName" readonly="readonly" placeholder="名称" class="layui-input linu" style="border:0px; border-bottom:1px dashed black;" value="@Model.ClassroomName"/>
                             }
                             else
                             {
-                                <input type="text" id="ClassroomName" name="ClassroomName" lay-verify="required" placeholder="名称" class="layui-input linu" />
+                                <input type="text" id="ClassroomName" name="ClassroomName" lay-verify="required" placeholder="名称" class="layui-input linu"/>
                             }
                         }
 
@@ -158,7 +80,7 @@
                             </div>
                         </div>
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                            <label class="layui-form-label">说明:</label>
+                            <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
                             <div class="layui-input-block">
                                 @Html.TextAreaFor(c => c.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
                             </div>
@@ -166,8 +88,8 @@
                     }
                     else
                     {
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10">
-                            <label class="layui-form-label">说明:</label>
+                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                            <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
                             <div class="layui-input-block">
                                 @Html.TextAreaFor(c => c.Rmark, new Dictionary<string, object>() { { "placeholder", "说明" }, { "class", "layui-input TextAreCss1" } })
                             </div>
@@ -178,18 +100,21 @@
         </div>
         <div class="layui-form-item" style="margin-top:80px;">
             <div class="layui-input-block">
-                @{
-                    if (Model == null)
-                    {
-                        <button class="layui-btn" lay-submit="" lay-filter="tijiao">添加</button>
+                <div style="width:50%;text-align:right">
+                    @{
+                        if (Model == null)
+                        {
+                            <button class="layui-btn" lay-submit="" lay-filter="tijiao">添加</button>
+                        }
+                        else
+                        {
+                            <button class="layui-btn" lay-submit="" lay-filter="tijiao">编辑</button>
+                        }
                     }
-                    else
-                    {
-                        <button class="layui-btn" lay-submit="" lay-filter="tijiao">编辑</button>
-                    }
-                }
 
-                <button class="layui-btn butCss1" onclick="MyClose()">取消</button>
+                    <button class="layui-btn" onclick="MyClose()">取消</button>
+                </div>
+                
             </div>
         </div>
     </form>

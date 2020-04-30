@@ -34,7 +34,7 @@
                         <label class="layui-form-label lad">学生姓名:</label>
                         <div class="layui-input-inline">
                             <input type="text" id="StudentName" class="layui-input" readonly="readonly" style="border:none" />
-                            <input type="text" name="StudentNO" id="StudentNO" class="layui-input"  style="display:none" />
+                            <input type="text" name="StudentNO" id="StudentNO" class="layui-input" style="display:none" />
                         </div>
                     </div>
 
@@ -46,6 +46,16 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label lad">就业日期:</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="date" id="date" lay-verify="date" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label lad">预想薪资:</label>
@@ -57,7 +67,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label lad">实际薪资:</label>
                         <div class="layui-input-inline">
-                            <input type="text" name="RealWages" id="RealWages" class="layui-input"  lay-verify="required" autofocus="autofocus"/>
+                            <input type="text" name="RealWages" id="RealWages" class="layui-input" lay-verify="required" autofocus="autofocus" />
                         </div>
                     </div>
                 </div>
@@ -138,6 +148,10 @@
     <script>
         var objdata;
         layui.use(['form', 'layedit', 'laydate'], function () {
+            //日期
+            laydate.render({
+                elem: '#date'
+            });
             var form = layui.form, layer = layui.layer;
             var info, EntScalearray, EntNaturearray, sepclist, entid = "", yes = false, jsenplist = new Array();
             jQuery(function () {

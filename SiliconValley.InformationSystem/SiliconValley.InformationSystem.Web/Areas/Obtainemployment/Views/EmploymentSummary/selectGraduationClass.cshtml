@@ -1,0 +1,61 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>selectGraduationClass</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+        layui.use(['table'], function(){
+
+            var table = layui.table;
+
+        table.render({
+            elem: '#test'
+            ,url:'/Obtainemployment/EmploymentSummary/GraduationClass'
+   
+            ,cols: [[
+                { type: 'radio', fixed: 'left' }
+                , { field: 'classid', title: 'ID', hide: true}
+                , { field: 'classname', title: '班级', width: 150}
+                , { field: 'major', title: '专业', width: 150 }
+                , { field: 'heammaster', title: '班主任', width: 150}
+                , { field: 'graduationDate', title: '毕业时间', width: 150}
+            ]]
+            ,page: true
+            });
+
+
+            table.on('rowDouble(test)', function (obj) {
+
+                window.parent.setClassid(obj.data);
+
+                //关闭
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+
+            });
+        });
+
+
+       
+    </script>
+</body>
+</html>

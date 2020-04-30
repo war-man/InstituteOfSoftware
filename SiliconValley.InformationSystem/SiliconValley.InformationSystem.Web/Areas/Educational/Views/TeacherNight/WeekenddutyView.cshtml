@@ -10,12 +10,26 @@
     <meta name="viewport" content="width=device-width" />
     <title>WeekenddutyView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
-    <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
+    <style>
+
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            font-weight: 400;
+            line-height: 20px;
+            text-align: right
+        }
+    </style>
     
 </head>
 <body>
-    <div>
-        <form id="weekendduty_form" class="layui-form" style="margin-top:20px">
+    <div style="margin-top:20px;margin-left:auto;margin-right:auto;width:90%">
+        <form id="weekendduty_form" class="layui-form">
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">部门名称:</label>
@@ -26,7 +40,7 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">值班日期:</label>
                     <div class="layui-input-block">
-                        <input type="text" id="date" name="date" class="layui-input" style="width:130px;" lay-verify="required" />
+                        <input type="text" id="date" name="date" class="layui-input"  lay-verify="required" />
                     </div>
                 </div>               
             </div>
@@ -45,9 +59,9 @@
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <div class="layui-collapse" lay-accordion="">
+                    <div class="layui-collapse" lay-accordion>
                         <div class="layui-colla-item">
-                            <h2 class="layui-colla-title">值班老师</h2>
+                            <h2 class="layui-colla-title" style="background-color:rgba(255,255,255,0.2)">值班老师</h2>
                             <div id="teacher_div" class="layui-colla-content">
 
                             </div>
@@ -106,9 +120,8 @@
                     }
                     
                 })
-                 
-                
-                if ($("input:checked").length <= 0) {
+
+                if ($("input:checked").length <= 0 || teacherid=="") {
                     layer.msg('请选择值班的老师', { icon: 2 });
                 } else {
                     var new_data = { "tid": teacherid, "time": data.field.date, "Type": data.field.type };

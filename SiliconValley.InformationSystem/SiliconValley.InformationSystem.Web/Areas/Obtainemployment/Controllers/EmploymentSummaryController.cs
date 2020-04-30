@@ -1,5 +1,10 @@
-﻿using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
+using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+using SiliconValley.InformationSystem.Entity.MyEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView;
 using SiliconValley.InformationSystem.Util;
 using System;
 using System.Collections.Generic;
@@ -9,7 +14,7 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 {
-    [CheckLogin]
+    //[CheckLogin]
     /// <summary>
     /// 总结
     /// </summary>
@@ -33,7 +38,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult EstablishTree()
         {
 
-            dbquarter = new QuarterBusiness();
+            dbquarter = new QuarterBusiness(); 
             var result = dbquarter.loadtree();
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -65,5 +70,192 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             }
             return Json(ajaxResult, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 就业率
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult EmploymentRatio()
+        {
+            return View();
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="Year"></param>
+        /// <param name="type">already， not</param>
+        /// <returns></returns>
+        public ActionResult YearEmploymentRatioData(string Year, string type, int page, int limit)
+        {
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+            var alllist = dbempStaffAndStu.EmploymentRatio(Year:Year);
+
+            int count = 0;
+
+            List<EmpStaffAndStuView> resultlist = RatioData(alllist, type, page, limit, ref count);
+
+            var obj = new {
+                code = 0,
+                msg = "",
+                count = count,
+                data = resultlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult ClassEmploymentRatioData(string classid, string type, int page, int limit)
+        {
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+            var alllist = dbempStaffAndStu.EmploymentRatio(classid:int.Parse(classid));
+
+            int count = 0;
+
+            List<EmpStaffAndStuView> resultlist = RatioData(alllist, type, page, limit, ref count);
+
+            var obj = new
+            {
+                code = 0,
+                msg = "",
+                count = count,
+                data = resultlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult MajorEmploymentRatioData(string majorid,string Year, string type, int page, int limit)
+        {
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+
+            var alllist = dbempStaffAndStu.EmploymentRatio(majorid:int.Parse(majorid), Year:Year);
+
+            int count = 0;
+
+            List<EmpStaffAndStuView> resultlist = RatioData(alllist, type, page, limit, ref count);
+
+            var obj = new
+            {
+                code = 0,
+                msg = "",
+                count = count,
+                data = resultlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public List<EmpStaffAndStuView> RatioData(List<EmpStaffAndStu> sourse, string type, int page, int limit, ref int count)
+        {
+            List<EmpStaffAndStu> templist = new List<EmpStaffAndStu>();
+
+            switch (type)
+            {
+                case "not":
+                    templist = sourse.Where(d => d.EmploymentState == 1 || d.EmploymentState == 3).ToList();
+                    break;
+                case "already":
+                    templist = sourse.Where(d => d.EmploymentState == 2).ToList();
+                    break;
+
+            }
+
+            count = templist.Count;
+
+            List<EmpStaffAndStu> skiplist = templist.Skip((page - 1) * limit).Take(limit).ToList();
+
+            List<EmpStaffAndStuView> datalist = new List<EmpStaffAndStuView>();
+
+            foreach (var item in skiplist)
+            {
+                var tempobj = dbempStaffAndStu.studentnoconversionempstaffandstubiew(item.Studentno);
+
+                if (tempobj != null)
+
+                    datalist.Add(tempobj);
+            }
+
+            return datalist;
+        }
+
+
+        /// <summary>
+        /// 获取毕业班级
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GraduationClass()
+        {
+            EmpClassBusiness db_empclass = new EmpClassBusiness();
+
+            //毕业班级
+           var classlist = db_empclass.GetClassFormServer().Where(d=>d.ClassStatus == true).ToList();
+
+            var db_major = new SpecialtyBusiness();
+
+            List<object> templist = new List<object>();
+
+            //var tempobj1 = new
+            //{
+
+            //    classname = "1710",
+            //    classid ="11",
+            //    major = "java",
+            //    heammaster ="杨雪",
+            //    graduationDate = "2020/02/03" 
+
+            //};
+
+            //templist.Add(tempobj1);
+            foreach (var item in classlist)
+            {
+                var tempemp = new EmployeesInfoManage();
+                var stuffemp = db_empclass.GetStaffByClassid(item.id);
+                var emp = tempemp.GetInfoByEmpID(stuffemp.EmployeesInfo_Id);
+
+
+                var tempobj = new {
+
+                    classname = item.ClassNumber,
+                    classid = item.id,
+                    major = db_major.GetSpecialties().Where(d => d.Id == item.Major_Id).FirstOrDefault().SpecialtyName,
+                    heammaster = emp.EmpName,
+                    graduationDate = db_empclass.GetEmpClassFormServer().Where(d=>d.ClassId == item.id).FirstOrDefault().EndingTime
+
+                };
+
+                templist.Add(tempobj);
+            }
+
+            var obj = new {
+                code = 0,
+                msg = "",
+                count = classlist.Count,
+                data = templist
+
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+           
+        }
+
+        public ActionResult selectGraduationClass()
+        {
+            return View();
+        }
+
+        public ActionResult selectMajor()
+        {
+            var db_major = new SpecialtyBusiness();
+            ViewBag.majors = db_major.GetSpecialties();
+            return View();
+        }
+
+    
+
     }
 }

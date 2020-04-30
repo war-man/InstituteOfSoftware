@@ -16,7 +16,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ObtainEmploymentView
         /// </summary>
         public string StudentNO { get; set; }
 
-
+        /// <summary>
+        /// 就业时间
+        /// </summary>
+        public DateTime employedDate { get; set; }
         /// <summary>
         /// 公司id
         /// </summary>

@@ -29,6 +29,18 @@
             color: #fff;
             border: none;
         }
+        .layui-colla-title
+        {
+            position: relative;
+            padding: 0 15px 0 35px;
+            color: #333;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            font-size: 14px;
+            overflow: hidden;
+            height: 15px;
+            line-height: 15px;
+        }
     </style>
 }
 <div class="layui-collapse" lay-filter="test">
@@ -127,12 +139,12 @@
     <table id="Recon_table" lay-filter="Recon_table"></table>
     <script type="text/html" id="Recon_toolbarDemo">
         <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="getCheckData">全体调课</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData">班级调课</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData2">全体上课日期调换</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData3">班级上课日期调换</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData">修改班级上专业课时间段</button>
-            <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData2">修改班级上专业课老师</button>
+            <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe642;</i>全体调课</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData"><i class="layui-icon">&#xe642;</i>班级调课</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData2"><i class="layui-icon">&#xe642;</i>全体上课日期调换</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getCheckData3"><i class="layui-icon">&#xe642;</i>班级上课日期调换</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData"><i class="layui-icon">&#xe642;</i>修改班级上专业课时间段</button>
+            <button class="layui-btn layui-btn-sm" lay-event="Class_getUpdateData2"><i class="layui-icon">&#xe642;</i>修改班级上专业课老师</button>
         </div>
     </script>
 </div>

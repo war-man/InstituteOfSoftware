@@ -116,35 +116,31 @@
                 </div>
 
                 <div class="layui-row layui-form-item">
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">缺卡扣款:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到次数:</label>
                         <div class="layui-input-inline" style="width:190px;">
-                            @Html.TextBoxFor(a => a.NoClockWithhold, new Dictionary<string, object>() { { "class", "layui-input" } })
+                            @Html.TextBoxFor(a => a.TardyNum, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
 
-                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                            <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到次数:</label>
-                            <div class="layui-input-inline" style="width:190px;">
-                                @Html.TextBoxFor(a => a.TardyNum, new Dictionary<string, object>() { { "class", "layui-input" } })
-                            </div>
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到记录:</label>
+                        <div class="layui-input-inline" style="width:190px;">
+                            @Html.TextBoxFor(a => a.TardyRecord, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
+                    </div>
 
-                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                            <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到记录:</label>
-                            <div class="layui-input-inline" style="width:190px;">
-                                @Html.TextBoxFor(a => a.TardyRecord, new Dictionary<string, object>() { { "class", "layui-input" } })
-                            </div>
-                        </div>
-                </div>
-
-                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label" style="width:120px;margin-left:-40px;">迟到扣款:</label>
                         <div class="layui-input-block" style="width:190px;">
                             @Html.TextBoxFor(a => a.TardyWithhold, new Dictionary<string, object>() { { "class", "layui-input" } })
                         </div>
                     </div>
+
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label" style="width:120px;margin-left:-40px;">早退次数:</label>
@@ -159,9 +155,7 @@
                             @Html.TextBoxFor(a => a.LeaveEarlyRecord, new Dictionary<string, object>() { { "class", "layui-input " } })
                         </div>
                     </div>
-                </div>
 
-                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label" style="width:120px;margin-left:-40px;">早退扣款:</label>
                         <div class="layui-input-block" style="width:190px;">
@@ -169,7 +163,11 @@
                         </div>
                     </div>
 
-                    <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
+                </div>
+
+                <div class="layui-row layui-form-item">
+
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">备注:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Remark, new Dictionary<string, object>() { { "class", "layui-input linu" } })

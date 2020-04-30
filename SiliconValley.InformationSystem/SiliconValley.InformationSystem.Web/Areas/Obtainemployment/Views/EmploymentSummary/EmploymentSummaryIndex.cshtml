@@ -147,6 +147,9 @@
                     //console.log($obj);
                     //console.log(first);
                     //empQuarterclassid = res.data[0].children[0].children[0].nodeId;
+                    
+                    if (res.data.length == 0)
+                        return;
                     param0 = true;
                     param1 = res.data[0].nodeId;
                     loadstaff();

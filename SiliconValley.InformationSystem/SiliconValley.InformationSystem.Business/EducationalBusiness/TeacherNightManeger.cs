@@ -72,8 +72,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                BeOnDuty_Entity = new BeOnDutyManeger();
-                new_t.BeOnDuty_Id = BeOnDuty_Entity.GetSingleBeOnButy("晚自习", false).Id;
                 this.Insert(new_t);
                 a.Success = true;
                 Redis.RemoveCache("TeacherNight");
@@ -86,6 +84,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return a;
         }
+
+        /// <summary>
+        /// 清除缓存
+        /// </summary>
+        public void DeleteRedis()
+        {
+            Redis.RemoveCache("TeacherNight");
+        }
+
         public AjaxResult Add_data(List<TeacherNight> new_t)
         {
             int data_override = 0;
@@ -93,11 +100,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                BeOnDuty_Entity = new BeOnDutyManeger();
-                int be_id = BeOnDuty_Entity.GetSingleBeOnButy("晚自习", false).Id;
                 foreach (TeacherNight new_data in new_t)
                 {
-                    new_data.BeOnDuty_Id = be_id;
                     //判断是否有重复数据
                     int cout = this.GetList().Where(all => all.ClassSchedule_Id == new_data.ClassSchedule_Id && all.OrwatchDate == new_data.OrwatchDate).ToList().Count;
                     if (cout > 0)
@@ -107,6 +111,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     else
                     {
                         this.Insert(new_data);
+                        TeacherNightandEvningStudet.SetEvningStudentData(new_data.OrwatchDate,Convert.ToInt32( new_data.ClassSchedule_Id),new_data.Tearcher_Id);
                     }
 
                 }
@@ -139,7 +144,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public AjaxResult AnpaiNight(DateTime starTime, DateTime endTime)
         {
             AjaxResult a = new AjaxResult();
-
+            BeOnDuty_Entity = new BeOnDutyManeger();
+            BeOnDuty finfb= BeOnDuty_Entity.GetSingleBeOnButy("教员晚自习", false);
             List<ClassSchedule> Class_All = Reconcile_Com.GetClass();//获取所有有效班级
 
             EvningSelfStudent_Entity = new EvningSelfStudyManeger();
@@ -183,6 +189,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     new_teachernight_data.Tearcher_Id = Teacher_Entity.GetTeacherByID(find_class_teacher.TeacherID).EmployeeId;
                     new_teachernight_data.timename = ev.curd_name;
                     new_teachernight_data.AttendDate = DateTime.Now;
+                    new_teachernight_data.BeOnDuty_Id = finfb.Id;
                     list_new.Add(new_teachernight_data);
                 }
             }
@@ -230,31 +237,31 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        /// <summary>
-        /// 获取空教室
-        /// </summary>
-        /// <param name="timename">上课时间</param>
-        /// <param name="time">安排日期</param>
-        /// <param name="schooladdress_id">所属校区</param>
-        /// <returns></returns>
-        public List<Classroom> GetEmptyClassroom(string timename, DateTime time, int schooladdress_id)
-        {
-            ClassroomManeger classroom_Entity = new ClassroomManeger();
-            List<Classroom> roomlist = classroom_Entity.GetAddreeClassRoom(schooladdress_id);//获取某个校区的所有有效教室
+        ///// <summary>
+        ///// 获取空教室
+        ///// </summary>
+        ///// <param name="timename">上课时间</param>
+        ///// <param name="time">安排日期</param>
+        ///// <param name="schooladdress_id">所属校区</param>
+        ///// <returns></returns>
+        //public List<Classroom> GetEmptyClassroom(string timename, DateTime time, int schooladdress_id)
+        //{
+        //    ClassroomManeger classroom_Entity = new ClassroomManeger();
+        //    List<Classroom> roomlist = classroom_Entity.GetAddreeClassRoom(schooladdress_id);//获取某个校区的所有有效教室
 
-            List<EvningSelfStudy> e_list = EvningSelfStudent_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == time).ToList(); //获取符合日期的晚自习安排
+        //    List<EvningSelfStudy> e_list = EvningSelfStudent_Entity.EvningSelfStudyGetAll().Where(e => e.Anpaidate == time).ToList(); //获取符合日期的晚自习安排
 
-            foreach (EvningSelfStudy item in e_list)
-            {
-                Classroom find = roomlist.Where(c => c.Id == item.Classroom_id).FirstOrDefault();//获取没有安排的空教室
-                if (find != null)
-                {
-                    roomlist.Remove(find);
-                }
-            }
+        //    foreach (EvningSelfStudy item in e_list)
+        //    {
+        //        Classroom find = roomlist.Where(c => c.Id == item.Classroom_id).FirstOrDefault();//获取没有安排的空教室
+        //        if (find != null)
+        //        {
+        //            roomlist.Remove(find);
+        //        }
+        //    }
 
-            return roomlist;
-        }
+        //    return roomlist;
+        //}
 
         /// <summary>
         /// 编辑数据

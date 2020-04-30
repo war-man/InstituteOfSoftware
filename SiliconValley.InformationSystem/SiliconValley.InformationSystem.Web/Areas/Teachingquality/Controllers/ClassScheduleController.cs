@@ -23,6 +23,7 @@ using SiliconValley.InformationSystem.Business.EducationalBusiness;
 using SiliconValley.InformationSystem.Business.Shortmessage_Business;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
+
 //班级管理
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {
@@ -30,11 +31,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
     [CheckLogin]
     public class ClassScheduleController : Controller
     {
-      
+
+
         public static int counts = 0;
         private readonly ClassScheduleBusiness dbtext;
         public ClassScheduleController()
         {
+            
             dbtext = new ClassScheduleBusiness();
 
         }
@@ -218,6 +221,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     classSchedule.ClassStatus = false;
                     classSchedule.IsDelete = false;
                     dbtext.Insert(classSchedule);
+                  
                     retus = new SuccessResult();
                     retus.Success = true;
                     retus.Msg = "开设成功";
