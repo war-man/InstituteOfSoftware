@@ -257,6 +257,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult BatchAdd() {
+       
+            return View();
+        }
 
     }
 }

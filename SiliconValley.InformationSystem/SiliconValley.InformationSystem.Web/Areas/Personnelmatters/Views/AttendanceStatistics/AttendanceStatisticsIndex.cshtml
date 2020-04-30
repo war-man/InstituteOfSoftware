@@ -7,6 +7,7 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="BatchImport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导入</button>
+        <button class="layui-btn layui-btn-sm" lay-event="BatchAdd"><i class="layui-icon layui-icon-add-1"></i>批量添加</button>
         <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange"><i class="layui-icon layui-icon-search"></i>查看记录</button>
     </div>
 </script>
@@ -127,6 +128,9 @@
                     case 'BatchImport':
                         BatchImport();
                         break;
+                    case 'BatchAdd':
+                        BatchAdd();
+                        break;
                     case 'timeanddaysChange':
                         TimeandDaysChange();
                         break;
@@ -175,6 +179,21 @@
 
         }); 
         //批量（导入excel数据）添加考勤信息
+        function BatchAdd() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["400px", "400px"]
+                    , title: "批量导入"
+                    , content: '/Personnelmatters/AttendanceStatistics/BatchAdd'
+                    , anim: 2
+                });
+            })
+
+        }
+
+        //批量添加考勤信息
         function BatchImport() {
             layui.use(['layer'], function (args) {
                 var layer = layui.layer;      //layui对象
@@ -185,10 +204,10 @@
                     , content: '/Personnelmatters/AttendanceStatistics/BatchImport'
                     , anim: 2
                 });
-
             })
 
         }
+
         //年月份/应到勤天数改变
         function TimeandDaysChange() {
             layui.use(['layer'], function (args) {
