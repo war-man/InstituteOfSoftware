@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             {
                 string pwd = Util.Extention.ToMD5String(u.Password);
 
-                if (loginType == "emp")
+                if (loginType == "account")
                 {
 
                     Base_User findu = userinfo.GetList().Where(find => find.UserName == u.UserName && find.Password == pwd).FirstOrDefault();
