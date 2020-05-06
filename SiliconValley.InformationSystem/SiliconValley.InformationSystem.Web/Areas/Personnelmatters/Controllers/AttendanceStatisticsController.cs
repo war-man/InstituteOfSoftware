@@ -261,6 +261,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
        
             return View();
         }
+        [HttpPost]
+        public ActionResult BatchAdd(string list) {
+            var AjaxResultxx = new AjaxResult();
+            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
 
     }
 }
