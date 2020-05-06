@@ -61,9 +61,10 @@
         </div>
   
 </div>
-@section script{
+
 <script src="~/Scripts/ECharts4.2.1/incubator-echarts-master/dist/echarts.js"></script>
     <script>
+        var indexs;
         //这是获取到多个学生的数据显示方法
         function StudentShow(url, mytitle, myskin, mycloseBtn) {
             layui.use('layer', function () {
@@ -157,13 +158,20 @@
             };
             return option;
         }
-              //柱状图初始化
-            $.ajax({
-                url: "/Market/FollwingInfo/GetImageData",
-                success: function (Sucdata) {
-                    myChart.setOption(optionData(Sucdata));
-                }
-            });
+        //柱状图初始化
+             layui.use('layer', function () {
+                 var layer = layui.layer;
+                 indexs = layer.load(1);
+
+                 $.ajax({
+                     url: "/Market/FollwingInfo/GetImageData",
+                     success: function (Sucdata) {
+                         myChart.setOption(optionData(Sucdata));
+                         layer.close(indexs);
+                     }
+                 });
+             });
+            
  
        //给柱状图注册点击事件
         myChart.on('click', function (params) {
@@ -249,7 +257,7 @@
                         layer.open({
                             type: 2,
                             content: '/Market/FollwingInfo/AddFollwingInfo/' + id
-                            , area: ['800px', '550px'],
+                            , area: ['800px', '580px'],
                             title: '添加跟踪页面'
                             , shade: 0.8
                             , anim: 4
@@ -293,5 +301,5 @@
             }
         }        
     </script>
-    }
+
 

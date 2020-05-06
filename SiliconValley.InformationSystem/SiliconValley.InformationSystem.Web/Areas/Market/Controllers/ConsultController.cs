@@ -287,6 +287,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量信息成功" , EnumType.LogType.添加数据);
             return Json("ok",JsonRequestBehavior.AllowGet);
-        }
+        }         
     }
 }

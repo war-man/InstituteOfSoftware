@@ -248,7 +248,7 @@
                     }
                     , { field: 'StuPhone', title: '联系电话' }
                     , { field: 'StuInfomationType_Id', title: '信息来源' }
-                    , { field: 'StuStatus_Id', title: '学生状态' }
+                    
                     , {
                         field: 'StuIsGoto', title: '是否上门', templet: function (res) {
                             if (res.StuIsGoto == false || res.StuIsGoto == null) {
@@ -258,21 +258,14 @@
                             }
                         }
                     }
+                    , { field: 'StuStatus_Id', title: '学生状态' }
                     , { field: 'EmployeesInfo_Id', title: '备案人' }
-                    , {
-                        field: 'ReginName', title: '区域', templet: function (res) {
-                            if (res.ReginName == null || res.ReginName.length == 0) {
-                                return "区域外";
-                            } else {
-                                return res.ReginName;
-                            }
-                        }
-                    }
-                    , {
-                        field: 'StuDateTime', title: '备案日期', templet: function (res) {
-                            return TimeChange(res.StuDateTime);
-                        }
-                    }
+                    // , {field: 'ReginName', title: '区域'}
+                    //, {
+                    //    field: 'StuDateTime', title: '备案日期', templet: function (res) {
+                    //        return TimeChange(res.StuDateTime);
+                    //    }
+                    //}
                     , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 150 }
                 ]]
                 , page: true

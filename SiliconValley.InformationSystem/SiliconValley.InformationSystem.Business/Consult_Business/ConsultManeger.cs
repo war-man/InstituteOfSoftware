@@ -153,7 +153,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         /// <returns></returns>
         public List<ConsultTeacher> GetConsultTeacher()
         {
-            return Ct_Entity.GetList();
+            return Ct_Entity.GetIQueryable().ToList();
         }
         /// <summary>
         /// 获取单个咨询师的数据
@@ -233,11 +233,11 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             //获取当前的年份
             int year = DateTime.Now.Year;
             int list_count = 0;
-            List<Consult> find_consult = this.GetList();
+            List<Consult> find_consult = this.GetIQueryable().ToList();
             if (!string.IsNullOrEmpty(TeacherId))
             {
                 int teId = Convert.ToInt32(TeacherId);
-                find_consult = this.GetList().Where(g => g.TeacherName == teId).ToList();
+                find_consult = this.GetIQueryable().Where(g => g.TeacherName == teId).ToList();
             }            
             if (IsTure== "未完成")
             {
@@ -350,7 +350,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
           
             if (Number==0)
             {
-                List<Consult> Getlist_all = this.GetList().Where(c =>c.TeacherName==teacherid && GetSingleStudent(c.StuName).StatusTime!=null && Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month==monthName).ToList();
+                List<Consult> Getlist_all = this.GetIQueryable().ToList().Where(c =>c.TeacherName==teacherid && GetSingleStudent(c.StuName).StatusTime!=null && Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month==monthName).ToList();
                 //完成的量
                 List<Consult> ok_all = Getlist_all.Where(c => Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month == monthName).ToList();
                 ALLDATA a_list = new ALLDATA();//完成的
@@ -374,7 +374,8 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             }
             else if(Number==1)
             {
-                List<Consult> Getlist_all = this.GetList().Where(c => Convert.ToDateTime(c.ComDate).Year == year && Convert.ToDateTime(c.ComDate).Month == monthName).ToList();
+
+                List<Consult> Getlist_all = this.GetIQueryable().ToList().Where(c => Convert.ToDateTime(c.ComDate).Year == year && Convert.ToDateTime(c.ComDate).Month == monthName).ToList();
                 //未完成的量
                 List<Consult> no_all = Getlist_all.Where(c => c.TeacherName == teacherid && (GetSingleStudent(c.StuName).StatusTime == null || Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month != monthName)).ToList();
                 ALLDATA aa_list = new ALLDATA();//未完成的
@@ -397,7 +398,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             } else 
             {
                 //分量数
-                List<Consult> Getlist_all = this.GetList().Where(c => Convert.ToDateTime(c.ComDate).Year == year && Convert.ToDateTime(c.ComDate).Month == monthName && c.TeacherName == teacherid).ToList();
+                List<Consult> Getlist_all = this.GetIQueryable().ToList().Where(c => Convert.ToDateTime(c.ComDate).Year == year && Convert.ToDateTime(c.ComDate).Month == monthName && c.TeacherName == teacherid).ToList();
                 ALLDATA aa_list = new ALLDATA();
                 List<DivTwoData> towdata2 = new List<DivTwoData>();
                 foreach (Consult item1 in Getlist_all)
@@ -424,7 +425,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         /// <returns></returns>
         public Consult TongStudentIdFindConsult(int id)
         {
-            return this.GetList().Where(c => c.StuName == id).FirstOrDefault();
+            return this.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
          
         }
         /// <summary>
@@ -440,7 +441,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         public int GetCount(int id,int monthName)
         {
             int year = DateTime.Now.Year;
-            return this.GetList().Where(c => c.TeacherName == id && Convert.ToDateTime(c.ComDate).Month == monthName && Convert.ToDateTime(c.ComDate).Year == year).Count();
+            return this.GetIQueryable().Where(c => c.TeacherName == id && Convert.ToDateTime(c.ComDate).Month == monthName && Convert.ToDateTime(c.ComDate).Year == year).Count();
         }
         //获取某个咨询师某个月份完成的个数
         public int GetWangcenCount(int id,int monthName)

@@ -32,7 +32,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
             //判断是哪个咨询师
             
-            f_id = ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetList().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
+            f_id = ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault()==null?0: ConsultTeacher.GetIQueryable().Where(cc => cc.Employees_Id == UserName.EmpNumber).FirstOrDefault().Id;
             return View();
         }
         /// <summary>
@@ -94,7 +94,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<StudentPutOnRecord> find_list = new List<StudentPutOnRecord>();
             if (f_id!=0)
             {
-                List<Consult> find_consult = CM_Entity.GetList().Where(c => c.TeacherName == f_id).ToList();//获取XX咨询师的分量情况
+                List<Consult> find_consult = CM_Entity.GetIQueryable().Where(c => c.TeacherName == f_id).ToList();//获取XX咨询师的分量情况
                 foreach (Consult item2 in find_consult)
                 {
                     StudentPutOnRecord find_s = stu_list.Where(s => s.Id == item2.StuName).FirstOrDefault();
@@ -105,7 +105,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 //获取这个学生的跟踪信息次数
                 int j = 0;
-                List<FollwingInfo> find = CM_Entity.GetFollwingManeger().GetList();
+                List<FollwingInfo> find = CM_Entity.GetFollwingManeger().GetIQueryable().ToList();
                 if (find_consult.Count == 1)
                 {
                     int i = 0;
@@ -140,9 +140,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult AddFollwingInfo(int id)
         {
             StudentPutOnRecord find_Stu= CM_Entity.GetSingleStudent(id);
-            int consult_id = CM_Entity.GetList().Where(c=>c.StuName==id).FirstOrDefault().Id;           
+            int consult_id = CM_Entity.GetIQueryable().Where(c=>c.StuName==id).FirstOrDefault().Id;           
             SessionHelper.Session["consult_id"] = consult_id;
-            int Number= CM_Entity.GetFollwingManeger().GetList().Where(c => c.Consult_Id == consult_id).ToList().Count;
+            int Number= CM_Entity.GetFollwingManeger().GetIQueryable().Where(c => c.Consult_Id == consult_id).ToList().Count;
             ViewBag.Name = find_Stu.StuName;
             ViewBag.Sex = find_Stu.StuSex;
             ViewBag.Number = Number;
@@ -187,13 +187,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.Name = find_stu.StuName;
             ViewBag.Sex = find_stu.StuSex==false?"女":"男";
             //获取跟踪总数
-            Consult find_consult = CM_Entity.GetList().Where(c => c.StuName == id).FirstOrDefault();
+            Consult find_consult = CM_Entity.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
             FollwingInfoManeger FM_Entity = CM_Entity.GetFollwingManeger();
-            int count= FM_Entity.GetList().Where(f => f.Consult_Id == find_consult.Id).ToList().Count;
+            int count= FM_Entity.GetIQueryable().Where(f => f.Consult_Id == find_consult.Id).ToList().Count;
             ViewBag.Number = count + "次";
             //获取这个学生的所有咨询信息
-            Consult find_c= CM_Entity.GetList().Where(c => c.StuName == id).FirstOrDefault();
-            List<FollwingInfo> flist= CM_Entity.GetFollwingManeger().GetList().Where(f => f.Consult_Id == find_c.Id).ToList();
+            Consult find_c= CM_Entity.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
+            List<FollwingInfo> flist= CM_Entity.GetFollwingManeger().GetIQueryable().Where(f => f.Consult_Id == find_c.Id).ToList();
             ViewBag.flist = flist;
             return View();
         }
