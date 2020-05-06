@@ -389,7 +389,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             int curtypeid4 = Reconcile_Com.CourseType_Entity.FindSingeData("英语课", false).Id; 
             List<Reconcile> Recon_all = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= startime && r.AnPaiDate <= endtime && Reconcile_Com.GetNameGetCur(r.Curriculum_Id) != null).ToList();
             Recon_all = Recon_all.Where(r => Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid2 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid3 || Reconcile_Com.GetNameGetCur(r.Curriculum_Id).CourseType_Id == curtypeid4).OrderBy(r => r.AnPaiDate).ToList();//获取这个时间段上专业课的排课数据
-            List<ClassSchedule> classSchedule_all = Reconcile_Com.GetClass();//获取所有有效的班级
+       
 
             int timenameindex = 0;
             string[] timename = new string[] { "晚一", "晚二" };
@@ -398,7 +398,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             int days = t.Days;
             for (int n = days; n >= 0; n--)
             {
-
+                List<ClassSchedule> classSchedule_all = Reconcile_Com.GetClass();//获取所有有效的班级
                 bool isok = true;
                 if (Doublerest)//双休
                 {

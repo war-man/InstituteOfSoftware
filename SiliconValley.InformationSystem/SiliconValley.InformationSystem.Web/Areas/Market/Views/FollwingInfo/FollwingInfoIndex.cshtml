@@ -1,33 +1,40 @@
 ﻿
 @{
-    ViewBag.Title = "FollwingInfoIndex";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+                /**/
+
+                ViewBag.Title = "FollwingInfoIndex";
+                Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity;
 @section style{
     <style>
-        .demo-class2{
-           width:280px;
-           text-align:center;
-        }
-        .demo-class2 .layui-layer-btn a
+        .demo-class2
         {
-            background: #009688;
-            color: #fff;
-            border:0;
-            margin-left:-8px;
-            margin-top:-10px;
+            width: 280px;
+            text-align: center;
         }
+
+            .demo-class2 .layui-layer-btn a
+            {
+                background: #009688;
+                color: #fff;
+                border: 0;
+                margin-left: -8px;
+                margin-top: -10px;
+            }
+
         body .demo-class2 .layui-layer-title
         {
             background: #009688;
             color: #fff;
             border: none;
- 
         }
-        li{
-          cursor:pointer;
+
+        li
+        {
+            cursor: pointer;
         }
+
         body .demo-class .layui-layer-title
         {
             background: #009688;
@@ -35,7 +42,7 @@
             border: none;
         }
     </style>
-    }
+}
 <div id="center_div">
     <div class="layui-form">
         <div class="layui-form">
@@ -53,253 +60,253 @@
         <div id="div_top" style="width:90%;height:400px;margin-top:30px;">
         </div>
     </div>
-        <div id="div_middle">
-            <h3 id="h3Css" style="margin-bottom:30px;"></h3>
-            <div id="div_middle_top" class="layui-row">
-                
-            </div>
+    <div id="div_middle">
+        <h3 id="h3Css" style="margin-bottom:30px;"></h3>
+        <div id="div_middle_top" class="layui-row">
+
         </div>
-  
+    </div>
+
 </div>
 
 <script src="~/Scripts/ECharts4.2.1/incubator-echarts-master/dist/echarts.js"></script>
-    <script>
-        var indexs;
-        //这是获取到多个学生的数据显示方法
-        function StudentShow(url, mytitle, myskin, mycloseBtn) {
-            layui.use('layer', function () {
-                var layer = layui.layer;
-                layer.open({
-                    type: 2,
-                    content: url
-                    , area: ['1000px', '670px'],
-                    title: mytitle
-                    , shade: 0.8
-                    , anim: 4
-                    , skin: myskin
-                    , closeBtn: mycloseBtn
-                });
+<script>
+    var indexs;
+    //这是获取到多个学生的数据显示方法
+    function StudentShow(url, mytitle, myskin, mycloseBtn) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.open({
+                type: 2,
+                content: url
+                , area: ['1000px', '670px'],
+                title: mytitle
+                , shade: 0.8
+                , anim: 4
+                , skin: myskin
+                , closeBtn: mycloseBtn
             });
-        }
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('div_top'));
-        myChart.title = '折柱混合';
-        function optionData(res) {
-            var wangchengarr = new Array();
-            var nowangchengarr = new Array();
-            var fenglingarr = new Array();
-            for (var i = 0; i < res.length; i++) {
-                wangchengarr.push(res[i].wanchengcount);
-            }
-            for (var i = 0; i < res.length; i++) {
-                fenglingarr.push(res[i].fengliangarry);
-            }
-            for (var i = 0; i < res.length; i++) {
-                nowangchengarr.push(res[i].nowanchengcount);
-            }
-            option = {
-                tooltip: {
-                    trigger: 'axis',
-                    axisPointer: {
-                        type: 'cross',
-                        crossStyle: {
-                            color: '#999'
-                        }
-                    }
-                },
-                toolbox: {
-                    feature: {
-                        dataView: { show: false, readOnly: false },
-                        magicType: { show: true, type: ['line', 'bar'] },
-                        restore: { show: false },
-                        saveAsImage: { show: true }
-                    }
-                },
-                legend: {
-                    data: ['完成量', '分量数', '未完成量']
-                },
-                xAxis: [
-                    {
-                        type: 'category',
-                        data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-                        axisPointer: {
-                            type: 'shadow'
-                        }
-                    }
-                ],
-                yAxis: [
-                    {
-                        type: 'value',
-                        name: '数量',
-                        min: 0,
-                        interval: 50,
-                        axisLabel: {
-                            formatter: '{value} 人'
-                        }
-                    }
-                ],
-                series: [
-                    {
-                        name: '完成量',
-                        type: 'bar',
-                        data: wangchengarr
-                    },
-                    {
-                        name: '分量数',
-                        type: 'bar',
-                        data: fenglingarr
-                    },
-                    {
-                        name: '未完成量',
-                        type: 'bar',
-                        data: nowangchengarr
-                    }
-                ]
-            };
-            return option;
-        }
-        //柱状图初始化
-             layui.use('layer', function () {
-                 var layer = layui.layer;
-                 indexs = layer.load(1);
-
-                 $.ajax({
-                     url: "/Market/FollwingInfo/GetImageData",
-                     success: function (Sucdata) {
-                         myChart.setOption(optionData(Sucdata));
-                         layer.close(indexs);
-                     }
-                 });
-             });
-            
- 
-       //给柱状图注册点击事件
-        myChart.on('click', function (params) {
-            var mystatus = params.seriesName;//状态
-
-                switch (params.name) {
-                    case "一月":
-                        ImagClick(mystatus,1);
-                        break;
-                    case "二月":
-                        ImagClick(mystatus, 2);
-                        break;
-                    case "三月":
-                        ImagClick(mystatus, 3);
-                        break;
-                    case "四月":
-                        ImagClick(mystatus, 4);
-                        break;
-                    case "五月":
-                        ImagClick(mystatus, 5);
-                        break;
-                    case "六月":
-                        ImagClick(mystatus, 6);
-                        break;
-                    case "七月":
-                        ImagClick(mystatus, 7);
-                        break;
-                    case "八月":
-                        ImagClick(mystatus, 8);
-                        break;
-                    case "九月":
-                        ImagClick(mystatus, 9);
-                        break;
-                    case "十月":
-                        ImagClick(mystatus, 10);
-                        break;
-                    case "十一月":
-                        ImagClick(mystatus, 11);
-                        break;
-                    case "十二月":
-                        ImagClick(mystatus, 12);
-                        break;
-                }
-
         });
+    }
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('div_top'));
+    myChart.title = '折柱混合';
+    function optionData(res) {
+        var wangchengarr = new Array();
+        var nowangchengarr = new Array();
+        var fenglingarr = new Array();
+        for (var i = 0; i < res.length; i++) {
+            wangchengarr.push(res[i].wanchengcount);
+        }
+        for (var i = 0; i < res.length; i++) {
+            fenglingarr.push(res[i].fengliangarry);
+        }
+        for (var i = 0; i < res.length; i++) {
+            nowangchengarr.push(res[i].nowanchengcount);
+        }
+        option = {
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'cross',
+                    crossStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            toolbox: {
+                feature: {
+                    dataView: { show: false, readOnly: false },
+                    magicType: { show: true, type: ['line', 'bar'] },
+                    restore: { show: false },
+                    saveAsImage: { show: true }
+                }
+            },
+            legend: {
+                data: ['完成量', '分量数', '未完成量']
+            },
+            xAxis: [
+                {
+                    type: 'category',
+                    data: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    axisPointer: {
+                        type: 'shadow'
+                    }
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    name: '数量',
+                    min: 0,
+                    interval: 50,
+                    axisLabel: {
+                        formatter: '{value} 人'
+                    }
+                }
+            ],
+            series: [
+                {
+                    name: '完成量',
+                    type: 'bar',
+                    data: wangchengarr
+                },
+                {
+                    name: '分量数',
+                    type: 'bar',
+                    data: fenglingarr
+                },
+                {
+                    name: '未完成量',
+                    type: 'bar',
+                    data: nowangchengarr
+                }
+            ]
+        };
+        return option;
+    }
+    //柱状图初始化
+    layui.use('layer', function () {
+        var layer = layui.layer;
+        indexs = layer.load(1);
 
-        //当点击柱状图时需要调用的方法
-        function ImagClick(Status, MonName) {
-            document.getElementById("div_middle_top").innerHTML = "";
+        $.ajax({
+            url: "/Market/FollwingInfo/GetImageData",
+            success: function (Sucdata) {
+                myChart.setOption(optionData(Sucdata));
+                layer.close(indexs);
+            }
+        });
+    });
+
+
+    //给柱状图注册点击事件
+    myChart.on('click', function (params) {
+        var mystatus = params.seriesName;//状态
+
+        switch (params.name) {
+            case "一月":
+                ImagClick(mystatus, 1);
+                break;
+            case "二月":
+                ImagClick(mystatus, 2);
+                break;
+            case "三月":
+                ImagClick(mystatus, 3);
+                break;
+            case "四月":
+                ImagClick(mystatus, 4);
+                break;
+            case "五月":
+                ImagClick(mystatus, 5);
+                break;
+            case "六月":
+                ImagClick(mystatus, 6);
+                break;
+            case "七月":
+                ImagClick(mystatus, 7);
+                break;
+            case "八月":
+                ImagClick(mystatus, 8);
+                break;
+            case "九月":
+                ImagClick(mystatus, 9);
+                break;
+            case "十月":
+                ImagClick(mystatus, 10);
+                break;
+            case "十一月":
+                ImagClick(mystatus, 11);
+                break;
+            case "十二月":
+                ImagClick(mystatus, 12);
+                break;
+        }
+
+    });
+
+    //当点击柱状图时需要调用的方法
+    function ImagClick(Status, MonName) {
+        document.getElementById("div_middle_top").innerHTML = "";
+        $.ajax({
+            url: "/Market/FollwingInfo/GetMonData",
+            data: { "MonthName": MonName, "Status": Status },
+            success: function (SucData) {
+                var divmiddle = $("#div_middle_top");
+                $("#h3Css")[0].innerText = Status;
+                for (var i = 0; i < SucData.length; i++) {
+                    $('<button onclick="butClick(' + SucData[i].Id + ')" class="layui-btn layui-col-sm1" id=' + SucData[i].Id + '>' + SucData[i].StuName + '</button>').appendTo(divmiddle);
+                }
+            }
+        });
+    }
+    //点击按钮弹出咨询页面
+    function butClick(id) {
+        layui.use('layer', function () {
+            var layer = layui.layer;
+            layer.confirm('',
+                { title: '业务选择', skin: 'demo-class2', shade: 0.8, btn: ['查看跟踪信息', '填写跟踪信息'] },
+                function (index) {
+                    //打开详情页面
+                    layer.close(index);//关闭弹出层
+                    layer.open({
+                        type: 2,
+                        content: '/Market/Consult/FollwingInfoView/' + id
+                        , area: ['1000px', '650px']
+                        , title: '跟踪页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class2'
+                    });
+                }, function (index) {
+                    layer.close(index);//关闭弹出层
+                    //打开跟踪添加页面
+                    layer.open({
+                        type: 2,
+                        content: '/Market/FollwingInfo/AddFollwingInfo/' + id
+                        , area: ['800px', '580px'],
+                        title: '添加跟踪页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class2'
+                    });
+                });
+        });
+    }
+    //查询信息
+    function AddFollwingData() {
+        //判断是否有值
+        var Name = $("#studentName").val();
+        if (Name.length > 0) {
+            //查找该学生
             $.ajax({
-                url: "/Market/FollwingInfo/GetMonData",
-                data: { "MonthName": MonName, "Status": Status},
+                url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
                 success: function (SucData) {
-                    var divmiddle = $("#div_middle_top");
-                    $("#h3Css")[0].innerText = Status;
-                    for (var i = 0; i < SucData.length; i++) {
-                        $('<button onclick="butClick(' + SucData[i].Id+')" class="layui-btn layui-col-sm1" id=' + SucData[i].Id + '>' + SucData[i].StuName + '</button>').appendTo(divmiddle);
+                    if (SucData.data.length > 0) {
+                        //找到了多个
+                        var stuid = "";
+                        for (var i = 0; i < SucData.data.length; i++) {
+                            stuid = stuid + SucData.data[i].Id + ",";
+                        }
+                        var url = "/Market/FollwingInfo/ListStudentView/" + stuid;
+                        StudentShow(url, "查询结果", "demo-class", 1);
+
+                    } else if (SucData.data.length <= 0) {
+                        layui.use('layer', function () {
+                            var layer = layui.layer;
+                            layer.msg('抱歉，该学生未分配给你！！！', { icon: 5 });
+                        });
                     }
                 }
             });
-        }
-        //点击按钮弹出咨询页面
-        function butClick(id) {
+
+        } else {
             layui.use('layer', function () {
                 var layer = layui.layer;
-                layer.confirm('',
-                    { title: '业务选择', skin: 'demo-class2', shade: 0.8, btn: ['查看跟踪信息', '填写跟踪信息']},
-                    function (index) {
-                        //打开详情页面
-                        layer.close(index);//关闭弹出层
-                        layer.open({
-                            type: 2,
-                            content: '/Market/Consult/FollwingInfoView/' + id
-                            , area: ['1000px', '650px']
-                            ,title: '跟踪页面'
-                            , shade: 0.8
-                            , anim: 4
-                            , skin: 'demo-class2'
-                        });
-                    }, function (index) {
-                        layer.close(index);//关闭弹出层
-                        //打开跟踪添加页面
-                        layer.open({
-                            type: 2,
-                            content: '/Market/FollwingInfo/AddFollwingInfo/' + id
-                            , area: ['800px', '580px'],
-                            title: '添加跟踪页面'
-                            , shade: 0.8
-                            , anim: 4
-                            , skin: 'demo-class2'
-                        });
-                    });
+                layer.msg('学生姓名不能为空！！！', { icon: 2 });
             });
         }
-        //查询信息
-        function AddFollwingData() {
-            //判断是否有值
-            var Name = $("#studentName").val();
-            if (Name.length > 0) {
-                //查找该学生
-                $.ajax({
-                    url: '/Market/FollwingInfo/GetMonthStudent/' + Name,
-                    success: function (SucData) {
-                        if (SucData.data.length > 0) {
-                            //找到了多个
-                            var stuid = "";
-                            for (var i = 0; i < SucData.data.length; i++) {
-                                stuid = stuid + SucData.data[i].Id+",";
-                            }
-                            var url = "/Market/FollwingInfo/ListStudentView/" + stuid;
-                            StudentShow(url, "查询结果","demo-class",1);
-
-                        } else if (SucData.data.length <= 0) {
-                            layui.use('layer', function () {
-                                var layer = layui.layer;
-                                layer.msg('抱歉，该学生未分配给你！！！', { icon: 5 });
-                            });
-                        }
-                    }
-                });
-
-            } else {
-                layui.use('layer', function () {
-                    var layer = layui.layer;
-                    layer.msg('学生姓名不能为空！！！', { icon:2 });
-                });
-            }
-        }        
-    </script>
+    }
+</script>
 
 

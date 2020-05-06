@@ -767,7 +767,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                                 news = equally_list
                             };
                             //string number = "13204961361";
-                            //string smsText = "备案提示:已备案成功，但是有重复数据";
+                            //string smsText = "备案提示:已备案成功，但是有重复数据,请自行去系统查看";
                             //string t = PhoneMsgHelper.SendMsg(number, smsText);
                             return Json(datajson, JsonRequestBehavior.AllowGet);
                         }
@@ -808,7 +808,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         };
                         //通知备案人备案成功
                         //string number = "13204961361";
-                        //string smsText = "备案提示:已备案成功";
+                        //string smsText = "备案提示:已备案成功，无重复数据";
                         //string t = PhoneMsgHelper.SendMsg(number, smsText);
 
                         return Json(datajson, JsonRequestBehavior.AllowGet);

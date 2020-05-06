@@ -441,7 +441,7 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
         public int GetCount(int id,int monthName)
         {
             int year = DateTime.Now.Year;
-            return this.GetIQueryable().Where(c => c.TeacherName == id && Convert.ToDateTime(c.ComDate).Month == monthName && Convert.ToDateTime(c.ComDate).Year == year).Count();
+            return this.GetIQueryable().ToList().Where(c => c.TeacherName == id && Convert.ToDateTime(c.ComDate).Month == monthName && Convert.ToDateTime(c.ComDate).Year == year).Count();
         }
         //获取某个咨询师某个月份完成的个数
         public int GetWangcenCount(int id,int monthName)
