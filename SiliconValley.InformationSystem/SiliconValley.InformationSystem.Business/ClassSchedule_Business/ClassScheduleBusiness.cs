@@ -868,7 +868,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                        var stu= studentInformationBusiness.GetEntity(UpdateSche.StudentID);
                         //修改学生状态为毕业
                         stu.State = BasicdatBusiness.GetList().Where(a => a.Name == "毕业" && a.IsDetele == false).FirstOrDefault().ID;
-                        studentInformationBusiness.Remove("StudentInformation");
+                  
                         studentInformationBusiness.Update(stu);
                         //删除宿舍
                         Accdation = new AccdationinformationBusiness();
@@ -1086,6 +1086,69 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             };
             return data;
         }
+
+        /// <summary>
+        /// 获取所有异动数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="TypeName"></param>
+        /// <param name="StudentID"></param>
+        /// <param name="Name"></param>
+        /// <param name="IsaDopt"></param>
+        /// <param name="ClassID"></param>
+        /// <returns></returns>
+        public object TransactionDatepro(int page, int limit,  string TypeName,  string Name, string IsaDopt, string ClassID)
+        {
+            var classDyan = classDynamicsBusiness.GetList().Where(a=>a.IsaDopt!=null).ToList();
+            var x = classDyan.Select(a => new
+            {
+                a.ID,
+                a.States,
+                StatesName = BasicdatBusiness.GetEntity(a.States).Name,//类型
+                a.Studentnumber,
+                Name = studentInformationBusiness.GetEntity(a.Studentnumber).Name,
+                Sex = studentInformationBusiness.GetEntity(a.Studentnumber).Sex == false ? "女" : "男",
+                Telephone = studentInformationBusiness.GetEntity(a.Studentnumber).Telephone,
+                a.IsaDopt,
+                a.FormerClass,
+                this.GetEntity(a.FormerClass).ClassNumber
+            }).ToList();
+
+            if (!string.IsNullOrEmpty(TypeName))
+            {
+                var sta = int.Parse(TypeName);
+                x = x.Where(a => a.States == sta).ToList();
+            }
+         
+            if (!string.IsNullOrEmpty(Name))
+            {
+
+                x = x.Where(a => a.Name.Contains(Name)).ToList();
+            }
+            if (!string.IsNullOrEmpty(IsaDopt))
+            {
+                if (IsaDopt != "null")
+                {
+                   
+                    x = x.Where(a => a.IsaDopt == Convert.ToBoolean(IsaDopt)).ToList();
+                }
+            }
+            if (!string.IsNullOrEmpty(ClassID))
+            {
+                int ClassIDpro = int.Parse(ClassID);
+                x = x.Where(a => a.FormerClass== ClassIDpro).ToList();
+            }
+            var Myx = x.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = x.Count,
+                data = Myx
+            };
+            return data;
+        }
         /// <summary>
         /// 获取转班申请单数据
         /// </summary>
@@ -1236,7 +1299,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             transactionView.IDnumber = Student.identitydocument;
             transactionView.Telephone = Student.Telephone;//联系电话
             transactionView.Postaladdress = Student.Familyaddress;//家庭住址
-            transactionView.NowHeadmaster = Hadmst.ClassHeadmaster(this.GetEntity(x.FormerClass).id).EmpName;//班主任姓名
+            transactionView.NowHeadmaster = Hadmst.ClassHeadmasterPro(this.GetEntity(x.FormerClass).id).EmpName;//班主任姓名
             transactionView.OriginalClassName = this.GetEntity(x.FormerClass).ClassNumber;
             transactionView.NowCLass = x.CurrentClass;
             transactionView.Dormitoryaddress = x.Dormitoryaddress;
@@ -2170,6 +2233,24 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                    
             }
             return info;
+        }
+
+        /// <summary>
+        /// 根据班级获取同名班级业务信息
+        /// </summary>
+        /// <param name="ClassNumber"></param>
+        /// <returns></returns>
+        public object ClassProDate(string ClassNumber)
+        {
+         var x= this.GetList().Where(a => a.ClassNumber == ClassNumber.ToUpper()).ToList();
+           var z= x.Select(a => new
+            {
+               a.id,
+                a.ClassNumber,
+                Grandcontext.GetEntity(a.grade_Id).GrandName,
+                TypeName = a.ClassstatusID == null ? "正常" : classtatus.GetEntity(a.ClassstatusID).TypeName
+            });
+            return z;
         }
     }
 }

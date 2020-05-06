@@ -11,35 +11,9 @@
     <title>AddBeOnDutyView</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <style>
-        #but1
-        {
-            position: absolute;
-            top: 13%;
-            left: 35%;
-            width: 36px;
-            height: 36px;
-            text-align: center;
-            line-height: 36px;
-        }
-
-            #but1:hover
-            {
-                background-color: aqua;
-            }
-
-        #Nation
-        {
-            width: 100px;
-        }
-
         .linu
         {
             width: 200px;
-        }
-
-        .mm
-        {
-            border: 1px solid black;
         }
 
         .LableCss1
@@ -94,18 +68,18 @@
     </style>
 </head>
 <body>
-    <div id="AddBeOnButyDiv">
-        <form class="layui-form" lay-filter="myform1" style="margin-top:30px;">
+    <div id="AddBeOnButyDiv" style="margin-top:30px;margin-left:auto;margin-right:auto;width:90%">
+        <form class="layui-form" lay-filter="myform1">
 
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">名称</label>
+                    <label class="layui-form-label">名 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 称</label>
                     <div class="layui-input-block">
                         <input name="MyTypeName" id="MyTypeName" class="layui-input" lay-verify="required" />
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">费用</label>
+                    <label class="layui-form-label">费 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 用</label>
                     <div class="layui-input-block">
                         <input name="MyCost" id="MyCost" class="layui-input" lay-verify="number|required" />
                     </div>
@@ -119,7 +93,7 @@
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                    <label class="layui-form-label">状态</label>
+                    <label class="layui-form-label">状 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态</label>
                     <div class="layui-input-block">
                         <input type="radio" title="激活" value="false" name="IsDelete"/>
                         <input type="radio" title="未激活" value="true" name="IsDelete"/>
@@ -128,7 +102,7 @@
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                    <label class="layui-form-label">说明</label>
+                    <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明</label>
                     <div class="layui-input-block">
                         <input name="MyReak" id="MyReak" placeholder="说明" class="layui-input TextAreCss1" />
                     </div>
@@ -137,8 +111,10 @@
 
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" lay-submit="" lay-filter="AddBeOnButy" id="AddBeOnButy"><span id="spanone">添加</span></button><input id="BeId" name="BeId" type="hidden"/>
-                    <button class="layui-btn butCss1" id="BeOnButyNo">取消</button>
+                    <div style="width:50%;text-align:right">
+                        <button class="layui-btn" lay-submit="" lay-filter="AddBeOnButy" id="AddBeOnButy"><span id="spanone">添加</span></button><input id="BeId" name="BeId" type="hidden" />
+                        <button class="layui-btn" id="BeOnButyNo">取消</button>
+                    </div>                    
                 </div>
             </div>
         </form>

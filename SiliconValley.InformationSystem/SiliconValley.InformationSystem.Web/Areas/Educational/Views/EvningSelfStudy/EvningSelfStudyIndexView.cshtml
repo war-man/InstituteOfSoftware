@@ -36,6 +36,18 @@
         position:fixed;
         margin-left:180px;
         }
+        .layui-colla-title
+        {
+            position: relative;
+            padding: 0 15px 0 35px;
+            color: #333;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            font-size: 14px;
+            overflow: hidden;
+            height: 15px;
+            line-height: 15px;
+        }
     </style>
 }
     <div class="layui-collapse">
@@ -61,7 +73,9 @@
                     <div style="width:150px;display:inline-block">
                         <input type="text" name="twotime" id="twotime" class="layui-input" />
                     </div>
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="sercher">查询</button>
+                   
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="sercher" style="height: 35px;margin-left:100px;">查询</button>
+                   
                 </form>
             </div>
         </div>       

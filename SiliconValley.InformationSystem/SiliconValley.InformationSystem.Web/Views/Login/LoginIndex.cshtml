@@ -9,7 +9,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Login</title>
-
+  
 </head>
 <body>
     <link rel="stylesheet" type="text/css" href="~/Content/Login/style.css" />
@@ -29,12 +29,21 @@
                 .btn_tab_login li.cur a {
                     color: #d00;
                 }
+
+        .login-wrap {
+            background-image: url('../../Images/Login/Middle.jpg');
+            background-size: 100%;
+            background-repeat: no-repeat;
+        }
     </style>
     <script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
     <script src="~/Scripts/vendor/layui/layui.js"></script>
     <div id="header">
-        湖南硅谷高科软件学院信息化平台
+
+        <img src="~/Images/Login/titlie.jpg" style="height:84px;width:100%;" />
     </div>
+
+ 
 
 
     <style type="text/css">
@@ -48,8 +57,8 @@
 
             <div class="form-box fr loginV2" style="display:block;">
                 <ul class="form-tab clearfix">
-                    <li class="tab-li"><a href="javascript:;" tjjj="passport.login_type.wixin_qrcode">微信登录<i class="icon"></i></a></li>
-                    <li class="tab-li cur"><a href="javascript:;" tjjj="passport.login_type.login_name">账号登录</a></li>
+                    <li class="tab-li"><a href="javascript:;" onclick="setLoginType('weixin');" tjjj="passport.login_type.wixin_qrcode">微信登录<i class="icon"></i></a></li>
+                    <li class="tab-li cur"><a href="javascript:;" onclick="setLoginType('account');" tjjj="passport.login_type.login_name">账号登录</a></li>
                 </ul>
                 <div class="form-con">
                     <div class="weixin-login" style="display:none;">
@@ -84,7 +93,7 @@
                             </div>
                             <div class="btn-box clearfix">
                                 @*<input id="normalSubmit" class="btn-settlement" type=submit value="登    录" tjjj="passport.button.login">*@
-                                <input type="button" class="submit btn-settlement" loginType="emp" tabindex="3" value="登    录" lay-submit lay-filter="subone">
+                                <input type="button" class="submit btn-settlement" loginType="account"  tabindex="3" value="登    录" lay-submit lay-filter="subone">
                             </div>
                             <div class="link-box clearfix">
                                 <a href="javascript:;" class="register" tjjj="passport.login.fstreg">新用户注册</a>
@@ -104,7 +113,7 @@
                                 <h3>您还可以选择：</h3>
                                 <p class="phone-short clearfix">
                                     <i class="phone"></i>
-                                    <a href="javascript:;" tjjj="" class="txt phoneLogin">手机快捷登录</a>
+                                    <a href="javascript:;" onclick="setLoginType('phone');" tjjj="" class="txt phoneLogin">手机快捷登录</a>
                                 </p>
                             </div>
                         </div>
@@ -115,7 +124,7 @@
             <div class="form-box fr shortLogin" style="display:none;">
                 <h5 class="title">快捷登录</h5>
                 <div class="form-con">
-                    <form id="mobileLoginForm" method="post" onsubmit="return mobileLoginCheck();">
+                    <form id="mobileLoginForm" class="layui-form" method="post" onsubmit="return mobileLoginCheck();">
                         <div class="form-error" style=""><i></i><label class="text"></label></div>
                         <dl class="clearfix">
                             <dt>手机号：</dt>
@@ -126,8 +135,8 @@
                             <dd>
                                 <input name="smsCaptcha" type="text" id="partnerYzm" class="input-yzm" onblur="captchCheck(this);" maxlength="4" autocomplete="off" />
                                 <span class="span-yzm">
-                                    <img id="smsCaptchaImage" src="/images/Login/code.jpg" title="点击图片刷新校验码" alt="点击图片刷新校验码" onclick="changeCode('smsCaptchaImage','partnerYzm');" />
-                                    <a href="javascript:changeCode('smsCaptchaImage','partnerYzm');" class="forget-pass">换一张</a>
+                                    <img id="smsCaptchaImage" src="/login/getcode" title="点击图片刷新校验码" alt="点击图片刷新校验码" onclick="changeCode();" />
+                                    <a href="javascript:changeCode();" class="forget-pass">换一张</a>
                                 </span>
                             </dd>
                         </dl>
@@ -144,11 +153,11 @@
                             <span class="rem-box rem-box-r"><input name="rememberMe" type="checkbox" id="remLogin" class="rem-check">三个月之内免登录</span>
                         </div>
                         <div class="btn-box clearfix">
-                            <input id="partnerSubmit" class="btn-settlement" type="submit" value="登    录" tjjj="passport.quick.button.login">
+                            <input id="partnerSubmit" class="btn-settlement" type="button" value="登    录" tjjj="passport.quick.button.login" lay-submit lay-filter="subone">
 
                         </div>
                         <div class="link-box clearfix">
-                            <a href="javascript:;" class="backLogin">返回账号登录>></a>
+                            <a href="javascript:;" onclick="setLoginType('account');" class="backLogin">返回账号登录>></a>
                         </div>
                     </form>
                 </div>
@@ -160,7 +169,7 @@
         <div class="jia_foot_info">
             <div class="jia_foot_con">
                 <p class="jia_foot_link">
-                    <a href="http://www.sucaihuo.com" rel="nofollow" target="_blank">关于我们</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">联系我们</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">媒体报道</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">法律声明</a><span class="jia_split">|</span> <a href="javascript:;/help/0002.html" target="_blank" rel="nofollow">企业文化</a><span class="jia_split">|</span> <a href="javascript:;/link.html" target="_blank" rel="nofollow">友情链接</a><span class="jia_split">|</span> <a href="javascript:;/jmtg/index.html" target="_blank" rel="nofollow">加盟齐家</a><span class="jia_split">|</span> <a href="javascript:;/zhaoshang/" tjjj="sjrz.2" target="_blank" rel="nofollow">入驻齐家</a><span class="jia_split">|</span> <a href="javascript:;/help/0055.html" target="_blank" rel="nofollow">诚聘英才</a><span class="jia_split">|</span> <a href="javascript:;/help/0033.html" target="_blank">网站地图</a><span class="jia_split">|</span> <a href="javascript:;/app/" rel="nofollow" target="_blank">手机齐家</a><span class="jia_split">|</span> <a href="http://www.sucaihuo.com" target="_blank" rel="nofollow">素材火钱包</a><span class="jia_split">|</span> <a href="javascript:;/help/" tjjj="bottom.link.help">帮助中心</a><span class="jia_split">|</span> <a href="javascript:;" class="jia_foot_open">更多<i></i></a>
+                    <a href="http://www.hnguigu.com/guigu/kecheng/" rel="nofollow" target="_blank">新闻中心</a><span class="jia_split">|</span> <a href="http://www.hnguigu.com/guigu/jiuye/jiuyefuwu/" target="_blank" rel="nofollow">就业服务</a><span class="jia_split">|</span> <a href="http://www.hnguigu.com/guigu/shizi/" target="_blank" rel="nofollow">名师风采</a><span class="jia_split">|</span> <a href="http://www.hnguigu.com/guigu/jianjie/xiaoyuanhuanjing/" target="_blank" rel="nofollow">学校环境</a><span class="jia_split">|</span> <a href="http://www.11467.com/changsha/co/242870.htm" target="_blank" rel="nofollow">企业文化</a><span class="jia_split">|</span> <a href="javascript:;/link.html" target="_blank" rel="nofollow">友情链接</a><span class="jia_split">|</span> <a href="http://www.hnguigu.com/guigu/lianxiwomen/" target="_blank" rel="nofollow">学院地址</a><span class="jia_split">|</span> <a href="http://weibo.com/hnguigu" tjjj="sjrz.2" target="_blank" rel="nofollow">官方微博</a><span class="jia_split">|</span><a href="http://www.hnguigu.com/guigu/jianjie/guanyuwomen/" rel="nofollow" target="_blank">学院简介</a><span class="jia_split">|</span> <a href="jhttp://www.hnguigu.com/guigu/jiuye/jiuyexueyuan/" tjjj="bottom.link">成功学子</a><span class="jia_split">|</span> <a href="http://www.hnguigu.com/guigu/lianxiwomen/lianxiwomen/" class="jia_foot_open">联系我们<i></i></a>
                 </p>
                 <p class="jia_foot_link footnone">
                     <a href="http://www.sucaihuo.com" target="_blank" tjjj="footer.bottom.1">找装修公司</a><span class="jia_split">|</span> <a href="javascript:;/" target="_blank" tjjj="footer.bottom.2">买建材家居</a><span class="jia_split">|</span> <a href="http://tg.jia.com/" target="_blank" tjjj="footer.bottom.3">齐家团购</a><span class="jia_split">|</span> <a href="javascript:;/baike/" target="_blank" tjjj="footer.bottom.4">家居百科</a><span class="jia_split">|</span> <a href="javascript:;/company/" target="_blank" tjjj="footer.bottom.5">装修公司库</a><span class="jia_split">|</span> <a href="javascript:;/product/" target="_blank" tjjj="footer.bottom.7">产品信息库</a><span class="jia_split">|</span> <a href="javascript:;/baike/xunxi/" target="_blank" tjjj="footer.bottom.9">装修知识</a><span class="jia_split">|</span> <a href="javascript:;/allcategory/" tjjj="2014.foot.allcate">商品分类</a><span class="jia_split">|</span> <a href="javascript:;/list/" tjjj="2014.foot.mallshangpin">所有商品</a><span class="jia_split">|</span> <a href="javascript:;/shanghai/list/shop/" tjjj="2014.foot.dianpu">店铺大全</a><span class="jia_split">|</span><a href="javascript:;/pinpai/" target="_blank" tjjj="footer.bottom.8">品牌库</a>
@@ -202,20 +211,39 @@
         return true;
     }
 
+    //切换验证码
+    function changeCode() {
+        var r = Math.random();
+        $("#smsCaptchaImage").attr("src", "/login/getcode?r=" + r);
+    }
+
+    //设置登录类型
+    function setLoginType(logintype) {
+        
+        $(".submit").attr("loginType", logintype);
+       
+    }
+
     //手机登陆验证
     function mobileLoginCheck() {
         var mobile = $("#mobileLoginForm").find("#partnerPhone").eq(0).val();
         var captch = $("#mobileLoginForm").find("#partnerYzm").eq(0).val();
         var code = $("#mobileLoginForm").find("#partnerJym").eq(0).val();
-        if (mobile == null || mobile == '' || !(_mobile_reg).test(mobile)) {
+       
+       
+      
+        if (mobile == null || mobile == '') {
+           
             showError("请填写正确的手机号");
             return false;
         }
-        if (captch == null || captch == "" || captch == undefined) {
+        if (captch == null || captch == '' || captch == undefined) {
+           
             showError("请填写验证码");
             return false;
         }
-        if (code == null || code == "") {
+        if (code == null || code == '') {
+          
             showError("请填写校验码");
             return false;
         }
@@ -223,39 +251,42 @@
     }
 
     function mobileCheck(obj) {
-        if (!(_mobile_reg).test($("#partnerPhone").val())) {
-            showError("请填写正确的手机号");
-            return;
-        } else {
-            closeError();
-        }
+        //if (!(_mobile_reg).test($("#partnerPhone").val())) {
+        //    showError("请填写正确的手机号");
+        //    return;
+        //} else {
+        //    closeError();
+        //}
     }
 
     //发送短信
     function sendSms(obj) {
-        alert("信息已发送  www.sucaihuo.com - 素材火");
+        var pn = $("#partnerPhone").val();
+        alert("校验码已发送至  "+pn);
     }
 
     function captchCheck(obj) {
-        if (!(_mobile_reg).test($("#partnerPhone").val())) {
-            showError("请填写正确的手机号");
-            return;
-        }
+        //if (!(_mobile_reg).test($("#partnerPhone").val())) {
+        //    showError("请填写正确的手机号");
+        //    return;
+        //}
         var captch = $(obj).val();
+       
         if (captch == '' || captch == null) {
             showError("请填写验证码");
+            return;
         } else {
-            checkCaptch(captch,
-                function () {
-                    if (!$("#smsSendButton").hasClass("sending")) {
-                        $("#smsSendButton").removeClass("disabled");
-                    }
-                    closeError();
-                }, function () {
-                    showError("验证码错误");
-                    $("#smsSendButton").addClass("disabled");
-                }
-            );
+            //checkCaptch(captch,
+            //    function () {
+            //        if (!$("#smsSendButton").hasClass("sending")) {
+            //            $("#smsSendButton").removeClass("disabled");
+            //        }
+            //        closeError();
+            //    }, function () {
+            //        showError("验证码错误");
+            //        $("#smsSendButton").addClass("disabled");
+            //    }
+            //);
         }
     }
     $(function () {
@@ -317,10 +348,11 @@
         var laydate = layui.laydate;
         var layer = layui.layer;
         form.on('submit(subone)', function (data) {
-            console.log("sdf");
+           
             var myformdata = data.field;//当前容器的全部表单字段，名值对形式：{name: value}
 
             var loginType = $(".submit").attr("loginType");
+          
             data.field.loginType = loginType
 
             $.ajax({
@@ -332,7 +364,7 @@
                         window.location.href = data.Data;
                     } else {
                         //配置一个透明的询问框
-                        alert(data.Msg);
+                        showError(data.Msg);
                     }
                 }
             });

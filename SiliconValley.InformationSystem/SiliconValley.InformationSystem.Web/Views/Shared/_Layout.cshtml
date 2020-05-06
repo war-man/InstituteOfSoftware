@@ -8,7 +8,6 @@
     <style>
 
         .outer-container {
-          
             height: 661px;
             position: relative;
             overflow: hidden;
@@ -16,14 +15,13 @@
 
         .inner-container {
             position: absolute;
-            left: 0px;
+            left: -8px;
             top: 0;
-            right: -17px;
+            right: -15px;
             bottom: 0;
             overflow-y: auto;
-            overflow-x:hidden;
+            overflow-x: hidden;
         }
-        
     </style>
     <!-- Bootstrap Styles-->
     <link href="~/assets/css/bootstrap.css" rel="stylesheet" />
@@ -40,7 +38,6 @@
     <!-- Bootstrap Core CSS -->
     <link href="~/Tree/css/bootstrap.min.css" rel='stylesheet' type='text/css' />
     <!-- Custom CSS -->
-
     <!-- Graph CSS -->
     <link href="~/Tree/css/font-awesome.css" rel="stylesheet">
     <!-- jQuery -->
@@ -60,10 +57,10 @@
 
     <link href="~/Tree/css/style.css" rel='stylesheet' type='text/css' />
 </head>
-<body scroll="no" >
+<body scroll="no">
     <div class="page-container">
         <!--/content-inner-->
-        <div class="left-content">
+        <div class="left-content" style="margin-top:-24px;width:88%">
             <div class="inner-content">
                 <!-- header-starts -->
                 <div class="header-section">
@@ -313,13 +310,13 @@
                     <div class="clearfix"></div>
                 </div>
                 <!-- //header-ends -->
-                <div class="outter-wp" style="overflow:auto;">
-                
+                <div class="outter-wp" style="overflow:hidden;">
+
                     @RenderBody()
                 </div>
                 <!--footer section start-->
                 <footer>
-                    <p>Copyright &copy; 2016.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+                    <p style="color:#000000;">版权所属公司：<a href="https://xin.baidu.com/company_detail_20452183185658?rq=ef&pd=ee&from=ps" title="湖南硅谷云教育科技有限公司">湖南硅谷云教育科技有限公司</a>  <a href="http://www.beian.miit.gov.cn/" target="_blank" title="湘ICP备17003047号-3">湘ICP备17003047号-3</a></p>
                 </footer>
                 <!--footer section end-->
             </div>
@@ -329,38 +326,39 @@
         <div class="sidebar-menu">
             <header class="logo">
                 <a href="#" class="sidebar-icon"> <span class="fa fa-bars"></span> </a> <a href="index.html">
-                    <span id="logo"> <h1>信息化系统</h1></span>
+                    <span id="logo"> <h1 style="font-size:23pt;">信息化系统</h1></span>
                     <!--<img id="logo" src="" alt="Logo"/>-->
                 </a>
             </header>
             <div style="border-top:1px solid rgba(69, 74, 84, 0.7)"></div>
             <!--/down-->
             <div class="down">
-                <a href="#"><img  id="Image"  style="width:100px;"/></a>
+                <a href="#"><img id="Image" style="width:100px;" /></a>
                 <a href="#"><span class=" name-caret" id="EmpName"></span></a>
                 <p id="EmployeeId"</p>
-           
+
                 <ul>
-                    <li><a class="tooltips" href="#"><span>开发中</span><i class="lnr lnr-user"></i></a></li>
-                    <li><a class="tooltips" href="#"><span>开发中</span><i class="lnr lnr-cog"></i></a></li>
-                    <li><a class="tooltips" href="#"><span>开发中</span><i class="lnr lnr-power-switch"></i></a></li>
+                    <li><a class="tooltips" href="#" id="EmpClass"><span style="color:aqua">信息更改</span><i class="lnr lnr-user"></i></a></li>
+                    <li><a class="tooltips" href="#"><span style="color:aqua">开发中</span><i class="lnr lnr-cog"></i></a></li>
+                    <li><a class="tooltips" id="logins"><span style="color:aqua">退出登录</span><i class="lnr lnr-power-switch"></i></a></li>
                 </ul>
             </div>
             <!--//down-->
-            <div >     </div>
+            <div>     </div>
             <div class="outer-container">
-                <div class="inner-container"  >
-                    <div class="menu " style="width:230px;"  >
+                <div class="inner-container">
+                    <div class="menu " style="width:230px;">
 
                         <ul id="menu"></ul>
                     </div>
                 </div>
             </div>
-            
-      
-    </div>
+
+
+        </div>
         <div class="clearfix"></div>
     </div>
+
     <script>
         //$("#menu").scroll(function () {
         //    console.log("a");
@@ -374,18 +372,18 @@
                 $(".outer-container").attr("style", "height:850px;")
                 $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
                 $("#menu span").css({ "position": "absolute" });
-             
-                console.log("1");
+
+
             }
             else {
                 $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
                 setTimeout(function () {
                     $("#menu span").css({ "position": "relative" });
-                  
+
                     $("#menu").attr("style", "width:230px;")
                     $(".outer-container").attr("style", "height:661px;")
                 }, 400);
-               
+
             }
 
             toggle = !toggle;
@@ -394,22 +392,49 @@
             $("#menu").css("overflow", "auto");
         })
 
-         
+
     </script>
+
 </body>
 
 </html>
 
 <script type="text/javascript">
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        empdate();
+        $("#EmpClass").click(function () {
+            layer.open({
+                title: "信息更新",
+                type: 2,
+                area: ['500px', '550px']
+                , content: "/Personnelmatters/EmployeesInfo/EditEmpAttr/" + $("#EmployeeId").text()
+                , end: function () { empdate();}
+                , anim: 1,
+                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+            });
+        })
+        $("#logins").click(function () {
+            location.replace("/Login/LoginIndex");
+          //  window.location.href = "/Login/LoginIndex?act=logout";
+        });
+       
+        function empdate() {
+            $.post('/Base_SysManage/Base_SysMenu/UserClass', function (data) {
+
+                //~/uploadXLSXfile/EmpImage/1.jpg
+                $("#EmployeeId").text(data.EmployeeId);
+                $("#EmpName").text(data.EmpName);
+                $("#Image").attr("src", "/uploadXLSXfile/EmpImage/" + data.Image)
+            });
+        }
+
+    });
    
     //UserClass
-    $.post('/Base_SysManage/Base_SysMenu/UserClass', function (data) {
-        console.log(data);
-        //~/uploadXLSXfile/EmpImage/1.jpg
-        $("#EmployeeId").text(data.EmployeeId);
-        $("#EmpName").text(data.EmpName);
-        $("#Image").attr("src", "/uploadXLSXfile/EmpImage/" + data.Image)
-    });
+  
     var MenuData;
     $.get('/Base_SysManage/Base_SysMenu/LoadMenus', function (data) {
 
@@ -457,7 +482,7 @@
 
         },
         mouseout: function () {
-            $(".outer-container").css("width", "222px");
+            $(".outer-container").css("width", "230px");
             //$(".outer-container").attr("style", "width:222px;")
         }
     });
@@ -469,7 +494,7 @@
                 if (Menu[i].IsShow == true) {
                     if (Menu[i].Url) {
 
-                        var li1 = $('<li id="menu-mensagens"  style="width:200px"></li>');
+                        var li1 = $('<li id="menu-mensagens"  style="width:150px"></li>');
                         var a1 = $('<a  href=' + Menu[i].Url + '>' + Menu[i].Name + '</a>')
 
                         li1.append(a1);

@@ -12,26 +12,45 @@
             color: #fff;
             border: none;
         }
+
+        .layui-colla-title
+        {
+            position: relative;
+            padding: 0 15px 0 35px;
+            color: #333;
+            background-color: #f2f2f2;
+            cursor: pointer;
+            font-size: 14px;
+            overflow: hidden;
+            height: 15px;
+            line-height: 15px;
+        }
     </style>
 }
-    <div>
-        <hr />
-        <label>名称：</label>
-        <div class="btn-group layui-container" style="width:120px;">
-            <div style="display:inline-block">
-                <input type="text" class="form-control" id="JangzMan" name="JangzMan" placeholder="名称">
+
+    <div class="layui-collapse" lay-accordion>
+        <div class="layui-colla-item">
+            <h2 class="layui-colla-title">简单查询</h2>
+            <div class="layui-colla-content">               
+                    <label>名称：</label>
+                    <div class="btn-group layui-container" style="width:120px;">
+                        <div style="display:inline-block">
+                            <input type="text" class="form-control" id="JangzMan" name="JangzMan" placeholder="名称">
+                        </div>
+                    </div>
+                    <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>       
+                
             </div>
         </div>
-        <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-        <hr />
     </div>
+    
     <div id="tableDiv">
         <table id="BeOnButyTable" lay-filter="BeOnButyTable"></table>
     </div>
  
 <script type="text/html" id="Be_toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData"><i class="layui-icon">&#xe624;</i>  添加</button>
     </div>
 </script>
 
@@ -64,9 +83,10 @@
                 table.reload('BeOnButyTable');
             })
         }
-        layui.use(['table', 'layer'], function () {
+        layui.use(['table', 'layer','element'], function () {
             var table = layui.table;
             var layer = layui.layer;
+            var element = layui.element;
             table.render({
                 elem: '#BeOnButyTable'
                 , url: '/Educational/BeOnDuty/GetBeOnDutyAllData'

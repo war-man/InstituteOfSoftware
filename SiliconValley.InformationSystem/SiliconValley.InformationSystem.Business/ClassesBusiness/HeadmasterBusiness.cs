@@ -180,6 +180,21 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
             var leid = head == null?new Headmaster(): this.GetEntity(head.LeaderID);
             return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
         }
+        /// <summary>
+        /// 通过班级号获取最后一位班主任
+        /// </summary>
+        /// <param name="ClassName"></param>
+        /// <returns></returns>
+        public EmployeesInfo ClassHeadmasterPro(int ClassName)
+        {
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            var mysex = Hoadclass.GetList().Where(a => a.ClassID == ClassName).ToList().OrderByDescending(a=>a.ID).FirstOrDefault();
+           
+          
+            var leid = mysex == null ? new Headmaster() : this.GetEntity(mysex.LeaderID);
+            return leid == null ? new EmployeesInfo() : employeesInfoManage.GetEntity(leid.informatiees_Id);
+        }
         public EmployeesInfo HeadmastaerClassFine(int ClassID)
         {
             //学员班级

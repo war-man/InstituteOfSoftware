@@ -132,39 +132,40 @@ namespace SiliconValley.InformationSystem.Business
         public void Insert(T entity)
         {
             Service.Insert<T>(entity);
+            RedisRemove();
         }
         /// <summary>
         /// Name缓存的名称 查询所有缓存数据
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public List<T> Mylist(string Name)
+        public List<T> Redislist()
         {
             List<T> list = new List<T>();
-            var x = this.GetList();
+          
             RedisCache redis = new RedisCache();
-            list = redis.GetCache<List<T>>(Name);
+            list = redis.GetCache<List<T>>(typeof(T).ToString());
             if (list != null)
             {
                 return list;
             }
             else
             {
-                redis.SetCache(Name, x);
-                list = redis.GetCache<List<T>>(Name);
-
+                var x = Service.GetList<T>();
+                redis.SetCache(typeof(T).ToString(), x);
+                list = redis.GetCache<List<T>>(typeof(T).ToString());
                 return list;
-
             }
         }
         /// <summary>
         /// 更新缓存数据
         /// </summary>
         /// <param name="Name"></param>
-        public void Remove(string Name)
+        public void RedisRemove()
         {
+            
             RedisCache redis = new RedisCache();
-            redis.RemoveCache(Name);
+            redis.RemoveCache(typeof(T).ToString());
         }
      
         /// <summary>
@@ -176,6 +177,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Insert(List<T> entities)
         {
             Service.Insert(entities);
+            RedisRemove();
         }
 
         /// <summary>
@@ -186,6 +188,7 @@ namespace SiliconValley.InformationSystem.Business
         public void BulkInsert(List<T> entities)
         {
             Service.BulkInsert(entities);
+            RedisRemove();
         }
 
         #endregion
@@ -199,6 +202,8 @@ namespace SiliconValley.InformationSystem.Business
         public void DeleteAll()
         {
             Service.DeleteAll<T>();
+            RedisRemove();
+
         }
 
         /// <summary>
@@ -208,6 +213,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Delete(string key)
         {
             Service.Delete<T>(key);
+            RedisRemove();
         }
 
         /// <summary>
@@ -217,6 +223,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Delete(List<string> keys)
         {
             Service.Delete<T>(keys);
+            RedisRemove();
         }
 
         /// <summary>
@@ -227,6 +234,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Delete(T entity)
         {
             Service.Delete(entity);
+            RedisRemove();
         }
 
         /// <summary>
@@ -237,6 +245,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Delete(List<T> entities)
         {
             Service.Delete(entities);
+            RedisRemove();
         }
 
         /// <summary>
@@ -247,6 +256,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Delete(Expression<Func<T, bool>> condition)
         {
             Service.Delete_Sql(condition);
+            RedisRemove();
         }
 
         #endregion
@@ -262,6 +272,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Update(T entity)
         {
             Service.Update(entity);
+            RedisRemove();
         }
 
         /// <summary>
@@ -272,6 +283,7 @@ namespace SiliconValley.InformationSystem.Business
         public void Update(List<T> entities)
         {
             Service.Update(entities);
+            RedisRemove();
         }
 
         /// <summary>
@@ -282,6 +294,7 @@ namespace SiliconValley.InformationSystem.Business
         public void UpdateAny(T entity, List<string> properties)
         {
             Service.UpdateAny(entity, properties);
+            RedisRemove();
         }
 
         /// <summary>
@@ -292,6 +305,7 @@ namespace SiliconValley.InformationSystem.Business
         public void UpdateAny(List<T> entities, List<string> properties)
         {
             Service.UpdateAny(entities, properties);
+            RedisRemove();
         }
 
         /// <summary>
@@ -303,6 +317,7 @@ namespace SiliconValley.InformationSystem.Business
         public void UpdateWhere(Expression<Func<T, bool>> whereExpre, Action<T> set)
         {
             Service.UpdateWhere(whereExpre, set);
+            RedisRemove();
         }
 
         #endregion
@@ -327,7 +342,8 @@ namespace SiliconValley.InformationSystem.Business
         /// <returns></returns>
         public List<T> GetList()
         {
-            return Service.GetList<T>();
+           //return Service.GetList<T>();
+           return Redislist();
         }
 
         /// <summary>
