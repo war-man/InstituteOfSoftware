@@ -8,7 +8,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>BatchAdd</title>
+    <title>AddMCEmps</title>
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/layui/layui.js"></script>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
@@ -25,13 +25,6 @@
 
                 </div>
 
-                <div class="layui-form-item">
-                    <label class="layui-form-label">应到勤天数:</label>
-                    <div class="layui-input-inline">
-                        <input type="text" id="ShouldComeDays" name="ShouldComeDays" class="layui-input" lay-verify="required|myday" />
-                    </div>
-
-                </div>
             </div>
 
             <div class="layui-form-item" style="margin-left:30px;margin-top:80px;">
@@ -52,32 +45,18 @@
                 , laydate = layui.laydate;
 
             //日期
-           laydate.render({
+            laydate.render({
                 elem: '#CurrentTime',
                 type: 'month',
                 format: 'yyyy-MM',
 
             });
 
-            //自定义验证
-            form.verify({
-                myday: function (value, item) {
-                    if (value == '') {
-                        return '';
-                    } else {
-                        var v = /^0[0-9]$|^[0-9]$|^1[0-9]$|^2[0-8]$/;
-                        if (!v.test(value)) {
-                            return '天数只能是0至31之间';
-                        }
-                    }
-                }//验证哪天
-            });
-
-
             //提交
             form.on('submit(demo1)', function (data) {
                 var loadindex = layer.load(1);
-                $.post("/Personnelmatters/AttendanceStatistics/BatchAdd", { time: data.field.CurrentTime, days: data.field.ShouldComeDays }, function (data) {
+                console.log("批量添加的选择:" + data.field.CurrentTime);
+                $.post("/Personnelmatters/PerformanceAssess/AddMCEmps", { time: data.field.CurrentTime }, function (data) {
                     layer.close(loadindex);
                     if (data.Success) {
                         layer.alert("添加成功!", { icon: 1 }, function (index) {
@@ -107,6 +86,5 @@
 
 
     </script>
-
 </body>
 </html>

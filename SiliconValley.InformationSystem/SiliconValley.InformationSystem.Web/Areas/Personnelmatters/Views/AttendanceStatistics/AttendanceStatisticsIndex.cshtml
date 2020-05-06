@@ -7,8 +7,9 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="BatchImport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导入</button>
-        <button class="layui-btn layui-btn-sm" lay-event="BatchAdd"><i class="layui-icon layui-icon-add-1"></i>批量添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="BatchAdd"><i class="layui-icon layui-icon-addition"></i>批量添加</button>
         <button class="layui-btn layui-btn-sm" lay-event="timeanddaysChange"><i class="layui-icon layui-icon-search"></i>查看记录</button>
+        <button class="layui-btn layui-btn-sm" lay-event="Approved"><i class="layui-icon layui-icon-edit"></i>确认审批</button>
     </div>
 </script>
 @*操作栏*@
@@ -134,6 +135,8 @@
                     case 'timeanddaysChange':
                         TimeandDaysChange();
                         break;
+                    case 'Approved':
+                        break;
                 };
             });
 
@@ -178,6 +181,7 @@
             });
 
         }); 
+
         //批量（导入excel数据）添加考勤信息
         function BatchAdd() {
             layui.use(['layer'], function (args) {
@@ -223,7 +227,25 @@
             })
 
         }
-        
+
+        //"确认审批"按钮事件
+        function ConfirmApproval(time) {
+            layer.confirm('确认都已审批了吗？', function (index) {
+                $.post('/Personnelmatters/AttendanceStatistics/ConfirmApproval', { 'time': time }, function (da) {
+                    if (da) {
+                        layer.alert("操作成功!", { icon: 1 }, function (index) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.alert("操作失败!");
+                    }
+                })
+
+            });
+        }
 
 
         //格式化时间

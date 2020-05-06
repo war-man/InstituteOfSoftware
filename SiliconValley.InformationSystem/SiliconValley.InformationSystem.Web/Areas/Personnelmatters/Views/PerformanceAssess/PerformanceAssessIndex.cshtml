@@ -56,7 +56,9 @@
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="MCadd"><i class="layui-icon layui-icon-addition"></i>考核人员添加</button>
         <button class="layui-btn layui-btn-sm" lay-event="timeChange"><i class="layui-icon layui-icon-edit"></i>年月份改变</button>
+        <button class="layui-btn layui-btn-sm" lay-event="Approved"><i class="layui-icon layui-icon-edit"></i>确认审批</button>
     </div>
 </script>
 
@@ -90,7 +92,7 @@
                 , limits: [5, 10, 15, 20, 25, 30]
                 , limit: 10
                 , cols: [[
-                      { field: 'empName', title: '姓名', width: 100, sort: true }
+                    { field: 'empName', title: '姓名', width: 100, sort: true }
                     , { field: 'empDept', title: '所属部门', width: 130, sort: true }
                     , { field: 'empPosition', title: '所属岗位', width: 110, sort: true }
                     , { field: 'RoutineWork', title: '日常工作内容', width: 130 }
@@ -116,6 +118,12 @@
                 switch (obj.event) {
                     case 'timeChange':
                         TimeChange();
+                        break;
+                    case 'MCadd':
+                        MCEmpAdd();
+                        break;
+                    case 'Approved':
+                        ConfirmApproval();
                         break;
                 };
             });
@@ -159,6 +167,22 @@
             });
         });
 
+        //考勤人员添加
+        function MCEmpAdd() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+                layer.open({
+                    type: 2
+                    , area: ["400px", "300px"]
+                    , title: ""
+                    , content: '/Personnelmatters/PerformanceAssess/AddMCEmps'
+                    , anim: 2
+                });
+
+            })
+
+        }
+
         //年月份/应到勤天数改变
         function TimeChange() {
             layui.use(['layer'], function (args) {
@@ -175,6 +199,24 @@
 
         }
 
+        //"确认审批"按钮事件
+        function ConfirmApproval(time) {
+            layer.confirm('确认都已审批了吗？', function (index) {
+                $.post('/Personnelmatters/PerformanceAssess/ConfirmApproval', { 'time': time }, function (da) {
+                    if (da) {
+                        layer.alert("操作成功!", { icon: 1 }, function (index) {
+                            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                            window.parent.location.reload();
+                            parent.layer.close(index);
+                        });
+                    }
+                    else {
+                        layer.alert("操作失败!");
+                    }
+                })
+
+            });
+        }
 
         //格式化时间
         function GetYearAndMonth(cellval) {

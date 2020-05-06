@@ -312,16 +312,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     //    AjaxResultxx.Success = monthss;
                     //}
 
-                    if (AjaxResultxx.Success) {
-                        bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
-                        AjaxResultxx.Success = mc;
-                        if (AjaxResultxx.Success && !string.IsNullOrEmpty(emp.PositiveDate.ToString())) {
-                            //并将该员工绩效分默认改为100
-                            var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
-                            AjaxResultxx.Success = mcemp;
+                    //if (AjaxResultxx.Success) {
+                    //    bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
+                    //    AjaxResultxx.Success = mc;
+                    //    if (AjaxResultxx.Success && !string.IsNullOrEmpty(emp.PositiveDate.ToString())) {
+                    //        //并将该员工绩效分默认改为100
+                    //        var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
+                    //        AjaxResultxx.Success = mcemp;
 
-                        }
-                    }
+                    //    }
+                    //}
 
                 }
             }
