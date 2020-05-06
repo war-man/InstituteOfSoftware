@@ -36,19 +36,20 @@
 
         <div class="layui-row layui-form-item">
             <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                <label class="layui-form-label" style="width:120px;margin-left:-40px;">社保缴费基数:</label>
+                <label class="layui-form-label" style="width:100px;margin-left:-30px">个人社保:</label>
+                <div class="layui-input-inline" style="margin-left:10px;">
+                    <input type="text" id="PersonalSocialSecurity" name="PersonalSocialSecurity" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <label class="layui-form-label" style="width:140px;margin-left:-40px;">社保缴费基数:</label>
                 <div class="layui-input-inline">
                     <input type="text" id="ContributionBase" name="ContributionBase" autocomplete="off" class="layui-input">
                 </div>
             </div>
 
-            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                <label class="layui-form-label" style="width:100px;">个人社保:</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="PersonalSocialSecurity" name="PersonalSocialSecurity" autocomplete="off" class="layui-input">
-                </div>
-            </div>
-            <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:120px;"><i class="layui-icon layui-icon-search"></i>查询</button>
+            <button class="layui-btn " type="button" id="Conditionselect" style="margin-left:200px;"><i class="layui-icon layui-icon-search"></i>查询</button>
         </div>
     </form>
 </fieldset>
@@ -56,7 +57,7 @@
 <table id="salarysystemtab" lay-filter="salarysystemtab"></table>
 @*头部工具栏*@
 <script type="text/html" id="toolbarDemo">
-    <div class="layui-btn-container">
+    <div class="layui-btn-container" >
         <button class="layui-btn layui-btn-sm" lay-event="editSS"><i class="layui-icon layui-icon-edit"></i>社保缴费基数及个人社保修改</button>
     </div>
 </script>

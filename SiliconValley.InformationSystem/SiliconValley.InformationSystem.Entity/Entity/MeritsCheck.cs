@@ -31,7 +31,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<decimal> FinalGrade { get; set; }//最终绩效分
         public string Remark { get; set; }//备注
         public Nullable<bool> IsDel { get; set; }
-    
-       
+        public Nullable<bool> IsApproval { get; set; }
+
     }
 }

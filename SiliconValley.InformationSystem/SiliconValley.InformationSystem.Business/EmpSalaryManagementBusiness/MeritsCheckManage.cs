@@ -31,40 +31,40 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool AddEmpToMeritsCheck(string empid)
-        {
-            bool result = false;
-            try
-            {
-                MeritsCheck ese = new MeritsCheck();
-                ese.EmployeeId = empid;
-                ese.IsDel = false;
-                if (this.GetEmpMCData().Count() == 0)
-                {
-                    ese.YearAndMonth = DateTime.Now;
-                }
-                else
-                {
-                    ese.YearAndMonth = this.GetEmpMCData().LastOrDefault().YearAndMonth;
-                }
+        //public bool AddEmpToMeritsCheck(string empid)
+        //{
+        //    bool result = false;
+        //    try
+        //    {
+        //        MeritsCheck ese = new MeritsCheck();
+        //        ese.EmployeeId = empid;
+        //        ese.IsDel = false;
+        //        if (this.GetEmpMCData().Count() == 0)
+        //        {
+        //            ese.YearAndMonth = DateTime.Now;
+        //        }
+        //        else
+        //        {
+        //            ese.YearAndMonth = this.GetEmpMCData().LastOrDefault().YearAndMonth;
+        //        }
 
-                this.Insert(ese);
-                rc.RemoveCache("InRedisMCData");
-                result = true;
-                BusHelper.WriteSysLog("绩效考核表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //        this.Insert(ese);
+        //        rc.RemoveCache("InRedisMCData");
+        //        result = true;
+        //        BusHelper.WriteSysLog("绩效考核表添加员工成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
 
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            return result;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        result = false;
+        //        BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+        //    }
+        //    return result;
 
-        }
+        //}
 
         /// <summary>
-        /// 往员工绩效考核表加入员工编号
+        /// 绩效考核表禁用员工方法
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
@@ -95,9 +95,9 @@ namespace SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness
         /// </summary>
         /// <param name="empid"></param>
         /// <returns></returns>
-        public bool  GetmcempByEmpid(string empid)
+        public bool GetmcempByEmpid(string empid)
         {
-             bool result = false;
+            bool result = false;
             try
             {
                 var mcemp = this.GetEmpMCData().Where(s => s.EmployeeId == empid).FirstOrDefault();

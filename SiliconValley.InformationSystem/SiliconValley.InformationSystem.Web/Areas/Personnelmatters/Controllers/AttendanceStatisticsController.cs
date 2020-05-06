@@ -237,7 +237,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <param name="course"></param>
         /// <returns></returns>
         [HttpPost]
-
         public ActionResult BatchImport(HttpPostedFileBase excelfile)
         {
             Stream filestream = excelfile.InputStream;
@@ -262,9 +261,60 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult BatchAdd(string list) {
+        public ActionResult BatchAdd(string time,string days) {
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
             var AjaxResultxx = new AjaxResult();
+            try
+            {
+                //获取未禁用的员工
+                var elist = esemanage.GetEmpESEData().Where(s => s.IsDel == false).ToList();
+                foreach (var item in elist)
+                {
+                    AttendanceInfo atd = new AttendanceInfo();
+                    atd.EmployeeId = item.EmployeeId;
+                    atd.YearAndMonth = DateTime.Parse(time);
+                    atd.DeserveToRegularDays = Convert.ToDecimal(days);
+                    atd.ToRegularDays = Convert.ToDecimal(days);
+                    atd.IsDel = false;
+                    atdmanage.Insert(atd);
+                   
+                    rc.RemoveCache("InRedisATDData");
+                }
+                AjaxResultxx = atdmanage.Success();
+            }
+            catch (Exception ex)
+            {
+              AjaxResultxx=atdmanage.Error(ex.Message);
+            }
+            FirstTime = time;
+            Firstshouldday = days;
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 确认审批（确认审批过的数据不可再编辑）
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ConfirmApproval(string time)
+        {
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var curtime = DateTime.Parse(time);
+                var curlist = atdmanage.GetADInfoData().Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == curtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == curtime.Month).ToList();
+                foreach (var item in curlist)
+                {
+                    item.IsApproval = true;
+                    atdmanage.Update(item);
+                    rc.RemoveCache("InRedisATDData");
+                }
+                AjaxResultxx = atdmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = atdmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
     }

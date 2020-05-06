@@ -274,6 +274,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
+
+        /// <summary>
+        /// 确认审批
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult JudgeIsApproval(int id)
         {
@@ -387,6 +393,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     item.IsApproval = true;
                     msrmanage.Update(item);
+                    rc.RemoveCache("InRedisMSRData");
                 }
                 AjaxResultxx = msrmanage.Success();
             }
