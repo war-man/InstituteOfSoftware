@@ -618,7 +618,7 @@ function TransactionAdd(url, datae) {
         type: 'POST',
         async: true,
         cache: false,
-        timeout: 2000,
+        
         data: datae,
 
         beforeSend: function () {//执行中
@@ -657,14 +657,11 @@ function TransactionAdd(url, datae) {
                     btn: ['确定']
                 });
             }
-        }
-        , error: function (xmlhttprequest, textstatus, message) {
-            closeLoad(i);
-            layer.msg("您的网络出现问题，请稍后再试！！！", {
-                time: 8000, //20s后自动关闭
-
-                btn: ['确定']
-            });
+        },
+         error: function (xmlhttprequest, textstatus, message) {
+             closeLoad(i);
+             console.log(textstatus);
+           
         }
     });
 }

@@ -14,57 +14,63 @@
     }
 
     <form class="layui-form" action="">
-        <div class="layui-container">
-            <div class="layui-row ">
-
-                <div class="layui-col-xs10">
+        <div class="layui-carousel-left">
+          
                     <div class="layui-row layui-form-item">
 
 
-                        <div class="layui-col-xs4">
+                        <div class="layui-col-xs2.5">
                             <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
                                 <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                             </div>
                         </div>
 
-                        <div class="layui-col-xs4" >
-                            <label class="layui-form-label"style="margin-left:35px;">学号</label>
+                        <div class="layui-col-xs2.5">
+                            <label class="layui-form-label" style="margin-left:35px;">学号</label>
                             <div class="layui-input-inline">
-                                <input type="text"  name="StudentNumber" class="layui-input" />
+                                <input type="text" name="StudentNumber" class="layui-input" />
                             </div>
                         </div>
 
-                        <div class="layui-col-xs4">
+                        <div class="layui-col-xs2.5">
                             <label class="layui-form-label">身份证</label>
                             <div class="layui-input-inline">
-                                <input type="text"  name="identitydocument" class="layui-input" />
+                                <input type="text" name="identitydocument" class="layui-input" />
                             </div>
                         </div>
-                        <div class="layui-col-xs4" >
+                        <div class="layui-col-xs2.5">
                             <label class="layui-form-label">班级</label>
                             <div class="layui-input-inline">
-                                @Html.DropDownList("ClassName", ViewBag.ClassName as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() {  })
+                                @Html.DropDownList("ClassName", ViewBag.ClassName as IEnumerable<SelectListItem>, "请选择", new Dictionary<string, object>() { })
                             </div>
 
                         </div>
-                        <div class="layui-col-xs6">
-                            <label class="layui-form-label" style="width:115px;">已过科目数量</label>
+                        <div class="layui-col-xs2.5">
+                            <label class="layui-form-label" style="width:115px;">及格数量</label>
                             <div class="layui-input-inline">
-                                <input type="text"  id="Alreadypassed" name="Alreadypassed" maxlength="2" class="layui-input" />
-                            </div> 
+                                <input type="text" id="Alreadypassed" name="Alreadypassed" maxlength="2" class="layui-input" />
+                            </div>
                         </div>
-                        <div style="position:absolute;left:82%;top:60px;">
-                            <i class="layui-icon  layui-icon-search but" lay-submit="" lay-filter="demo2" style="font-size: 30px; color: #009688;"></i>查询
-                        </div>
+
                     </div>
 
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs2.5" style="margin-left:-36px;">
+                            <label class="layui-form-label" style="width:115px;">及格数量</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="Alreadypassed" name="Alreadypassed" maxlength="2" class="layui-input" />
+                            </div>
+                        </div>
+                    </div>
+                    <div style="position:absolute;left:93%;top:68px; z-index:999;width:100px;">
+                        <i class="layui-icon  layui-icon-search but" lay-submit="" lay-filter="demo2" style="font-size: 30px; color: #009688;"></i>查询
+                    </div>
                 </div>
 
-            </div>
-        </div>
+       
     </form>
-    <div style="width:220px;height:440px; position:absolute; top:45px;border:1px solid #e6e6e6;">
+    <div style="width:220px;height:440px; position:absolute; top:176px;border:1px solid #e6e6e6;">
         <div class="demo-tree-more">
             <ul id="test13"></ul>
         </div>

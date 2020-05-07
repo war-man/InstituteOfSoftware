@@ -11,30 +11,42 @@
     </style>
 }
 <form class="layui-form" action="">
-    <div class="layui-container" style="margin-left:20%;">
+    <div  >
        
          
-                <div class="layui-row layui-form-item">
+        <div class="layui-row layui-form-item">
 
 
-                    <div class="layui-col-xs6">
-                        <label class="layui-form-label title">学员姓名</label>
-                        <div class="layui-input-inline">
-                            <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
-                        </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label title">学员姓名</label>
+                <div class="layui-input-inline">
+                    <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-col-xs8">
+                <div class="layui-inline">
+                    <label for="" class="layui-form-label title">时间段</label>
+                    <div class="layui-input-inline startTime">
+                        <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                     </div>
-                    <div class="layui-col-xs6" style="margin-left:-200px;">
+                    <div class="layui-form-mid">到</div>
+                    <div class="layui-input-inline endTime">
 
-                        <label class="layui-form-label title">学&nbsp;&nbsp;&nbsp;&nbsp;号</label>
-                        <div class="layui-input-inline">
-                            <input type="tel" style="width:100%;" name="StudentNumberID" lay-verify="number" id="StudentNumberID" autocomplete="off" class="layui-input">
-
-                        </div>
-
+                        <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
                     </div>
                 </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs4" style="margin-left:-100px;">
+            </div>
+            <div class="layui-col-xs3">
+
+                <label class="layui-form-label title">学&nbsp;&nbsp;&nbsp;&nbsp;号</label>
+                <div class="layui-input-inline">
+                    <input type="tel" style="width:100%;" name="StudentNumberID" lay-verify="number" id="StudentNumberID" autocomplete="off" class="layui-input">
+
+                </div>
+
+            </div>
+      
+                    <div class="layui-col-xs3" >
 
                         <label class="layui-form-label title">谈话标题</label>
                         <div class="layui-input-inline">
@@ -44,27 +56,11 @@
 
                     </div>
 
-                    <div class="layui-col-xs6">
 
 
-                        <div class="layui-inline" style="margin-left:-100px;">
-                            <label for="" class="layui-form-label title">时间段</label>
-                            <div class="layui-input-inline startTime">
-                                <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                            </div>
-                            <div class="layui-form-mid">到</div>
-                            <div class="layui-input-inline endTime">
-
-                                <input type="text" name="qEndTime" id="qEndTime" readonly="readonly" placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-
-                    </div>
 
 
-                </div>
-
-                <div style="position:absolute;left:65%;top:20px;">
+                <div style="position:absolute;left:64%;top:65px;">
                     <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
                 </div>
 

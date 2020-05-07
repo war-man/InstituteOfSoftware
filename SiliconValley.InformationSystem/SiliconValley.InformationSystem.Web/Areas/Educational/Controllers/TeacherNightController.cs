@@ -19,7 +19,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
     [CheckLogin]
     public class TeacherNightController : Controller
     {
-        // GET: /Educational/TeacherNight/GetClassData
+        // GET: /Educational/TeacherNight/ClassMasterIndex
 
         TeacherNightManeger TeacherNight_Entity = new TeacherNightManeger();
         TeacherBusiness Teacher_Entity;

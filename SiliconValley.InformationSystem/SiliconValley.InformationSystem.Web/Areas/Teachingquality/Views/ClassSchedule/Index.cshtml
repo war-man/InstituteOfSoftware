@@ -4,9 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     @section style{
         <style>
-            .linu {
-                width:232px;
-            }
+          
             .labels{
                 width:100px;
             }
@@ -15,33 +13,33 @@
     }
 }@model SiliconValley.InformationSystem.Entity.MyEntity.ClassSchedule
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left">
         <div class="layui-row ">
 
-           
-            <div class="layui-row layui-form-item" style="width:60%;">
+
+            <div class="layui-row layui-form-item">
 
 
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
                     <label class="layui-form-label labels">班级名称</label>
-                    <div class="layui-input-inline" style="margin-left:10px;">
-                        <input type="tel" name="ClassNumber" lay-verify="Name" id="ClassNumber" autocomplete="off" class="layui-input linu">
+                    <div class="layui-input-inline">
+                        <input type="tel" name="ClassNumber"  lay-verify="Name" id="ClassNumber" autocomplete="off" class="layui-input ">
                     </div>
                 </div>
 
-                <div class="layui-col-xs6  layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
 
                     <label class="layui-form-label labels">专业</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         @Html.DropDownListFor(a => a.Major_Id, ViewBag.Major_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
 
                     </div>
 
                 </div>
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
 
                     <label class="layui-form-label labels">阶段</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
 
 
                         @Html.DropDownListFor(a => a.grade_Id, ViewBag.grade_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
@@ -49,10 +47,13 @@
                     </div>
 
                 </div>
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+             
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
 
                     <label class="layui-form-label labels">状态</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
 
 
                         @Html.DropDownListFor(a => a.ClassstatusID, ViewBag.ClassState as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
@@ -60,23 +61,23 @@
                     </div>
 
                 </div>
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-col-xs2.5 layui-col-sm2.5 layui-col-md2.5">
 
                     <label class="layui-form-label labels">课时</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         @Html.DropDownListFor(a => a.BaseDataEnum_Id, ViewBag.BaseDataEnum_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
 
                     </div>
 
                 </div>
             </div>
-               
-                    <div style="position:absolute;left:65%;top:20px;">
-                        <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>   查询</button>
-                    </div>
+
+            <div style="position:absolute;left:65%;top:67px;">
+                <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>   查询</button>
+            </div>
 
 
-                </div>
+        </div>
 
             </div>
 </form>

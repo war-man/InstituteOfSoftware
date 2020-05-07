@@ -60,7 +60,7 @@
 <body scroll="no">
     <div class="page-container">
         <!--/content-inner-->
-        <div class="left-content" style="margin-top:-24px;width:88%">
+        <div class="left-content" style="margin-top:-24px;">
             <div class="inner-content">
                 <!-- header-starts -->
                 <div class="header-section">
@@ -333,7 +333,7 @@
             <div style="border-top:1px solid rgba(69, 74, 84, 0.7)"></div>
             <!--/down-->
             <div class="down">
-                <a href="#"><img id="Image" style="width:100px;" /></a>
+                <a href="#"><img id="Image" style="width:100px;height:100px;" /></a>
                 <a href="#"><span class=" name-caret" id="EmpName"></span></a>
                 <p id="EmployeeId"</p>
 
@@ -365,9 +365,10 @@
         //    //overflow-x:auto;
         //});
         var toggle = true;
-
+        var contai = 0;
         $(".sidebar-icon").click(function () {
             if (toggle) {
+                contai++;
                 $("#menu").attr("style", "width:65px;")
                 $(".outer-container").attr("style", "height:850px;")
                 $(".page-container").addClass("sidebar-collapsed").removeClass("sidebar-collapsed-back");
@@ -376,6 +377,7 @@
 
             }
             else {
+                contai = 0;
                 $(".page-container").removeClass("sidebar-collapsed").addClass("sidebar-collapsed-back");
                 setTimeout(function () {
                     $("#menu span").css({ "position": "relative" });
@@ -482,7 +484,12 @@
 
         },
         mouseout: function () {
-            $(".outer-container").css("width", "230px");
+            if (contai > 0) {
+                $(".outer-container").css("width", "64px");
+            } else {
+                $(".outer-container").css("width", "230px");
+            }
+          
             //$(".outer-container").attr("style", "width:222px;")
         }
     });

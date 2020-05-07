@@ -513,7 +513,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
             var mylist = UndergraduatecourseBusiness.GetList().Where(a => a.CoursecategoryXid == CoursecategoryXid).ToList();
             
             //获取已经过了的成绩
-          var achievement =UndergraduateachievementBusines.GetList().Where(a => a.EnrollID == EnrollID).ToList();
+          var achievement =UndergraduateachievementBusines.GetList().Where(a => a.EnrollID == EnrollID&&a.Fraction>=60).ToList();
             for (int i = mylist.Count - 1; i >= 0; i--)
             {
                 foreach (var item in achievement)
@@ -761,7 +761,7 @@ namespace SiliconValley.InformationSystem.Business.EnrollmentBusiness
         {
             var EnroID = this.GetList().Where(a => a.IsDelete == false && a.StudentNumber == Studentid).FirstOrDefault().ID;
             List<AchievementView> achievementViews = new List<AchievementView>();
-            var list = UndergraduateachievementBusines.GetList().Where(a => a.EnrollID == EnroID).ToList();
+            var list = UndergraduateachievementBusines.GetList().Where(a => a.EnrollID == EnroID&&a.Fraction>=60).ToList();
             foreach (var item in list)
             {
                 AchievementView view = new AchievementView();

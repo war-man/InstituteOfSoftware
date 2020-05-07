@@ -61,11 +61,13 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         {
           return  tuitionalloca.GetList().Where(a => a.IsDelete == false && a.Stage == Stage).FirstOrDefault();
         }
-
+    
   
 
         public object Studenttuitionfeestandard(int id)
         {
+      
+
             var x = feestandard.GetList().Where(a => a.IsDelete == false && a.Stage == id).Select(a => new {
                 code = a.id,
                 name = a.Unitpricename

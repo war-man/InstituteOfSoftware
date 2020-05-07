@@ -13,23 +13,23 @@
     </style>
 }
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left" style="width:100%">
 
 
         <div class="layui-row layui-form-item">
 
 
-            <div class="layui-col-xs7">
+            <div class="layui-col-xs2.5">
                 <label class="layui-form-label title">学员姓名</label>
                 <div class="layui-input-inline">
                     <input type="tel" name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                 </div>
             </div>
-            <div class="layui-col-xs4" style="margin-left:-120px;">
+            <div class="layui-col-xs2.5" >
 
                 <label class="layui-form-label title">学&nbsp;&nbsp;&nbsp;&nbsp;号</label>
                 <div class="layui-input-inline">
-                    <input type="tel" style="width:100%;" name="StudentID" lay-verify="number" id="StudentNumberID" autocomplete="off" class="layui-input">
+                    <input type="tel"  name="StudentID" lay-verify="number" id="StudentNumberID" autocomplete="off" class="layui-input">
 
                 </div>
 
@@ -37,7 +37,7 @@
 
 
 
-            <div class="layui-col-xs6">
+            <div class="layui-col-xs4">
                 <div class="layui-inline">
                     <label for="" class="layui-form-label title">时&nbsp;间&nbsp;&nbsp;段</label>
                     <div class="layui-input-inline startTime">
@@ -52,7 +52,7 @@
 
             </div>
 
-            <div class="layui-col-xs4" style="margin-left:-5px;">
+            <div class="layui-col-xs3" >
 
                 <label class="layui-form-label labels">类&nbsp;&nbsp;&nbsp;&nbsp;型</label>
                 <div class="layui-input-inline">
@@ -67,7 +67,7 @@
 
         </div>
 
-        <div style="position:absolute;left:80%;top:20px;">
+        <div style="position:absolute;left:91%;top:68px;">
             <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>查询</button>
         </div>
 
@@ -81,7 +81,7 @@
 @section script{
     <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
     <script type="text/html" id="leftbarDemo">
-        <div style="color:#0475C5;font-size:13pt;" id="Totals">
+        <div style="font-size:13pt;" id="Totals">
             
         </div>
     </script>
@@ -92,11 +92,11 @@
             var count = 0;
             $.post("/Finance/Pricedetails/DateTatal", dbase, function (da) {
                 for (var i = 0; i < da.length; i++) {
-                    Tost = Tost + da[i].TypeName + "：" + da[i].Total + "元，"
+                    Tost = Tost + da[i].TypeName + "：" + "<span style='color:#0475C5;'>" + da[i].Total + "</span>"  + "元，"
                     count = count + da[i].Total;
                 }
-                Tost=   Tost + "总额:" + count+"元";
-                $("#Totals").text(Tost);
+                Tost = Tost + "总额:" + "<span style='color:#0475C5;'>" + count + "</span>" + "元";
+                $("#Totals").append(Tost);
                 console.log(Tost);
             })
             
