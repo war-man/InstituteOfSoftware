@@ -1679,6 +1679,11 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmpAttr.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\SuspectedView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\AddMCEmps.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\ChangeMCTime.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\PerformanceAssess\EditEmpPFAssess.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\BatchAdd.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\AttendanceStatistics\BatchImport.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
