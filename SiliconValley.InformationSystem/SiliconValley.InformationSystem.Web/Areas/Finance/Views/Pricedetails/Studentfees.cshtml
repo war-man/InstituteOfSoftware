@@ -5,16 +5,16 @@
 }
 
 <form class="layui-form" action="">
-    <div class="layui-container">
-        <div class="layui-row ">
-            <div class="layui-row layui-form-item" style="width:60%;">
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+    <div class="layui-carousel-left">
+      
+            <div class="layui-row layui-form-item" >
+                <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
                     <label class="layui-form-label labels">阶段</label>
                     <div class="layui-input-block">
                         @Html.DropDownList("grade_Id", ViewBag.grade_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
                     </div>
                 </div>
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
                     <label class="layui-form-label labels">类别</label>
                     <div class="layui-input-block">
                         @Html.DropDownList("Typex", ViewBag.Typex as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
@@ -22,16 +22,16 @@
                 </div>
             </div>
 
-            <div style="position:absolute;left:45%;top:1px;">
+            <div style="position:absolute;left:46%;top:67px;">
                 <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>查询</button>
             </div>
 
 
         </div>
 
-    </div>
+    
 </form>
-<table class="layui-hide" id="test" lay-filter="test"></table>
+<table class="layui-hide" id="test" lay-filter="test" ></table>
 @section script{
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
@@ -64,8 +64,9 @@
                 , url: '/Finance/Pricedetails/DateCostitems'
                 , toolbar: '#toolbarDemo'
                 , id: 'idTest'
+                ,Width:"100%"
                 , page: true
-                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+                //全局定义常规单元格的最小宽度，layui 2.2.1 新增
                 , cols: [[
                     { type: 'radio' }
                     , { field: 'id', title: '编号 ' }
@@ -73,7 +74,7 @@
                     , { field: 'Name', title: '名称 ' }
                     , { field: 'Typex', title: '类别 ' }
                     , { field: 'Amountofmoney', title: '价格 ' }
-                    , { fixed: 'right', title: '状态', toolbar: '#barDemo', width: 100 }
+                    , { fixed: 'right', title: '状态', toolbar: '#barDemo' }
                 ]]
                 , page: true
                 , limit: 8

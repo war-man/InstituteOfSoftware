@@ -48,7 +48,7 @@ a:hover { transition: all 200ms ease-in-out; }
 }
 .left-content {
     float: right;
-        width: 87%;
+        width: 88%;
 }
 .page-container.sidebar-collapsed {
   transition: all 100ms linear;
@@ -69,7 +69,7 @@ a:hover { transition: all 200ms ease-in-out; }
     -moz-transition: all 0.3s ease;
     transition: all 0.3s ease;
 	float: right;
-    width:87%;
+    width:88%;
 }
 .page-container.sidebar-collapsed .sidebar-menu {
   width: 65px;
@@ -5448,11 +5448,11 @@ footer  p a:hover ,.footer p a:hover{
 @media (max-width:1600px){
 	.left-content {
 		float: right;
-		width: 86%;
+		width: 88%;
 	}
 	.page-container.sidebar-collapsed-back .left-content {
 		float: right;
-		width: 86%;
+		width: 88%;
 	}
 	.page-container.sidebar-collapsed .left-content {
 		float: right;

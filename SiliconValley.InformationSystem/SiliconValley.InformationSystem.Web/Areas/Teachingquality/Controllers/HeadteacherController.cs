@@ -193,6 +193,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// 班主任带班分布图
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public ActionResult Teamleaderdistribution()
         {
            ViewBag.ListTeam= Newtonsoft.Json.JsonConvert.SerializeObject(dbtext.ListTeamleaderdistributionView());

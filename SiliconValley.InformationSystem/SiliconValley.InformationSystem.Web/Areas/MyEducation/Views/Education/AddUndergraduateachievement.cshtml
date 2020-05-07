@@ -192,10 +192,17 @@
                         form.render();
                     }
                 }, function (value, index, elem) {
-                    if (value < 60 || value > 100 || RegExp(/\d{8-20}/)) {
-                        value = 60;
-                    } 
 
+                    if (value >= 60 && RegExp(/\d{8-20}/)) {
+                        console.log(value);
+                        value = 60;
+
+                    } else if (value < 60) {
+
+                    } else {
+                        value = 60;
+                    }
+                   
                     data.elem.title = data.elem.title + "(" + value + "分)";
                     form.render();
                     var obj = {
