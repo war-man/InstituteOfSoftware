@@ -84,7 +84,7 @@
 </div>
 <table id="MyTableSix-1" lay-filter="MyTableSix-1" name="MyTableSix-1"></table>
 
-@section script{
+ 
     <script>
         //转换时间的方法
         function TimeChange(newtime) {
@@ -116,7 +116,7 @@
         function TiHelper(Msg) {
             layui.use('layer', function () {
                 var layer = layui.layer;
-                layer.msg(Msg, { icon: 2, time: 2000 });
+                layer.msg(Msg, { icon: 2, time: 2000 ,shade:0.8});
             });
         }
         layui.use(['table', 'laydate', 'form', 'layer', 'element'], function () {
@@ -236,7 +236,7 @@
                     , data = obj.data //得到所在行所有键值
                     , field = obj.field; //得到字段
                 
-                if (data.IsDelete == true && field !="IsDelete") {
+                if (data.IsDelete == true) {
                     FlushTableSix1();
                     TiHelper("异常数据不能更改！！！");
                 } else {
@@ -265,8 +265,11 @@
                             success: function (SucData) {
                                 if (SucData != "ok") {
                                     TiHelper(SucData);
+                                } else {
+                                    FlushTableSix1();
+                                    layer.msg('操作成功', { shade: 0.8, icon:1 });
                                 }
-                                FlushTableSix1();
+                                
                             }
                         });
                     } 
@@ -370,4 +373,4 @@
             });
         });
     </script>
-}
+ 
