@@ -158,7 +158,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">出生日期:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy|contents" }, { "class", "layui-input linu" } })
+                            @Html.TextBoxFor(s => s.StuBirthy, new Dictionary<string, object>() { { "placeholder", "YY-MM-DD" }, { "lay-verify", "StuBirthy" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                 </div>
@@ -177,7 +177,7 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="LableCss1">上门日期:</label>
                             <div class="layui-input-block">
-                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "StuDateTime|IsVisit|content" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" } })
+                                @Html.TextBoxFor(s => s.StuVisit, new Dictionary<string, object>() { { "lay-verify", "StuDateTime|IsVisit" }, { "placeholder", "YY-MM-DD" }, { "class", "layui-input linu" } })
                             </div>
                     </div>
                 </div>
@@ -340,21 +340,21 @@
                 /^[0-9]*$/
                 , '电话号码只能是数字'
             ]
-            , content: function (value) {
-                var newsdate = new Date();
-                var olddate = new Date(value);
-                var s = newsdate - olddate;
-                if (s < 0) {
-                    return "时间选择错误，请重新选择";
-                }
-            },contents: function (value) {
-                var newsdate = new Date();
-                var olddate = new Date(value);
-                var s = newsdate - olddate;
-                if (s <= 0) {
-                    return "时间选择错误，请重新选择";
-                }
-            }
+            //, content: function (value) {
+            //    var newsdate = new Date();
+            //    var olddate = new Date(value);
+            //    var s = newsdate - olddate;
+            //    if (s < 0) {
+            //        return "时间选择错误，请重新选择";
+            //    }
+            //},contents: function (value) {
+            //    var newsdate = new Date();
+            //    var olddate = new Date(value);
+            //    var s = newsdate - olddate;
+            //    if (s <= 0) {
+            //        return "时间选择错误，请重新选择";
+            //    }
+            //}
         });
 
         //提交数据

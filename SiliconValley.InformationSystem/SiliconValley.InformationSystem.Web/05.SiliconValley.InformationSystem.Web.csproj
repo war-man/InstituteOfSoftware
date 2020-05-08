@@ -1679,6 +1679,7 @@
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\EditEmpAttr.cshtml" />
     <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\LeftEmpDetail.cshtml" />
     <Content Include="Areas\Market\Views\StudentDataKeep\SuspectedView.cshtml" />
+    <Content Include="Areas\Market\Views\MarketChair\AddMarketChairView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
