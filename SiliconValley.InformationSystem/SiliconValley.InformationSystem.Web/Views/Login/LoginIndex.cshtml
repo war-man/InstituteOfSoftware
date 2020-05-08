@@ -32,27 +32,33 @@
 
         .login-wrap {
             background-image: url('../../Images/Login/Middle.jpg');
-            background-size: 100%;
+            background-size: 100% 100%;
             background-repeat: no-repeat;
+           
+        }
+        #header {
+           
+            background-image: url('../../Images/Login/titlie.jpg');
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
+         
         }
     </style>
     <script type="text/javascript" src="~/Scripts/jquery-3.3.1.js"></script>
     <script src="~/Scripts/vendor/layui/layui.js"></script>
     <div id="header">
 
-        <img src="~/Images/Login/titlie.jpg" style="height:84px;width:100%;" />
+        @*<img src="~/Images/Login/titlie.jpg" style="height:84px;width:100%;" />*@
     </div>
 
  
-
-
     <style type="text/css">
         #weixin_login_container iframe {
             width: 158px;
             height: 158px;
         }
     </style>
-    <div class="login-wrap">
+    <div class="login-wrap" style=" margin-top:-1px;">
         <div class="wrap clearfix">
 
             <div class="form-box fr loginV2" style="display:block;">
@@ -79,11 +85,11 @@
                             <div class="form-error" style=""><i></i><label class="text"></label></div>
                             <dl class="clearfix">
                                 <dt>账户名：</dt>
-                                <dd><input type="text" name="UserName" id="normalUser" class="input-text" autocomplete="off" /><span class="placeholder">用户名/邮箱/手机号</span></dd>
+                                <dd><input type="text" name="UserName" id="normalUser" placeholder="用户名/邮箱/手机号" class="input-text" autocomplete="off" /><span class="placeholder"></span></dd>
                             </dl>
                             <dl class="top1 clearfix">
                                 <dt>密<em></em>码：</dt>
-                                <dd><input type="password" name="password" id="normalPassword" class="input-text"><span class="placeholder">请输入密码</span></dd>
+                                <dd><input type="password" name="password" id="normalPassword" placeholder="请输入密码" class="input-text"><span class="placeholder"></span></dd>
                             </dl>
 
                             <div class="form-remember">

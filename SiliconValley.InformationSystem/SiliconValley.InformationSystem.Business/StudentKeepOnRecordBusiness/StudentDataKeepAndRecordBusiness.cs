@@ -34,7 +34,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             get_studentkeep_list = redisCache.GetCache<List<StudentPutOnRecord>>("StudentKeepList");
             if (get_studentkeep_list == null || get_studentkeep_list.Count == 0)
             {
-                get_studentkeep_list = this.GetList();
+                get_studentkeep_list = this.GetIQueryable().ToList();
                 redisCache.SetCache("StudentKeepList", get_studentkeep_list);
             }
             return get_studentkeep_list;

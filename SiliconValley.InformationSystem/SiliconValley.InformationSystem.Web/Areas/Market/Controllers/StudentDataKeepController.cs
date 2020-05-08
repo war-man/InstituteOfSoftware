@@ -41,7 +41,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         // GET: /Market/StudentDataKeep/FielsPath
         #region 创建实体
         //创建一个用于操作数据的备案实体
-        private StudentDataKeepAndRecordBusiness s_Entity;
+        private StudentDataKeepAndRecordBusiness s_Entity =new StudentDataKeepAndRecordBusiness();
         //创建一个用于查询数据的上门学生状态实体
         StuStateManeger Stustate_Entity;
         //创建一个用于查询数据的上门学生信息来源实体
@@ -64,7 +64,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult StudentDataKeepIndex()
         {
             StuInfomationType_Entity = new StuInfomationTypeManeger();
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             //获取信息来源的所有数据
             List<SelectListItem> se=  StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
             SelectListItem e = new SelectListItem();
@@ -83,8 +82,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         //往数据库中获取数据备案的信息
         public ActionResult GetStudentPutOnRecordData(int limit,int page)
-        {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
+        { 
             region_Entity = new RegionManeges();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             Stustate_Entity = new StuStateManeger();
@@ -182,7 +180,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuEntering = s.StuEntering,
                     Reak = s.Reak,
                     Regin_id = s.Region_id,
-                    ReginName = region_Entity.GetAreValue(s.Region_id.ToString(), true)==null?"区域外":region_Entity.GetAreValue(s.Region_id.ToString(),true).RegionName
+                    ReginName = region_Entity.GetEntity(s.Region_id) == null?"区域外":region_Entity.GetEntity(s.Region_id).RegionName
                 }).ToList();//获取了数据库中所有数据备案信息;                                                                                                         
                 var JsonData = new {     
                     code=0, //解析接口状态,
@@ -206,7 +204,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             Stustate_Entity = new StuStateManeger();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             //获取信息来源的所有数据
             ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s=>s.IsDelete==false).Select(s=>new SelectListItem { Text=s.Name, Value=s.Id.ToString() }).ToList();
 
@@ -230,7 +227,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             Department_Entity = new DepartmentManage();
             Position_Entity = new PositionManage();
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             List<EmployeesInfo> list_Enploy = s_Entity.GetEffectiveEmpAll(true);//获取所有在职员工
             List<TreeClass> list_Tree = Department_Entity.GetList().Select(d=>new TreeClass() {id=d.DeptId.ToString(),title=d.DeptName, children=new List<TreeClass>(), disable=false, @checked=false, spread=false }).ToList();
             List<Position> list_Position = Position_Entity.GetList().Where(s=>s.IsDel==false).ToList();//获取所有岗位有用的数据
@@ -267,7 +263,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //查看是否是选中员工
         public ActionResult FindEmply(string id)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             EmployeesInfo finde= s_Entity.GetEffectiveEmpAll(true).Where(s => s.EmployeeId==id).FirstOrDefault();
             if (finde!=null)
             {                 
@@ -283,7 +278,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //添加备案数据
         public ActionResult StudentDataKeepAdd(StudentPutOnRecord news)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             Stustate_Entity = new StuStateManeger();
             AjaxResult a ;
             try
@@ -332,7 +326,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //查看是否有重复的学员信息名称
         public ActionResult FindStudent(string id)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             AjaxResult a = new AjaxResult();
             List<StudentPutOnRecord> fins= s_Entity.GetAllStudentKeepData().Where(s=>s.StuName==id).ToList();
             if (fins.Count>0)
@@ -352,7 +345,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         {
             Stustate_Entity = new StuStateManeger();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             ViewBag.id = id;
             //获取信息来源的所有数据
             ViewBag.infomation = StuInfomationType_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.Name, Value = s.Id.ToString() }).ToList();
@@ -373,7 +365,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //创建一个用于编辑的处理方法
         public ActionResult EditFunction(StudentPutOnRecord olds)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             //需要判断是咨询部人员修改还是网络部人员修改  SessionHelper.Session["UserId"]=""
             AjaxResult a= s_Entity.Update_data(olds);
             return Json(a,JsonRequestBehavior.AllowGet);
@@ -382,7 +373,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //将Excel中的数据加载到数据库中
         public bool AddExcelToServer(List<MyExcelClass> list)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             region_Entity = new RegionManeges();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             Stustate_Entity = new StuStateManeger();
@@ -430,7 +420,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //根据ID找到学生信息并赋值
         public ActionResult FindStudentInfomation(string id)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             Stustate_Entity = new StuStateManeger();
             region_Entity = new RegionManeges();
@@ -475,7 +464,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult LookDetailsView(string id)
         {
             Stustate_Entity = new StuStateManeger();
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             int s_id = Convert.ToInt32(id);
             StudentPutOnRecord find= s_Entity.GetEntity(s_id);
@@ -488,14 +476,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             ViewBag.state = Stustate_Entity.GetList().Where(s => s.IsDelete == false).Select(s => new SelectListItem { Text = s.StatusName, Value = s.Id.ToString() }).ToList();
 
             //获取区域
-            ViewBag.regin = region_Entity.GetEntity(find.Region_id).RegionName;
+            ViewBag.regin = region_Entity.GetEntity(find.Region_id)==null?"区域外": region_Entity.GetEntity(find.Region_id).RegionName;
             return View();
         }
 
         //显示有疑似的数据
         public ActionResult StudentSomeData(string id)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             region_Entity = new RegionManeges();
             Stustate_Entity = new StuStateManeger();
@@ -524,7 +511,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取已备案中的相似数据
         public List<MyExcelClass> SercherStudent(List<MyExcelClass> ex)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             region_Entity = new RegionManeges();
             List<StudentPutOnRecord> s_list = s_Entity.GetAllStudentKeepData();
             List<MyExcelClass> list = new List<MyExcelClass>();
@@ -702,7 +688,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //判断是否有重复的值
         public List<MyExcelClass> Repeatedly(bool IsRepea)
         {
-            s_Entity = new StudentDataKeepAndRecordBusiness();
             List<MyExcelClass> ExcelList = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;//获取Excle文件数据     
             List<StudentPutOnRecord> All_list = s_Entity.GetAllStudentKeepData();//获取备案数据
             List<MyExcelClass> result = new List<MyExcelClass>();                           
@@ -782,7 +767,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                                 news = equally_list
                             };
                             //string number = "13204961361";
-                            //string smsText = "备案提示:已备案成功，但是有重复数据";
+                            //string smsText = "备案提示:已备案成功，但是有重复数据,请自行去系统查看";
                             //string t = PhoneMsgHelper.SendMsg(number, smsText);
                             return Json(datajson, JsonRequestBehavior.AllowGet);
                         }
@@ -823,7 +808,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         };
                         //通知备案人备案成功
                         //string number = "13204961361";
-                        //string smsText = "备案提示:已备案成功";
+                        //string smsText = "备案提示:已备案成功，无重复数据";
                         //string t = PhoneMsgHelper.SendMsg(number, smsText);
 
                         return Json(datajson, JsonRequestBehavior.AllowGet);

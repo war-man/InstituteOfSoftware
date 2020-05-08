@@ -44,6 +44,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             ymtime = FirstTime;
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
+            EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表     
             List<MonthlySalaryRecord> eselist = new List<MonthlySalaryRecord>();
             List<MySalaryObjView> result = new List<MySalaryObjView>();
             EmployeesInfoManage empmanage = new EmployeesInfoManage();//员工信息表
@@ -51,12 +52,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             eselist = msrmanage.GetEmpMsrData().Where(s => s.IsDel == false).ToList();
             if (!string.IsNullOrEmpty(ymtime))
             {
-                if (msrmanage.CreateSalTab(ymtime))
-                {
-                    EmplSalaryEmbodyManage empsemanage = new EmplSalaryEmbodyManage();//员工工资体系表             
-                    var time = DateTime.Parse(ymtime);
-                    eselist = eselist.Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == time.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == time.Month).ToList();
-                };
+                var time = DateTime.Parse(ymtime);
+                eselist = eselist.Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == time.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == time.Month).ToList();
             }
             if (!string.IsNullOrEmpty(AppCondition))
             {
@@ -190,7 +187,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>
         public ActionResult UpdateTime()
         {
-            ViewBag.time = GetFirstTime();
+            ViewBag.time = FirstTime;
             return View();
         }
         [HttpPost]
@@ -251,7 +248,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 string[] ids = list.Split(',');
                 for (int i = 0; i < ids.Length - 1; i++)
                 {
-                    int id =Convert.ToInt32(ids[i]);
+                    int id = Convert.ToInt32(ids[i]);
                     AjaxResultxx.Success = msrmanage.EditEmpMS(id);
                     var ad = msrmanage.GetEntity(id);
                     if (AjaxResultxx.Success)
@@ -261,7 +258,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     }
                     if (AjaxResultxx.Success)
                     {
-                        bool a = admanage.EditEmpStateToAds(ad.EmployeeId,ad.YearAndMonth.ToString());//员工考勤表禁用该员工
+                        bool a = admanage.EditEmpStateToAds(ad.EmployeeId, ad.YearAndMonth.ToString());//员工考勤表禁用该员工
                         AjaxResultxx.Success = a;
                     }
                     if (AjaxResultxx.Success)
@@ -278,6 +275,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 确认审批
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult JudgeIsApproval(int id)
+        {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var msr = msrmanage.GetEntity(id);
+                if (msr.IsApproval == true)
+                {
+                    AjaxResultxx.Success = true;
+
+                }
+                else
+                {
+                    AjaxResultxx.Success = false;
+                }
+                AjaxResultxx.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx.ErrorCode = 500;
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult EditEmpSalary(int id)
         {
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
@@ -310,7 +338,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public ActionResult GetIsApprovalState(int id) {
+        public ActionResult GetIsApprovalState(int id)
+        {
             MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
             var AjaxResultxx = new AjaxResult();
             try
@@ -323,8 +352,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
                 AjaxResultxx = msrmanage.Error(ex.Message);
             }
-         
-            return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
         [HttpPost]
         public ActionResult EditEmpSalary(MonthlySalaryRecord msr)
@@ -348,6 +377,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-     
+        /// <summary>
+        /// 确认审批（确认审批过的数据不可再编辑）
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ConfirmApproval(string time)
+        {
+            var AjaxResultxx = new AjaxResult();
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
+            try
+            {
+                var curtime = DateTime.Parse(time);
+                var curlist = msrmanage.GetEmpMsrData().Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == curtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == curtime.Month).ToList();
+                foreach (var item in curlist)
+                {
+                    item.IsApproval = true;
+                    msrmanage.Update(item);
+                    rc.RemoveCache("InRedisMSRData");
+                }
+                AjaxResultxx = msrmanage.Success();
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx = msrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
     }
 }

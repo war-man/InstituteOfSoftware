@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "ConsultIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
+   // Layout = null;
 }
 @using SiliconValley.InformationSystem.Entity.MyEntity
 @using SiliconValley.InformationSystem.Entity.ViewEntity
@@ -130,8 +131,8 @@
             <input type="text" class="form-control" id="JangzMan" name="JangzMan" placeholder="学生姓名">
         </div>
     </div>
-    <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
-    <button id="serchBtn2" class="layui-btn" style="border-radius:10px;height:35px">分量</button>
+    <button  class="layui-btn layui-btn-radius layui-btn-primary"   onclick="serchBtnOne()">查询</button>
+    <button  class="layui-btn" style="border-radius:10px;height:35px" onclick="serchBtnTwo()">分量</button>
     <hr />
 </div>
 
@@ -188,8 +189,8 @@
     </div>
 
     <div id="div_right_bttom" style="margin-top:50px;">
-        <div id="div_right_bttom_left" style="width:50%;height:400px;float:left">
-            <div id="Yuang" style="width:100%;height:100%;">
+        <div id="div_right_bttom_left" style="width:60%;height:500px;float:left;text-align:right">
+            <div id="Yuang" style="float:left;width:700px;height:400px;display:inline-block;">
 
             </div>
         </div>
@@ -242,300 +243,315 @@
             $("#div_right_bttom").show();
         }
         var myChart;
+        var indexs;
+        var indexs2;
         $(function () {
-            HiddenMiddle();
-            HiddenBttom();
-            //注册鼠标点击事件(查询)
-            $(".container").click(function (event) {
+
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                indexs = layer.load(1);
                 HiddenMiddle();
-                var spanelem = event.currentTarget.firstElementChild.firstElementChild.firstElementChild;//获取span标签
-                var id = spanelem.getAttribute("id");
-                var myid = spanelem.getAttribute("myid");
-                var empName = spanelem.innerText;
-                if (empName != "整体") {
-                    HiddenBttom();
-                    $("#TeacherStuation").val(myid);
-                    $(".front").each(function (index, elem) {
-                        $(elem).removeClass("RedCss");
-                        $(elem).addClass("GreenCss");
-                    });
-                    var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
-                    $(Myspanelem).addClass("RedCss");
-                    $(Myspanelem).removeClass("GreenCss");
-                    $.ajax({
-                        type: "GET",
-                        url: '/Market/Consult/GetImageData/' + myid,
-                        success: function (data) {
-                            // 使用刚指定的配置项和数据显示图表。
-                            myChart.setOption(myoption(data));
-                        }
-                    });
-                    $("#TeacherStuation").val(myid);
-                } else {
-                    $(".front").each(function (index, elem) {
-                        $(elem).removeClass("RedCss");
-                        $(elem).addClass("GreenCss");
-                    });
-                    var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
-                    $(Myspanelem).removeClass("GreenCss");
-                    // console.log(Myspanelem);
-                    $(Myspanelem).addClass("RedCss");
-                    $("#TeacherStuation").val("tangminGood");
-                    $.ajax({
-                        type: "GET",
-                        url: '/Market/Consult/GetImageData/',
-                        success: function (data) {
-                            // 使用刚指定的配置项和数据显示图表。
-                            myChart.setOption(myoption(data));
-                        }
-                    });
-                }
-
-            });
-             // 基于准备好的dom，初始化echarts实例
-            myChart = echarts.init(document.getElementById("MyDataDiv"));            
-            myChart.title = '折柱混合';
-            //当鼠标移动到某个月份，显示未完成数据和完成数据
-            myChart.on('click', function (params) {
-                var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为报名个数和报名个数
-                if (params.componentType == "series") {
-                    var mystatus = params.seriesName;
-                    if (values != "tangminGood") {
+                HiddenBttom();
+                //注册鼠标点击事件(查询)
+                $(".container").click(function (event) {
+                    HiddenMiddle();
+                    var spanelem = event.currentTarget.firstElementChild.firstElementChild.firstElementChild;//获取span标签
+                    var id = spanelem.getAttribute("id");
+                    var myid = spanelem.getAttribute("myid");
+                    var empName = spanelem.innerText;
+                    if (empName != "整体") {
+                        indexs = layer.load(1);
                         HiddenBttom();
-                        ShowMiddle();
-                        var monthName = parseInt(params.name);
-                        GetTwoDivData(values, monthName, mystatus);
-                    }
-                }
-                else if (params.componentType == "xAxis") {
-                    //如果是整体就显示一个饼状图
-                    if (values == "tangminGood") {
-                        ShowBttom();
-                        HiddenMiddle();
-                        var monthName = parseInt(params.value);
-                        ShowRangImage(monthName);
-                    }
-
-                }
-            });
-            function myoption(res) {
-                var wangchengarry = new Array();
-                var fengliangarry = new Array();
-                var nowanchengarry = new Array();
-
-                for (var i = 0; i < res.length; i++) {
-                    wangchengarry.push(res[i].wanchengcount);
-                }
-                for (var i = 0; i < res.length; i++) {
-                    fengliangarry.push(res[i].fengliangarry);
-                }
-                for (var i = 0; i < res.length; i++) {
-                    nowanchengarry.push(res[i].nowanchengcount);
-                }
-
-                var option = {
-                    tooltip: {
-                        trigger: 'axis',
-                        axisPointer: {
-                            type: 'cross',
-                            crossStyle: {
-                                color: '#999'
-                            }
-                        }
-                    },
-                    toolbox: {
-                        feature: {
-                            dataView: { show: false, readOnly: false },
-                            magicType: { show: true, type: ['line', 'bar'] },
-                            restore: { show: false },
-                            saveAsImage: { show: true }
-                        }
-                    },
-                    legend: {
-                        data: ['报名个数', '分量数', '未完成量']
-                    },
-                    xAxis: [
-                        {
-                            type: 'category',
-                            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                            axisPointer: {
-                                type: 'shadow'
-                            },
-                            triggerEvent: true
-
-                        }
-                    ],
-                    yAxis: [
-                        {
-                            type: 'value',
-                            name: '数量',
-                            min: 0,
-                            interval: 50,
-                            axisLabel: {
-                                formatter: '{value} 人'
-                            }
-                        }
-                    ],
-                    series: [
-                        {
-                            name: '报名个数',
-                            type: 'bar',
-                            data: wangchengarry
-                        },
-                        {
-                            name: '分量数',
-                            type: 'bar',
-                            data: fengliangarry
-                        },
-                        {
-                            name: '未完成量',
-                            type: 'bar',
-                            data: nowanchengarry
-                        }
-                    ]
-                };
-                return option;
-            }
-            function GetTwoDivData(values, name, status) {
-                var number = 0;
-                if (status == "报名个数") {
-                    $("#spanText")[0].innerText = "已报名学生";
-                } else if (status == "未完成量") {
-                    $("#spanText")[0].innerText = "未报名学生";
-                    number = 1;
-                } else if (status == "分量数") {
-                    $("#spanText")[0].innerText = "本月分量总人数";
-                    number = 2;
-                }
-                $.ajax({
-                    type: "GET",
-                    url: '/Market/Consult/GetTwoDivData',
-                    data: { "Myid": values, "MonthName": name, "Staue": number },
-                    success: function (data) {
-                        // 使用刚指定的配置项和数据显示图表。
-                        //myChart.setOption(myoption(data));
-                        //完成的
-                        var Sucwc = $("#wangchen");
-                        $("#wangchen")[0].innerHTML = "";
-                        for (var i = 0; i < data[0].list.length; i++) {
-                            $('<div class="layui-col-sm1 btnCenDivCss"><input onclick=InputClick(' + data[0].list[i].StudentId + ') type="button" class="layui-btn btnCssEnght1"  StudentId=' + data[0].list[i].StudentId + ' value=' + data[0].list[i].StudentName + '></div>').appendTo(Sucwc);
-                        }
-                    }
-                });
-            }
-
-            function InputClick(studentid) {
-                layui.use('layer', function () {
-                    var layer = layui.layer;
-                    layer.confirm('是否查看跟踪信息？',
-                        { icon: 3, title: '系统温馨提示', shade: 0.8 },
-                        function (index) {
-                            //打开详情页面
-                            layer.close(index);//关闭弹出层
-                            layer.open({
-                                type: 2,
-                                content: '/Market/Consult/FollwingInfoView/' + studentid
-                                , area: ['1000px', '650px'],
-                                title: '跟踪信息'
-                                , shade: 0.8
-                                , anim: 4
-                                , skin: 'demo-class'
-                            });
+                        $("#TeacherStuation").val(myid);
+                        $(".front").each(function (index, elem) {
+                            $(elem).removeClass("RedCss");
+                            $(elem).addClass("GreenCss");
                         });
+                        var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
+                        $(Myspanelem).addClass("RedCss");
+                        $(Myspanelem).removeClass("GreenCss");
+                        $.ajax({
+                            type: "GET",
+                            url: '/Market/Consult/GetImageData/' + myid,
+                            success: function (data) {
+                                // 使用刚指定的配置项和数据显示图表。
+                                myChart.setOption(myoption(data));
+
+                                layer.close(indexs);
+                            }
+                        });
+                        $("#TeacherStuation").val(myid);
+                    } else {
+                        indexs = layer.load(1);
+                        $(".front").each(function (index, elem) {
+                            $(elem).removeClass("RedCss");
+                            $(elem).addClass("GreenCss");
+                        });
+                        var Myspanelem = event.currentTarget.firstElementChild.firstElementChild;
+                        $(Myspanelem).removeClass("GreenCss");
+                        // console.log(Myspanelem);
+                        $(Myspanelem).addClass("RedCss");
+                        $("#TeacherStuation").val("tangminGood");
+                        $.ajax({
+                            type: "GET",
+                            url: '/Market/Consult/GetImageData/',
+                            success: function (data) {
+                                // 使用刚指定的配置项和数据显示图表。
+                                myChart.setOption(myoption(data));
+
+                                layer.close(indexs);
+                            }
+                        });
+                    }
+
                 });
-            }
-            ////这个方法是用于显示饼状图的
-            var myChart2 = echarts.init(document.getElementById('Yuang'));
-            function ShowRangImage(MonthName) {
-                var legendData = [];
-                var seriesData = [];
-                var selected = {};//自定义了一个对象
-                $.ajax({
-                    url: '/Market/Consult/GetConsultTeacherData/' + MonthName,
-                    success: function (SucData) {
-                        $("#divone1")[0].innerHTML = "";
-                        $("#divone2")[0].innerHTML = "";
-                        $("#divone3")[0].innerHTML = "";
-                        $("#div_right_bttom_left_center")[0].innerHTML = "";
-                        var legendData = [];
-                        var seriesData = [];
-                        var selected = {};
-                        for (var i = 0; i < SucData.length; i++) {
-                            legendData.push(SucData[i].TeacherName);
-                            seriesData.push({
-                                name: SucData[i].TeacherName,
-                                value: SucData[i].Number
-                            });
-                            selected[SucData[i].TeacherName] = i < SucData.length;
-                            if (i == 0) {
-                                $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone1"));
-                            } else if (i == 1) {
-                                $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone2"));
-                            } else if (i == 2) {
-                                $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone3"));
-                            } else {
-                                $("<div><span class='DivCssfont'>" + SucData[i].TeacherName + "<span></div>").appendTo($("#div_right_bttom_left_center"));
+                // 基于准备好的dom，初始化echarts实例
+                myChart = echarts.init(document.getElementById("MyDataDiv"));
+                myChart.title = '折柱混合';
+                //当鼠标移动到某个月份，显示未完成数据和完成数据f
+                myChart.on('click', function (params) {
+                    var values = $("#TeacherStuation").val();//如果是“tangminGood”，说明是整体，负责就是某个咨询师的某月为报名个数和报名个数
+                    if (params.componentType == "series") {
+                        var mystatus = params.seriesName;
+                        if (values != "tangminGood") {
+                            HiddenBttom();
+                            ShowMiddle();
+                            var monthName = parseInt(params.name);
+                            indexs = layer.load(1);
+                            GetTwoDivData(values, monthName, mystatus);
+                        }
+                    }
+                    else if (params.componentType == "xAxis") {
+                        //如果是整体就显示一个饼状图
+                        if (values == "tangminGood") {
+                            ShowBttom();
+                            HiddenMiddle();
+                            var monthName = parseInt(params.value);
+                            indexs2 = layer.load(1);
+                            ShowRangImage(monthName);
+                        }
+
+                    }
+                });
+                function myoption(res) {
+                    var wangchengarry = new Array();
+                    var fengliangarry = new Array();
+                    var nowanchengarry = new Array();
+
+                    for (var i = 0; i < res.length; i++) {
+                        wangchengarry.push(res[i].wanchengcount);
+                    }
+                    for (var i = 0; i < res.length; i++) {
+                        fengliangarry.push(res[i].fengliangarry);
+                    }
+                    for (var i = 0; i < res.length; i++) {
+                        nowanchengarry.push(res[i].nowanchengcount);
+                    }
+
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'cross',
+                                crossStyle: {
+                                    color: '#999'
+                                }
+                            }
+                        },
+                        toolbox: {
+                            feature: {
+                                dataView: { show: false, readOnly: false },
+                                magicType: { show: true, type: ['line', 'bar'] },
+                                restore: { show: false },
+                                saveAsImage: { show: true }
+                            }
+                        },
+                        legend: {
+                            data: ['报名个数', '分量数', '未完成量']
+                        },
+                        xAxis: [
+                            {
+                                type: 'category',
+                                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                                axisPointer: {
+                                    type: 'shadow'
+                                },
+                                triggerEvent: true
+
+                            }
+                        ],
+                        yAxis: [
+                            {
+                                type: 'value',
+                                name: '数量',
+                                min: 0,
+                                interval: 50,
+                                axisLabel: {
+                                    formatter: '{value} 人'
+                                }
+                            }
+                        ],
+                        series: [
+                            {
+                                name: '报名个数',
+                                type: 'bar',
+                                data: wangchengarry
+                            },
+                            {
+                                name: '分量数',
+                                type: 'bar',
+                                data: fengliangarry
+                            },
+                            {
+                                name: '未完成量',
+                                type: 'bar',
+                                data: nowanchengarry
+                            }
+                        ]
+                    };
+                    return option;
+                }
+                function GetTwoDivData(values, name, status) {
+                    var number = 0;
+                    if (status == "报名个数") {
+                        $("#spanText")[0].innerText = "已报名学生";
+                    } else if (status == "未完成量") {
+                        $("#spanText")[0].innerText = "未报名学生";
+                        number = 1;
+                    } else if (status == "分量数") {
+                        $("#spanText")[0].innerText = "本月分量总人数";
+                        number = 2;
+                    }
+                    $.ajax({
+                        type: "GET",
+                        url: '/Market/Consult/GetTwoDivData',
+                        data: { "Myid": values, "MonthName": name, "Staue": number },
+                        success: function (data) {
+                            // 使用刚指定的配置项和数据显示图表。
+                            //myChart.setOption(myoption(data));
+                            //完成的
+                            var Sucwc = $("#wangchen");
+                            $("#wangchen")[0].innerHTML = "";
+                            for (var i = 0; i < data[0].list.length; i++) {
+                                $('<div class="layui-col-sm1 btnCenDivCss"><input onclick=InputClick(' + data[0].list[i].StudentId + ') type="button" class="layui-btn btnCssEnght1"  StudentId=' + data[0].list[i].StudentId + ' value=' + data[0].list[i].StudentName + '></div>').appendTo(Sucwc);
                             }
 
+                            layer.close(indexs);
                         }
-                        console.log(seriesData);
-                        var option2 = {
-                            title: {
-                                text: '转化量统计',
-                                x: 'center'
-                            },
-                            tooltip: {
-                                trigger: 'item',
-                                formatter: "{{b} : ({c}个)}"
-                            },
-                            legend: {
-                                type: 'scroll',
-                                orient: 'vertical',
-                                right: 10,
-                                top: 20,
-                                bottom: 20,
-                                data: legendData,
-                                selected: selected
-                            },
-                            series: [
-                                {
-                                    name: '姓名',
-                                    type: 'pie',
-                                    radius: '60%',
-                                    center: ['50%', '50%'],
-                                    data: seriesData,
-                                    itemStyle: {
-                                        emphasis: {
-                                            shadowBlur: 10,
-                                            shadowOffsetX: 0,
-                                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    });
+                }
+
+    
+                ////这个方法是用于显示饼状图的
+                var myChart2 = echarts.init(document.getElementById('Yuang'));
+                function ShowRangImage(MonthName) {                 
+                    var legendData = [];
+                    var seriesData = [];
+                    var selected = {};//自定义了一个对象
+                    $.ajax({
+                        url: '/Market/Consult/GetConsultTeacherData/' + MonthName,
+                        success: function (SucData) {
+                            $("#divone1")[0].innerHTML = "";
+                            $("#divone2")[0].innerHTML = "";
+                            $("#divone3")[0].innerHTML = "";
+                            $("#div_right_bttom_left_center")[0].innerHTML = "";
+                            var legendData = [];
+                            var seriesData = [];
+                            var selected = {};
+                            for (var i = 0; i < SucData.length; i++) {
+                                legendData.push(SucData[i].TeacherName);
+                                seriesData.push({
+                                    name: SucData[i].TeacherName,
+                                    value: SucData[i].Number
+                                });
+                                selected[SucData[i].TeacherName] = i < SucData.length;
+                                if (i == 0) {
+                                    $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone1"));
+                                } else if (i == 1) {
+                                    $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone2"));
+                                } else if (i == 2) {
+                                    $("<span class='DivCssfont'>" + SucData[i].TeacherName + "<span>").appendTo($("#divone3"));
+                                } else {
+                                    $("<div><span class='DivCssfont'>" + SucData[i].TeacherName + "<span></div>").appendTo($("#div_right_bttom_left_center"));
+                                }
+
+                            }
+                            var option2 = {
+                                title: {
+                                    text: '转化量统计',
+                                    x: 'center'
+                                },
+                                tooltip: {
+                                    trigger: 'item',
+                                    formatter: "{{b} : ({c}个)}"
+                                },
+                                legend: {
+                                    type: 'scroll',
+                                    orient: 'vertical',
+                                    data: legendData,
+                                    selected: selected,
+                                    right: -3,
+                                    top: 20,
+                                    bottom: 0,
+                                },
+                                series: [
+                                    {
+                                        name: '姓名',
+                                        type: 'pie',
+                                        radius: '60%',
+                                        center: ['40%', '50%'],
+                                        data: seriesData,
+                                        itemStyle: {
+                                            emphasis: {
+                                                shadowBlur: 10,
+                                                shadowOffsetX: 0,
+                                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                                            }
                                         }
                                     }
-                                }
-                            ]
-                        };
-                        myChart2.setOption(option2);
-
-                    }
-                });
-            }
-
-            $.ajax({
-                type: "GET",
-                url: '/Market/Consult/GetImageData',
-                success: function (data) {
-                        // 使用刚指定的配置项和数据显示图表。
-                        myChart.setOption(myoption(data));                  
+                                ]
+                            };
+                            myChart2.setOption(option2);
+                            layer.close(indexs2); 
+                        }
+                    });
                 }
-            });
-        });
-        
-        
-   
- 
 
+                //用于初始化柱状图
+                $.ajax({
+                    type: "GET",
+                    url: '/Market/Consult/GetImageData',
+                    success: function (data) {
+                        // 使用刚指定的配置项和数据显示图表。
+                        myChart.setOption(myoption(data));
+                        layer.close(indexs); 
+                    }
+                });               
+            });             
+        });
+        //点击btn获取学生跟踪信息
+        function InputClick(studentid) {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                layer.confirm('是否查看跟踪信息？',
+                    { icon: 3, title: '系统温馨提示', shade: 0.8 },
+                    function (index) {
+                        //打开详情页面
+                        layer.close(index);//关闭弹出层
+                        layer.open({
+                            type: 2,
+                            content: '/Market/Consult/FollwingInfoView/' + studentid
+                            , area: ['1000px', '650px'],
+                            title: '跟踪信息'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
+                        });
+                    });
+            });
+        }
         //查询这个学生的信息
-        $("#serchBtn1").click(function () {
+        function serchBtnOne() {
             var StudentName = $("#JangzMan").val();
             if (StudentName.length <= 0) {
                 layui.ues('layer', function () {
@@ -543,6 +559,7 @@
                     layer.msg('学生姓名不能为空!!!', { icon: 2 })
                 });
             } else {
+               
                 $.ajax({
                     url: '/Market/Consult/SeracherIsno/' + StudentName,
                     success: function (SucData) {
@@ -587,8 +604,8 @@
                 });
 
             }
-        });
-        $("#serchBtn2").click(function () {
+        } 
+        function serchBtnTwo () {
             layui.use('layer', function () {
                 var layer = layui.layer;
                 layer.open({
@@ -601,7 +618,7 @@
                     , skin: 'demo-class'
                 });
             });
-        });
+        } 
     </script>
 }
 

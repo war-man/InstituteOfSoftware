@@ -12,20 +12,20 @@
     }
 
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left" style="width:80%">
         <div class="layui-row ">
 
-            <div class="layui-col-xs10">
+         
                 <div class="layui-row layui-form-item">
 
 
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs3">
                         <label class="layui-form-label">姓名</label>
                         <div class="layui-input-inline">
                             <input type="tel"  name="Name" lay-verify="Name" id="Name" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs3">
                         <label class="layui-form-label">性别</label>
                         <div class="layui-input-block">
                             <input type="radio" name="Sex" value="false" title="女">
@@ -33,7 +33,7 @@
                             <input type="radio" name="Sex" value="" title="全部" checked="checked">
                         </div>
                     </div>
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs3">
                         <label class="layui-form-label">学号</label>
                         <div class="layui-input-inline" >
                             <input type="text" lay-verify="number" name="StudentNumber" class="layui-input"  />
@@ -41,7 +41,7 @@
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6">
+                    <div class="layui-col-xs3">
 
                         <label class="layui-form-label">身份证</label>
                         <div class="layui-input-block">
@@ -50,14 +50,14 @@
                         </div>
 
                     </div>
-                    <div style="position:absolute;left:90%;top:20px;">
+                    <div style="position:absolute;left:85%;">
                         <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i>查询</button>
                     </div>
 
 
                 </div>
 
-            </div>
+           
            
         </div>
     </div>
@@ -205,28 +205,28 @@
                 , cols: [[
                     { type: 'radio' }
                     , { field: 'StudentNumber', width: 180, title: '学号', sort: true }
-                    , { field: 'Name', width: 80, title: '姓名' }
+                    , { field: 'Name', title: '姓名' }
                     , {
-                        field: 'Sex', width: 80, title: '性别', templet: function (c) {
+                        field: 'Sex',  title: '性别', templet: function (c) {
                             if (c.Sex == 0) {
                                 return "女";
                             } else { return "男"; }
                         }
                     }
                     , {
-                        field: 'BirthDate', width: 80, title: '年龄', templet: function (c) {
+                        field: 'BirthDate', title: '年龄', templet: function (c) {
                             return Age(TimeChange(c.BirthDate));
                         }
                     }
 
-                    , { field: 'Nation', width: 80, title: '民族 ' }
-                    , { field: 'Education', width: 80, title: '学历 ' }
-                    , { field: 'Telephone', width: 180, title: '电话号' }
-                    , { field: 'qq', width: 180, title: 'qq' }
-                    , { field: 'WeChat', width: 180, title: '微信' }
+                    , { field: 'Nation',  title: '民族 ' }
+                    , { field: 'Education', title: '学历 ' }
+                    , { field: 'Telephone',  title: '电话号' }
+                    , { field: 'qq', title: 'qq' }
+                    , { field: 'WeChat', title: '微信' }
 
-                    , { field: 'Familyaddress', width: 280, title: '家庭住址 ' }
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo', width: 100 }
+                    , { field: 'Familyaddress',title: '家庭住址 ' }
+                    , { fixed: 'right', title: '操作', toolbar: '#barDemo' }
 
                 ]]
                 , page: true
@@ -239,7 +239,7 @@
                 layer.open({
                     title: name,
                     type: 2,
-                    area: ['1000px', '920px']
+                    area: ['1000px', '800px']
                     , content: "/Teachingquality/StudentInformation/Registeredtrainees?id=" + id
                     , end: function () { table.reload('idTest'); select(); }
                     , anim: 1,
