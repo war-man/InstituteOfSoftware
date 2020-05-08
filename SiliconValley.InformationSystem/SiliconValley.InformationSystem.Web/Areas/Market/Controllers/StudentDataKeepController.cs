@@ -97,24 +97,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string findBeanManvalue = Request.QueryString["findBeanManvalue"];
             string findAreavalue = Request.QueryString["findAreavalue"];
             #endregion
-            List<StudentPutOnRecord> stu_IQueryable;
+            List<StudentPutOnRecord> stu_IQueryable= s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
             #region 判断是网路部人员登录还是咨询部人员登录
 
-            StuInfomationType find_type = StuInfomationType_Entity.GetNameSearchId("网络招生");
-            if (department.DeptName=="咨询部")
-            {
-                //获取网络招生的数据
-                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s=>s.StuInfomationType_Id!= find_type.Id).ToList();
-            }
-            else if(department.DeptName == "网络部")
-            {
-                //获取除了网络招生以外的数据
-                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s => s.StuInfomationType_Id == find_type.Id).ToList();
-            }
-            else
-            {
-                stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
-            }
+            //StuInfomationType find_type = StuInfomationType_Entity.GetNameSearchId("网络招生");
+            //if (department.DeptName=="咨询部")
+            //{
+            //    //获取网络招生的数据
+            //    stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s=>s.StuInfomationType_Id!= find_type.Id).ToList();
+            //}
+            //else if(department.DeptName == "网络部")
+            //{
+            //    //获取除了网络招生以外的数据
+            //    stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s => s.StuInfomationType_Id == find_type.Id).ToList();
+            //}
+            //else
+            //{
+            //    stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
+            //}
             #endregion
             #region 模糊查询
             if (!string.IsNullOrEmpty(findNamevalue))

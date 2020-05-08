@@ -5,7 +5,11 @@
 
 function DoAdd(courseFiled, successcallback, errorcallback) {
 
+    console.log(courseFiled);
+
     Ajax("/CourseSyllabus/Course/DoOperation", courseFiled, "post", function (data) {
+
+
 
         successcallback(data);
     }, function (error) {
@@ -32,7 +36,7 @@ layui.use(['table', 'layer','form'], function () {
         , url: '/CourseSyllabus/Course/GetCourseData/'
         , cellMinWidth: 100 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
         , cols: [[
-            { type: 'radio', fixed: 'left' }
+            { type: 'checkbox', fixed: 'left' }
             , { field: 'CourseName', title: '课程名称', sort: true }
             , { field: 'GrandName', title: '阶段', templet: '<div>{{d.Grand.GrandName}}</div>' }
             , {
@@ -74,7 +78,13 @@ layui.use(['table', 'layer','form'], function () {
                     skin: "demo-class2",
                     shade: [0],
                     title: "新增课程",
-                    content: '/CourseSyllabus/Course/OperationView/'
+                    content: '/CourseSyllabus/Course/OperationView/',
+                    end: function () {
+                        table.reload('Courselist', {
+
+                        });
+                    }
+
                 });
 
                 break;
@@ -88,6 +98,20 @@ layui.use(['table', 'layer','form'], function () {
                     content: '/CourseSyllabus/Course/CourseTypeIndex'
                 });
                 break;
+
+            case 'isUsing':
+
+                console.log(checkStatus);
+                if (checkStatus.data.count == 0) {
+
+                    layer.msg("请选择课程");
+
+                    return;
+                }
+
+                break;
+
+
         };
     });
 
@@ -103,6 +127,15 @@ layui.use(['table', 'layer','form'], function () {
         if (data.field.MajorID.length == 0) {
             data.field.MajorID = 0;
         }
+
+        if (data.field.IsEndCurr == "0") {
+            data.field.IsEndCurr = false;
+        }
+        else {
+            data.field.IsEndCurr = true;
+        }
+
+        console.log(data.field);
         //调用添加方法
         DoAdd(data.field, function (data) {
 

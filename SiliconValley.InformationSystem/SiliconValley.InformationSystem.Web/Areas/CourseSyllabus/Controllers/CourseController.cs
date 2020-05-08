@@ -644,5 +644,40 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
 
         }
+
+        public ActionResult UsingOrProhibit(string courseIds)
+        {
+            var temp1 = courseIds.Split(',');
+
+            var idlist = temp1.ToList();
+
+            idlist.RemoveAt(temp1.Length - 1);
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                foreach (var item in idlist)
+                {
+                    var tempobj = db_course.GetEntity(int.Parse(item));
+                    var isdel = tempobj.IsDelete;
+                    tempobj.IsDelete = !isdel;
+                    db_course.Update(tempobj);
+                }
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "失败";
+            }
+
+            return Json(result);
+           
+        }
     }
 }
