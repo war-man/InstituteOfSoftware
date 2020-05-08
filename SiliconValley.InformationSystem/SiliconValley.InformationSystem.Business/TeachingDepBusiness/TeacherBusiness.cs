@@ -15,6 +15,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
     using SiliconValley.InformationSystem.Util;
     using SiliconValley.InformationSystem.Entity.Entity;
     using System.Xml;
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
 
     public class TeacherBusiness : BaseBusiness<Teacher>
     {
@@ -606,7 +607,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// <param name="teacherid">教员id</param>
         /// <param name="majorid">专业id</param>
         /// <returns></returns>
-        public List<Curriculum> GetTeacherGoodCurriculum(int teacherid, int majorid)
+        public List<Curriculum> GetTeacherGoodCurriculum(int teacherid)
         {
 
             List<Curriculum> resultlist = new List<Curriculum>();
@@ -619,69 +620,43 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             foreach (var item in temp)
             {
                 var curr = Curriculum_db.GetList().Where(d => d.IsDelete == false && d.CurriculumID == item.Curriculum).FirstOrDefault();
-
-                if (curr.MajorID == majorid)
-                {
-
-                    resultlist.Add(curr);
-                }
-
+                resultlist.Add(curr);
             }
 
             return resultlist;
         }
 
 
-        public List<Curriculum> GetCurriculaOnTeacherNoHave(int teacherid, int majorid)
+        public List<Curriculum> GetCurriculaOnTeacherNoHave(int teacherid, int grandid)
         {
-
             var resultlist = new List<Curriculum>();
 
             BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
 
             BaseBusiness<Curriculum> curr_db = new BaseBusiness<Curriculum>();
 
-            var temp1 = goodskill_db.GetList().Where(d => d.TearchID == teacherid).ToList().OrderBy(d => d.Curriculum).ToList();
 
-            var temp2 = db_specialty.GetList().Where(d => d.IsDelete == false && d.Id == majorid).FirstOrDefault();
+            //已经擅长的课程
+            var temp1 = GetTeacherGoodCurriculum(teacherid).Where(d=>d.Grand_Id == grandid).ToList();
 
-            var temp3 = curr_db.GetList().Where(d => d.IsDelete == false && d.MajorID == majorid).ToList();
+            //获取阶段下的课程
+            var grandCurriculist = curr_db.GetList().Where(d => d.Grand_Id == grandid).ToList();
 
-
-            var all = new List<Curriculum>();
-
-            foreach (var item in temp1)
+            foreach (var item in grandCurriculist)
             {
-                var cur = temp3.Where(d => d.CurriculumID == item.Curriculum).FirstOrDefault();
-
-                if ( cur !=null && cur.MajorID == majorid)
-                {
-
-                    all.Add(cur);
-
-                }
-            }
-            CurriculumBusiness curriculumBusiness = new CurriculumBusiness();
-
-            //这个专业的技能
-
-            all = all.OrderBy(d => d.CurriculumID).ToList();
-
-
-            foreach (var item in temp3)
-            {
-
-                if (!curriculumBusiness.IsHave(all, item.CurriculumID))
+                if (!IsContains(temp1, item))
                 {
                     resultlist.Add(item);
-
                 }
-
             }
 
             return resultlist;
         }
 
+        public bool IsContains(List<Curriculum> sourse, Curriculum curriculum)
+        {
+            return sourse.Where(d => d.CurriculumID == curriculum.CurriculumID).FirstOrDefault() != null;
+        }
 
 
         /// <summary>
@@ -692,9 +667,13 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             List<Curriculum> result = new List<Curriculum>();
 
-           CourseSyllabusBusiness.CourseBusiness courseBusiness = new CourseSyllabusBusiness.CourseBusiness();
 
-            var alllist = courseBusiness.GetCurriculas().Where(d => d.MajorID == null).ToList(); //所有公共课
+            CourseTypeBusiness db_coursetype = new CourseTypeBusiness();
+            CourseSyllabusBusiness.CourseBusiness courseBusiness = new CourseSyllabusBusiness.CourseBusiness();
+
+
+             var publicType = db_coursetype.GetCourseTypes().Where(d => d.TypeName.Contains("专业")).FirstOrDefault();
+            var alllist = courseBusiness.GetCurriculas().Where(d => d.MajorID == null && d.CourseType_Id == publicType.Id).ToList(); //所有公共课
 
             var list1 = GetPublickCurriculaOnTeacher(teacherId); //教员可以上的公共课
             //排除掉可以上的公共课
@@ -731,14 +710,14 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             BaseBusiness<GoodSkill> goodskill_db = new BaseBusiness<GoodSkill>();
             CourseSyllabusBusiness.CourseBusiness courseBusiness = new CourseSyllabusBusiness.CourseBusiness();
             var templist = goodskill_db.GetIQueryable().ToList().Where(d => d.TearchID == teacher).ToList();
-
+            CourseTypeBusiness db_coursetype = new CourseTypeBusiness();
             List<Curriculum> result = new List<Curriculum>();
-
+            var publicType = db_coursetype.GetCourseTypes().Where(d => d.TypeName.Contains("专业")).FirstOrDefault();
             foreach (var item in templist)
             {
                var tempobj = courseBusiness.GetCurriculas().ToList().Where(d => d.CurriculumID == item.Curriculum).FirstOrDefault();
 
-                if (tempobj.MajorID == null)
+                if (tempobj.MajorID == null && tempobj.CourseType_Id == publicType.Id)
                 {
                     result.Add(tempobj);
                 }

@@ -9,7 +9,7 @@ function Ajax(url, dataJson, methd, successcallback,errorcallback) {
         url: url,
         type: methd,
         data: dataJson ,
-        timeout:5000,
+        timeout:10000,
         dataType: 'json',
         success: function (successResult) {
 

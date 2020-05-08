@@ -765,7 +765,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         {
             //提供专业
 
-           ViewBag.majors = db_teacher.GetMajorByTeacherID(id);
+            ViewBag.grands = db_grand.AllGrand();
 
 
             ViewBag.Teacher = db_teacher.GetTeacherByID(id);
@@ -780,31 +780,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// 
         [HttpPost]
        
-        public ActionResult GetCurcousData(int teacherid, int majorid)
+        public ActionResult GetCurcousData(int teacherid, int grandid)
         {
             AjaxResult result = new AjaxResult();
 
             try
             {
-                List<Curriculum> currlist = new List<Curriculum>();
-
-                if (majorid == 0)
-                {
-                    //需要加上公共课
-
-                    var publiccOURSE = db_teacher.GetPublickCurriculaOnTeacher(teacherid);
-
-                    if (publiccOURSE != null)
-                    {
-                        currlist.AddRange(publiccOURSE);
-                    }
-                }
-                else
-                {
-                    currlist = db_teacher.GetTeacherGoodCurriculum(teacherid, majorid);
-                }
-
-               
+                List<Curriculum> currlist = db_teacher.GetTeacherGoodCurriculum(teacherid).Where(d => d.Grand_Id == grandid).ToList();
 
                 result.Data = currlist;
                 result.ErrorCode = 200;
@@ -831,7 +813,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         /// <returns></returns>
         /// 
         [HttpPost]
-        public ActionResult GetNewSkill(int majorid , int teacherid)
+        public ActionResult GetNewSkill(int grandid , int teacherid)
         {
 
             AjaxResult result = new AjaxResult();
@@ -839,16 +821,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             var temp = new List<Curriculum>();
             try
             {
-                if (majorid == 0)
-                {
-                    temp = db_teacher.GetpublicCurriculaOnTeacherNoHave(teacherid);
-                }
-                else
-                {
-                    temp = db_teacher.GetCurriculaOnTeacherNoHave(teacherid, majorid);
-                }
-
-
+               
+                temp = db_teacher.GetCurriculaOnTeacherNoHave(teacherid, grandid);
+               
                 result.Msg = "成功";
                 result.Data = temp;
                 result.ErrorCode = 200;
@@ -1519,5 +1494,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
 
         }
+
+
+
+
     }
 }

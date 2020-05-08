@@ -74,7 +74,10 @@ layui.use(['table', 'layer','form'], function () {
                     skin: "demo-class2",
                     shade: [0],
                     title: "新增课程",
-                    content: '/CourseSyllabus/Course/OperationView/'
+                    content: '/CourseSyllabus/Course/OperationView/',
+                    end: function () {
+                        table.reload('Courselist', {
+                    }
                 });
 
                 break;

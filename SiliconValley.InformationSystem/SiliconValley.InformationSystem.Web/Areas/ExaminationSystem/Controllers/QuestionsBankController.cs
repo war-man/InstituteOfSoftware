@@ -80,10 +80,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// <returns></returns>
         public ActionResult ChoiceQuestionBatchEntry(string QuestionType)
         {
-            SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+            GrandBusiness grandBusiness = new GrandBusiness();
             //提供专业数据
-            ViewBag.Major = specialtyBusiness.GetSpecialties();
+            ViewBag.Grand = grandBusiness.AllGrand();
+
             ViewBag.QuestionType = QuestionType;
+
             return View();
 
         }
@@ -158,7 +160,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 result.Msg = "成功";
                 result.Data = count;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
 
                 result.ErrorCode = 500;
@@ -267,14 +269,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         [HttpGet]
         public ActionResult Proposition()
         {
-            SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+            GrandBusiness grandBusiness = new GrandBusiness();
 
             //提供难度级别数据
 
             ViewBag.QuestionLevel = db_questionLevel.AllQuestionLevel();
 
-            //提供专业数据
-            ViewBag.Major = specialtyBusiness.GetSpecialties();
+            //提供阶段数据
+            ViewBag.Grand = grandBusiness.AllGrand();
 
             return View();
         }
@@ -284,22 +286,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         /// </summary>
         /// <param name="majorid">专业</param>
         /// <returns></returns>
-        public ActionResult CourseData(int majorid)
+        public ActionResult CourseData(int grandid)
         {
             CourseBusiness courseBusiness = new CourseBusiness();
 
             List<Curriculum> curricullist = new List<Curriculum>();
 
-            if (majorid == -1)
-            {
-                //获取公共课
-                curricullist = courseBusiness.GetCurriculas().Where(d => d.MajorID == null).ToList();
+           var list = courseBusiness.GetCurriculas().Where(d => d.Grand_Id == grandid);
 
-
-            }
-            else
+            if (list != null)
             {
-                curricullist = courseBusiness.GetCurriculaByMajor(majorid);
+                curricullist.AddRange(list);
             }
 
 
@@ -564,14 +561,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         [HttpGet]
         public ActionResult PropositionAnswerQuestion()
         {
-            SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+            GrandBusiness grandBusiness = new GrandBusiness();
 
             //提供难度级别数据
 
             ViewBag.QuestionLevel = db_questionLevel.AllQuestionLevel();
 
             //提供专业数据
-            ViewBag.Major = specialtyBusiness.GetSpecialties();
+            ViewBag.Grand = grandBusiness.AllGrand();
             return View();
         }
 
@@ -794,8 +791,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             ViewBag.QuestionLevel = db_questionLevel.AllQuestionLevel();
 
-            SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
-            ViewBag.Major = specialtyBusiness.GetSpecialties();
+            GrandBusiness grandBusiness = new GrandBusiness();
+            ViewBag.Major = grandBusiness.AllGrand();
 
             return View();
         }
