@@ -317,5 +317,42 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return false;
             }
         }
+
+        /// <summary>
+        /// 修改授课班级数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="teacherid"></param>
+        /// <returns></returns>
+        #region
+        //public static bool UpdateTeacherClassData(DateTime date,int teacherid,int class_id,int )
+        //{
+        //    ClassTeacher classTeacher=  TeacherClass_Entity.GetList().Where(t => t.ClassNumber == class_id && t.IsDel == false).FirstOrDefault();//获取授课数据
+
+        //    classTeacher.EndDate = date;
+        //    classTeacher.IsDel = true;
+        //    try
+        //    {
+        //        TeacherClass_Entity.Update(classTeacher);
+
+        //        ClassTeacher newdata = new ClassTeacher();
+        //        newdata.BeginDate = date;
+        //        newdata.IsDel = false;
+        //        newdata.ClassNumber = class_id;
+        //        newdata.Skill = 1;
+
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+
+
+
+        //}
+
+        #endregion
     }
 }

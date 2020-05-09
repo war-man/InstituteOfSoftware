@@ -29,12 +29,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
           
 
-            Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+            //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             List<Reconcile> get_reconciles_list = new List<Reconcile>();
             get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
             if (get_reconciles_list == null || get_reconciles_list.Count == 0)
             {
-                get_reconciles_list = this.GetIQueryable().ToList();
+                get_reconciles_list = this.GetList();
                 Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
             }
             return get_reconciles_list;
@@ -235,6 +235,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     this.Update(item);
                 }
                 a.Success = true;
+                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -1765,67 +1766,20 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
             List<Reconcile> list = new List<Reconcile>();
             Curriculum find_cur = Reconcile_Com.Curriculum_Entity.GetIQueryable().Where(c => c.CourseType_Id == curtype_id && c.Grand_Id == grand_id).FirstOrDefault(); //根据课程类型/阶段获取课程编号
-            for (int i = 0; i < find_cur.CourseCount; i++)
+            if (find_cur!=null)
             {
-                Reconcile new_r = new Reconcile();
-                new_r.ClassRoom_Id = classroom_id;
-                new_r.ClassSchedule_Id = class_id;
-                new_r.Curriculum_Id = find_cur.CourseName;
-                new_r.Curse_Id = timename;
-                new_r.EmployeesInfo_Id = emp_id;
-                new_r.IsDelete = false;
-                new_r.NewDate = DateTime.Now;
-                if (find_cur.CourseName.Contains("军事")) //两周一次
+                for (int i = 0; i < find_cur.CourseCount; i++)
                 {
-                    if (i==0)
+                    Reconcile new_r = new Reconcile();
+                    new_r.ClassRoom_Id = classroom_id;
+                    new_r.ClassSchedule_Id = class_id;
+                    new_r.Curriculum_Id = find_cur.CourseName;
+                    new_r.Curse_Id = timename;
+                    new_r.EmployeesInfo_Id = emp_id;
+                    new_r.IsDelete = false;
+                    new_r.NewDate = DateTime.Now;
+                    if (find_cur.CourseName.Contains("军事")) //两周一次
                     {
-                        while (Days(time)!=days)
-                        {
-                            time = time.AddDays(1);
-                        }
-                    }
-                    else
-                    {
-                        time = time.AddDays(21);
-                    }
-                    new_r.AnPaiDate = time;
-                }
-                else if (find_cur.CourseName.Contains("班会") || find_cur.CourseName.Contains("英语"))//一周一次 
-                {
-                    if (i == 0)
-                    {
-                        while (Days(time) != days)
-                        {
-                            time = time.AddDays(1);
-                        }
-                    }
-                    else
-                    {
-                        time = time.AddDays(14);
-                    }
-                    new_r.AnPaiDate = time;
-                }else if (find_cur.CourseName.Contains("职素"))//高中--两周一次，初中一周一次
-                {
-                    Grand find_g= Reconcile_Com.Grand_Entity.GetEntity(grand_id);
-                    if (find_g.GrandName.Equals("Y1",StringComparison.CurrentCultureIgnoreCase))
-                    {
-                        //初中
-                        if (i == 0)
-                        {
-                            while (Days(time) != days)
-                            {
-                                time = time.AddDays(1);
-                            }
-                        }
-                        else
-                        {
-                            time = time.AddDays(14);
-                        }
-                        new_r.AnPaiDate = time;
-                    }
-                    else
-                    {
-                        //高中
                         if (i == 0)
                         {
                             while (Days(time) != days)
@@ -1839,9 +1793,61 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         }
                         new_r.AnPaiDate = time;
                     }
+                    else if (find_cur.CourseName.Contains("班会") || find_cur.CourseName.Contains("英语"))//一周一次 
+                    {
+                        if (i == 0)
+                        {
+                            while (Days(time) != days)
+                            {
+                                time = time.AddDays(1);
+                            }
+                        }
+                        else
+                        {
+                            time = time.AddDays(14);
+                        }
+                        new_r.AnPaiDate = time;
+                    }
+                    else if (find_cur.CourseName.Contains("职素"))//高中--两周一次，初中一周一次
+                    {
+                        Grand find_g = Reconcile_Com.Grand_Entity.GetEntity(grand_id);
+                        if (find_g.GrandName.Equals("Y1", StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            //初中
+                            if (i == 0)
+                            {
+                                while (Days(time) != days)
+                                {
+                                    time = time.AddDays(1);
+                                }
+                            }
+                            else
+                            {
+                                time = time.AddDays(14);
+                            }
+                            new_r.AnPaiDate = time;
+                        }
+                        else
+                        {
+                            //高中
+                            if (i == 0)
+                            {
+                                while (Days(time) != days)
+                                {
+                                    time = time.AddDays(1);
+                                }
+                            }
+                            else
+                            {
+                                time = time.AddDays(21);
+                            }
+                            new_r.AnPaiDate = time;
+                        }
+                    }
+                    list.Add(new_r);
                 }
-                list.Add(new_r);
-            }             
+            }
+                      
             return list;
         }
        /// <summary>
