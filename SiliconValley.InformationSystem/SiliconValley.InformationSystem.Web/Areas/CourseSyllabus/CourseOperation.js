@@ -53,6 +53,22 @@ layui.use(['table', 'layer','form'], function () {
 
                 }
             }   
+            , {
+                field: 'IsDelete', title: '状态', templet: function (res) {
+
+                    console.log(res.IsDelete);
+
+                    if (res.IsDelete == false) {
+                        return '正常';
+                    }
+                    else {
+                        return '未激活';
+                    }
+
+
+
+                }
+            }   
             , { field: 'TypeName', title: '课程类型', templet: '<div>{{d.CourseType.TypeName}}</div>' }   
             , { field: 'CourseCount', title: '课时', sort: true }
             , { field: 'right', title: '操作', toolbar: '#editBar', width: 250 }
@@ -108,6 +124,38 @@ layui.use(['table', 'layer','form'], function () {
 
                     return;
                 }
+
+                var loadindex = layer.load(1, { shade: false }); //0代表加载的风格，支持0-2
+
+                var ids = "";
+
+                for (var i = 0; i < checkStatus.data.length; i++) {
+                    ids += checkStatus.data[i].CurriculumID + ",";
+                }
+
+                $.post("/CourseSyllabus/Course/UsingOrProhibitCourse", { courseIds: ids }, function (result) {
+
+                    layer.close(loadindex);
+
+                    if (result.ErrorCode == 200) {
+
+                        layer.msg("成功!", { icon: 1 }, function () {
+
+                            table.reload('Courselist', {
+
+                            });
+
+                        });
+                    }
+                    else {
+                        layer.msg("失败!", { icon: 2}, function () {
+
+                           
+
+                        });
+                    }
+
+                });
 
                 break;
 

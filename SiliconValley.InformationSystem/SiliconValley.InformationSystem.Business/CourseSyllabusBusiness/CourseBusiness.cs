@@ -31,9 +31,12 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
         /// <returns></returns>
         public List<Curriculum> GetCurriculas()
         {
-
             return this.GetList().Where(d => d.IsDelete == false).ToList().OrderByDescending(d => d.CurriculumID).ToList();
+        }
 
+        public List<Curriculum> Curriculas() {
+
+            return this.GetList().OrderByDescending(d => d.CurriculumID).ToList();
         }
 
         /// <summary>
@@ -78,7 +81,7 @@ namespace SiliconValley.InformationSystem.Business.CourseSyllabusBusiness
 
             courseView.PeriodMoney = curriculum.PeriodMoney;
             courseView.Rmark = curriculum.Rmark;
-
+            courseView.IsDelete = (bool)curriculum.IsDelete;
 
             return courseView;
         }

@@ -112,8 +112,13 @@
             });
 
             form.on('select(course)', function (data) {
+
+                var loadindex = layer.load(1, { shade: false }); //0代表加载的风格，支持0-2
+
                 $("#teacher option").remove();
                 $.post("/CourseSyllabus/Course/goodSkillTeacher", { courseid: data.value  }, function (result) {
+
+                    layer.close(loadindex);
 
                     console.log(result);
 
@@ -126,7 +131,6 @@
                             option.val(result.Data[i].EmployeeId);
 
                             $("#teacher").append(option);
-
 
 
                         }
