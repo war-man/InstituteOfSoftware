@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// <returns></returns>
         public List<EmployeesInfo> GetEmpInfoData() {
             rc = new RedisCache();
-            //rc.RemoveCache("InRedisEmpInfoData");
+            rc.RemoveCache("InRedisEmpInfoData");
             List<EmployeesInfo> emplist = new List<EmployeesInfo>();
             if (emplist==null || emplist.Count()==0) {
                 emplist = this.GetList();
