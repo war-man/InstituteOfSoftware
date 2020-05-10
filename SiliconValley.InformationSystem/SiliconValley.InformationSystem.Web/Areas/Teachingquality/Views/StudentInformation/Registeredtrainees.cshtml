@@ -304,7 +304,7 @@
 
                     $("#Guardian").val(GuaSex[0])//亲属姓名
                     $("#StudentNumber").val(data.StudentNumber);//学号
-                    $("#Name").val(data.Name);//姓名
+                    $("#Name").val($.trim(data.Name));//姓名
                     $("#Telephone").val(data.Telephone);//电话
                     $("#Familyaddress").val(data.Familyaddress);//家庭住址
                     $("#WeChat").val(data.WeChat);//微信
@@ -465,14 +465,7 @@
 
 
             });//Guardian
-            //错误消息提示
-            function Errye(err) {
-                layer.msg(err, {
-                    time: 8000, //20s后自动关闭
-
-                    btn: ['确定']
-                });
-            }
+           
             //正在执行中
             function showLoad() {
 
@@ -544,9 +537,9 @@
                                 type: 'POST',
                                 async: true,
                                 cache: false,
-                                timeout: 2000,
+                              
                                 data: data.field,
-                                timeout: 1000,
+                              
                                 beforeSend: function () {//执行中
                                     i = showLoad();
                                 },
@@ -587,11 +580,7 @@
                                 }
                                 , error: function (xmlhttprequest, textstatus, message) {
                                     closeLoad(i);
-                                    layer.msg("您的网络出现问题，请稍后再试！！！", {
-                                        time: 5000, //20s后自动关闭
-
-                                        btn: ['确定']
-                                    });
+                             
                                     couer++;
                                 }
                             });
@@ -669,11 +658,7 @@
                                         }
                                         , error: function (xmlhttprequest, textstatus, message) {
                                             closeLoad(i);
-                                            layer.msg("您的网络出现问题，请稍后再试！！！", {
-                                                time: 5000, //20s后自动关闭
-
-                                                btn: ['确定']
-                                            });
+                                            
                                         }
                                     })
                                 } else {
@@ -739,7 +724,7 @@
                     form.render();
                     //$("Sex").val(data.StuSex);
 
-                    $("#Name").val(data.StuName);//姓名
+                    $("#Name").val($.trim(data.StuName));//姓名
 
                     $("#Telephone").val(data.StuPhone);//电话
 

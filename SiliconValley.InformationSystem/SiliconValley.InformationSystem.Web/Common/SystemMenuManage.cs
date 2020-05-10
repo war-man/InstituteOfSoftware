@@ -235,14 +235,22 @@ namespace SiliconValley.InformationSystem.Web
         /// 获取登陆人信息
         /// </summary>
         /// <returns></returns>
-        public static EmployeesInfo UserClass()
+        public static object UserClass()
         {
             //员工表
             EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
             //session["UserId"] = user.UserId;
             Base_UserBusiness base_UserBusiness = new Base_UserBusiness();
            var empid=  base_UserBusiness.GetList().Where(a => a.UserId == Operator.UserId).FirstOrDefault().EmpNumber;
-            return employeesInfoManage.GetEntity(empid);
+           var emp= employeesInfoManage.GetEntity(empid);
+            var x = new
+            {
+                emp.EmployeeId,
+                emp.EmpName,
+                employeesInfoManage.GetDeptByEmpid(emp.EmployeeId).DeptName,
+                emp.Image
+            };
+            return x;
             
         }
 

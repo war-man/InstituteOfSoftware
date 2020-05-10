@@ -14,13 +14,13 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <style>
-        .linu{
-            width:200px;
-          
+        .linu {
+            width: 100%;
         }
         .mysql{
-            margin-top:8px;
+            margin-top:12px;
         }
+      
     </style>
 </head>
 <body>
@@ -29,13 +29,13 @@
         <form class="layui-form" action="" id="form">
             <div class="layui-container">
                 <input type="text" value="@ViewBag.Student" name="StudentID" style="display:none;" />
-                <fieldset style="height:510px;">
+                <fieldset style="">
 
                     <legend>基础数据</legend>
 
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">班级名称</label>
-                        <div class="layui-input-block" style="">
+                        <div class="layui-input-inline" style="margin-top:8px;">
                             @Model.ClassNumber
 
                         </div>
@@ -81,10 +81,10 @@
                         </div>
                     </div>
                     <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 mysql">
-                        <label class="layui-form-label las">保费</label>
+                        <label class="layui-form-label las">保&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;费</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.premium, new Dictionary<string, object>() { { "class", "layui-input linu" }, { "lay-verify", "Amountofmoney" } })
-                            })
+
                         </div>
                     </div>
 
@@ -93,17 +93,18 @@
 
 
 
+
+
+
                 </fieldset>
-            </div>
-            <div class="layui-row layui-form-item" style="margin-top:20px;">
-                <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;margin-top:57px;">
                     <div class="layui-input-block">
                         <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
                         <button type="reset" id="butn" class="layui-btn layui-btn-primary">重置</button>
                     </div>
                 </div>
-
             </div>
+       
         </form>
     </div>
 </body>

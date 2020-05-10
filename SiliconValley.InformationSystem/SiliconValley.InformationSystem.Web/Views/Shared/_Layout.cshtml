@@ -335,8 +335,8 @@
             <div class="down">
                 <a href="#"><img id="Image" style="width:100px;height:100px;" /></a>
                 <a href="#"><span class=" name-caret" id="EmpName"></span></a>
-                <p id="EmployeeId"</p>
-
+                <p id="EmployeeId"></p>
+                <input type="text" id="EmpDeptName" style="display:none" />
                 <ul>
                     <li><a class="tooltips" href="#" id="EmpClass"><span style="color:aqua">信息更改</span><i class="lnr lnr-user"></i></a></li>
                     <li><a class="tooltips" href="#"><span style="color:aqua">开发中</span><i class="lnr lnr-cog"></i></a></li>
@@ -358,7 +358,7 @@
         </div>
         <div class="clearfix"></div>
     </div>
-
+   
     <script>
         //$("#menu").scroll(function () {
         //    console.log("a");
@@ -396,7 +396,7 @@
 
 
     </script>
-
+   
 </body>
 
 </html>
@@ -429,6 +429,7 @@
                 //~/uploadXLSXfile/EmpImage/1.jpg
                 $("#EmployeeId").text(data.EmployeeId);
                 $("#EmpName").text(data.EmpName);
+                $("#EmpDeptName").val(data.DeptName);
                 $("#Image").attr("src", "/uploadXLSXfile/EmpImage/" + data.Image)
             });
         }
@@ -444,6 +445,7 @@
         //console.log(MenuData);
         //调用加载菜单函数
         loadMenus();
+       
 
     });
     /**<li>

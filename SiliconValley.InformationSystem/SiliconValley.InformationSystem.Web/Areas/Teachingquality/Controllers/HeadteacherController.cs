@@ -138,8 +138,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             var data=new
             {
-                d1=ListClass.Select(c => new { value = c.id, title = c.ClassNumber }).ToList(),
-                d2= MyClass.Select(c => new { title= c.ClassNumber, value =c.id}).ToList()
+                d1=ListClass.Select(c => new { value = c.id, title = c.ClassNumber+"("+ ClasHead.GetClassGrand(c.id,222) + ")" }).ToList(),
+                d2= MyClass.Select(c => new { title= c.ClassNumber + "(" + ClasHead.GetClassGrand(c.id, 222) + ")", value =c.id}).ToList()
             };
             return Newtonsoft.Json.JsonConvert.SerializeObject(data);
             
@@ -196,9 +196,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult Teamleaderdistribution()
         {
-           ViewBag.ListTeam= Newtonsoft.Json.JsonConvert.SerializeObject(dbtext.ListTeamleaderdistributionView());
-            ViewBag.ListTeamleaderdistributionView = dbtext.ListTeamleaderdistributionView();
+          // ViewBag.ListTeam= Newtonsoft.Json.JsonConvert.SerializeObject(dbtext.ListTeamleaderdistributionView());
+           // ViewBag.ListTeamleaderdistributionView = dbtext.ListTeamleaderdistributionView();
             return View();
+        }
+        /// <summary>
+        /// 获取分布图数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ListTeam()
+        {
+            return Json(dbtext.ListTeamleaderdistributionView(), JsonRequestBehavior.AllowGet);
         }
         //班主任接班记录
         public ActionResult Successionrecord()

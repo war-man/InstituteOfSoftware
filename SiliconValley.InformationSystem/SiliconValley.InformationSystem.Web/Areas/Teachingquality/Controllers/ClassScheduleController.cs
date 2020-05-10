@@ -99,24 +99,24 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 counts++;
                 List<ClassSchedule> list = new List<ClassSchedule>();
-                if (user.UserName=="Admin")
-                {
+               // if (user.UserName=="Admin")
+                //{
                     list = dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false).ToList();
-                }
-                else
-                {
-                    var HadnID = Hadmst.GetList().Where(c => c.informatiees_Id == user.EmpNumber && c.IsDelete == false).FirstOrDefault();
-                    if (HadnID != null)
-                    {
-                        var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
-                        foreach (var item in x)
-                        {
-                            list.Add(dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false && a.id == item.ClassID).FirstOrDefault());
-                        }
-                    }
+               // }
+                //else
+                //{
+                //    var HadnID = Hadmst.GetList().Where(c => c.informatiees_Id == user.EmpNumber && c.IsDelete == false).FirstOrDefault();
+                //    if (HadnID != null)
+                //    {
+                //        var x = HeadClassEnti.GetList().Where(a => a.IsDelete == false && a.LeaderID == HadnID.ID).ToList();
+                //        foreach (var item in x)
+                //        {
+                //            list.Add(dbtext.GetList().Where(a => a.ClassStatus == false && a.IsDelete == false && a.id == item.ClassID).FirstOrDefault());
+                //        }
+                //    }
 
 
-                }
+                //}
             if (counts == 1)
             {
               list = list.Where(a => a.ClassstatusID==null).ToList();
@@ -849,9 +849,47 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return Json(data, JsonRequestBehavior.AllowGet);
            
         }
+        //添加活动视图
         public ActionResult AddClassactivities()
         {
             return View();
+        }
+        /// <summary>
+        /// 我的班级
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Myclass()
+        {
+            return View(dbtext.Headteacherdetails());
+        }
+        /// <summary>
+        /// 获取当前登陆人的班级
+        /// </summary>
+        /// <param name="EndTime"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult EmpClass(string EndTime)
+        {
+           bool  End=   EndTime == null ? true : false;
+            var EmpNumber = Base_UserBusiness.GetCurrentUser().EmpNumber;
+            var id = Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber && a.IsDelete == false).FirstOrDefault().ID;
+
+            var dataList = Hadmst.EmpClass(id, End).Select(a => new
+            {
+                //  a.BaseDataEnum_Id,
+                a.id,
+                ClassNumber = a.ClassNumber,
+                ClassRemarks = a.ClassRemarks,
+                ClassStatus = a.ClassStatus,
+                IsDelete = a.IsDelete,
+                grade_Id = Grandcontext.GetEntity(a.grade_Id).GrandName, //阶段id
+                
+            //Hadmst.HeadmastaerClassFine(a.id)==null?"未设置班主任": Hadmst.ClassHeadmaster(a.id).EmpName,
+                IsBool = classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault() == null ? "正常" : classtatus.GetList().Where(c => c.IsDelete == false && c.id == a.ClassstatusID).FirstOrDefault().TypeName,
+                stuclasss = Stuclass.GetList().Where(c => c.ID_ClassName == a.id && c.CurrentClass == true).Count()//班级人数
+            }).ToList();
+            return Json(dataList, JsonRequestBehavior.AllowGet);
         }
     }
 }
