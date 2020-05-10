@@ -106,9 +106,9 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// </summary>
         /// <param name="Name"></param>
         /// <returns></returns>
-        public bool FindSameName(string Name)
+        public bool FindSameName(string Name,int addreeid)
         {
-           Classroom find_c= GetSingData(Name, false);
+           Classroom find_c= GetIQueryable().Where(c=>c.ClassroomName.Equals(Name) && c.BaseData_Id==addreeid).FirstOrDefault();
             if (find_c==null)
             {
                 return false;

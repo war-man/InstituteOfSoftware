@@ -29,7 +29,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public List<StudentPutOnRecord> GetAllStudentKeepData()
         {
             redisCache = new RedisCache();
-            redisCache.RemoveCache("StudentKeepList");
+            //redisCache.RemoveCache("StudentKeepList");
             List<StudentPutOnRecord> get_studentkeep_list = new List<StudentPutOnRecord>();
             get_studentkeep_list = redisCache.GetCache<List<StudentPutOnRecord>>("StudentKeepList");
             if (get_studentkeep_list == null || get_studentkeep_list.Count == 0)

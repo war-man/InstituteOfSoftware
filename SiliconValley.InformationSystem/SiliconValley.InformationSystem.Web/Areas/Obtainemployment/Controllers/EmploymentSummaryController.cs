@@ -150,6 +150,28 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
         }
 
+        public ActionResult StuffEmploymentRatioData(string empnumber, string Year, string type, int page, int limit)
+        {
+            dbempStaffAndStu = new EmpStaffAndStuBusiness();
+            dbEmploymentStaff = new EmploymentStaffBusiness();
+            var stuff = dbEmploymentStaff.GetList().Where(d => d.EmployeesInfo_Id == empnumber).FirstOrDefault();
+            var alllist = dbempStaffAndStu.EmploymentRatio(Year:Year, StaffId: stuff.ID.ToString());
+
+            int count = 0;
+
+            List<EmpStaffAndStuView> resultlist = RatioData(alllist, type, page, limit, ref count);
+
+            var obj = new
+            {
+                code = 0,
+                msg = "",
+                count = count,
+                data = resultlist
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
         public List<EmpStaffAndStuView> RatioData(List<EmpStaffAndStu> sourse, string type, int page, int limit, ref int count)
         {
             List<EmpStaffAndStu> templist = new List<EmpStaffAndStu>();
@@ -255,7 +277,57 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             return View();
         }
 
-    
+        public ActionResult selectStuff()
+        {
+            return View();
+        }
+
+        public ActionResult StuffData(int page, int limit , string stuffName = null)
+        {
+            dbEmploymentStaff = new EmploymentStaffBusiness();
+
+            List<EmployeesInfo> list = new List<EmployeesInfo>();
+
+            List<EmployeesInfo> resutllist = new List<EmployeesInfo>();
+
+            var templist = dbEmploymentStaff.GetList();
+
+            foreach (var item in templist)
+            {
+                var tempempobj = dbEmploymentStaff.GetEmployeesInfoByID(item.EmployeesInfo_Id);
+
+                if (tempempobj != null)
+                    list.Add(tempempobj);
+            }
+
+            if (string.IsNullOrEmpty(stuffName))
+            {
+                if (list != null)
+                    resutllist.AddRange(list);
+            }
+
+            else
+            {
+                if (list != null)
+                {
+                   resutllist.AddRange( list.Where(d => d.EmpName.Contains(stuffName)).ToList());
+                }
+                    
+            }
+
+            var obj = new {
+
+                code = 0,
+                msg = "",
+                count = resutllist.Count,
+                data = resutllist.Skip((page - 1) * limit).Take(limit).ToList()
+            };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+
+        }
+
+
 
     }
 }

@@ -67,7 +67,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                     Classroom find_c= Classroom_Entity.GetSingData(c.ClassroomName, false);
                     if (find_c.Id==c.Id)
                     {
-                        Classroom_Entity.My_update(c);
+                        bool isorrid = Classroom_Entity.FindSameName(find_c.ClassroomName, Convert.ToInt32(find_c.BaseData_Id));
+                        if (!isorrid)
+                        {
+                            Classroom_Entity.My_update(c);
+                        }
+                        else
+                        {
+                            return Json("已有该教室!!!", JsonRequestBehavior.AllowGet);
+                        }
+                         
                     }
                     else
                     {
@@ -76,7 +85,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 }
                 else
                 {
-                   if(Classroom_Entity.FindSameName(c.ClassroomName))
+                   if(Classroom_Entity.FindSameName(c.ClassroomName,Convert.ToInt32( c.BaseData_Id)))
                     {
                         return Json("已有该教室!!!",JsonRequestBehavior.AllowGet);
                     }

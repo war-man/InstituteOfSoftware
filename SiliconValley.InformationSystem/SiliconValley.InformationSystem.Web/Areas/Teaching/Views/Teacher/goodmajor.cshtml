@@ -51,15 +51,15 @@
         <input type="hidden" id="teacherid" value="@ViewBag.Teacher.TeacherID" />
         @{
 
-            foreach (var item in ViewBag.majors)
+            foreach (var item in ViewBag.grands)
             {
                 <div class="layui-collapse" lay-filter="filter">
                     <div class="layui-colla-item">
-                        <h2 class="layui-colla-title" majorid="@item.Id">@item.SpecialtyName 系列课程 </h2>
+                        <h2 class="layui-colla-title" grandid="@item.Id">@item.GrandName 系列课程 </h2>
 
                         <div id="opinionContent" class="layui-colla-content coll" style="position:relative;">
                             <div id="adddiv" style="display:inline-block;">
-                                <a majorid="@item.Id" class="layui-btn layui-btn-primary addbtn" href="javascript:void(0);">  <i class="layui-icon">&#xe654;</i> 新技能</a>
+                                <a grandid="@item.Id" class="layui-btn layui-btn-primary addbtn" href="javascript:void(0);">  <i class="layui-icon">&#xe654;</i> 新技能</a>
                             </div>
 
                             <div id="content" style="display:inline-block;  ">
@@ -70,7 +70,7 @@
                 </div>
             }
 
-            <div class="layui-collapse" lay-filter="filter">
+            @*<div class="layui-collapse" lay-filter="filter">
                 <div class="layui-colla-item">
                     <h2 class="layui-colla-title" majorid="0">公共课</h2>
 
@@ -84,7 +84,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>*@
         }
 
 
@@ -132,18 +132,16 @@
 
                 if (data.show) {
                     //获取专业id
-                    var majorid = data.title[0].attributes["majorid"].nodeValue;
+                    var grandid = data.title[0].attributes["grandid"].nodeValue;
 
                     var teacherid = $("#teacherid").val();
                     //发送请求
 
-                    Ajax("/teaching/teacher/GetCurcousData", { teacherid: teacherid, majorid: majorid }, "post", function (result) {
+                    Ajax("/teaching/teacher/GetCurcousData", { teacherid: teacherid, grandid: grandid }, "post", function (result) {
 
                         if (result.ErrorCode == 200) {
 
                             $($(data.content).children()[1]).html("");
-
-                           
 
                             ///成功 渲染数据
 
@@ -152,7 +150,6 @@
                                 return;
 
                             }
-
 
                             for (var i = 0; i < result.Data.length; i++) {
 
@@ -195,13 +192,9 @@
                                             });
 
                                         layer.close(index);
-                                    });
-
-
-                                    
+                                    });  
 
                                 });
-
 
                                 btn.append(closebtn);
 
@@ -253,10 +246,10 @@
                 //获取teacherid
                 var teacherid = $("#teacherid").val();
 
-                var majorid = $(this).attr("majorid");
+                var granid = $(this).attr("grandid");
 
 
-                Ajax("/teaching/teacher/GetNewSkill", { majorid: majorid, teacherid: teacherid }, "post", function (result) {
+                Ajax("/teaching/teacher/GetNewSkill", { grandid: granid, teacherid: teacherid }, "post", function (result) {
 
 
                     if (result.Data.length == 0) {

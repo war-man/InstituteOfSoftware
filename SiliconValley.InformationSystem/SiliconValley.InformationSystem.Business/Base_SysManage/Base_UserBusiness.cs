@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Dynamic;
 using System.Linq.Expressions;
+using SiliconValley.InformationSystem.Entity.MyEntity;
 
 namespace SiliconValley.InformationSystem.Business.Base_SysManage
 {
@@ -282,6 +283,27 @@ namespace SiliconValley.InformationSystem.Business.Base_SysManage
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// 根据员工编号获取用户对象
+        /// </summary>
+        /// <param name="empid"></param>
+        /// <returns></returns>
+        public Base_User GetUserByEmpid(string empid)
+        {
+            var user = this.GetList().Where(s => s.EmpNumber == empid).FirstOrDefault();
+            return user;
+        }
+
+        /// <summary>
+        /// 根据用户获取员工对象
+        /// </summary>
+        /// <returns></returns>
+        public EmployeesInfo GetEmpByUser() {
+            var user = GetCurrentUser();
+            EmployeesInfoManage empmanage = new EmployeesInfoManage();
+            return empmanage.GetInfoByEmpID(user.EmpNumber);
         }
     }
 

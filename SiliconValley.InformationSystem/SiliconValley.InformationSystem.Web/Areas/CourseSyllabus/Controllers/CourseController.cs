@@ -55,24 +55,23 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
         /// <returns>课程json数据</returns>
         public ActionResult GetCourseData(int limit, int page)
         {
-            var list = db_course.GetCurriculas();
+            var list = db_course.Curriculas();
 
+            var skiplist = list.Skip((page - 1) * limit).Take(limit).ToList();
 
             List<CourseView> resultlist = new List<CourseView>();
 
-            foreach (var item in list)
+            foreach (var item in skiplist)
             {
                 resultlist.Add(db_course.ToCourseView(item));
             }
-
-            var count = resultlist.Count;
 
             var objresult = new
             {
                 code = 0,
                 msg = "",
-                count = count,
-                data = resultlist.Skip((page - 1) * limit).Take(limit)
+                count = list.Count,
+                data = resultlist
             };
 
 
@@ -529,42 +528,52 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
             {
                
                 TeacherBusiness dbteacher = new TeacherBusiness();
+
                  var list = dbteacher.GetTeachers(isContains_Jiaowu: false, IsNeedDimission:false);
+                var emplist = db_emp.GetAll();
+                //List<EmployeesInfo> emplist = new List<EmployeesInfo>();
+                //foreach (var item in list)
+                //{
+                //   var temp = db_emp.GetInfoByEmpID(item.EmployeeId);
 
-                List<EmployeesInfo> emplist = new List<EmployeesInfo>();
-                foreach (var item in list)
-                {
-                   var temp = db_emp.GetInfoByEmpID(item.EmployeeId);
+                //    if (temp != null)
+                //    {
+                //        emplist.Add(temp);
+                //    }
 
-                    if (temp != null)
-                    {
-                        emplist.Add(temp);
-                    }
-
-                }
-                
+                //}
 
                 BaseBusiness<GoodSkill> dbgoodskell = new BaseBusiness<GoodSkill>();
-                
 
-                
 
                 List<EmployeesInfo> resultlist = new List<EmployeesInfo>();
-                foreach (var item in emplist)
+                //foreach (var item in emplist)
+                //{
+                //    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+                //    if (teacher != null)
+                //    {
+                //        var templist = dbgoodskell.GetList().Where(d => d.TearchID == teacher.TeacherID && d.Curriculum == courseid).FirstOrDefault();
+
+                //        if (templist != null)
+                //        {
+
+                //            resultlist.Add(item);
+                //        }
+                //    }
+                //}
+                var templist = dbgoodskell.GetList().Where(d=>d.Curriculum == courseid).ToList();
+
+                foreach (var item in templist)
                 {
-                    var teacher = dbteacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+                   var teacher = list.Where(d => d.TeacherID == item.TearchID).FirstOrDefault();
 
-                    if (teacher != null)
-                    {
-                        var templist = dbgoodskell.GetList().Where(d => d.TearchID == teacher.TeacherID && d.Curriculum == courseid).FirstOrDefault();
+                   var emp = emplist.Where(d => d.EmployeeId == teacher.EmployeeId).FirstOrDefault();
 
-                        if (templist != null)
-                        {
-
-                            resultlist.Add(item);
-                        }
-                    }
+                    resultlist.Add(emp);
                 }
+
+
 
                 result.Msg = "成功";
                 result.Data = resultlist;
@@ -643,6 +652,42 @@ namespace SiliconValley.InformationSystem.Web.Areas.CourseSyllabus.Controllers
 
 
 
+        }
+
+        public ActionResult UsingOrProhibitCourse(string courseIds)
+        {
+            var temp1 = courseIds.Split(',');
+
+            var idlist = temp1.ToList();
+
+            idlist.RemoveAt(temp1.Length - 1);
+
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                foreach (var item in idlist)
+                {
+                    var tempobj = db_course.GetEntity(int.Parse(item));
+                    var isdel = tempobj.IsDelete;
+                    tempobj.IsDelete = !isdel;
+                    db_course.Update(tempobj);
+                }
+
+                result.ErrorCode = 200;
+                result.Data = null;
+                result.Msg = "成功";
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "失败";
+            }
+
+            return Json(result);
+           
         }
     }
 }

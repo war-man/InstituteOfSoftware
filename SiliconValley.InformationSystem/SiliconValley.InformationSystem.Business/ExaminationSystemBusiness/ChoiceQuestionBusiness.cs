@@ -267,11 +267,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 result.Title = title;
                 
                 //获取 是否单选
-                string IsRedio = sheet.GetRow(beginRowindex + 5).Cells[1].StringCellValue;
+                string IsRedio = sheet.GetRow(beginRowindex + 5).Cells[1].StringCellValue.Trim();
                 result.IsRadio = IsRedio == "是" ? true : false;
 
                 //获取 难度级别
-                string Level = sheet.GetRow(beginRowindex + 5).Cells[3].StringCellValue;
+                string Level = sheet.GetRow(beginRowindex + 5).Cells[3].StringCellValue.Trim();
 
                 switch (Level)
                 {
@@ -287,24 +287,29 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 }
 
                 // 获取 参考答案
-                string answer = sheet.GetRow(beginRowindex + 5).Cells[5].StringCellValue;
+                string answer = sheet.GetRow(beginRowindex + 5).Cells[5].StringCellValue.Trim();
                 result.Answer = answer;
 
                 // 获取 A 选项
-                string optionA = sheet.GetRow(beginRowindex + 7).Cells[1].StringCellValue;
+                var optionACell = sheet.GetRow(beginRowindex + 7).Cells[1];
+                string optionA = optionACell.CellType.ToString() == "Numeric" ? optionACell.NumericCellValue.ToString().Trim() : optionACell.StringCellValue.Trim();
                 result.OptionA = optionA;
 
 
                 // 获取 B 选项
-                string optionB = sheet.GetRow(beginRowindex + 10).Cells[1].StringCellValue;
+                var  optionBCell = sheet.GetRow(beginRowindex + 10).Cells[1];
+
+                string optionB = optionBCell.CellType.ToString() == "Numeric" ? optionBCell.NumericCellValue.ToString().Trim() : optionBCell.StringCellValue.Trim();
                 result.OptionB = optionB;
 
                 // 获取 C 选项
-                string optionC = sheet.GetRow(beginRowindex + 13).Cells[1].StringCellValue;
+                var optionCCell = sheet.GetRow(beginRowindex + 13).Cells[1];
+                string optionC = optionCCell.CellType.ToString() == "Numeric" ? optionCCell.NumericCellValue.ToString().Trim() : optionCCell.StringCellValue.Trim();
                 result.OptionC = optionC;
 
                 // 获取 D 选项
-                string optionD = sheet.GetRow(beginRowindex + 16).Cells[1].StringCellValue;
+                var optionDCell = sheet.GetRow(beginRowindex + 16).Cells[1];
+                string optionD = optionDCell.CellType.ToString() == "Numeric"? optionDCell.NumericCellValue.ToString().Trim() : optionDCell.StringCellValue.Trim();
                 result.OptionD = optionD;
 
             }
