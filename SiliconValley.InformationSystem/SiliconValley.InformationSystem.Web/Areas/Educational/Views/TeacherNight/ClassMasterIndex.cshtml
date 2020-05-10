@@ -29,8 +29,6 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
-
-@section script{
     <script>
         function TableFulsh() {
             layui.use('table', function () {
@@ -62,10 +60,12 @@
         }
 
         function EditDatebehind(olddate, newdate) {
+    
             var new_data = { "oldtime": olddate, "ids": ids, "IsAll": IsAll, "newtime": newdate };
             if (IsAll == true) {
-                var new_data = { "oldtime": date, "IsAll": IsAll, "newtime": newdate};
+                var new_data = { "oldtime": olddate, "IsAll": IsAll, "newtime": newdate};
             }
+            
             $.ajax({
                 url: '/Educational/TeacherNight/EditDateChangeFuntion',
                 data: new_data,
@@ -81,8 +81,6 @@
                 }
             });
         }
-
-
         layui.use('table', function () {
             var table = layui.table;
             var layer = layui.layer;
@@ -214,5 +212,5 @@
             });
         });
     </script>
-}
+ 
 

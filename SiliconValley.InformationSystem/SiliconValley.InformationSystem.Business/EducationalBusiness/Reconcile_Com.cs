@@ -220,17 +220,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public static List<EmployeesInfo> GetObtainTeacher()
         {
             List<EmployeesInfo> e_list = GetAllNoGoingEMP();
-            List<EmploymentStaff> f_list = EmploymentStaff_Entity.GetALl();
+            List<EmploymentStaff> f_list = EmploymentStaff_Entity.GetALl();//获取就业部的所有员工
             List<EmployeesInfo> list = new List<EmployeesInfo>();
-            foreach (EmployeesInfo item1 in e_list)
+            foreach (EmploymentStaff item1 in f_list)
             {
-                foreach (EmploymentStaff item2 in f_list)
+                EmployeesInfo find= e_list.Where(e => e.EmployeeId == item1.EmployeesInfo_Id).FirstOrDefault();
+                if (find!=null)
                 {
-                    if (item1.EmployeeId == item2.EmployeesInfo_Id)
-                    {
-                        list.Add(item1);
-                    }
+                    list.Add(find);
                 }
+                 
             }
             return list;
         }
