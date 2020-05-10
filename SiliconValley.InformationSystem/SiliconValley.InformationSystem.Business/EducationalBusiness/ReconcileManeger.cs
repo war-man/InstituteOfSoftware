@@ -27,17 +27,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<Reconcile> AllReconcile()
         {
-          
 
-            //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-            List<Reconcile> get_reconciles_list = new List<Reconcile>();
-            get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
-            if (get_reconciles_list == null || get_reconciles_list.Count == 0)
-            {
-                get_reconciles_list = this.GetList();
-                Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
-            }
-            return get_reconciles_list;
+            //List<Reconcile> get_reconciles_list = new List<Reconcile>();
+            //get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
+            //if (get_reconciles_list == null || get_reconciles_list.Count == 0)
+            //{
+            //    get_reconciles_list = this.GetList();
+            //    Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
+            //}
+            return SQLGetReconcileDate();
         }
         /// <summary>
         /// 获取单条数据
@@ -65,7 +63,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 {
                     this.Insert(r);
                     s = true;
-                    Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                   // Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 }
                 else
                 {
@@ -92,7 +90,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 Reconcile find_r = AllReconcile().Where(f => f.Id == r.Id).FirstOrDefault();
                 find_r.AnPaiDate = r.AnPaiDate;//日期                
                 a.Success = true;
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -121,7 +119,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     find_r.Rmark = r.ramak;
                     this.Update(find_r);
                     //清空缓存
-                    Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                    //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                     a.Success = true;
                     a.Msg = "编辑成功";
                 }
@@ -135,7 +133,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         find_r.Rmark = r.ramak;
                         this.Update(find_r);
                         //清空缓存
-                        Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                        //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                         a.Success = true;
                         a.Msg = "编辑成功";
                     }
@@ -174,7 +172,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             this.Update(find_r);
 
                             //清空缓存
-                            Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                            //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                             a.Success = true;
                             a.Msg = "编辑成功";
                         }
@@ -211,7 +209,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                     this.Update(item);
                 }
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 a.Success = true;
             }
             catch (Exception ex)
@@ -235,7 +233,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     this.Update(item);
                 }
                 a.Success = true;
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -303,50 +301,60 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         {
             List<EmployeesInfo> list = new List<EmployeesInfo>();
 
-            //s1，s2的班主任
+            //s1，s2,s3的班主任
             BaseBusiness<Headmaster> basemaster = new BaseBusiness<Headmaster>();
-            List<EmployeesInfo> elist = Reconcile_Com.GetAllNoGoingEMP();
+            //List<EmployeesInfo> elist = Reconcile_Com.GetAllNoGoingEMP();
             List<Headmaster> find_m = basemaster.GetList().Where(m => m.IsDelete == false && m.IsAttend == true).ToList();//获取没有辞职的可以上职素课的班主任
-            foreach (EmployeesInfo e1 in elist)
+            foreach (Headmaster e1 in find_m)
             {
-                foreach (Headmaster m1 in find_m)
+               EmployeesInfo findata= Reconcile_Com.Employees_Entity.GetEntity(e1.informatiees_Id);
+                if (findata!=null)
                 {
-                    if (m1.informatiees_Id == e1.EmployeeId)
+                    //判断这个班主任是否有课
+                    bool s = IsHaveClass(findata.EmployeeId, timename, time);
+                    if (s == false)
                     {
-                        //判断这个班主任是否有课
-                        bool s = IsHaveClass(e1.EmployeeId, timename, time);
-                        if (s == false)
-                        {
-                            list.Add(e1);
-                        }
+                        list.Add(findata);
                     }
                 }
+                //foreach (Headmaster m1 in find_m)
+                //{
+                //    if (m1.informatiees_Id == e1.EmployeeId)
+                //    {
+                //        //判断这个班主任是否有课
+                //        bool s = IsHaveClass(e1.EmployeeId, timename, time);
+                //        if (s == false)
+                //        {
+                //            list.Add(e1);
+                //        }
+                //    }
+                //}
             }
 
             //s3，s4的
             List<EmployeesInfo> list_saff = Reconcile_Com.GetObtainTeacher();//获取未辞职的就业部老师
-                                                                             //获取可以上职素的S3的教质老师
-            Department find_d = Reconcile_Com.GetDempt("s3教质部");
-            Position find_p = Reconcile_Com.GetPsit(find_d, "班主任");
-            List<EmployeesInfo> e_list = Reconcile_Com.Employees_Entity.GetList().Where(e => e.IsDel == false && e.PositionId == find_p.Pid).ToList();
-            List<Headmaster> head_list = Reconcile_Com.Headmaster_Etity.GetList().Where(h => h.IsAttend == true).ToList();
-            foreach (Headmaster i1 in head_list)
-            {
-                foreach (EmployeesInfo i2 in e_list)
-                {
-                    if (i1.informatiees_Id == i2.EmployeeId)
-                    {
-                        list_saff.Add(i2);
-                    }
-                }
-            }
+                                                                              
+           // Department find_d = Reconcile_Com.GetDempt("s3教质部");
+           // Position find_p = Reconcile_Com.GetPsit(find_d, "班主任");
+           // List<EmployeesInfo> e_list = Reconcile_Com.Employees_Entity.GetList().Where(e => e.IsDel == false && e.PositionId == find_p.Pid).ToList();
+            //List<Headmaster> head_list = Reconcile_Com.Headmaster_Etity.GetList().Where(h => h.IsAttend == true).ToList();
+            //foreach (Headmaster i1 in head_list)
+            //{
+            //    foreach (EmployeesInfo i2 in e_list)
+            //    {
+            //        if (i1.informatiees_Id == i2.EmployeeId)
+            //        {
+            //            list_saff.Add(i2);
+            //        }
+            //    }
+            //}
 
             foreach (EmployeesInfo item in list_saff)
             {
                 bool s = IsHaveClass(item.EmployeeId, timename, time);
                 if (s == false)
                 {
-                    list.Add(item);
+                    list.Add(item);//获取就业部空闲的老师
                 }
             }
 
@@ -635,7 +643,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 }
                 this.Insert(list);
                 s.Success = true;
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -954,7 +962,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 this.Delete(find_r);
                 a.Success = true;
                 a.Msg = "操作成功";
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -1060,7 +1068,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     index++;
                 }
                 //清空缓存
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 if (index == list.Count)
                 {
                     s = true;
@@ -1096,7 +1104,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     index++;
                 }
                 //清空缓存
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 if (index == reconciles.Count)
                 {
                     s = true;
@@ -1305,7 +1313,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         this.Update(item);
                     }
                     //清空缓存
-                    Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                    //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                     for (int i = 1; i <= addcount; i++)
                     {
                         Reconcile r = new Reconcile();
@@ -1356,7 +1364,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <returns></returns>
         public List<Reconcile> GetReconciles(DateTime time)
         {
-            return AllReconcile().Where(a => a.AnPaiDate == time).ToList();
+            return GetReconcileDate(time,false).Where(a => a.AnPaiDate == time).ToList();
         }
 
         /// <summary>
@@ -1902,7 +1910,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 a.Success = true;
                 this.Update(reconcile);
                 //清空缓存
-                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception)
             {
@@ -1914,6 +1922,41 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
+        /// <summary>
+        /// 获取某个日期的排课数据
+        /// </summary>
+        /// <param name="date">日期</param>
+        /// <param name="equsls">true--获取大于并等于该日期的数据，false--获取等于该日期的数据</param>
+        /// <returns></returns>
+        public List<Reconcile> GetReconcileDate(DateTime date,bool equsls)
+        {
+            string dd = date.Year + "-" + date.Month + "-" + date.Day;
+            if (equsls)
+            {
+                //大于等于该日期的数据
+                List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile where AnPaiDate>='"+dd+"'");
+                return list;
+            }
+            else
+            {
+                //等于该日期的数据
+                List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile where AnPaiDate='" + dd+"'");
+                return list;
+            }
+            
+        }
+        
+        /// <summary>
+        /// 通过sql语句获取所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<Reconcile> SQLGetReconcileDate()
+        {
+            List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile");
+
+            return list;
+        }
+        
         #endregion
     }
 }

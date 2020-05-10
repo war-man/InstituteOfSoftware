@@ -351,6 +351,7 @@
                         var curr = $("#childview_currname").val();
                         var mydata2 = { "Time": anpaiTime, "timeName": data.value, "Curr": curr, "class_id": classnumber }
                         if (type != "0") {
+                            var indexmy = layer.load(1);
                             if (type == "专业课") {
                                 $.ajax({
                                     url: '/Educational/Reconcile/GetTeacher',
@@ -363,6 +364,7 @@
                                             $('<option value=' + succ[i].Value + '>' + succ[i].Text + '</option>').appendTo(teacher_child);
                                             $("#childteacher_div").append(teacher_child);
                                         }
+                                        layer.close(indexmy);
                                         form.render(); //更新全部
                                     }
                                 });
@@ -382,8 +384,10 @@
                                                 $("#childteacher_div").append(teacher_child);
                                             }
                                             form.render(); //更新全部
+                                            layer.close(indexmy);
                                         } else {
                                             layer.msg("没有合适的老师!!!", { icon: 2, shade: 0.8 });
+                                            layer.close(indexmy);
                                         }
                                          
                                     }
@@ -525,7 +529,7 @@
                                 layer.close(indexof);
                                 layer.msg('操作成功！！！', { icon: 1, shade: 0.8 }, function () {
                                     //刷新表单
-                                    window.parent.TableFulsh();
+                                    // window.parent.TableFulsh();
                                     //关闭弹出层
                                     Myclose();
                                 });

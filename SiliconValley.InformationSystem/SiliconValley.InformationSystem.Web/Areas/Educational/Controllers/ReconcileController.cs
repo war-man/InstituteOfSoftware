@@ -921,14 +921,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             int class_id = Convert.ToInt32(Request.Form["class_select"]);
             string time = Request.Form["time"];
+            DateTime date1 =Convert.ToDateTime( Request.Form["date"]);
             BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
             int time2 = base_Entity.GetsameFartherData("上课时间类型").Where(b => b.Name == time).FirstOrDefault().Id;
             AjaxResult a = Reconcile_Com.ClassSchedule_Entity.Modifyclasstime(class_id, time2);
             if (a.Success == true)
             {
                 //修改调课单
-                DateTime dd = DateTime.Now;
-                string date = dd.Year + "-" + dd.Month + "-" + dd.Day;
+                
+                string date = date1.Year + "-" + date1.Month + "-" + date1.Day;
                 DateTime dd2 = Convert.ToDateTime(date);
                 List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
                 AjaxResult a2 = Reconcile_Entity.Update_data2(find_list, time);
