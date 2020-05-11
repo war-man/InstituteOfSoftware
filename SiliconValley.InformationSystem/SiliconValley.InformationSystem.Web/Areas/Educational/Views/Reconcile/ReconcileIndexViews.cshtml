@@ -15,27 +15,24 @@
             border: none;
         }
 
-        .BtnCss
+        .divCss1
         {
-            width: 200px;
-            height: 200px;
-            line-height: 200px;
-            text-align: center;
-            background-color: #009688;
-            cursor:pointer;
-            font-size:30px;
-            font-weight:700;
+            width: 90%;
+             margin:0px auto;
+             text-align:center;
         }
     </style>
 }
 
- 
-   <input id="Anan1" type="button" class="BtnCss"   value="专业课程排课"  />
-   <input id="Anan2" type="button" class="BtnCss" value="手动排课" />
-   <input id="Anan3" type="button" class="BtnCss" value="非专业课程排课"  />
+    <div class="divCss1">
+        <button id="Anan1" type="button" class="layui-btn"><i class="layui-icon">&#xe654;</i>专业课程排课 </button>
+        <button id="Anan2" type="button" class="layui-btn"><i class="layui-icon">&#xe654;</i>手动排课</button>
+        <button id="Anan3" type="button" class="layui-btn"><i class="layui-icon">&#xe654;</i>非专业课程排课</button>
+    </div>
+    
 
  
-@section script{
+ 
     <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
     <script>         
         $(function () {
@@ -88,5 +85,5 @@
 
         });
     </script>
-}
+ 
 

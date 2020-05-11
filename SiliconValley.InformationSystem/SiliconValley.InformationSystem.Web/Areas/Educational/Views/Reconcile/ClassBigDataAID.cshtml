@@ -95,15 +95,17 @@
 
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
-                console.log(data.field);
+                //console.log(data.field);
                 if (data.field.class_select == undefined || data.field.class_select == "0") {
                     layer.msg("请选择班级!!", { icon: 2, shade: 0.8 });
                 } else {
+                    var indexff = layer.load(1);
                      $.ajax({
                     url: '/Educational/Reconcile/ClassBigDataFunction',
                     type: 'POST',
                     data: data.field,
-                    success: function (sucdata) {
+                         success: function (sucdata) {
+                             layer.close(indexff);
                         if (sucdata == false) {
                             layer.msg('系统错误，请重试！！', { icon: 2 });
                         } else {

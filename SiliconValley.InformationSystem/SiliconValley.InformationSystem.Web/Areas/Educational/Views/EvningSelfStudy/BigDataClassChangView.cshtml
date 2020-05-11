@@ -91,6 +91,7 @@
 
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
+                var indexss = layer.load(1);
                 var check = $("input:checked");
                 var checkid_Str = "";
                 for (var i = 0; i < check.length; i++) {
@@ -102,6 +103,7 @@
                     type: 'POST',
                     data: new_data,
                     success: function (sucdata) {
+                        layer.close(indexss);
                         if (sucdata.Success == false) {
                             layer.msg('系统错误，请重试！！', { icon: 2 });
                         } else {
