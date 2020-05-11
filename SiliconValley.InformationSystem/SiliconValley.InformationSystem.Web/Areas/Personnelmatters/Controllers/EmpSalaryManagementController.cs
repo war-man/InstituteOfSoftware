@@ -190,6 +190,37 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             ViewBag.time = FirstTime;
             return View();
         }
+        /// <summary>
+        /// 判断某月份员工工资是否已确认审批
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult IsConfirmApproval(string time)
+        {
+            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();//员工月度工资
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var mtime = DateTime.Parse(time);
+                var msrlist = msrmanage.GetEmpMsrData().Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == mtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == mtime.Month).ToList();
+                if (msrlist.FirstOrDefault().IsApproval == true)
+                {
+                    AjaxResultxx.Data = "该月份员工工资已确认审批！";
+                    AjaxResultxx.Success = false;
+                }
+                else
+                {
+                    AjaxResultxx.Success = true;
+                }
+                AjaxResultxx.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx.ErrorCode = 500;
+                AjaxResultxx=msrmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
         [HttpPost]
         public ActionResult UpdateTime(string CurrentTime)
         {

@@ -10,6 +10,13 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     using SiliconValley.InformationSystem.Business.DepartmentBusiness;
     using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
     using SiliconValley.InformationSystem.Util;
+    using SiliconValley.InformationSystem.Business.Employment;
+    using SiliconValley.InformationSystem.Business.ClassesBusiness;
+    using SiliconValley.InformationSystem.Business.Consult_Business;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Business.FinanceBusiness;
+    using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
+    using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 
     /// <summary>
     /// 员工业务类
@@ -159,6 +166,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         public List<EmployeesInfo> GetAll() {
           return  this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
+
         /// <summary>
         /// 根据员工编号获取员工对象
         /// </summary>
@@ -290,7 +298,58 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                 employees = this.GetEmpInfoData().Where(e => e.EmpName == name).FirstOrDefault();
             }
             return employees;
-        }       
+        }
         #endregion
+
+        /// <summary>
+        /// 将员工加入对相应的部门
+        /// </summary>
+        /// <param name="emp"></param>
+        /// <returns></returns>
+        public bool AddEmpToCorrespondingDept(EmployeesInfo emp) {
+            bool result = true;
+            var dname = this.GetDept(emp.PositionId).DeptName;//获取该员工所属部门名称
+            var pname = this.GetPosition(emp.PositionId).PositionName;//获取该员工所属岗位名称
+            if (dname.Equals("就业部"))
+            {
+                EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
+                result = esmanage.AddEmploystaff(emp.EmployeeId);//给就业部员工表添加员工
+            }
+            if (dname.Equals("市场部"))
+            {
+                ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
+                result = csmanage.AddChannelStaff(emp.EmployeeId);
+            }//给市场部员工表添加员工
+            if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
+            {
+                HeadmasterBusiness hm = new HeadmasterBusiness();
+                result = hm.AddHeadmaster(emp.EmployeeId);
+            }//给两个教质部员工表添加除教官外的员工
+            if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
+            {
+                InstructorListBusiness itmanage = new InstructorListBusiness();
+                result = itmanage.AddInstructorList(emp.EmployeeId);
+            }//给教官员工表添加教官
+            if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
+            {
+                ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
+                result = cmanage.AddConsultTeacherData(emp.EmployeeId);
+            }//给咨询部员工表添加除咨询助理外的员工
+            if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))//给三个教学部员工表添加员工
+            {
+                TeacherBusiness teamanage = new TeacherBusiness();
+                Teacher tea = new Teacher();
+                tea.EmployeeId = emp.EmployeeId;
+                result = teamanage.AddTeacher(tea);
+            }
+            if (dname.Equals("财务部"))
+            {
+                FinanceModelBusiness fmmanage = new FinanceModelBusiness();
+                result = fmmanage.AddFinancialstaff(emp.EmployeeId);
+            }//给财务部员工表添加员工
+            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+            result = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
+            return result;
+        }
     }
 }

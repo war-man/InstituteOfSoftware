@@ -136,6 +136,36 @@
                         TimeandDaysChange();
                         break;
                     case 'Approved':
+                          var time = '@ViewBag.yearandmonth';
+                        if (JSON.stringify(time) == "{}") {
+                            $.ajax({
+                                type: "post",
+                                dataType: "json",
+                                url: "/Personnelmatters/AttendanceStatistics/IsConfirmApproval",
+                                data: time,
+                                //报错请加入以下三行，则ajax提交无问题
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                                success: function (data) {
+                                    if (data.ErrorCode == 200) {
+                                        if (data.Success) {
+                                            ConfirmApproval(time);
+                                        } else {
+                                            layer.alert(data.Data, { icon: 1 }, function (index) {
+                                                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                                                window.parent.location.reload();
+                                                parent.layer.close(index);
+                                            });
+                                        }
+                                    } else {
+                                        layer.msg("系统错误,请联系后台管理员!");
+                                    }
+                                }
+                            });
+                        } else {
+                            layer.msg("没有数据可审批!");
+                        } 
                         break;
                 };
             });
@@ -212,7 +242,7 @@
 
         }
 
-        //年月份/应到勤天数改变
+        //年月份/应到勤天数改变（查看记录）
         function TimeandDaysChange() {
             layui.use(['layer'], function (args) {
                 var layer = layui.layer;      //layui对象

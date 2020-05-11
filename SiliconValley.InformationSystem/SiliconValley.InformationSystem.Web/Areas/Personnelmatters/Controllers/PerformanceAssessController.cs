@@ -100,7 +100,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.SuperiorGrade,
                              e.FinalGrade,
                              e.Remark,
-                             e.IsDel
+                             e.IsDel,
+                             e.IsApproval
                              #endregion
                          };
 
@@ -148,7 +149,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// 编辑员工绩效考核数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult EditEmpPFAssess(int id)
         {
             var mc = mcmanage.GetEntity(id);
@@ -176,7 +181,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 mc.SuperiorGrade,
                 mc.FinalGrade,
                 mc.Remark,
-                mc.IsDel
+                mc.IsDel,
+                mc.IsApproval
             };
             return Json(mcobj, JsonRequestBehavior.AllowGet);
         }
@@ -190,6 +196,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 mc.EmployeeId = m.EmployeeId;
                 mc.YearAndMonth = m.YearAndMonth;
                 mc.IsDel = m.IsDel;
+                mc.IsApproval = m.IsApproval;
                 mcmanage.Update(mc);
                 rc.RemoveCache("InRedisMCData");
                 AjaxResultxx = mcmanage.Success();
@@ -201,6 +208,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// 批量添加绩效数据
+        /// </summary>
+        /// <returns></returns>
         public ActionResult AddMCEmps()
         {
             return View();
@@ -226,6 +238,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         mc.FinalGrade = 100;
                     }
                     mc.IsDel = false;
+                    mc.IsApproval = false;
                     mcmanage.Insert(mc);
                     rc.RemoveCache("InRedisMCData");
                 }
@@ -239,6 +252,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+
+        /// <summary>
+        /// 判断某月份员工工资是否已确认审批
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult IsConfirmApproval(string time)
+        {
+            MeritsCheckManage mcmanage = new MeritsCheckManage();//员工月度工资
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var mtime = DateTime.Parse(time);
+                var msrlist = mcmanage.GetEmpMCData().Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == mtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == mtime.Month).ToList();
+                if (msrlist.FirstOrDefault().IsApproval == true)
+                {
+                    AjaxResultxx.Data = "该月份员工绩效考核已确认审批！";
+                    AjaxResultxx.Success = false;
+                }
+                else
+                {
+                    AjaxResultxx.Success = true;
+                }
+                AjaxResultxx.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx.ErrorCode = 500;
+                AjaxResultxx = mcmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
+        }
         /// <summary>
         /// 确认审批（确认审批过的数据不可再编辑）
         /// </summary>
