@@ -87,7 +87,8 @@
 
             //监听提交
             form.on('submit(Update_CBig)', function (data) {
-                if (data.field.class_select == "0" || data.field.classselect == undefined) {
+              //  console.log(data);
+                if (data.field.class_select == "0" || data.field.class_select == undefined) {
                     layer.msg('请选择班级!!!', { icon: 2, shade: 0.8 });
                 } else {
                     $.ajax({

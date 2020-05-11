@@ -30,6 +30,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             //获取所有老师
             Teacher_Entity = new TeacherBusiness();
+            List<SelectListItem> teacherlist = new List<SelectListItem>();
+            List<Teacher> teacher=  Teacher_Entity.GetTeachers();
+
+
 
             return View();
         }

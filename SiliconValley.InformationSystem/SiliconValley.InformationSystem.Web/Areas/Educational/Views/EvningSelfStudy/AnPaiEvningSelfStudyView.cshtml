@@ -237,11 +237,13 @@
                 if (data.field.mytime.length <= 0) {
                     layer.msg('请选择日期！！', { icon: 2 });
                 } else {
-                     $.ajax({
-                    url: '/Educational/EvningSelfStudy/HnadEvningSelfStudyFunction',
-                    type: 'POST',
-                    data: data.field,
-                    success: function (sucdata) {
+                    var indexss = layer.load(1);
+                    $.ajax({
+                        url: '/Educational/EvningSelfStudy/HnadEvningSelfStudyFunction',
+                        type: 'POST',
+                        data: data.field,
+                        success: function (sucdata) {
+                            layer.close(indexss);
                         if (sucdata.Success == false) {
                             layer.msg('安排失败！！！,请重试', {icon:2});
                             MyClose();

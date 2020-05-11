@@ -56,12 +56,13 @@
             });
             //监听提交
             form.on('submit(Update_Big)', function (data) {
-
+                var indexof = layer.load(1);
                 $.ajax({
                     url: '/Educational/Reconcile/ChangReconcileFunction',
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {
+                        layer.close(indexof);
                         if (sucdata == false) {
                             layer.msg('系统错误，请重试！！', { icon: 2 });
                         } else {
