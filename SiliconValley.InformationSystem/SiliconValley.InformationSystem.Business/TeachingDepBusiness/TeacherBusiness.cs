@@ -183,6 +183,25 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        public List<EmployeesInfo> GetTeacherEmps(bool isContains_Jiaowu = false, bool IsNeedDimission = false)
+        {
+            var teachers =  this.GetTeachers(isContains_Jiaowu: isContains_Jiaowu, IsNeedDimission: IsNeedDimission);
+
+            List<EmployeesInfo> result = new List<EmployeesInfo>();
+
+            teachers.ForEach(d=> 
+            {
+                var emp = GetEmpByEmpNo(d.EmployeeId);
+
+                if (emp != null)
+
+                    result.Add(emp);
+
+            });
+
+            return result;
+
+        }
 
         /// <summary>
         /// 是否离职
