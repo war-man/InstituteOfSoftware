@@ -1058,21 +1058,25 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             int index = 0;
             try
             {
-                List<Reconcile> list = new List<Reconcile>();
-                List<Reconcile> reconciles = AllReconcile().Where(r => r.AnPaiDate >= date).ToList();
-
-                foreach (Reconcile re in list)
+                List<Reconcile> reconciles = GetReconcileDate(date, true);
+                List<Reconcile> Recon = new List<Reconcile>();
+                foreach (Reconcile re in reconciles)
                 {
                     re.AnPaiDate = re.AnPaiDate.AddDays(days);
-                    this.Update(re);
+                    Recon.Add(re);
+                   
                     index++;
                 }
+
+                this.Update(Recon);
+
                 //清空缓存
                 //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                if (index == list.Count)
-                {
-                    s = true;
-                }
+                //if (index == list.Count)
+                //{
+                //    s = true;
+                //}
+                s = true;
             }
             catch (Exception)
             {
@@ -1096,19 +1100,22 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             int index = 0;
             try
             {
-                List<Reconcile> reconciles = AllReconcile().Where(r => r.AnPaiDate >= date && r.ClassSchedule_Id == class_id).ToList();
+                List<Reconcile> recon = new List<Reconcile>();
+                List<Reconcile> reconciles = GetReconcileDate(date,true).Where(r =>r.ClassSchedule_Id == class_id).ToList();
                 foreach (Reconcile re in reconciles)
                 {
                     re.AnPaiDate = re.AnPaiDate.AddDays(days);
-                    this.Update(re);
+                    recon.Add(re);
                     index++;
                 }
                 //清空缓存
                 //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
-                if (index == reconciles.Count)
-                {
-                    s = true;
-                }
+                //if (index == reconciles.Count)
+                //{
+                //    s = true;
+                //}
+                this.Update(recon);
+                s = true;
             }
             catch (Exception)
             {

@@ -9,6 +9,7 @@ using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
 using SiliconValley.InformationSystem.Entity.Entity;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.Employment;
 
 namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 {
@@ -353,6 +354,43 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        
+        /// <summary>
+        /// 获取就业部跟班主任老师
+        /// </summary>
+        /// <returns></returns>
+        public List<EmployeesInfo> GEThEADmASTER()
+        {
+            HeadmasterBusiness headmaster = new HeadmasterBusiness();
+           
+
+            EmploymentStaffBusiness employmentStaff = new EmploymentStaffBusiness();
+
+            List<EmploymentStaff> list2=  employmentStaff.GetIQueryable().ToList();
+
+            EmployeesInfoManage emp = new EmployeesInfoManage();
+
+            List<EmployeesInfo> result = new List<EmployeesInfo>();
+
+            List<Headmaster> list = headmaster.GetIQueryable().ToList();//获取所有班主任
+            list.ForEach(h =>
+            {
+                EmployeesInfo e = emp.GetEntity(h.informatiees_Id);
+                if (e!=null)
+                {
+                    result.Add(e);
+                }
+            }
+            );
+
+            list2.ForEach(f=> {
+                EmployeesInfo e = emp.GetEntity(f.EmployeesInfo_Id);
+                if (e != null)
+                {
+                    result.Add(e);
+                }
+            });
+
+            return result;
+        }
     }
 }

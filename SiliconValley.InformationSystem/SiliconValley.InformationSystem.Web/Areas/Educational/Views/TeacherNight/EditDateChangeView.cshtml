@@ -17,13 +17,13 @@
     <div style="margin-top:20px;margin-left:auto;margin-right:auto;width:90%">
         <form id="addmaster_form" class="layui-form" lay-filter="addmaster_form" >
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                @*<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="LableCss1">原来日期:</label>
                     <div class="layui-input-block">
                         <input type="text" id="oldtime" name="oldtime" class="layui-input" lay-verify="required" />
                     </div>
-                </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                </div>*@
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="LableCss1">值班日期:</label>
                     <div class="layui-input-block">
                         <input type="text" id="newtime" name="newtime" class="layui-input" lay-verify="required" />
@@ -46,11 +46,6 @@
             var laydate = layui.laydate;
 
             laydate.render({
-                elem: '#oldtime'
-                , trigger: 'click'
-            });
-
-            laydate.render({
                 elem: '#newtime'
                 , trigger: 'click'
             });
@@ -66,9 +61,8 @@
         }
 
         function TIJIAO() {
-            var oldtime = $("#oldtime").val();
             var newtime = $("#newtime").val();
-            window.parent.EditDatebehind(oldtime, newtime);
+            window.parent.EditDatebehind(newtime);
                 Myclose();
                 return false;            
         }
