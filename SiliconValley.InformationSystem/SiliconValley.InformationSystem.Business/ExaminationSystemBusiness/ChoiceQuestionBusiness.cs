@@ -86,8 +86,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             if (IsNeedProposition)
             {
                 //获取命题人
-               
-                var empid = db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == multipleChoiceQuestion.Proposition).FirstOrDefault().EmployeeId;
+
+                var empid =  db_teacher.GetEntity(multipleChoiceQuestion.Proposition).EmployeeId;
                 choiceQuestionTableView.Proposition = db_emp.GetList().Where(d=>d.EmployeeId == empid).FirstOrDefault();
             }
             else

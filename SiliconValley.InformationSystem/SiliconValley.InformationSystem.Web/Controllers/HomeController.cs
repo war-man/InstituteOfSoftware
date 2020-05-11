@@ -24,6 +24,8 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
         public DateTime birthday { get; set; }
     }
+
+   
     //[CheckLogin]
     public class HomeController : Controller
     {
@@ -37,9 +39,10 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             var list = brole.GetList();
             return View(list);
         }
-
+       
         public ActionResult About()
         {
+            
 
             ViewBag.Message = "Your application description page.";
 

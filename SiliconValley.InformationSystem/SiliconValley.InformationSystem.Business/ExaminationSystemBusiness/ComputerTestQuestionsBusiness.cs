@@ -61,7 +61,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (IsNeedProposition)
             {
-                var empid = db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == machTestQuesBank.Proposition).FirstOrDefault().EmployeeId;
+
+                var empid = db_teacher.GetEntity(machTestQuesBank.Proposition).EmployeeId;
                 computerTestQuestionsView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == empid).FirstOrDefault();
 
             }

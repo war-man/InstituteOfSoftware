@@ -115,7 +115,7 @@
                             $("#course").append(new Option("请选择项目", ""));
                             $.each(resultData, function (index, item) {
                                 var grand_ = item.Grand == null ? "" : item.Grand.GrandName;
-                                var namaC = item.CourseName + '(' + grand_')'
+                                var namaC = item.CourseName + '(' + grand_ + ')';
                                 //赋值
                                 $('#course')
                                     .append(new Option(namaC, item.CurriculumID));
@@ -131,7 +131,7 @@
             layui.form.render("select");
 
             form.on('submit(submit)', function (data) {
-
+                var loadindex = layer.load(1); //换了种风格
                 console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
 
                 //获取文件
@@ -169,6 +169,8 @@
                         dataType: "json",//返回的数据格式
                         data: fd,
                         success: function (result) {
+
+                            layer.close(loadindex);
 
                             if (result.ErrorCode == 200) {
 

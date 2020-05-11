@@ -136,79 +136,72 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         /// 获取所有教员
         /// </summary>
         /// <returns></returns>
-        public List<Teacher> GetTeachers(bool isContains_Jiaowu = false ,bool  IsNeedDimission = false)
+        public List<Teacher> GetTeachers(bool isContains_Jiaowu = false, bool IsNeedDimission = false)
         {
-          
+
             List<Teacher> resultlist = new List<Teacher>();
 
             //从缓存中获取
             RedisCache redisCache = new RedisCache();
-            
+
             resultlist = redisCache.GetCache<List<Teacher>>("TeacherList");
-            
+
 
             if (resultlist == null || resultlist.Count == 0)
             {
 
                 resultlist = new List<Teacher>();
 
-
-               
                 var temp2 = this.GetList().ToList();
 
                 resultlist.AddRange(temp2);
-                
+
                 redisCache.SetCache("TeacherList", resultlist);
             }
 
-
-            List<Teacher> returnlist = new List<Teacher>();
-
             if (IsNeedDimission == false)
             {
-                //不需要离职的
-                var temp1 = resultlist.Where(d => d.IsDel == false).ToList();
-
-                returnlist.AddRange(temp1);
-
+                // 去除离职
+                resultlist.Where(db_convertCourse => db_convertCourse.IsDel == true).ToList().ForEach(d => resultlist.Remove(d));
             }
 
-            else
+            resultlist.ForEach(d =>
             {
-                //需要离职的
-                returnlist.AddRange(resultlist);
-            }
+                var posi = db_emp.GetPositionByEmpid(d.EmployeeId);
 
-            if (isContains_Jiaowu)
-            {
-                return returnlist.OrderByDescending(d => d.TeacherID).ToList();
-            }
-
-            //排除掉教务
-
-            List<Teacher> returnlist1 = new List<Teacher>();
-
-            foreach (var item in returnlist)
-            {
-               var emp = this.GetEmpByEmpNo(item.EmployeeId);
-
-                var empview = this.ConvertToEmpDetailView(emp);
-
-                if (empview != null)
+                if (posi.PositionName.Contains("教务"))
                 {
-                    if (!empview.PositionId.PositionName.Contains("教务"))
-                    {
-                        returnlist1.Add(item);
-                    }
+                    var index = resultlist.IndexOf(d);
+
+                    resultlist.RemoveAt(index);
                 }
 
-            }
+            });
 
-            return returnlist1.OrderByDescending(d => d.TeacherID).ToList();
+            return resultlist.OrderByDescending(d => d.TeacherID).ToList();
 
 
         }
 
+        public List<EmployeesInfo> GetTeacherEmps(bool isContains_Jiaowu = false, bool IsNeedDimission = false)
+        {
+            var teachers =  this.GetTeachers(isContains_Jiaowu: isContains_Jiaowu, IsNeedDimission: IsNeedDimission);
+
+            List<EmployeesInfo> result = new List<EmployeesInfo>();
+
+            teachers.ForEach(d=> 
+            {
+                var emp = GetEmpByEmpNo(d.EmployeeId);
+
+                if (emp != null)
+
+                    result.Add(emp);
+
+            });
+
+            return result;
+
+        }
 
         /// <summary>
         /// 是否离职
@@ -228,8 +221,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         public EmployeesInfo GetEmpByEmpNo(string EmpNo)
         {
 
-
-            return db_emp.GetList().Where(d => d.EmployeeId == EmpNo).FirstOrDefault();
+            return db_emp.GetEntity(EmpNo);
         }
 
 

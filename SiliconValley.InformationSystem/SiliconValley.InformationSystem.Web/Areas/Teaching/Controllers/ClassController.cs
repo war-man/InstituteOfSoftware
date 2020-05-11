@@ -46,7 +46,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
 
-            var teacher = db_teacher.GetTeachers().Where(d=>d.EmployeeId==user.EmpNumber).FirstOrDefault();
+            var teacherlist = db_teacher.GetTeachers();
+
+            var teacher = teacherlist.Where(d=>d.EmployeeId==user.EmpNumber).FirstOrDefault();
 
             var myclasslist =  db_teacherclass.GetCrrentMyClass(teacher.TeacherID);
 
@@ -63,41 +65,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             // 
 
-            List<ClassTableView> classlist = new List<ClassTableView>();
-
-            SatisfactionSurveyBusiness dd = new SatisfactionSurveyBusiness();
-
-           var emplist = dd.GetMyDepEmp(user);
-            foreach (var item in emplist)
-            {
-               var tempteacher =  db_teacher.GetTeachers().Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
-
-                if (tempteacher != null)
-                {
-                   var tempteachaerclass = db_teacherclass.GetCrrentMyClass(tempteacher.TeacherID);
-
-                    foreach (var item1 in tempteachaerclass)
-                    {
-                        var temp = db_teacherclass.GetClassTableView(item1);
-
-                        if (temp != null  && resultlist.Where(d=>d.classid == temp.classid).FirstOrDefault()==null)
-                            classlist.Add(temp);
-                    }
-                    
-                }
-               
-            }
-
-            
-
-
-
-
-            ViewBag.Fclasslist = classlist;
-
-
-
-
+            //ViewBag.Fclasslist = classlist;
 
 
             ViewBag.classlist = resultlist;
@@ -107,8 +75,57 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
 
 
+        public ActionResult LoadOtherClass()
+        {
+            AjaxResult result = new AjaxResult();
 
-        
+            try
+            {
+                var teacherlist = db_teacher.GetTeachers();
+
+                Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+
+                List<ClassTableView> classlist = new List<ClassTableView>();
+
+                SatisfactionSurveyBusiness dd = new SatisfactionSurveyBusiness();
+
+                var emplist = dd.GetMyDepEmp(user);
+
+                foreach (var item in emplist)
+                {
+                    if (item.EmployeeId != user.EmpNumber)
+                    {
+                        var tempteacher = teacherlist.Where(d => d.EmployeeId == item.EmployeeId).FirstOrDefault();
+
+                        if (tempteacher != null)
+                        {
+                            var tempteachaerclass = db_teacherclass.GetCrrentMyClass(tempteacher.TeacherID);
+
+                            foreach (var item1 in tempteachaerclass)
+                            {
+                                var temp = db_teacherclass.GetClassTableView(item1);
+
+                                classlist.Add(temp);
+                            }
+                        }
+                    }
+                }
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = classlist;
+            }
+            catch (Exception)
+            {
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
 
         /// <summary>
         /// 获取班级学员
@@ -126,15 +143,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             List<StudentDetailView> resultlist = new List<StudentDetailView>();
 
-            foreach (var item in list)
-            {
-               var temp = db_teacherclass.GetStudetentDetailView(item);
+            //foreach (var item in list)
+            //{
+            //   var temp = db_teacherclass.GetStudetentDetailView(item);
 
-                if (temp != null)
-                    resultlist.Add(temp);
-            }
+            //    if (temp != null)
+            //        resultlist.Add(temp);
+            //}
 
-            return Json(resultlist, JsonRequestBehavior.AllowGet);
+            return Json(list, JsonRequestBehavior.AllowGet);
 
         }
 

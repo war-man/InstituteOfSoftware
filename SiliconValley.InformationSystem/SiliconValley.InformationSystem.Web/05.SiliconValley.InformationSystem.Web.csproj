@@ -3323,6 +3323,7 @@
     <Content Include="Tree\maps\mideast.json" />
     <Content Include="Tree\maps\risk.json" />
     <Content Include="Tree\maps\usofa.json" />
+    <Content Include="Views\Login\SLogin.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

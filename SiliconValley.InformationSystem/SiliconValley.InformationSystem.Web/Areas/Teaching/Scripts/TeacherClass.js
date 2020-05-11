@@ -27,6 +27,31 @@ function GetClassInfo(classnumber,successcallback, errorcallback) {
 }
 
 
+function loadOtherClass() {
+
+    $.get("/Teaching/Class/LoadOtherClass", function (result) {
+
+        if (result.ErrorCode == 200) {
+
+
+            for (var i = 0; i < result.Data.length; i++) {
+
+
+                var classinfohtml = _.template($("#otherClass").html());
+
+                var classdata = classinfohtml({ classid: result.Data[i].classid, classnumber: result.Data[i].ClassNumber, grandname: result.Data[i].GradeName });
+
+                $("#otherclass").append($(classdata));
+            }
+        }
+       
+    });
+
+
+
+
+}
+
 ///渲染班级信息
 function loadclassinfohtml(data) {
 
@@ -117,6 +142,8 @@ layui.use(["table", "layer", "element"], function () {
     var layer = layui.layer;
     var element = layui.element;
 
+    loadOtherClass();
+
     element.init();
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -183,7 +210,7 @@ layui.use(["table", "layer", "element"], function () {
             for (var i = 0; i < data.length; i++) {
                 var studenthtml = _.template($("#studenthtml").html());
 
-                var studentdata = studenthtml({ studentnumber: data[i].StudentNumber, studentname: data[i].Name, posi: data[i].PositionName });
+                var studentdata = studenthtml({ studentnumber: data[i].StudentNumber, studentname: data[i].Name/*, posi: data[i].PositionName */});
 
                 $("#studentlist").append($(studentdata));
             }
@@ -203,8 +230,7 @@ layui.use(["table", "layer", "element"], function () {
 
     //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     //班级按钮的点击事件
-    $(".classbtn").click(function () {
-
+    $(document).off("click", ".classbtn").on("click", ".classbtn", function () {
 
 
 

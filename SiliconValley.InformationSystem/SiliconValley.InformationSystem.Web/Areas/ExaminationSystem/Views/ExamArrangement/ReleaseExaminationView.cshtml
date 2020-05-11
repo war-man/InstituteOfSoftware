@@ -44,7 +44,7 @@
                                 @{
                                     foreach (var item in ViewBag.ExamTypes as List<ExamTypeView>)
                                     {
-                                        <option grandid="@item.GrandID.Id" typeid="@item.ID" value="@item.ID">@item.TypeName.TypeName (@item.GrandID.GrandName)</option>
+                                        <option grandid="@item.GrandID.Id" typeid="@item.TypeName.ID" value="@item.ID">@item.TypeName.TypeName (@item.GrandID.GrandName)</option>
                                     }
                                 }
                             </select>
@@ -156,7 +156,7 @@
 
                 });
 
-
+              
                 if (type == "2") {
 
 

@@ -281,6 +281,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             }
 
             temp.MarkingTeacher = empid;
+
             db_markingArrange.Update(temp);
         }
 

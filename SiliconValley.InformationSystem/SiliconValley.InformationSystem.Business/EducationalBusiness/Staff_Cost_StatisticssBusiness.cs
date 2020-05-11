@@ -195,11 +195,17 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
                     HeadmasterBusiness temphead_db = new HeadmasterBusiness();
                     var headmaster = temphead_db.GetList().Where(d => d.informatiees_Id == emp.EmployeeId).FirstOrDefault();
-                    //根据员工筛选数据
 
-                    var resultlist = templist.Where(d => d.Trainee == headmaster.ID).ToList();
+                    if (headmaster != null)
+                    {
+                        //根据员工筛选数据
 
-                    result = resultlist.Count;
+                        var resultlist = templist.Where(d => d.Trainee == headmaster.ID).ToList();
+
+                        result = resultlist.Count;
+                    }
+
+                    return 0;
                 }
 
                 if (dep.DeptName.Contains("教学"))
@@ -462,6 +468,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             ExamScoresBusiness db_exscore = new ExamScoresBusiness();
 
             Teacher t = teacher();
+
+            if (t == null)
+            {
+                return resultlist;
+            }
 
             resultlist = db_exscore.AllExamScores().
 
