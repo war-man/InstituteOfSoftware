@@ -9,4 +9,10 @@
   <exam id="1012">
     <course id="1034" />
   </exam>
+  <exam id="1012">
+    <course id="11" />
+  </exam>
+  <exam id="1013">
+    <course id="11" />
+  </exam>
 </root>

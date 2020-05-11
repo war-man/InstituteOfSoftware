@@ -1392,6 +1392,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
             try
             {
+
+
                 TeacherBusiness dbteacher = new TeacherBusiness();
 
                var teacherlist = dbteacher.BrushSelectionByGrand(grand);

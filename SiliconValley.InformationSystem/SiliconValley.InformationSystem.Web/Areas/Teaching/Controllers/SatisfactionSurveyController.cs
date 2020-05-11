@@ -58,8 +58,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         }
         public ActionResult SatisfactionIndex()
         {
-
-
             var permisslist = PermissionManage.GetOperatorPermissionValues();
 
             ViewBag.Permisslist = permisslist;
@@ -1356,21 +1354,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult CreateHeadMasterSurveyConfig()
         {
-            //获取当前登录的班主任
 
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+            //获取班级
 
-            //获取班主任的班级
+            var classlist = db_teacherclass.AllClassSchedule().Where(d => d.IsDelete == false).ToList().Where(d => d.ClassstatusID == null).ToList();
 
-            BaseBusiness<HeadClass> headclass = new BaseBusiness<HeadClass>();
 
-            BaseBusiness<Headmaster> headmaster = new BaseBusiness<Headmaster>();
-
-           var head = headmaster.GetList().Where(d => d.informatiees_Id == user.EmpNumber && d.IsDelete==false).FirstOrDefault();
-
-            var list = db_teacherclass.AllClassSchedule().Where(d => d.IsDelete == false).ToList().Where(d=>d.ClassstatusID == null);
-
-            ViewBag.classlist = list;
+            ViewBag.classlist = classlist;
 
             return View();
 
@@ -1478,11 +1468,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
         [HttpGet]
         public ActionResult CreateTeacherSurveyConfig()
         {
+           
 
 
-            //获取班级
+               //获取班级
 
-            var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList().Where(d=>d.ClassstatusID == null).ToList();
+               var classlist = db_teacherclass.AllClassSchedule().Where(d=>d.IsDelete==false).ToList().Where(d=>d.ClassstatusID == null).ToList();
             
             ViewBag.classlist = classlist;
 

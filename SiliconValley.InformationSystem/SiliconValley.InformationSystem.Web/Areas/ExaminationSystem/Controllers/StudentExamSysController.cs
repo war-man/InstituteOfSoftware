@@ -15,7 +15,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
     using SiliconValley.InformationSystem.Entity.MyEntity;
    
 
-    [CheckLogin]
+  
     public class StudentExamSysController : Controller
     {
 

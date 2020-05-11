@@ -1,0 +1,38 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>SLogin</title>
+</head>
+<body>
+    <div>
+
+        <input type="text" id="username" />
+        <input type="password" id="password" />
+        <input type="button" id="commit" value="登录" />
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script>
+        $("#commit").click(function () {
+
+            var username = $("#username").val();
+            var password = $("#password").val();
+
+            $.post("/Login/LoginAction", { username: username, password: password }, function (result) {
+
+                console.log(result);
+                window.location.href = result.Data;
+
+            });
+
+        });
+    </script>
+</body>
+</html>

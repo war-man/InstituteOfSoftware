@@ -183,9 +183,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
                 foreach (var item in list)
                 {
-                    var obj = db_staf_Cost.Statistics_Cost(item.EmployeeId, date, workingDays);
+                    string emp = "";
 
-                    result.Add(obj);
+                    try
+                    {
+                        var obj = db_staf_Cost.Statistics_Cost(item.EmployeeId, date, workingDays);
+                        result.Add(obj);
+                    }
+                    catch (Exception ex)
+                    {
+
+
+                        //emp = item.emp;
+                    }
+                   
                 }
 
                 //保存到文件 

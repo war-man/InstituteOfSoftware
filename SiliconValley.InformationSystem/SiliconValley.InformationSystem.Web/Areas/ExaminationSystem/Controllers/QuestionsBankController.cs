@@ -506,6 +506,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ClearlyQuestionIndex()
         {
             SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+
             ViewBag.Major = specialtyBusiness.GetSpecialties();
 
 
@@ -735,6 +736,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult ComputerTestQuestionsIndex()
         {
             SpecialtyBusiness specialtyBusiness = new SpecialtyBusiness();
+
             ViewBag.Major = specialtyBusiness.GetSpecialties();
 
             return View();
@@ -789,10 +791,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         {
             //提供难度级别数据
 
+            GrandBusiness grandBusiness = new GrandBusiness();
+
+            //提供难度级别数据
+
             ViewBag.QuestionLevel = db_questionLevel.AllQuestionLevel();
 
-            GrandBusiness grandBusiness = new GrandBusiness();
-            ViewBag.Major = grandBusiness.AllGrand();
+            //提供阶段数据
+            ViewBag.Grand = grandBusiness.AllGrand();
 
             return View();
         }

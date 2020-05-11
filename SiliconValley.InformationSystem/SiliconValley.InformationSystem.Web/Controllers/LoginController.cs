@@ -109,6 +109,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         //手机短信实例
         public ActionResult PhoneSMS()
         {
+           
             string number = "13204961361";
             string smsText = "达磊，下雨了！！！";
             string t = PhoneMsgHelper.SendMsg(number, smsText);
@@ -129,6 +130,33 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             image.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
             byte[] bytes = ms.ToArray();
             return File(bytes, "image/Jpeg");
+        }
+
+        public ActionResult SLogin()
+        {
+            return View();
+        }
+
+        public ActionResult LoginAction(string username, string password)
+        {
+            //20052000082300013
+
+            BaseBusiness<StudentInformation> dbst = new BaseBusiness<StudentInformation>();
+            ErrorResult err = new ErrorResult();
+            var student = dbst.GetEntity(username);
+
+            if (student != null)
+            {
+                if (student.Password == password)
+                {
+                    SessionHelper.Session["studentnumber"] = student.StudentNumber;
+                    err.Success = true;
+                    err.Msg = "登陆成功!";
+                    err.Data = "/student/index";
+                }
+            }
+
+            return Json(err, JsonRequestBehavior.AllowGet);
         }
     }
 }

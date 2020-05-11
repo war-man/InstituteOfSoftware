@@ -11,6 +11,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     using NPOI.SS.Util;
     using NPOI.XSSF.UserModel;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView;
@@ -27,7 +28,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         private readonly TeacherBusiness db_teacher;
 
-        private readonly BaseBusiness<EmployeesInfo> db_emp;
+        private readonly EmployeesInfoManage db_emp;
 
         /// <summary>
         /// 试卷业务类实例
@@ -37,7 +38,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public AnswerQuestionBusiness()
         {
             db_questionLevel = new QuestionLevelBusiness();
-            db_emp = new BaseBusiness<EmployeesInfo>();
+            db_emp = new EmployeesInfoManage();
             db_teacher = new TeacherBusiness();
             db_ExamPaper = new ExaminationPaperBusiness();
         }
@@ -71,8 +72,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             if (IsNeedProposition)
             {
-                var empid = db_teacher.GetTeachers(IsNeedDimission: true).Where(d => d.TeacherID == answerQuestionBank.Proposition).FirstOrDefault().EmployeeId;
-                answerQuestionView.Proposition = db_emp.GetList().Where(c => c.EmployeeId == empid).FirstOrDefault();
+                var empid = db_teacher.GetEntity(answerQuestionBank.Proposition).EmployeeId;
+                answerQuestionView.Proposition = db_emp.GetAll().Where(c => c.EmployeeId == empid).FirstOrDefault();
 
             }
             else

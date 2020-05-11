@@ -30,7 +30,8 @@
 
         #classlist {
             width: 20%;
-            height: 500px;
+            height:500px;
+            overflow:scroll;
             border: 1px solid white;
             float: left
         }
@@ -292,102 +293,29 @@
                 </div>
             }
 
-                <h4 style="text-align:center;">其他班级</h4>
-            foreach (var item in ViewBag.Fclasslist as List<ClassTableView>)
-            {
-                <div style="height:50px;">
-                    <button type="button" classnumber="@item.classid" style="margin-top:0px !important;" class="layui-btn classbtn">@item.ClassNumber <span style="padding:0px;  margin-left:5px;height:40px; font-size:18px;">@item.GradeName 阶段</span></button>
-                </div>
-                <div style="margin:0 auto; height:30px; border:1px solid #6579ee;width:1px;">
 
-                </div>
-            }
+
+
         }
+        <h4 style="text-align:center;">其他班级</h4>
+        <div id="otherclass">
+            @*<div style="height:50px;">
+                <button type="button" classnumber="@item.classid" style="margin-top:0px !important;" class="layui-btn classbtn">@item.ClassNumber <span style="padding:0px;  margin-left:5px;height:40px; font-size:18px;">@item.GradeName 阶段</span></button>
+            </div>
+            <div style="margin:0 auto; height:30px; border:1px solid #6579ee;width:1px;">
+
+            </div>*@
+
+        </div>
+
+
 
     </div>
 
     <div id="studenttable">
 
         <div id="studentlist">
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    唐敏
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    魔法球
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    猪猪侠
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    丁洪源
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    陈海石
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    达磊
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    霍建华
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    唐嫣
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    胡歌
-                </button>
-
-            </div>
-
-            <div class="studentbtn callback1">
-
-                <button studentnumber="33333333333" class="layui-btn">
-                    <i class="layui-icon">&#xe66f;</i>    钟伦攀
-                </button>
-
-            </div>
+            
         </div>
         <div id="studentInfo">
 
@@ -460,6 +388,17 @@
 
 
     </div>
+
+    <script type="text/template" id="otherClass">
+
+        <div style="height:50px;">
+            <button type="button" classnumber="{{=classid}}" style="margin-top:0px !important;" class="layui-btn classbtn">{{=classnumber}} <span style="padding:0px;  margin-left:5px;height:40px; font-size:18px;">{{grandname}}阶段</span></button>
+        </div>
+        <div style="margin:0 auto; height:30px; border:1px solid #6579ee;width:1px;">
+
+        </div>
+
+    </script>
 
     <script type="text/template" id="studenthtml">
 
