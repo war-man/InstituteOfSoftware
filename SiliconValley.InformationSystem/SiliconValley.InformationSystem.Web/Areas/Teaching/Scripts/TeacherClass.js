@@ -2,7 +2,13 @@
 
 function GetStudentByClass(classnumber,successcabllack, errorcallback) {
 
+
+    var index = layer.load(1); //换了种风格
+
     Ajax("/Teaching/Class/GetStudentByClass", { classnumber: classnumber }, "post", function (data) {
+
+        layer.close(index);
+
         successcabllack(data);
     }, function (error) {
 
@@ -180,30 +186,7 @@ layui.use(["table", "layer", "element"], function () {
     //发送请求
     GetStudentByClass(clickclassnumber, function (data) {
 
-        /*BirthDate: "/Date(985881600000)/"
-        Education: "大专"
-        Familyaddress: "中国"
-        Guardian: "陈神仙,父亲              "
-        Hobby: null
-        InsitDate: "/Date(1566230400000)/"
-        IsDelete: null
-        Name: "陈海石"
-        Nation: "汉"
-        Password: "000000"
-        Picture: null
-        Reack: null
-        Sex: true
-        State: null
-        StudentNumber: "19082001033000001"
-        StudentPutOnRecord_Id: 1020
-        Telephone: "15673151748"
-        Traine: null
-        WeChat: null
-        identitydocument: "431124200103303850"
-        qq: null*/
-
-
-
+        var loadindex = layer.load(1); //换了种风格
         if (data.length != 0) {
             //渲染数据
 
@@ -216,7 +199,7 @@ layui.use(["table", "layer", "element"], function () {
             }
 
 
-
+            layer.close(loadindex);
         }
 
 
@@ -232,7 +215,7 @@ layui.use(["table", "layer", "element"], function () {
     //班级按钮的点击事件
     $(document).off("click", ".classbtn").on("click", ".classbtn", function () {
 
-
+        var loadindex = layer.load(1); //换了种风格
 
         $(this).parent().siblings().each(function () {
 
@@ -255,15 +238,11 @@ layui.use(["table", "layer", "element"], function () {
 
             console.log(data);
 
-
             if (data.length > 0) {
-
-
 
                 for (var i = 0; i < data.length; i++) {
 
                     //渲染数据
-
 
                     var studenthtml = _.template($("#studenthtml").html());
 
@@ -273,6 +252,7 @@ layui.use(["table", "layer", "element"], function () {
 
                 }
 
+                layer.close(loadindex);
             }
 
         }, function (error) {
