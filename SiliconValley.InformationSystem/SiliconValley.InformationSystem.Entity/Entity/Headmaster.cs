@@ -13,6 +13,8 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.SqlClient;
+
     [Table(name: "Headmaster")]
     public partial class Headmaster
     {
@@ -42,6 +44,18 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         {
             get;set;
         }
+
+        //public EmployeesInfo informatiees
+        //{
+        //    get
+        //    {
+
+        //        string sql = "select*from EmployeesInfo where EmployeeId="+ this.informatiees_Id;
+        //        SqlDate sqlDate = new SqlDate();
+        //        List<EmployeesInfo> x1 = sqlDate.SqlsFine<EmployeesInfo>(sql);
+        //        return x1[0];
+        //    }
+        //}
 
     }
 }
