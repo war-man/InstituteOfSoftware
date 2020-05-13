@@ -942,6 +942,8 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             infosView.WrittenQuestionScores = choicetotal + answertotal;
 
+            infosView.TimeLimit = exam.TimeLimit;
+
             return infosView;
         }
 

@@ -85,7 +85,7 @@ function loadclassCadres(classnumber1) {
             
             if (data.Data) {
                 
-                var h3 = $('<h2 style="text-align:center">暂无任何班干部</h2>');
+                var h3 = $('<h4 style="text-align:center">暂无任何班干部</h4>');
 
                 
                 $("#classCadres").append(h3);
@@ -186,7 +186,7 @@ layui.use(["table", "layer", "element"], function () {
     //发送请求
     GetStudentByClass(clickclassnumber, function (data) {
 
-        var loadindex = layer.load(1); //换了种风格
+    
         if (data.length != 0) {
             //渲染数据
 
@@ -199,7 +199,7 @@ layui.use(["table", "layer", "element"], function () {
             }
 
 
-            layer.close(loadindex);
+           
         }
 
 
@@ -237,6 +237,7 @@ layui.use(["table", "layer", "element"], function () {
         GetStudentByClass(classnumber, function (data) {
 
             console.log(data);
+             layer.close(loadindex);
 
             if (data.length > 0) {
 
@@ -252,7 +253,7 @@ layui.use(["table", "layer", "element"], function () {
 
                 }
 
-                layer.close(loadindex);
+               
             }
 
         }, function (error) {

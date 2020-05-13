@@ -17,11 +17,35 @@
 
     <div style=" width:500px; display:inline-block;">
 
-        <!-- Single button -->
-        <label>区域：</label>
-        <div class="btn-group layui-container" style="width:120px;">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">区域</label>
+                    <div class="layui-input-inline">
+                        <select name="Area" id="Area" lay-filter="Areaselect">
 
-            <button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectArea" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+
+                            @{
+                                foreach (var item in ViewBag.arealist)
+                                {
+                                    <option value="@item.ID">@item.AreaName</option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+        </form>
+
+
+            <!-- Single button -->
+            @*<label>区域：</label>
+            <div class="btn-group layui-container" style="width:120px;">*@
+
+                @*<button type="button" class="btn btn-default dropdown-toggle" majorid="0" id="selectArea" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 选择区域 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" id="arealist">
@@ -33,8 +57,11 @@
                     }
                 }
 
-            </ul>
-        </div>
+            </ul>*@
+
+               
+           
+        
     </div>
 
     <div style="display:inline-block;width:500px;" class="form-inline">
@@ -135,26 +162,44 @@
                 }
 
             });
-        });
 
-        $("#arealist li a").click(function () {
+            form.on('select(Areaselect)', function (data) {
 
-            var area = $(this).text();
-            $("#selectArea")[0].innerHTML = area + " <span class='caret'></span>";
-            areaid = $(this).attr("areaid");
+                console.log(data.value); //得到被选中的值
+                areaid = data.value;
 
-            //发送请求
-            MrDtableIns.reload({
-                where: {
-                    areaid: areaid
-                }
-                , page: {
-                    curr: 1
-                }
+                //发送请求
+                MrDtableIns.reload({
+                    where: {
+                        areaid: areaid
+                    }
+                    , page: {
+                        curr: 1
+                    }
+                });
+
             });
         });
 
        
+
+        //$("#arealist li a").click(function () {
+
+        //    var area = $(this).text();
+        //    $("#selectArea")[0].innerHTML = area + " <span class='caret'></span>";
+        //    areaid = $(this).attr("areaid");
+
+        //    //发送请求
+        //    MrDtableIns.reload({
+        //        where: {
+        //            areaid: areaid
+        //        }
+        //        , page: {
+        //            curr: 1
+        //        }
+        //    });
+        //});
+
 
         $("#serchBtn2").click(function () {
 
