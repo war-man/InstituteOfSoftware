@@ -139,6 +139,16 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
            return GetEffectiveEmpAll(false).Where(es => es.EmpName == name).FirstOrDefault();
             
         }
+
+        /// <summary>
+        /// 获取员工实体类
+        /// </summary>
+        /// <returns></returns>
+        public EmployeesInfoManage GetempManeger()
+        {
+            Enplo_Entity = new EmployeesInfoManage();
+            return Enplo_Entity;
+        }
         /// <summary>
         /// 添加数据
         /// </summary>

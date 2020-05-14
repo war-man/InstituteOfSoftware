@@ -21,13 +21,24 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
     {
         public static readonly EvningSelfStudyManeger EvningSelfStudy_Entity = new EvningSelfStudyManeger();
 
+
         /// <summary>
-        /// 从缓存中获取排课所有数据
+        /// 通过sql语句获取所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<Reconcile> SQLGetReconcileDate()
+        {
+            List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile");
+
+            return list;
+        }
+        /// <summary>
+        /// 获取排课所有数据
         /// </summary>
         /// <returns></returns>
         public List<Reconcile> AllReconcile()
         {
-
+            #region 使用缓存拿数据
             //List<Reconcile> get_reconciles_list = new List<Reconcile>();
             //get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
             //if (get_reconciles_list == null || get_reconciles_list.Count == 0)
@@ -35,6 +46,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             //    get_reconciles_list = this.GetList();
             //    Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
             //}
+            #endregion
             return SQLGetReconcileDate();
         }
         /// <summary>
@@ -296,7 +308,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             return s;
         }
-        //获取可以上职素的班主任集合
+        /// <summary>
+        /// 获取可以上职素的班主任集合
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="timename"></param>
+        /// <returns></returns>
         public List<EmployeesInfo> GetMasTeacher(DateTime time, string timename)
         {
             List<EmployeesInfo> list = new List<EmployeesInfo>();
@@ -316,39 +333,10 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     {
                         list.Add(findata);
                     }
-                }
-                //foreach (Headmaster m1 in find_m)
-                //{
-                //    if (m1.informatiees_Id == e1.EmployeeId)
-                //    {
-                //        //判断这个班主任是否有课
-                //        bool s = IsHaveClass(e1.EmployeeId, timename, time);
-                //        if (s == false)
-                //        {
-                //            list.Add(e1);
-                //        }
-                //    }
-                //}
+                }                
             }
-
-            //s3，s4的
             List<EmployeesInfo> list_saff = Reconcile_Com.GetObtainTeacher();//获取未辞职的就业部老师
-                                                                              
-           // Department find_d = Reconcile_Com.GetDempt("s3教质部");
-           // Position find_p = Reconcile_Com.GetPsit(find_d, "班主任");
-           // List<EmployeesInfo> e_list = Reconcile_Com.Employees_Entity.GetList().Where(e => e.IsDel == false && e.PositionId == find_p.Pid).ToList();
-            //List<Headmaster> head_list = Reconcile_Com.Headmaster_Etity.GetList().Where(h => h.IsAttend == true).ToList();
-            //foreach (Headmaster i1 in head_list)
-            //{
-            //    foreach (EmployeesInfo i2 in e_list)
-            //    {
-            //        if (i1.informatiees_Id == i2.EmployeeId)
-            //        {
-            //            list_saff.Add(i2);
-            //        }
-            //    }
-            //}
-
+                                                                                         
             foreach (EmployeesInfo item in list_saff)
             {
                 bool s = IsHaveClass(item.EmployeeId, timename, time);
@@ -362,7 +350,12 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return list;
         }
-        //获取教官
+        /// <summary>
+        /// 获取教官
+        /// </summary>
+        /// <param name="time"></param>
+        /// <param name="timename"></param>
+        /// <returns></returns>
         public List<EmployeesInfo> GetSir(DateTime time, string timename)
         {
             DepartmentManage department = new DepartmentManage();
@@ -1953,16 +1946,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             
         }
         
-        /// <summary>
-        /// 通过sql语句获取所有数据
-        /// </summary>
-        /// <returns></returns>
-        public List<Reconcile> SQLGetReconcileDate()
-        {
-            List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile");
-
-            return list;
-        }
         
         #endregion
     }

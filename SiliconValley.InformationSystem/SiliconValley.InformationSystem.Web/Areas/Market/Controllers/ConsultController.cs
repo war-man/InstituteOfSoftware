@@ -247,6 +247,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 EmployeesInfo_Id=CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
                 Region_id=CM_Entity.GetRegionName(s.Region_id).RegionName
             }).ToList();
+ 
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         //添加
