@@ -948,6 +948,7 @@
     <Content Include="Scripts\common\myDatepicker.css" />
     <Content Include="Scripts\common\myDatepicker.js" />
     <Content Include="Scripts\css\buttonStyle.css" />
+    <Content Include="Scripts\css\css\style.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.mobile.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\modules\code.css" />

@@ -1567,7 +1567,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                 //首先判断是否已经存在
 
-               var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == int.Parse(classnumber) && d.CurriculumID == Curriculum).ToList();
+               var templist = db_survey.satisficingConfigs().Where(d => d.IsDel == false && d.EmployeeId == user.EmpNumber && d.ClassNumber == int.Parse(classnumber)).ToList();
 
                 if (templist.Count !=0)
                 {

@@ -9,17 +9,40 @@
 
 
 <!-- Single button -->
-<div class="btn-group">
-    <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        搜索条件
-        <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" id="grandlist">
-        <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
-        <li><a whyshow="distribution" href="javascript:void(0);">已分配班级</a></li>
-        <li><a whyshow="nodistribution" href="javascript:void(0);">未分配班级</a></li>
-    </ul>
+<div style="display:inline-block;width:300px;">
+    @*<div class="btn-group">
+            <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                搜索条件
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" id="grandlist">
+                <li><a whyshow="all" href="javascript:void(0);">显示全部</a></li>
+                <li><a whyshow="distribution" href="javascript:void(0);">已分配班级</a></li>
+                <li><a whyshow="nodistribution" href="javascript:void(0);">未分配班级</a></li>
+            </ul>
+        </div>*@
+
+    <form class="layui-form">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">区域</label>
+                <div class="layui-input-inline">
+                    <select name="grandid" id="grandid" lay-filter="grandidselect">
+
+
+                        <option value="all">显示全部</option>
+                        <option value="distribution">已分配班级</option>
+                        <option value="nodistribution">未分配班级</option>
+
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
 </div>
+
 
 <div style="display:inline-block;width:600px;" class="form-inline">
 
@@ -80,10 +103,11 @@
                 }
             });
         }
-        layui.use(['table', 'layer'], function () {
+        layui.use(['table', 'layer','form'], function () {
             var table = layui.table;
             var layer = layui.layer; //layui对象
             MrDLayer = layer;
+            var form = layui.form;
             ////监听表格复选框选择
             //table.on('checkbox(EnterpriseInfo)', function (obj) {
             //    console.log(obj)
@@ -149,23 +173,41 @@
                 }
             });
 
+            form.on('select(grandidselect)', function (data) {
+
+
+                var a = data.value;
+                MrDWhyShow = a;
+                WhyShow(a);
+
+                if (a == "nodistribution") {
+                    $("#empname").attr("disabled", "disabled");
+                } else {
+                    $("#empname").removeAttr("disabled");
+                }
+
+            });
+
           
         });
 
-        $("#grandlist li a").click(function () {
-            var grand = $(this).text();
-            $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-            var grandid = $(this).attr("grandid");
-            $("#selectGrand").attr("grandid", grandid);
-            var a = $(this).attr("whyshow");
-            MrDWhyShow = a;
-            WhyShow(a);
-            if (a == "nodistribution") {
-                $("#empname").attr("disabled", "disabled");
-            } else {
-                $("#empname").removeAttr("disabled");
-            }
-        });
+        //$("#grandlist li a").click(function () {
+        //    var grand = $(this).text();
+        //    $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
+        //    var grandid = $(this).attr("grandid");
+        //    $("#selectGrand").attr("grandid", grandid);
+        //    var a = $(this).attr("whyshow");
+        //    MrDWhyShow = a;
+        //    WhyShow(a);
+        //    if (a == "nodistribution") {
+        //        $("#empname").attr("disabled", "disabled");
+        //    } else {
+        //        $("#empname").removeAttr("disabled");
+        //    }
+        //});
+
+
+       
 
         $("#SearchEnter").click(function () {
             var empname = $("#empname").val();

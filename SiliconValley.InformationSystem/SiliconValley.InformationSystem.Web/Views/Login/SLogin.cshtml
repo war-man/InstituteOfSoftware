@@ -8,16 +8,53 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
+
     <title>SLogin</title>
+    <link href="~/Scripts/css/css/style.css" rel="stylesheet" />
 </head>
 <body>
-    <div>
 
-        <input type="text" id="username" />
-        <input type="password" id="password" />
-        <input type="button" id="commit" value="登录" />
-
+    <div class="main-w3layouts wrapper">
+        <div class="main-agileinfo">
+            <div class="agileits-top">
+                <form action="#" method="post">
+                    <input class="text" type="text" name="Username" placeholder="姓名" id="username" required="">
+                    <input class="text" type="password" id="password" name="password" placeholder="密码" required="">
+                    <div class="wthree-text">
+                        <ul>
+                            <li>
+                                <label class="anim">
+                                    <input type="checkbox" class="checkbox" required="">
+                                    <span> 记住 ?</span>
+                                </label>
+                            </li>
+                            <li><a href="#">忘记密码 ?</a> </li>
+                        </ul>
+                        <div class="clear"> </div>
+                    </div>
+                    <input type="button" id="commit" value="登录">
+                </form>
+                <p>创建一个账号? <a href="#"> 立即登录!</a></p>
+            </div>
+        </div>
+        <!-- copyright -->
+      
+        <!-- //copyright -->
+        <ul class="w3lsg-bubbles">
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+        </ul>
     </div>
+
+  
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script>
         $("#commit").click(function () {
@@ -27,8 +64,14 @@
 
             $.post("/Login/LoginAction", { username: username, password: password }, function (result) {
 
-                console.log(result);
-                window.location.href = result.Data;
+                if (result.Success == true) {
+
+                    window.location.href = result.Data;
+
+                }
+                else {
+                    alert(result.Msg);
+                }
 
             });
 

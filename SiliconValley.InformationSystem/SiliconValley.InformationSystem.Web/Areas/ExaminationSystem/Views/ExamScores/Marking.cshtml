@@ -141,6 +141,10 @@
         #biaoji {
             display:none;
         }
+
+        .currentstudent {
+            background-color:#20419d;
+        }
     </style>
     }
 <div id="mywarp">
@@ -563,6 +567,12 @@
                     return;
                 }
 
+                var cure = $(".currentstudent");
+                cure.removeClass("currentstudent");
+                cure.next().addClass("currentstudent");
+
+                
+
                 Sheetindex++;
 
                 loadAnswerSheet(Examid, ExamRoom, Sheetindex);
@@ -575,13 +585,16 @@
 
 
                 if (Sheetindex == 1) {
-
-                    
                     layer.msg('当前是第一份哦。。', { icon: 2 }, function () {
                         layer.close(index);
                     });
                     return;
                 }
+
+
+                var cure = $(".currentstudent");
+                cure.removeClass("currentstudent");
+                cure.prev().addClass("currentstudent");
 
                 Sheetindex--;
 
@@ -717,6 +730,12 @@
             $(document).off("click", ".stuBtn").on("click", ".stuBtn", function () {
 
                 var studetnnumber = $(this).attr("stuNumber");
+
+                $(this).siblings().removeClass("currentstudent");
+
+                $(this).addClass("currentstudent");
+
+                Sheetindex = ($(this).index()) +1;
 
                 loadAnswerSheet(Examid, ExamRoom, Sheetindex, studetnnumber);
 
