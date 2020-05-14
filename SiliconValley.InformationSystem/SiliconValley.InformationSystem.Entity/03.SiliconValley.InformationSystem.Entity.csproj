@@ -368,6 +368,7 @@
     <Compile Include="ViewEntity\ExaminationSystemView\StudentExamScoreView.cs" />
     <Compile Include="ViewEntity\ExaminationSystemView\StudentIsReExamHelper.cs" />
     <Compile Include="ViewEntity\ExaminationView.cs" />
+    <Compile Include="ViewEntity\ExportStudentBeanData.cs" />
     <Compile Include="ViewEntity\flooralloryes.cs" />
     <Compile Include="ViewEntity\floorview.cs" />
     <Compile Include="ViewEntity\GetYear.cs" />

@@ -1697,6 +1697,7 @@
     <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TishEvningView.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
+    <Content Include="Config\ExportStudentBean.json" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3407,6 +3408,7 @@
     <Folder Include="Scripts\Tangmin_CssAndJs\ConsultTeacher_Js\" />
     <Folder Include="uploadXLSXfile\ConsultTeacherImage\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\" />
+    <Folder Include="uploadXLSXfile\ConsultUploadfile\ExportAll\" />
     <Folder Include="Views\DataKeepOnRecord\" />
   </ItemGroup>
   <ItemGroup>

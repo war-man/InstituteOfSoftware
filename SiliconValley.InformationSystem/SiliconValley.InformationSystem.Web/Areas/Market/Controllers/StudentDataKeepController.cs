@@ -846,8 +846,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>        
         public FileStreamResult DownFile()
         {           
-            string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
-            FileStream stream = new FileStream(rr, FileMode.Open);
+             string rr = Server.MapPath("/uploadXLSXfile/Template/Excle模板.xls");  //获取下载文件的路径         
+             FileStream stream = new FileStream(rr, FileMode.Open);
              return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
 
@@ -866,7 +866,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <returns></returns>
         public void LoadFile()
         {
-
             string id = Request.QueryString["id"];
             if (!string.IsNullOrEmpty(id) && id!= "undefined")
             {                 
@@ -882,8 +881,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         Response.AddHeader("Content-Disposition", "attachment; filename=" + HttpUtility.UrlEncode(id, System.Text.Encoding.UTF8));
                         Response.BinaryWrite(bytes);
                         Response.Flush();
-                        Response.End();
-                    
+                        Response.End();                    
             }             
         }
        
@@ -933,5 +931,89 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
         #endregion
+
+
+        #region Excel数据导出
+        /// <summary>
+        /// 生成Excel文件
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult ExportFunction()
+        {
+            DataTable data = s_Entity.GetDataTableWithSql("select * from StudentBeanView");
+            string jsonfile = Server.MapPath("/Config/ExportStudentBean.json");//获取表头
+            System.IO.StreamReader file = System.IO.File.OpenText(jsonfile);
+            JsonTextReader reader = new JsonTextReader(file);
+            //转化为JObject
+            JObject ojb = (JObject)JToken.ReadFrom(reader);
+
+            var jj = ojb["ExportStudentBeanData"].ToString();
+
+            JObject jo = (JObject)JsonConvert.DeserializeObject(jj);
+
+            //生成字段名称 
+            List<string> Head = new List<string>();
+            foreach (DataColumn col in data.Columns)
+            {
+                Head.Add(jo[col.ColumnName].ToString());
+            }
+            Excel_Entity = new ExcelHelper();
+
+            List<ExportStudentBeanData> entity = s_Entity.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView").Select(s => new ExportStudentBeanData()
+            {
+                StuName = s.StuName,
+                StuSex = s.StuSex,
+                StuBirthy=s.StuBirthy,
+                Stuphone=s.Stuphone,
+                StuSchoolName=s.StuSchoolName,
+                StuEducational=s.StuEducational,
+                StuAddress=s.StuAddress,
+                StuWeiXin=s.StuWeiXin,
+                StuQQ=s.StuQQ,
+                stuinfomation=s.stuinfomation,
+                StatusName=s.StatusName,
+                StuisGoto=s.StuisGoto,
+                StuVisit=s.StuVisit,
+                empName=s.empName,
+                StuDateTime=s.StuDateTime,
+                StuEntering= s_Entity.GetempManeger().GetEntity(s.StuEntering).EmpName,
+                StatusTime=s.StatusTime,
+                RegionName=s.RegionName,
+                Reak=s.Reak
+            }).ToList();
+            string filename = DateTime.Now.ToString("yyyyMMddhhmmss")+".xls";
+            SessionHelper.Session["filename"] = filename;
+            string path = "~/uploadXLSXfile/ConsultUploadfile/ExportAll/" + filename;
+            string truePath = Server.MapPath(path);
+
+            SessionHelper.Session["truePath"] = truePath;
+            bool result= Excel_Entity.DaoruExport(entity, truePath, Head);
+            AjaxResult a = new AjaxResult();
+            a.Success = false;
+           
+            if (result)
+            {                
+                a.Success = result;
+                return Json(a, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                a.Msg = "网络异常，请刷新重试！";
+                return Json(a,JsonRequestBehavior.AllowGet);
+            }           
+        }
+        
+        /// <summary>
+        /// 获取Excel备案所有数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetExcelport()
+        {
+            string truePath = SessionHelper.Session["truePath"].ToString();                 
+            FileStream stream = new FileStream(truePath, FileMode.Open);
+            return File(stream, "application/octet-stream", Server.UrlEncode("Excel备案数据.xls"));       
+        }
+        #endregion
+
     }
 }
