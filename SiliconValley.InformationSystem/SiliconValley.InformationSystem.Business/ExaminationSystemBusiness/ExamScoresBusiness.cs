@@ -296,7 +296,17 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             BaseBusiness<StudentInformation> dbstudentg = new BaseBusiness<StudentInformation>();
             //阅卷老师
             TeachingDepBusiness.TeacherBusiness dbteacher = new TeachingDepBusiness.TeacherBusiness();
-            view.MarkingTeacherName = db_emp.GetInfoByEmpID( dbteacher.GetTeacherByID(testScore.Reviewer).EmployeeId).EmpName;
+
+            if (testScore.Reviewer == null)
+            {
+                view.MarkingTeacherName = "无";
+            }
+            else
+            {
+                var markingteacher = db_emp.GetInfoByEmpID(dbteacher.GetTeacherByID(testScore.Reviewer).EmployeeId);
+                view.MarkingTeacherName = markingteacher.EmpName;
+            }
+          
             view.Score = testScore;
             BaseBusiness<ClassSchedule> dbclass = new BaseBusiness<ClassSchedule>();
             view.StudentClass = dbclass.GetIQueryable().Where(d => d.id == candidInfo.ClassId).FirstOrDefault().ClassNumber;
