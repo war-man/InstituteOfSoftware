@@ -76,7 +76,8 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <returns></returns>
         public ClassSchedule GetClassingByID(int classiD)
         {
-            return this.GetClassFormServer().Where(a => a.id == classiD  && a.ClassStatus == false).FirstOrDefault();
+            //return this.GetClassFormServer().Where(a => a.id == classiD  && a.ClassStatus == false).FirstOrDefault();
+            return this.GetClassFormServer().Where(a => a.id == classiD).FirstOrDefault();
         }
         /// <summary>
         /// 获取带班已毕业的

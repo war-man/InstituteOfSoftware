@@ -77,7 +77,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                 GrandName = dbempclass.GetGrandByClassid(a.ClassId).GrandName,
                 empclassDate = a.dirDate,
                 Remark = a.Remark,
-                SpecialtyName = dbspee.GetSpecialtyByID((int)dbempclass.GetClassingByID(a.ClassId).Major_Id).SpecialtyName
+                SpecialtyName = dbspee.GetSpecialtyByID((int)dbempclass.GetClassingByID(a.ClassId)?.Major_Id)?.SpecialtyName ?? "无专业"
             }).ToList();
             var noemplist = NoGraduation.Select(a => new EmpClassView
             {

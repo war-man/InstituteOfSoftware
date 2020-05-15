@@ -20,7 +20,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public int Course { get; set; }
 
         /// <summary>
-        /// 课时  4节课=1课时
+        /// 
         /// </summary>
         public float NodeNumber { get; set; }
     }

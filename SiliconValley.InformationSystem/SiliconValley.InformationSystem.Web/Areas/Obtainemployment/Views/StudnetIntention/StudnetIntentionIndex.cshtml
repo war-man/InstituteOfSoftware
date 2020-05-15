@@ -98,6 +98,10 @@
                     //console.log(res);
                     //console.log($obj);
                     //console.log(first);
+                    if (res.data.length == 0) {
+                        return;
+                    }
+
                     empQuarterclassid = res.data[0].children[0].children[0].nodeId;
                     myleave = 1;
                     string2 = res.data[0].nodeId;

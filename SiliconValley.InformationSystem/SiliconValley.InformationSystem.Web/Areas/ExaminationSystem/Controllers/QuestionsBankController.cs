@@ -543,7 +543,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
             var obj = new {
                 code = 0,
                 msg = "",
-                count = resultlist.Count,
+                count = list.Count,
                 data=resultlist
 
             };

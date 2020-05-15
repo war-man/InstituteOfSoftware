@@ -15,4 +15,7 @@
   <!--内训费-->
   <InternalTrainingCost>200</InternalTrainingCost>
 
+  <!--语数外 质素 军事-->
+  <OtherTeachingCose>30</OtherTeachingCose>
+
 </root>

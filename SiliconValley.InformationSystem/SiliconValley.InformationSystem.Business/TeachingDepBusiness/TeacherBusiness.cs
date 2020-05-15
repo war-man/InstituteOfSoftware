@@ -612,7 +612,11 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             foreach (var item in temp)
             {
                 var curr = Curriculum_db.GetList().Where(d => d.IsDelete == false && d.CurriculumID == item.Curriculum).FirstOrDefault();
-                resultlist.Add(curr);
+                if (curr != null)
+                {
+                    resultlist.Add(curr);
+                }
+              
             }
 
             return resultlist;

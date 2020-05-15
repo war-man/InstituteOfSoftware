@@ -23,6 +23,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public decimal EachingHourCost { set; get; }
 
+
+        /// <summary>
+        /// 质素课，军事课， 语数外费用
+        /// </summary>
+        public decimal OtherTeachingCost { get; set; }
+
         /// <summary>
         /// 值班费
         /// </summary>

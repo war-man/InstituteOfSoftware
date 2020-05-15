@@ -81,6 +81,9 @@
                     //console.log(first);
                     //empQuarterclassid = res.data[0].children[0].children[0].nodeId;
                     myleave = 1;
+                    if (res.data.length == 0) {
+                        return;
+                    }
                     string2 = res.data[0].nodeId;
                     treedata = res.data;
                     //loadtable();

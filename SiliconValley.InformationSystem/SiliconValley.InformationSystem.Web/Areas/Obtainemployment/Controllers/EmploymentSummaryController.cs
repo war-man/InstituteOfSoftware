@@ -90,6 +90,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult YearEmploymentRatioData(string Year, string type, int page, int limit)
         {
             dbempStaffAndStu = new EmpStaffAndStuBusiness();
+
             var alllist = dbempStaffAndStu.EmploymentRatio(Year:Year);
 
             int count = 0;
@@ -152,6 +153,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
         public ActionResult StuffEmploymentRatioData(string empnumber, string Year, string type, int page, int limit)
         {
+
+            //EmpStaffAndStu
             dbempStaffAndStu = new EmpStaffAndStuBusiness();
             dbEmploymentStaff = new EmploymentStaffBusiness();
             var stuff = dbEmploymentStaff.GetList().Where(d => d.EmployeesInfo_Id == empnumber).FirstOrDefault();
@@ -327,7 +330,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
         }
 
-
+       
 
     }
 }
