@@ -56,7 +56,7 @@ namespace SiliconValley.InformationSystem.Depository
         /// 使用Bulk批量插入数据（适合大数据量，速度非常快）
         /// </summary>
         /// <typeparam name="T">实体类型</typeparam>
-        /// <param name="entities">数据</param>
+        /// <param name="entities">数据</param>--+
         public override void BulkInsert<T>(List<T> entities)
         {
             using (SqlConnection conn = new SqlConnection())
