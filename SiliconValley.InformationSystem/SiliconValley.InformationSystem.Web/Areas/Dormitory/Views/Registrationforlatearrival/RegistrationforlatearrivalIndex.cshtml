@@ -237,7 +237,20 @@
                 var result = year + '-' + month + '-' + day;
                 return result;
             }
+            //前三
+            var day1 = new Date();
+            day1.setTime(day1.getTime() - 72 * 60 * 60 * 1000);
+            var s1 = day1.getFullYear() + "-" + (day1.getMonth() + 1) + "-" + day1.getDate();
 
+            //今天
+            var day2 = new Date();
+            day2.setTime(day2.getTime());
+            var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
+
+
+            startime = getLastMonthYestdy();
+
+            endtime = s2;
             //表单
             var table0 = table.render({
                 elem: '#demo'
@@ -322,16 +335,7 @@
                 });
             }
 
-            //前三
-            var day1 = new Date();
-            day1.setTime(day1.getTime() - 72 * 60 * 60 * 1000);
-            var s1 = day1.getFullYear() + "-" + (day1.getMonth() + 1) + "-" + day1.getDate();
-
-            //今天
-            var day2 = new Date();
-            day2.setTime(day2.getTime());
-            var s2 = day2.getFullYear() + "-" + (day2.getMonth() + 1) + "-" + day2.getDate();
-
+        
             //前一个月
             function getLastMonthYestdy() {
 
@@ -385,9 +389,6 @@
 
             }
 
-            startime = getLastMonthYestdy();
-
-            endtime = s2;
 
             //前后若干天可选，这里以7天为例
             var ins22 = laydate.render({
