@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemView
 {
     using SiliconValley.InformationSystem.Entity.MyEntity;
+
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     /// <summary>
     /// 学员考试成绩
@@ -18,8 +19,6 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
         public string StudentNumber { get; set; }
 
         public string StudentClass { get; set; }
-
-       
 
         /// <summary>
         /// 阅卷老师
@@ -37,5 +36,11 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
         /// 考试名称
         /// </summary>
         public string ExamTitle { get; set; }
+
+        public Grand Grand { get; set; }
+
+        public Curriculum Curriculum { get; set; }
+
+
     }
 }

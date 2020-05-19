@@ -57,7 +57,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
             }
             else
             {
-                return this.GetScheduleForTrainees().Where(a => a.StudentID == StudentNumber).FirstOrDefault();
+                return this.GetList().Where(a => a.StudentID == StudentNumber).FirstOrDefault();
             }
            
 

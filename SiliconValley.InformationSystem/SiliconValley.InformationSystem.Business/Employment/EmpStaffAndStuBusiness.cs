@@ -263,6 +263,55 @@ namespace SiliconValley.InformationSystem.Business.Employment
             return view;
         }
 
+        public EmpStaffAndStuView studentnoconversionempstaffandstubiew1(string studentno)
+        {
+            dbemploymentStaff = new EmploymentStaffBusiness();
+            dbproScheduleForTrainees = new ProScheduleForTrainees();
+            dbemploymentAreas = new EmploymentAreasBusiness();
+            dbstudentIntention = new StudentIntentionBusiness();
+            EmployeesBusiness.EmployeesInfoManage db_emp = new EmployeesBusiness.EmployeesInfoManage();
+
+
+            dbquarter = new QuarterBusiness();
+            dbproStudentInformation = new ProStudentInformationBusiness();
+            StudnetIntention intention = dbstudentIntention.GetStudnetIntentionByStudentNO(studentno);
+            EmpStaffAndStuView view = new EmpStaffAndStuView();
+            ScheduleForTrainees Trainees = dbproScheduleForTrainees.GetTraineesByStudentNumber(studentno);
+            view.classno = Trainees.ClassID;
+            view.Areaname = dbemploymentAreas.GetEntity(intention.AreaID).AreaName;
+            view.AreaID = intention.AreaID;
+            EmpStaffAndStu queryobj = this.GetEmpStaffAndStuingBystudentno(studentno);
+
+            view.EmploymentStage = queryobj.EmploymentStage == 1 ? "第一次就业" : "第二次就业";
+            view.ID = queryobj.ID;
+            view.QuarterID = intention.QuarterID;
+            view.Quartertitle = dbquarter.GetEntity(intention.QuarterID).QuaTitle;
+            view.Salary = intention.Salary;
+            view.StudentName = dbproStudentInformation.GetEntity(studentno).Name;
+            view.StudentNO = studentno;
+
+            dbemploymentStaff = new EmploymentStaffBusiness();
+
+            var dd = dbemploymentStaff.GetALl().Where(d=>d.ID == queryobj.EmpStaffID).FirstOrDefault();
+
+            EmployeesInfo employeesInfo = db_emp.GetInfoByEmpID(dd.EmployeesInfo_Id);
+            view.empname = employeesInfo.EmpName;
+
+            switch (queryobj.EmploymentState)
+            {
+                case 1:
+                    view.EmploymentState = "就业中";
+                    break;
+                case 2:
+                    view.EmploymentState = "已就业";
+                    break;
+                case 3:
+                    view.EmploymentState = "未就业";
+                    break;
+            }
+            return view;
+        }
+
         /// <summary>
         /// 根据就业专员id 跟计划id 返回出这个带学生数据
         /// </summary>

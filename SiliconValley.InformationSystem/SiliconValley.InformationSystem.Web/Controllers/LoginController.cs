@@ -20,6 +20,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 {
     //  /Login/LoginIndex
     [IgnoreLogin]
+    [IgnoreUrlPermissionAttribute]
     public class LoginController : BaseMvcController
     {
         UsersInfoManeger userinfo = new UsersInfoManeger();

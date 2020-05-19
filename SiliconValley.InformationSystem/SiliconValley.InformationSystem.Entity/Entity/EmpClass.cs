@@ -26,6 +26,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 班级id
         /// </summary>
         public int ClassId { get; set; }
+
         public bool IsDel { get; set; }
 
         public System.DateTime dirDate { get; set; }

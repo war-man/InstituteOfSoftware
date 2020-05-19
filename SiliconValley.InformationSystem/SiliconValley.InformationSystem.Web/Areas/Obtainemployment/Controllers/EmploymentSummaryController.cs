@@ -198,7 +198,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             foreach (var item in skiplist)
             {
-                var tempobj = dbempStaffAndStu.studentnoconversionempstaffandstubiew(item.Studentno);
+                var tempobj = dbempStaffAndStu.studentnoconversionempstaffandstubiew1(item.Studentno);
 
                 if (tempobj != null)
 

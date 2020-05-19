@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 {
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
@@ -290,6 +292,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         {
             StudentExamScoreView view = new StudentExamScoreView();
 
+            GrandBusiness db_grand = new GrandBusiness();
+
+            var allExem = db_exam.AllExamination();
+
+
             TeachingDepBusiness.TeacherClassBusiness dbteacherclass = new TeachingDepBusiness.TeacherClassBusiness();
 
             var candidInfo = db_exam.AllCandidateInfo().Where(d => d.CandidateNumber == testScore.CandidateInfo).FirstOrDefault();
@@ -313,6 +320,35 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             view.StudentName = dbstudentg.GetIQueryable().Where(d => d.StudentNumber == candidInfo.StudentID).FirstOrDefault().Name;
             view.ExamTitle = db_exam.AllExamination().Where(d => d.ID == testScore.Examination).FirstOrDefault().Title;
             view.StudentNumber = candidInfo.StudentID;
+
+            //获取类型
+            var exam = allExem.Where(d => d.ID == testScore.Examination).FirstOrDefault();
+            var examtype = db_exam.allExamType().Where(d => d.ID == exam.ExamType).FirstOrDefault();
+
+            var examtypename = db_exam.allExamTypeName().Where(d => d.ID == examtype.ExamTypeID).FirstOrDefault();
+
+            view.Grand = db_grand.AllGrand().Where(d => d.Id == examtype.GrandID).FirstOrDefault();
+
+            if (examtypename.TypeName.Contains("升学"))
+            {
+                view.Curriculum = null;
+            }
+            else
+            {
+                // 去获取课程ID
+
+               var curxml = db_exam.ExamCourseConfigRead((int)testScore.Examination);
+                var coursexml = curxml.GetElementsByTagName("course")[0];
+
+                var couserid = coursexml.Attributes["id"].Value;
+
+                CourseBusiness dbcourse = new CourseBusiness();
+
+                var cu = dbcourse.Curriculas().Where(d => d.CurriculumID == int.Parse(couserid)).FirstOrDefault();
+
+                view.Curriculum = cu;
+
+            }
 
             return view;
         }
@@ -409,5 +445,46 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             return scorelist;
         }
+
+        /// <summary>
+        /// 获取学生成绩
+        /// </summary>
+        /// <param name="studentNumber"></param>
+        /// <param name="type">kecheng, shengxue</param>
+        /// <returns></returns>
+        public List<StudentExamScoreView> StudentScores(string studentNumber)
+        {
+            List<StudentExamScoreView> examScoreViews = new List<StudentExamScoreView>();
+
+            List<TestScore> allScores = this.AllExamScores();
+
+            List<CandidateInfo> allCadidateInfo = db_exam.AllCandidateInfo();
+
+            allScores.ForEach(d=> {
+
+                var didInfo = allCadidateInfo.Where(x => x.CandidateNumber == d.CandidateInfo).FirstOrDefault();
+
+                if (didInfo.StudentID != studentNumber)
+                {
+                    allScores.RemoveAt(allScores.IndexOf(d));
+                }
+
+            });
+
+            allScores.ForEach(d=> {
+
+                StudentExamScoreView examScoreView = ConvertToStudentExamScoreView(d);
+
+                if (examScoreView != null)
+                {
+                    examScoreViews.Add(examScoreView);
+                }
+            });
+
+            return examScoreViews;
+
+        }
+
+
     }
 }

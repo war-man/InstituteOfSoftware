@@ -23,6 +23,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
     {
 
         private readonly BaseBusiness<ExamType> db_examtype;
+
+        private readonly BaseBusiness<ExamTypeName> db_examtypename;
+
         private readonly QuestionLevelBusiness db_questionlevel;
         /// <summary>
         /// 班主任带班业务实例
@@ -64,6 +67,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         public List<Examination> AllExamination()
         {
             return this.GetList().ToList();
+        }
+
+        public List<ExamType> allExamType()
+        {
+            return db_examtype.GetList();
         }
 
         /// <summary>
@@ -136,6 +144,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
         }
 
+
+        public List<ExamTypeName> allExamTypeName()
+        {
+            return db_examtypename.GetList();
+        }
 
         /// <summary>
         /// 判断考试是否已经结束
