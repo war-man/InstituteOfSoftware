@@ -32,6 +32,50 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             return list;
         }
+       
+        /// <summary>
+        /// 条件查询
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="class_id"></param>
+        /// <returns></returns>
+        public List<Reconcile> GetSingData(DateTime date,int class_id)
+        {
+            Grand find_g= Reconcile_Com.GetGrand_Id().Where(g => g.GrandName=="Y1" || g.GrandName=="y1").FirstOrDefault();
+            List<Reconcile> list = this.GetListBySql<Reconcile>("select * from Reconcile where anpaidate='"+ date + "' and ClassSchedule_Id="+class_id+"");
+            List<Reconcile> koshi = list.Where(l => l.Curriculum_Id.Contains("考试")).ToList();
+            ClassSchedule find_c= Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);
+            List<CourseType> type = Reconcile_Com.CourseType_Entity.GetList();
+            CourseType find_t1 = type.Where(t => t.TypeName.Equals("专业课")).FirstOrDefault();
+            if (find_c.grade_Id==find_g.Id)
+            {
+                //如果是Y1,只需要专业，英语、数学、语文
+                             
+               CourseType find_t2 = type.Where(t => t.TypeName.Equals("语文课")).FirstOrDefault();
+               CourseType find_t3 = type.Where(t => t.TypeName.Equals("数学课")).FirstOrDefault();
+               CourseType find_t4 = type.Where(t => t.TypeName.Equals("英语课")).FirstOrDefault();
+
+                list = list.Where(l => Reconcile_Com.findname(l.Curriculum_Id) != null).ToList();//排除考试及其他活动的安排数据
+
+                list = list.Where(l => Reconcile_Com.findname(l.Curriculum_Id).CourseType_Id == find_t1.Id || Reconcile_Com.findname(l.Curriculum_Id).CourseType_Id == find_t2.Id || Reconcile_Com.findname(l.Curriculum_Id).CourseType_Id == find_t3.Id || Reconcile_Com.findname(l.Curriculum_Id).CourseType_Id == find_t4.Id).ToList();
+
+                list.AddRange(koshi);
+
+            }
+            else
+            {
+                //只需要专业、课程考试、升学考试
+
+                list = list.Where(l => Reconcile_Com.findname(l.Curriculum_Id) != null).ToList();//排除考试及其他活动的安排数据
+                list = list.Where(l => Reconcile_Com.findname(l.Curriculum_Id).CourseType_Id == find_t1.Id).ToList();//排除考试及其他活动的安排数据
+
+                list.AddRange(koshi);
+            }
+           
+            
+            return list;
+        }
+        
         /// <summary>
         /// 获取排课所有数据
         /// </summary>
@@ -39,13 +83,13 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<Reconcile> AllReconcile()
         {
             #region 使用缓存拿数据
-            //List<Reconcile> get_reconciles_list = new List<Reconcile>();
-            //get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
-            //if (get_reconciles_list == null || get_reconciles_list.Count == 0)
-            //{
-            //    get_reconciles_list = this.GetList();
-            //    Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
-            //}
+            List<Reconcile> get_reconciles_list = new List<Reconcile>();
+            get_reconciles_list = Reconcile_Com.redisCache.GetCache<List<Reconcile>>("ReconcileList");
+            if (get_reconciles_list == null || get_reconciles_list.Count == 0)
+            {
+                get_reconciles_list = SQLGetReconcileDate();
+                Reconcile_Com.redisCache.SetCache("ReconcileList", get_reconciles_list);
+            }
             #endregion
             return SQLGetReconcileDate();
         }
@@ -75,7 +119,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 {
                     this.Insert(r);
                     s = true;
-                   // Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                   Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 }
                 else
                 {
@@ -102,7 +146,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 Reconcile find_r = AllReconcile().Where(f => f.Id == r.Id).FirstOrDefault();
                 find_r.AnPaiDate = r.AnPaiDate;//日期                
                 a.Success = true;
-                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -131,7 +175,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     find_r.Rmark = r.ramak;
                     this.Update(find_r);
                     //清空缓存
-                    //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                    Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                     a.Success = true;
                     a.Msg = "编辑成功";
                 }
@@ -145,7 +189,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         find_r.Rmark = r.ramak;
                         this.Update(find_r);
                         //清空缓存
-                        //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                        Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                         a.Success = true;
                         a.Msg = "编辑成功";
                     }
@@ -184,7 +228,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                             this.Update(find_r);
 
                             //清空缓存
-                            //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                            Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                             a.Success = true;
                             a.Msg = "编辑成功";
                         }
@@ -201,7 +245,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return a;
         }
 
-        public AjaxResult Update_data2(List<Reconcile> r, string timename)
+        public AjaxResult Update_data2(List<Reconcile> r, string timename,int room)
         {
             AjaxResult a = new AjaxResult();
             try
@@ -218,10 +262,14 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                         item.Curse_Id = timename == "上午" ? "下午" + tr + "节" : "上午" + tr + "节";
                     }
 
+                    if (item.ClassRoom_Id!=room)
+                    {
+                        item.ClassRoom_Id = room;
+                    }
 
                     this.Update(item);
                 }
-                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
                 a.Success = true;
             }
             catch (Exception ex)
@@ -245,7 +293,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                     this.Update(item);
                 }
                 a.Success = true;
-                //Reconcile_Com.redisCache.RemoveCache("ReconcileList");
+                Reconcile_Com.redisCache.RemoveCache("ReconcileList");
             }
             catch (Exception ex)
             {
@@ -521,7 +569,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public List<ClassSchedule> GetGrandClass(int grand_id)
         {
             //获取有效的班级数据//获取属于某个阶段的班级
-            List<ClassSchedule> c_list = Reconcile_Com.ClassSchedule_Entity.GetList().Where(c => c.ClassStatus == false && c.IsDelete == false && c.grade_Id == grand_id && c.ClassstatusID == null).ToList();
+            List<ClassSchedule> c_list = Reconcile_Com.GetClass().Where(c =>c.grade_Id == grand_id).ToList();
             return c_list;
         }
         /// <summary>

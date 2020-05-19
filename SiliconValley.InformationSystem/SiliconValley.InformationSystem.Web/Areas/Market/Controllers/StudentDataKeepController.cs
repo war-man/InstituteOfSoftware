@@ -175,7 +175,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuStatus_Id = Stustate_Entity.GetEntity(s.StuStatus_Id)==null?null: Stustate_Entity.GetEntity(s.StuStatus_Id).StatusName,
                     StuIsGoto = s.StuIsGoto,
                     StuVisit = s.StuVisit,
-                    EmployeesInfo_Id =s_Entity.GetEmployeeValue(s.EmployeesInfo_Id, false),
+                    EmployeesInfo_Id =s_Entity.GetEmployeeValue(s.EmployeesInfo_Id, false)==null?"":s_Entity.GetEmployeeValue(s.EmployeesInfo_Id, false),
                     StuDateTime = s.StuDateTime,
                     StuEntering = s.StuEntering,
                     Reak = s.Reak,
@@ -450,7 +450,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuEntering_1 = s_Entity.GetEmployeeValue(finds.StuEntering, false),
                     InfomationTypeName = StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id) == null ? "未定义" : StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,
                     StatusName = Stustate_Entity.GetEntity(finds.StuStatus_Id) == null ? "未填写" : Stustate_Entity.GetEntity(finds.StuStatus_Id).StatusName,
-                    Region_id = finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString()
+                    Region_id = finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString(),
+                    Party = finds.Party
                 };
                 return Json(newdata, JsonRequestBehavior.AllowGet);
             }
@@ -1012,6 +1013,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string truePath = SessionHelper.Session["truePath"].ToString();                 
             FileStream stream = new FileStream(truePath, FileMode.Open);
             return File(stream, "application/octet-stream", Server.UrlEncode("Excel备案数据.xls"));       
+        }
+        
+        
+        public ActionResult In_LongrageData()
+        {
+            List<LongrageBean> longdata= s_Entity.GetLongrageData();
+
+            return null;
         }
         #endregion
 

@@ -117,7 +117,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             else
             {
                 List<EvningSelfStudy> list = a.Data as List<EvningSelfStudy>;
-                a= EvningSelefstudy_Entity.Add_Data(list);
+                a= EvningSelefstudy_Entity.Add_Data(list,true);
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
 
@@ -146,6 +146,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(a,JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 阶段安排晚自习
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GoodEvningSelfStudyView()
+        {
+            //获取阶段
+            List<SelectListItem> g_list = Reconcile_Com.GetGrand_Id().Select(g => new SelectListItem() { Text = g.GrandName, Value = g.Id.ToString() }).ToList();
+            g_list.Add(new SelectListItem() { Text = "--请选择--", Value = "0", Selected = true });
+            ViewBag.grlist = g_list;
+            return View();
+        }
+        [HttpPost]
+        public ActionResult GoodEvningSelfStudyFunction()
+        {
+            string class_ids = Request.Form["checkid_Str"];
+            DateTime starttime = Convert.ToDateTime(Request.Form["starTime"].Split('到')[0]);
+            DateTime endtime = Convert.ToDateTime(Request.Form["starTime"].Split('到')[1]);
+            GrandClassAnpaiEvningSelf data=  EvningSelefstudy_Entity.GoodsEvningSelfStudyFunction(class_ids, starttime, endtime);
+            AjaxResult a= EvningSelefstudy_Entity.Add_Data(data.evnlist, false);
+            a.Data = data.emplist;
+            return Json(a,JsonRequestBehavior.AllowGet);
+        }
+        
         #endregion
 
         #region 对于数据的操作

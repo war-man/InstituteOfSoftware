@@ -185,15 +185,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             TeacherNight_Entity = new TeacherNightManeger();
             TeacherNight findata = TeacherNight_Entity.GetEntity(id);
             a = TeacherNight_Entity.My_Delete(id);
-            if (a.Success)
-            {
+            //if (a.Success)
+            //{
                 
-                a= TeacherNightandEvningStudet.SetEvningStudentData(findata.OrwatchDate,Convert.ToInt32( findata.ClassSchedule_Id), null);
-                if (a.Success==false)
-                {
-                    a.Msg = "删除失败，请刷新重试！！！";
-                }
-            }
+            //    a= TeacherNightandEvningStudet.SetEvningStudentData(findata.OrwatchDate,Convert.ToInt32( findata.ClassSchedule_Id), null);
+            //    if (a.Success==false)
+            //    {
+            //        a.Msg = "删除失败，请刷新重试！！！";
+            //    }
+            //}
             return Json(a, JsonRequestBehavior.AllowGet);
         }
 
@@ -299,7 +299,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             DateTime new_old = Convert.ToDateTime(Request.Form["newtime"]);
             bool Whychangedate = Convert.ToBoolean(Request.Form["mybool"]);
             List<TeacherNight> list = TeacherNight_Entity.GetAllTeacherNight();
-            int count = (old - new_old).Days;
+            int count = (new_old-old).Days;
             if (Whychangedate)//调课
             {
                 list = list.Where(t => t.OrwatchDate >= old && t.BeOnDuty_Id == id).ToList();

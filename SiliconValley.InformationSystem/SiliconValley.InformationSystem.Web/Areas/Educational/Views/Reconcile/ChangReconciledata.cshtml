@@ -48,11 +48,13 @@
             laydate.render({
                 elem: '#starTime'
                 , theme: 'molv'
+                , trigger: 'click' 
             });
 
             laydate.render({
                 elem: '#endtime'
                 , theme: 'molv'
+                , trigger: 'click' 
             });
             //监听提交
             form.on('submit(Update_Big)', function (data) {

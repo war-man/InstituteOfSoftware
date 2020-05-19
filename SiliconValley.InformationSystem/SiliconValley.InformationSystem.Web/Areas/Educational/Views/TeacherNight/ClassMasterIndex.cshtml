@@ -240,7 +240,7 @@
                             layer.open({
                                 type: 2,
                                 content: '/Educational/TeacherNight/EditDateChangeView'
-                                , area: ['600px', '300px']
+                                , area: ['600px', '400px']
                                 , title: '延迟、提前值班日期页面'
                                 , shade: 0.8
                                 , anim: 4
@@ -267,8 +267,8 @@
                         layer.open({
                             type: 2,
                             content: '/Educational/TeacherNight/EditDateView'
-                            , area: ['450px', '200px'],
-                            title: '安排周末值班页面'
+                            , area: ['600px', '400px'],
+                            title: '修改值班日期'
                             , shade: 0.8
                             , anim: 4
                             , skin: 'demo-class'
@@ -287,7 +287,7 @@
             var data = obj.data;
             //console.log(obj)
             if (obj.event === 'del') {
-                layer.confirm('真的删除行么?', function (index) {
+                layer.confirm('真的删除行么?', {icon:3}, function (index) {
                     $.ajax({
                         url: '/Educational/TeacherNight/DeleteFunction/' + data.Id,
                         type: 'GET',
@@ -308,7 +308,7 @@
                 layer.open({
                     type: 2,
                     content: '/Educational/TeacherNight/EditMasterView/' + data.Id,
-                    area: ['500px', '200px'],
+                    area: ['600px', '400px'],
                     title: '编辑值班数据',
                     shade: 0.8,
                     anim: 4,

@@ -42,13 +42,28 @@
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">上课时间:</label>
                     <div class="layui-input-block">
-                        @Html.DropDownList("time", ViewBag.baseE as List<SelectListItem>,new Dictionary<string, object>() { { "class","layui-select"} })                         
+                        @Html.DropDownList("time", ViewBag.baseE as List<SelectListItem>,new Dictionary<string, object>() { { "class","layui-select"} })   
+                                               
                     </div>
                 </div>
                 <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                     <label class="layui-form-label">修改日期:</label>
                     <div class="layui-input-block">
                        <input type="text" name="date" id="date" lay-verify="required" class="layui-input"/>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">所在校区:</label>
+                    <div id="dreeediv" class="layui-input-block">
+                        @Html.DropDownList("address", ViewBag.baseA as List<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select mvv" },{ "lay-filter", "addressselect" } })
+                    </div>
+                </div>
+                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <label class="layui-form-label">上课教室:</label>
+                    <div id="roomdiv" class="layui-input-block">
+                        
                     </div>
                 </div>
             </div>
@@ -63,12 +78,65 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
+        var addressvalue = null;
+
         layui.use(['form','laydate'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
+            var id = null;
             laydate.render({
                 elem: "#date"
                 , theme: 'molv'
+                , trigger: 'click' 
+                , done: function (value, date, endDate) {
+                    var data = { "date": value, "id": id };
+                    if (id == null) {
+                        layer.msg("请先选择班级!!!", { icon: 2, shade: 0.8 });
+                    } else {
+                        var indexx = layer.load(1);
+                        $.ajax({
+                            url: '/Educational/Reconcile/GetTimeRoom',                            
+                            data: data,
+                            success: function (data) {
+                                if (data.room == null) {
+                                    layer.msg("该班级在这个日期没有找到上课的教室!!", { icon: 2, shade: 0.8 });
+                                    $("#dreeediv")[0].innerHTML = "";
+                                    $("#roomdiv")[0].innerHTML = "";
+                                    layer.close(indexx);
+                                } else {
+                                    $("#roomdiv")[0].innerHTML = "";
+                                   var select= $("<select name=room id=room><select>").appendTo($("#roomdiv"));
+                                    //加载属于这个校区的有效教室
+                                    $.ajax({
+                                        url: '/Educational/Reconcile/GetSchoolEmptyRoom',
+                                        data: { "schooldaddressval": data.address },
+                                        type: 'post',
+                                        success: function (suc) {
+                                            for (var i = 0; i < suc.Data.length; i++) {
+                                                $('<option value=' + suc.Data[i].Value + '>' + suc.Data[i].Text + '</option>').appendTo(select);
+                                            }
+                                            var dd = $("#dreeediv")[0].innerHTML;
+                                            if (dd.length <= 0) {
+                                                $(addressvalue).appendTo($("#dreeediv"));
+
+                                            }
+                                            form.render();
+                                        }
+                                    });
+                                    //给表单赋值
+                                    form.val("form_classData", {
+                                        "address": data.address,
+                                        "room":data.room
+                                    });
+                                    layer.close(indexx);
+                                }
+                                
+                            }
+                        });
+
+                        
+                    }                    
+                }
             });
             form.on('select(grand)', function (data) {
                 $("#Myclass_Div")[0].innerHTML = "";
@@ -89,21 +157,16 @@
             });
             //点击班级
             form.on('select(bianji2)', function (data) {
+                id = data.value;
                 if (data.value!=="0") {
                     $.ajax({
                         url: '/Educational/Reconcile/TimeName/' + data.value,
                         success: function (sucdata) {
-                            if (sucdata == "上午") {
                                 //给表单赋值
                                 form.val("form_classData", {  
-                                    time:"上午"
+                                    time: sucdata
                                 });
-                            } else if (sucdata == "下午"){
-                                //给表单赋值
-                                form.val("form_classData", {
-                                    time: "下午"
-                                });
-                            }
+                            
                             form.render();
                         }
                     });
@@ -114,7 +177,10 @@
             form.on('submit(Update_clasTime)', function (data) {              
                 if (data.field.class_select == "0" || data.field.class_select == undefined) {
                     layer.msg('请选择班级！！', { icon: 2 });
-                } else {
+                } else if (data.field.room == undefined) {
+                    layer.msg('请选择教室！！', { icon: 2 });
+                }
+                else {
                     var indeof = layer.load(1);
                     $.ajax({
                         url: '/Educational/Reconcile/UpdateClassFunction',
@@ -135,6 +201,24 @@
                 }               
                 return false;
             });
+
+            //点击校区切换教室
+            form.on('select(addressselect)', function (data) {
+               // console.log(data.value);
+                $("#roomdiv")[0].innerHTML = "";
+                var select = $("<select name=room id=room><select>").appendTo($("#roomdiv"));
+                $.ajax({
+                    url: '/Educational/Reconcile/GetSchoolEmptyRoom',
+                    data: { "schooldaddressval": data.value },
+                    type: 'post',
+                    success: function (suc) {
+                        for (var i = 0; i < suc.Data.length; i++) {
+                            $('<option value=' + suc.Data[i].Value + '>' + suc.Data[i].Text + '</option>').appendTo(select);
+                        }
+                        form.render();
+                    }
+                });
+            });
         });
 
         function MyClose() {
@@ -143,6 +227,12 @@
             var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
             parent.layer.close(index); //再执行关闭
         }
+
+        $(function () {
+            addressvalue = $(".mvv");
+            addressvalue.addClass("mvv");
+            addressvalue.attr("lay-filter","addressselect")
+        });
     </script>
 </body>
 </html>
