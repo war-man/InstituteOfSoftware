@@ -28,6 +28,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         #region  教员晚自习值班
         public ActionResult TeacherNightViewIndex()
         {
+            //获取所有老师
+            Teacher_Entity = new TeacherBusiness();
+
             return View();
         }
 

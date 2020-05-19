@@ -40,13 +40,13 @@
         }
     </style>
 }
-<h2 style="color:#1cc09f;">班主任带班分布图</h2>
+<h3 style="color:red;">该数据是对教质部公开的数据，请勿随意操作数据！！</h3>
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left">
         <div class="layui-row layui-form-item">
             <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                 <label class="layui-form-label" style="width:100px;">显示方式</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline">
                     <select name="interest" lay-filter="college">
 
                         <option value="Stage" selected="">阶段</option>
@@ -64,13 +64,47 @@
 
 
 </div>
-@section script{
 
+@section script{
+    <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 }
+
 <script>
-        var Team = JSON.parse('@Html.Raw(ViewBag.ListTeam)');
-        //第一次加载
-        Listdome("Stage");
+    function showLoad() {
+
+        return layer.msg('正在加载数据中！请稍后...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 800000 });
+
+    }
+    var Team = "";
+    layui.use(['table', 'layer', 'element', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        var element = layui.element;
+        $.ajax({
+            url: '/Teachingquality/Headteacher/ListTeam',
+            type: 'post',
+            async: true,
+            cache: false,
+           
+            beforeSend: function () {//执行中
+                i = showLoad();
+            },
+            success: function (data) {//执行成功
+                closeLoad(i);
+                Team = data;
+                //第一次加载
+                Listdome("Stage");
+            }
+            , error: function (xmlhttprequest, textstatus, message) {
+                closeLoad(i);
+               
+            }
+        });
+
+      
+
+       
         //去重
         function unique(arr, field) {
             var map = {};
@@ -113,7 +147,7 @@
                     if (Type == "Stage") { TeamName = Team[A].Stage } else if (Type == "HeadmasterName") { TeamName = Team[A].HeadmasterName; } else { TeamName = Team[A].Major };
 
                     if (Name == TeamName) {
-                        var div2 = $(' <div class="Title hover">  <input type="text" style="display:none" value=' + Team[A].ClassID + ' /> <div style="font-size:22pt;text-align:center;margin-top:10px;">' + Team[A].ClassName + '</div></div>');
+                        var div2 = $(' <div class="Title hover" id=' + Team[A].Stage+'>  <input type="text" style="display:none" value=' + Team[A].ClassID + ' /> <div style="font-size:22pt;text-align:center;margin-top:10px;">' + Team[A].ClassName + '</div></div>');
 
                         if (Type == "Stage") {
 
@@ -136,7 +170,7 @@
             }
         }
 
-        layui.use(['element', 'form','layer'], function () {
+
             var element = layui.element;
             var form = layui.form;
             var layer = layui.layer;
@@ -147,19 +181,23 @@
                 Listdome(data.value);
 
             });
-        });
+       
 
-        $("body").on("mouseover",".Title",function () {
+        $("body").on("mouseover", ".Title", function () {
 
             $(this).removeClass("hover")
         });
-        $("body").on("mouseout",".Title", function () {
+        $("body").on("mouseout", ".Title", function () {
             $(this).addClass("hover");
         });
-          //双击详细
+        //双击详细
         $("body").on("dblclick", ".Title", function () {
-
-            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
+            console.log($(this).attr("id"));
+            if ($("#EmpDeptName").val().indexOf($(this).attr("id"))==-1) {
+                console.log("匹配" + $("#EmpDeptName").val());
+            }
+           
+          //  window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
         });
-
+    });
 </script>

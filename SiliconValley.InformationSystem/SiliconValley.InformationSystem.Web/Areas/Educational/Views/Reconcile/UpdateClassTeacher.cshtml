@@ -152,14 +152,17 @@
                     layer.msg('请选择班级！！', { icon: 2 });
                 } else {
                     if (s == true) {
+                        var indexfo = layer.load(1);
                         $.ajax({
                             url: '/Educational/Reconcile/UpdateClassTeacherFuntion',
                             type: 'POST',
                             data: data.field,
-                            success: function (sucdata) {
+                            success: function (sucdata) {                                
                                 if (sucdata.Success == false) {
+                                    layer.close(indexfo);
                                     layer.msg(sucdata.Msg, { icon: 2 });
                                 } else {
+                                    layer.close(indexfo);
                                     layer.msg('修改成功！！', { icon: 1, shade: 0.8 }, function () {
                                         window.parent.TableFulsh();
                                         MyClose();

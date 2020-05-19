@@ -21,6 +21,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 {
     public class EmpTransactionRecordController : Controller
     {
+        RedisCache rc = new RedisCache();
+
         // GET: Personnelmatters/EmpTransactionRecord
         public ActionResult EmpTransactionRecordIndex()
         {
@@ -152,7 +154,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     {
                         emp.PositiveDate = e.TransactionTime;
                         empmanage.Update(emp);
+                        rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
+                        if (ajaxresult.Success) {
+                            //员工转正时间修改好之后将该员工的绩效工资及岗位工资修改一下
+                                EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
+                                var ese = esemanage.GetEseByEmpid(emp.EmployeeId);
+                                //当该员工的岗位是主任或者是副主任绩效额度为1000，普通员工为500
+                                if (empmanage.GetPositionByEmpid(emp.EmployeeId).PositionName.Contains("主任"))
+                                {
+                                    ese.PerformancePay = 1000;
+                                }
+                                else if (empmanage.GetDeptByEmpid(emp.EmployeeId).DeptName == "校办")
+                                {
+                                    ese.PerformancePay = 3000;
+                                }
+                                else
+                                {
+                                    ese.PerformancePay = 500;
+                                }
+                                ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
+
+                                esemanage.Update(ese);
+                            rc.RemoveCache("InRedisESEData");
+                            ajaxresult = esemanage.Success();
+                                //并将该员工绩效分默认改为100
+                                if (ajaxresult.Success)
+                                {
+                                    MeritsCheckManage mcmanage = new MeritsCheckManage();
+                                    var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
+                                    ajaxresult.Success = mcemp;
+                                }
+                           
+                        }
                     }
                     //else if (ajaxresult.Success && e.TransactionType == mtype2)//当异动时间修改好之后且是离职异动的情况下将该员工的在职状态改为离职状态
                     //{
@@ -391,6 +425,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         var emp = empmanage.GetEntity(etr.EmployeeId);
                         emp.PositiveDate = etr.TransactionTime;
                         empmanage.Update(emp);
+                        rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
 
                         //员工转正时间修改好之后将该员工的绩效工资及岗位工资修改一下
@@ -413,6 +448,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             }
                             ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
                             esemanage.Update(ese);
+                            rc.RemoveCache("InRedisESEData");
                             ajaxresult = esemanage.Success();
                             //并将该员工绩效分默认改为100
                             if (ajaxresult.Success)
@@ -438,6 +474,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             emp.Salary = etr.PresentSalary;
                         }
                         empmanage.Update(emp);
+                        rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
                         if (ajaxresult.Success)
                         {
@@ -464,6 +501,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                                 ese.PositionSalary = emp.Salary - ese.BaseSalary - ese.PerformancePay;
                             }
                             esemanage.Update(ese);
+                            rc.RemoveCache("InRedisESEData");
                             ajaxresult = esemanage.Success();
                         }
                     }
@@ -502,6 +540,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             }
 
                             esemanage.Update(ese);
+                            rc.RemoveCache("InRedisESEData");
                             ajaxresult = esemanage.Success();
                         }
                     }

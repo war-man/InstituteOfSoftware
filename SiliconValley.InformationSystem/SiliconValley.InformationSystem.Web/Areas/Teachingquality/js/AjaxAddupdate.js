@@ -105,11 +105,7 @@ function Transaction(url, mytitle, width, hegin) {
             }
             , error: function (xmlhttprequest, textstatus, message) {
                 closeLoad(i);
-                layer.msg("您的网络出现问题，请稍后再试！！！", {
-                    time: 8000, //20s后自动关闭
-
-                    btn: ['确定']
-                });
+                
             }
         });
     }
@@ -327,11 +323,7 @@ function ajaxUniomss(url, datae) {
         }
         , error: function (xmlhttprequest, textstatus, message) {
             closeLoad(i);
-            layer.msg("您的网络出现问题，请稍后再试！！！", {
-                time: 8000, //20s后自动关闭
-
-                btn: ['确定']
-            });
+           
         }
     });
 }
@@ -469,11 +461,7 @@ function ajaxPorfessionala(url, datae) {
         }
         , error: function (xmlhttprequest, textstatus, message) {
             closeLoad(i);
-            layer.msg("您的网络出现问题，请稍后再试！！！", {
-                time: 8000, //20s后自动关闭
-
-                btn: ['确定']
-            });
+           
         }
     });
 }

@@ -79,23 +79,65 @@
                 xda += getData[i].value + ",";
             }
             layer.confirm('您真的要选择吗?', function (index) {
-
-                  $.post("/Teachingquality/Headteacher/HeadmasreEntity?ClassName=" + xda, function (datas) {
-                      console.log(datas);
-                      if (datas == true) {
-                          layer.alert('操作成功', { icon: 1 });
-                          parent.layer.close(parent.layer.index);
-                      } else {
-                          Errye("操作失败");
-                      }
-                   //   layer.close(index);
-
-                });
-
+                ajaxAdd("/Teachingquality/Headteacher/HeadmasreEntity?ClassName=" + xda);
+                
 
             });
 
         });
+
+        function ajaxAdd(url) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                async: true,
+                cache: false,
+              
+               
+                beforeSend: function () {//执行中
+                    i = showLoad();
+                },
+                success: function (data) {//执行成功
+                    closeLoad(i);
+                    if (data == true) {
+                        layer.open({
+                            type: 1
+                            , title: false //不显示标题栏
+                            , closeBtn: false
+                            , area: '300px;'
+                            , shade: 0.8
+                            , id: 'LAY_layuipro' //设定一个id，防止重复弹出
+                            , btn: ['确认']
+                            , btnAlign: 'c'
+                            , moveType: 1 //拖拽模式，0或者1
+                            , content: '<div style="padding: 50px; line-height: 22px; background-color: #393D49; color: #fff; font-weight: 300;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作成功！！！</div>'
+
+                            , success: function (layero) {
+
+                                var btn = layero.find('.layui-layer-btn');
+
+                                btn.find('.layui-layer-btn0').click(function () {
+                                    var index = parent.layer.getFrameIndex(window.name);
+                                    parent.layer.close(index);
+                                });
+                            }
+
+                        });
+                    } else {
+
+                        layer.msg("操作失败，请联系管理员！", {
+                            time: 5000, //20s后自动关闭
+
+                            btn: ['确定']
+                        });
+                    }
+                }
+                , error: function (xmlhttprequest, textstatus, message) {
+                    closeLoad(i);
+
+                }
+            });
+        }
 
 
     });

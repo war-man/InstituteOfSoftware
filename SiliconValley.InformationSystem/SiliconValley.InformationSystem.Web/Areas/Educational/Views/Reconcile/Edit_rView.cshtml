@@ -173,12 +173,14 @@
 
             //监听提交
             form.on('submit(Editview_add)', function (data) {
+                var indexof = layer.load(1);
                 //console.log(data.field);
                 $.ajax({
                     url: '/Educational/Reconcile/EditFunction',
                     data: data.field,
                     type: 'POST',
                     success: function (sud) {
+                        layer.close(indexof);
                         if (sud.Success == true) {
                             layer.msg(sud.Msg, { icon: 1,shade:0.8 }, function () {
                                 //刷新数据

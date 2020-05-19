@@ -220,17 +220,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         public static List<EmployeesInfo> GetObtainTeacher()
         {
             List<EmployeesInfo> e_list = GetAllNoGoingEMP();
-            List<EmploymentStaff> f_list = EmploymentStaff_Entity.GetALl();
+            List<EmploymentStaff> f_list = EmploymentStaff_Entity.GetALl();//获取就业部的所有员工
             List<EmployeesInfo> list = new List<EmployeesInfo>();
-            foreach (EmployeesInfo item1 in e_list)
+            foreach (EmploymentStaff item1 in f_list)
             {
-                foreach (EmploymentStaff item2 in f_list)
+                EmployeesInfo find= e_list.Where(e => e.EmployeeId == item1.EmployeesInfo_Id).FirstOrDefault();
+                if (find!=null)
                 {
-                    if (item1.EmployeeId == item2.EmployeesInfo_Id)
-                    {
-                        list.Add(item1);
-                    }
+                    list.Add(find);
                 }
+                 
             }
             return list;
         }
@@ -317,5 +316,42 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return false;
             }
         }
+
+        /// <summary>
+        /// 修改授课班级数据
+        /// </summary>
+        /// <param name="date"></param>
+        /// <param name="teacherid"></param>
+        /// <returns></returns>
+        #region
+        //public static bool UpdateTeacherClassData(DateTime date,int teacherid,int class_id,int )
+        //{
+        //    ClassTeacher classTeacher=  TeacherClass_Entity.GetList().Where(t => t.ClassNumber == class_id && t.IsDel == false).FirstOrDefault();//获取授课数据
+
+        //    classTeacher.EndDate = date;
+        //    classTeacher.IsDel = true;
+        //    try
+        //    {
+        //        TeacherClass_Entity.Update(classTeacher);
+
+        //        ClassTeacher newdata = new ClassTeacher();
+        //        newdata.BeginDate = date;
+        //        newdata.IsDel = false;
+        //        newdata.ClassNumber = class_id;
+        //        newdata.Skill = 1;
+
+
+        //    }
+        //    catch (Exception)
+        //    {
+
+        //        throw;
+        //    }
+
+
+
+        //}
+
+        #endregion
     }
 }

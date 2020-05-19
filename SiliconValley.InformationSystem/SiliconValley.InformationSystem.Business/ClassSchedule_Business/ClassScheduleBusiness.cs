@@ -21,6 +21,8 @@ using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.ClassDynamics_Business;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.ExaminationSystemBusiness;
+using SiliconValley.InformationSystem.Business.Base_SysManage;
+using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 
 namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 {
@@ -78,8 +80,14 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
         BaseBusiness<Suspensionofschool> SuspensionofschoolBusiness = new BaseBusiness<Suspensionofschool>();
         //开除业务类
         BaseBusiness<Expels> ExpelsBusiness = new BaseBusiness<Expels>();
+        //员工表
+        EmployeesInfoManage employeesInfoManage = new EmployeesInfoManage();
+        //班主任带班
+        BaseBusiness<HeadClass> Hoadclass = new BaseBusiness<HeadClass>();
+       
         //学生居住信息
         private AccdationinformationBusiness Accdation;
+      
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -2234,7 +2242,6 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
             }
             return info;
         }
-
         /// <summary>
         /// 根据班级获取同名班级业务信息
         /// </summary>
@@ -2251,6 +2258,121 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 TypeName = a.ClassstatusID == null ? "正常" : classtatus.GetEntity(a.ClassstatusID).TypeName
             });
             return z;
+        }
+        /// <summary>
+        /// 通过班级id获取学员
+        /// </summary>
+        /// <param name="ClassID">班级id</param>
+        /// <returns></returns>
+        public List<StudentInformation> ClassListStudent(int ClassID)
+        {
+            List<StudentInformation> studentsmy = new List<StudentInformation>();
+           var studentid= ss.GetList().Where(a => a.ID_ClassName == ClassID && a.CurrentClass == true && a.IsGraduating == false).ToList();
+          
+            if (studentid.Count<1)
+            {
+                return null;
+            }
+            foreach (var item in studentid)
+            {
+                studentsmy.Add(studentInformationBusiness.GetEntity(item.StudentID));
+            }
+            return studentsmy;
+        }
+        /// <summary>
+        /// 获取当前班主任带班的所有学员数据，主任即可查看全部
+        /// </summary>
+        /// <returns></returns>
+        public List<StudentInformation> HeadteStudent()
+        {
+            //学员数据
+            List<StudentInformation> studentInformation = new List<StudentInformation>();
+            var EmpNumber = Base_UserBusiness.GetCurrentUser().EmpNumber;
+            //岗位
+            var Position = employeesInfoManage.GetPositionByEmpid(EmpNumber);
+            //部门
+            var Dept = employeesInfoManage.GetDeptByEmpid(EmpNumber);
+            if (Base_UserBusiness.GetCurrentUser().UserId=="Admin")
+            {
+                studentInformation= studentInformationBusiness.GetList().Where(a => a.IsDelete != true).ToList();
+            }
+            else if (Position.PositionName.Contains("教质主任")|| Position.PositionName.Contains("教质副主任") &&  Position.DeptId== Dept.DeptId)
+            {
+                var x = this.Departmentclass(Dept.DeptName);
+                foreach (var item in x)
+                {
+                    if (this.ClassListStudent(item.id)!=null)
+                    {
+                        studentInformation.AddRange(this.ClassListStudent(item.id));
+                    }
+                  
+                }
+               
+            }
+            else
+            {
+                //获取班主任
+                var heamstEmp = Hadmst.GetList().Where(a => a.informatiees_Id == EmpNumber).FirstOrDefault().ID;
+                //获取带班的班级
+                var x = Hadmst.EmpClass(heamstEmp,true);
+                foreach (var item in x)
+                {
+                    if (this.ClassListStudent(item.id) != null)
+                    {
+                        studentInformation.AddRange(this.ClassListStudent(item.id));
+                    }
+                   
+                }
+
+            }
+            return studentInformation;
+        }
+        /// <summary>
+        /// 通过部门名称获取部门负责的班级
+        /// </summary>
+        /// <param name="DeptName"></param>
+        /// <returns></returns>
+        public List< ClassSchedule> Departmentclass(string DeptName)
+        {
+            //拿到部分负责班级的阶段
+            List<Grand> grands = Grandcontext.GetList();
+            if (DeptName.ToLower().Contains("s1"))
+            {
+                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S1" || a.GrandName == "S2" || a.GrandName == "Y1").ToList();
+            }
+            else
+            {
+                grands = Grandcontext.GetList().Where(a => a.IsDelete == false && a.GrandName == "S3" || a.GrandName == "S4").ToList();
+            }
+            //该班主任所有可负责的班级
+            List<ClassSchedule> classesList = new List<ClassSchedule>();
+            foreach (var item in grands)
+            {
+                classesList.AddRange(this.GetList().Where(a => a.ClassstatusID == null && a.grade_Id == item.Id).ToList());
+            }
+            return classesList;
+        }
+        /// <summary>
+        /// 班主任详情
+        /// </summary>
+        /// <returns></returns>
+        public SuccessionrecordView Headteacherdetails()
+        {
+            var EmpNumber = Base_UserBusiness.GetCurrentUser().EmpNumber;
+           
+            var employees = employeesInfoManage.GetInfoByEmpID(EmpNumber);
+            var department = employeesInfoManage.GetDeptByEmpid(EmpNumber);
+            var Headyees = new SuccessionrecordView
+            {
+                Education = employees.Education,//学历
+                EmpName = employees.EmpName,//姓名
+                Sex = employees.Sex,//性别
+                Phone = employees.Phone,//电话
+                DeptName = department.DeptName,//部门
+                Images = employees.Image//图片
+            };
+
+            return Headyees;
         }
     }
 }

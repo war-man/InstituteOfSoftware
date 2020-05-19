@@ -193,31 +193,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         /// <param name="limit"></param>
         /// <param name="page"></param>
         /// <returns></returns>
-        public ActionResult GetTableData(int limit, int page)
-        {
-            int classname = Convert.ToInt32(Request.QueryString["classname"]);//班级名称
-            if (classname <= 0)
-            {
-                return Json(new { code = 0, msg = "", count = 0, data = "" }, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                List<Reconcile> lisr_r = Reconcile_Entity.GetList().Where(r => r.ClassSchedule_Id == classname).ToList();
-                var mydata = lisr_r.Skip((page - 1) * limit).Take(limit).Select(r => new
-                {
-                    Id = r.Id,
-                    classname = Reconcile_Com.ClassSchedule_Entity.GetEntity(r.ClassSchedule_Id).ClassNumber,//班级名称
-                    classroom = r.ClassRoom_Id==null?"无" :Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id).ClassroomName,//教室
-                    curriName = r.Curriculum_Id,//课程
-                    Sketime = r.Curse_Id,//课程时间字段
-                    ADate = r.AnPaiDate,
-                    Teacher = r.EmployeesInfo_Id == null ? "无" : Reconcile_Com.Employees_Entity.GetEntity(r.EmployeesInfo_Id).EmpName
-                });
-                var jsondata = new { code = 0, msg = "", count = lisr_r.Count, data = mydata };
-                return Json(jsondata, JsonRequestBehavior.AllowGet);
-            }
+        //public ActionResult GetTableData(int limit, int page)
+        //{
+        //    int classname = Convert.ToInt32(Request.QueryString["classname"]);//班级名称
+        //    if (classname <= 0)
+        //    {
+        //        return Json(new { code = 0, msg = "", count = 0, data = "" }, JsonRequestBehavior.AllowGet);
+        //    }
+        //    else
+        //    {
+        //        List<Reconcile> lisr_r = Reconcile_Entity.GetList().Where(r => r.ClassSchedule_Id == classname).ToList();
+        //        var mydata = lisr_r.Skip((page - 1) * limit).Take(limit).Select(r => new
+        //        {
+        //            Id = r.Id,
+        //            classname = Reconcile_Com.ClassSchedule_Entity.GetEntity(r.ClassSchedule_Id).ClassNumber,//班级名称
+        //            classroom = r.ClassRoom_Id==null?"无" :Reconcile_Com.Classroom_Entity.GetEntity(r.ClassRoom_Id).ClassroomName,//教室
+        //            curriName = r.Curriculum_Id,//课程
+        //            Sketime = r.Curse_Id,//课程时间字段
+        //            ADate = r.AnPaiDate,
+        //            Teacher = r.EmployeesInfo_Id == null ? "无" : Reconcile_Com.Employees_Entity.GetEntity(r.EmployeesInfo_Id).EmpName
+        //        });
+        //        var jsondata = new { code = 0, msg = "", count = lisr_r.Count, data = mydata };
+        //        return Json(jsondata, JsonRequestBehavior.AllowGet);
+        //    }
 
-        }
+        //}
 
         /// <summary>
         /// 获取某个时间段没有安排上课的空教室
@@ -638,8 +638,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         public ActionResult GetReconAllData(int page, int limit)
         {
             List<Reconcile> all = Reconcile_Entity.AllReconcile().OrderByDescending(r => r.Id).ToList();//获取所有排课数据                   
-
-
             string class_select1 = Request.QueryString["class_select1"];
             string starTime = Request.QueryString["starTime"];
             string endTime = Request.QueryString["endTime"];
@@ -923,14 +921,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
         {
             int class_id = Convert.ToInt32(Request.Form["class_select"]);
             string time = Request.Form["time"];
+            DateTime date1 =Convert.ToDateTime( Request.Form["date"]);
             BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
             int time2 = base_Entity.GetsameFartherData("上课时间类型").Where(b => b.Name == time).FirstOrDefault().Id;
             AjaxResult a = Reconcile_Com.ClassSchedule_Entity.Modifyclasstime(class_id, time2);
             if (a.Success == true)
             {
                 //修改调课单
-                DateTime dd = DateTime.Now;
-                string date = dd.Year + "-" + dd.Month + "-" + dd.Day;
+                
+                string date = date1.Year + "-" + date1.Month + "-" + date1.Day;
                 DateTime dd2 = Convert.ToDateTime(date);
                 List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
                 AjaxResult a2 = Reconcile_Entity.Update_data2(find_list, time);
@@ -1009,9 +1008,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 ClassTeacher find_ct = Reconcile_Com.TeacherClass_Entity.GetList().Where(t => t.ClassNumber == class_id && t.IsDel == false).FirstOrDefault();
                 if (find_ct != null)
                 {
-                    find_ct.TeacherID = teacher_id;
-                    Reconcile_Com.TeacherClass_Entity.Update(find_ct);
-
+                    //find_ct.TeacherID = teacher_id;
+                    //Reconcile_Com.TeacherClass_Entity.Update(find_ct);
                     //更新排课表
                     int typeid= Reconcile_Com.CourseType_Entity.GetList().Where(c => c.TypeName.Contains("专业")).FirstOrDefault().Id;
                     ClassSchedule findclass= Reconcile_Com.ClassSchedule_Entity.GetEntity(class_id);

@@ -37,20 +37,15 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
         {
             List<GoodSkill> sk_list= this.GetList().Where(t => t.Curriculum == curr).ToList();
             List<Teacher> ts = new List<Teacher>();
-            List<Teacher> get_t = new BaseBusiness<Teacher>().GetList();
+            List<Teacher> get_t = new BaseBusiness<Teacher>().GetIQueryable().ToList();
             foreach (GoodSkill item1 in sk_list)
             {
-                foreach (var item2 in get_t)
+               Teacher t= get_t.Where(g => g.TeacherID == item1.TearchID && g.IsDel == false).FirstOrDefault();
+                bool s = IsOrride(ts, t.TeacherID);
+                if (s == false)
                 {
-                    if (item2.TeacherID==item1.TearchID && item2.IsDel==false)
-                    {
-                       bool s= IsOrride(ts,item2.TeacherID);
-                        if (s==false)
-                        {
-                            ts.Add(item2);
-                        }
-                    }
-                }
+                    ts.Add(t);
+                }                
             }
             return ts;
         }

@@ -205,7 +205,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
             //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
-              List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
+            List<StudentInformation> list = classschedu.HeadteStudent();
+
+
             try
             {
               
@@ -266,7 +268,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
             List<StudentPutOnRecord> x = null;
-            x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+            x = dbctexta.GetList().Where(a => a.StuName.Trim() == Name).ToList();
 
             var studentlist = dbtext.StudentList();
             for (int i = x.Count - 1; i >= 0; i--)
@@ -530,7 +532,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         {
             string Name = Request.QueryString["Name"];
             StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
-            var x = dbctexta.GetList().Where(a => a.StuName == Name).ToList();
+          
+            var x = dbctexta.GetList().Where(a => a.StuName.Trim() == Name).ToList();
             return Json(x, JsonRequestBehavior.AllowGet);
         }
         //根据阶段查找专业

@@ -65,7 +65,7 @@
 </div>
 
 
-@section script{
+@section script{}
     @*头部工具栏*@
     <script src="~/Areas/Teachingquality/js/Datetime.js"></script>
     <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
@@ -80,13 +80,29 @@
 
     </script>
     <script>
-       
+        function getNowFormatDate(date) {
+            var db = date.split(' ');
+            var seperator1 = "-";
+            var da = new Date(db[0]);
+            var year = da.getFullYear();
+            var month = da.getMonth() + 1;
+            var strDate = da.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = year + seperator1 + month + seperator1 + strDate;
+            return currentdate;
+        }
         function GetData() {
             $($("#Stu").children()).remove();
             var db = {
                 ClassID: $("#ClassID").val()
             };
             $.post("/Teachingquality/ClassSchedule/InsuranceStudent", db, function (dbase) {
+                console.log(dbase);
                 for (var i = 0; i < dbase.length; i++) {
                     if (dbase[i].Count == 1) {
                         $("#Stu").append($('<div class="FlatStundet"><input type="text" style="display:none;" value=' + dbase[i].StudentID + ' /><div style="margin-top:10px;text-align:center;">学号:<label>' + dbase[i].StuID + '</label></div><div style="margin-top:5px;text-align:center;">姓名:<label>' + dbase[i].Name + '</label></div> <div style="margin-top:5px;text-align:center;">到期:<label >' + getNowFormatDate(dbase[i].Context) + '</label></div> </div>'));
@@ -251,7 +267,7 @@
                             layer.open({
                                 title: "学员保险添加",
                                 type: 2,
-                                area: ['615px', '650px']
+                                area: ['615px', '450px']
                                 , content: "/Teachingquality/ClassSchedule/InsuranceAdd?StudentID=" + x
                                 , end: function () { table.reload('idTest'); }
                                 , anim: 1,
@@ -353,4 +369,4 @@
             }
         });
     </script>
-}
+

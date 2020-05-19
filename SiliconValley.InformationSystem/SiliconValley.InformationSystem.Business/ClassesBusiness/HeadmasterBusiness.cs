@@ -405,6 +405,30 @@ namespace SiliconValley.InformationSystem.Business.ClassesBusiness
 
         }
         /// <summary>
+        /// 通过班主任id获取带班班级
+        /// </summary>
+        /// <param name="informatiees_Id">班主任id</param>
+        /// <param name="Endtime">true为正在带班数据，false为带班所有数据</param>
+        /// <returns></returns>
+        public List<ClassSchedule> EmpClass(int informatiees_Id,bool Endtime)
+        {
+            //学员班级
+            ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
+            //班主任带班数据
+          var list=  Hoadclass.GetList().Where(a => a.LeaderID == informatiees_Id).ToList();
+            if (Endtime==true)
+            {
+                list = list.Where(a => a.EndingTime == null).ToList();
+            }
+            //班级数据
+            List<ClassSchedule> classlist = new List<ClassSchedule>();
+            foreach (var item in list)
+            {
+                classlist.Add(classScheduleBusiness.GetEntity(item.ClassID));
+            }
+            return classlist;
+        }
+        /// <summary>
         /// 根据班级编号结束班主任带班
         /// </summary>
         /// <param name="ClassID"></param>
