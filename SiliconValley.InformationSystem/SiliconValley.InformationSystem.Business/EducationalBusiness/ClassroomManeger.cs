@@ -137,5 +137,15 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return GetExitsData().Where(c => c.IsDelete==false).ToList();
         }
 
+        /// <summary>
+        /// 通过教室获取教室所在校区
+        /// </summary>
+        /// <returns></returns>
+        public BaseDataEnum GetAddressData(int id)
+        {
+           Classroom finda= this.GetEntity(id);
+            BaseDataEnumManeger ba = new BaseDataEnumManeger();
+           return ba.GetEntity(finda.BaseData_Id);
+        }
     }
 }

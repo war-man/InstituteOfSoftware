@@ -82,16 +82,18 @@
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
  
-        layui.use(['form', 'laydate','element'], function () {
+        layui.use(['form', 'laydate','element','layer'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
             var element = layui.element;
+            var layer = layui.layer;
             laydate.render({
                 elem: '#date'
                 , trigger: 'click'
             });
 
             form.on('select(MyDepdata)', function (data) {
+                var indemm = layer.load(1);
                 if (data.value != "0") {
                     $("#teacher_div")[0].innerHTML = "";
                     var new_data = { "depid": data.value };
@@ -107,6 +109,7 @@
                                 }
                             }
                             form.render();
+                            layer.close(indemm);
                         }
                     });
                 }

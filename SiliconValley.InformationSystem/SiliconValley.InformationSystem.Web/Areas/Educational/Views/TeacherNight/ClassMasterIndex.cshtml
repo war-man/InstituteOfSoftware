@@ -1,19 +1,89 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "ClassMasterIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 @section style{
-    <style>
-        body .demo-class .layui-layer-title
-        {
-            background: #009688;
-            color: #fff;
-            border: none;
-        }
-    </style>
+<style>
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
+    .LableCss1
+    {
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        float: left;
+        display: block;
+        padding: 9px 15px;
+        width: 80px;
+        font-weight: 400;
+        line-height: 20px;
+        text-align: right
+    }
+
+    .linu
+    {
+        width: 150px;
+    }
+
+    body .demo-class .layui-layer-title
+    {
+        background: #009688;
+        color: #fff;
+        border: none;
+    }
+
+    .layui-colla-title
+    {
+        position: relative;
+        padding: 0 15px 0 35px;
+        color: #333;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        font-size: 14px;
+        overflow: hidden;
+        height: 15px;
+        line-height: 15px;
+    }
+</style>
 }
+
+<div class="layui-collapse" lay-accordion>
+    <div class="layui-colla-item">
+        <h2 class="layui-colla-title">简单查询</h2>
+        <div class="layui-colla-content">
+            <form class="layui-form" lay-filter="MasterSercher">
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">值班老师:</label>
+                        <div class="layui-input-block">
+                            @Html.DropDownList("masterid", ViewBag.master as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "teacher" } })
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">开始时间:</label>
+                        <div class="layui-input-block">
+                            <input type="text" placeholder="开始时间" class="layui-input" name="starTime" id="starTime" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
+                        <label class="LableCss1">结束时间:</label>
+                        <div id="ClssTime" class="layui-input-block">
+                            <input type="text" placeholder="结束时间" class="layui-input" name="endTime" id="endTime" />
+                        </div>
+                    </div>
+                    <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
+                        <button type="button" class="layui-btn" onclick="Sercher()">查询</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <table id="headmaster_table" lay-filter="headmaster_table"></table>
 <script src="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.js"></script>
 <script type="text/html" id="toolbarDemo_Night">
@@ -29,188 +99,224 @@
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 </script>
 
-    <script>
-        function TableFulsh() {
-            layui.use('table', function () {
-                var table = layui.table;
-                table.reload('headmaster_table');
-            });
-        }
-        var ids = "";
-        var IsAll = false;
-        function EditDateFunction(date) {
-            var new_data = { "time": date, "ids": ids, "IsAll": IsAll };
-            if (IsAll == true) {
-                var new_data = { "time": date,"IsAll": IsAll };
-            }
-            $.ajax({
-                url: '/Educational/TeacherNight/EditDateFuntion',
-                data: new_data,
-                type:'POST',
-                success: function (sudata) {
-                    if (sudata.Success == false) {
-                        layer.msg(sudata.Msg, { icon: 2 });
-                    } else {
-                        layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
-                           TableFulsh();
-                        });
-                    }
-                }
-            });
-        }
+<script>
 
-        function EditDatebehind(olddate, newdate) {
-    
-            var new_data = { "oldtime": olddate, "ids": ids, "IsAll": IsAll, "newtime": newdate };
-            if (IsAll == true) {
-                var new_data = { "oldtime": olddate, "IsAll": IsAll, "newtime": newdate};
-            }
-            
-            $.ajax({
-                url: '/Educational/TeacherNight/EditDateChangeFuntion',
-                data: new_data,
-                type: 'POST',
-                success: function (sudata) {
-                    if (sudata.Success == false) {
-                        layer.msg(sudata.Msg, { icon: 2 });
-                    } else {
-                        layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
-                            TableFulsh();
-                        });
-                    }
-                }
+    function Sercher() {
+        layui.use(['form', 'table'], function () {
+            var form = layui.form;
+            var table = layui.table;
+            var data1 = form.val("MasterSercher");
+            table.reload('headmaster_table', {
+                url: '/Educational/TeacherNight/GetClassMasterFunction'
+                , where: { "tid": data1.masterid, "olddate": data1.starTime, "newdate": data1.endTime }
             });
-        }
+        });
+
+    }
+
+    function TableFulsh() {
         layui.use('table', function () {
             var table = layui.table;
-            var layer = layui.layer;
-            table.render({
-                elem: '#headmaster_table'
-                , url: '/Educational/TeacherNight/GetClassMasterFunction'
-                , toolbar: '#toolbarDemo_Night' //开启头部工具栏，并为其绑定左侧模板
-                , cols: [[
-                      { type: 'checkbox' }
-                    , {
-                        field: 'OrwatchDate', title: '值班日期', templet: function (res) {
-                            return TimeChange(res.OrwatchDate);
-                        }
-                    }
-                    , { field: 'TearcherName', title: '值班老师'}
-                    , { field: 'timename', title: '值班类型' }
-                    , {
-                        field: 'AttendDate', title: '安排日期', templet: function (res) {
-                            return TimeChange(res.AttendDate);
-                        }}
-                    , { field: 'Rmark', title: '备注'}
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo_Night', width: 150 }
-                ]]
-                , page: true
-            });
+            table.reload('headmaster_table');
+        });
+    }
+    var ids = "";
+    var IsAll = false;
+    function EditDateFunction(date) {
+        var new_data = { "time": date, "ids": ids, "IsAll": IsAll };
+        if (IsAll == true) {
+            var new_data = { "time": date, "IsAll": IsAll };
+        }
+        $.ajax({
+            url: '/Educational/TeacherNight/EditDateFuntion',
+            data: new_data,
+            type: 'POST',
+            success: function (sudata) {
+                if (sudata.Success == false) {
+                    layer.msg(sudata.Msg, { icon: 2 });
+                } else {
+                    layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
+                        TableFulsh();
+                    });
+                }
+            }
+        });
+    }
 
-            //头工具栏事件
-            table.on('toolbar(headmaster_table)', function (obj) {
-                var checkStatus = table.checkStatus(obj.config.id);
-                switch (obj.event) {
-                    case 'getCheckData_week':
-                        layer.open({
-                            type: 2,
-                            content: '/Educational/TeacherNight/WeekenddutyView'
-                            , area: ['800px', '400px'],
-                            title: '添加值班数据页面'
-                            , shade: 0.8
-                            , anim: 4
-                            , skin: 'demo-class'
-                        });
-                        break;
-                    case 'getCheckChange_time':
-                         
-                        var checkStatus = table.checkStatus('headmaster_table');
-                        if (checkStatus.data.length > 0) {
-                            var checkdata = checkStatus.data;
-                            var id = "";
-                            for (var i = 0; i < checkdata.length; i++) {
-                                id += checkdata[i].Id + ",";
+    function EditDatebehind(newdate) {
+
+        var new_data = {"ids": ids,"newtime": newdate };
+        $.ajax({
+            url: '/Educational/TeacherNight/EditDateChangeFuntion',
+            data: new_data,
+            type: 'POST',
+            success: function (sudata) {
+                if (sudata.Success == false) {
+                    layer.msg(sudata.Msg, { icon: 2 });
+                } else {
+                    layer.msg(sudata.Msg, { icon: 1, shade: 0.8 }, function () {
+                        TableFulsh();
+                    });
+                }
+            }
+        });
+    }
+    layui.use(['table','element','laydate'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var element = layui.element;
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#starTime'
+            , trigger: 'click' //采用click弹出
+        });
+
+        //自定义事件
+        laydate.render({
+            elem: '#endTime'
+            , trigger: 'click' //采用click弹出
+        });
+
+        table.render({
+            elem: '#headmaster_table'
+            , url: '/Educational/TeacherNight/GetClassMasterFunction'
+            , toolbar: '#toolbarDemo_Night' //开启头部工具栏，并为其绑定左侧模板
+            , cols: [[
+                { type: 'checkbox' }
+                , {
+                    field: 'OrwatchDate', title: '值班日期', templet: function (res) {
+                        return TimeChange(res.OrwatchDate);
+                    }
+                }
+                , { field: 'TearcherName', title: '值班老师' }
+                , { field: 'timename', title: '值班类型' }
+                , {
+                    field: 'AttendDate', title: '安排日期', templet: function (res) {
+                        return TimeChange(res.AttendDate);
+                    }
+                }
+                , { field: 'Rmark', title: '备注' }
+                , { fixed: 'right', title: '操作', toolbar: '#barDemo_Night', width: 150 }
+            ]]
+            , page: true
+        });
+
+        //头工具栏事件
+        table.on('toolbar(headmaster_table)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData_week':
+                    layer.open({
+                        type: 2,
+                        content: '/Educational/TeacherNight/WeekenddutyView'
+                        , area: ['800px', '400px'],
+                        title: '添加值班数据页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                    break;
+                case 'getCheckChange_time':
+
+                    var checkStatus = table.checkStatus('headmaster_table');
+                    if (checkStatus.data.length > 0) {
+                        var checkdata = checkStatus.data;
+                        //console.log(checkdata);
+                        var id = "";
+                        var count = 0;
+                        for (var i = 0; i < checkdata.length; i++) {
+                            var date = TimeChange(checkdata[0].OrwatchDate);
+                            if (date != TimeChange(checkdata[i].OrwatchDate)) {
+                                count++;
                             }
-                            ids = id;
-                            IsAll = checkStatus.isAll;
+                            id += checkdata[i].Id + ",";
+
+                        }
+                        ids = id;
+                        //IsAll = checkStatus.isAll;
+                        if (count > 0) {
+                            layer.msg('值班日期要一致', { icon: 2,shade:0.8 });
+                        } else {
                             layer.open({
                                 type: 2,
                                 content: '/Educational/TeacherNight/EditDateChangeView'
-                                , area: ['600px', '300px']
+                                , area: ['600px', '400px']
                                 , title: '延迟、提前值班日期页面'
                                 , shade: 0.8
                                 , anim: 4
                                 , skin: 'demo-class'
                             });
-                        } else {
-                            layer.msg('请选择数据在进行操作!!!', { icon: 2 });
                         }
                          
-                        break;
-                    case 'getCheckData_time':
-                        
-                        var checkStatus = table.checkStatus('headmaster_table');
-                        if (checkStatus.data.length > 0) {
-                            var checkdata = checkStatus.data;
-                            var id = "";
-                            for (var i = 0; i < checkdata.length; i++) {
-                                id += checkdata[i].Id + ",";
-                            }
-                            ids = id;
-                            IsAll = checkStatus.isAll;
-                            layer.open({
-                                type: 2,
-                                content: '/Educational/TeacherNight/EditDateView'
-                                , area: ['450px', '200px'],
-                                title: '安排周末值班页面'
-                                , shade: 0.8
-                                , anim: 4
-                                , skin: 'demo-class'
-                            });
-                        } else {
-                            layer.msg('请选择数据在进行操作!!!', { icon:2 });
+                    } else {
+                        layer.msg('请选择数据在进行操作!!!', { icon: 2 });
+                    }
+
+                    break;
+                case 'getCheckData_time':
+
+                    var checkStatus = table.checkStatus('headmaster_table');
+                    if (checkStatus.data.length > 0) {
+                        var checkdata = checkStatus.data;
+                        var id = "";
+                        for (var i = 0; i < checkdata.length; i++) {
+                            id += checkdata[i].Id + ",";
                         }
-                        
-                        break;
-
-                };
-            });
-
-            //监听行工具事件
-            table.on('tool(headmaster_table)', function (obj) {
-                var data = obj.data;
-                //console.log(obj)
-                if (obj.event === 'del') {
-                    layer.confirm('真的删除行么?', function (index) {
-                        $.ajax({
-                            url: '/Educational/TeacherNight/DeleteFunction/'+data.Id,
-                            type: 'GET',
-                            success: function (suc) {
-                                if (suc.Success == false) {
-                                    layer.msg('删除失败！', { icon: 2 });
-                                } else {
-                                    layer.msg(suc.Msg, { icon: 1, shade: 0.8 }, function () {
-                                        //刷新
-                                        TableFulsh();
-                                    });
-                                }
-                            }
+                        ids = id;
+                        IsAll = checkStatus.isAll;
+                        layer.open({
+                            type: 2,
+                            content: '/Educational/TeacherNight/EditDateView'
+                            , area: ['600px', '400px'],
+                            title: '修改值班日期'
+                            , shade: 0.8
+                            , anim: 4
+                            , skin: 'demo-class'
                         });
-                        layer.close(index);
-                    });
-                } else if (obj.event === 'edit') {
-                    layer.open({
-                        type: 2,
-                        content: '/Educational/TeacherNight/EditMasterView/' + data.Id,
-                        area: ['500px', '200px'],
-                        title: '编辑值班数据',
-                        shade: 0.8,
-                        anim: 4,
-                        skin:'demo-class'
-                    });
-                }
-            });
+                    } else {
+                        layer.msg('请选择数据在进行操作!!!', { icon: 2 });
+                    }
+
+                    break;
+
+            };
         });
-    </script>
- 
+
+        //监听行工具事件
+        table.on('tool(headmaster_table)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么?', {icon:3}, function (index) {
+                    $.ajax({
+                        url: '/Educational/TeacherNight/DeleteFunction/' + data.Id,
+                        type: 'GET',
+                        success: function (suc) {
+                            if (suc.Success == false) {
+                                layer.msg('删除失败！', { icon: 2 });
+                            } else {
+                                layer.msg(suc.Msg, { icon: 1, shade: 0.8 }, function () {
+                                    //刷新
+                                    TableFulsh();
+                                });
+                            }
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    content: '/Educational/TeacherNight/EditMasterView/' + data.Id,
+                    area: ['600px', '400px'],
+                    title: '编辑值班数据',
+                    shade: 0.8,
+                    anim: 4,
+                    skin: 'demo-class'
+                });
+            }
+        });
+    });
+</script>
+
 

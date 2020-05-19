@@ -95,7 +95,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public string Reak { get; set; }
         /// <summary>
-        ///  该信息是否删除
+        ///  
         /// </summary>
         public Nullable<bool> IsDelete { get; set; }
         /// <summary>
@@ -106,6 +106,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 报名时间
         /// </summary>
         public Nullable<System.DateTime> StatusTime { get; set; }
+
+        /// <summary>
+        /// 关系人
+        /// </summary>
+        public string Party
+        {
+            get;set;
+        }
 
         public bool Equals(StudentPutOnRecord x, StudentPutOnRecord y)
         {

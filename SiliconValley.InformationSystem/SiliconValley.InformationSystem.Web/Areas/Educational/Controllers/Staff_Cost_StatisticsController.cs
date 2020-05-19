@@ -187,7 +187,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
 
                     try
                     {
-                        var obj = db_staf_Cost.Statistics_Cost(item.EmployeeId, date, workingDays);
+                        var obj = db_staf_Cost.Statistics_Cost("202005070007", date, workingDays);
                         result.Add(obj);
                     }
                     catch (Exception ex)

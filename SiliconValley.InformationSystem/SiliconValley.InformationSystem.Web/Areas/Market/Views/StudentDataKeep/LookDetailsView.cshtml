@@ -156,15 +156,24 @@
                         <div class="layui-input-block">
                             <input name="Reak" id="Reak" class="layui-input linu" disabled="disabled" />
                         </div>
-                    </div>  
+                    </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">关&nbsp; 系&nbsp;人:</label>
+                        <div class="layui-input-block">
+                            <input name="Party" id="Party" class="layui-input linu" disabled="disabled" />                         
+                        </div>
+                    </div>
+                     
+                </div>        
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
 
                         <label class="layui-form-label">区 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 域:</label>
                         <div class="layui-input-block">
-                            <input name="reginname" id="reginname" class="layui-input linu" disabled="disabled" value="@ViewBag.regin">                               
+                            <input name="reginname" id="reginname" class="layui-input" style="width:93%" disabled="disabled" value="@ViewBag.regin">
                         </div>
                     </div>
-                </div>            
+                </div>
             <div class="layui-form-item">
                 <div class="layui-input-block" style="margin-top:30px;">      
                     <div style="width:30%;margin:0px auto ">
@@ -267,6 +276,7 @@
                         $("#StatusName")[0].value = successdata.StatusName;
                         $("#e_Name")[0].value = successdata.e_Name;
                         $("#Reak")[0].value = successdata.Reak;
+                        $("#Party")[0].value = successdata.Party;
                     } else {
                         layui.use(['layer'], function () {
                             var layer = layui.layer;

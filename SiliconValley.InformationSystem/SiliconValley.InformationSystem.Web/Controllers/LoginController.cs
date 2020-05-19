@@ -109,7 +109,6 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         //手机短信实例
         public ActionResult PhoneSMS()
         {
-           
             string number = "13204961361";
             string smsText = "达磊，下雨了！！！";
             string t = PhoneMsgHelper.SendMsg(number, smsText);
@@ -132,50 +131,18 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             return File(bytes, "image/Jpeg");
         }
 
-        public ActionResult SLogin()
+        public ActionResult GetPhoneCode(string mobile)
         {
-            return View();
-        }
-
-        public ActionResult LoginAction(string username, string password)
-        {
-            //20052000082300013
-
-            BaseBusiness<StudentInformation> dbst = new BaseBusiness<StudentInformation>();
-            ErrorResult err = new ErrorResult();
-            var student = dbst.GetEntity(username);
-
-            if (student != null)
-            {
-                if (student.Password == password)
-                {
-                    SessionHelper.Session["studentnumber"] = student.StudentNumber;
-                    SessionHelper.Session["UserId"] = student.StudentNumber;
-                    err.Success = true;
-                    err.Msg = "登陆成功!";
-                    err.Data = "/student/index";
-
-                    return Json(err, JsonRequestBehavior.AllowGet);
-                }
-                else
-                {
-                    err.Success = false;
-                    err.Msg = "用户名或密码错误！";
-                    err.Data = null;
-
-                    return Json(err, JsonRequestBehavior.AllowGet);
-                }
-            }
-            else
-            {
-                err.Success = false;
-                err.Msg = "用户名或密码错误！";
-                err.Data = null;
-
-                return Json(err, JsonRequestBehavior.AllowGet);
-            }
-
-           
+            string code = LoginHelper.PhoneCode(4);
+            //将手机校验码存储到Session中
+            SessionHelper.Session["phonecode"] = code;
+            //将校验码发送到指定的手机
+            string msg = string.Format("您在{0}使用手机登录方式登录湖南硅谷高科软件学院信息平台，为了您的账户安全！请使用：{1} 验证码完成登录", DateTime.Now, code);
+            PhoneMsgHelper.SendMsg(mobile, msg);
+            ErrorResult er = new ErrorResult();
+            er.Success = true;
+            er.Msg = code;
+            return Json(er, JsonRequestBehavior.AllowGet);
         }
     }
 }

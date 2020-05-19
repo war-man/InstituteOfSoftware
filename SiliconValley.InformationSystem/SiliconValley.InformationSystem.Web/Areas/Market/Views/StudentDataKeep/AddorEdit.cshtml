@@ -43,7 +43,7 @@
 
     .TextAreCss1 {
         height: 38px;
-        width:200px;
+        width:93%;
     }
 
     .butCss2{
@@ -73,6 +73,7 @@
     .layui-unselect
     {
         width:200px;
+       
     }
 </style>
 <div style="width:74%;margin:20px auto;">
@@ -203,13 +204,20 @@
                         </div>
                     </div>                    
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">说 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 明:</label>
+                        <label class="layui-form-label">关&nbsp; 系&nbsp;人:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.Party, new Dictionary<string, object>() { { "placeholder", "关系人" }, { "class", "layui-input linu" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">其他说明:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(s => s.Reak, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
                         </div>
                     </div>
                 </div>
-       
                 <div class="layui-form-item" style="margin-top:40px;">
             <div class="layui-input-block" style="width:30%;margin-left:43%">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>

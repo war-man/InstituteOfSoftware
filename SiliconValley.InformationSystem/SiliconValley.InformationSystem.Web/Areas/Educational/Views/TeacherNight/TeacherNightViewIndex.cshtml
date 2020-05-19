@@ -55,10 +55,10 @@
         <div class="layui-colla-item">
             <h2 class="layui-colla-title">简单查询</h2>
             <div class="layui-colla-content">
-                <form class="layui-form">
+                <form class="layui-form" lay-filter="TeacherSercher">
                     <div class="layui-row layui-form-item">
                         <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                            <label class="layui-form-label">老师:</label>
+                            <label class="LableCss1">值班老师:</label>
                             <div class="layui-input-block">
                                 @Html.DropDownList("teacherid", ViewBag.teacher as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "lay-filter", "teacher" } })
                             </div>
@@ -76,7 +76,7 @@
                             </div>
                         </div>
                         <div class="layui-col-xs2 layui-col-sm2 layui-col-md2" style="text-align:center">
-                            <button type="submit" class="layui-btn" lay-submit="" lay-filter="find">查询</button>
+                            <button type="button" class="layui-btn" onclick="Sercher()">查询</button>
                         </div>
                     </div>
                 </form>
@@ -101,16 +101,40 @@
 
 
 <script>
+    function Sercher() {
+        layui.use(['form','table'], function () {
+            var form = layui.form;
+            var table = layui.table;
+            var data1 = form.val("TeacherSercher");
+            table.reload('TeacherNight_table', {
+                url: '/Educational/TeacherNight/TeacherTableData'
+                , where: { "tid": data1.teacherid, "olddate": data1.starTime, "newdate": data1.endTime } 
+            });
+        });
+       
+    }
     function TableFulsh() {
         layui.use('table', function () {
             var table = layui.table;
             table.reload('TeacherNight_table');
         });
     }
-    layui.use(['table','element'], function () {
+    layui.use(['table','element','laydate'], function () {
         var table = layui.table;
         var layer = layui.layer;
+        var laydate = layui.laydate;
         var element = layui.element;
+        //自定义事件
+        laydate.render({
+            elem: '#starTime'
+            , trigger: 'click' //采用click弹出
+        });
+
+        //自定义事件
+        laydate.render({
+            elem: '#endTime'
+            , trigger: 'click' //采用click弹出
+        });
         table.render({
             elem: '#TeacherNight_table'
             , url: '/Educational/TeacherNight/TeacherTableData'

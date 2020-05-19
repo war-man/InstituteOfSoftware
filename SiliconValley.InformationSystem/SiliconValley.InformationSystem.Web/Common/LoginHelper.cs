@@ -36,8 +36,24 @@ namespace SiliconValley.InformationSystem.Web.Common
             }
             return sb.ToString();
 
-        }     
-       
+        }
+
+        public static string PhoneCode(int length)
+        {
+            StringBuilder sb = new StringBuilder();
+            Random r = new Random();
+            for (int i = 0; i < length; i++)
+            {
+                int n = r.Next();
+               
+               char ch = (char)(n % 10 + '0');
+               sb.Append(ch);
+               
+            }
+            return sb.ToString();
+
+        }
+
         /// <summary>
         /// 产生随机验证码图片
         /// </summary>
