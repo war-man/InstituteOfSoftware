@@ -96,6 +96,38 @@
             });
 
         }
+
+        function TableLoad(YesSudata) {
+            layui.use(['table'], function () {
+                var table = layui.table;
+                table.render({
+                    height: 400,
+                    elem: '#mystudenttable'
+                    , cols: [[
+                        { type: 'checkbox' }
+                        , { field: 'StuName', title: '姓名', sort: true }
+                        , {
+                            field: 'StuSex', title: '性别', templet: function (res) {
+                                if (res.StuSex == false) {
+                                    return "女";
+                                } else {
+                                    return "男";
+                                }
+                            }
+                        }
+                        , { field: 'StuPhone', title: '电话号码', sort: true }
+                        , { field: 'EmployeesInfo_Id', title: '备案人' }
+                        , { field: 'Region_id', title: '区域' }
+                        , { field: 'StuStatus_Id', title: '状态' }
+                    ]]
+                    , data: YesSudata
+                    , page: true
+                    , limits: [8]
+                    , limit: 8
+                });   
+            });
+        }
+
         $(function () {   
             var consultId = -1;
             var mon = -1;
@@ -125,32 +157,7 @@
                     $.ajax({
                         url: '/Market/Consult/MonthStudentData/' + month
                         , success: function (YesSudata) {                              
-                            table.render({
-                                    height: 400,
-                                    elem: '#mystudenttable'
-                                    , cols: [[
-                                        { type: 'checkbox' }
-                                        , { field: 'StuName', title: '姓名', sort: true }
-                                        , {
-                                            field: 'StuSex', title: '性别', templet: function (res) {
-                                                if (res.StuSex == false) {
-                                                    return "女";
-                                                } else {
-                                                    return "男";
-                                                }
-                                            }
-                                        }
-                                        , { field: 'StuPhone', title: '电话号码', sort: true }
-                                        , { field: 'EmployeesInfo_Id',  title: '备案人' }
-                                        , { field: 'Region_id', title: '区域' }
-                                        , { field: 'StuStatus_Id', title: '状态' }
-                                    ]]
-                                    , data: YesSudata
-                                    , page: true
-                              , limits: [8]
-                              , limit:8
-                            });   
-
+                            TableLoad(YesSudata);
                             layer.close(indexs);
                         }
                     });
@@ -175,6 +182,7 @@
                                 for (var i = 0; i < checkStatus.data.length; i++) {
                                     stuId = stuId + checkStatus.data[i].Id + ",";
                                 }
+                                 
                                 $.ajax({
                                     url: '/Market/Consult/Insertconsult',
                                     data: { consultTeacher: consultId, listid: stuId },
@@ -183,8 +191,24 @@
                                         if (SuccessData != "ok") {
                                             layer.msg(SuccessData, { icon: 2 });
                                         } else {
-                                            layer.msg('分量成功！！！', { icon: 1 }, function () {
-                                                Claose();
+                                            layer.msg('分量成功！！！', { icon: 1 ,shade:0.8}, function (myindex) {
+                                                layer.confirm('是否继续分量?', {
+                                                    icon: 3, title: '温馨提示', btn: ['是', '否'], btn1: function (index) {
+                                                       var loadmm= layer.load(1);
+                                                        $.ajax({
+                                                            url: '/Market/Consult/MonthStudentData/' + mon
+                                                            , success: function (YesSudata) {
+                                                                TableLoad(YesSudata);
+                                                                layer.close(loadmm);
+                                                            }
+                                                        });
+                                                        layer.close(index);
+                                                    }, btn2: function (twoindex) {
+                                                        //layer.close(twoindex);
+                                                        Claose();
+                                                    }
+                                                });       
+                                               
                                             });
 
                                         }

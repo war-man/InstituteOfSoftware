@@ -1,5 +1,7 @@
 ﻿
 @{
+    /**/
+
     Layout = null;
 }
 
@@ -12,14 +14,17 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <link href="~/Scripts/Tangmin_CssAndJs/com_js/MyOrther_tangmin.css" rel="stylesheet" />
     <style>
-        .mm{
-        border:1px solid black;
-        margin-bottom:10px;
+        .mm
+        {
+            border: 1px solid black;
+            margin-bottom: 10px;
         }
+
         .hideCss
         {
             display: none;
         }
+
         .layui-textare
         {
             height: 38px;
@@ -109,11 +114,11 @@
                     </div>
 
                     <div class="layui-row layui-form-item">
-                  
+
                         <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                             <label class="LableCss1">校 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 区:</label>
-                            <div class="layui-input-block">                                 
-                                @Html.DropDownList("schooladdress", ViewBag.schoolAddress as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" },{ "lay-filter", "schooladdress"} })
+                            <div class="layui-input-block">
+                                @Html.DropDownList("schooladdress", ViewBag.schoolAddress as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" }, { "lay-filter", "schooladdress" } })
                             </div>
                         </div>
 
@@ -141,7 +146,7 @@
                 </form>
             </div>
         </fieldset>
-        
+
     </div>
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
@@ -178,11 +183,11 @@
 
             form.on('select(schooladdress)', function (data) {
                 var schoolvalue = data.value;
-                if (schoolvalue!="0") {
+                if (schoolvalue != "0") {
                     var data1 = form.val("system_form");
                     if (data1.mytime.length <= 0) {
                         form.val("system_form", { "schooladdress": "0" });
-                        layer.msg('请选择日期!!!', { icon: 2 });                        
+                        layer.msg('请选择日期!!!', { icon: 2 });
                     } else {
                         $("#classroomdiv")[0].innerHTML = "";
                         var new_data = { "timename": data1.timename, "time": data1.mytime, "schooladdres": data1.schooladdress };
@@ -200,11 +205,11 @@
                             }
                         });
                     }
-                    
- 
+
+
                 }
-                
-            });      
+
+            });
             //自动安排
             form.on('submit(anpaiEvingstudy)', function (data) {
                 var indexmy = layer.load(1);
@@ -213,14 +218,14 @@
                     type: 'POST',
                     data: data.field,
                     success: function (sucdata) {
-                        layer.close(indexmy);    
-                        if (sucdata.Success == false) {                                                      
+                        layer.close(indexmy);
+                        if (sucdata.Success == false) {
                             var str = '<div class="divCss1">';
                             for (var i = 0; i < sucdata.Data.length; i++) {
-                                str = str + '<div><div style="margin-top:10px;margin-bottom:10px;"><span>日期:<span style="color:red;">' + TimeChange(sucdata.Data[i].date) + '</span><span></div></div><div><span>未安排专业课的班级:</span><br/><div style="margin-top:10px;margin-bottom:10px;"><span class="inputCss1 spanCss1">' + sucdata.Data[i].ClassName + '</span></div><div></div>';                        
+                                str = str + '<div><div style="margin-top:10px;margin-bottom:10px;"><span>日期:<span style="color:red;">' + TimeChange(sucdata.Data[i].date) + '</span><span></div></div><div><span>未安排专业课的班级:</span><br/><div style="margin-top:10px;margin-bottom:10px;"><span class="inputCss1 spanCss1">' + sucdata.Data[i].ClassName + '</span></div><div></div>';
                             }
                             window.parent.Myopen(str);
-                            MyClose();  
+                            MyClose();
                         } else {
                             layer.msg(sucdata.Msg, { icon: 1, shade: 0.8 }, function () {
                                 window.parent.TableFulsh();
@@ -233,26 +238,28 @@
             });
             //手动安排
             form.on('submit(handanpaiEvingstudy)', function (data) {
-               
+
                 if (data.field.mytime.length <= 0) {
                     layer.msg('请选择日期！！', { icon: 2 });
                 } else {
-                     $.ajax({
-                    url: '/Educational/EvningSelfStudy/HnadEvningSelfStudyFunction',
-                    type: 'POST',
-                    data: data.field,
-                    success: function (sucdata) {
-                        if (sucdata.Success == false) {
-                            layer.msg('安排失败！！！,请重试', {icon:2});
-                            MyClose();
-                        } else {
-                            layer.msg('安排成功！！！', { icon: 1, shade: 0.8 }, function () {
-                                window.parent.TableFulsh();
+                    var indexss = layer.load(1);
+                    $.ajax({
+                        url: '/Educational/EvningSelfStudy/HnadEvningSelfStudyFunction',
+                        type: 'POST',
+                        data: data.field,
+                        success: function (sucdata) {
+                            layer.close(indexss);
+                            if (sucdata.Success == false) {
+                                layer.msg('安排失败！！！,请重试', { icon: 2 });
                                 MyClose();
-                            });
+                            } else {
+                                layer.msg('安排成功！！！', { icon: 1, shade: 0.8 }, function () {
+                                    window.parent.TableFulsh();
+                                    MyClose();
+                                });
+                            }
                         }
-                    }
-                });
+                    });
                 }
                 return false;
             });

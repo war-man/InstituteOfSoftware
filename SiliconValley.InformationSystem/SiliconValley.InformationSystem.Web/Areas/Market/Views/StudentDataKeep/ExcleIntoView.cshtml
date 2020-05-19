@@ -210,7 +210,9 @@
                 , accept: 'file' //普通文件
                 , exts: 'xls|xlsx'//只允许上传Excle文件
                 , done: function (res) {
+                    var indexss = layer.load(1);
                     if (res.msg == "ok") {
+                       
                         table.render({
                             elem: '#tabletest2'
                             , data:res.data
@@ -232,10 +234,13 @@
                             , limit: 5
                         });
                         $("#Yes")[0].removeAttribute("disabled");
+                        layer.close(indexss);
                     } else if (res.msg == "文件格式错误") {
                         TiShi(res.msg);
+                        layer.close(indexss);
                     } else if (res.msg == "no") {
                         TiShi('操作错误');
+                        layer.close(indexss);
                     }
                 }
             });               

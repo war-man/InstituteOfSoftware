@@ -68,7 +68,7 @@
 
             //监听
             form.on('submit(true_btn1)', function (data) {
-                var index = layer.load();
+                var index = layer.load(1);
                 var ifno = $("#bntone").attr("data-idinfo");
                 var new_data = { "oldtime": data.field.oldtime, "newtime": data.field.newtime, "mybool": ifno};
                 

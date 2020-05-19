@@ -1,0 +1,24 @@
+{
+  "ExportStudentBeanData": {
+    "StuName": "学生姓名",
+    "StuSex": "学生性别",
+    "StuBirthy": "出生日期",
+    "Stuphone": "联系电话",
+    "StuSchoolName": "毕业学校",
+    "StuEducational": "学历",
+    "StuAddress": "家庭住址",
+    "StuWeiXin": "微信号",
+    "StuQQ": "QQ号",
+    "stuinfomation": "信息来源",
+    "StatusName": "备案状态",
+    "StuisGoto": "是否来校访问",
+    "StuVisit": "访问日期",
+    "empName": "备案人",
+    "StuDateTime": "备案日期",
+    "StuEntering": "录入人",
+    "StatusTime": "报名日期",
+    "RegionName": "所在区域",
+    "Reak": "其他说明"
+  }
+
+}

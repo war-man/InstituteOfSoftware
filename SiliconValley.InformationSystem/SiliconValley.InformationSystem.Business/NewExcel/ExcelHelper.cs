@@ -7,6 +7,7 @@ using SiliconValley.InformationSystem.Entity.Entity;
 using Microsoft.Office.Interop.Excel;
 using System.Reflection;
 using System.IO;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
 
 namespace SiliconValley.InformationSystem.Business.NewExcel
 {
@@ -67,6 +68,56 @@ namespace SiliconValley.InformationSystem.Business.NewExcel
                 IsCuss = true;
             }
             catch (Exception)
+            {
+                return IsCuss;
+            }
+            return IsCuss;
+        }
+
+
+        public bool DaoruExport(List<ExportStudentBeanData> data,string mypath,List<string> Head)
+        {
+            bool IsCuss = false;
+            object misValue = System.Reflection.Missing.Value;
+            Application xlApp = new Application();
+            Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+            Worksheet xlWorkSheet = (Worksheet)xlWorkBook.Worksheets.get_Item(1);
+
+            for (int i = 0; i < Head.Count; i++)
+            {
+                xlWorkSheet.Cells[1, i + 1] = Head[i]; //write the column name
+            }
+            for (int i = 0; i < data.Count; i++)
+            {
+                xlWorkSheet.Cells[i + 2, 1] = data[i].StuName;
+                xlWorkSheet.Cells[i + 2, 2] = data[i].StuSex==true?"男":"女";
+                xlWorkSheet.Cells[i + 2, 3] = data[i].StuBirthy;
+                xlWorkSheet.Cells[i + 2, 4] = data[i].Stuphone;
+                xlWorkSheet.Cells[i + 2, 5] = data[i].StuSchoolName;
+                xlWorkSheet.Cells[i + 2, 6] = data[i].StuSchoolName;
+                xlWorkSheet.Cells[i + 2, 7] = data[i].StuEducational;
+                xlWorkSheet.Cells[i + 2, 8] = data[i].StuAddress;
+                xlWorkSheet.Cells[i + 2, 9] = data[i].StuWeiXin;
+                xlWorkSheet.Cells[i + 2, 10] = data[i].StuQQ;
+                xlWorkSheet.Cells[i + 2, 11] = data[i].stuinfomation;
+                xlWorkSheet.Cells[i + 2, 12] = data[i].StuisGoto == false ? "否" : "是";
+                xlWorkSheet.Cells[i + 2, 13] = data[i].StuVisit;
+                xlWorkSheet.Cells[i + 2, 14] = data[i].empName;
+                xlWorkSheet.Cells[i + 2, 15] = data[i].StuDateTime;
+                xlWorkSheet.Cells[i + 2, 16] = data[i].StuEntering;
+                xlWorkSheet.Cells[i + 2, 17] = data[i].Reak; 
+                xlWorkSheet.Cells[i + 2, 18] = data[i].StatusTime; 
+                xlWorkSheet.Cells[i + 2, 19] = data[i].RegionName;
+            }
+
+            try
+            {
+                xlWorkBook.SaveAs(mypath, XlFileFormat.xlExcel8, null, null, false, false, XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                xlWorkBook.Close(true, misValue, misValue);
+                xlApp.Quit();
+                IsCuss = true;
+            }
+            catch (Exception ex)
             {
                 return IsCuss;
             }

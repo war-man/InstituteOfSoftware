@@ -316,7 +316,16 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return false;
             }
         }
-
+        /// <summary>
+        /// 通过课程名称获取课程数据
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static Curriculum findname(string name)
+        {
+           return Curriculum_Entity.GetList().Where(c => c.CourseName == name).FirstOrDefault();
+        }
+ 
         /// <summary>
         /// 修改授课班级数据
         /// </summary>

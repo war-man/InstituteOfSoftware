@@ -27,9 +27,10 @@
         <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
             <i class="layui-icon">&#xe624;</i> 添加
         </button>
-        <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
-            <i class="layui-icon">&#xe681;</i> Excel文件导入
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto"><i class="layui-icon">&#xe601;</i>
+             Excel文件导入
         </button>
+        <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
     </div>
 </script>
 <script type="text/html" id="barDemo1">
@@ -120,7 +121,7 @@
             });
 
         }
-        //提示
+        //错误提示提示
         function TiShi(msg) {
             layui.use(['layer'], function () {
                 var layer = layui.layer;
@@ -176,7 +177,33 @@
                     });                                                 
             });
         });
-        layui.use(['table', 'laydate', 'form','element'], function () {
+
+        function ExcelExport() {
+            layui.use('layer', function () {
+                var layer = layui.layer;
+                var ind= layer.load(1);
+                $.ajax({
+                    url: '/Market/StudentDataKeep/ExportFunction',
+                    success: function (suc) {                       
+                        if (suc.Success == true) {
+                            //下载
+                            let a = document.createElement('a') // 创建a标签
+                            let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
+                            e.initEvent('click', false, false) // 初始化事件对象
+                            a.href = "/Market/StudentDataKeep/GetExcelport" // 设置下载地址
+                            a.download = '' // 设置下载文件名
+                            a.dispatchEvent(e);
+                            layer.close(ind);
+                        } else {
+                            layer.close(ind);
+                            TiShi(suc.Msg);
+                        }
+                    }
+                });
+            });
+            
+        }
+        layui.use(['table', 'laydate', 'form', 'element'], function () {
             var table = layui.table;
             var laydate = layui.laydate;
             var form = layui.form;
@@ -279,7 +306,7 @@
                         layer.open({
                             type: 2,
                             content: '/Market/StudentDataKeep/AddorEdit' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                            , area: ['950px', '650px'],
+                            , area: ['950px', '710px'],
                             title: '添加备案信息页面'
                             , shade: 0.8
                             , anim: 4
@@ -299,22 +326,22 @@
                               , closeBtn:0
                         });                      
                         break;
-                    case 'getSerchType':
-                        layer.open({
-                            type: 2,
-                            content: '/Market/StudentDataKeep/InfomationAndStatuView' 
-                            , area: ['800px', '450px'],
-                            title: '查看信息来源与学生状态'
-                            , shade: 0.8
-                            , anim: 4
-                            , skin: 'demo-class'
-                            , end: function () {
-                                $.ajax({
-                                    url:'/Market/StudentDataKeep/DelteInfomationType'
-                                });
-                            }
-                        });       
-                        break;
+                    //case 'getSerchType':
+                    //    layer.open({
+                    //        type: 2,
+                    //        content: '/Market/StudentDataKeep/InfomationAndStatuView' 
+                    //        , area: ['800px', '480px'],
+                    //        title: '查看信息来源与学生状态'
+                    //        , shade: 0.8
+                    //        , anim: 4
+                    //        , skin: 'demo-class'
+                    //        , end: function () {
+                    //            $.ajax({
+                    //                url:'/Market/StudentDataKeep/DelteInfomationType'
+                    //            });
+                    //        }
+                    //    });       
+                    //    break;
                 };
             });
             //监听行工具事件
@@ -325,7 +352,7 @@
                     layer.open({
                         type: 2,
                         content: '/Market/StudentDataKeep/EditView/' + data.Id  
-                        , area: ['900px', '690px'],
+                        , area: ['900px', '720px'],
                         title: '编辑备案信息'
                         , shade: 0.8
                         , anim: 4
@@ -335,7 +362,7 @@
                     layer.open({
                         type: 2,
                         content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id  
-                        , area: ['800px', '650px'],
+                        , area: ['800px', '690px'],
                         title: '备案数据详情'
                         , shade: 0.8
                         , anim: 4

@@ -9,6 +9,10 @@ using SiliconValley.InformationSystem.Business.Psychro;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.RegionManage;
+using SiliconValley.InformationSystem.Entity.ViewEntity;
+using System.Data.SqlClient;
+using System.Data;
+using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -139,6 +143,16 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
            return GetEffectiveEmpAll(false).Where(es => es.EmpName == name).FirstOrDefault();
             
         }
+
+        /// <summary>
+        /// 获取员工实体类
+        /// </summary>
+        /// <returns></returns>
+        public EmployeesInfoManage GetempManeger()
+        {
+            Enplo_Entity = new EmployeesInfoManage();
+            return Enplo_Entity;
+        }
         /// <summary>
         /// 添加数据
         /// </summary>
@@ -194,6 +208,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 fins.StuIsGoto = olds.StuIsGoto;
                 fins.StuVisit = olds.StuVisit;
                 fins.StuInfomationType_Id = olds.StuInfomationType_Id;
+                fins.Party = olds.Party;
                 if (olds.StuStatus_Id == -1 || olds.StuStatus_Id == null)
                 {
                     AjaxResult a1 = Stustate_Entity.GetIdGiveName("未报名", false);
@@ -391,6 +406,76 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             }
             return resultlist;
         }
+        #endregion
+
+
+        #region 用于将远程数据库中的备案数据导入当前数据库中
+        /// <summary>
+        /// 获取远程备案数据
+        /// </summary>
+        /// <returns></returns>
+        public List<LongrageBean> GetLongrageData()
+            {
+                List<LongrageBean> list = new List<LongrageBean>();
+                string sql = "server=121.43.166.117;database=GUIGU;uid=sa;pwd=Guigu20202020;Max Pool Size = 512";
+                SqlConnection con = new SqlConnection(sql);
+                con.Open();
+                SqlCommand comm = new SqlCommand("select * from Sch_Market", con);
+                DataSet ds = new DataSet();
+                SqlDataAdapter da = new SqlDataAdapter(comm);
+                da.Fill(ds);
+                DataTable mm=  ds.Tables[0];
+
+                list= mm.ToList<LongrageBean>();
+                con.Close();
+            return list;
+            }
+        
+        public AjaxResult InServer()
+        {
+            Enplo_Entity = new EmployeesInfoManage();
+            List<LongrageBean> longrages= GetLongrageData();
+            List<StudentPutOnRecord> records = new List<StudentPutOnRecord>();
+            //将数据进行备案
+            foreach (LongrageBean lo in longrages)
+            {
+                StuInfomationTypeManeger stuInfomation = new StuInfomationTypeManeger();
+                StringBuilder sb = new StringBuilder();
+                EmployeesInfo employees= Enplo_Entity.FindEmpData(lo.SalePerson, false);//备案人
+                EmployeesInfo info = Enplo_Entity.FindEmpData(lo.CreateUserName, false);//录入人
+                
+                    StudentPutOnRecord s = new StudentPutOnRecord();
+                    s.StuName = lo.StudentName;
+                    s.StuPhone = lo.Phone;
+                    s.StuQQ = lo.QQ;
+                    s.StuSex = lo.Sex == "男" ? true : false;
+                    s.EmployeesInfo_Id = employees?.EmployeeId??null ;//employees == null ? null : employees.EmployeeId;
+                    s.IsDelete = false;
+                    s.Party = lo.RelatedPerson;
+                    s.Reak = lo.Remark;
+                    s.Region_id = null;
+                    s.StatusTime = null;
+                    s.StuAddress = null;
+                    s.StuBirthy = null;
+                    s.StuDateTime = lo.CreateDate;
+                    s.StuEducational = lo.Education;
+                    s.StuEntering = info?.EmployeeId??null;
+                    //s.StuInfomationType_Id = ;
+                    s.StuIsGoto = null;
+                    s.StuSchoolName = lo.School;
+                    s.StuStatus_Id = null;
+                    s.StuVisit = null;
+                    
+                    
+                //if (employees==null)
+                //{
+                //   // sb.Append("备案人:"+);
+                //}
+            }
+
+            return null;
+        }
+            
         #endregion
     }
 }

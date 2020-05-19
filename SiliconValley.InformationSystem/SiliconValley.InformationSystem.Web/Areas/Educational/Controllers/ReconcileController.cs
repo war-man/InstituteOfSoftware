@@ -436,7 +436,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 }
 
                 //获取任课老师
-                if (!string.IsNullOrEmpty(Request.Form["teacher_child"]))
+                if (!string.IsNullOrEmpty(Request.Form["teacher_child"]) && Request.Form["teacher_child"]!="0")
                 {
                     new_r.EmployeesInfo_Id = Request.Form["teacher_child"];
                 }
@@ -897,7 +897,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             return Json(s, JsonRequestBehavior.AllowGet);
         }
 
-
+        /// <summary>
+        /// 获取某个班级上课时间、所在教室
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult GetTimeRoom()
+        {
+            DateTime date =Convert.ToDateTime(Request.QueryString["date"]);
+            int id=  Convert.ToInt32(Request.QueryString["id"]);
+            ClassSchedule find_c = Reconcile_Com.ClassSchedule_Entity.GetEntity(id);
+            Reconcile find_r = Reconcile_Entity.AllReconcile().Where(r=>r.ClassSchedule_Id==id && r.AnPaiDate==date).FirstOrDefault();
+            int? room = find_r == null ? null : find_r.ClassRoom_Id;
+            int? address = null;
+            if (find_r!=null)
+            {
+                BaseDataEnum find_b= Reconcile_Com.Classroom_Entity.GetAddressData(Convert.ToInt32(find_r.ClassRoom_Id)); //获取校区
+                if (find_b!=null)
+                {
+                    address = find_b.Id;
+                }
+            }
+            var data =new { room= room, address = address };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
 
         /// <summary>
         /// 修改班级上课时间段页面
@@ -914,6 +936,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
             List<SelectListItem> basesataenum = base_Entity.GetsameFartherData("上课时间类型").Select(b=>new SelectListItem() { Text=b.Name,Value=b.Name}).ToList();
             ViewBag.baseE = basesataenum;
+
+            //获取所在校区
+            List<SelectListItem> addreess= base_Entity.GetsameFartherData("校区地址").Select(b => new SelectListItem() { Text = b.Name, Value = b.Id.ToString() }).ToList();
+            ViewBag.baseA = addreess;
+
             return View();
         }
 
@@ -922,6 +949,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
             int class_id = Convert.ToInt32(Request.Form["class_select"]);
             string time = Request.Form["time"];
             DateTime date1 =Convert.ToDateTime( Request.Form["date"]);
+            int room =Convert.ToInt32( Request.Form["room"]);
             BaseDataEnumManeger base_Entity = new BaseDataEnumManeger();
             int time2 = base_Entity.GetsameFartherData("上课时间类型").Where(b => b.Name == time).FirstOrDefault().Id;
             AjaxResult a = Reconcile_Com.ClassSchedule_Entity.Modifyclasstime(class_id, time2);
@@ -932,14 +960,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Educational.Controllers
                 string date = date1.Year + "-" + date1.Month + "-" + date1.Day;
                 DateTime dd2 = Convert.ToDateTime(date);
                 List<Reconcile> find_list = Reconcile_Entity.AllReconcile().Where(r => r.AnPaiDate >= dd2 && r.ClassSchedule_Id == class_id).ToList();
-                AjaxResult a2 = Reconcile_Entity.Update_data2(find_list, time);
+                AjaxResult a2 = Reconcile_Entity.Update_data2(find_list, time,room);
                 if (a2.Success == true && a.Success == true)
                 {
                     return Json(a2, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    a2.Msg = "修改排课数据失败，请联系开发人员！！！";
+                    a2.Msg = "修改排课数据失败，请刷新页面重试";
                     return Json(a2, JsonRequestBehavior.AllowGet);
                 }
 

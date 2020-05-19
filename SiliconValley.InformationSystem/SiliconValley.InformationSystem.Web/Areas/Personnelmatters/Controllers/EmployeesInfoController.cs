@@ -10,23 +10,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
     using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.PositionBusiness;
     using SiliconValley.InformationSystem.Business.DepartmentBusiness;
-    using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using System.Net;
     using SiliconValley.InformationSystem.Util;
     using System.ComponentModel.DataAnnotations;
-    using SiliconValley.InformationSystem.Business.Employment;
-    using SiliconValley.InformationSystem.Business.Consult_Business;
     using SiliconValley.InformationSystem.Business.Channel;
     using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
-    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Business.SchoolAttendanceManagementBusiness;
-    using SiliconValley.InformationSystem.Business.FinanceBusiness;
     using SiliconValley.InformationSystem.Entity.Entity;
-    using SiliconValley.InformationSystem.Business.EducationalBusiness;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
-    using SiliconValley.InformationSystem.Business.DormitoryBusiness;
     using System.Text;
     using System.IO;
     using System.Globalization;
@@ -228,17 +221,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         {
             EmployeesInfoManage empinfo = new EmployeesInfoManage();
             var AjaxResultxx = new AjaxResult();
-            EmploymentStaffBusiness esmanage = new EmploymentStaffBusiness();
-            HeadmasterBusiness hm = new HeadmasterBusiness();
-            ConsultTeacherManeger cmanage = new ConsultTeacherManeger();
-            ChannelStaffBusiness csmanage = new ChannelStaffBusiness();
-            TeacherBusiness teamanage = new TeacherBusiness();
-            FinanceModelBusiness fmmanage = new FinanceModelBusiness();
-            EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
-            MonthlySalaryRecordManage msrmanage = new MonthlySalaryRecordManage();
-            AttendanceInfoManage attinfomanage = new AttendanceInfoManage();
-            MeritsCheckManage mcmanage = new MeritsCheckManage();
-            InstructorListBusiness itmanage = new InstructorListBusiness();
+           
             try
             {
                 emp.EmployeeId = EmpId();
@@ -266,63 +249,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 rc.RemoveCache("InRedisEmpInfoData");
                 AjaxResultxx = empinfo.Success();
                 if (AjaxResultxx.Success) {
-                    var dname = empinfo.GetDept(emp.PositionId).DeptName;//获取该员工所属部门名称
-                    var pname = empinfo.GetPosition(emp.PositionId).PositionName;//获取该员工所属岗位名称
-                    if (dname.Equals("就业部"))
-                    {
-                        bool s = esmanage.AddEmploystaff(emp.EmployeeId);//给就业部员工表添加员工
-                        AjaxResultxx.Success = s;
-                    }
-                    if (dname.Equals("市场部"))
-                    {
-                        bool s = csmanage.AddChannelStaff(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }//给市场部员工表添加员工
-                    if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && !pname.Equals("教官"))
-                    {
-                        bool s = hm.AddHeadmaster(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }//给两个教质部员工表添加除教官外的员工
-                    if ((dname.Equals("s1、s2教质部") || dname.Equals("s3教质部")) && pname.Equals("教官"))
-                    {
-                        bool s = itmanage.AddInstructorList(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }//给教官员工表添加教官
-                    if (pname.Equals("咨询师") || pname.Equals("咨询主任"))
-                    {
-                        bool s = cmanage.AddConsultTeacherData(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }//给咨询部员工表添加除咨询助理外的员工
-                    if (dname.Equals("s1、s2教学部") || dname.Equals("s3教学部") || dname.Equals("s4教学部"))//给三个教学部员工表添加员工
-                    {
-                        Teacher tea = new Teacher();
-                        tea.EmployeeId = emp.EmployeeId;
-                        bool s = teamanage.AddTeacher(tea);
-                        AjaxResultxx.Success = s;
-                    }
-                    if (dname.Equals("财务部"))
-                    {
-                        bool s = fmmanage.AddFinancialstaff(emp.EmployeeId);
-                        AjaxResultxx.Success = s;
-                    }//给财务部员工表添加员工
-                    bool ss = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
-                    AjaxResultxx.Success = ss;
-                    //if (AjaxResultxx.Success) {
-                    //    bool monthss = msrmanage.AddEmpToEmpMonthSalary(emp.EmployeeId);//往月度工资表添加员工
-                    //    AjaxResultxx.Success = monthss;
-                    //}
-
-                    //if (AjaxResultxx.Success) {
-                    //    bool mc = mcmanage.AddEmpToMeritsCheck(emp.EmployeeId);//往绩效考核表添加员工
-                    //    AjaxResultxx.Success = mc;
-                    //    if (AjaxResultxx.Success && !string.IsNullOrEmpty(emp.PositiveDate.ToString())) {
-                    //        //并将该员工绩效分默认改为100
-                    //        var mcemp = mcmanage.GetmcempByEmpid(emp.EmployeeId);
-                    //        AjaxResultxx.Success = mcemp;
-
-                    //    }
-                    //}
-
+                    empinfo.AddEmpToCorrespondingDept(emp);
                 }
             }
             catch (Exception ex)

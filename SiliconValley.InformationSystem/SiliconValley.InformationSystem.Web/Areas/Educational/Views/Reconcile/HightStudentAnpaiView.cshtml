@@ -340,7 +340,7 @@
                        
                         if (mydata.mygrand == "0") {
                             layer.msg('请选择班级！！！', { icon: 2 });
-                        } else if (mydata.schoolAddress=="0") {
+                        } else if (mydata.myclassroom == undefined) {
                             layer.msg('请选择教室！！！', { icon: 2 });
                         } else {
                             var myindexof = layer.load(1);
@@ -352,7 +352,6 @@
                                      layer.close(myindexof);
                                      if (Sucdata.Success == true) {
                                          layer.msg(Sucdata.Msg, { icon: 1, shade: 0.8 }, function () {
-                                             Myclose();
                                          });
                                 } else {
                                     layer.msg(Sucdata.Msg, { icon: 2, shade: 0.8 });

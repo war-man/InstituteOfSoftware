@@ -48,6 +48,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         }
         static string FirstTime = GetFirstTime();
         static string Firstshouldday = GetFirstDeserveToRegularDays();
+
         //考勤统计
         // GET: Personnelmatters/AttendanceStatistics
         public ActionResult AttendanceStatisticsIndex()
@@ -113,6 +114,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                              e.LeaveEarlyRecord,
                              e.Remark,
                              e.IsDel,
+                             e.IsApproval,
                              e.DeserveToRegularDays,
                              e.TardyWithhold,
                              e.LeaveWithhold
@@ -129,6 +131,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             }; 
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
+
+
         /// <summary>
         /// 年月份及应到勤天数的改变
         /// </summary>
@@ -168,6 +172,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 考勤数据编辑
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult EditAttendanceInfo(int id)
         {
             var att = atdmanage.GetEntity(id);
@@ -199,6 +208,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 att.YearAndMonth,
                 att.DeserveToRegularDays,
                 att.IsDel,
+                att.IsApproval
                 #endregion
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
@@ -214,6 +224,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 att.YearAndMonth = a.YearAndMonth;
                 att.DeserveToRegularDays = a.DeserveToRegularDays;
                 att.IsDel = a.IsDel;
+                att.IsApproval = a.IsApproval;
                 att.EmployeeId = a.EmployeeId;
                 atdmanage.Update(att);
                 rc.RemoveCache("InRedisATDData");
@@ -226,12 +237,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
+
         public ActionResult BatchImport()
         {
             return View();
         }
         /// <summary>
-        /// 批量录入
+        /// 批量录入(excel导入)
         /// </summary>
         /// <param name="excelfile"></param>
         /// <param name="course"></param>
@@ -256,6 +268,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 批量添加
+        /// </summary>
+        /// <returns></returns>
         public ActionResult BatchAdd() {
        
             return View();
@@ -276,6 +292,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     atd.DeserveToRegularDays = Convert.ToDecimal(days);
                     atd.ToRegularDays = Convert.ToDecimal(days);
                     atd.IsDel = false;
+                    atd.IsApproval = false;
                     atdmanage.Insert(atd);
                    
                     rc.RemoveCache("InRedisATDData");
@@ -289,6 +306,39 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             FirstTime = time;
             Firstshouldday = days;
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+
+        /// <summary>
+        /// 判断某月份员工工资是否已确认审批
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult IsConfirmApproval(string time)
+        {
+            AttendanceInfoManage atdmanage = new AttendanceInfoManage();//员工月度工资
+            var AjaxResultxx = new AjaxResult();
+            try
+            {
+                var mtime = DateTime.Parse(time);
+                var msrlist = atdmanage.GetADInfoData().Where(s => DateTime.Parse(s.YearAndMonth.ToString()).Year == mtime.Year && DateTime.Parse(s.YearAndMonth.ToString()).Month == mtime.Month).ToList();
+                if (msrlist.FirstOrDefault().IsApproval == true)
+                {
+                    AjaxResultxx.Data = "该月份员工考勤数据已确认审批！";
+                    AjaxResultxx.Success = false;
+                }
+                else
+                {
+                    AjaxResultxx.Success = true;
+                }
+                AjaxResultxx.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+                AjaxResultxx.ErrorCode = 500;
+                AjaxResultxx = atdmanage.Error(ex.Message);
+            }
+            return Json(AjaxResultxx, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>

@@ -9,7 +9,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Login</title>
-  
+    <script src="http://res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js"></script>
 </head>
 <body>
     <link rel="stylesheet" type="text/css" href="~/Content/Login/style.css" />
@@ -70,10 +70,10 @@
                     <div class="weixin-login" style="display:none;">
                         <div class="wx-box clearfix">
                             <a href="javascript:;" class="wx-img-box">
-                                <img class="wx-qrCode" src="/images/Login/ewm.jpg" id="qrCodeImg">
+                                @*<img class="wx-qrCode" src="/images/Login/ewm.jpg" id="qrCodeImg">
                                 <img class="wx-qrCode-logo" src="/images/Login/ewm.jpg" id="qrCodeLogo">
-                                <img class="statusImg" src="/images/Login/wx-confirm.png" id="statusImg">
-                                <div id="weixin_login_container" style="display:none;"></div>
+                                <img class="statusImg" src="/images/Login/wx-confirm.png" id="statusImg">*@
+                                <div id="weixin_login_container"></div>
                             </a>
                             <img src="/images/Login/wx-image.png" class="wx-image">
                         </div>
@@ -217,6 +217,20 @@
         return true;
     }
 
+    //页面加载事件
+    $(document).ready(function () {
+        var obj = new WxLogin
+            ({
+                id: "weixin_login_container",//div的id
+                appid: "wx9a441f4d4496906a",
+                scope: "snsapi_login",//写死
+                redirect_uri: encodeURI("http://www.guiguxinxihua.com/Base_SysManage/Base_SysMenu/Index"),
+                state: "",
+                style: "black",//二维码黑白风格        
+                href: "data:text/css;base64,LmltcG93ZXJCb3ggLnFyY29kZSB7CiAgICB3aWR0aDogMTU4cHg7CiAgICBwYWRkaW5nOjBweDsKICAgIG1hcmdpbjowcHg7Cn0KCi5pbXBvd2VyQm94IC50aXRsZSB7CiAgICBkaXNwbGF5OiBub25lOwp9CgouaW1wb3dlckJveCAuaW5mbyB7CiAgICB3aWR0aDogMTU4cHg7Cn0KCi5zdGF0dXNfaWNvbiB7CiAgICBkaXNwbGF5OiBub25lCn0KCi5pbXBvd2VyQm94IC5zdGF0dXMgewogICAgdGV4dC1hbGlnbjogY2VudGVyOwp9"
+            });
+    });
+
     //切换验证码
     function changeCode() {
         var r = Math.random();
@@ -268,7 +282,21 @@
     //发送短信
     function sendSms(obj) {
         var pn = $("#partnerPhone").val();
-        alert("校验码已发送至  "+pn);
+        $.ajax({
+            url: "/Login/GetPhoneCode?mobile="+pn,
+           
+            type: "GET",
+            success: function (data) {
+                if (data.Success == true) {
+                    alert("校验码已发送至  " + pn);
+                    //window.location.href = data.Data;
+                } else {
+                    //配置一个透明的询问框
+                    showError(data.Msg);
+                }
+            }
+        });
+       
     }
 
     function captchCheck(obj) {
@@ -346,6 +374,7 @@
         $(".form-error").find("label").html(error);
         $(".form-error").show();
     }
+
 
 
     layui.use(['form', 'layedit', 'laydate', 'layer'], function () {

@@ -134,7 +134,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 }
                 catch (Exception)
                 {
-                    a.Success = true;
+                    a.Success = false;
                     a.Msg = "编辑异常，请刷新重试！！";
                 }
             }
