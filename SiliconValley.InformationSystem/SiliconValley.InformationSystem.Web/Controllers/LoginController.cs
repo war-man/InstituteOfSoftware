@@ -130,5 +130,19 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             byte[] bytes = ms.ToArray();
             return File(bytes, "image/Jpeg");
         }
+
+        public ActionResult GetPhoneCode(string mobile)
+        {
+            string code = LoginHelper.PhoneCode(4);
+            //将手机校验码存储到Session中
+            SessionHelper.Session["phonecode"] = code;
+            //将校验码发送到指定的手机
+            string msg = string.Format("您在{0}使用手机登录方式登录湖南硅谷高科软件学院信息平台，为了您的账户安全！请使用：{1} 验证码完成登录", DateTime.Now, code);
+            PhoneMsgHelper.SendMsg(mobile, msg);
+            ErrorResult er = new ErrorResult();
+            er.Success = true;
+            er.Msg = code;
+            return Json(er, JsonRequestBehavior.AllowGet);
+        }
     }
 }

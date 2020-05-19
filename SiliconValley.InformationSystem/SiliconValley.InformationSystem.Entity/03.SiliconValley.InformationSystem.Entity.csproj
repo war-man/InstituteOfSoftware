@@ -70,6 +70,7 @@
     <Compile Include="Base_SysManage\Base_UserRoleMap.cs" />
     <Compile Include="Base_SysManage\EnumType.cs" />
     <Compile Include="Base_SysManage\ViewEntity\AccountView.cs" />
+    <Compile Include="Base_SysManage\ViewEntity\Weixin_info.cs" />
     <Compile Include="Entity\Accdationinformation.cs" />
     <Compile Include="Entity\AddCourse.cs" />
     <Compile Include="Entity\AdmissArrangement.cs" />
