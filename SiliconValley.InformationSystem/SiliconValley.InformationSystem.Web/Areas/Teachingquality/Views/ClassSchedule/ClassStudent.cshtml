@@ -664,14 +664,7 @@
         $("body").on("dblclick", ".Mydiv,.TiDIV,.Transaction", function () {
 
             var stuid = $($(this).children()[0]).text();
-            layer.open({
-                title: name,
-                type: 2,
-                area: ['500px', '880px']
-                , content: "/Teachingquality/StudentInformation/Viewdetails?id=" + stuid
-
-                //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-            });
+            window.location = "/Teachingquality/Stuportfolio/Index/" + stuid;
         });
         //群号设置
         $("#but1").click(function () {

@@ -326,6 +326,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
+    <Compile Include="Areas\Teachingquality\Studentportfolio\StuportfolioController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
@@ -458,6 +459,13 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997080200010back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.png" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997080200010just.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997111700040just.jpg" />
     <Content Include="Areas\Teachingquality\StuImages\2019年10月14日.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
@@ -1697,6 +1705,8 @@
     <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TishEvningView.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\IDcardphoto.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
