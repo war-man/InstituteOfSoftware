@@ -110,6 +110,7 @@
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
                     <button class="layui-btn layui-btn-sm" lay-event="AddEmps"><i class="layui-icon layui-icon-addition"></i>添加员工</button>
+                    <button class="layui-btn layui-btn-sm" lay-event="BatchImport"><i class="layui-icon layui-icon-upload-drag"></i>excel批量导入</button>
                     <button class="layui-btn layui-btn-sm" lay-event="DeptAndPositionOperation"><i class="layui-icon layui-icon-app"></i>部门及岗位管理</button>
 
                 </div>
@@ -213,6 +214,9 @@
                 switch (obj.event) {
                     case 'AddEmps':
                         AddEmployee();
+                        break;
+                    case 'BatchImport':
+                        BatchImportEmps();
                         break;
                     case 'DeptAndPositionOperation':
                         DeptAndPositionOperation();
@@ -335,8 +339,6 @@
                         }
                     });
                 });
-
-
 
             });
 
@@ -476,7 +478,22 @@
                 });
 
             })
+        }
 
+        //批量导入员工的方法
+        function BatchImportEmps() {
+            layui.use(['layer'], function (args) {
+                var layer = layui.layer;      //layui对象
+
+                layer.open({
+                    type: 2
+                    , area: ["800px", "500px"]
+                    , title: "批量导入员工"
+                    , content: '/Personnelmatters/EmployeesInfo/BatchImportEmps'
+                    , anim: 2
+                });
+
+            })
         }
 
         //部门和岗位的管理

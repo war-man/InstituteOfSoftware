@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     public partial class EmployeesInfo
     {
         
-        [Key]
+        [Key] 
         public string EmployeeId { get; set; }
         public Nullable<int> DDAppId { get; set; }
         public string EmpName { get; set; }
@@ -53,5 +53,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public string Image { get; set; }
+        public string RecruitSource { get; set; }//招聘来源
     }
 }

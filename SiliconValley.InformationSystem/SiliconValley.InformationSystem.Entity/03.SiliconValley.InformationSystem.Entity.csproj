@@ -350,6 +350,8 @@
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmpDetailView.cs" />
+    <Compile Include="ViewEntity\EmpErrorDataView.cs" />
+    <Compile Include="ViewEntity\EmployeeInfoView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EmptyClass.cs" />
