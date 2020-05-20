@@ -1697,6 +1697,7 @@
     <Content Include="Areas\Educational\Views\EvningSelfStudy\AnPaiEvningSelfStudyView.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TishEvningView.cshtml" />
     <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\BatchImportEmps.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
