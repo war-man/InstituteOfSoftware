@@ -192,12 +192,12 @@
         });
         //双击详细
         $("body").on("dblclick", ".Title", function () {
-            console.log($(this).attr("id"));
-            if ($("#EmpDeptName").val().indexOf($(this).attr("id"))==-1) {
-                console.log("匹配" + $("#EmpDeptName").val());
-            }
+            //console.log($(this).attr("id"));
+            //if ($("#EmpDeptName").val().indexOf($(this).attr("id"))1) {
+            //    console.log("匹配" + $("#EmpDeptName").val());
+            //}
            
-          //  window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
+            window.location.href = '/Teachingquality/ClassSchedule/ClassStudent?ClassNumber=' + $($(this).children()[0]).val();
         });
     });
 </script>
