@@ -1703,6 +1703,7 @@
     <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
     <Content Include="Config\ExportStudentBean.json" />
     <Content Include="Areas\Educational\Views\EvningSelfStudy\GoodEvningSelfStudyView.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\BatchImportEmps.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
