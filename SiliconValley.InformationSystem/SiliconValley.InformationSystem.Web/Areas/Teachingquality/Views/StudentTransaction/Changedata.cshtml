@@ -20,36 +20,36 @@
     
 </ul></div>
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left">
         <div class="layui-row ">
 
 
             <div class="layui-row layui-form-item" style="width:80%;margin-top:20px;">
 
 
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                     <label class="layui-form-label labels">班级</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <input type="text" id="ClassIDs"  autocomplete="off" class="layui-input linu">
                         @Html.Hidden("ClassID")
                     </div>
                 </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                     <label class="layui-form-label labels">姓名</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <input type="text" name="Name" class="layui-input linu">
                     </div>
                 </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                     <label class="layui-form-label labels">类型</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         @Html.DropDownList("TypeName", ViewBag.Types as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
 
                     </div>
                 </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
                     <label class="layui-form-label">状态</label>
-                    <div class="layui-input-block">
+                    <div class="layui-input-inline">
                         <select name="IsaDopt">
                             <option value="" selected="">全部</option>
                             <option value="false">拒绝</option>
@@ -61,7 +61,7 @@
 
             </div>
 
-            <div style="position:absolute;left:84%;top:1px;">
+            <div style="position:absolute;left:84%;top:88px;">
                 <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i> 查询</button>
             </div>
 
