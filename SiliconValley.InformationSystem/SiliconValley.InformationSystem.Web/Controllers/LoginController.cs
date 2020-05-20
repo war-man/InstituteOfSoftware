@@ -145,5 +145,51 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             er.Msg = code;
             return Json(er, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult SLogin()
+        {
+            return View();
+        }
+
+        public ActionResult LoginAction(string username, string password)
+        {
+            //20052000082300013
+
+            BaseBusiness<StudentInformation> dbst = new BaseBusiness<StudentInformation>();
+            ErrorResult err = new ErrorResult();
+            var student = dbst.GetEntity(username);
+
+            if (student != null)
+            {
+                if (student.Password == password)
+                {
+                    SessionHelper.Session["studentnumber"] = student.StudentNumber;
+                    SessionHelper.Session["UserId"] = student.StudentNumber;
+                    err.Success = true;
+                    err.Msg = "登陆成功!";
+                    err.Data = "/student/index";
+
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    err.Success = false;
+                    err.Msg = "用户名或密码错误！";
+                    err.Data = null;
+
+                    return Json(err, JsonRequestBehavior.AllowGet);
+                }
+            }
+            else
+            {
+                err.Success = false;
+                err.Msg = "用户名或密码错误！";
+                err.Data = null;
+
+                return Json(err, JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
     }
 }
