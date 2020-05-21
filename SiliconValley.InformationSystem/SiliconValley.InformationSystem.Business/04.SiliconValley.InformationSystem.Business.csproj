@@ -256,6 +256,7 @@
     <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
     <Compile Include="StudentManeger\StudentInformationManeger.cs" />
     <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />
+    <Compile Include="StudentportfolioBusiness\StudentpoBusiness.cs" />
     <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TalentDemandPlanBusiness\TalentDemandPlanManage.cs" />

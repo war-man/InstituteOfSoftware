@@ -109,6 +109,14 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 亲属电话
         /// </summary>
         public string Familyphone { get; set; }
-
+ 
+        /// <summary>
+        /// 身份证正面
+        /// </summary>
+        public string Identityjustimg { get; set; }
+        /// <summary>
+        /// 身份证反面
+        /// </summary>
+        public string Identitybackimg { get; set; }
     }
 }
