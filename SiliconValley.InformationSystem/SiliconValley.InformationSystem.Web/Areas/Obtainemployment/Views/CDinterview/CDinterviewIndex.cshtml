@@ -230,6 +230,13 @@
                 case 'ing':
                     switch (obj.event) {
                         case 'add':
+
+                            if (classid == undefined || classid == ""){
+                            layer.msg("请选择班级",{ icon: 2 });
+                            return;
+                            }
+        
+
                             layer.open({
                                 type: 2,
                                 content: "/Obtainemployment/CDinterview/CDSResearchRecordRegister?param0=" + classid,

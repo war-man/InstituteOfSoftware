@@ -3357,6 +3357,8 @@
     <Content Include="Tree\maps\risk.json" />
     <Content Include="Tree\maps\usofa.json" />
     <Content Include="Views\Login\SLogin.cshtml" />
+    <Content Include="Views\WeiXin\BindingWX.cshtml" />
+    <Content Include="Views\WeiXin\WXLoginError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -3429,7 +3431,6 @@
     <Folder Include="uploadXLSXfile\ConsultUploadfile\ConflictExcel\" />
     <Folder Include="uploadXLSXfile\ConsultUploadfile\ExportAll\" />
     <Folder Include="Views\DataKeepOnRecord\" />
-    <Folder Include="Views\WeiXin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

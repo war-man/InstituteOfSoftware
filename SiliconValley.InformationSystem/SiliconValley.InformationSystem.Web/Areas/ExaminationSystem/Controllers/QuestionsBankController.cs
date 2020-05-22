@@ -56,8 +56,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         // GET: ExaminationSystem/QuestionsBank
         public ActionResult QuestionsBankIndex()
         {
-         
-            return View();
+
+            StudentExamBusiness studentExamBusiness = new StudentExamBusiness();
+
+            ExaminationBusiness examinationBusiness = new ExaminationBusiness();
+
+            var e = examinationBusiness.GetList().Where(d => d.ID == 3012).FirstOrDefault();
+
+            studentExamBusiness.productAnswerQuestion(e, 10);
+
+             return View();
         }
 
 
@@ -131,7 +139,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
        /// <returns></returns>
         [HttpPost]
 
-        public ActionResult ChoiceQuestionBatchEntry(HttpPostedFileBase excelfile, string course, string QuestionType)
+        public ActionResult ChoiceQuestionBatchEntry(HttpPostedFileBase excelfile, string course, string QuestionType, string grand)
         {
 
    

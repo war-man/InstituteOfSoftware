@@ -40,5 +40,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
         /// 使用次数
         /// </summary>
         public int UsageCount { get; set; }
+
+        public int Grand { get; set; }
     }
 }
