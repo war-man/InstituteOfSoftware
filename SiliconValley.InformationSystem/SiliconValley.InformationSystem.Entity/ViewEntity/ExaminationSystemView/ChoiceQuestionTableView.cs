@@ -61,5 +61,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
         /// 所属课程
         /// </summary>
         public Curriculum Course { get; set; }
+
+        public int Grand { get; set; }
     }
 }

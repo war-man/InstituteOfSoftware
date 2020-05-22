@@ -63,8 +63,18 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             AnswerQuestionView answerQuestionView = new AnswerQuestionView();
 
             CourseBusiness courseBusiness = new CourseBusiness();
+            answerQuestionView.Grand = answerQuestionBank.Grand;
 
-            answerQuestionView.Course= courseBusiness.GetCurriculas().Where(d => d.CurriculumID == answerQuestionBank.Course).FirstOrDefault();
+            if (answerQuestionBank.Course == 0)
+            {
+                answerQuestionView.Course = null;
+            }
+            else
+            {
+                answerQuestionView.Course = courseBusiness.GetCurriculas().Where(d => d.CurriculumID == answerQuestionBank.Course).FirstOrDefault();
+            }
+
+            
 
             answerQuestionView.ID = answerQuestionBank.ID;
             answerQuestionView.IsUsing = answerQuestionBank.IsUsing;

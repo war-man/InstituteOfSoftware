@@ -176,6 +176,8 @@
                             $("#course").empty();
                             $("#course").append(new Option("暂无数据", ""));
                         }
+
+                        $("#course").append(new Option("升学题", "0"));
                         layui.form.render("select");
                     }
             });
@@ -248,11 +250,11 @@
                     Level: data.field.Level,
                     Answer: Answer,
                     Course: data.field.course,
-                    Remark:data.field.Remark
+                    Remark: data.field.Remark,
+                    Grand: data.field.major
 
                 };
 
-            
 
                 Ajax('/ExaminationSystem/QuestionsBank/AddProposition', obj, 'post', function (result) {
 

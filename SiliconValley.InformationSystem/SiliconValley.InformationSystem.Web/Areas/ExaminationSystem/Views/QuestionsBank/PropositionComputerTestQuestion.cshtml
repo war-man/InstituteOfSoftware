@@ -19,7 +19,7 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">阶段</label>
                     <div class="layui-input-inline">
-                        <select name="major" lay-filter="major">
+                        <select name="Grand" lay-filter="major">
                             <option value="0">请选择</option>
                           
                             @{
@@ -124,6 +124,7 @@
                             $("#course").empty();
                             $("#course").append(new Option("暂无数据", ""));
                         }
+                        $("#course").append(new Option("升学题", "0"));
                         layui.form.render("select");
                     }
                 });
