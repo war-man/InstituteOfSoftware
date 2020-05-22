@@ -376,7 +376,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         studentInformation.IsDelete = false;
-                        dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
+                        //dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
 
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();

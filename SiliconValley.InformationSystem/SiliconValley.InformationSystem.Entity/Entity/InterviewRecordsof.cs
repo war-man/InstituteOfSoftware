@@ -13,22 +13,51 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    /// <summary>
+    /// 学员家长访谈记录
+    /// </summary>
     [Table(name: "InterviewRecordsof")]
     public partial class InterviewRecordsof
     {
         [Key]
         public int ID { get; set; }
+        /// <summary>
+        /// 访谈话题
+        /// </summary>
         public string InterviewTopics { get; set; }
+        /// <summary>
+        /// 访谈内容
+        /// </summary>
         public string Interviewcontent { get; set; }
-        public Nullable<System.DateTime> Interviewtime { get; set; }
+        /// <summary>
+        /// 访谈日期
+        /// </summary>
+        public DateTime Interviewtime { get; set; }
+        /// <summary>
+        /// 学员id
+        /// </summary>
         public string Studentnumber { get; set; }
+        /// <summary>
+        /// 家长姓名
+        /// </summary>
         public string Parent { get; set; }
-        public Nullable<int> Headmaster { get; set; }
+        /// <summary>
+        /// 登记人
+        /// </summary>
+        public string Empnumber { get; set; }
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Remarks { get; set; }
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
         public Nullable<bool> IsDelete { get; set; }
-        public Nullable<System.DateTime> Addtime { get; set; }
-    
-        public virtual Headmaster Headmaster1 { get; set; }
-        public virtual StudentInformation StudentInformation { get; set; }
+        /// <summary>
+        /// 添加时间
+        /// </summary>
+        public DateTime Addtime { get; set; }
+
+
     }
 }
