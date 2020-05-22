@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using Newtonsoft.Json;
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
 
@@ -23,6 +23,8 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         // GET: WeiXin
         public ActionResult WXLogin(string code)
         {
+           
+
             QQ_callback callback = new QQ_callback();
 
             Weixin_info userinfo = callback.getWeixinUserInfoJSON(code);
@@ -39,6 +41,12 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             var permisslist = PermissionManage.GetOperatorPermissionValues();
 
             SessionHelper.Session["OperatorPermission"] = permisslist;
+
+            Base_SysLogBusiness base_SysLogBusiness = new Base_SysLogBusiness();
+
+            base_SysLogBusiness.WriteSysLog($"code:{code}");
+            base_SysLogBusiness.WriteSysLog($"用户信息:{JsonConvert.SerializeObject(userinfo)}");
+
 
             return Redirect("/Base_SysManage/Base_SysMenu/Index");
         }
