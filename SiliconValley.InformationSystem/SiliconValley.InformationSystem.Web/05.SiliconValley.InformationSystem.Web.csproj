@@ -326,6 +326,7 @@
     <Compile Include="Areas\Teachingquality\Controllers\StudentInformationController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentTransactionController.cs" />
     <Compile Include="Areas\Teachingquality\Controllers\StudentUnionController.cs" />
+    <Compile Include="Areas\Teachingquality\Studentportfolio\StuportfolioController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
@@ -337,10 +338,12 @@
     <Compile Include="Areas\Teaching\TeachingAreaRegistration.cs" />
     <Compile Include="Common\layuitree.cs" />
     <Compile Include="Common\LoginHelper.cs" />
+    <Compile Include="Common\QQ_callback.cs" />
     <Compile Include="Common\SystemMenuManage.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\StudentController.cs" />
+    <Compile Include="Controllers\WeiXinController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -458,6 +461,14 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997080200010back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.png" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041back.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051991032300041just.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997080200010just.jpg" />
+    <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997111700040just.jpg" />
     <Content Include="Areas\Teachingquality\StuImages\2019年10月14日.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
@@ -473,6 +484,7 @@
     <Content Include="Config\ExamCourseconfig.xml" />
     <Content Include="Config\questionLevelConfig.xml" />
     <Content Include="Content\Login\style.css" />
+    <Content Include="Content\Login\weixincode.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo.css" />
     <Content Include="dleiicon\font_xhlb4bpyaza\demo_index.html" />
     <Content Include="dleiicon\font_xhlb4bpyaza\iconfont.css" />
@@ -948,6 +960,7 @@
     <Content Include="Scripts\common\myDatepicker.css" />
     <Content Include="Scripts\common\myDatepicker.js" />
     <Content Include="Scripts\css\buttonStyle.css" />
+    <Content Include="Scripts\css\css\style.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\layui.mobile.css" />
     <Content Include="Scripts\dtree2.5.4\layui\css\modules\code.css" />
@@ -1339,7 +1352,6 @@
     <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
-    <Content Include="Scripts\Tangmin_CssAndJs\StudentDatakeep_Css\studentdatakeep.css" />
     <Content Include="Tree\css\atlas.css" />
     <Content Include="Tree\css\bars.css" />
     <Content Include="Tree\css\bootstrap-markdown.min.css" />
@@ -1700,9 +1712,11 @@
     <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
     <Content Include="Config\ExportStudentBean.json" />
     <Content Include="Areas\Educational\Views\EvningSelfStudy\GoodEvningSelfStudyView.cshtml" />
-    <Content Include="Areas\Market\Views\StudentDataKeep\Sch_MarketIndex.cshtml" />
-    <Content Include="Areas\Market\Views\ConsultTeacher\TeacherSelect.cshtml" />
-    <Content Include="Areas\Market\Views\StudentDataKeep\ExportView.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\InterviewStudents\ParentinterviewEntiy.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\InterviewStudents\ParentinterviewFine.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\InterviewStudents\ParentinterviewHome.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\Stuportfolio\Index.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\StudentInformation\IDcardphoto.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3343,6 +3357,8 @@
     <Content Include="Tree\maps\risk.json" />
     <Content Include="Tree\maps\usofa.json" />
     <Content Include="Views\Login\SLogin.cshtml" />
+    <Content Include="Views\WeiXin\BindingWX.cshtml" />
+    <Content Include="Views\WeiXin\WXLoginError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

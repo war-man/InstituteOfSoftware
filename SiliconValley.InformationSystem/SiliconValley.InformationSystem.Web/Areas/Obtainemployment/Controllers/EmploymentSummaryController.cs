@@ -1,4 +1,5 @@
-﻿using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+﻿using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
+using SiliconValley.InformationSystem.Business.DormitoryBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using SiliconValley.InformationSystem.Business.Employment;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
@@ -90,6 +91,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
         public ActionResult YearEmploymentRatioData(string Year, string type, int page, int limit)
         {
             dbempStaffAndStu = new EmpStaffAndStuBusiness();
+
             var alllist = dbempStaffAndStu.EmploymentRatio(Year:Year);
 
             int count = 0;
@@ -152,6 +154,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
         public ActionResult StuffEmploymentRatioData(string empnumber, string Year, string type, int page, int limit)
         {
+
+            //EmpStaffAndStu
             dbempStaffAndStu = new EmpStaffAndStuBusiness();
             dbEmploymentStaff = new EmploymentStaffBusiness();
             var stuff = dbEmploymentStaff.GetList().Where(d => d.EmployeesInfo_Id == empnumber).FirstOrDefault();
@@ -195,7 +199,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
             foreach (var item in skiplist)
             {
-                var tempobj = dbempStaffAndStu.studentnoconversionempstaffandstubiew(item.Studentno);
+                var tempobj = dbempStaffAndStu.studentnoconversionempstaffandstubiew1(item.Studentno);
 
                 if (tempobj != null)
 
@@ -215,7 +219,11 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
             EmpClassBusiness db_empclass = new EmpClassBusiness();
 
             //毕业班级
-           var classlist = db_empclass.GetClassFormServer().Where(d=>d.ClassStatus == true).ToList();
+         
+
+            ClassScheduleBusiness dbclassss = new ClassScheduleBusiness();
+
+            var classlist = dbclassss.Graduatingclass();
 
             var db_major = new SpecialtyBusiness();
 
@@ -246,7 +254,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
                     classid = item.id,
                     major = db_major.GetSpecialties().Where(d => d.Id == item.Major_Id).FirstOrDefault().SpecialtyName,
                     heammaster = emp.EmpName,
-                    graduationDate = db_empclass.GetEmpClassFormServer().Where(d=>d.ClassId == item.id).FirstOrDefault().EndingTime
+                    graduationDate = db_empclass.GetList().Where(d=>d.ClassId == item.id).FirstOrDefault().EndingTime
 
                 };
 
@@ -327,7 +335,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Obtainemployment.Controllers
 
         }
 
-
+       
 
     }
 }

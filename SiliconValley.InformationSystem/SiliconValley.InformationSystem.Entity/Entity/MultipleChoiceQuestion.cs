@@ -32,6 +32,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> IsUsing { get; set; }
         public string Remark { get; set; }
         public Nullable<int> Course { get; set; }
+        public int Grand { get; set; }
 
 
     }

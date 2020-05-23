@@ -12,14 +12,16 @@
     <permission permissionid="s3TeacherDirector_SearchSurveyHistory" depIds="1009"></permission>
     <permission permissionid="s3MasterDirector_SearchSurveyHistory" depIds="1008"></permission>
     <permission permissionid="s4TeacherDirector_SearchSurveyHistory" depIds="1010"></permission>
+    <permission permissionid="Y1TeacherDirector_SearchSurveyHistory" depIds="1010"></permission>
     
   </permissions>
 
   <grandteacherPermissions>
-    <permission permissionid="GetAllGrandTeacher" grand="1,2,3,4"></permission>
-    <permission permissionid="S1S2GrandTeacher" grand="1,2"></permission>
+    <permission permissionid="GetAllGrandTeacher" grand="1,2,3,4,1002"></permission>
+    <permission permissionid="S1S2GrandTeacher" grand="1,2,1002"></permission>
     <permission permissionid="S3GrandTeacher" grand="3"></permission>
     <permission permissionid="S4GrandTeacher" grand="4"></permission>
+   
   </grandteacherPermissions>
  
   

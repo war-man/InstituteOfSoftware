@@ -51,5 +51,11 @@ namespace SiliconValley.InformationSystem.Entity.Base_SysManage
         /// 员工编号
         /// </summary>
         public string EmpNumber { get; set; }
+
+
+        /// <summary>
+        /// 微信标识
+        /// </summary>
+        public string WX_Unionid { get; set; }
     }
 }

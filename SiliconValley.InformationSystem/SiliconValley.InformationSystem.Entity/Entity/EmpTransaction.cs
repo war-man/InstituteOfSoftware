@@ -73,5 +73,23 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// 原因
         /// </summary>
         public string Reason { get; set; }
+
+        /// <summary>
+        /// 续签前合同起始时间
+        /// </summary>
+        public Nullable<System.DateTime> BeforeContractStartTime { get; set; }
+        /// <summary>
+        /// 续签前合同终止时间
+        /// </summary>
+        public Nullable<System.DateTime> BeforeContractEndTime { get; set; }
+        /// <summary>
+        /// 续签后合同起始时间
+        /// </summary>
+        public Nullable<System.DateTime> AfterContractStartTime { get; set; }
+      
+        /// <summary>
+        /// 续签后合同终止时间
+        /// </summary>
+        public Nullable<System.DateTime> AfterContractEndTime { get; set; }
     }
 }

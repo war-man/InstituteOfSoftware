@@ -151,7 +151,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             else
             {
                 //职业素养课，语数外 体育 课时
-                resultObj.otherTeaccher_count = otherTeaccher_count();
+                resultObj.otherTeaccher_count = teachingitems(empObj, date, "other");
             }
 
             //内训课时
@@ -241,7 +241,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             }
             #endregion
 
-
+            
 
             #region 阅卷份数
             int MarkingNumber()
@@ -455,7 +455,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             return result;
         }
 
-
         /// <summary>
         ///提供老师月阅卷数量
         /// </summary>
@@ -474,7 +473,7 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
                 return resultlist;
             }
 
-            resultlist = db_exscore.AllExamScores().
+            resultlist = db_exscore.AllExamScores().Where(d=>d.CreateTime!=null).ToList().
 
                 Where(d => ((DateTime)d.CreateTime).Year == date.Year && ((DateTime)d.CreateTime).Month == date.Month).
 
@@ -575,13 +574,11 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
         /// <param name="emp"></param>
         /// <param name="date"></param>
         /// <returns></returns>
-        public List<TeachingItem> teachingitems(EmployeesInfo emp, DateTime date)
+        public List<TeachingItem> teachingitems(EmployeesInfo emp, DateTime date, string type="skill")
         {
 
-            var templist = ScreenReconcile(emp.EmployeeId, date, type: "skill");
+            var templist = ScreenReconcile(emp.EmployeeId, date, type: type);
 
-            //获取所有阶段
-           
             return GetteachingNum();
 
 
@@ -828,6 +825,8 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
             ///课时费
             result.EachingHourCost = (decimal)this.EachingHourCost(data.teachingitems, data.BottomClassHour, data.SatisfactionScore);
+
+            result.OtherTeachingCost = OtherTeachingCost(data.otherTeaccher_count);
 
             ///值班费
             result.DutyCost = Duty_Cost(data.Duty_Count);
@@ -1205,7 +1204,25 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
             var cost = xmlRoot.GetElementsByTagName("PPT_NodeCost")[0].InnerText;
 
             return count * int.Parse(cost);
-        } 
+        }
+
+        public decimal OtherTeachingCost(List<TeachingItem> items)
+        {
+            decimal result = 0;
+            CourseBusiness tempdb_course = new CourseBusiness();
+
+            items.ForEach(d=> {
+
+                //获取课程费用
+             
+                Curriculum course = tempdb_course.GetCurriculas().Where(x=>x.CurriculumID == d.Course).FirstOrDefault();
+
+                result += (decimal)course.PeriodMoney * (decimal)d.NodeNumber;
+
+            });
+
+            return result;
+        }
 
 
         /// <summary>
@@ -1358,5 +1375,6 @@ namespace SiliconValley.InformationSystem.Business.EducationalBusiness
 
 
         }
+
     }
 }

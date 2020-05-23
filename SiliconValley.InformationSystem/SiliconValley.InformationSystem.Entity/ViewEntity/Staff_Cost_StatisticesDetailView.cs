@@ -36,7 +36,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 职业素养课，语数外 体育 次数
         /// </summary>
-        public int otherTeaccher_count { get; set; }
+        public  List<TeachingItem> otherTeaccher_count { get; set; }
 
         /// <summary>
         /// 底课时

@@ -374,6 +374,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             t.ProjectExperience = teacher.ProjectExperience.Trim();
             t.TeachingExperience = teacher.TeachingExperience.Trim();
             t.WorkExperience = teacher.WorkExperience.Trim();
+            t.MinimumCourseHours = teacher.MinimumCourseHours;
 
             try
             {

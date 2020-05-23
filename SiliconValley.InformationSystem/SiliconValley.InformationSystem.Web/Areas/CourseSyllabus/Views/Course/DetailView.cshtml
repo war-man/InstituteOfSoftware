@@ -31,13 +31,29 @@
                         <label class="layui-form-label">课程名称：</label>
                         <div class="layui-input-inline">
 
-                            @Html.TextBoxFor(c => c.CourseName, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" } ,{ "readonly", "readonly" } })
+                            @Html.TextBoxFor(c => c.CourseName, new Dictionary<string, object> { { "lay-verify", "required" }, { "class", "layui-input" }, { "readonly", "readonly" } })
                         </div>
                     </div>
                     <div class="layui-inline">
                         <label class="layui-form-label">所属专业：</label>
                         <div class="layui-input-inline">
-                            <button class="layui-btn">@Model.Major.SpecialtyName</button>
+                            <button class="layui-btn">
+
+                                @{
+                                    string majorname = string.Empty;
+
+                                    if (Model.Major == null)
+                                    {
+                                        majorname = "无专业";
+                                    }
+                                    else
+                                    {
+                                        majorname = Model.Major.SpecialtyName;
+                                    }
+
+                                }
+                                @majorname
+                            </button>
                             @*@Html.DropDownListFor(d => d.Major, ViewBag.majors as IEnumerable<SelectListItem>, new Dictionary<string, object> { { "disabled", "disabled" } })*@
 
                         </div>

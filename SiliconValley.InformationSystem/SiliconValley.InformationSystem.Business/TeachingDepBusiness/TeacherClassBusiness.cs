@@ -218,9 +218,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                 classTableView.MajorName = "";
 
             }
-
-
-
             classTableView.ClassSize = this.GetStudentByClass(classSchedule.id).Count;//班级人数
             //学员班级     
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
@@ -228,9 +225,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             try
             {
 
-                var master = headerclass.GetList().Where(d => d.IsDelete == false && d.ClassID == classScheduleBusiness.GetEntity(classSchedule.ClassNumber).id).FirstOrDefault();
+                var master = headerclass.GetList().Where(d => d.IsDelete == false && d.ClassID == classScheduleBusiness.GetEntity(classSchedule.id).id).FirstOrDefault();
 
                 var temp1 = headermaster.GetList().Where(d => d.IsDelete == false && d.ID == master.LeaderID).FirstOrDefault();//获取到班主任
+
                 classTableView.Headmaster = emp.GetList().Where(d => d.IsDel == false && d.EmployeeId == temp1.informatiees_Id).FirstOrDefault().EmpName;
 
             }
@@ -239,8 +237,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
                 classTableView.Headmaster = "暂无";
             }
-
-
             try
             {
                 classTableView.qqGroup = classgroup.GetList().Where(d => d.IsDelete == false && d.ClassNumber == classSchedule.id).FirstOrDefault().QQGroupnumber;

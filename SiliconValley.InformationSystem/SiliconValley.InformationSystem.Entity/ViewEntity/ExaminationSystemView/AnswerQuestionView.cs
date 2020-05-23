@@ -50,5 +50,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity.ExaminationSystemVie
        /// 命题日期
        /// </summary>
         public Nullable<DateTime> PropositionDate { get; set; }
+
+        public int Grand { get; set; }
     }
 }

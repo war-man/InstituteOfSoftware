@@ -8,6 +8,8 @@ using System.Web.Mvc;
 
 namespace SiliconValley.InformationSystem.Web
 {
+
+    [CheckUrlPermission]
     /// <summary>
     /// Mvc基控制器
     /// </summary>

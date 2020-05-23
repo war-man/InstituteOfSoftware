@@ -270,7 +270,7 @@
                             var notcount = $("#notemploymenttable .count").attr("value");
                             console.log(alerdycount);
                             console.log(notcount);
-                            var radio = (alerdycount / (alerdycount + notcount)) * 100;
+                            var radio = (parseInt(alerdycount) / (parseInt(alerdycount) + parseInt(notcount))) * 100;
                             console.log(radio);
                             $("#radioH").text(radio + '%');
 

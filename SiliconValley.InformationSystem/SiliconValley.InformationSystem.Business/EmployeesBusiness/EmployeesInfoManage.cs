@@ -17,11 +17,17 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
     using SiliconValley.InformationSystem.Business.FinanceBusiness;
     using SiliconValley.InformationSystem.Business.EmpSalaryManagementBusiness;
     using SiliconValley.InformationSystem.Business.DormitoryBusiness;
+    using NPOI.SS.UserModel;
+    using System.IO;
+    using NPOI.HSSF.UserModel;
+    using NPOI.XSSF.UserModel;
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
+    using SiliconValley.InformationSystem.Business.EmpTransactionBusiness;
 
     /// <summary>
     /// 员工业务类
     /// </summary>
-    public class EmployeesInfoManage:BaseBusiness<EmployeesInfo>
+    public class EmployeesInfoManage : BaseBusiness<EmployeesInfo>
     {
         RedisCache rc;
         /// <summary>
@@ -32,9 +38,9 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             rc = new RedisCache();
             rc.RemoveCache("InRedisEmpInfoData");
             List<EmployeesInfo> emplist = new List<EmployeesInfo>();
-            if (emplist==null || emplist.Count()==0) {
-                emplist = this.GetList();
-                rc.SetCache("InRedisEmpInfoData",emplist);
+            if (emplist == null || emplist.Count() == 0) {
+                emplist = this.GetIQueryable().ToList();
+                rc.SetCache("InRedisEmpInfoData", emplist);
             }
             emplist = rc.GetCache<List<EmployeesInfo>>("InRedisEmpInfoData");
             return emplist;
@@ -52,7 +58,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             return str;
         }
 
-        
+
         /// <summary>
         /// 根据员工编号获取所属岗位对象
         /// </summary>
@@ -115,7 +121,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             List<EmployeesInfo> emplist = new List<EmployeesInfo>();
             foreach (var item in this.GetEmpInfoData())
             {
-                if (item.PositionId==pid) {
+                if (item.PositionId == pid) {
                     emplist.Add(item);
                 }
             }
@@ -144,14 +150,14 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             MoveTypeManage mtmanage = new MoveTypeManage();
             return mtmanage.GetEntity(id);
         }
-       
+
         /// <summary>
         /// 根据部门编号获取该部门下的所有员工
         /// </summary>
         /// <returns></returns>
         public List<EmployeesInfo> GetEmpsByDeptid(int deptid)
         {
-            return this.GetAll().Where(a => this.GetDeptByPid(a.PositionId).DeptId==deptid).ToList();
+            return this.GetAll().Where(a => this.GetDeptByPid(a.PositionId).DeptId == deptid).ToList();
         }
 
 
@@ -164,7 +170,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// </summary>
         /// <returns></returns>
         public List<EmployeesInfo> GetAll() {
-          return  this.GetIQueryable().Where(a => a.IsDel == false).ToList();
+            return this.GetIQueryable().Where(a => a.IsDel == false).ToList();
         }
 
         /// <summary>
@@ -203,7 +209,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// <returns></returns>
         public List<EmployeesInfo> GetChannelStaffZhuren() {
             return this.GetAll().Where(a => this.GetPositionByEmpid(a.EmployeeId).PositionName == "市场主任").ToList();
-       
+
         }
 
         /// <summary>
@@ -211,7 +217,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// </summary>
         /// <returns></returns>
         public List<EmployeesInfo> GetChannelStaffFuzhuren() {
-            return this.GetAll().Where(a=>this.GetPositionByEmpid(a.EmployeeId).PositionName=="市场副主任").ToList();
+            return this.GetAll().Where(a => this.GetPositionByEmpid(a.EmployeeId).PositionName == "市场副主任").ToList();
         }
 
         /// <summary>
@@ -221,7 +227,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// <returns></returns>
         public EmployeesInfo GetInfoByChannelID(int ChannelID) {
             dbchannel = new ChannelStaffBusiness();
-            var channel= dbchannel.GetChannelByID(ChannelID);
+            var channel = dbchannel.GetChannelByID(ChannelID);
             return this.GetInfoByEmpID(channel.EmployeesInfomation_Id);
         }
         /// <summary>
@@ -229,7 +235,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         /// </summary>
         /// <returns></returns>
         public EmployeesInfo GetYangxiao() {
-            return this.GetAll().Where(a => this.GetPositionByEmpid(a.EmployeeId).PositionName=="常务副校长").FirstOrDefault();
+            return this.GetAll().Where(a => this.GetPositionByEmpid(a.EmployeeId).PositionName == "常务副校长").FirstOrDefault();
         }
         /// <summary>
         /// 判断是否是渠道主任
@@ -241,7 +247,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             var data = this.GetChannelStaffZhuren();
             foreach (var item in data)
             {
-                if (item.EmployeeId==empinfoid)
+                if (item.EmployeeId == empinfoid)
                 {
                     iszhuren = true;
                 }
@@ -256,7 +262,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         public bool IsChannelZhuren(EmployeesInfo empinfo) {
             bool iszhuren = false;
             var query = this.GetChannelStaffZhuren().Where(a => a.EmployeeId == empinfo.EmployeeId).FirstOrDefault();
-            if (query!=null)
+            if (query != null)
             {
                 iszhuren = true;
             }
@@ -272,7 +278,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
         {
             bool isfuzhuren = false;
             var query = this.GetChannelStaffFuzhuren().Where(a => a.EmployeeId == empinfo.EmployeeId).FirstOrDefault();
-            if (query!=null)
+            if (query != null)
             {
                 isfuzhuren = true;
             }
@@ -350,6 +356,467 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
             EmplSalaryEmbodyManage esemanage = new EmplSalaryEmbodyManage();
             result = esemanage.AddEmpToEmpSalary(emp.EmployeeId);//往员工工资体系表添加员工
             return result;
+        }
+
+
+        /// <summary>
+        /// 将导过来的excel数据赋给考勤视图类中
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <returns></returns>
+        public List<EmployeeInfoView> CreateExcelData(ISheet sheet)
+        {
+            List<EmployeeInfoView> result = new List<EmployeeInfoView>();
+            int num = 0;
+            AjaxResult ajaxresult = new AjaxResult();
+            try
+            {
+                while (true)
+                {
+                    EmployeeInfoView empview = new EmployeeInfoView();
+                    num++;
+                    //循环获取num行的数据
+                    var getrow = sheet.GetRow(num);
+                    if (getrow == null)
+                    {
+                        break;
+                    }
+                    #region 获取excel中的每一列数据
+                    //获取第num行"姓名"列的数据
+                    string name = getrow.GetCell(1).StringCellValue;
+                    //获取第num行"部门"列的数据
+                    string dept = getrow.GetCell(2).StringCellValue;
+                    //获取第num行"岗位"列的数据
+                    string position = getrow.GetCell(3).StringCellValue;
+                    //获取第num行"工号"列的数据
+                    string ddid = getrow.GetCell(4) == null ? null : getrow.GetCell(4).NumericCellValue.ToString();
+                    //获取第num行"招聘来源"列的数据
+                    string original = getrow.GetCell(5) == null ? null : getrow.GetCell(5).StringCellValue;
+                    //获取第num行"身份证号码"列的数据
+                    // var idnum = System.Text.RegularExpressions.Regex.Replace(getrow.GetCell(6).StringCellValue, @"[^0-9]+", "");
+                    string idcardnum = getrow.GetCell(6).StringCellValue;
+                    //获取第num行"电话号码"列的数据
+                    string phonenum = getrow.GetCell(7).NumericCellValue.ToString();
+                    //获取第num行"性别"列的数据
+                    string empsex = getrow.GetCell(8).StringCellValue;
+                    //获取第num行"年龄"列的数据
+                    string empage = getrow.GetCell(9).NumericCellValue.ToString();
+                    //获取第num行"民族"列的数据
+                    string nation = getrow.GetCell(10).StringCellValue;
+                    //获取第num行"入职时间"列的数据
+                    string entertime = getrow.GetCell(11).StringCellValue;
+                    //获取第num行"转正时间"列的数据
+                    string positivetime = getrow.GetCell(12)?.StringCellValue ?? null;
+                    //获取第num行"试用期工资"列的数据
+                    var sal = getrow.GetCell(13);
+                    string probationsalary = getrow.GetCell(13) == null ? null : getrow.GetCell(13).NumericCellValue.ToString();
+                    //获取第num行"转正后工资"列的数据
+                    string salary = getrow.GetCell(14).NumericCellValue.ToString();
+                    //获取第num行"学历"列的数据
+                    string education = getrow.GetCell(15) == null ? "大专" : getrow.GetCell(15).StringCellValue;
+                    //获取第num行"合同起始日期"列的数据
+                    string contractStartTime = getrow.GetCell(17) == null ? null : getrow.GetCell(17).StringCellValue;
+                    //获取第num行"合同终止日期"列的数据
+                    string contractEndTime = getrow.GetCell(18) == null ? null : getrow.GetCell(18).StringCellValue;
+                    //获取第num行"生日"列的数据
+                    string birthday = getrow.GetCell(19) == null ? null : getrow.GetCell(19).StringCellValue;
+                    //获取第num行"紧急联系电话"列的数据
+                    string urgentphone = getrow.GetCell(20) == null ? null : getrow.GetCell(20).NumericCellValue.ToString();
+                    //获取第num行"户籍地址"列的数据
+                    string domicileAddress = getrow.GetCell(21) == null ? null : getrow.GetCell(21).StringCellValue;
+                    //获取第num行"现地址"列的数据
+                    string address = getrow.GetCell(22) == null ? null : getrow.GetCell(22).StringCellValue;
+                    //获取第num行"婚姻状况"列的数据
+                    string maritalStatus = getrow.GetCell(23) == null ? "未婚" : getrow.GetCell(23).StringCellValue;
+                    //获取第num行"身份证有效期"列的数据
+                    string idcardIndate = getrow.GetCell(24) == null ? null : getrow.GetCell(24).StringCellValue;
+                    //获取第num行"政治面貌"列的数据
+                    string politicsStatus = getrow.GetCell(25) == null ? "党员" : getrow.GetCell(25).StringCellValue;
+                    //获取第num行"社保起始月份"列的数据
+                    string SSstartTime;
+                    if (getrow.GetCell(26) == null)
+                    {
+                         SSstartTime = null;
+                    }
+                    else {
+                         SSstartTime = string.IsNullOrEmpty(getrow.GetCell(26).ToString()) ? null : getrow.GetCell(26).NumericCellValue.ToString();
+                    }
+                  
+                    //获取第num行"银行卡号"列的数据
+                    string bankCardnum = getrow.GetCell(27) == null  ? null : getrow.GetCell(27).StringCellValue;
+                    //获取第num行"纸质材料"列的数据
+                    string paperyMaterial = getrow.GetCell(28) == null ? null : getrow.GetCell(28).StringCellValue;
+                    // ICell leaveddays_cell = sheet.GetRow(num).GetCell(3);
+                    //获取第num行"备注"列的数据
+                    string remark = getrow.GetCell(29) == null ? null : getrow.GetCell(14).StringCellValue;
+                    #endregion
+                    #region 将excel中拿过来的数据赋给员工视图对象
+                    empview.name = name;
+                    empview.dept = dept;
+                    empview.position = position;
+                    empview.ddid =int.Parse(ddid);
+                    empview.original = original;
+                    empview.idcardnum = idcardnum;
+                    empview.phonenum = phonenum; 
+                    empview.empsex = empsex;
+                    empview.nation = nation;
+                    empview.entertime = Convert.ToDateTime(entertime);
+                    if (!string.IsNullOrEmpty(positivetime)) {
+                        empview.positivetime=Convert.ToDateTime(positivetime);
+                    }
+                    empview.probationsalary =Convert.ToDecimal(probationsalary);
+                    empview.salary =Convert.ToDecimal(salary);
+                    empview.education = education;
+                    empview.contractStartTime = Convert.ToDateTime(contractStartTime);
+                    empview.contractEndTime = Convert.ToDateTime(contractEndTime);
+                    empview.birthday = birthday;
+                    empview.urgentphone = urgentphone;
+                    empview.domicileAddress = domicileAddress;
+                    empview.address = address;
+                    empview.maritalStatus = maritalStatus=="已婚"?true:false;
+                    empview.idcardIndate = Convert.ToDateTime(idcardIndate);
+                    empview.politicsStatus = politicsStatus;
+                    if (!string.IsNullOrEmpty(SSstartTime) && !SSstartTime.Equals("/")) {
+                        // DateTime.ParseExact(str, "yyyyMMdd", null);
+                        DateTime stime=DateTime.ParseExact(SSstartTime,"yyyyMM",null);
+                        empview.SSstartTime = stime;
+                    }
+                    empview.bankCardnum = bankCardnum;
+                    empview.paperyMaterial = paperyMaterial;
+                    empview.Remark = remark;
+                    #endregion
+                    result.Add(empview);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = null;
+            }
+            return result;
+
+        }
+
+        /// <summary>
+        /// 将excel数据类的数据存入到数据库的考勤表中
+        /// </summary>
+        /// <returns></returns>
+        public AjaxResult ExcelImportEmpSql(ISheet sheet)
+        {
+            var ajaxresult = new AjaxResult();
+            List<EmpErrorDataView> emperrorlist = new List<EmpErrorDataView>();
+            try
+            {
+                var mateviewlist = CreateExcelData(sheet);
+                foreach (var item in mateviewlist)
+                {
+                    EmployeesInfo emp = new EmployeesInfo();
+                    EmpErrorDataView emperror = new EmpErrorDataView();
+                    var deptobj = GetDeptByDname(item.dept);
+                    if (DDidIsExist((int)item.ddid) == true)
+                    {
+                        emperror.ddid = item.ddid;
+                        emperror.ename = item.name;
+                        emperror.errorExplain = "原因是该钉钉号已存在！";
+                        emperrorlist.Add(emperror);
+
+                    }
+                    else {
+                        if (deptobj == null)
+                        {
+                            emperror.ddid = item.ddid;
+                            emperror.ename = item.name;
+                            emperror.errorExplain = "原因是不存在"+item.dept+"该部门!";
+                            emperrorlist.Add(emperror);
+                        }
+                        else
+                        {
+                            if (deptobj != null && GetPositionByDeptidPname(deptobj.DeptId, item.position) == null)
+                            {
+                                emperror.errorExplain = "原因是" + item.dept + "中不存在"+item.position+"该岗位!";
+                                emperror.ddid = item.ddid;
+                                emperror.ename = item.name;
+                                emperrorlist.Add(emperror);
+                            }
+                            else
+                            {
+                                emp.EmployeeId = EmpId();
+                                emp.DDAppId = item.ddid;
+                                emp.EmpName = item.name;
+                                emp.PositionId = GetPositionByDeptidPname(deptobj.DeptId, item.position).Pid;
+                                emp.Sex = item.empsex;
+                                emp.IdCardIndate = item.idcardIndate;
+
+                                emp.IdCardNum = item.idcardnum;
+                                if (emp.IdCardNum != null)
+                                {
+                                    emp.Birthdate = DateTime.Parse(GetBirth(emp.IdCardNum));
+                                }
+                                if (emp.Birthdate != null)
+                                {
+                                    emp.Age = Convert.ToInt32(this.GetAge((DateTime)emp.Birthdate, DateTime.Now));
+                                }
+                                emp.Nation = item.nation;
+                                emp.Phone = item.phonenum;
+                                emp.ContractStartTime = item.contractStartTime;
+                                emp.ContractEndTime = item.contractEndTime;
+                                emp.EntryTime = item.entertime;
+                                emp.Birthday = item.birthday;
+                                emp.PositiveDate = item.positivetime;
+                                emp.UrgentPhone = item.urgentphone;
+                                emp.DomicileAddress = item.domicileAddress;
+                                emp.Address = item.address;
+                                emp.Education = item.education;
+                                emp.MaritalStatus = item.maritalStatus;
+                                emp.IdCardIndate = item.idcardIndate;
+                                emp.PoliticsStatus = item.politicsStatus;
+                                emp.ProbationSalary = item.probationsalary;
+                                emp.Salary = item.salary;
+                                emp.SSStartMonth = item.SSstartTime;
+                                emp.BCNum = item.bankCardnum;
+                                emp.Material = item.paperyMaterial;
+                                emp.Remark = item.Remark;
+                                if (!string.IsNullOrEmpty(emp.PositiveDate.ToString()))
+                                {
+                                    EmpTransactionManage etsmanage = new EmpTransactionManage();
+                                    bool etsresult = etsmanage.InsertETSData(emp.EmployeeId, Convert.ToDateTime(emp.PositiveDate));
+                                }
+                                this.Insert(emp);
+                                rc.RemoveCache("InRedisEmpInfoData");
+                                AddEmpToCorrespondingDept(emp);
+
+                            }
+                        }
+                      
+                    }           
+                }
+                if (mateviewlist.Count() - emperrorlist.Count() == mateviewlist.Count())
+                {//说明没有出错数据，导入的数据全部添加成功
+                    ajaxresult.Success = true;
+                    ajaxresult.ErrorCode = 100;
+                    ajaxresult.Msg = mateviewlist.Count().ToString();
+                    ajaxresult.Data = emperrorlist;
+                }
+                else
+                {//说明有出错数据，导入的数据条数就是导入的数据总数-错误数据总数
+                    ajaxresult.Success = true;
+                    ajaxresult.ErrorCode = 200;
+                    ajaxresult.Msg = (mateviewlist.Count() - emperrorlist.Count()).ToString();
+                    ajaxresult.Data = emperrorlist;
+                }
+            }
+            catch (Exception ex)
+            {
+                ajaxresult.Success = false;
+                ajaxresult.ErrorCode = 500;
+                ajaxresult.Msg = ex.Message;
+                ajaxresult.Data = 0;
+            }
+            return ajaxresult;
+        }
+
+
+        public AjaxResult ImportDataFormExcel(Stream stream, string contentType)
+        {
+            var ajaxresult = new AjaxResult();
+            IWorkbook workbook = null;
+
+            if (contentType == "application/vnd.ms-excel")
+            {
+                workbook = new HSSFWorkbook(stream);
+            }
+
+            if (contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                workbook = new XSSFWorkbook(stream);
+            }
+
+            ISheet sheet = workbook.GetSheetAt(0);
+            var result = ExcelImportEmpSql(sheet);
+            stream.Close();
+            stream.Dispose();
+            workbook.Close();
+
+            return result;
+        }
+
+        /// <summary>
+        /// 根据部门的名称获取部门对象
+        /// </summary>
+        /// <param name="dname"></param>
+        /// <returns></returns>
+        public Department GetDeptByDname(string dname)
+        {
+            DepartmentManage dmanage = new DepartmentManage();
+            var dept = dmanage.GetDepartmentByName(dname);
+            return dept;
+        }
+        /// <summary>
+        /// 获取指定部门某岗位对象
+        /// </summary>
+        /// <param name="deptid"></param>
+        /// <param name="pname"></param>
+        /// <returns></returns>
+        public Position GetPositionByDeptidPname(int deptid,string pname) {
+            PositionManage pmanage = new PositionManage();
+            var plist = pmanage.GetPositionByDepeID(deptid);
+            var position = plist.Where(s => s.PositionName == pname).FirstOrDefault();
+            return position;
+
+
+        }
+
+        /// <summary>
+        ///计算员工年龄
+        /// </summary>
+        /// <param name="dtBirthday"></param>
+        /// <param name="dtNow"></param>
+        /// <returns></returns>
+        public  string GetAge(DateTime dtBirthday, DateTime dtNow)
+        {
+            string strAge = string.Empty; // 年龄的字符串表示
+            int intYear = 0; // 岁
+            int intMonth = 0; // 月
+            int intDay = 0; // 天
+
+            // 如果没有设定出生日期, 返回空
+            if (dtBirthday == null)
+            {
+                return string.Empty;
+            }
+
+            // 计算天数
+            intDay = dtNow.Day - dtBirthday.Day;
+            if (intDay < 0)
+            {
+                dtNow = dtNow.AddMonths(-1);
+                intDay += DateTime.DaysInMonth(dtNow.Year, dtNow.Month);
+            }
+
+            // 计算月数
+            intMonth = dtNow.Month - dtBirthday.Month;
+            if (intMonth < 0)
+            {
+                intMonth += 12;
+                dtNow = dtNow.AddYears(-1);
+            }
+
+            // 计算年数
+            intYear = dtNow.Year - dtBirthday.Year;
+
+            // 格式化年龄输出
+            if (intYear >= 1) // 年份输出
+            {
+                strAge = intYear.ToString();
+            }
+
+            //if (intMonth > 0 && intYear <= 5) // 五岁以下可以输出月数
+            //{
+            //    strAge += intMonth.ToString() + "月";
+            //}
+
+            //if (intDay >= 0 && intYear < 1) // 一岁以下可以输出天数
+            //{
+            //    if (strAge.Length == 0 || intDay > 0)
+            //    {
+            //        strAge += intDay.ToString() + "日";
+            //    }
+            //}
+
+            return strAge;
+        }
+        /// <summary>
+        ///生成员工编号
+        /// </summary>
+        /// <returns></returns>
+        public string EmpId()
+        {
+            string mingci = string.Empty;
+            // DateTime date = Convert.ToDateTime(Date());
+            DateTime date = DateTime.Now;
+            string n = date.Year.ToString();//获取年份
+            string y = MonthAndDay(Convert.ToInt32(date.Month)).ToString();//获取月份
+            string d = MonthAndDay(Convert.ToInt32(date.Day)).ToString();//获取日期
+
+            EmployeesInfoManage empinfo = new EmployeesInfoManage();
+            var lastobj = empinfo.GetEmpInfoData().LastOrDefault();
+            if (lastobj == null)
+            {
+                mingci = "0001";
+            }
+            else
+            {
+                string laststr = lastobj.EmployeeId;
+                string startfournum = laststr.Substring(0, 4);
+                string endfournum = laststr.Substring(laststr.Length - 4, 4);
+                if (int.Parse(n) > int.Parse(startfournum))
+                {
+                    mingci = "0001";
+                }
+                else
+                {
+                    string newstr = (int.Parse(endfournum) + 1).ToString();
+                    if (int.Parse(newstr) < 10)
+                    {
+                        mingci = "000" + newstr;
+                    }
+                    else if (int.Parse(newstr) >= 10 && int.Parse(newstr) < 100)
+                    {
+                        mingci = "00" + newstr;
+                    }
+                    else if (int.Parse(newstr) >= 100 && int.Parse(newstr) < 1000)
+                    {
+                        mingci = "0" + newstr;
+                    }
+                    else
+                    {
+                        mingci = newstr;
+                    }
+                }
+            }
+            string EmpidResult = n + y + d + mingci;
+            return EmpidResult;
+        }
+        //月份及日期前面加个零
+        public string MonthAndDay(int a)
+        {
+            if (a < 10)
+            {
+                return "0" + a;
+            }
+            string c = a.ToString();
+            return c;
+        }
+        /// <summary>
+        /// 根据身份证号码获取出生日期
+        /// </summary>
+        /// <param name="idnum"></param>
+        /// <returns></returns>
+        public  string GetBirth(string idnum)
+        {
+            string year = idnum.Substring(6, 4);
+            string month = idnum.Substring(10, 2);
+            string date = idnum.Substring(12, 2);
+            string result = year + "-" + month + "-" + date;
+            return result;
+        }
+        /// <summary>
+        /// 判断某钉钉号是否已存在
+        /// </summary>
+        /// <param name="ddid"></param>
+        /// <returns></returns>
+        public bool DDidIsExist(int ddid) {
+            bool result = false;
+           
+                var emp = this.GetEmpInfoData().Where(s => s.DDAppId == ddid).FirstOrDefault();
+            if (emp != null)
+            {
+                result = true;
+            }
+            else {
+                result = false;
+            }
+            return result;
+           
         }
     }
 }

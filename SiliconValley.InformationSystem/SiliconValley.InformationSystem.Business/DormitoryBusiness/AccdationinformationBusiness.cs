@@ -55,7 +55,7 @@ namespace SiliconValley.InformationSystem.Business.DormitoryBusiness
                 throw;
             }
             return result;
-        }
+        } 
 
         /// <summary>
         /// 根据学生编号返回居住信息

@@ -16,7 +16,7 @@
 
         #list {
             height: 700px;
-            border: 1px solid #808080;
+           
             margin-top:10px;
         }
     </style>
@@ -27,8 +27,7 @@
 
     <div id="warp">
 
-        <h1 style="text-align:center;">我的谈话记录</h1>
-      
+    
         <div id="torbar">
             <button style="margin-left:20px;" class="layui-btn" id="addrecord"><i class="layui-icon">&#xe608;</i>新建谈话记录</button>
 
@@ -51,9 +50,10 @@
             <button id="serchBtn1" class="layui-btn layui-btn-radius layui-btn-primary">查询</button>
         </div>
 
-
+        <hr />
 
         <div id="list">
+
         </div>
 
     </div>
@@ -65,7 +65,7 @@
             <button class="layui-btn" id="detailbtn" recordid="{{=recorid}}" style="width:100px;height:100px;">{{=studentname}}</button>
         </div>
         <div class="media-body">
-            <h4 class="media-heading"><strong style="font-size:18px;">主题</strong>:{{=title}}</h4>
+            <h6 class="media-heading"><strong style="font-size:18px;">主题</strong>:{{=title}}</h6>
             <span><strong style="font-size:18px;">时间</strong>：{{=date}}</span>
             <div>
                 <strong style="font-size:18px;">内容</strong>:{{=content}}...

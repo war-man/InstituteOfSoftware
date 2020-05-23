@@ -78,9 +78,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Dormitory.Controllers
             Headmaster queryheadmaster = dbprosutdent_Dbproheadmaster.GetHeadmasterByStudentNumber(notreturningLate.StudentNumber);
             notreturningLate.AddTime = DateTime.Now;
             notreturningLate.HeadMasterID = queryheadmaster.ID;
-
-
-            Base_UserModel user = Base_UserBusiness.GetCurrentUser();
+        
+             Base_UserModel user = Base_UserBusiness.GetCurrentUser();
             var query = dbinstructorList.GetInstructorByempid(user.EmpNumber);
             notreturningLate.Inspector = query.ID;
 

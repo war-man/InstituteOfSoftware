@@ -1,0 +1,83 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>WXLoginError</title>
+
+    <style>
+
+        #warp {
+            width:500px;
+
+           margin:200px auto;
+
+           background-color:white;
+        }
+
+        .erroritem {
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="warp"> 
+
+        <input type="hidden" id="errorMsg" value="@Model" />
+
+        <div class"erroritem" id="error_login404">
+            <!-- login404 未绑定微信 -->
+
+            <h3 style="text-align:center; color: red;">抱歉，未检测到您是本系统用户！</h3>
+
+            <h5 style="text-align:center; color: gray;">提示！  如果你是系统用户则需要登录账号，然后绑定微信账号之后才可以使用微信登录！</h5>
+
+            <h5 style="text-align:center;"> <a href="/Login/LoginIndex">去登录</a></h5>
+        </div>
+
+        <div class="erroritem" id="error_binding402">
+            <!-- binding402 账号重复绑定微信错误 -->
+
+            <h3 style="text-align:center; color: red;">当前账号已绑定微信！</h3>
+
+        </div>
+
+    </div>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+
+    <script>
+
+        $(function () {
+
+            var errorMsg = $("#errorMsg").val();
+
+            switch (errorMsg) {
+
+                case "login404":
+
+                    $("#error_login404").css("display","block");
+
+                    break;
+
+                case "binding402":
+
+                    $("#error_binding402").css("display", "block");
+
+                    break;
+
+
+            }
+        });
+
+
+    </script>
+
+</body>
+</html>

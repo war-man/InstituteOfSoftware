@@ -71,8 +71,17 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             choiceQuestionTableView.Answer = multipleChoiceQuestion.Answer;
 
+            choiceQuestionTableView.Grand = multipleChoiceQuestion.Grand;
+
             //获取题目所属课程
-            choiceQuestionTableView.Course = courseBusiness.GetCurriculas().Where(d => d.CurriculumID == multipleChoiceQuestion.Course).FirstOrDefault();
+            if (multipleChoiceQuestion.Course == 0)
+            {
+                choiceQuestionTableView.Course = null;
+            }
+            else
+            {
+                choiceQuestionTableView.Course = courseBusiness.GetCurriculas().Where(d => d.CurriculumID == multipleChoiceQuestion.Course).FirstOrDefault();
+            }
             choiceQuestionTableView.CreateTime = multipleChoiceQuestion.CreateTime;
             choiceQuestionTableView.Id = multipleChoiceQuestion.Id;
             choiceQuestionTableView.IsRadio = multipleChoiceQuestion.IsRadio;

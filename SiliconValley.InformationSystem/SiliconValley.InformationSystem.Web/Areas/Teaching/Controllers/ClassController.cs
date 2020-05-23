@@ -189,6 +189,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             try
             {
                 var temp1 = db_teacherclass.GetClassByClassNumber(classnumber);
+
                var obj = db_teacherclass.GetClassTableView(temp1);
 
                 result.Data = obj;
@@ -206,11 +207,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
 
             return Json(result, JsonRequestBehavior.AllowGet);
-            
-
 
         }
-        
 
         /// <summary>
         /// 查看学生作业提交情况

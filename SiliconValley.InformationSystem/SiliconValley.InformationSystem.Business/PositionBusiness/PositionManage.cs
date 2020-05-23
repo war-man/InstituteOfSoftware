@@ -12,7 +12,7 @@ namespace SiliconValley.InformationSystem.Business.PositionBusiness
     {
 
         /// <summary>
-        /// 获取没有没禁用的岗位集合
+        /// 获取没有被禁用的岗位集合
         /// </summary>
         /// <returns></returns>
         public List<Position> GetPositions() {

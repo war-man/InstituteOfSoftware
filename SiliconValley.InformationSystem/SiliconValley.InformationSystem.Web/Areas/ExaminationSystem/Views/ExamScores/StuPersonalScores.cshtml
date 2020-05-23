@@ -111,7 +111,6 @@
                 <hr class="layui-bg-orange">
             </div>
 
-
         </div>
 
         
@@ -160,8 +159,6 @@
             var loadindex = layer.load(2); //又换了种风格，并且设定最长等待10秒 
 
             $.post("/ExaminationSystem/ExamScores/StuPersonalScores", { examid: examid }, function (result) {
-
-                
 
                 if (result.ErrorCode == 200) {
                     layer.close(loadindex);

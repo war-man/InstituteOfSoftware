@@ -96,6 +96,7 @@
         position: relative !important;
         left: 45%;
         top: 310%;
+        display:none;
         /*宽高50块元素*/
         width: 300px !important;
         height: 300px !important;
@@ -463,13 +464,18 @@
             });
         }
          //添加房间点击事件
-        $("#btn0").click(function () {
+        $(document).off("click", "#btn0").on("click", "#btn0", function () {
+          
+
             jslayer.msg($(this).attr("direction"));
             addroom($(this).attr("direction"));
+
         });
 
         //禁用房间点击事件
-        $("#btn1").click(function () {
+       // $("#btn1").click();
+
+        $(document).off("click", "#btn1").on("click", "#btn1", function () {
             var roomid = $(this).attr("roomid");
             jslayer.confirm('禁用该房间?', { icon: 3, title: '提示' }, function (index0) {
                 jslayer.prompt(
@@ -479,7 +485,7 @@
                         $.ajax({
                             url: '/Dormitory/RoomBasis/DelRoom',
                             type: 'GET',
-                            data: { param0: roomid,param1:value },
+                            data: { param0: roomid, param1: value },
                             success: function (SuccessData) {
                                 if (SuccessData.Success) {
                                     layer.msg('操作成功。', {
@@ -518,7 +524,8 @@
         });
 
          //编辑房间
-        $("#btn2").click(function () {
+       // $("#btn2").click();
+        $(document).off("click", "#btn2").on("click", "#btn2", function () {
             var roomid = $(this).attr("roomid");
             $.ajax({
                 url: '/Dormitory/RoomBasis/AllowEditors',
@@ -545,7 +552,7 @@
                                 body.find("#ID").val(roomid);
                             },
                             end: function () {
-                                 $("#caozuodiv").hide();
+                                $("#caozuodiv").hide();
                                 loadroom(jstungid, jsfloorid);
                             }
                         });
@@ -553,8 +560,8 @@
                 },
                 error: function (ErrorData) {
                     layer.msg('网络不佳！', {
-                            icon: 1,
-                            time: 3000
+                        icon: 1,
+                        time: 3000
                     }, function () {
                     });
                 }

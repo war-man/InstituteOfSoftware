@@ -90,9 +90,7 @@
         var device = layui.device(), table = layui.table, form = layui.form, layer = layui.layer;
         var type = "ing", classno, classid, studentname, isadd = false;
 
-        jQuery(function () {
-            reloadtable00();
-        });
+       
         table.render({
             elem: '#table00'
             //, url: 'sadas' //数据接口
@@ -162,7 +160,9 @@
                 }
             });
         }
-
+        jQuery(function () {
+            reloadtable00();
+        });
         //时间转化
         function TimeChange(newtime) {
             if (newtime == null)
@@ -230,6 +230,13 @@
                 case 'ing':
                     switch (obj.event) {
                         case 'add':
+
+                            if (classid == undefined || classid == ""){
+                            layer.msg("请选择班级",{ icon: 2 });
+                            return;
+                            }
+        
+
                             layer.open({
                                 type: 2,
                                 content: "/Obtainemployment/CDinterview/CDSResearchRecordRegister?param0=" + classid,

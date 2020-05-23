@@ -122,7 +122,7 @@ namespace SiliconValley.InformationSystem.Util
                 throw new Exception("该类型未注册！");
             var typeMapping = _mapping[typeFrom];
             if (name.IsNullOrEmpty())
-                name = _lastName;
+                name = _lastName; 
             if (!typeMapping.ContainsKey(name))
                 throw new Exception("该类型实现名为注册！");
 

@@ -85,7 +85,7 @@
                     <li><label>答题人-- </label><span>@ViewBag.AnswerSheetInfo.AnswerPerson.Name</span></li>
                     <li><label>考室-- </label><span>@ViewBag.AnswerSheetInfo.Classroom.ClassroomName</span></li>
                     @*<li><label>开始时间-- </label><span>@ViewBag.AnswerSheetInfo.BeginDate</span></li>*@
-                    <li><label>时限-- </label><span>@ViewBag.AnswerSheetInfo.TimeLimit</span></li>
+                    <li><label>时限-- </label><span>@ViewBag.AnswerSheetInfo.TimeLimit (小时)</span></li>
                     <li><label>选择题得分-- </label><span class="choiceQuestionScoreshuode"></span></li>
                     <li><label>笔试题总分-- </label><span>@ViewBag.AnswerSheetInfo.WrittenQuestionScores</span></li>
                     <li><label>机试题总分-- </label><span>@ViewBag.AnswerSheetInfo.ComputerQuestionScores</span></li>
@@ -128,8 +128,11 @@
                         <label class="layui-form-label"></label>
                         <div class="layui-input-block">
                             <input type="checkbox" value="A" lay-filter="option" name="OptionA" title="{{=A}} (选项A)">
+                            <br />
                             <input type="checkbox" value="B" lay-filter="option" name="OptionB" title="{{=B}} (选项B)">
+                            <br />
                             <input type="checkbox" value="C" lay-filter="option" name="OptionC" title="{{=C}} (选项C)">
+                            <br />
                             <input type="checkbox" value="D" lay-filter="option" name="OptionD" title="{{=D}} (选项D)">
                         </div>
                     </div>

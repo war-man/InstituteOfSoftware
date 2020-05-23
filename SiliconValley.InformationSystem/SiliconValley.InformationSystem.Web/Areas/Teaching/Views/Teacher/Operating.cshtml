@@ -71,7 +71,7 @@
             <legend>编辑区域</legend>
             <form class="layui-form" lay-filter="editteacher">
 
-               @Html.HiddenFor(d=>d.TeacherID)
+                @Html.HiddenFor(d => d.TeacherID)
 
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">工作经验</label>
@@ -81,6 +81,16 @@
                     </textarea>
                     </div>
                 </div>
+                <div class="layui-form-item">
+                   
+                    <div class="layui-inline">
+                        <label class="layui-form-label">底课时</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="MinimumCourseHours" value="@Model.MinimumCourseHours" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="layui-form-item layui-form-text">
                     <label class="layui-form-label">项目经验</label>
                     <div class="layui-input-block">

@@ -148,6 +148,8 @@
     <script>
         var objdata;
         layui.use(['form', 'layedit', 'laydate'], function () {
+
+            var laydate = layui.laydate;
             //日期
             laydate.render({
                 elem: '#date'
@@ -165,10 +167,10 @@
                 EntNaturearray = $getEntNatures();
             });
 
-            //$(document).off("click", '.search').on('click', '.search', function () {
-            //    console.log('11');
-            //    loadentlist();
-            //});
+            $(document).off("click", '.search').on('click', '.search', function () {
+                console.log('11');
+                loadentlist();
+            });
 
             //失去焦点事件
             $(document).off("focusout", '#EntName').on('focusout', '#EntName', function () {

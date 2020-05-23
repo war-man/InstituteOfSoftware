@@ -14,7 +14,7 @@ using System.Web.Mvc;
 namespace SiliconValley.InformationSystem.Web.Areas.Courseware.Controllers
 {
     [CheckLogin]
-    public class CoursewaremakingController : Controller
+    public class CoursewaremakingController : BaseController
     {
         private readonly CoursewaremakingBusiness dbtext;
         public CoursewaremakingController()
