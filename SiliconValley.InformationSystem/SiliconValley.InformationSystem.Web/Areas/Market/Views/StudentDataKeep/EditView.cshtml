@@ -196,7 +196,14 @@
                         </div>
                     </div>
                 </div>
-            
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">身&nbsp; 份&nbsp;证:</label>
+                        <div class="layui-input-block">
+                            <input name="IdCade" id="IdCade" placeholder="身份证" class="layui-input" lay-verify="identity" style="width:92%"/>
+                        </div>
+                    </div>
+                </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <div style="width:30%;margin:0px auto">
@@ -312,7 +319,7 @@
                                 window.parent.LoadTable();
                             });
                         }else {
-                            layer.msg("修改失败，请重试!", {
+                            layer.msg(successdata.Msg, {
                                 icon: 2,
                                 time: 2000 //2秒关闭（如果不配置，默认是3秒）
                             });
@@ -347,6 +354,7 @@
                             $("#e_Name")[0].innerText = successdata.e_Name;
                             $("#StuEntering_1")[0].innerText = successdata.StuEntering_1;
                             $("#StuAddress").attr("title", successdata.StuAddress);
+                            $("#IdCade")[0].value = successdata.Idcode;
                             form.val("myform1", successdata);
                         });
                         IsDisable(successdata.StuIsGoto);

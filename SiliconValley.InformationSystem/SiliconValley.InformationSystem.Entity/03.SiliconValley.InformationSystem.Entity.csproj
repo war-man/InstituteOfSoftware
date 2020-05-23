@@ -351,6 +351,7 @@
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EmptyClass.cs" />
+    <Compile Include="ViewEntity\Emp_consult.cs" />
     <Compile Include="ViewEntity\EnrollmentStudentView.cs" />
     <Compile Include="ViewEntity\EnrollmentView.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
@@ -380,7 +381,7 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
-    <Compile Include="ViewEntity\LongrageBean.cs" />
+    <Compile Include="ViewEntity\Sch_Market.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
@@ -433,6 +434,7 @@
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingConfigView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />
+    <Compile Include="ViewEntity\Sch_MarketView.cs" />
     <Compile Include="ViewEntity\ShowBaomingListView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\ShowEchartsView.cs" />

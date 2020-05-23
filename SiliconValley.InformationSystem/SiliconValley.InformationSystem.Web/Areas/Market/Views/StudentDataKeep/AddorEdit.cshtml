@@ -43,7 +43,7 @@
 
     .TextAreCss1 {
         height: 38px;
-        width:93%;
+        width:200px;
     }
 
     .butCss2{
@@ -75,12 +75,16 @@
         width:200px;
        
     }
+
+    .needTextColor{
+      color:red
+    }
 </style>
 <div style="width:74%;margin:20px auto;">
     <form class="layui-form">                   
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">                        
-                        <label class="layui-form-label">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
+                        <label class="layui-form-label needTextColor">姓 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
                             <div class="layui-input-block">
                                 @Html.TextBoxFor(s => s.StuName, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "学生姓名" }, { "class", "layui-input linu" } })
                             </div>                         
@@ -100,13 +104,13 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">电 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 话:</label>
+                        <label class="layui-form-label needTextColor">电 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 话:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(s => s.StuPhone, new Dictionary<string, object>() { { "lay-verify", "required|phone" }, { "placeholder", "联系电话" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">信息来源:</label>
+                        <label class="LableCss1 needTextColor">信息来源:</label>
                         <div class="layui-input-block">
                             @Html.DropDownListFor(s => s.StuInfomationType_Id, ViewBag.infomation as IEnumerable<SelectListItem>)
                         </div>
@@ -137,11 +141,11 @@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="LableCss1">家庭住址:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.StuAddress, new Dictionary<string, object>() { { "placeholder", "家庭住址" }, { "class", "layui-input linu" }, { "lay-verify", "required" } })
+                            @Html.TextBoxFor(s => s.StuAddress, new Dictionary<string, object>() { { "placeholder", "家庭住址" }, { "class", "layui-input linu" } })
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">备 案 &nbsp;人:</label>                        
+                        <label class="layui-form-label needTextColor">备 案 &nbsp;人:</label>                        
                             <input type="hidden" id="EmployeesInfo_Id" name="EmployeesInfo_Id" />                            
                                 <input name="e_Name" id="e_Name" lay-verify="required" class="layui-input linu" readonly="readonly" placeholder="备案人"/>
                                 <div style="margin-top:-30px;text-align:right;width:328px;">
@@ -198,7 +202,7 @@
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">Q &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q:</label>
+                        <label class="layui-form-label">Q &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(s => s.StuQQ, new Dictionary<string, object>() { { "placeholder", "QQ" }, { "class", "layui-input linu" } })
                         </div>
@@ -211,10 +215,24 @@
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                        <label class="layui-form-label">咨&nbsp;询 &nbsp; 师:</label>
+                        <div class="layui-input-block">
+                           @Html.DropDownList("ConsultId", ViewBag.ConsultTeacher as List<SelectListItem>)
+                        </div>
+                    </div>
+                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
                         <label class="layui-form-label">其他说明:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(s => s.Reak, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-row layui-form-item">
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                        <label class="layui-form-label">身&nbsp;份 &nbsp; 证:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(s => s.IdCade, new Dictionary<string, object>() { { "placeholder", "学生身份证号" }, { "class", "layui-input" } ,{ "style","width:93%"},{"lay-verify", "identity" } })
                         </div>
                     </div>
                 </div>
@@ -348,6 +366,7 @@
                 /^[0-9]*$/
                 , '电话号码只能是数字'
             ]
+
             //, content: function (value) {
             //    var newsdate = new Date();
             //    var olddate = new Date(value);

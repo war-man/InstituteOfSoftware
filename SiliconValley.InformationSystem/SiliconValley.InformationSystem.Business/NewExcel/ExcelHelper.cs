@@ -90,24 +90,27 @@ namespace SiliconValley.InformationSystem.Business.NewExcel
             for (int i = 0; i < data.Count; i++)
             {
                 xlWorkSheet.Cells[i + 2, 1] = data[i].StuName;
-                xlWorkSheet.Cells[i + 2, 2] = data[i].StuSex==true?"男":"女";
+                xlWorkSheet.Cells[i + 2, 2] = data[i].StuSex==true ? "男" : "女"; 
                 xlWorkSheet.Cells[i + 2, 3] = data[i].StuBirthy;
-                xlWorkSheet.Cells[i + 2, 4] = data[i].Stuphone;
-                xlWorkSheet.Cells[i + 2, 5] = data[i].StuSchoolName;
+                xlWorkSheet.Cells[i + 2, 4] = data[i].IdCade;
+                xlWorkSheet.Cells[i + 2, 5] = data[i].Stuphone;
                 xlWorkSheet.Cells[i + 2, 6] = data[i].StuSchoolName;
                 xlWorkSheet.Cells[i + 2, 7] = data[i].StuEducational;
                 xlWorkSheet.Cells[i + 2, 8] = data[i].StuAddress;
                 xlWorkSheet.Cells[i + 2, 9] = data[i].StuWeiXin;
                 xlWorkSheet.Cells[i + 2, 10] = data[i].StuQQ;
                 xlWorkSheet.Cells[i + 2, 11] = data[i].stuinfomation;
-                xlWorkSheet.Cells[i + 2, 12] = data[i].StuisGoto == false ? "否" : "是";
-                xlWorkSheet.Cells[i + 2, 13] = data[i].StuVisit;
-                xlWorkSheet.Cells[i + 2, 14] = data[i].empName;
-                xlWorkSheet.Cells[i + 2, 15] = data[i].StuDateTime;
-                xlWorkSheet.Cells[i + 2, 16] = data[i].StuEntering;
-                xlWorkSheet.Cells[i + 2, 17] = data[i].Reak; 
-                xlWorkSheet.Cells[i + 2, 18] = data[i].StatusTime; 
-                xlWorkSheet.Cells[i + 2, 19] = data[i].RegionName;
+                xlWorkSheet.Cells[i + 2, 12] = data[i].StatusName;
+                xlWorkSheet.Cells[i + 2, 13] = data[i].StuisGoto == false ? "否" : "是";
+                xlWorkSheet.Cells[i + 2, 14] = data[i].StuVisit;
+                xlWorkSheet.Cells[i + 2, 15] = data[i].empName;
+                xlWorkSheet.Cells[i + 2, 16] = data[i].Party;
+                xlWorkSheet.Cells[i + 2, 17] = data[i].BeanDate;
+                xlWorkSheet.Cells[i + 2, 18] = data[i].StuEntering;
+                xlWorkSheet.Cells[i + 2, 19] = data[i].StatusTime;               
+                xlWorkSheet.Cells[i + 2, 20] = data[i].RegionName; 
+                xlWorkSheet.Cells[i + 2, 21] = data[i].ConsultTeacher;
+                xlWorkSheet.Cells[i + 2, 22] = data[i].Reak;
             }
 
             try

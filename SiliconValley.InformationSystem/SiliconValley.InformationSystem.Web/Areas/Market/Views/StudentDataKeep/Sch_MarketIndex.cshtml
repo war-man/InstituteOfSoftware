@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Sch_MarketIndex";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style>
+    .layui-colla-title
+    {
+        position: relative;
+        padding: 0 15px 0 35px;
+        color: #333;
+        background-color: #f2f2f2;
+        cursor: pointer;
+        font-size: 14px;
+        overflow: hidden;
+        height: 15px;
+        line-height: 15px;
+    }
+</style>
+
+<table id="Sch_MarketTable" lay-filter="Sch_MarketTable"></table>
+
+<script>
+    layui.use(['table', 'form', 'element'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var element = layui.element;
+
+
+        table.render({
+            elem: '#Sch_MarketTable'
+            , url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
+            , cols: [[
+                { type: 'radio' }
+                , { field: 'StudentName', title: '姓名' }
+                , {field: 'Sex', title: '性别'}
+                , { field: 'Phone', title: '联系电话' }
+                , { field: 'School', title: '毕业学校' }
+                , { field: 'Education', title: '学历' }
+                , { field: 'Source', title: '信息来源' }
+                , { field: 'Area', title: '区域' }
+                , { field: 'RelatedPerson', title: '关系人' }        
+                , { field: 'SalePerson', title: '备案人' } 
+                , { field: 'MarketState', title: '备案状态' }
+                , { field: 'MarketType', title: '市场类别' }
+                , { field: 'CreateDate', title: '备案日期' }
+                , { field: 'ModifyDate', title: '修改日期' }
+                , { field: 'ModifyUserName', title: '修改人' }
+                , { field: 'Inquiry', title: '咨询师' }
+                , { field: 'Info', title: '跟踪内容' }                
+                , { field: 'Remark', title: '其他说明' }
+            ]]
+            , page: true
+        });
+
+    });
+</script>
+
+

@@ -100,5 +100,18 @@ namespace SiliconValley.InformationSystem.Business.StuSatae_Maneger
 
             return a;
         }
+
+        /// <summary>
+        /// 通过名称查找备案状态
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public StuStatus GetSingdata(string name)
+        {           
+            StuStatus find_s = this.GetList().Where(s => s.StatusName == name).FirstOrDefault();
+             
+            return find_s;
+        }
+
     }
 }

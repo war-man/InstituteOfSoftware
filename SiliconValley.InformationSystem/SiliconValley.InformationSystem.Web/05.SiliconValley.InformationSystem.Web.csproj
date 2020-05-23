@@ -1339,6 +1339,7 @@
     <Content Include="Scripts\MenusStyle\js\main.js" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.css" />
     <Content Include="Scripts\Tangmin_CssAndJs\com_js\MyOrther_tangmin.js" />
+    <Content Include="Scripts\Tangmin_CssAndJs\StudentDatakeep_Css\studentdatakeep.css" />
     <Content Include="Tree\css\atlas.css" />
     <Content Include="Tree\css\bars.css" />
     <Content Include="Tree\css\bootstrap-markdown.min.css" />
@@ -1699,6 +1700,9 @@
     <Content Include="Areas\Educational\Views\Timetable\TiShiView.cshtml" />
     <Content Include="Config\ExportStudentBean.json" />
     <Content Include="Areas\Educational\Views\EvningSelfStudy\GoodEvningSelfStudyView.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\Sch_MarketIndex.cshtml" />
+    <Content Include="Areas\Market\Views\ConsultTeacher\TeacherSelect.cshtml" />
+    <Content Include="Areas\Market\Views\StudentDataKeep\ExportView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />

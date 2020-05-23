@@ -2,6 +2,7 @@
   "ExportStudentBeanData": {
     "StuName": "学生姓名",
     "StuSex": "学生性别",
+    "IdCade": "身份证",
     "StuBirthy": "出生日期",
     "Stuphone": "联系电话",
     "StuSchoolName": "毕业学校",
@@ -14,10 +15,12 @@
     "StuisGoto": "是否来校访问",
     "StuVisit": "访问日期",
     "empName": "备案人",
-    "StuDateTime": "备案日期",
+    "Party": "关系人",
+    "BeanDate": "备案日期",
     "StuEntering": "录入人",
     "StatusTime": "报名日期",
     "RegionName": "所在区域",
+    "ConsultTeacher": "咨询师",
     "Reak": "其他说明"
   }
 

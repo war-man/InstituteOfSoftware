@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,8 +11,12 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// <summary>
     /// 用于获取远程数据库中的备案数据
     /// </summary>
-   public class LongrageBean
+    [Table(name: "Sch_Market")]
+    public class Sch_Market
     {
+        [Key]
+        public int Id { get; set; } 
+
         /// <summary>
         /// 市场编号
         /// </summary>
@@ -118,7 +124,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         public string MarketState { get; set; }
 
         /// <summary>
-        /// 咨询类别
+        /// 市场类别
         /// </summary>
         public string MarketType { get; set; }
     }
