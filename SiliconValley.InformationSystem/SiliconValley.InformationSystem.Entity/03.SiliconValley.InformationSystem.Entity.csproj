@@ -222,6 +222,9 @@
     <Compile Include="Entity\Outbreaksindormitories.cs" />
     <Compile Include="Entity\OvertimeRecord.cs" />
     <Compile Include="Entity\ParticiParticipants.cs" />
+    <Compile Include="Entity\Paymentverification.cs" />
+    <Compile Include="Entity\Payview.cs" />
+    <Compile Include="Entity\PayviewPaymentver.cs" />
     <Compile Include="Entity\PerInfo.cs" />
     <Compile Include="Entity\Position.cs" />
     <Compile Include="Entity\Prefunding.cs" />
