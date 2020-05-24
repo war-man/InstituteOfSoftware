@@ -2,7 +2,8 @@
 @{
     Layout = null;
 }
-@using SiliconValley.InformationSystem.Entity.MyEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity;
+@using SiliconValley.InformationSystem.Entity.ViewEntity;
 <!DOCTYPE html>
 
 <html>
@@ -49,138 +50,240 @@
         {
             font-size: 20px;
         }
+        .DivCssone{
+            width:98%;
+            margin:0px auto;
+            display:flex;
+            flex-direction:column;
+        }
+   
+        .DivCsstwo{
+           width:100%;
+           height:250px;
+           
+        }
+        .DivCssthree
+        {
+            width: 100%;
+            flex: 1;
+          
+        }
     </style>
 </head>
 <body>
-    <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" lay-allowClose="true">
-        <ul class="layui-tab-title">
-            @{
-                List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
-                if (f_list.Count <= 0)
-                {
-                    <li class="layui-this">系统提示</li>
-                }
-                else
-                {
-                    int i = 0;
-                    foreach (var item in f_list)
-                    {
-                        i++;
-                        <li>第<span>《</span><span>@i</span><span>》次跟踪</span></li>
-                    }
-                }
+    <div class="DivCssone">
+        <div class="DivCsstwo">
+            @{ 
+                ExportStudentBeanData studata = ViewBag.Studentdata as ExportStudentBeanData;
+
+                string stusex = studata.StuSex == true ? "男" : "女";
             }
-        </ul>
-        <div class="layui-tab-content" style="height: 100px;">
-            @{
-                if (f_list.Count <= 0)
-                {
-                    <div class="layui-tab-item layui-show">
-                        <h2 style="color:red">该学生目前没有跟踪信息!！！</h2>
-                    </div>
-                }
-                else
-                {
-                    int j = 0;
-                    foreach (FollwingInfo item2 in f_list)
-                    {
-                        if (j == 0)
-                        {
-                    <div class="layui-tab-item layui-show">
-                        <div style="width:90%;margin:0px auto">
-                            <form class="layui-form">
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">跟踪日期:</label>
-                                        <div class="layui-input-block">
-                                            <input id="MyDate" name="MyDate" type="text" disabled="disabled" class="layui-input" value="@item2.FollwingDate"/>                                             
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">跟踪等级:</label>
-                                        <div class="layui-input-block">
-                                            <input id="MyGrad" name="MyGrad" type="text" disabled="disabled" class="layui-input" value="@item2.Rank" />                                             
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">跟踪内容:</label>
-                                        <div class="layui-input-block">
-                                            <textarea class="layui-input TextAreCss1 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly" style="color:red">
-                                                         @item2.TailAfterSituation 
-                                                </textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">其他说明:</label>
-                                        <div class="layui-input-block">
-                                            <textarea class="layui-input TextAreCss2 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly">
-                                                         @item2.Rmark 
-                                            </textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+            <form class="layui-form" lay-filter="studentdata">
+                <fieldset>
+                    <legend>基础数据</legend>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">联系电话:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.Stuphone" />
+                            </div>
                         </div>
-                       
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">学生性别:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@stusex" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">Q &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Q:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.StuQQ" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">学 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 历:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.StuEducational" />
+                            </div>
+                        </div>
                     </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">家庭地址:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.StuAddress" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">信息来源:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.stuinfomation" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">状  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 态:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.StatusName" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">备&nbsp; 案&nbsp; 人:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.empName" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-row layui-form-item">
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">所在区域:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.RegionName" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs3 layui-col-sm3 layui-col-md3">
+                            <label class="LableCss1">关 &nbsp; 系 &nbsp; 人:</label>
+                            <div class="layui-input-block">
+                                <input type="text" disabled="disabled" class="layui-input" value="@studata.Party" />
+                            </div>
+                        </div>                        
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div class="DivCssthree">
+            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief" lay-allowClose="true">
+                <ul class="layui-tab-title">
+                    @{
+                        List<FollwingInfo> f_list = ViewBag.Flowingdata as List<FollwingInfo>;
+                        if (f_list.Count <= 0)
+                        {
+                            <li class="layui-this">系统提示</li>
                         }
                         else
                         {
-                    <div class="layui-tab-item">
-                        <div style="width:90%;margin:0px auto">
-                            <form class="layui-form">
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">跟踪日期:</label>
-                                        <div class="layui-input-block">
-                                            <input id="MyDate" name="MyDate" type="text" disabled="disabled" class="layui-input" value="@item2.FollwingDate" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">跟踪等级:</label>
-                                        <div class="layui-input-block">
-                                            <input id="MyGrad" name="MyGrad" type="text" disabled="disabled" class="layui-input" value="@item2.Rank" />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">跟踪内容:</label>
-                                        <div class="layui-input-block">
-                                            <textarea class="layui-input TextAreCss1 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly" style="color:red">
+                            int i = 0;
+                            foreach (var item in f_list)
+                            {
+                                i++;
+                                <li>第<span>《</span><span>@i</span><span>》次跟踪</span></li>
+                            }
+                        }
+                    }
+                </ul>
+                <div class="layui-tab-content" style="height: 100px;">
+                    @{
+                        if (f_list.Count <= 0)
+                        {
+                            <div class="layui-tab-item layui-show">
+                                <h2 style="color:red">该学生目前没有跟踪信息!！！</h2>
+                            </div>
+                        }
+                        else
+                        {
+                            int j = 0;
+                            foreach (FollwingInfo item2 in f_list)
+                            {
+                                if (j == 0)
+                                {
+                                    <div class="layui-tab-item layui-show">
+                                        <div style="width:90%;margin:0px auto">
+                                            <form class="layui-form">
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">跟踪日期:</label>
+                                                        <div class="layui-input-block">
+                                                            <input id="MyDate" name="MyDate" type="text" disabled="disabled" class="layui-input" value="@item2.FollwingDate" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">跟踪等级:</label>
+                                                        <div class="layui-input-block">
+                                                            <input id="MyGrad" name="MyGrad" type="text" disabled="disabled" class="layui-input" value="@item2.Rank" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">跟踪内容:</label>
+                                                        <div class="layui-input-block">
+                                                            <textarea class="layui-input TextAreCss1 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly" style="color:red">
                                                          @item2.TailAfterSituation 
                                                 </textarea>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="layui-row layui-form-item">
-                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                                        <label class="LableCss1">其他说明:</label>
-                                        <div class="layui-input-block">
-                                            <textarea class="layui-input TextAreCss2 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">其他说明:</label>
+                                                        <div class="layui-input-block">
+                                                            <textarea class="layui-input TextAreCss2 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly">
                                                          @item2.Rmark 
                                             </textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="layui-tab-item">
+                                        <div style="width:90%;margin:0px auto">
+                                            <form class="layui-form">
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">跟踪日期:</label>
+                                                        <div class="layui-input-block">
+                                                            <input id="MyDate" name="MyDate" type="text" disabled="disabled" class="layui-input" value="@item2.FollwingDate" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">跟踪等级:</label>
+                                                        <div class="layui-input-block">
+                                                            <input id="MyGrad" name="MyGrad" type="text" disabled="disabled" class="layui-input" value="@item2.Rank" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">跟踪内容:</label>
+                                                        <div class="layui-input-block">
+                                                            <textarea class="layui-input TextAreCss1 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly" style="color:red">
+                                                         @item2.TailAfterSituation 
+                                                </textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="layui-row layui-form-item">
+                                                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                        <label class="LableCss1">其他说明:</label>
+                                                        <div class="layui-input-block">
+                                                            <textarea class="layui-input TextAreCss2 colorText" id="My_TailAfterSituation" name="My_TailAfterSituation" readonly="readonly">
+                                                         @item2.Rmark 
+                                            </textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                                }
+                                j++;
+                            }
                         }
-                        j++;
                     }
-                }
-            }            
+                </div>
+            </div>
         </div>
+        
     </div>
+     
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>

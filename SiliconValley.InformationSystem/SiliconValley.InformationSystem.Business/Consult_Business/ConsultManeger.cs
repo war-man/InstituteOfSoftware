@@ -450,6 +450,73 @@ namespace SiliconValley.InformationSystem.Business.Consult_Business
             return this.GetList().Where(c => c.TeacherName == id && GetSingleStudent(c.StuName).StatusTime != null && Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Month == monthName && Convert.ToDateTime(GetSingleStudent(c.StuName).StatusTime).Year==year).Count();
         }
         
+        /// <summary>
+        /// 添加单条分量数据
+        /// </summary>
+        /// <param name="new_c"></param>
+        /// <returns></returns>
+        public bool AddSing(Consult new_c)
+        {
+            bool s = false;
+            try
+            {
+                this.Insert(new_c);
+                s = true;
+            }
+            catch (Exception)
+            {
+                s = false;
+            }
+
+            return s;
+        }
+
+        /// <summary>
+        /// 获取备案学生数据
+        /// </summary>
+        /// <param name="Stu_id">学生备案Id</param>
+        /// <param name="date">日期</param>
+        /// <returns></returns>
+        public ExportStudentBeanData GetStudentData(int Stu_id)
+        {
+            List<ExportStudentBeanData> data = new List<ExportStudentBeanData>();
+            string str = "select * from  StudentBeanView where Id=" + Stu_id;
+            //if (Stu_id<54117)
+            //{
+            //data = Stu_Entity.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where Id=" + Stu_id).Select(d => new ExportStudentBeanData()
+            //{
+            //    StuName = d.StudentName,
+            //    StuSex = d.Sex == "男" ? true : false,
+            //    StuBirthy = null,
+            //    IdCade = null,
+            //    Stuphone = d.Phone,
+            //    StuSchoolName = d.School,
+            //    StuEducational = d.Education,
+            //    StuAddress = null,
+            //    StuWeiXin = null,
+            //    StuQQ = d.QQ,
+            //    stuinfomation = d.source,
+            //    StatusName = d.MarketState,
+            //    StuisGoto = false,
+            //    StuVisit = null,
+            //    empName = d.SalePerson,
+            //    Party = d.RelatedPerson,
+            //    BeanDate = d.CreateDate,
+            //    StuEntering = d.CreateUserName,
+            //    StatusTime = null,
+            //    RegionName = d.Area,
+            //    Reak = null,
+            //    ConsultTeacher = d.Inquiry
+            //}).ToList();
+            //   data = Stu_Entity.GetListBySql<ExportStudentBeanData>("select view Sch_MarketView where Id="+Stu_id);
+            //}
+            //else
+            //{
+                 data = Stu_Entity.GetListBySql<ExportStudentBeanData>("select * from  StudentBeanView where Id=" + Stu_id);
+            //}
+            return data[0];
+        }
+
         #region  给跟踪业务使用的方法
         //给咨询分量的数据
         public List<StudentPutOnRecord> GetStudentData(int monName,string Status,int? consultTeacherId)

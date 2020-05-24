@@ -129,5 +129,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json("数据错误！！！", JsonRequestBehavior.AllowGet);
             }             
         }
+
+        public ActionResult TeacherSelect()
+        {
+            List<Emp_consult> list = EmployandCounTeacherCoom.getallCountTeacher(false);
+            ViewBag.selectconsult = list;
+            return View();
+        }
     }
 }
