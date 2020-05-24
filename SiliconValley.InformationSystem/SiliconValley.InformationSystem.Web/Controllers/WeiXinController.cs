@@ -8,6 +8,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using SiliconValley.InformationSystem.Entity.Base_SysManage;
+
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
 
@@ -19,40 +21,51 @@ namespace SiliconValley.InformationSystem.Web.Controllers
         {
             db_account = new Base_UserBusiness();
         }
-
+        [IgnoreLogin]
         // GET: WeiXin
         public ActionResult WXLogin(string code)
         {
-           
-
-            QQ_callback callback = new QQ_callback();
-
-            Weixin_info userinfo = callback.getWeixinUserInfoJSON(code);
-
-            //匹配账号 
-
-            var account = db_account.GetList().Where(d => d.WX_Unionid == userinfo.Unionid).FirstOrDefault();
-
-            if (account == null) return View("WXLoginError","login404");
-
-            //记录登录
-            SessionHelper.Session["UserId"] = account.UserId;
-
-            var permisslist = PermissionManage.GetOperatorPermissionValues();
-
-            SessionHelper.Session["OperatorPermission"] = permisslist;
-
             Base_SysLogBusiness base_SysLogBusiness = new Base_SysLogBusiness();
+            try
+            {
+                QQ_callback callback = new QQ_callback();
 
-            base_SysLogBusiness.WriteSysLog($"code:{code}");
-            base_SysLogBusiness.WriteSysLog($"用户信息:{JsonConvert.SerializeObject(userinfo)}");
+                Weixin_info userinfo = callback.getWeixinUserInfoJSON(code);
 
+                //匹配账号 
 
+                //base_SysLogBusiness.WriteSysLog($"code:{code}");
+
+                //base_SysLogBusiness.WriteSysLog($"用户信息:{JsonConvert.SerializeObject(userinfo)}");
+
+                var account = db_account.GetList().Where(d => d.WX_Unionid == userinfo.Unionid).FirstOrDefault();
+
+                if (account == null)
+                {
+                    errorMsg errorMsg = new errorMsg();
+
+                    errorMsg.errorCode = "login404";
+                    return View(viewName: "WXLoginError", model: errorMsg);
+                } 
+
+                //记录登录
+                SessionHelper.Session["UserId"] = account.UserId;
+
+                var permisslist = PermissionManage.GetOperatorPermissionValues();
+
+                SessionHelper.Session["OperatorPermission"] = permisslist;
+
+            }
+            catch (Exception ex)
+            {
+                throw;
+
+            }
             return Redirect("/Base_SysManage/Base_SysMenu/Index");
         }
 
      
-        [CheckLogin]
+        
         [HttpGet]
         public ActionResult BindingWX()
         {
@@ -60,7 +73,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             return View();
         }
 
-        [CheckLogin]
+        
         public ActionResult DoBindingWX(string code)
         {
 
@@ -70,12 +83,23 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
             var currentUser = Base_UserBusiness.GetCurrentUser();
 
-            if(!string.IsNullOrEmpty(currentUser.WX_Unionid)) return View("WXLoginError", "binding402");
+            Base_User user = db_account.GetEntity(currentUser.Id);
+
+
+            if (!string.IsNullOrEmpty(user.WX_Unionid))
+            {
+                errorMsg errorMsg = new errorMsg();
+
+                errorMsg.errorCode = "binding402";
+
+                return View("WXLoginError", errorMsg);
+            }
+
 
             //存入信息
-            currentUser.WX_Unionid = userinfo.Unionid;
+            user.WX_Unionid = userinfo.Unionid;
 
-            db_account.Update(currentUser);
+            db_account.Update(user);
 
             //跳转登录
 
@@ -83,6 +107,7 @@ namespace SiliconValley.InformationSystem.Web.Controllers
 
         }
 
+        [IgnoreLogin]
         public ActionResult WXLoginError()
         {
 
