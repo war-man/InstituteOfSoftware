@@ -89,24 +89,34 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             var templist = new List<ChoiceQuestionTableView>();
 
-            foreach (var item in list)
-            {
-                templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item, false));
-            }
+            //foreach (var item in list)
+            //{
+            //    templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item, false));
+            //}
             List<Curriculum> sourchlist = new List<Curriculum>();
             if (examview.ExamType.ExamTypeID == 1)
             {
-                questionlist = templist.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == null).ToList();
+                var tempqulist = list.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == 0).ToList();
+                tempqulist.ForEach(d=>
+                {
+                    var tempobj = db_choiceQuestion.ConvertToChoiceQuestionTableView(d, false);
+                    if (tempobj != null) questionlist.Add(tempobj);
+                });
             }
 
             if (examview.ExamType.ExamTypeID == 2)
             {
-
                var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
-                templist = templist.Where(d => d.Course != null).ToList();
-                if (course != null)
 
-                    sourchlist.Add(course);
+                list = list.Where(d => d.Course != 0).ToList();
+
+                list.ForEach(d=>
+                {
+                    var tempobj = db_choiceQuestion.ConvertToChoiceQuestionTableView(d, false);
+                    if (tempobj != null) templist.Add(tempobj);
+                });
+
+                if (course != null) sourchlist.Add(course);
 
                 //筛选题目
                 foreach (var item in templist)
@@ -234,10 +244,10 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_answerQuextion.AllAnswerQuestion();
             var templist = new List<AnswerQuestionView>();
-            foreach (var item in list)
-            {
-                templist.Add(db_answerQuextion.ConvertToAnswerQuestionView(item, false));
-            }
+            //foreach (var item in list)
+            //{
+            //    templist.Add(db_answerQuextion.ConvertToAnswerQuestionView(item, false));
+            //}
             //筛选出S2的课程
             List<AnswerQuestionView> questionlist = new List<AnswerQuestionView>();
 
@@ -246,7 +256,13 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             if (examview.ExamType.ExamTypeID == 1)
             {
 
-                questionlist = templist.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == null).ToList();
+                var tempqulist = list.Where(d => d.Grand == examview.ExamType.GrandID && d.Course ==0).ToList();
+                tempqulist.ForEach(d=>
+                {
+                    var tempobj = db_answerQuextion.ConvertToAnswerQuestionView(d, false);
+
+                    if (tempobj != null) questionlist.Add(tempobj);
+                });
             }
 
             if (examview.ExamType.ExamTypeID == 2)
@@ -254,12 +270,17 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
                 var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
 
-                templist = templist.Where(d => d.Course != null).ToList();
+                list = list.Where(d => d.Course !=0).ToList();
 
-                if (course != null)
+                list.ForEach(d=>
+                {
+                    var tempobj = db_answerQuextion.ConvertToAnswerQuestionView(d, false);
 
-                    sourchlist.Add(course);
+                    if (tempobj != null) templist.Add(tempobj);
 
+                });
+
+                if (course != null) sourchlist.Add(course);
 
                 //筛选题目
                 foreach (var item in templist)
@@ -368,26 +389,42 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             List<Curriculum> sourchlist = new List<Curriculum>();
 
-            foreach (var item in list)
-            {
-                templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item,false));
-            }
+            //foreach (var item in list)
+            //{
+            //    templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item,false));
+            //}
 
             List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
 
             if (examview.ExamType.ExamTypeID == 1)
             {
-                questionlist = templist.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == null).ToList();
+                var tempqulist  = list.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == 0).ToList();
+
+                tempqulist.ForEach(d=> {
+
+                   var tempobj = db_computerQuestion.ConvertToComputerTestQuestionsView(d, false);
+
+                    if (tempobj != null) questionlist.Add(tempobj);
+                });
+
             }
 
             if (examview.ExamType.ExamTypeID == 2)
             {
 
                 var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
-                templist = templist.Where(d => d.Course != null).ToList();
-                if (course != null)
 
-                    sourchlist.Add(course);
+                list = list.Where(d => d.Course !=0).ToList();
+
+                list.ForEach(d=> {
+
+                    var tempobj = db_computerQuestion.ConvertToComputerTestQuestionsView(d, false);
+
+                    if (tempobj != null) templist.Add(tempobj);
+                });
+
+
+                if (course != null) sourchlist.Add(course);
 
 
                 //获取S2的题目
