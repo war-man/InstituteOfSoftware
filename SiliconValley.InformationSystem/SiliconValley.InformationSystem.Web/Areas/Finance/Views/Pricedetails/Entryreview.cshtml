@@ -1,0 +1,192 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.ViewEntity.vierprice
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.MyEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Entryreview</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
+    <style>
+        .site-doc-icon li .layui-anim {
+            width: 150px;
+            height: 150px;
+            line-height: 150px;
+            margin: 0 auto 10px;
+            text-align: center;
+            background-color: #009688;
+            cursor: pointer;
+            color: #fff;
+            border-radius: 50%;
+        }
+
+        #table1 td {
+            padding-top: 20px;
+        }
+        #No {
+            position: absolute;
+            right: 330px;
+            top: 20px;
+            background-image: url('/Areas/Teachingquality/images/审批.png');
+            width: 140px;
+            height: 120px;
+            background-position-x: -80px;
+            background-position-y: -60px;
+            /*filter: alpha(opacity:30);*/
+        }
+
+        #Yes {
+            position: absolute;
+            right: 330px;
+            top: 20px;
+            background-image: url('/Areas/Teachingquality/images/审批.png');
+            width: 140px;
+            height: 120px;
+            background-position-x: -260px;
+            background-position-y: -60px;
+        }
+    </style>
+</head>
+<body>
+    @if (ViewBag.Passornot == "true")
+    {
+        <div id="Yes"></div>
+    }
+    else if (ViewBag.Passornot =="false")
+    {
+        <div id="No"></div>
+    }
+    <input type="text" id="ids" style="display:none;" value="@ViewBag.id" />
+    <div style="float:left">
+        <ul class="layui-timeline">
+
+            @{
+                int Total = 0;
+                foreach (var item in ViewBag.vier as List<vierprice>)
+                {
+                    decimal db = 0;
+                    <li class="layui-timeline-item">
+                        <i class="layui-icon layui-timeline-axis"></i>
+                        <div class="layui-timeline-content layui-text">
+                            @foreach (var item1 in item.Chicked)
+                            {
+
+                                db += item1.Amountofmoney;
+                                Total += Convert.ToInt32(item1.Amountofmoney);
+
+                            }
+                            <h3 class="layui-timeline-title">@item.Date (@db)</h3>
+
+                            @foreach (var s in item.Chicked.OrderBy(a => a.Rategory).ToList().Select(a => a.Rategory).ToList().Distinct().ToList())
+                            {
+                                <p>@s</p>
+                                foreach (var item1 in item.Chicked)
+                                {
+                                    if (item1.Rategory == s)
+                                    {
+                                        <ul>
+                                            <li>@item1.GrandName @item1.CostitemName,缴纳: @item1.Amountofmoney</li>
+                                        </ul>
+                                    }
+                                }
+
+                            }
+
+
+                        </div>
+                    </li>
+                }
+            }
+
+
+        </ul>
+    </div>
+    <div style="float:right;margin-left:-30px;width:300px;">
+        @{
+
+            var student = ViewBag.student as StudentInformation;
+            <table id="table1">
+                <tr>
+                    <td>学号：</td>
+                    <td>@student.StudentNumber</td>
+                </tr>
+                <tr>
+                    <td>姓名：</td>
+                    <td>@student.Name</td>
+                </tr>
+                <tr>
+                    <td>身份证：</td>
+
+                    <td>@student.identitydocument</td>
+                </tr>
+                <tr>
+                    <td>单号：</td>
+                    @if (ViewBag.OddNumbers != "null")
+                    {
+                        <td>@ViewBag.OddNumbers</td>
+                    }
+                    else
+                    {
+                        <td> <input type="text" id="OddNumbers" lay-verify="required|number" placeholder="请输入单号" class="layui-input" /></td>
+                    }
+
+                </tr>
+            </table>
+        }
+
+        <div style="border-bottom:#ffffff solid 1px;border-left:#ffffff solid 1px;border-right:#ffffff solid 1px; height:60px;margin-top:224px;margin-left:-495px;">
+            <div style="text-align:center;border-top:0px;">
+                @if (ViewBag.Passornot == "null")
+                {
+                    <button class="layui-btn layui-btn-radius" type="button" id="Yess"><i class="layui-icon">&#xe605;</i>通过</button>
+                    <button class="layui-btn layui-btn-radius layui-btn-danger" type="button" id="Nos"> <i class="layui-icon">&#x1006;</i>作废</button>
+                }
+                else
+                {
+                    <button class="layui-btn layui-btn-radius layui-btn-danger" id="Ceno" type="button"><i class="layui-icon">&#x1007;</i>关闭</button>
+                }
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
+<script>
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        //同意
+        $("#Yess").click(function () {
+            var Dabse = {
+                id: $("#ids").val(),
+                whether: true,
+                OddNumbers: $("#OddNumbers").val()
+            }
+            TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+        });
+        //拒绝
+        $("#Nos").click(function () {
+            var Dabse = {
+                id: $("#ids").val(),
+                whether: false,
+                OddNumbers: $("#OddNumbers").val()
+            }
+            TransactionAdd("/Finance/Pricedetails/Tuitionentry", Dabse);
+        });
+        //关闭
+        $("#Ceno").click(function () {
+            closeopen();
+        });
+    });
+
+</script>
