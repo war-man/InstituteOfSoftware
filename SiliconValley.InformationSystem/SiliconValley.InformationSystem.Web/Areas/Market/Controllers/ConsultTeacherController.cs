@@ -75,6 +75,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         IsZhizhi = finde.IsDel,
                         Rmark = findc.Rmark,
                         Politicsstatus = finde.PoliticsStatus,
+                        //workExperence = finde.InvitedSource,
                         IsZhangzhe = finde.PositiveDate == null ? false : true,
                         ConGrade = findc.ConGrade
                     };
@@ -127,13 +128,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 BusHelper.WriteSysLog("操作人:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "操作时出现:" + ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 return Json("数据错误！！！", JsonRequestBehavior.AllowGet);
             }             
-        }
-
-        public ActionResult TeacherSelect()
-        {
-            List<Emp_consult> list = EmployandCounTeacherCoom.getallCountTeacher(false);
-            ViewBag.selectconsult = list;
-            return View();
         }
     }
 }
