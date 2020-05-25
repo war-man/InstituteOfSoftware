@@ -11,6 +11,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
     /// </summary>
     public class Sch_MarketView
     {
+        public int Id { get; set; }
         public string StudentName { get; set; }
         public string Sex { get; set; }
         public string Phone { get; set; }

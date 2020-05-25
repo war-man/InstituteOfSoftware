@@ -90,7 +90,7 @@ namespace SiliconValley.InformationSystem.Business.NewExcel
             for (int i = 0; i < data.Count; i++)
             {
                 xlWorkSheet.Cells[i + 2, 1] = data[i].StuName;
-                xlWorkSheet.Cells[i + 2, 2] = data[i].StuSex==true ? "男" : "女"; 
+                xlWorkSheet.Cells[i + 2, 2] = data[i].StuSex; 
                 xlWorkSheet.Cells[i + 2, 3] = data[i].StuBirthy;
                 xlWorkSheet.Cells[i + 2, 4] = data[i].IdCade;
                 xlWorkSheet.Cells[i + 2, 5] = data[i].Stuphone;

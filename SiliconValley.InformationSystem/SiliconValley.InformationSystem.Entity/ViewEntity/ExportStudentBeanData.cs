@@ -23,7 +23,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 学生性别
         /// </summary>
-        public bool StuSex { get; set; }
+        public string StuSex { get; set; }
 
         /// <summary>
         /// 学生出生年月日
@@ -73,7 +73,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 是否来校访问
         /// </summary>
-        public bool StuisGoto { get; set; }
+        public bool? StuisGoto { get; set; }
 
         /// <summary>
         /// 来校访问的日期

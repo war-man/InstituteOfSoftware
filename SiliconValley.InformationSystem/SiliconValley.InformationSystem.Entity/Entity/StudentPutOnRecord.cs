@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 学生性别
         /// </summary>
-        public Nullable<bool> StuSex { get; set; }
+        public string StuSex { get; set; }
         /// <summary>
         /// 学生出生年月日
         /// </summary>

@@ -456,6 +456,8 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             return resultlist;
         }
         #endregion        
+      
+
         #region 用于将远程数据库中的备案数据导入当前数据库中
         /// <summary>
         /// 获取远程备案数据
@@ -497,6 +499,72 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             //}
         }
 
+        /// <summary>
+        /// 将远程数据转成本地视图数据
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> LongrageDataToViewmodel(List<Sch_MarketView> list)
+        {
+            List<ExportStudentBeanData> newlist = list.Select(s2 => new ExportStudentBeanData
+            {
+                StuName = s2.StudentName,
+                StuSex = s2.Sex,
+                StuBirthy = null,
+                IdCade = null,
+                Stuphone = s2.Phone,
+                StuSchoolName = s2.School,
+                StuEducational = s2.Education,
+                StuAddress = null,
+                StuWeiXin = null,
+                StuQQ = s2.QQ,
+                stuinfomation = s2.source,
+                StatusName = s2.MarketState,
+                StuisGoto = false,
+                StuVisit = null,
+                empName = s2.SalePerson,
+                Party = s2.RelatedPerson,
+                BeanDate = s2.CreateDate,
+                StuEntering = s2.CreateUserName,
+                StatusTime = null,
+                RegionName = s2.Area,
+                Reak = null,
+                ConsultTeacher = s2.Inquiry
+            }).ToList();
+
+            return newlist;
+        }
         #endregion
+
+        /// <summary>
+        /// 获取两张表的所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> GETView()
+        {
+             List<ExportStudentBeanData> listall= this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
+
+            //List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
+
+            //listall.AddRange(this.LongrageDataToViewmodel(old));
+            return listall;
+        }
+
+        /// <summary>
+        /// 获取页面总条数
+        /// </summary>
+        /// <returns></returns>
+        public int SumCount()
+        {
+           
+            SqlConnection con = new SqlConnection("server=106.13.104.179;database=Coldairarrow.Fx.Net.Easyui.GitHub;uid=sa;pwd=tangdan2020@;Max Pool Size = 512;");
+            con.Open();
+            SqlCommand cmd = new SqlCommand("select count(*) as count from StudentBeanView",con);
+            SqlCommand cmd2 = new SqlCommand("select count(*) as count from Sch_MarketView", con);
+            int count=Convert.ToInt32(cmd.ExecuteScalar());
+            count= count+ Convert.ToInt32(cmd2.ExecuteScalar());
+            con.Close();
+            return count;
+        }
     }
 }
