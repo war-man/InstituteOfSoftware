@@ -137,7 +137,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             if (find_spt != null)
             {
                 mystudentdata.StudentputonereadName = find_spt.StuName;
-                mystudentdata.Sex = find_spt.StuSex == false ? "女" : "男";
+                mystudentdata.Sex = find_spt.StuSex;
                 mystudentdata.RecordData = find_spt.StuDateTime;
                 mystudentdata.IsVistSchool = find_spt.StuIsGoto == true ? "是" : "否";
                 StuStatus find_status = SM_Entity.GetEntity(find_spt.StuStatus_Id);

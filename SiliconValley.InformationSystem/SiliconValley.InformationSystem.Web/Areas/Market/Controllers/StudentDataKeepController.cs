@@ -110,24 +110,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             string findAreavalue = Request.QueryString["findAreavalue"];
             #endregion
             List<StudentPutOnRecord> stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
-            #region 判断是网路部人员登录还是咨询部人员登录
-
-            //StuInfomationType find_type = StuInfomationType_Entity.GetNameSearchId("网络招生");
-            //if (department.DeptName=="咨询部")
-            //{
-            //    //获取网络招生的数据
-            //    stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s=>s.StuInfomationType_Id!= find_type.Id).ToList();
-            //}
-            //else if(department.DeptName == "网络部")
-            //{
-            //    //获取除了网络招生以外的数据
-            //    stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).Where(s => s.StuInfomationType_Id == find_type.Id).ToList();
-            //}
-            //else
-            //{
-            //    stu_IQueryable = s_Entity.GetAllStudentKeepData().OrderByDescending(s => s.Id).ToList();
-            //}
-            #endregion
+            
             #region 模糊查询
             if (!string.IsNullOrEmpty(findNamevalue))
             {
@@ -165,7 +148,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 int Areeid = Convert.ToInt32(findAreavalue);
                 stu_IQueryable = stu_IQueryable.Where(s => s.Region_id == Areeid).ToList();
             }
-            #endregion            
+            #endregion
+
             try
             {
                 #region 分页转前端数据格式类型
@@ -210,6 +194,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
                 return Json(Error("加载数据有误"), JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult GetTableData(int limit,int page)
+        {
+            List<ExportStudentBeanData> list= s_Entity.GETView().OrderByDescending(s=>s.Id).ToList();
+
+            var data = list.Skip((page - 1) * limit).Take(limit).ToList() ;
+
+            var josndata =new {code=0, count=s_Entity.SumCount(), data=data};
+
+            return Json(josndata,JsonRequestBehavior.AllowGet);
         }
 
         //这是一个添加数据的页面
@@ -496,7 +491,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             List<StudentPutOnRecord> list = s_Entity.GetAllStudentKeepData().Where(s => s.StuName == id).ToList();
             var data = list.Select(s => new StudentData
             {
-                stuSex = s.StuSex == true ? "男" : "女",
+                stuSex = s.StuSex  ,
                 StuName = s.StuName,
                 StuPhone = s.StuPhone,
                 StuSchoolName = s.StuSchoolName,
@@ -556,7 +551,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     if (item2.StuName == item1.StuName && item2.StuPhone == item1.StuPhone)
                     {
                         MyExcelClass m = new MyExcelClass();
-                        m.StuSex = item2.StuSex == true ? "男" : "女";
+                        m.StuSex = item2.StuSex ;
                         m.StuName = item2.StuName;
                         m.StuPhone = item2.StuPhone;
                         m.StuSchoolName = item2.StuSchoolName;
@@ -607,7 +602,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     StudentPutOnRecord create_s = new StudentPutOnRecord();
                     create_s.StuName = t.Rows[i][0].ToString();
-                    create_s.StuSex = t.Rows[i][1].ToString() == "女" ? false : true;
+                    create_s.StuSex = t.Rows[i][1].ToString();
                     create_s.StuPhone = t.Rows[i][2].ToString();
                     create_s.StuSchoolName = t.Rows[i][3].ToString();//学校
                     create_s.StuAddress = t.Rows[i][4].ToString();//家庭住址
@@ -766,7 +761,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 {
                     StudentPutOnRecord s = new StudentPutOnRecord();
                     s.StuName = item1.StuName;
-                    s.StuSex = item1.StuSex == "男" ? true : false;
+                    s.StuSex = item1.StuSex;
                     s.EmployeesInfo_Id = s_Entity.GetNameSreachEmploId(item1.EmployeesInfo_Id) == null ? null : s_Entity.GetNameSreachEmploId(item1.EmployeesInfo_Id).EmployeeId;
                     s.IsDelete = false;
                     s.Reak = item1.Reak;
@@ -1018,7 +1013,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
-
         #region Excel数据导出
 
         /// <summary>
@@ -1114,31 +1108,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 return Json(a, JsonRequestBehavior.AllowGet);
             }
 
-            List<ExportStudentBeanData> entity2 = s_Entity.GetListBySql<Sch_MarketView>(str2).Select(s2 => new ExportStudentBeanData()
-            {
-                StuName = s2.StudentName,
-                StuSex = s2.Sex == "男" ? true : false,
-                StuBirthy = null,
-                IdCade=null,
-                Stuphone = s2.Phone,
-                StuSchoolName = s2.School,
-                StuEducational = s2.Education,
-                StuAddress = null,
-                StuWeiXin = null,
-                StuQQ = s2.QQ,
-                stuinfomation = s2.source,
-                StatusName = s2.MarketState,
-                StuisGoto = false,
-                StuVisit = null,
-                empName = s2.SalePerson,
-                Party =s2.RelatedPerson,
-                BeanDate = s2.CreateDate,
-                StuEntering = s2.CreateUserName,
-                StatusTime = null,
-                RegionName = s2.Area,
-                Reak = null,
-                ConsultTeacher=s2.Inquiry
-            }).ToList();
+            List<Sch_MarketView> entity2 = s_Entity.GetListBySql<Sch_MarketView>(str2);
+
+            
             string jsonfile = Server.MapPath("/Config/ExportStudentBean.json");//获取表头
             System.IO.StreamReader file = System.IO.File.OpenText(jsonfile);
             JsonTextReader reader = new JsonTextReader(file);
@@ -1189,7 +1161,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }).ToList();
              
 
-            entity.AddRange(entity2);
+            entity.AddRange(s_Entity.LongrageDataToViewmodel(entity2));
 
 
             string filename = DateTime.Now.ToString("yyyyMMddhhmmss") + ".xls";
@@ -1243,6 +1215,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         }
         #endregion
 
+       
         #region 远程数据查询
         public ActionResult Sch_MarketIndex()
         {
