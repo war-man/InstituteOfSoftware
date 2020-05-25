@@ -1,0 +1,118 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Viewdetails</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        .layui-col-xs12 {
+            border: 1px;
+            border-bottom-style: solid;
+        }
+
+        #StudentImages {
+            width: 100px;
+            height: 100px;
+            z-index: 999;
+            position: absolute;
+            right: 50px;
+            top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <div id="StudentImages"></div>
+
+    <div style="text-align:center;margin-top:10px;height:30px;">
+        <h3>访谈详情</h3>
+    </div>
+    <div class="layui-container" style="text-align:center;">
+        <div class="layui-row layui-form-item">
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Studentnumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" i>
+                <label class="layui-form-label">学生姓名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Name" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">谈话标题</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="InterviewTopics" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">谈话内容</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Interviewcontent" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">谈话日期</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Interviewtime" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">学员家长</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Parent" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                <label class="layui-form-label">登记人</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Empnumber" readonly="readonly" style="line-height:40px;color:dodgerblue;border:0px;" />
+                </div>
+            </div>
+         
+
+        </div>
+    </div>
+    <div style="text-align:center;margin-top:10px;height:30px;">
+        <button class="layui-btn" type="button" id="but1">确认</button>
+    </div>
+</body>
+</html>
+<script src="~/Areas/Teachingquality/js/Datetime.js"></script>
+<script>
+
+    var cur = JSON.parse('@Html.Raw(ViewBag.intervirereco)');
+    $("#Studentnumber").val(cur.Studentnumber)
+    $("#Name").val(cur.Name)
+    $("#InterviewTopics").val(cur.InterviewTopics)
+    $("#Interviewcontent").val(cur.Interviewcontent)
+    $("#Interviewtime").val(cur.Interviewtime)
+    $("#Empnumber").val(cur.Empnumber)
+    $("#Parent").val(cur.Parent)
+    var dayime = new Date(cur.Interviewtime)
+    console.log(dayime);
+
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var layer = layui.layer;
+
+        //关闭详细宽
+        $("#but1").click(function () {
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+            parent.layer.close(index); //再执行关闭
+
+        });
+    });
+
+
+</script>
+

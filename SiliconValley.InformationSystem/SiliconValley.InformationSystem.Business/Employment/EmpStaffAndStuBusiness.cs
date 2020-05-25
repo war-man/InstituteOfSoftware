@@ -678,7 +678,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
 
             dbemploySituation = new EmploySituationBusiness();
 
-            if (Year == null)
+            if (string.IsNullOrEmpty(Year))
                 result = this.GetEmpStaffAndStus().Where(d=>d.EmpStaffID == int.Parse(StaffId)).ToList();
             else
                 result = this.GetEmpStaffAndStus().Where(d => ((DateTime)d.Date).Year == int.Parse(Year) && d.EmpStaffID == int.Parse(StaffId)).ToList();

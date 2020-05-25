@@ -75,16 +75,9 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         /// <returns></returns>
         public List<ChoiceQuestionTableView> ProductChoiceQuestion(Examination examination,int kecheng)
         {
-            //获取专业
-
-           var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+            
             TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
-           var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
-
-           var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
-
-            //获取班级专业
-           var major = dbteacheraclass.GetClass_Major(classschue.id);
+      
 
             List<ChoiceQuestionTableView> questionlist = new List<ChoiceQuestionTableView>();
 
@@ -93,61 +86,59 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             var examview = db_exam.ConvertToExaminationView(examination);
 
             var list = db_choiceQuestion.AllChoiceQuestionData();
+
             var templist = new List<ChoiceQuestionTableView>();
-            foreach (var item in list)
-            {
-                templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item, false));
-            }
+
+            //foreach (var item in list)
+            //{
+            //    templist.Add(db_choiceQuestion.ConvertToChoiceQuestionTableView(item, false));
+            //}
             List<Curriculum> sourchlist = new List<Curriculum>();
             if (examview.ExamType.ExamTypeID == 1)
             {
-                //筛选出S2的课程
-
-                if (major == null)
+                var tempqulist = list.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == 0).ToList();
+                tempqulist.ForEach(d=>
                 {
-                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID ).ToList();
-                }
-                else
-                {
-                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
-                }
-
-                
-
+                    var tempobj = db_choiceQuestion.ConvertToChoiceQuestionTableView(d, false);
+                    if (tempobj != null) questionlist.Add(tempobj);
+                });
             }
 
             if (examview.ExamType.ExamTypeID == 2)
             {
-
                var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
 
-                if (course != null)
+                list = list.Where(d => d.Course != 0).ToList();
 
-                    sourchlist.Add(course);
-
-
-            }
-
-            
-            //筛选题目
-            foreach (var item in templist)
-            {
-                foreach (var item1 in sourchlist)
+                list.ForEach(d=>
                 {
+                    var tempobj = db_choiceQuestion.ConvertToChoiceQuestionTableView(d, false);
+                    if (tempobj != null) templist.Add(tempobj);
+                });
 
-                    if (item.Course.CurriculumID == item1.CurriculumID)
+                if (course != null) sourchlist.Add(course);
+
+                //筛选题目
+                foreach (var item in templist)
+                {
+                    foreach (var item1 in sourchlist)
                     {
-                        //判断是否存在
-                        if (!IsContain(questionlist, item))
+
+                        if (item.Course.CurriculumID == item1.CurriculumID)
                         {
-                            questionlist.Add(item);
+                            //判断是否存在
+                            if (!IsContain(questionlist, item))
+                            {
+                                questionlist.Add(item);
+                            }
                         }
+
                     }
-
                 }
+
+
             }
-
-
+      
             //筛选难度
             //读取配置文件
             XmlDocument xmlDocument = new XmlDocument();
@@ -247,38 +238,31 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
             //获取专业
 
-            var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
+         
             TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
-            var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
-
-            var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
-
-            //获取班级专业
-            var major = dbteacheraclass.GetClass_Major(classschue.id);
-
+          
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_answerQuextion.AllAnswerQuestion();
             var templist = new List<AnswerQuestionView>();
-            foreach (var item in list)
-            {
-                templist.Add(db_answerQuextion.ConvertToAnswerQuestionView(item, false));
-            }
+            //foreach (var item in list)
+            //{
+            //    templist.Add(db_answerQuextion.ConvertToAnswerQuestionView(item, false));
+            //}
             //筛选出S2的课程
+            List<AnswerQuestionView> questionlist = new List<AnswerQuestionView>();
+
 
             List<Curriculum> sourchlist = new List<Curriculum>();
             if (examview.ExamType.ExamTypeID == 1)
             {
-                //筛选出S2的课程
-                if (major == null)
-                {
-                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
-                }
-                else
-                {
-                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
-                }
-                
 
+                var tempqulist = list.Where(d => d.Grand == examview.ExamType.GrandID && d.Course ==0).ToList();
+                tempqulist.ForEach(d=>
+                {
+                    var tempobj = db_answerQuextion.ConvertToAnswerQuestionView(d, false);
+
+                    if (tempobj != null) questionlist.Add(tempobj);
+                });
             }
 
             if (examview.ExamType.ExamTypeID == 2)
@@ -286,33 +270,39 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
                 var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
 
-                if (course != null)
+                list = list.Where(d => d.Course !=0).ToList();
 
-                    sourchlist.Add(course);
-
-
-            }
-
-            List<AnswerQuestionView> questionlist = new List<AnswerQuestionView>();
-
-
-            //筛选题目
-            foreach (var item in templist)
-            {
-                foreach (var item1 in sourchlist)
+                list.ForEach(d=>
                 {
+                    var tempobj = db_answerQuextion.ConvertToAnswerQuestionView(d, false);
 
-                    if (item.Course.CurriculumID == item1.CurriculumID)
+                    if (tempobj != null) templist.Add(tempobj);
+
+                });
+
+                if (course != null) sourchlist.Add(course);
+
+                //筛选题目
+                foreach (var item in templist)
+                {
+                    foreach (var item1 in sourchlist)
                     {
-                        //判断是否存在
-                        if (!IsContain(questionlist, item))
-                        {
-                            questionlist.Add(item);
-                        }
-                    }
 
+                        if (item.Course.CurriculumID == item1.CurriculumID)
+                        {
+                            //判断是否存在
+                            if (!IsContain(questionlist, item))
+                            {
+                                questionlist.Add(item);
+                            }
+                        }
+
+                    }
                 }
+
             }
+
+      
             //读取配置文件
             XmlDocument xmlDocument = new XmlDocument();
             xmlDocument.Load(System.Web.HttpContext.Current.Server.MapPath("/Config/questionLevelConfig.xml"));
@@ -393,43 +383,29 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         {
             //获取专业
 
-            var candidate = db_candidateinfo.GetIQueryable().Where(d => d.Examination == examination.ID).FirstOrDefault();
-            TeacherClassBusiness dbteacheraclass = new TeacherClassBusiness();
-            var student = dbteacheraclass.GetStudentByNumber(candidate.StudentID);
-
-            var classschue = dbteacheraclass.GetScheduleByStudent(student.StudentNumber); //获取到班级
-
-            //获取班级专业
-            var major = dbteacheraclass.GetClass_Major(classschue.id);
-
             var examview = db_exam.ConvertToExaminationView(examination);
             var list = db_computerQuestion.AllComputerTestQuestion();
             var templist = new List<ComputerTestQuestionsView>();
 
             List<Curriculum> sourchlist = new List<Curriculum>();
 
-            foreach (var item in list)
-            {
-                templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item,false));
-            }
+            //foreach (var item in list)
+            //{
+            //    templist.Add(db_computerQuestion.ConvertToComputerTestQuestionsView(item,false));
+            //}
 
+            List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
 
             if (examview.ExamType.ExamTypeID == 1)
             {
-                //筛选出S2的课程
+                var tempqulist  = list.Where(d => d.Grand == examview.ExamType.GrandID && d.Course == 0).ToList();
 
-                //筛选出S2的课程
+                tempqulist.ForEach(d=> {
 
-                if (major == null)
-                {
-                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID).ToList();
-                }
-                else
-                {
-                    sourchlist = db_Course.GetList().Where(d => d.IsDelete == false && d.Grand_Id == examview.ExamType.GrandID && d.MajorID == major.Id).ToList();
-                }
+                   var tempobj = db_computerQuestion.ConvertToComputerTestQuestionsView(d, false);
 
-                
+                    if (tempobj != null) questionlist.Add(tempobj);
+                });
 
             }
 
@@ -438,30 +414,37 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
 
                 var course = db_Course.GetList().Where(d => d.IsDelete == false && d.CurriculumID == kecheng).FirstOrDefault();
 
-                if (course != null)
+                list = list.Where(d => d.Course !=0).ToList();
 
-                    sourchlist.Add(course);
+                list.ForEach(d=> {
+
+                    var tempobj = db_computerQuestion.ConvertToComputerTestQuestionsView(d, false);
+
+                    if (tempobj != null) templist.Add(tempobj);
+                });
+
+
+                if (course != null) sourchlist.Add(course);
+
+
+                //获取S2的题目
+                foreach (var item in templist)
+                {
+                    foreach (var item1 in sourchlist)
+                    {
+                        if (!IsContain(questionlist, item))
+                        {
+                            if (item.Course.CurriculumID == item1.CurriculumID)
+                            {
+                                questionlist.Add(item);
+                            }
+                        }
+                    }
+                }
 
 
             }
            
-            List<ComputerTestQuestionsView> questionlist = new List<ComputerTestQuestionsView>();
-
-            //获取S2的题目
-            foreach (var item in templist)
-            {
-                foreach (var item1 in sourchlist)
-                {
-                    if (!IsContain(questionlist, item))
-                    {
-                        if (item.Course.CurriculumID == item1.CurriculumID) 
-                        {
-                            questionlist.Add(item);
-                        }
-                    }
-                }
-            }
-
             Random rendom = new Random();
            
             var reslist = questionlist.Where(d => d.Level.LevelID == examview.PaperLevel.LevelID).ToList();

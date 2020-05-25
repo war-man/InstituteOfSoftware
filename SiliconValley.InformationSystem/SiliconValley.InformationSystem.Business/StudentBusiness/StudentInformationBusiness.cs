@@ -11,7 +11,7 @@ using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Business.StudentBusiness
 {
- public   class StudentInformationBusiness:BaseBusiness<StudentInformation>
+    public class StudentInformationBusiness : BaseBusiness<StudentInformation>
     {
         //阶段专业表
         BaseBusiness<StageGrade> tagegrade = new BaseBusiness<StageGrade>();
@@ -34,9 +34,9 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public object Stage(int id)
         {
-            var x = tagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == id).Select(a=>new {
-                code= specia.GetEntity(a.Major_Id).Id,
-                name=specia.GetEntity(a.Major_Id).SpecialtyName
+            var x = tagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == id).Select(a => new {
+                code = specia.GetEntity(a.Major_Id).Id,
+                name = specia.GetEntity(a.Major_Id).SpecialtyName
             }).ToList();
             return x;
         }
@@ -49,8 +49,8 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public StudentFeeStandard GetFeestandard(int Stage, int Major_Id)
         {
-           var x= tagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == Stage && a.Major_Id == Major_Id).FirstOrDefault();
-           return StudentFee.GetList().Where(a => a.IsDelete == false && a.Stage == x.Id).FirstOrDefault();
+            var x = tagegrade.GetList().Where(a => a.IsDelete == false && a.Grand_Id == Stage && a.Major_Id == Major_Id).FirstOrDefault();
+            return StudentFee.GetList().Where(a => a.IsDelete == false && a.Stage == x.Id).FirstOrDefault();
         }
         /// <summary>
         /// 迟交数据显示
@@ -59,14 +59,14 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public Tuitionallocation Latetuitionfee(int Stage)
         {
-          return  tuitionalloca.GetList().Where(a => a.IsDelete == false && a.Stage == Stage).FirstOrDefault();
+            return tuitionalloca.GetList().Where(a => a.IsDelete == false && a.Stage == Stage).FirstOrDefault();
         }
-    
-  
+
+
 
         public object Studenttuitionfeestandard(int id)
         {
-      
+
 
             var x = feestandard.GetList().Where(a => a.IsDelete == false && a.Stage == id).Select(a => new {
                 code = a.id,
@@ -81,7 +81,7 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <param name="imgurl">照片名称</param>
         /// <returns></returns>
         public bool StudentAddImg(string studenid, string imgurl)
-         {
+        {
             bool bo = true;
             try
             {
@@ -98,7 +98,38 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             }
             return bo;
         }
+        /// <summary>
+        /// 学员身份证正反面上传
+        /// </summary>
+        /// <param name="studenid">学员学号</param>
+        /// <param name="types">类型，1则为正面，否则为反面</param>
+        /// <param name="imgname"></param>
+        /// <returns></returns>
+        public bool StudentIdentityImg(string studenid, int types, string imgname)
+        {
+            bool bo = true;
+            try
+            {
+                var x = this.GetEntity(studenid);
+                if (types == 1)
+                {
+                    x.Identityjustimg = imgname;
+                }
+                else
+                {
+                    x.Identitybackimg = imgname;
+                }
+                this.Update(x);
+                BusHelper.WriteSysLog("修改学员身份证信息", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            catch (Exception ex)
+            {
 
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+                bo = false;
+            }
+            return bo;
+        }
         /// <summary>
         /// 根据学号获取学员姓名，班级
         /// </summary>
@@ -124,7 +155,7 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         /// <returns></returns>
         public int boolImg(string studentid)
         {
-          if(this.GetEntity(studentid).Picture!=null)
+            if (this.GetEntity(studentid).Picture != null)
             {
                 return 2;
             }

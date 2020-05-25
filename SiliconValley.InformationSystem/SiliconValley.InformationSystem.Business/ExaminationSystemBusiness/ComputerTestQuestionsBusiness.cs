@@ -52,8 +52,19 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
         {
 
             ComputerTestQuestionsView computerTestQuestionsView = new ComputerTestQuestionsView();
+
+            computerTestQuestionsView.Grand = machTestQuesBank.Grand;
+
             CourseBusiness courseBusiness = new CourseBusiness();
-            computerTestQuestionsView.Course= courseBusiness.GetCurriculas().Where(d => d.CurriculumID == machTestQuesBank.Course).FirstOrDefault();
+            if (machTestQuesBank.Course == 0)
+            {
+                computerTestQuestionsView.Course = null;
+            }
+            else
+            {
+                computerTestQuestionsView.Course = courseBusiness.GetCurriculas().Where(d => d.CurriculumID == machTestQuesBank.Course).FirstOrDefault();
+            }
+            
             computerTestQuestionsView.CreateDate = machTestQuesBank.CreateDate;
             computerTestQuestionsView.ID = machTestQuesBank.ID;
             computerTestQuestionsView.IsUsing = machTestQuesBank.IsUsing;

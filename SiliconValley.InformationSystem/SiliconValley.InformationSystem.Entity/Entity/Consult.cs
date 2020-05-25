@@ -24,11 +24,11 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 咨询师编号
         /// </summary>
-        public Nullable<int> TeacherName { get; set; }
+        public int TeacherName { get; set; }
         /// <summary>
         /// 数据备案编号
         /// </summary>
-        public Nullable<int> StuName { get; set; }
+        public int StuName { get; set; }
         /// <summary>
         /// 说明
         /// </summary>

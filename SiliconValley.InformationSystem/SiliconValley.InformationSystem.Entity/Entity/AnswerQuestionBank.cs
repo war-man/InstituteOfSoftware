@@ -27,7 +27,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }
         public Nullable<DateTime> PropositionDate { get; set; }
 
-
+        public int Grand { get; set; }
 
     }
 }

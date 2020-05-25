@@ -147,7 +147,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
        
         //接收自考本科表单数据
         [HttpPost]
-        public ActionResult Tuitionandfees(StudentFeeRecord studentFeeRecord)
+        public ActionResult Tuitionandfees(Payview studentFeeRecord)
         {
           
             return Json(dbtext.Tuitionandfees(studentFeeRecord),JsonRequestBehavior.AllowGet);
@@ -346,5 +346,57 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(dbtext.PaymentcommodityIsdele(id, Isdele), JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// 费用入账
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult Expenseentry()
+        {
+            return View();
+        }
+        /// <summary>
+        /// 获取待入账数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="StudentID">学号</param>
+        /// <param name="Name">姓名</param>
+        /// <param name="IsaDopt">状态</param>
+        /// <param name="OddNumbers">单号</param>
+        /// <returns></returns>
+        public ActionResult Expenseentrys(int page, int limit,string StudentID,string Name,string IsaDopt,string OddNumbers)
+        {
+            return Json(dbtext.Expenseentry(page, limit, StudentID,Name,IsaDopt,OddNumbers), JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 审核是否入账页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Entryreview(int id)
+        {
+            //学员信息
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+            string studentid = Request.QueryString["studentid"];
+           ViewBag.student = studentInformationBusiness.GetEntity(studentid);
+            ViewBag.id = id;
+            ViewBag.vier = dbtext.FienPricesa(id);
+            ViewBag.OddNumbers = Request.QueryString["OddNumbers"];
+            ViewBag.Passornot = Request.QueryString["Passornot"];
+            return View();
+        }
+
+        /// <summary>
+        /// 审核入账是否成功
+        /// </summary>
+        /// <param name="id">核对缴费是否成功编号</param>
+        /// <param name="whether">是否入账</param>
+        /// <param name="OddNumbers">单号</param>
+        /// <returns></returns>
+        public ActionResult Tuitionentry(int id, bool whether, string OddNumbers)
+        {
+            return Json(dbtext.Tuitionentry(id, whether, OddNumbers), JsonRequestBehavior.AllowGet);
+        }
     }
 }

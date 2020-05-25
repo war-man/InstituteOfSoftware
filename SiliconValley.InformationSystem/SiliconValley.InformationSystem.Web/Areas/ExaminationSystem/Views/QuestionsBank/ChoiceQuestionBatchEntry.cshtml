@@ -54,7 +54,11 @@
                 <div class="layui-inline">
                     <label class="layui-form-label">课程：</label>
                     <div class="layui-input-inline">
-                        <select lay-verify="required" name="course" id="course"></select>
+                        <select lay-verify="required" name="course" id="course">
+
+
+
+                        </select>
                     </div>
                 </div>
 
@@ -115,6 +119,9 @@
                     data: { grandid: value },
                     dataType: "json",
                     success: function (resultData) {
+
+                       
+
                         if (resultData.length > 0) {
                             //清空赋值
                             $("#course").empty();
@@ -131,6 +138,8 @@
                             $("#course").empty();
                             $("#course").append(new Option("暂无数据", ""));
                         }
+
+                        $("#course").append(new Option("升学题", "0"));
                         layui.form.render("select");
                     }
                 });
@@ -193,6 +202,8 @@
 
                 
                 formdata.set("course", data.field.course);
+
+                formdata.set("grand", data.field.major);
 
                 console.log(formdata);
 

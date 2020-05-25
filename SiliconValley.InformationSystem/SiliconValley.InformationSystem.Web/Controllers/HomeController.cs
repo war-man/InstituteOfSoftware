@@ -12,6 +12,8 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
+using SiliconValley.InformationSystem.Web.Common;
+
 namespace SiliconValley.InformationSystem.Web.Controllers
 {
     public class users
@@ -39,7 +41,18 @@ namespace SiliconValley.InformationSystem.Web.Controllers
             var list = brole.GetList();
             return View(list);
         }
-       
+
+        public ActionResult ddd()
+        {
+            Business.Base_SysManage.Base_SysRoleBusiness brole = new Business.Base_SysManage.Base_SysRoleBusiness();
+            var list = brole.GetList();
+
+            errorMsg errorMsg = new errorMsg();
+            errorMsg.errorCode = "d";
+
+            return View("Index", errorMsg);
+        }
+
         public ActionResult About()
         {
             

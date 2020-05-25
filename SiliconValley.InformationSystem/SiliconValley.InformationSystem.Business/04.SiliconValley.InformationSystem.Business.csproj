@@ -177,6 +177,7 @@
     <Compile Include="EducationalBusiness\TeacherNightManeger.cs" />
     <Compile Include="EducationalBusiness\TimeTableManeger.cs" />
     <Compile Include="EducationalBusiness\WarehouseManeger.cs" />
+    <Compile Include="EmployeesBusiness\EmployandCounTeacherCoom.cs" />
     <Compile Include="EmployeesBusiness\EmployeesInfoManage.cs" />
     <Compile Include="Employment\CDInterviewBusiness.cs" />
     <Compile Include="Employment\EmpClassBusiness.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Shortmessage_Business\ShortmessageBusiness.cs" />
     <Compile Include="StageGrade_Business\StageGradeBusiness.cs" />
     <Compile Include="StudentBusiness\StudentInformationBusiness.cs" />
+    <Compile Include="StudentKeepOnRecordBusiness\Sch_MarketManeger.cs" />
     <Compile Include="StudentKeepOnRecordBusiness\StudentDataKeepAndRecordBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\InterviewStudentsBusiness.cs" />
     <Compile Include="StudentmanagementBusinsess\StudentAttendanceBusiness.cs" />
@@ -256,6 +258,7 @@
     <Compile Include="StudentManeger\InterviewRecordsofManeger.cs" />
     <Compile Include="StudentManeger\StudentInformationManeger.cs" />
     <Compile Include="StudentManeger\StudentUnionMembersManeeger.cs" />
+    <Compile Include="StudentportfolioBusiness\StudentpoBusiness.cs" />
     <Compile Include="StuInfomationType_Maneger\StuInfomationTypeManeger.cs" />
     <Compile Include="StuSatae_Maneger\StuStateManeger.cs" />
     <Compile Include="TalentDemandPlanBusiness\TalentDemandPlanManage.cs" />

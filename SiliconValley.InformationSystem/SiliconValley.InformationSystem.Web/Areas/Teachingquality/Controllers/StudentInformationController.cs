@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 {  //学员信息模块
     [CheckLogin]
+    [CheckUrlPermission]
     public class StudentInformationController : Controller
     {
         //拆班记录
@@ -45,7 +46,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public StudentInformationController()
         {
             dbtext = new StudentInformationBusiness();
-            
+
         }
         // GET: Teachingquality/StudentInformation
         public ActionResult Index()
@@ -95,21 +96,21 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             string c = a.ToString();
             return c;
         }
-      
-       //图片
-       public JsonResult img()
+
+        //图片
+        public JsonResult img()
         {
             if (Request.Files.Count > 0)
             {
                 HttpPostedFileBase f = Request.Files["file"];//最简单的获取方法
                 string name = "2017.jpg";
-  
-                f.SaveAs(AppDomain.CurrentDomain.BaseDirectory + "Areas/Teachingquality/StuImages/"+name);//保存图片
+
+                f.SaveAs(AppDomain.CurrentDomain.BaseDirectory + "Areas/Teachingquality/StuImages/" + name);//保存图片
 
                 //这下面是返回json给前端 
                 var data1 = new
                 {
-                    src = AppDomain.CurrentDomain.BaseDirectory + "Areas/Teachingquality/StuImages/" + name ,//服务器储存路径
+                    src = AppDomain.CurrentDomain.BaseDirectory + "Areas/Teachingquality/StuImages/" + name,//服务器储存路径
                 };
                 var Person = new
                 {
@@ -128,20 +129,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public string StudentID(string IDnumber)
 
         {
-           
+
             string mingci = string.Empty;
             DateTime date = Convert.ToDateTime(Date());
             //当前年份
             string n = date.Year.ToString().Substring(2);//获取年份
 
             //学员总数Mylist("StudentInformation")
-            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count()+1;
-            string sfz = IDnumber.Substring(6,8);
+            var laststr = dbtext.GetList().Where(a => Convert.ToDateTime(a.InsitDate).Year.ToString().Substring(2).ToString() == n).Count() + 1;
+            string sfz = IDnumber.Substring(6, 8);
 
             string y = Month(Convert.ToInt32(date.Month)).ToString();
             // string count = Count().ToString();
             string count = laststr.ToString();
-            if (count.Length<2)
+            if (count.Length < 2)
                 mingci = "0000" + count;
             else if (count.Length < 3)
                 mingci = "000" + count;
@@ -149,16 +150,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 mingci = "00" + count;
             else if (count.Length < 5)
                 mingci = "0" + count;
-            else mingci =  count;
+            else mingci = count;
 
-            string xuehao = n + y + sfz+mingci;
+            string xuehao = n + y + sfz + mingci;
             return xuehao;
         }
-        
+
         //复杂日期截取
         public string Datetimes(DateTime InsitDate)
         {
-            string[] dat =InsitDate.ToString().Split('/');
+            string[] dat = InsitDate.ToString().Split('/');
             string c = Month(int.Parse(dat[1]));
             string ri = dat[2];
             string[] ri1 = ri.Split(' ');
@@ -167,7 +168,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             return data;
         }
 
-      
+
         //学员注册编辑
         public ActionResult Registeredtrainees()
         {
@@ -182,9 +183,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //}
             //ViewBag.List = classSchedules.Select(a => new SelectListItem { Text = a.ClassNumber, Value = a.id.ToString() });
             string id = Request.QueryString["id"];
-            if (!string.IsNullOrEmpty(id)&&id!= "undefined")
+            if (!string.IsNullOrEmpty(id) && id != "undefined")
             {
-                
+
                 ViewBag.Name = "编辑学员信息";
                 ViewBag.StudentID = id;
                 return View();
@@ -192,16 +193,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             else
             {
-               
+
                 ViewBag.Name = "注册学员信息";
                 ViewBag.StudentID = false;
                 return View();
             }
-           
+
         }
         RedisCache redis = new RedisCache();
         //获取所有数据
-        public ActionResult GetDate(int page, int limit,string Name,string Sex,string StudentNumber,string identitydocument)
+        public ActionResult GetDate(int page, int limit, string Name, string Sex, string StudentNumber, string identitydocument)
         {
             //  List<StudentInformation>list=  dbtext.GetPagination(dbtext.GetIQueryable(),page,limit, dbtext)
             //List<StudentInformation> list = dbtext.GetList().Where(a=>a.IsDelete!=true).ToList();
@@ -210,7 +211,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             try
             {
-              
+
                 if (!string.IsNullOrEmpty(Name))
                 {
                     list = list.Where(a => a.Name.Contains(Name)).ToList();
@@ -229,13 +230,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     list = list.Where(a => a.identitydocument.Contains(identitydocument)).ToList();
                 }
 
-              
+
             }
             catch (Exception ex)
             {
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
 
-                
+
             }
             var dataList = list.OrderBy(a => a.StudentNumber).Skip((page - 1) * limit).Take(limit).ToList();
             //  var x = dbtext.GetList();
@@ -254,7 +255,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpGet]
         public ActionResult DataKey()
         {
-           ViewBag.Name = Request.QueryString["Name"];
+            ViewBag.Name = Request.QueryString["Name"];
             StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
 
             return View();
@@ -279,12 +280,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     {
                         if (x.Count > 0)
                         {
-                            if (x[i].Id == item.StudentPutOnRecord_Id&&item.State==null)
+                            if (x[i].Id == item.StudentPutOnRecord_Id && item.State == null)
                             {
                                 x.Remove(x[i]);
                             }
                         }
-                       
+
                     }
                 }
             }
@@ -297,7 +298,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         public ActionResult BoolStudentPut()
         {
             string Name = Request.QueryString["Name"];
-          return Json( ListStudentPutOnRecord(Name).Count,JsonRequestBehavior.AllowGet);
+            return Json(ListStudentPutOnRecord(Name).Count, JsonRequestBehavior.AllowGet);
         }
         //备案查询
         public ActionResult DataKeys()
@@ -306,16 +307,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             List<StudentPutOnRecord> x = null;
             try
             {
-               x= ListStudentPutOnRecord(Name);
+                x = ListStudentPutOnRecord(Name);
 
 
             }
             catch (Exception ex)
             {
 
-            BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
             }
-         
+
             var data = new
             {
                 code = "",
@@ -327,7 +328,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         }
         //查询赋值
-        public  ActionResult NameKeys(int id)
+        public ActionResult NameKeys(int id)
         {
             NameKeysid = id;
             StudentDataKeepAndRecordBusiness dbctext = new StudentDataKeepAndRecordBusiness();
@@ -342,14 +343,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.加载数据);
                 return Json("加载数据异常", JsonRequestBehavior.AllowGet);
             }
-      
+
         }
         //以身份证查询是否有重复学员
         public bool Isidentitydocument(string identitydocument)
         {
-        
-           var x= dbtext.GetList().Where(a => a.identitydocument == identitydocument&& a.IsDelete != true).ToList();
-            if (x.Count>0)
+
+            var x = dbtext.GetList().Where(a => a.identitydocument == identitydocument && a.IsDelete != true).ToList();
+            if (x.Count > 0)
             {
                 return false;
             }
@@ -357,13 +358,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             {
                 return true;
             }
-            
+
         }
         //注册学员编辑学员
-        public ActionResult Enti(StudentInformation studentInformation,int? List)
+        public ActionResult Enti(StudentInformation studentInformation, int? List)
         {
             redis.RemoveCache("StudentInformation");
-              AjaxResult result = null;
+            AjaxResult result = null;
             if (studentInformation.StudentNumber == null)
             {
                 if (Isidentitydocument(studentInformation.identitydocument))
@@ -371,15 +372,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     try
                     {
                         studentInformation.StudentNumber = StudentID(studentInformation.identitydocument);
-                        studentInformation.InsitDate = DateTime.Now; 
+                        studentInformation.InsitDate = DateTime.Now;
                         studentInformation.Password = "000000";
                         studentInformation.StudentPutOnRecord_Id = NameKeysid;
                         studentInformation.IsDelete = false;
-                        dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
+                        //dataKeepAndRecordBusiness.ChangeStudentState(NameKeysid);
                         dbtext.Insert(studentInformation);
-                     
+
                         ScheduleForTrainees scheduleForTrainees = new ScheduleForTrainees();
-                        scheduleForTrainees.ClassID = classschedu.GetEntity( List).ClassNumber;//班级名称
+                        scheduleForTrainees.ClassID = classschedu.GetEntity(List).ClassNumber;//班级名称
                         scheduleForTrainees.ID_ClassName = (int)List;//班级编号
                         scheduleForTrainees.CurrentClass = true;
                         scheduleForTrainees.StudentID = studentInformation.StudentNumber;
@@ -403,7 +404,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                         result.Msg = "服务器错误1";
 
                         BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-                     
+
                     }
                 }
                 else
@@ -415,8 +416,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
             else
             {
-             try
-                    {
+                try
+                {
                     StudentInformation x = Finds(studentInformation.StudentNumber);
                     studentInformation.Password = x.Password;
                     studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
@@ -425,30 +426,30 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                     dbtext.Update(studentInformation);
                     dbtext.GetList();
                     result = new SuccessResult();
-                        result.Msg = "修改成功";
-                        result.Success = true;
-                 //   dbtext.Remove("StudentInformation");
+                    result.Msg = "修改成功";
+                    result.Success = true;
+                    //   dbtext.Remove("StudentInformation");
                     BusHelper.WriteSysLog("修改学员信息成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
                 }
-                    catch (Exception ex)
-                    {
-                        result = new ErrorResult();
-                        result.ErrorCode = 500;
-                        result.Msg = "服务器错误";
+                catch (Exception ex)
+                {
+                    result = new ErrorResult();
+                    result.ErrorCode = 500;
+                    result.Msg = "服务器错误";
 
                     BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
-                  
+
                 }
-                }
-             
-           
-       
-            return Json( result,JsonRequestBehavior.AllowGet);
+            }
+
+
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         //按学号查询单个学员 find
         public StudentInformation Finds(string id)
         {
-            var x = dbtext.GetList().Where(a => a.StudentNumber == id&& a.IsDelete != true).FirstOrDefault();
+            var x = dbtext.GetList().Where(a => a.StudentNumber == id && a.IsDelete != true).FirstOrDefault();
             return x;
         }
         //按学号查询单个学员返回json格式
@@ -481,9 +482,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 Images = a.Picture
                 //a => a.IsDelete == false && a.ClassStatus == false
             };
-            
-                //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称
-                //a => a.IsDelete == false && a.ClassStatus == false
+
+            //classab = classschedu.GetList().Where(w => w.IsDelete == false&&w.ClassNumber== Stuclass.GetList().Where(c => c.StudentID == a.StudentNumber && c.CurrentClass == false).First().ClassID && w.ClassStatus == false).FirstOrDefault().ClassNumber //班级名称
+            //a => a.IsDelete == false && a.ClassStatus == false
             return Json(x, JsonRequestBehavior.AllowGet);
         }
         public ActionResult Viewdetails()
@@ -504,7 +505,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult Password(StudentInformation student)
         {
-          var x=  dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber&& a.IsDelete != true).FirstOrDefault();
+            var x = dbtext.GetList().Where(a => a.StudentNumber == student.StudentNumber && a.IsDelete != true).FirstOrDefault();
             x.Password = student.Password;
             AjaxResult result = null;
             try
@@ -513,7 +514,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result = new SuccessResult();
                 result.Success = true;
                 result.Msg = "修改成功";
-               
+
                 BusHelper.WriteSysLog("修改学员密码成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
             }
             catch (Exception ex)
@@ -523,33 +524,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
                 result.ErrorCode = 500;
                 result.Msg = "服务器错误";
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
-              
+
             }
-          return Json(result, JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
         //查询备案是否存在
         public ActionResult Beian()
         {
             string Name = Request.QueryString["Name"];
             StudentDataKeepAndRecordBusiness dbctexta = new StudentDataKeepAndRecordBusiness();
-          
+
             var x = dbctexta.GetList().Where(a => a.StuName.Trim() == Name).ToList();
             return Json(x, JsonRequestBehavior.AllowGet);
         }
         //根据阶段查找专业
         public ActionResult Stage(int id)
         {
-          
+
 
             return Json(dbtext.Stage(id), JsonRequestBehavior.AllowGet);
-        
+
         }
         //学费赋值
-        public ActionResult GetFeestandard(int Stage,int Major_Id)
+        public ActionResult GetFeestandard(int Stage, int Major_Id)
         {
             //int Stage = Convert.ToInt32(Request.QueryString["Stage"]);
             //int Major_Id = Convert.ToInt32(Request.QueryString["Major_Id"]);
-          return Json(  dbtext.GetFeestandard(Stage, Major_Id),JsonRequestBehavior.AllowGet);
+            return Json(dbtext.GetFeestandard(Stage, Major_Id), JsonRequestBehavior.AllowGet);
         }
         //迟交信息
         public ActionResult Latetuitionfee(int id)
@@ -559,15 +560,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
         public ActionResult Studenttuitionfeestandard(int id)
         {
-            return Json(dbtext.Studenttuitionfeestandard(id),JsonRequestBehavior.AllowGet);
+            return Json(dbtext.Studenttuitionfeestandard(id), JsonRequestBehavior.AllowGet);
         }
         //添加学员照片规格宽144高192
         [HttpGet]
         public ActionResult AddStudentimg()
         {
-            string studentid= Request.QueryString["studentid"]; ;
+            string studentid = Request.QueryString["studentid"]; ;
             ViewBag.studentid = studentid;
-            ViewBag.student = JsonConvert.SerializeObject( dbtext.StuClass(studentid));
+            ViewBag.student = JsonConvert.SerializeObject(dbtext.StuClass(studentid));
             ViewBag.Picture = dbtext.GetEntity(studentid).Picture == null ? "" : dbtext.GetEntity(studentid).Picture;
             return View();
         }
@@ -575,26 +576,26 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         [HttpPost]
         public ActionResult AddStudentimg(string id)
         {
-        //    string studentid = Request.QueryString["studentid"];
+            //    string studentid = Request.QueryString["studentid"];
             // Bitmap bitmap = new Bitmap(144,192);
             AjaxResult result = new AjaxResult();
             try
             {
-                var fien =  Request.Files[0];
-             string filename = fien.FileName;
-            string Extension = Path.GetExtension(filename);
-            string newfilename =id + Extension;
-               
-                 
-                if (dbtext.StudentAddImg(id, newfilename)==true)
+                var fien = Request.Files[0];
+                string filename = fien.FileName;
+                string Extension = Path.GetExtension(filename);
+                string newfilename = id + Extension;
+
+
+                if (dbtext.StudentAddImg(id, newfilename) == true)
                 {
 
                     result = new SuccessResult();
                     result.ErrorCode = 200;
                     string path = Server.MapPath("~/Areas/Teachingquality/studentImg/" + newfilename);
-                   
-                      fien.SaveAs(path);
-                 
+
+                    fien.SaveAs(path);
+
                     //  bitmap.Save(path);
                 }
             }
@@ -606,12 +607,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             }
 
 
-            return Json(result,JsonRequestBehavior.AllowGet);
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
-       //验证图片是否已经有了
+        //验证图片是否已经有了
         public int boolImg(string studentid)
         {
-          return  dbtext.boolImg(studentid);
+            return dbtext.boolImg(studentid);
         }
         /// <summary>
         /// 获取班级
@@ -631,9 +632,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             //专业
             ViewBag.Major_Id = Techarco.OrderBy(a => a.Id).Select(a => new SelectListItem { Text = a.SpecialtyName, Value = a.Id.ToString() });
             //阶段
-            ViewBag.Stage = Grandcontext.GetList().Where(a=>a.IsDelete==false).Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
+            ViewBag.Stage = Grandcontext.GetList().Where(a => a.IsDelete == false).Select(a => new SelectListItem { Text = a.GrandName, Value = a.Id.ToString() });
             return View();
-            
+
         }
 
         /// <summary>
@@ -642,16 +643,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
         /// <param name="page"></param>
         /// <param name="limit"></param>
         /// <returns></returns>
-        public ActionResult Classlist(int page, int limit,  string Stage_id, string Major_Id)
+        public ActionResult Classlist(int page, int limit, string Stage_id, string Major_Id)
         {
             //阶段
             GrandBusiness Grandcontext = new GrandBusiness();
 
-          
+
 
             var MyClass = classschedu.ClassList();
 
-         
+
             if (!string.IsNullOrEmpty(Stage_id))
             {
                 int stage = int.Parse(Stage_id);
@@ -689,5 +690,76 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
             };
             return Json(data, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult IDcardphoto()
+        {
+            string studentid = Request.QueryString["studentid"];
+            ViewBag.studentid = studentid;
+            var student = dbtext.GetEntity(studentid);
+
+            return View(student);
+        }
+        /// <summary>
+        /// 身份证正面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Identityjustimg(string id)
+        {
+            AjaxResult result = new AjaxResult();
+            var fien = Request.Files[0];
+            string filename = fien.FileName;
+            string Extension = Path.GetExtension(filename);
+            string newfilename = id + "just" + Extension;
+            try
+            {
+                if (dbtext.StudentIdentityImg(id, 1, newfilename) == true)
+                {
+                    result = new SuccessResult();
+                    result.ErrorCode = 200;
+                    string path = Server.MapPath("~/Areas/Teachingquality/IDcardphotoImg/Identityjustimg/" + newfilename);
+
+                    fien.SaveAs(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new SuccessResult();
+                result.ErrorCode = 300;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+        /// <summary>
+        /// 身份证反面
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Identitybackimg(string id)
+        {
+            AjaxResult result = new AjaxResult();
+            var fien = Request.Files[0];
+            string filename = fien.FileName;
+            string Extension = Path.GetExtension(filename);
+            string newfilename = id + "back" + Extension;
+            //    StudentIdentityImg
+            try
+            {
+                if (dbtext.StudentIdentityImg(id, 2, newfilename) == true)
+                {
+                    result = new SuccessResult();
+                    result.ErrorCode = 200;
+                    string path = Server.MapPath("~/Areas/Teachingquality/IDcardphotoImg/Identitybackimg/" + newfilename);
+
+                    fien.SaveAs(path);
+                }
+            }
+            catch (Exception ex)
+            {
+                result = new SuccessResult();
+                result.ErrorCode = 300;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
     }
 }

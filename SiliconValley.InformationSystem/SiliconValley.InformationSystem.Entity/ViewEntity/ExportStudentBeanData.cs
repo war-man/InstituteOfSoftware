@@ -12,6 +12,10 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
    public class ExportStudentBeanData
     {
         /// <summary>
+        /// 备案编号
+        /// </summary>
+        public int? Id { get; set; }
+        /// <summary>
         /// 学生姓名
         /// </summary>
         public string StuName { get; set; }
@@ -84,7 +88,7 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// <summary>
         /// 备案时间
         /// </summary>
-        public DateTime StuDateTime { get; set; }
+        public DateTime BeanDate { get; set; }
 
         /// <summary>
         /// 数据录入人员
@@ -106,5 +110,20 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// 其他说明
         /// </summary>
         public string Reak { get; set; }
+
+        /// <summary>
+        /// 咨询师
+        /// </summary>
+        public string ConsultTeacher { get; set; }
+
+        /// <summary>
+        /// 关系人
+        /// </summary>
+        public string Party { get; set; }
+
+        /// <summary>
+        /// 身份证
+        /// </summary>
+        public string IdCade { get; set; }
     }
 }

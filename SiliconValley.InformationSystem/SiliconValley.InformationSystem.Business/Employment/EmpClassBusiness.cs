@@ -491,7 +491,7 @@ namespace SiliconValley.InformationSystem.Business.Employment
         /// <param name="classid"></param>
         /// <returns></returns>
         public EmploymentStaff GetStaffByClassid(int classid) {
-            EmpClass empClass = this.GetEmpClassByclassid(classid);
+            EmpClass empClass = this.GetList().Where(d => d.ClassId == classid).FirstOrDefault();
             dbemploymentStaff = new EmploymentStaffBusiness();
             return dbemploymentStaff.GetEntity(empClass.EmpStaffID);
         }

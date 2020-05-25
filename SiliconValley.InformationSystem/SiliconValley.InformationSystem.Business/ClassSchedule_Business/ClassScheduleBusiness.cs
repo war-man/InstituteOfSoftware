@@ -87,7 +87,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
        
         //学生居住信息
         private AccdationinformationBusiness Accdation;
-      
+
         /// <summary>
         /// 通过班级名称获取学号，姓名，职位
         /// </summary>
@@ -97,14 +97,14 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
 
             List<ClassStudentView> listview = new List<ClassStudentView>();
 
-            var list = ss.ClassStudent(classid);
+            var list = this.ClassStudentneViewList(classid);
             foreach (var item in list)
             {
                 List<ClassStudentView> Nameofmember = new List<ClassStudentView>();
                 ClassStudentView classStudentView = new ClassStudentView();
-                if (Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false&&a.ClassNumber==classid).ToList().Count > 0)
+                if (Business.GetList().Where(a => a.Studentnumber == item.StuNameID && a.IsDelete == false && a.ClassNumber == classid).ToList().Count > 0)
                 {
-                    var mylist = Business.GetList().Where(a => a.Studentnumber == item.StudentNumber && a.IsDelete == false).ToList();
+                    var mylist = Business.GetList().Where(a => a.Studentnumber == item.StuNameID && a.IsDelete == false).ToList();
                     foreach (var item1 in mylist)
                     {
                         ClassStudentView view = new ClassStudentView();
@@ -117,7 +117,7 @@ namespace SiliconValley.InformationSystem.Business.ClassSchedule_Business
                 classStudentView.Name = item.Name;
                 classStudentView.Sex = (bool)item.Sex;
 
-                classStudentView.StuNameID = item.StudentNumber;
+                classStudentView.StuNameID = item.StuNameID;
                 if (classStudentView != null)
                 {
                     listview.Add(classStudentView);
