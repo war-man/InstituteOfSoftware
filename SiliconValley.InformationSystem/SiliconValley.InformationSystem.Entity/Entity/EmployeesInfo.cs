@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> MaritalStatus { get; set; }
         public Nullable<System.DateTime> IdCardIndate { get; set; }
         public string PoliticsStatus { get; set; }
-        public string WorkExperience { get; set; }
+        public string InvitedSource { get; set; }
         public Nullable<decimal> ProbationSalary { get; set; }
         public Nullable<decimal> Salary { get; set; }
         public Nullable<System.DateTime> SSStartMonth { get; set; }
