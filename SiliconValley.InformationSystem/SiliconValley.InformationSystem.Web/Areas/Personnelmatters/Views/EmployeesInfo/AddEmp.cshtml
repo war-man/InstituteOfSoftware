@@ -171,6 +171,13 @@
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label">招聘来源:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.InvitedSource, new Dictionary<string, object>() { { "class", "layui-input " } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">户籍地址:</label>
                         <div class="layui-input-block">
                             @Html.TextBoxFor(a => a.DomicileAddress, new Dictionary<string, object>() { { "placeholder", "请输入户籍地址" }, { "class", "layui-input" } })
@@ -184,6 +191,10 @@
                         </div>
                     </div>
 
+                </div>
+
+                <div class="layui-row layui-form-item">
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">政治面貌:</label>
                         <div class="layui-input-block">
@@ -194,10 +205,6 @@
                             </select>
                         </div>
                     </div>
-
-                </div>
-
-                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label" style="margin-left:-40px;width:120px;">紧急联系电话:</label>
@@ -223,6 +230,10 @@
                         </div>
                     </div>
 
+                </div>
+
+                <div class="layui-row layui-form-item">
+
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">婚姻状态:</label>
                         <div class="layui-input-block">
@@ -231,13 +242,10 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">试用期工资:</label>
                         <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() {  { "placeholder", "请输入试用期工资" }, { "class", "layui-input salary" } })
+                            @Html.TextBoxFor(a => a.ProbationSalary, new Dictionary<string, object>() { { "placeholder", "请输入试用期工资" }, { "class", "layui-input salary" } })
                         </div>
                     </div>
 
@@ -247,6 +255,10 @@
                             @Html.TextBoxFor(a => a.Salary, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入转正工资" }, { "class", "layui-input salary" } })
                         </div>
                     </div>
+                  
+                </div>
+
+                <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">银行卡号:</label>
@@ -255,23 +267,14 @@
                         </div>
                     </div>
 
-                </div>
-
-                <div class="layui-row layui-form-item">
-
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    <div class="layui-col-xs8 layui-col-sm8 layui-col-md8">
                         <label class="layui-form-label">材料:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(a => a.Material, new Dictionary<string, object>() { { "class", "layui-input linu" } })
                         </div>
                     </div>
 
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">工作经验:</label>
-                        <div class="layui-input-block">
-                            @Html.TextAreaFor(a => a.WorkExperience, new Dictionary<string, object>() { { "class", "layui-input linu" } })
-                        </div>
-                    </div>
+
 
                 </div>
 
