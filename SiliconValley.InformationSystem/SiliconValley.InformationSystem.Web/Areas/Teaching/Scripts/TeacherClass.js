@@ -395,6 +395,58 @@ layui.use(["table", "layer", "element"], function () {
 
     });
 
+    $(document).off("mouseout", "#EditStuComment").on('mouseout', '#EditStuComment', function () {
+
+        $("#navbarTewsText").text("主菜单");
+
+    });
+
+    $(document).off("mouseover", "#EditStuComment").on('mouseover', '#EditStuComment', function () {
+
+        $("#navbarTewsText").text("进行评价");
+
+    });
+
+    
+
+    $(document).off("mouseout", "#StuCommentList").on('mouseout', '#StuCommentList', function () {
+
+        $("#navbarTewsText").text("主菜单");
+
+    });
+
+    $(document).off("mouseover", "#StuCommentList").on('mouseover', '#StuCommentList', function () {
+
+        $("#navbarTewsText").text("大家的评价");
+
+    });
+
+    $(document).off("click", "#EditStuComment").on('click', '#EditStuComment', function () {
+
+        var studentnumber = $(this).attr("studentnumber");
+
+        layer.open({
+            type: 2,
+            area: ["800px", "350px;"],
+            title: "评语",
+            content: '/Teaching/Class/CommnetView?studentNumber=' + studentnumber
+
+        });
+
+    });
+
+    $(document).off("click", "#StuCommentList").on('click', '#StuCommentList', function () {
+
+        layer.open({
+            type: 2,
+            area: ["1000px", "900px;"],
+            title: "大家对他（她）的评价",
+            content: '/Teaching/Class/StuCommentList'
+
+        });
+
+    });
+
 
     //添加学生谈话记录
     $(document).off("click", "#AddConversationRecordBtn").on('click', '#AddConversationRecordBtn', function () {

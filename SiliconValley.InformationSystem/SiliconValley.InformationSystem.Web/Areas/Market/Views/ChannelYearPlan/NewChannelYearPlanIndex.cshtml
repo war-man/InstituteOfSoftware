@@ -36,7 +36,54 @@
 
 @*顶部*@
 <dvi id="top">
-    <div class="btn-group">
+
+    <form class="layui-form">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">@ViewBag.NowYearName.ShowTitle</label>
+            <div class="layui-input-inline">
+                <select name="selectGrand" id="selectGrand">
+
+                    @{
+                        foreach (var item in ViewBag.YearName)
+                        {
+                            @*<li><a href="javascript:void(0);" planid=""></a></li>*@
+                            <option value="@item.SchoolPlanID">@item.ShowTitle</option>
+                        }
+                    }
+                </select>
+            </div>
+            <label class="layui-form-label">主任团队</label>
+            <div class="layui-input-inline">
+
+                <select name="selectZhuren" id="selectZhuren">
+                    @{
+                        foreach (var item in ViewBag.empzhuren)
+                        {
+
+                            <option value="@item.EmployeeId">@item.EmpName</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="layui-input-inline">
+
+                <input type="text" class="layui-input" id="classnumber" placeholder="专员的名字。">
+                @*<input type="tel" name="phone" lay-verify="required|phone" autocomplete="off" class="layui-input">*@
+
+            </div>
+
+            <div class="layui-input-inline">
+
+
+                <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
+
+            </div>
+        </div>
+
+    </form>
+
+    @*<div class="btn-group">
         <div class="btn-group">
             <button type="button" id="selectGrand" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 @ViewBag.NowYearName.ShowTitle
@@ -52,9 +99,11 @@
             </ul>
 
         </div>
-    </div>
+    </div>*@
 
-    <div class="btn-group">
+
+
+    @*<div class="btn-group">
         <button type="button" id="selectZhuren" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             主任团队
             <span class="caret"></span>
@@ -77,7 +126,7 @@
         </div>
 
         <button class="layui-btn layui-btn-radius layui-btn-primary" id="SearchEnter">查询</button>
-    </div>
+    </div>*@
 </dvi>
 @*内容页面*@
 <div id="content">
@@ -991,9 +1040,9 @@
             });
                   //年度计划下拉框触发事件
         $("#grandlist li a").click(function () {
-            var grand = $(this).text();
-            $("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
-            mrdplanID = $(this).attr("planid");
+            //var grand = $(this).text();
+            //$("#selectGrand")[0].innerHTML = grand + " <span class='caret'></span>";
+            mrdplanID = $("#selectGrand").val();
             console.log(mrdplanID);
             LoadZhuren(mrdplanID);
             LoadTree(mrdplanID,mrdempid);
@@ -1002,9 +1051,9 @@
         });
         //团队下拉框触发事件
         $(document).off("click", "#Zhurenlist li").on('click', '#Zhurenlist li', function () {
-            var dudu = $(this).text();
-            $("#selectZhuren")[0].innerHTML = dudu + " <span class='caret'></span>";
-            mrdempid = $($(this)[0].firstChild).attr('ZhurenID');
+            //var dudu = $(this).text();
+            //$("#selectZhuren")[0].innerHTML = dudu + " <span class='caret'></span>";
+            mrdempid = $("#selectZhuren").val();
             console.log(mrdempid);
             isteam = true;
             LoadTree(mrdplanID, mrdempid);

@@ -9,7 +9,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Util;
@@ -621,6 +623,89 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
             };
 
             return Json(objresult, JsonRequestBehavior.AllowGet);
+
+        }
+
+        public ActionResult CommnetView(string studentNumber)
+        {
+
+            var currentUser = Base_UserBusiness.GetCurrentUser();
+
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+            //获取学生信息
+            BaseBusiness<StudentInformation> dbstu = new BaseBusiness<StudentInformation>();
+
+            StudentInformation student = dbstu.GetEntity(studentNumber);
+
+            //获取对他的评价
+            BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
+
+            var stuCommentObj =  dbstucomment.GetList().Where(d => d.CommnetEr == currentUser.EmpNumber && d.CommnetObj == studentNumber).FirstOrDefault();
+
+            if (stuCommentObj == null)
+            {
+                stuCommentObj = new ThearToStuComment();
+                stuCommentObj.Commnet = string.Empty;
+            }
+
+            ViewBag.student = student;
+            ViewBag.CommentObj = stuCommentObj;
+
+            return View();
+        }
+
+        public ActionResult DoToComment(string studentNumber, string Comment)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
+                var currentUser = Base_UserBusiness.GetCurrentUser();
+
+                var stuComment = dbstucomment.GetList().Where(d => d.CommnetEr == currentUser.EmpNumber && d.CommnetObj == studentNumber).FirstOrDefault();
+
+                if (stuComment == null)
+                {
+                    stuComment = new ThearToStuComment();
+                    stuComment.Commnet = Comment;
+                    stuComment.CommnetDate = DateTime.Now;
+                    stuComment.CommnetEr = currentUser.EmpNumber;
+                    stuComment.CommnetObj = studentNumber;
+
+                    dbstucomment.Insert(stuComment);
+
+                }
+                else
+                {
+                    stuComment.Commnet = Comment;
+
+                    dbstucomment.Update(stuComment);
+                }
+
+                result.ErrorCode = 200;
+                result.Data = stuComment;
+                result.Msg = "成功！";
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "失败！";
+            }
+
+
+            return Json(result);
+
+
+        }
+
+        public ActionResult StuCommentList()
+        {
+
+
+            return View();
 
         }
 
