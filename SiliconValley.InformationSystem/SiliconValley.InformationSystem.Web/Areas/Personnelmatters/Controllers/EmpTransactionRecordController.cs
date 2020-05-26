@@ -358,9 +358,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
 
             if (ajaxresult.Success) {
                 var mtname = mtmanage.GetList().Where(s => s.IsDel == false && s.ID == etr.TransactionType).FirstOrDefault().MoveTypeName;
+                var emp = empmanage.GetEntity(etr.EmployeeId);
                 if (mtname.Equals("离职")) {
                     #region 员工表（及相关子表）修改（离职）
-                    var emp = empmanage.GetEntity(etr.EmployeeId);
                     emp.IsDel = true;
                     empmanage.Update(emp);
                     ajaxresult = empmanage.Success();
@@ -422,7 +422,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     if (ajaxresult.Success)
                     {
-                        var emp = empmanage.GetEntity(etr.EmployeeId);
                         emp.PositiveDate = etr.TransactionTime;
                         empmanage.Update(emp);
                         rc.RemoveCache("InRedisEmpInfoData");
@@ -464,7 +463,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 {
                     if (ajaxresult.Success)
                     {
-                        var emp = empmanage.GetEntity(etr.EmployeeId);
                         if (emp.PositiveDate == null)
                         {
                             emp.ProbationSalary = etr.PresentSalary;
@@ -506,9 +504,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                         }
                     }
                 } else if (mtname.Equals("加薪")) {
-                    if(ajaxresult.Success){
+                    if (ajaxresult.Success) {
                         //异动添加成功后将员工表中的员工工资也改变
-                        var emp = empmanage.GetEntity(etr.EmployeeId);
                         if (emp.PositiveDate == null)
                         {
                             emp.ProbationSalary = etr.PresentSalary;
@@ -518,6 +515,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             emp.Salary = etr.PresentSalary;
                         }
                         empmanage.Update(emp);
+                        rc.RemoveCache("InRedisEmpInfoData");
                         ajaxresult = empmanage.Success();
                         //员工工资改变之后，将员工岗位工资也改一下
                         if (ajaxresult.Success)
@@ -536,7 +534,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             }
                             if (!string.IsNullOrEmpty(ese.PerformancePay.ToString()))
                             {
-                                ese.PositionSalary=ese.PositionSalary- ese.PerformancePay;
+                                ese.PositionSalary = ese.PositionSalary - ese.PerformancePay;
                             }
 
                             esemanage.Update(ese);
@@ -544,9 +542,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                             ajaxresult = esemanage.Success();
                         }
                     }
+                } else if (mtname.Equals("续签")) {
+                    emp.ContractStartTime = etr.AfterContractStartTime;
+                    emp.ContractEndTime = etr.AfterContractEndTime;
+                    empmanage.Update(emp);
+                    rc.RemoveCache("InRedisEmpInfoData");
+                    ajaxresult = empmanage.Success();
                 }
             }
-
 
             return Json(ajaxresult,JsonRequestBehavior.AllowGet);
         }

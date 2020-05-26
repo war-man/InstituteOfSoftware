@@ -197,6 +197,13 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">紧急联系电话:</label>
+                        <div class="layui-input-block">
+                            @Html.TextBoxFor(a => a.UrgentPhone, new Dictionary<string, object>() { { "lay-verify", "myUrgentPhone" }, { "placeholder", "请输入紧急联系电话" }, { "class", "layui-input" } })
+                        </div>
+                    </div>
+
+                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
                         <label class="layui-form-label">政治面貌:</label>
                         <div class="layui-input-block">
                             <select name="PoliticsStatus" id="PoliticsStatus">
@@ -204,13 +211,6 @@
                                 <option value="团员">团员</option>
                                 <option value="群众">群众</option>
                             </select>
-                        </div>
-                    </div>
-
-                    <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
-                        <label class="layui-form-label" style="margin-left:-40px;width:120px;">紧急联系电话:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(a => a.UrgentPhone, new Dictionary<string, object>() { { "lay-verify", "myUrgentPhone" }, { "placeholder", "请输入紧急联系电话" }, { "class", "layui-input" } })
                         </div>
                     </div>
 
