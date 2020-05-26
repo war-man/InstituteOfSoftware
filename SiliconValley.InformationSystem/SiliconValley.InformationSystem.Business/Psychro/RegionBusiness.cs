@@ -90,5 +90,15 @@ namespace SiliconValley.InformationSystem.Business.Psychro
             }
             return result;
         }
+
+        /// <summary>
+        /// 根据区域名称获取区域数据
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public Region GetSingdata(string name)
+        {
+           return this.GetList().Where(r => r.RegionName == name).FirstOrDefault();
+        }
     }
 }

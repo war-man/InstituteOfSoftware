@@ -33,7 +33,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// <summary>
         /// 学生性别
         /// </summary>
-        public Nullable<bool> StuSex { get; set; }
+        public string StuSex { get; set; }
         /// <summary>
         /// 学生出生年月日
         /// </summary>
@@ -83,7 +83,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public string EmployeesInfo_Id { get; set; }
         /// <summary>
-        /// 备案日期
+        /// 备案详细日期（包括时分秒，毫秒）
         /// </summary>
         public System.DateTime StuDateTime { get; set; }
         /// <summary>
@@ -114,6 +114,26 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         {
             get;set;
         }
+
+        /// <summary>
+        /// 咨询师
+        /// </summary>
+        public string ConsultTeacher { get; set; }
+
+        /// <summary>
+        /// 咨询师编号
+        /// </summary>
+        public string ConsultId { get; set; }
+
+        /// <summary>
+        /// 备案日期(只有年月日)
+        /// </summary>
+        public DateTime BeanDate { get; set; }
+
+        /// <summary>
+        /// 身份证
+        /// </summary>
+        public string IdCade { get; set; }
 
         public bool Equals(StudentPutOnRecord x, StudentPutOnRecord y)
         {

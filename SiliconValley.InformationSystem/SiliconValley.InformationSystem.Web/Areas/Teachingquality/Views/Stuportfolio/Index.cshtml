@@ -1,0 +1,207 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style{}
+<style>
+    th{
+        padding-left:20px;
+    }
+    th, td {
+        font-size: 14pt;
+        padding-top: 20px;
+    }
+    #table1 th {
+        padding-left: 60px;
+        color: red;
+    }
+  
+</style>
+@section script{}
+<input type="text" id="studentid" style="display:none" value="@ViewBag.studentid" />
+<div style="width:99%;height:200px;border:1px solid red;">
+    <div id="stuimg" style="float:left;">
+    
+    </div>
+  <div  style="float:left;">
+      <table id="table1">
+          <tr>
+              <th>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：</th>
+              <td id="StudentNumber"></td>
+              <th>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</th>
+              <td id="Name"></td>
+              <th>性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别：</th>
+              <td id="Sex"></td>
+              <th>身份证号：</th>
+              <td id="identitydocument"></td>
+              <th>电话号码：</th>
+              <td id="Telephone"></td>
+              
+
+
+          </tr>
+          <tr>
+              <th>爱&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;好：</th>
+              <td id="Hobby"></td>
+              <th>出生日期：</th>
+              <td id="BirthDate"></td>
+              <th>年&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;龄：</th>
+              <td id="Age"></td>
+              <th>家庭住址：</th>
+              <td id="Familyaddress"></td>
+              <th>学&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;历：</th>
+              <td id="Education"></td>
+
+             
+          </tr>
+          <tr>
+              <th>亲&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;属：</th>
+              <td id="Guardian"></td>
+              <th>亲属电话：</th>
+              <td id="Familyphone"></td>
+              <th>民&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;族：</th>
+              <td id="Nation"></td>
+              <th>班&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;级：</th>
+              <td id="ClassID"></td>
+          </tr>
+      </table>
+  </div>
+</div>
+<div style="width:10%;height:600px; border:1px solid red;float:left;">
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">身份证照</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">学员访谈</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">家长访谈</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">考试成绩</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">奖惩记录</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">宿舍信息</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">缴费信息</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">异动信息</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">保险信息</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid"  style="margin-top:10px;">宿舍维修</button><br />
+    <button type="button" class="layui-btn layui-btn-fluid" style="margin-top:10px;">本科成绩</button><br />
+    @*<button type="button" class="layui-btn" style="margin-top:10px;">默认按钮</button><br />
+        <button type="button" class="layui-btn" style="margin-top:10px;">默认按钮</button><br />*@
+</div>
+<div style="width:89%;height:600px; border:1px solid red;float:left;">
+    <div id="IDcard">
+        <img id="Identityjustimg" style="width:600px;height:260px;" />
+        <text style="font-size:22pt;">正面</text>
+        <br />
+        <button type="button" id="imgbut" class="layui-btn" style="margin-left:50%;">导出</button>
+        <br />
+        <img  id="Identitybackimg" style="width:600px;height:260px;" />
+        <text style="font-size:22pt;">反面</text>
+
+    </div>
+   
+</div>
+<script>
+    //下载多个文件
+    function download(name, href) {
+
+        var a = document.createElement("a"), //创建a标签
+            e = document.createEvent("MouseEvents"); //创建鼠标事件对象
+        e.initEvent("click", false, false); //初始化事件对象
+        a.href = href; //设置下载地址
+        a.download = name; //设置下载文件名
+        a.dispatchEvent(e); //给指定的元素，执行事件click事件
+    }
+
+    //计算年龄
+    function Age(strBirthday) { //传入形式yyyy-MM-dd
+        //strBirthday = util.formatTime(strBirthday);转换成yyyy-MM-dd形式
+        var returnAge
+        var strBirthdayArr = strBirthday.split('-')
+        var birthYear = strBirthdayArr[0]
+        var birthMonth = strBirthdayArr[1]
+        var birthDay = strBirthdayArr[2]
+        var d = new Date()
+        var nowYear = d.getFullYear()
+        var nowMonth = d.getMonth() + 1
+        var nowDay = d.getDate()
+        if (nowYear == birthYear) {
+            returnAge = 0 //同年 则为0岁
+        } else {
+            var ageDiff = nowYear - birthYear //年之差
+            if (ageDiff > 0) {
+                if (nowMonth == birthMonth) {
+                    var dayDiff = nowDay - birthDay //日之差
+                    if (dayDiff < 0) {
+                        returnAge = ageDiff - 1
+                    } else {
+                        returnAge = ageDiff
+                    }
+                } else {
+                    var monthDiff = nowMonth - birthMonth //月之差
+                    if (monthDiff < 0) {
+                        returnAge = ageDiff - 1
+                    } else {
+                        returnAge = ageDiff
+                    }
+                }
+            } else {
+                returnAge = -1 //返回-1 表示出生日期输入错误 晚于今天
+            }
+        }
+        return returnAge //返回周岁年龄
+    }
+    //时间转换方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if (month < 10) {
+            month = "0" + (parseInt(month) + 1);
+        }
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+    layui.use(['table', 'layer', 'tree', 'form'], function () {
+        var table = layui.table;
+        var layer = layui.layer;
+        var form = layui.form;
+        $.post("/Teachingquality/Stuportfolio/Studentfine/" + $("#studentid").val(), function (data) {
+            
+            if (data.Picture != null) {
+                $("#stuimg").append($('<img src="/Areas/Teachingquality/studentImg/' + data.Picture +'"  style="width:150px;height:150px;"/>'))
+            } else {
+                $("#stuimg").append($('<img src="/Images/Login/guigu.png"  style="width:150px;height:150px;"/>'))
+            }
+            $("#Name").text(data.Name);
+            $("#ClassID").text(data.ClassID);
+            $("#StudentNumber").text(data.StudentNumber);
+            $("#Nation").text(data.Nation);
+            var sex = data.Sex == false?"女":"男"
+            $("#Sex").text(sex);
+            $("#identitydocument").text(data.identitydocument);
+         
+            $("#Telephone").text(data.Telephone);
+            $("#Hobby").text(data.Hobby);
+            $("#BirthDate").text(TimeChange(data.BirthDate));
+            $("#Age").text(Age(TimeChange(data.BirthDate)));
+            $("#Familyaddress").text(data.Familyaddress); 
+            $("#Guardian").text(data.Guardian);
+          
+            $("#Familyphone").text(data.Familyphone); 
+            $("#Education").text(data.Education);
+            $("#Identitybackimg").attr('src', '/Areas/Teachingquality/IDcardphotoImg/Identitybackimg/' + data.Identitybackimg);
+            $("#Identityjustimg").attr('src', '/Areas/Teachingquality/IDcardphotoImg/Identityjustimg/' + data.Identityjustimg);
+        })
+
+        $("#imgbut").click(function () {
+            var img = $("#IDcard").children("img");
+            for (var i = 0; i < img.length; i++) {
+                var name = $(img[i]).attr("src").split('/');
+                download(name[5], $(img[i]).attr("src"))
+               
+            }
+        })
+    });
+</script>

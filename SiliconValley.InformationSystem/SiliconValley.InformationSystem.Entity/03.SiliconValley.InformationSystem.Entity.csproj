@@ -222,6 +222,9 @@
     <Compile Include="Entity\Outbreaksindormitories.cs" />
     <Compile Include="Entity\OvertimeRecord.cs" />
     <Compile Include="Entity\ParticiParticipants.cs" />
+    <Compile Include="Entity\Paymentverification.cs" />
+    <Compile Include="Entity\Payview.cs" />
+    <Compile Include="Entity\PayviewPaymentver.cs" />
     <Compile Include="Entity\PerInfo.cs" />
     <Compile Include="Entity\Position.cs" />
     <Compile Include="Entity\Prefunding.cs" />
@@ -317,6 +320,7 @@
     <Compile Include="Entity\Warehouse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registerforexamination.cs" />
+    <Compile Include="SqlDate.cs" />
     <Compile Include="ViewEntity\AccdationView.cs" />
     <Compile Include="ViewEntity\AchievementView.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
@@ -350,9 +354,12 @@
     <Compile Include="ViewEntity\EditEnterpriseView.cs" />
     <Compile Include="ViewEntity\EmpClassView.cs" />
     <Compile Include="ViewEntity\EmpDetailView.cs" />
+    <Compile Include="ViewEntity\EmpErrorDataView.cs" />
+    <Compile Include="ViewEntity\EmployeeInfoView.cs" />
     <Compile Include="ViewEntity\EmployStaffDetailView.cs" />
     <Compile Include="ViewEntity\EmplyeeAndPoAndDe.cs" />
     <Compile Include="ViewEntity\EmptyClass.cs" />
+    <Compile Include="ViewEntity\Emp_consult.cs" />
     <Compile Include="ViewEntity\EnrollmentStudentView.cs" />
     <Compile Include="ViewEntity\EnrollmentView.cs" />
     <Compile Include="ViewEntity\EnterdetailView.cs" />
@@ -382,7 +389,7 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
-    <Compile Include="ViewEntity\LongrageBean.cs" />
+    <Compile Include="ViewEntity\Sch_Market.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionView.cs" />
     <Compile Include="ViewEntity\MrdChannelYearPlanIndexView.cs" />
@@ -435,6 +442,7 @@
     <Compile Include="ViewEntity\SatisfactionSurveyView.cs" />
     <Compile Include="ViewEntity\SatisficingConfigView.cs" />
     <Compile Include="ViewEntity\SatisficingResultDetailView.cs" />
+    <Compile Include="ViewEntity\Sch_MarketView.cs" />
     <Compile Include="ViewEntity\ShowBaomingListView.cs" />
     <Compile Include="ViewEntity\ShowCoopEnterView.cs" />
     <Compile Include="ViewEntity\ShowEchartsView.cs" />

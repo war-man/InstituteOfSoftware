@@ -21,7 +21,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
     public partial class EmployeesInfo
     {
         
-        [Key]
+        [Key] 
         public string EmployeeId { get; set; }
         public Nullable<int> DDAppId { get; set; }
         public string EmpName { get; set; }
@@ -44,7 +44,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public Nullable<bool> MaritalStatus { get; set; }
         public Nullable<System.DateTime> IdCardIndate { get; set; }
         public string PoliticsStatus { get; set; }
-        public string WorkExperience { get; set; }
+        public string InvitedSource { get; set; }
         public Nullable<decimal> ProbationSalary { get; set; }
         public Nullable<decimal> Salary { get; set; }
         public Nullable<System.DateTime> SSStartMonth { get; set; }
@@ -53,5 +53,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         public string Remark { get; set; }
         public Nullable<bool> IsDel { get; set; }
         public string Image { get; set; }
+        public string RecruitSource { get; set; }//招聘来源
     }
 }

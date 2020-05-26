@@ -185,7 +185,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             StudentPutOnRecord find_stu = CM_Entity.GetSingleStudent(id);
             //获取该学生的Id
             ViewBag.Name = find_stu.StuName;
-            ViewBag.Sex = find_stu.StuSex==false?"女":"男";
+            ViewBag.Sex = find_stu.StuSex;
             //获取跟踪总数
             Consult find_consult = CM_Entity.GetIQueryable().Where(c => c.StuName == id).FirstOrDefault();
             FollwingInfoManeger FM_Entity = CM_Entity.GetFollwingManeger();
@@ -264,7 +264,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
             List<StudentData> data = findresult.Select(s => new StudentData() {
                 Id=s.Id,
-                stuSex = s.StuSex == false ? "女" : "男",
+                stuSex = s.StuSex,
                 StuName = s.StuName,
                 StuPhone = s.StuPhone,
                 StuSchoolName = s.StuSchoolName,

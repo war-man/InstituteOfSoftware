@@ -313,7 +313,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                               e.MaritalStatus,
                               e.IdCardIndate,
                               e.PoliticsStatus,
-                              e.WorkExperience,
+                              e.InvitedSource,
                               e.ProbationSalary,
                               e.Salary,
                               e.SSStartMonth,

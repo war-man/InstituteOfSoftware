@@ -1,0 +1,77 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>TeacherSelect</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .Divcss1{
+        width:97%;
+        margin-top:20px;
+        margin-left:auto;
+        margin-right:auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="Divcss1">
+        <form class="layui-form" lay-filter="teacherselect_form">
+            <div class="layui-row">
+                @{
+                    List<Emp_consult> list = ViewBag.selectconsult as List<Emp_consult>;
+                    foreach (Emp_consult item in list)
+                    {
+                        <input type="radio" name="consultTeacherid" id="" value="@item.consultercherid" title="@item.empname">  
+                    }
+                }
+            </div>
+            <div class="layui-row">
+                  <div class="layui-col-sm3">
+                      <label>其他说明:</label>
+                  </div>
+                  <div class="layui-col-sm9">
+                       <textarea name="ramke" id="ramke" class="layui-textarea"></textarea>
+                  </div>
+            </div>
+            <div style="text-align:center;margin-top:20px"><button type="button" class="layui-btn" lay-submit lay-filter="truebtn">确定</button></div>
+        </form>
+    </div>
+    
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form'], function () {
+            var form = layui.form;      
+
+            form.on('submit(truebtn)', function (data) {               
+                //console.log(data.field);
+                if (data.field.consultTeacherid == null) {
+                    layer.msg("请先选择咨询师!!!", { icon: 6, shade: 0.8 });
+                } else {
+                    window.parent.LoadConsultdata(data.field.consultTeacherid, data.field.ramke);
+                    MyClose();
+                }
+                return false;  
+            });
+
+        });
+
+         
+
+        function MyClose() {
+            layui.use('layer', function () {
+                //var layer = layui.layer;
+                //当你在iframe页面关闭自身时
+                var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                parent.layer.close(index); //再执行关闭   
+            });
+        }
+    </script>
+</body>
+</html>

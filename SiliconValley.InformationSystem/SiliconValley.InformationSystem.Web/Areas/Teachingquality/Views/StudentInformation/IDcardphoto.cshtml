@@ -1,0 +1,156 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.MyEntity.StudentInformation
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IDcardphoto</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+   <style>
+       table {
+           font-size: 13pt;
+        margin-left:150px;
+        margin-top:10px;
+       }
+       td,th{
+           padding-left:10px;
+           padding-top:10px;
+       }
+      td{
+          color:#4cff00;
+      }
+
+   </style>
+</head>
+<body>
+    <input type="text" id="studentid" value="@ViewBag.studentid" style="display:none;" />
+    <div>
+        <table>
+            <tr>
+                <th>姓名</th>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <th>学号</th>
+                <td>@Model.StudentNumber</td>
+            </tr>
+
+
+        </table>
+    </div>
+    <div style="margin-top:20px;">
+
+        <div class="layui-upload">
+            <div style="float:left;padding-left:20px;">
+                <button type="button" class="layui-btn" id="test1">身份证正面</button>
+                <div class="layui-upload-list">
+                   
+                    @{
+                        if (Model.Identityjustimg != null)
+                        {
+
+                            <img class="layui-upload-img" style="width:200px;height:200px;" id="demo1" src="~/Areas/Teachingquality/IDcardphotoImg/Identityjustimg/@Model.Identityjustimg">
+                        }
+                        else
+                        {
+                            <img class="layui-upload-img" style="width:200px;height:200px;" id="demo1">
+                        }
+                    }
+                </div>
+            </div>
+            <div style="float:left;padding:70px 30px;font-size:14pt;">
+                &nbsp;&nbsp;    &lt; 正面<br /><br /><br /><br />&nbsp;&nbsp;&nbsp;&nbsp;反面&gt;
+            </div>
+            <div style="float:right;padding-right:20px;">
+                <button type="button" class="layui-btn" id="test2">身份证反面</button>
+                <div class="layui-upload-list">
+                    @{
+                        if (Model.Identitybackimg!=null)
+                        {
+
+                            <img class="layui-upload-img" style="width:200px;height:200px;" id="demo2" src="~/Areas/Teachingquality/IDcardphotoImg/Identitybackimg/@Model.Identitybackimg">
+                        }
+                        else
+                        {
+                            <img class="layui-upload-img" style="width:200px;height:200px;" id="demo2">
+                        }
+                    }
+                </div>
+            </div>
+
+
+        </div>
+
+    </div>
+</body>
+</html>
+<script>
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: '/Teachingquality/StudentInformation/Identityjustimg' //改成您自己的上传接口
+            , data: {
+                id: $("#studentid").val()
+            }
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test2'
+            , url: '/Teachingquality/StudentInformation/Identitybackimg' //改成您自己的上传接口
+            , data: {
+                id: $("#studentid").val()
+            }
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+    });
+</script>

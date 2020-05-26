@@ -75,7 +75,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         IsZhizhi = finde.IsDel,
                         Rmark = findc.Rmark,
                         Politicsstatus = finde.PoliticsStatus,
-                        workExperence = finde.WorkExperience,
+                        //workExperence = finde.InvitedSource,
                         IsZhangzhe = finde.PositiveDate == null ? false : true,
                         ConGrade = findc.ConGrade
                     };

@@ -106,7 +106,7 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
             view.Sex = employeesInfo.Sex;
             view.SSStartMonth = employeesInfo.SSStartMonth;
             view.UrgentPhone = employeesInfo.UrgentPhone;
-            view.WorkExperience = employeesInfo.WorkExperience;
+            //view.WorkExperience = employeesInfo.WorkExperience;
 
             return view;
         }

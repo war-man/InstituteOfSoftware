@@ -1,4 +1,5 @@
 ﻿
+
 @{
     ViewBag.Title = "StudentDataKeepIndex";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -6,7 +7,7 @@
 @using SiliconValley.InformationSystem.Entity.MyEntity;
 @model SiliconValley.InformationSystem.Entity.MyEntity.StudentPutOnRecord
 @section style{
-<link href="~/Scripts/Tangmin_CssAndJs/StudentDatakeep_Css/studentdatakeep.css" rel="stylesheet" />
+    <link href="~/Scripts/Tangmin_CssAndJs/StudentDatakeep_Css/studentdatakeep.css" rel="stylesheet" />
     <style>
         .layui-colla-title
         {
@@ -19,7 +20,7 @@
             overflow: hidden;
             height: 15px;
             line-height: 15px;
-        }
+        }        
     </style>
 }
 <script type="text/html" id="toolbarDemo1">
@@ -27,15 +28,18 @@
         <button type="button" class="layui-btn layui-btn-sm" lay-event="getCheckData">
             <i class="layui-icon">&#xe624;</i> 添加
         </button>
-        <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto"><i class="layui-icon">&#xe601;</i>
-             Excel文件导入
+        <button type="button" class="layui-btn layui-btn-sm" lay-event="getFileInto">
+            <i class="layui-icon">&#xe601;</i>
+            Excel文件导入
         </button>
         <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
+        <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
     </div>
 </script>
 <script type="text/html" id="barDemo1">
-    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">查看详情</a>
+    <a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>
 </script>
 <div class="layui-collapse" lay-accordion>
     <div class="layui-colla-item">
@@ -44,7 +48,7 @@
             <form class="layui-form">
                 <div class="layui-row">
                     <div class="layui-col-sm3">
-                        <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
+                        <label class="spanCss2">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 名:</label>
                         <input name="findNamevalue" id="findNamevalue" class="inputCss1" />
                     </div>
                     <div class="layui-col-sm3">
@@ -55,6 +59,7 @@
                         <label class="spanCss2">信息来源:</label>
                         <div class="divCss1">
                             @Html.DropDownList("findInformationvalue", ViewBag.infomation as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                         
                         </div>
 
                     </div>
@@ -67,7 +72,7 @@
                 </div>
                 <div class="layui-row divCss2">
                     <div class="layui-col-sm3">
-                        <label class="spanCss2">备&nbsp; 案&nbsp;人:</label>
+                        <label class="spanCss2">备&nbsp; 案&nbsp;&nbsp;人:</label>
                         <input name="findBeanManvalue" id="findBeanManvalue" class="inputCss1" />
                     </div>
                     <div class="layui-col-sm3">
@@ -80,297 +85,421 @@
                             <input name="findEndvalue" id="findEndvalue" class="inputCss1" />
                         </div>
                     </div>
-                    <div class="layui-col-sm2 divCss3">
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">咨 &nbsp; 询&nbsp;师:</label>
+                        <div class="divCss1">
+                            @Html.DropDownList("S_consultTeacher", ViewBag.teacherlist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                        </div>
+                        
+                    
+                    </div>
+                </div>
+                <div class="layui-row divCss2">
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">学生状态:</label>
+                        <div class="divCss1">
+                            @Html.DropDownList("S_status", ViewBag.slist as IEnumerable<SelectListItem>, new Dictionary<string, object>() { })
+                        </div>
+                      
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">关 &nbsp; 系&nbsp;人:</label>
+                        <input name="S_party" id="S_party" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm3">
+                        <label class="spanCss2">录 &nbsp; 入&nbsp;人:</label>
+                        <input name="S_intosysMan" id="S_intosysMan" class="inputCss1" />
+                    </div>
+                    <div class="layui-col-sm3 divCss3">
                         <button id="searchBtn" type="button" class="layui-btn" style="margin-right:45px;width:148px"><i class="layui-icon">&#xe615;</i> 查询</button>
                     </div>
                 </div>
-
             </form>
         </div>
     </div>
-    
-</div>
- 
-<table id="tabletest1" lay-filter="tabletest1"></table>
-@section script{
-    <script>
-        //转换时间的方法
-        function TimeChange(newtime) {
-            if (newtime == null)
-                return "";
-            var date = new Date(parseInt(newtime.slice(6)));
-            var year = date.getFullYear();
-            var month = date.getMonth();
-            if ((month + 1) < 10) {
-                month = "0" + Number(month + 1);
-            } else {
-                month = Number(month + 1);
-            }
-            var day = date.getDate();
-            if (day < 10) {
-                day = "0" + day;
-            }
-            var result = year + '-' + month + '-' + day;
-            return result;
-        }
-        //table重载的方法
-        function LoadTable() {
-            layui.use('table', function () {
-                var table = layui.table;
-                table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
-            });
 
+</div>
+
+<table id="tabletest1" lay-filter="tabletest1"></table>
+
+<script>
+    //转换时间的方法
+    function TimeChange(newtime) {
+        if (newtime == null)
+            return "";
+        var date = new Date(parseInt(newtime.slice(6)));
+        var year = date.getFullYear();
+        var month = date.getMonth();
+        if ((month + 1) < 10) {
+            month = "0" + Number(month + 1);
+        } else {
+            month = Number(month + 1);
         }
-        //错误提示提示
-        function TiShi(msg) {
-            layui.use(['layer'], function () {
-                var layer = layui.layer;
-                layer.msg(msg, {
-                    icon: 2,
-                    time: 2000 //2秒关闭（如果不配置，默认是3秒）
-                });
+        var day = date.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        var result = year + '-' + month + '-' + day;
+        return result;
+    }
+    //table重载的方法
+    function LoadTable() {
+        layui.use('table', function () {
+            var table = layui.table;
+            table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+        });
+
+    }
+    //错误提示提示
+    function TiShi(msg) {
+        layui.use(['layer'], function () {
+            var layer = layui.layer;
+            layer.msg(msg, {
+                icon: 2,
+                shade:0.8
             });
-        }
-        //这个方法是用于当有姓名相同的就会显示与姓名相同的数据
-        function LoadTableSeache(name) {
+        });
+    }
+    //这个方法是用于当有姓名相同的就会显示与姓名相同的数据
+    function LoadTableSeache(name) {
+        layui.use('table', function () {
+            var table = layui.table;
+            table.reload('tabletest1', {
+                url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
+                , where: { 'findNamevalue': name } //设定异步数据接口的额外参数
+            });
+        });
+    }
+    $(function () {
+        //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
+        $(document).keydown(function (event) {
+            if (event.keyCode === 90 && event.ctrlKey === true) {
+                layui.use('layer', function () {
+                    var layer = layui.layer;
+                    layer.open({
+                        type: 2,
+                        content: '/Market/StudentDataKeep/AddorEdit' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        , area: ['950px', '710px'],
+                        title: '添加备案信息'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                    });
+                });
+            }
+        });
+        //这是一个模糊查询的方法
+        $("#searchBtn").click(function () {
+            var findNamevalue = $("#findNamevalue").val();
+            var findPhonevalue = $("#findPhonevalue").val();
+            var findInformationvalue = $("#findInformationvalue").val();
+            var findStartvalue = $("#findStartvalue").val();//获取开始时间
+            var findEndvalue = $("#findEndvalue").val();//获取结束时间
+            var findAreavalue = $("#findAreavalue").val();//获取区域
+            var findBeanManvalue = $("#findBeanManvalue").val();//获取备案人
             layui.use('table', function () {
                 var table = layui.table;
                 table.reload('tabletest1', {
                     url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                    , where: { 'findNamevalue': name} //设定异步数据接口的额外参数
+                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue } //设定异步数据接口的额外参数
                 });
-            });
-        }
-        $(function () {
-            //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
-            $(document).keydown(function (event) {
-                if (event.keyCode === 90 && event.ctrlKey === true) {
-                    layui.use('layer', function () {
-                        var layer = layui.layer;
-                        layer.open({
-                            type: 2,
-                            content: '/Market/StudentDataKeep/AddorEdit' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                            , area: ['1000px', '590px'],
-                            title: '添加备案信息'
-                            , shade: 0.8
-                            , anim: 4
-                            , skin: 'demo-class'
-                        });
-                    });
-                }
-            });
-            //这是一个模糊查询的方法
-            $("#searchBtn").click(function () {
-                var findNamevalue = $("#findNamevalue").val();
-                var findPhonevalue = $("#findPhonevalue").val();
-                var findInformationvalue = $("#findInformationvalue").val();
-                var findStartvalue = $("#findStartvalue").val();//获取开始时间
-                var findEndvalue = $("#findEndvalue").val();//获取结束时间
-                var findAreavalue = $("#findAreavalue").val();//获取区域
-                var findBeanManvalue = $("#findBeanManvalue").val();//获取备案人               
-                    layui.use('table', function () {
-                        var table = layui.table;
-                        table.reload('tabletest1', {
-                            url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                            , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue} //设定异步数据接口的额外参数
-                        });
-                    });                                                 
             });
         });
+    });
 
-        function ExcelExport() {
-            layui.use('layer', function () {
-                var layer = layui.layer;
-                var ind= layer.load(1);
-                $.ajax({
-                    url: '/Market/StudentDataKeep/ExportFunction',
-                    success: function (suc) {                       
-                        if (suc.Success == true) {
-                            //下载
-                            let a = document.createElement('a') // 创建a标签
-                            let e = document.createEvent('MouseEvents') // 创建鼠标事件对象
-                            e.initEvent('click', false, false) // 初始化事件对象
-                            a.href = "/Market/StudentDataKeep/GetExcelport" // 设置下载地址
-                            a.download = '' // 设置下载文件名
-                            a.dispatchEvent(e);
-                            layer.close(ind);
-                        } else {
-                            layer.close(ind);
-                            TiShi(suc.Msg);
+    //数据导出页面
+    function ExcelExport() {
+        layui.use('layer', function () {
+            layer.open({
+                type: 2,
+                content: '/Market/StudentDataKeep/ExportView' 
+                , area: ['700px', '480px'],
+                title: '导出备案数据页面'
+                , shade: 0.8
+                , anim: 4
+                , skin: 'demo-class'
+                , scrollbar: false
+            });           
+        });
+
+    }
+
+    var sid = 0;
+    function LoadConsultdata(tid,rake) {
+                    $.ajax({
+                        url: '/Market/Consult/AddSingConsultdata',
+                        data: { "teacherid": tid, "stuid": sid, "Rmark": rake },
+                        type:'POST',
+                        success: function (suc) {
+                            if (suc.Success) {
+                                layui.use(['layer','table'], function () {
+                                    var layer = layui.layer;
+                                    
+                                    var table = layui.table;
+                                    $.ajax({
+                                        url: '/Market/StudentDataKeep/ZhipaiConsustTacher',
+                                        type: 'POST',
+                                        data: { "teaid": tid, "stuid": sid,},
+                                        success: function (result) {
+                                            if (result.Success) {
+                                                layer.msg('指派成功！！！', {
+                                                    icon: 1, shade: 0.8
+                                                });
+                                                table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+                                            } else {
+                                                TiShi("系统异常，请刷新重试!!!");
+                                            }
+                                             
+                                        } 
+                                    });
+                                    
+                                });
+                                
+                            } else {
+                                TiShi("系统异常，请刷新重试!!!");
+                            }
                         }
-                    }
-                });
-            });
-            
-        }
-        layui.use(['table', 'laydate', 'form', 'element'], function () {
-            var table = layui.table;
-            var laydate = layui.laydate;
-            var form = layui.form;
-            var element = layui.element;
-            //日期
-           
-            //月份小于10的前面加个0
-            function MoDay(a) {
-                if (a < 10) {
-                    return "0" + a;
-                }
-                return a;
+                    });
+    }
+    layui.use(['table', 'laydate', 'form', 'element'], function () {
+        var table = layui.table;
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var element = layui.element;
+        //日期
+
+        //月份小于10的前面加个0
+        function MoDay(a) {
+            if (a < 10) {
+                return "0" + a;
             }
-            ////系统时间
+            return a;
+        }
+        ////系统时间
 
-            var curDate = new Date();
-            var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
+        var curDate = new Date();
+        var curYearMonthrDay = curDate.getFullYear() + "-" + MoDay(parseInt(curDate.getMonth()) + 1) + "-" + MoDay(parseInt(curDate.getDate()));
 
-            // 时间选择器初始化 开始时间
-            laydate.render({
-                elem: '#findStartvalue',
-                format: 'yyyy-MM-dd',
-                done: function (value, date, endDate) {
-                    var startDate = new Date(value).getTime();
-                    var endTime = new Date($('#findEndvalue').val()).getTime();
-                    if (endTime < startDate) {
-                        layer.msg('结束时间不能小于开始时间');
-                        $('#findStartvalue').val($('#findEndvalue').val());
-                    }
-                    if (startDate > curDate.getTime()) {
-                        layer.msg('开始时间不能大于当前时间');
-                        $('#findStartvalue').val(curYearMonthrDay);
-                    }
+        // 时间选择器初始化 开始时间
+        laydate.render({
+            elem: '#findStartvalue',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date(value).getTime();
+                var endTime = new Date($('#findEndvalue').val()).getTime();
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#findStartvalue').val($('#findEndvalue').val());
                 }
-            })
-            // 时间选择器初始化 结束时间
-            laydate.render({ //结束时间
-                elem: '#findEndvalue',
-                format: 'yyyy-MM-dd',
-                done: function (value, date, endDate) {
-                    var startDate = new Date($('#findStartvalue').val()).getTime();
-                    var endTime = new Date(value).getTime();
-                    if (endTime < startDate) {
-                        layer.msg('结束时间不能小于开始时间');
-                        $('#findEndvalue').val($('#findStartvalue').val());
-                    }
-                    if (endTime > curDate.getTime()) {
-                        layer.msg('结束时间不能大于当前时间');
-                        $('#findEndvalue').val(curYearMonthrDay);
-                    }
+                if (startDate > curDate.getTime()) {
+                    layer.msg('开始时间不能大于当前时间');
+                    $('#findStartvalue').val(curYearMonthrDay);
                 }
-            })
-            table.render({
-                elem: '#tabletest1'
-                , url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                , toolbar: '#toolbarDemo1'
-                , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-                , cols: [[
-                    { type: 'radio' }
-                    ,{ field: 'StuName', title: '姓名' }
-                    , {
-                        field: 'StuSex', title: '性别', templet: function (res) {
-                            if (res.StuSex == false) {
-                                return "女";
-                            } else {
-                                return "男";
-                            }
+            }
+        })
+        // 时间选择器初始化 结束时间
+        laydate.render({ //结束时间
+            elem: '#findEndvalue',
+            format: 'yyyy-MM-dd',
+            done: function (value, date, endDate) {
+                var startDate = new Date($('#findStartvalue').val()).getTime();
+                var endTime = new Date(value).getTime();
+                if (endTime < startDate) {
+                    layer.msg('结束时间不能小于开始时间');
+                    $('#findEndvalue').val($('#findStartvalue').val());
+                }
+                if (endTime > curDate.getTime()) {
+                    layer.msg('结束时间不能大于当前时间');
+                    $('#findEndvalue').val(curYearMonthrDay);
+                }
+            }
+        })
+
+        table.render({
+            elem: '#tabletest1'
+            , url: '/Market/StudentDataKeep/GetTableData'
+            , toolbar: '#toolbarDemo1'
+            , cellMinWidth: 80 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            , cols: [[
+                { type: 'checkbox' }
+                , { field: 'StuName', title: '姓名' }
+                , { field: 'StuSex', title: '性别',width:60 }
+                , { field: 'Stuphone', title: '联系电话' }
+                , { field: 'stuinfomation', title: '信息来源' }
+                , {
+                    field: 'StuisGoto', title: '是否上门', templet: function (res) {
+                        if (res.StuisGoto == false || res.StuisGoto == null) {
+                            return "未上门";
+                        }  else {
+                            return "已上门";
                         }
                     }
-                    , { field: 'StuPhone', title: '联系电话' }
-                    , { field: 'StuInfomationType_Id', title: '信息来源' }
+                }
+                , { field: 'StatusName', title: '学生状态' }
+                , { field: 'empName', title: '备案人' }
+                , { field: 'RegionName', title: '区域' }
+                , { field: 'ConsultTeacher', title: '咨询师' }
+                , {
+                    field: 'BeanDate', title: '备案日期', templet: function (res) {
+                        return TimeChange(res.BeanDate);
+                    }
+                }
+                , {
+                    fixed: 'right', title: '操作', width: 250, templet: function (res) {
+                        if (res.ConsultTeacher == null) {
+                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a ><a class="layui-btn layui-btn-xs" lay-event="addconsult">指派咨询师</a>';
+                        } else {
+                            return '<a class="layui-btn layui-btn-xs" lay-event="edit">补充信息</a><a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" > 查看详情</a >';
+                        }
+                    }
+                }
+            ]]
+            , page: true
+            , limits: [20, 40, 50, 60, 80, 100]
+            ,limit:20
+        });
+
+        //头工具栏事件
+        table.on('toolbar(tabletest1)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'getCheckData':
+                    layer.open({
+                        type: 2,
+                        content: '/Market/StudentDataKeep/AddorEdit'  
+                        , area: ['950px', '710px'],
+                        title: '添加备案信息页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                        , scrollbar: false
+                    });
+                    break;
+                case 'getFileInto':
+                    layer.open({
+                        type: 2,
+                        content: '/Market/StudentDataKeep/ExcleIntoView'
+                        , area: ['1000px', '720px'],
+                        title: '导入Excle文件'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                        , closeBtn: 0
+                    });
+                    break;
+            };
+        });
+        //监听行工具事件
+        table.on('tool(tabletest1)', function (obj) {
+            var data = obj.data;
+            //console.log(obj)
+            if (obj.event === 'edit') {
+                layer.open({
+                    type: 2,
+                    content: '/Market/StudentDataKeep/EditView/' + data.Id
+                    , area: ['900px', '720px'],
+                    title: '补充备案信息'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            } else if (obj.event === 'del') {
+                layer.open({
+                    type: 2,
+                    content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id
+                    , area: ['800px', '690px'],
+                    title: '备案数据详情'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            } else if (obj.event === 'addconsult') {
+                //指派咨询师
+                sid = obj.data.Id;
+                layer.open({
+                    type: 2,
+                    content: '/Market/ConsultTeacher/TeacherSelect'
+                    , area: ['600px', '400px'],
+                    title: '选择咨询师页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });
+
+        //双击获取跟踪详情
+        //监听行双击事件
+        table.on('rowDouble(tabletest1)', function (obj) {
+            var id = obj.data.Id;
+            layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
+                layer.close(index);
+                if (obj.data.consultName == null) {
+                    layer.msg("请先指派咨询师!!!", { icon: 6, shade:0.8 });
+                } else {
+                    layer.open({
+                        type: 2,
+                        content: '/Market/Consult/FollwingInfoView/' + id
+                        , area: ['950px', '710px'],
+                        title: '跟踪信息信息页面'
+                        , shade: 0.8
+                        , anim: 4
+                        , skin: 'demo-class'
+                        , scrollbar: false
+                    });
                     
-                    , {
-                        field: 'StuIsGoto', title: '是否上门', templet: function (res) {
-                            if (res.StuIsGoto == false || res.StuIsGoto == null) {
-                                return "未上门";
-                            } else {
-                                return "已上门";
-                            }
-                        }
-                    }
-                    , { field: 'StuStatus_Id', title: '学生状态' }
-                    , { field: 'EmployeesInfo_Id', title: '备案人' }
-                    // , {field: 'ReginName', title: '区域'}
-                    //, {
-                    //    field: 'StuDateTime', title: '备案日期', templet: function (res) {
-                    //        return TimeChange(res.StuDateTime);
-                    //    }
-                    //}
-                    , { fixed: 'right', title: '操作', toolbar: '#barDemo1', width: 150 }
-                ]]
-                , page: true
-            });
-
-            //头工具栏事件
-            table.on('toolbar(tabletest1)', function (obj) {
-                var checkStatus = table.checkStatus(obj.config.id);
-                switch (obj.event) {
-                    case 'getCheckData':
-                        layer.open({
-                            type: 2,
-                            content: '/Market/StudentDataKeep/AddorEdit' //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
-                            , area: ['950px', '710px'],
-                            title: '添加备案信息页面'
-                            , shade: 0.8
-                            , anim: 4
-                            , skin: 'demo-class'
-                            , scrollbar: false
-                        });
-                        break;
-                    case 'getFileInto':                         
-                          layer.open({
-                                type: 2,
-                                content: '/Market/StudentDataKeep/ExcleIntoView'  
-                                , area: ['1000px', '720px'],
-                                title: '导入Excle文件'
-                                , shade: 0.8
-                                , anim: 4
-                              , skin: 'demo-class'
-                              , closeBtn:0
-                        });                      
-                        break;
-                    //case 'getSerchType':
-                    //    layer.open({
-                    //        type: 2,
-                    //        content: '/Market/StudentDataKeep/InfomationAndStatuView' 
-                    //        , area: ['800px', '480px'],
-                    //        title: '查看信息来源与学生状态'
-                    //        , shade: 0.8
-                    //        , anim: 4
-                    //        , skin: 'demo-class'
-                    //        , end: function () {
-                    //            $.ajax({
-                    //                url:'/Market/StudentDataKeep/DelteInfomationType'
-                    //            });
-                    //        }
-                    //    });       
-                    //    break;
-                };
-            });
-            //监听行工具事件
-            table.on('tool(tabletest1)', function (obj) {
-                var data = obj.data;
-                //console.log(obj)
-                if (obj.event === 'edit') {
-                    layer.open({
-                        type: 2,
-                        content: '/Market/StudentDataKeep/EditView/' + data.Id  
-                        , area: ['900px', '720px'],
-                        title: '编辑备案信息'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                } else if (obj.event === 'del') {
-                    layer.open({
-                        type: 2,
-                        content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id  
-                        , area: ['800px', '690px'],
-                        title: '备案数据详情'
-                        , shade: 0.8
-                        , anim: 4
-                        , skin: 'demo-class'
-                    });
-                }
+                }                 
+                
             });
         });
-    </script>
-}
+    });
+
+    function PostDataChange(strid, date) {
+          $.ajax({
+              url: '/Market/StudentDataKeep/UpdateGotoSchool',
+              data: { "ids": strid, "date": date },
+              type:'POST',
+              success: function (suc) {
+                  if (suc.Success) {
+                      layer.msg('操作成功！！！', { icon: 1, shade: 0.8 });
+                      table.reload('tabletest1', { url:'/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+                  } else {
+                      layer.msg('操作失败，请刷新重试！！！', { icon: 2, shade: 0.8 });
+                  }
+              }
+          });
+    }
+
+    function ChangeGotoSchoolstate() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
+            } else {
+                var strid = 0;
+                var date = null;
+                layer.prompt({ title: '请输入上门日期' }, function (val, index) {
+                    date = val;
+                    var dateFormat = /^((((1[6-9]|[2-9]\d)\d{2})-(0?[13578]|1[02])-(0?[1-9]|[12]\d|3[01]))|(((1[6-9]|[2-9]\d)\d{2})-(0?[13456789]|1[012])-(0?[1-9]|[12]\d|30))|(((1[6-9]|[2-9]\d)\d{2})-0?2-(0?[1-9]|1\d|2[0-8]))|(((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))-0?2-29-))$/;
+
+                    if (dateFormat.test(date)) {
+                        //获取选中的id                        
+                        checkStatus.data.forEach(f => {
+                            strid = strid + f.Id + ",";
+                        });
+                         PostDataChange(strid, date);
+                        layer.close(index);
+                    } else {
+                        layer.msg('请输入正确的日期！！例如:2020-02-11', { icon: 2, shade: 0.8 });
+                    }
+
+                });
+
+            }
+            });
+        }
+</script>
+
 

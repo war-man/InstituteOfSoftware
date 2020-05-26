@@ -15,6 +15,7 @@ using SiliconValley.InformationSystem.Business.StuSatae_Maneger;
 using SiliconValley.InformationSystem.Entity.Base_SysManage;
 using SiliconValley.InformationSystem.Business.Base_SysManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Util;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -32,7 +33,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //获取当前上传的操作人
         Base_UserModel UserName = Base_UserBusiness.GetCurrentUser();
 
-        // GET: /Market/Consult/ConsultIndex
+        // GET: /Market/Consult/AddSingConsultdata
         public ActionResult ConsultIndex()
         {
             ViewBag.data = CM_Entity.GetConsultTeacher().Select(c => new ConsultShowData
@@ -52,10 +53,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
         /// <summary>
-       /// 这是获取柱状图数据
-       /// </summary>
-       /// <param name="id">咨询师Id</param>
-       /// <returns></returns>
+        /// 这是获取柱状图数据
+        /// </summary>
+        /// <param name="id">咨询师Id</param>
+        /// <returns></returns>
         public ActionResult GetImageData(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -68,7 +69,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 List<ConsultZhuzImageData> list = CM_Entity.GetImageData(id);
                 return Json(list, JsonRequestBehavior.AllowGet);
             }
- 
+
         }
         /// <summary>
         /// 获取某个咨询师今年某个月完成的量和未完成的量
@@ -76,10 +77,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         /// <param name="monthName">月份</param>
         /// <param name="myid">咨询师Id</param>
         /// <returns></returns>
-        public ActionResult GetTwoDivData(int MonthName, int Myid,int Staue)
-        {           
-           List<ALLDATA> list= CM_Entity.GetTeacherMonthCount(MonthName, Myid, Staue);
-            return Json(list,JsonRequestBehavior.AllowGet);
+        public ActionResult GetTwoDivData(int MonthName, int Myid, int Staue)
+        {
+            List<ALLDATA> list = CM_Entity.GetTeacherMonthCount(MonthName, Myid, Staue);
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
         /// <summary>
         /// 这是跟踪未报名学生情况显示页面
@@ -88,72 +89,74 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         public ActionResult FollwingInfoView(string id)
         {
             int stuId = Convert.ToInt32(id);
-            Consult find_c= CM_Entity.TongStudentIdFindConsult(stuId);
+            ViewBag.Studentdata= CM_Entity.GetStudentData(stuId);
+            Consult find_c = CM_Entity.TongStudentIdFindConsult(stuId);
             List<FollwingInfo> f_list = CM_Entity.GetFllowInfoData(find_c.Id);
-            ViewBag.Flowingdata = f_list;            
+            ViewBag.Flowingdata = f_list;
             return View();
-        }  
+        }
         //获取所有咨询师
         public ActionResult GetConsultTeacherData(int id)
-        {            
-                List<ConsultTeacher> list_ConsultTeacher = CM_Entity.GetConsultTeacher();//获取所有咨询师
-                List<ZhuanghuanluData> list_Zhang = new List<ZhuanghuanluData>();
-                foreach (ConsultTeacher item in list_ConsultTeacher)
-                {                   
-                    ZhuanghuanluData zhanghua = new ZhuanghuanluData();
-                    zhanghua.TeacherName =CM_Entity.GetEmplyeesInfo( item.Employees_Id).EmpName;
-                    int count = CM_Entity.GetCount(item.Id, id);//得到分量
-                    int wangchen = CM_Entity.GetWangcenCount(item.Id, id);//得到完成量
-                    if (wangchen!=0 && count!=0)
-                    {
-                       zhanghua.Number = wangchen;
-                    }else
-                    {
-                     zhanghua.Number = 0;
+        {
+            List<ConsultTeacher> list_ConsultTeacher = CM_Entity.GetConsultTeacher();//获取所有咨询师
+            List<ZhuanghuanluData> list_Zhang = new List<ZhuanghuanluData>();
+            foreach (ConsultTeacher item in list_ConsultTeacher)
+            {
+                ZhuanghuanluData zhanghua = new ZhuanghuanluData();
+                zhanghua.TeacherName = CM_Entity.GetEmplyeesInfo(item.Employees_Id).EmpName;
+                int count = CM_Entity.GetCount(item.Id, id);//得到分量
+                int wangchen = CM_Entity.GetWangcenCount(item.Id, id);//得到完成量
+                if (wangchen != 0 && count != 0)
+                {
+                    zhanghua.Number = wangchen;
                 }
-                     
-                    list_Zhang.Add(zhanghua);
+                else
+                {
+                    zhanghua.Number = 0;
                 }
-                 var data = list_Zhang.OrderByDescending(c => c.Number).ToList();
-                return Json(data, JsonRequestBehavior.AllowGet);                
+
+                list_Zhang.Add(zhanghua);
+            }
+            var data = list_Zhang.OrderByDescending(c => c.Number).ToList();
+            return Json(data, JsonRequestBehavior.AllowGet);
         }
         //查看是否有这个学生
         public ActionResult SeracherIsno(string id)
         {
             List<StudentPutOnRecord> find = CM_Entity.GetStudentPutRecored().Where(s => s.StuName == id).ToList();
-            return Json(find,JsonRequestBehavior.AllowGet);
+            return Json(find, JsonRequestBehavior.AllowGet);
         }
         //获取学生综合数据的方法
         public My_StudentDataOne GetDataStudent(string id)
-        {             
-                My_StudentDataOne mystudentdata = new My_StudentDataOne();
-                //单个数据
-                int stu_id = int.Parse(id);//得到学生备案Id                
-                //获取备案信息
-                StudentPutOnRecord find_spt = CM_Entity.GetSingleStudent(stu_id);
+        {
+            My_StudentDataOne mystudentdata = new My_StudentDataOne();
+            //单个数据
+            int stu_id = int.Parse(id);//得到学生备案Id                
+                                       //获取备案信息
+            StudentPutOnRecord find_spt = CM_Entity.GetSingleStudent(stu_id);
             if (find_spt != null)
             {
                 mystudentdata.StudentputonereadName = find_spt.StuName;
-                mystudentdata.Sex = find_spt.StuSex == false ? "女" : "男";
+                mystudentdata.Sex = find_spt.StuSex;
                 mystudentdata.RecordData = find_spt.StuDateTime;
                 mystudentdata.IsVistSchool = find_spt.StuIsGoto == true ? "是" : "否";
                 StuStatus find_status = SM_Entity.GetEntity(find_spt.StuStatus_Id);
-                if (find_status!=null)
+                if (find_status != null)
                 {
                     mystudentdata.IsExitsSchool = find_status.StatusName;
                 }
-                 
+
                 EmployeesInfo find_e1 = CM_Entity.GetEmplyeesInfo(find_spt.EmployeesInfo_Id);
                 if (find_e1 != null)
                 {
                     mystudentdata.DataputRecordMan = find_e1.EmpName;//获取备案人
-                }                 
+                }
                 Region find_r = CM_Entity.GetRegionName(find_spt.Region_id);
                 if (find_r != null)
                 {
                     mystudentdata.AreaName = find_r.RegionName;//获取区域名称
                 }
-                 
+
                 Consult find_c = CM_Entity.FindStudentIdGetConultdata(find_spt.Id);//获取分量数据
                 if (find_c != null)
                 {
@@ -164,13 +167,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     {
                         mystudentdata.ConsultTeacherName = CM_Entity.GetEmplyeesInfo(find_ct.Employees_Id).EmpName;//获取咨询师名称
                     }
-                     
-                }                
+
+                }
 
             }
-                //根据学生备案Id去找学生学号
-                StudentInformation find_s = ST_Entity.GetList().Where(s => s.StudentPutOnRecord_Id == stu_id).FirstOrDefault();
-                if (find_s != null)
+            //根据学生备案Id去找学生学号
+            StudentInformation find_s = ST_Entity.GetList().Where(s => s.StudentPutOnRecord_Id == stu_id).FirstOrDefault();
+            if (find_s != null)
             {
                 //根据学号找班级
                 ScheduleForTrainees className = SB_Entity.SutdentCLassName(find_s.StudentNumber);
@@ -180,14 +183,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     mystudentdata.Teacher = TB_Entity.ClassTeacher(className.ID_ClassName.ToString()).EmpName;//获取任课老师
                     mystudentdata.Grand = CB_Entity.GetClassGrand(className.ID_ClassName, 2);//阶段
                     mystudentdata.ZhuanyeName = CB_Entity.GetClassGrand(className.ID_ClassName, 1);//专业
-                }                
+                }
                 EmployeesInfo find_e = HB_Entity.Listheadmasters(find_s.StudentNumber);
                 if (find_e != null)
                 {
                     mystudentdata.ClassTeacher = find_e.EmpName;//获取班主任
-                }                 
-            }                       
-                return mystudentdata;
+                }
+            }
+            return mystudentdata;
         }
         //查到一个或多个学生的页面显示
         public ActionResult ListStudentView(string id)
@@ -205,16 +208,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     if (!string.IsNullOrEmpty(myid))
                     {
                         list.Add(GetDataStudent(myid));
-                    }                     
+                    }
                 }
             }
             ViewBag.Mystudents = list;
-                return View();
+            return View();
         }
         //这是一个分量页面
         public ActionResult ConsultView()
         {
-          List<TreeClass> list_treacher = CM_Entity.GetConsultTeacher().Where(ct=>ct.IsDelete==false).Select(ct=>new TreeClass() { id=ct.Id.ToString(),title=CM_Entity.GetEmplyeesInfo(ct.Employees_Id).EmpName}).ToList();
+            List<TreeClass> list_treacher = CM_Entity.GetConsultTeacher().Where(ct => ct.IsDelete == false).Select(ct => new TreeClass() { id = ct.Id.ToString(), title = CM_Entity.GetEmplyeesInfo(ct.Employees_Id).EmpName }).ToList();
             ViewBag.Teacher = list_treacher;//咨询师
             return View();
         }
@@ -228,26 +231,27 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             //获取未报名学生
             List<StudentPutOnRecord> list_stu = CM_Entity.GetMonStudent(id).Where(s => s.StuStatus_Id != (SM_Entity.GetStu("已报名").Data as StuStatus).Id).ToList();
             //获取未分量的学生
-            List<Consult> find_all= CM_Entity.GetIQueryable().ToList();
+            List<Consult> find_all = CM_Entity.GetIQueryable().ToList();
             List<StudentPutOnRecord> getNoExit = new List<StudentPutOnRecord>();
             foreach (StudentPutOnRecord studentdata in list_stu)
             {
-                Consult findvalue= find_all.Where(a => a.StuName == studentdata.Id).FirstOrDefault();
-                if (findvalue==null)
+                Consult findvalue = find_all.Where(a => a.StuName == studentdata.Id).FirstOrDefault();
+                if (findvalue == null)
                 {
                     getNoExit.Add(studentdata);
                 }
             }
-            var data = getNoExit.Select(s => new {
+            var data = getNoExit.Select(s => new
+            {
                 Id = s.Id,
-                StuName=s.StuName,
+                StuName = s.StuName,
                 StuSex = s.StuSex,
-                StuStatus_Id= SM_Entity.GetEntity(s.StuStatus_Id).StatusName,
-                StuPhone=s.StuPhone,
-                EmployeesInfo_Id=CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
-                Region_id=CM_Entity.GetRegionName(s.Region_id).RegionName
+                StuStatus_Id = SM_Entity.GetEntity(s.StuStatus_Id).StatusName,
+                StuPhone = s.StuPhone,
+                EmployeesInfo_Id = CM_Entity.GetEmplyeesInfo(s.EmployeesInfo_Id).EmpName,
+                Region_id = CM_Entity.GetRegionName(s.Region_id).RegionName
             }).ToList();
- 
+
             return Json(data, JsonRequestBehavior.AllowGet);
         }
         //添加
@@ -277,17 +281,33 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 }
                 else
                 {
-                    WriteSysLog("用户:"+ Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量操作错误", EnumType.LogType.添加数据);
-                    return Json("系统错误，请重试!!!",JsonRequestBehavior.AllowGet);
+                    WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量操作错误", EnumType.LogType.添加数据);
+                    return Json("系统错误，请重试!!!", JsonRequestBehavior.AllowGet);
                 }
             }
             catch (Exception ex)
             {
-                WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量操作出现"+ex.Message, EnumType.LogType.添加数据);
+                WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量操作出现" + ex.Message, EnumType.LogType.添加数据);
                 return Json("系统错误，请重试!!!", JsonRequestBehavior.AllowGet);
             }
-            WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量信息成功" , EnumType.LogType.添加数据);
-            return Json("ok",JsonRequestBehavior.AllowGet);
-        }         
+            WriteSysLog("用户:" + Employsinfo_Entity.GetEntity(UserName.EmpNumber).EmpName + "添加分量信息成功", EnumType.LogType.添加数据);
+            return Json("ok", JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpPost]
+        public ActionResult AddSingConsultdata()
+        {
+            AjaxResult a = new AjaxResult();
+            Consult consult = new Consult();
+            consult.ComDate = DateTime.Now;
+            consult.IsDelete = false;
+            consult.Rmark = Request.Form["Rmark"];
+            consult.StuName =  Convert.ToInt32(Request.Form["stuid"]);
+            consult.TeacherName = Convert.ToInt32(Request.Form["teacherid"]);
+            a.Success= CM_Entity.AddSing(consult);
+            return Json(a, JsonRequestBehavior.AllowGet);
+        }
+
+         
     }
 }
