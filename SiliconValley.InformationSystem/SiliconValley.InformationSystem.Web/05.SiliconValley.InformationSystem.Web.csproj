@@ -1730,6 +1730,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\IDcardphoto.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Expenseentry.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Entryreview.cshtml" />
+    <Content Include="Areas\Personnelmatters\Views\EmployeesInfo\BatchImportEmps.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
