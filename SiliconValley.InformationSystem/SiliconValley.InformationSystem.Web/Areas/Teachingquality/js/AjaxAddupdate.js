@@ -63,7 +63,7 @@ function Transaction(url, mytitle, width, hegin) {
             type: 'POST',
             async: true,
             cache: false,
-            timeout: 2000,
+         
             data: datae,
             beforeSend: function () {//执行中
                 i = showLoad();
@@ -347,9 +347,7 @@ function ajaxprice(url, datae,callback) {
         type: 'POST',
         async: true,
         cache: false,
-        timeout: 2000,
         data: datae,
-
         beforeSend: function () {//执行中
             i = showLoad();
         },

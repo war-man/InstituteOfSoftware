@@ -310,7 +310,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         public ActionResult Nominaldata(int page, int limit, string StudentID, string Name, string TypeID, string qBeginTime, string qEndTime)
         {
             var x = dbtext.Nominaldata(StudentID, Name, TypeID, qBeginTime, qEndTime);
-            
             var dataList = x.OrderBy(a => a.ID).Skip((page - 1) * limit).Take(limit).ToList();
             var data = new
             {
@@ -320,7 +319,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
                 data = dataList
             };
             return Json(data, JsonRequestBehavior.AllowGet);
-          
         }
         /// <summary>
         /// 获取总额统计
@@ -345,7 +343,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.PaymentcommodityIsdele(id, Isdele), JsonRequestBehavior.AllowGet);
         }
-
         /// <summary>
         /// 费用入账
         /// </summary>
@@ -386,7 +383,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.Passornot = Request.QueryString["Passornot"];
             return View();
         }
-
         /// <summary>
         /// 审核入账是否成功
         /// </summary>
