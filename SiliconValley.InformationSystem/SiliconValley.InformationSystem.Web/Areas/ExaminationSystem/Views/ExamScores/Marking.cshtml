@@ -115,6 +115,7 @@
             text-align: right
         }
         .floatbtn  {
+            display: inline-block;
            text-align:right;
         }
 
@@ -223,16 +224,15 @@
 
                     <div class="layui-form-item">
                         <label class="layui-form-label">备注</label>
-                        <div class="layui-input-block">
-                            <input type="text" id="scoreRemark" name="title" lay-verify="title" autocomplete="off" placeholder="请输入备注" class="layui-input">
+                        <div class="layui-input-inline" style="width:500px;">
+                            <input type="text" id="scoreRemark" name="title"  lay-verify="title" autocomplete="off" placeholder="请输入备注" class="layui-input">
                         </div>
-                    </div>
 
-                    <div class="floatbtn">
-
-                        <button type="button" class="layui-btn layui-btn-danger commitScores">提交</button>
-                        <button type="button" class="layui-btn layui-btn-danger closefloat">关闭</button>
-
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-inline">
+                            <button type="button" class="layui-btn layui-btn-danger commitScores">提交</button>
+                            <button type="button" class="layui-btn layui-btn-danger closefloat">关闭</button>
+                        </div>
                     </div>
                 </form>
 

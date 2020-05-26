@@ -299,6 +299,7 @@
     <Compile Include="Entity\TecharOnstageBearing.cs" />
     <Compile Include="Entity\TestScore.cs" />
     <Compile Include="Entity\TextAnswer.cs" />
+    <Compile Include="Entity\ThearToStuComment.cs" />
     <Compile Include="Entity\Timestamp.cs" />
     <Compile Include="Entity\TotaleCharges.cs" />
     <Compile Include="Entity\Transfer.cs" />
