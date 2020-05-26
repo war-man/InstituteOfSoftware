@@ -462,6 +462,7 @@
     <Content Include="Areas\Obtainemployment\Scripts\Drawing.js" />
     <Content Include="Areas\Obtainemployment\Scripts\opneentxml.js" />
     <Content Include="Areas\Teachingquality\ClassImages\3.jpg" />
+    <Content Include="Areas\Teachingquality\ClassImages\ClassImages.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051991032300041back.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997080200010back.jpg" />
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identitybackimg\20051997111700040back.jpg" />
@@ -472,6 +473,10 @@
     <Content Include="Areas\Teachingquality\IDcardphotoImg\Identityjustimg\20051997111700040just.jpg" />
     <Content Include="Areas\Teachingquality\images\guigu.png" />
     <Content Include="Areas\Teachingquality\images\审批.png" />
+    <Content Include="Areas\Teachingquality\studentImg\20031998063000011.jpg" />
+    <Content Include="Areas\Teachingquality\studentImg\20051899070900005.jpg" />
+    <Content Include="Areas\Teachingquality\studentImg\20051997080200010.jpg" />
+    <Content Include="Areas\Teachingquality\studentImg\default.jpg" />
     <Content Include="Areas\Teachingquality\StuImages\2019年10月14日.jpg" />
     <Content Include="Areas\Teaching\config\empmanageConfig.xml">
       <SubType>Designer</SubType>
@@ -508,7 +513,7 @@
     <Content Include="Images\Login\Middle.jpg" />
     <Content Include="Images\Login\new.png" />
     <Content Include="Images\Login\rem-check.png" />
-    <Content Include="Images\Login\shouye.jpg" />
+    <Content Include="Images\Login\shoye.jpg" />
     <Content Include="Images\Login\shoye1.jpg" />
     <Content Include="Images\Login\slide_btn_bg.png" />
     <Content Include="Images\Login\titlie.jpg" />
@@ -1730,6 +1735,7 @@
     <Content Include="Areas\Teachingquality\Views\StudentInformation\IDcardphoto.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Expenseentry.cshtml" />
     <Content Include="Areas\Finance\Views\Pricedetails\Entryreview.cshtml" />
+    <Content Include="Areas\Teachingquality\Views\ClassSchedule\Myclass.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
