@@ -24,6 +24,10 @@
             line-height: 20px;
             text-align: right
         }
+
+       label i{
+        cursor:pointer;
+        }
     </style>
     
 </head>
@@ -31,18 +35,29 @@
     <div style="margin-top:20px;margin-left:auto;margin-right:auto;width:90%">
         <form id="weekendduty_form" class="layui-form">
             <div class="layui-row layui-form-item">
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="LableCss1">部门名称:</label>
                     <div class="layui-input-block">
                         @Html.DropDownList("Depdata", ViewBag.dep as IEnumerable<SelectListItem>, new Dictionary<string, object>() { { "class", "layui-select" }, { "lay-filter", "MyDepdata" } })
                     </div>
                 </div>
-                <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <label class="LableCss1">值班日期:</label>
                     <div class="layui-input-block">
-                        <input type="text" id="date" name="date" class="layui-input"  lay-verify="required" />
+                        <input type="text" id="date" name="date" class="layui-input"/>
                     </div>
-                </div>               
+                </div>
+            </div>
+            <div class="layui-row layui-form-item">
+                <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                    <label class="LableCss1">所选日期:</label>
+                    <div id="dateDiv" class="layui-input-block">
+                       
+                    </div>
+                </div>
             </div>
             <div class="layui-row layui-form-item">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
@@ -53,11 +68,11 @@
                         </div>
                         <div class="layui-col-sm6">
                             <input type="radio" name="type" value="true" title="晚自习值班" checked>
-                        </div>                        
+                        </div>
                     </div>
-                </div>                
+                </div>
             </div>
-            <div class="layui-row layui-form-item">
+            <div class="layui-row layui-form-item" style="width:97%;margin-left:3%">
                 <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                     <div class="layui-collapse" lay-accordion>
                         <div class="layui-colla-item">
@@ -81,7 +96,12 @@
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
     <script>
- 
+
+        function delet(evnt) {
+            var findlable = ($(evnt).parent())[0];
+            $(findlable).remove();
+        }
+
         layui.use(['form', 'laydate','element','layer'], function () {
             var form = layui.form;
             var laydate = layui.laydate;
@@ -90,6 +110,11 @@
             laydate.render({
                 elem: '#date'
                 , trigger: 'click'
+                , done: function (value) {
+                    if (value.length > 0) {
+                        $('<label class="LableCss1 lablem" style="border:1px solid #fff;border-width:1px">' + value + '<i onclick="delet(this)" class="layui-icon" style="color: red;">&#x1006;</i></label>').appendTo($("#dateDiv"));
+                    }
+                }
             });
 
             form.on('select(MyDepdata)', function (data) {
@@ -124,11 +149,19 @@
                     }
                     
                 })
-
+                var dates = "";
+                $(".lablem").each(function (index, value) {
+                    var ss = $(value)[0].innerText;
+                    dates = dates + ss.substring(0, ss.length-1) + ",";
+                });
+                  
                 if ($("input:checked").length <= 0 || teacherid=="") {
                     layer.msg('请选择值班的老师', { icon: 2 });
-                } else {
-                    var new_data = { "tid": teacherid, "time": data.field.date, "Type": data.field.type };
+                } else if ($(".lablem").length <= 0 || dates=="") {
+                    layer.msg('请选择值班日期', { icon: 2 });
+                }
+                else {
+                    var new_data = { "tid": teacherid, "time": dates, "Type": data.field.type };
                     $.ajax({
                         url: '/Educational/TeacherNight/WeekEnddutyFunction',
                         type: 'POST',
