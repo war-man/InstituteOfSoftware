@@ -557,7 +557,7 @@
                         $("#ContractRenewal").show();
                         data.EntryTime = GetYMD(data.EntryTime);
                         data.TransactionTime = GetYMD(data.TransactionTime);
-                        $("#balance").val(abs(data.PresentSalary - data.PreviousSalary));
+                       // $("#balance").val(abs(data.PresentSalary - data.PreviousSalary));
                         console.log(data);
                         form.val("ContractRenewal", data);
                     }
