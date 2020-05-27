@@ -343,7 +343,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
         /// <returns></returns>        
         public FileStreamResult DownFile()
         {
-            string rr = Server.MapPath("/uploadXLSXfile/Template/员工信息表-模板.xls");  //获取下载文件的路径         
+            string rr = Server.MapPath("/uploadXLSXfile/Template/EmpInfoTemplate.xls");  //获取下载文件的路径         
             FileStream stream = new FileStream(rr, FileMode.Open);
             return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }

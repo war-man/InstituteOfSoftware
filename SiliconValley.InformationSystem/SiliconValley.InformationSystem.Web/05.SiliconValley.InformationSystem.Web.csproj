@@ -3375,8 +3375,8 @@
     <Content Include="Views\Login\SLogin.cshtml" />
     <Content Include="Views\WeiXin\BindingWX.cshtml" />
     <Content Include="Views\WeiXin\WXLoginError.cshtml" />
-    <Content Include="uploadXLSXfile\Template\员工信息表-模板.xls" />
-    <Content Include="uploadXLSXfile\Template\月度考勤表模板.xlsx" />
+    <Content Include="uploadXLSXfile\Template\EmpInfoTemplate.xls" />
+    <Content Include="uploadXLSXfile\Template\AttendanceInfoTemp.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
