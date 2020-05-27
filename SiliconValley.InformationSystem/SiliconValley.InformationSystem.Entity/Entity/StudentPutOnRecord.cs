@@ -130,11 +130,6 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public DateTime BeanDate { get; set; }
 
-        /// <summary>
-        /// 身份证
-        /// </summary>
-        public string IdCade { get; set; }
-
         public bool Equals(StudentPutOnRecord x, StudentPutOnRecord y)
         {
             if (x.StuName == y.StuName && x.StuPhone == y.StuPhone)
