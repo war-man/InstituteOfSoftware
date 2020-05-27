@@ -227,6 +227,7 @@
     <Compile Include="Entity\PayviewPaymentver.cs" />
     <Compile Include="Entity\PerInfo.cs" />
     <Compile Include="Entity\Position.cs" />
+    <Compile Include="Entity\Preentryfee.cs" />
     <Compile Include="Entity\Prefunding.cs" />
     <Compile Include="Entity\Pricedormitoryarticles.cs" />
     <Compile Include="Entity\PrintGoodsApply.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Entity\Reconcile.cs" />
     <Compile Include="Entity\RecruitingDataSummary.cs" />
     <Compile Include="Entity\RecruitPhoneTrace.cs" />
+    <Compile Include="Entity\Refund.cs" />
     <Compile Include="Entity\Region.cs" />
     <Compile Include="Entity\RemovalRecords.cs" />
     <Compile Include="Entity\ReplenishmentRecord.cs" />

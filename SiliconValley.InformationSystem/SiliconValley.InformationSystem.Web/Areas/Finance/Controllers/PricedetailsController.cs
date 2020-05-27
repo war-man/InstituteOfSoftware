@@ -217,8 +217,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         public ActionResult Receipt()
         {
             //学员费用
-            BaseBusiness<StudentFeeRecord> studentfee = new BaseBusiness<StudentFeeRecord>();
-            var personlist = SessionHelper.Session["person"] as List<StudentFeeRecord>;
+            BaseBusiness<Payview> studentfee = new BaseBusiness<Payview>();
+            var personlist = SessionHelper.Session["person"] as List<Payview>;
             string Invoicenumber = "";
             int counts = studentfee.GetList().Count();
             if (counts<10)
@@ -394,5 +394,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
             return Json(dbtext.Tuitionentry(id, whether, OddNumbers), JsonRequestBehavior.AllowGet);
         }
+
+        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+        public ActionResult Prepayments()
+        {
+            return View();
+        }
+        //public ActionResult PrepaymentsDate()
+        //{
+        //    studentDataKeepAndRecordBusiness.GetSudentDataAll()
+        //}
     }
 }

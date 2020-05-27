@@ -418,7 +418,7 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         /// </summary>
         /// <param name="studentFeeRecords">集合数据</param>
         /// <returns></returns>
-        public object Receiptdata(List<StudentFeeRecord> studentFeeRecords)
+        public object Receiptdata(List<Payview> studentFeeRecords)
         {
             int Stage = Convert.ToInt32(SessionHelper.Session["Stage"]);
             return studentFeeRecords.Select(a => new
