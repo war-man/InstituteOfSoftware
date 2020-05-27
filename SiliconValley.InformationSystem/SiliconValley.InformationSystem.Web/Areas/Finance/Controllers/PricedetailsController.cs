@@ -396,13 +396,43 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         }
 
         StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+        /// <summary>
+        /// 缴纳预入费页面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Prepayments()
         {
             return View();
         }
-        //public ActionResult PrepaymentsDate()
-        //{
-        //    studentDataKeepAndRecordBusiness.GetSudentDataAll()
-        //}
+        /// <summary>
+        /// 预入费缴纳操作数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <param name="Name">学员姓名</param>
+        /// <returns></returns>
+        public ActionResult PrepaymentsDate(int page, int limit,string Name)
+        {
+           var costlist= studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a=>a.StatusName=="未报名").ToList();
+            if (!string.IsNullOrEmpty(Name))
+            {
+                costlist = costlist.Where(a => a.StuName.Contains(Name)).ToList();
+            }
+            var dataList = costlist.OrderBy(a => a.Id).Skip((page - 1) * limit).Take(limit).ToList();
+            //  var x = dbtext.GetList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = costlist.Count,
+                data = dataList
+            };
+            return Json(data, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Paytheadvancefee()
+        {
+            return View();
+        }
     }
 }
