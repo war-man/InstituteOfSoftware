@@ -228,14 +228,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
-                        <label class="layui-form-label">身&nbsp;份 &nbsp; 证:</label>
-                        <div class="layui-input-block">
-                            @Html.TextBoxFor(s => s.IdCade, new Dictionary<string, object>() { { "placeholder", "学生身份证号" }, { "class", "layui-input" } ,{ "style","width:93%"},{"lay-verify", "identity" } })
-                        </div>
-                    </div>
-                </div>
                 <div class="layui-form-item" style="margin-top:40px;">
             <div class="layui-input-block" style="width:30%;margin-left:43%">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="tijiao">提交</button>
@@ -366,7 +358,15 @@
                 /^[0-9]*$/
                 , '电话号码只能是数字'
             ]
-
+            //, MyIdCard: function (value) {
+            //    var regIdNo = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+            //    if (value.length>0) {
+            //        if (!regIdNo.test(value)) {
+            //            return "身份证错误！";
+            //        } 
+            //    }
+                 
+            //}
             //, content: function (value) {
             //    var newsdate = new Date();
             //    var olddate = new Date(value);

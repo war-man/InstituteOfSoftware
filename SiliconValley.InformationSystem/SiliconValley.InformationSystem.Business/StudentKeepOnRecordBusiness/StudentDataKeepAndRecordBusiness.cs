@@ -198,7 +198,6 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 fins.StuVisit = olds.StuVisit;
                 fins.StuInfomationType_Id = olds.StuInfomationType_Id;
                 fins.Party = olds.Party;
-                fins.IdCade = olds.IdCade;
                 if (olds.StuStatus_Id == -1 || olds.StuStatus_Id == null)
                 {
                     AjaxResult a1 = Stustate_Entity.GetIdGiveName("未报名", false);
@@ -544,9 +543,20 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
              List<ExportStudentBeanData> listall= this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
 
-            //List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
+            List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
 
-            //listall.AddRange(this.LongrageDataToViewmodel(old));
+            listall.AddRange(this.LongrageDataToViewmodel(old));
+            return listall;
+        }
+
+        /// <summary>
+        /// 获取StudentPutOnRecord表的所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> GetSudentDataAll()
+        {
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
+
             return listall;
         }
 
@@ -565,6 +575,55 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             count= count+ Convert.ToInt32(cmd2.ExecuteScalar());
             con.Close();
             return count;
+        }
+
+        /// <summary>
+        /// 查看是否有重复的值 false--有，true--没有
+        /// </summary>
+        /// <param name="stuName"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public bool StudentOrride(string stuName,string phone)
+        {
+            stuName = stuName.Trim();
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='"+stuName+"'and Stuphone='"+phone+"' ");
+            List<Sch_MarketView> listal2 = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where StudentName='"+stuName+"'and Phone='"+ phone + "'");
+            return listall.Count + listal2.Count <= 0 ? true : false;
+        }
+
+        /// <summary>
+        /// 获取有相同学生姓名备案数据
+        /// </summary>
+        /// <param name="stuName"></param>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> StudentOrride(string stuName)
+        {
+            stuName = stuName.Trim();
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='" + stuName + "'");
+
+            List<Sch_MarketView> listal2 = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where StudentName='" + stuName + "'");
+
+
+            listall.AddRange(this.LongrageDataToViewmodel(listal2));
+
+            return listall;
+        }
+
+        /// <summary>
+        /// 获取已备案的疑似数据
+        /// </summary>
+        /// <param name="stuName"></param>
+        /// <param name="phone"></param>
+        /// <returns></returns>
+        public ExportStudentBeanData StudentOrrideData(string stuName, string phone)
+        {
+            stuName = stuName.Trim();
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where StuName='" + stuName + "'and Stuphone='" + phone + "' ");
+            List<Sch_MarketView> listal2 = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where StudentName='" + stuName + "'and Phone='" + phone + "'");
+
+            listall.AddRange(this.LongrageDataToViewmodel(listal2));
+
+            return listall.Count > 0 ? listall[0] : null;
         }
     }
 }

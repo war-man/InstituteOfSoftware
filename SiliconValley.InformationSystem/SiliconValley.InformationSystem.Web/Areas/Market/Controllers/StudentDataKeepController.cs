@@ -198,7 +198,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 
         public ActionResult GetTableData(int limit,int page)
         {
-            List<ExportStudentBeanData> list= s_Entity.GETView().OrderByDescending(s=>s.Id).ToList();
+            List<ExportStudentBeanData> list= s_Entity.GetSudentDataAll().OrderByDescending(s=>s.Id).ToList();
 
             var data = list.Skip((page - 1) * limit).Take(limit).ToList() ;
 
@@ -294,8 +294,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             try
             {
                 //判断是否有姓名相同的备案数据
-                StudentPutOnRecord er = s_Entity.GetAllStudentKeepData().Where(s => s.StuName == news.StuName && s.StuPhone == news.StuPhone).FirstOrDefault();
-                if (er == null)
+                //StudentPutOnRecord er = s_Entity.GetAllStudentKeepData().Where(s => s.StuName == news.StuName && s.StuPhone == news.StuPhone).FirstOrDefault();
+                if (s_Entity.StudentOrride(news.StuName,news.StuPhone))
                 {
                     news.StuDateTime = DateTime.Now;
                     news.BeanDate = DateTime.Now;
@@ -446,7 +446,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     StuStatus_Id = finds.StuStatus_Id,
                     StuVisit = finds.StuVisit,
                     StuWeiXin = finds.StuWeiXin,
-                    Idcode=finds.IdCade,
                     e_Name = s_Entity.GetEmployeeValue(finds.EmployeesInfo_Id, false),
                     StuEntering_1 = finds.StuEntering,
                     InfomationTypeName = StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id) == null ? "未定义" : StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,
@@ -488,22 +487,22 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             StuInfomationType_Entity = new StuInfomationTypeManeger();
             region_Entity = new RegionManeges();
             Stustate_Entity = new StuStateManeger();
-            List<StudentPutOnRecord> list = s_Entity.GetAllStudentKeepData().Where(s => s.StuName == id).ToList();
+            List<ExportStudentBeanData> list = s_Entity.StudentOrride(id);
             var data = list.Select(s => new StudentData
             {
                 stuSex = s.StuSex  ,
                 StuName = s.StuName,
-                StuPhone = s.StuPhone,
+                StuPhone = s.Stuphone,
                 StuSchoolName = s.StuSchoolName,
                 StuAddress = s.StuAddress,
-                StuInfomationType_Id = StuInfomationType_Entity.GetEntity(s.StuInfomationType_Id).Name,
-                StuStatus_Id = Stustate_Entity.GetEntity(s.StuStatus_Id).StatusName,
-                StuIsGoto = s.StuIsGoto == false ? "否" : "是",
+                StuInfomationType_Id = s.stuinfomation,
+                StuStatus_Id = s.StatusName,
+                StuIsGoto = s.StuisGoto == false ? "否" : "是",
                 StuVisit = s.StuVisit,
-                EmployeesInfo_Id = s_Entity.GetEmployeeValue(s.EmployeesInfo_Id, true),
-                StuDateTime = s.StuDateTime,
-                StuEntering = s_Entity.GetEmployeeValue(s.StuEntering, true),
-                AreName = region_Entity.GetAreValue(s.Region_id.ToString(), true).RegionName
+                EmployeesInfo_Id = s.empName,
+                StuDateTime = s.BeanDate,
+                StuEntering = s.StuEntering,
+                AreName =  s.RegionName
             }).ToList();
             ViewBag.Student = data;
             return View(data);
@@ -535,138 +534,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(a,JsonRequestBehavior.AllowGet);
         }
         #endregion
-       
-        
+
+
         #region Excle文件导入
-        //获取已备案中的相似数据
-        public List<MyExcelClass> SercherStudent(List<MyExcelClass> ex)
-        {
-            region_Entity = new RegionManeges();
-            List<StudentPutOnRecord> s_list = s_Entity.GetAllStudentKeepData();
-            List<MyExcelClass> list = new List<MyExcelClass>();
-            foreach (MyExcelClass item1 in ex)
-            {
-                foreach (StudentPutOnRecord item2 in s_list)
-                {
-                    if (item2.StuName == item1.StuName && item2.StuPhone == item1.StuPhone)
-                    {
-                        MyExcelClass m = new MyExcelClass();
-                        m.StuSex = item2.StuSex ;
-                        m.StuName = item2.StuName;
-                        m.StuPhone = item2.StuPhone;
-                        m.StuSchoolName = item2.StuSchoolName;
-                        m.StuInfomationType_Id = StuInfomationType_Entity.GetEntity(item2.StuInfomationType_Id) == null ? null : StuInfomationType_Entity.GetEntity(item2.StuInfomationType_Id).Name;
-                        m.Region_id = region_Entity.SerchRegionName(item2.Region_id.ToString(), true).RegionName;
-                        m.StuEducational = item2.StuEducational;
-                        m.StuAddress = item2.StuAddress;
-                        m.Reak = item2.Reak;
-                        m.EmployeesInfo_Id = s_Entity.GetEmployeeValue(item2.EmployeesInfo_Id, false);
-                        if (list.Where(s => s.StuName == m.StuName && s.StuPhone == m.StuPhone).FirstOrDefault() == null)
-                        {
-                            list.Add(m);
-                        }
-
-                    }
-                }
-            }
-
-            return list;
-        }
-        ///一个删除文件的方法
-        public void DeleteFile()
-        {
-            var namef = SessionHelper.Session["filename"];
-            var namef2 = SessionHelper.Session["filename2"];
-            if (namef != null)
-            {
-                FileInfo fi = new FileInfo(namef.ToString());
-                bool ishave = fi.Exists;
-                if (ishave)
-                {
-                    fi.Delete();
-                }
-            }
-
-        }
-        //获取Excle文件中的值
-        public List<StudentPutOnRecord> GetExcelFunction()
-        {
-            region_Entity = new RegionManeges();
-            string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
-            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
-            List<StudentPutOnRecord> new_listStudent = new List<StudentPutOnRecord>();
-            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
-            {
-                //需要转型
-                for (int i = 1; i < (t.Rows.Count); i++)
-                {
-                    StudentPutOnRecord create_s = new StudentPutOnRecord();
-                    create_s.StuName = t.Rows[i][0].ToString();
-                    create_s.StuSex = t.Rows[i][1].ToString();
-                    create_s.StuPhone = t.Rows[i][2].ToString();
-                    create_s.StuSchoolName = t.Rows[i][3].ToString();//学校
-                    create_s.StuAddress = t.Rows[i][4].ToString();//家庭住址
-                    Region find_region = region_Entity.GetAreValue(t.Rows[i][5].ToString(), false);
-                    if (find_region != null)
-                    {
-                        create_s.Region_id = find_region.ID;
-                    }
-                    create_s.StuInfomationType_Id = StuInfomationType_Entity.GetNameSearchId(t.Rows[i][6].ToString()) == null ? 0 : StuInfomationType_Entity.GetNameSearchId(t.Rows[i][6].ToString()).Id;//信息来源
-                    create_s.StuEducational = t.Rows[i][7].ToString() == null ? "初中" : t.Rows[i][7].ToString();
-                    create_s.EmployeesInfo_Id = s_Entity.GetNameSreachEmploId(t.Rows[i][8].ToString()) == null ? null : s_Entity.GetNameSreachEmploId(t.Rows[i][8].ToString()).EmployeeId;//备案人
-                    create_s.Reak = t.Rows[i][9].ToString();//备注
-                    create_s.StuIsGoto = false;
-                    create_s.StuStatus_Id = 1;
-                    new_listStudent.Add(create_s);
-                }
-                DeleteFile();
-                return new_listStudent;
-            }
-            else
-            {
-                DeleteFile();
-                return new_listStudent;
-            }
-        }
-        //转型为Excle集合(目的:有些是区域外的，会被处理)
-        public bool GetExcel()
-        {
-            string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
-            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
-            List<MyExcelClass> new_listStudent = new List<MyExcelClass>();
-            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
-            {
-                //直接设为Excel实体
-                for (int i = 1; i < (t.Rows.Count); i++)
-                {
-                    MyExcelClass create_s = new MyExcelClass();
-                    create_s.StuName = t.Rows[i][0].ToString();
-                    create_s.StuSex = t.Rows[i][1].ToString();
-                    create_s.StuPhone = t.Rows[i][2].ToString();
-                    create_s.StuSchoolName = t.Rows[i][3].ToString();//学校
-                    create_s.StuAddress = t.Rows[i][4].ToString();//家庭住址
-                    create_s.Region_id = t.Rows[i][5].ToString();//区域
-                    create_s.StuInfomationType_Id = t.Rows[i][6].ToString();//信息来源
-                    create_s.StuEducational = t.Rows[i][7].ToString();
-                    create_s.EmployeesInfo_Id = t.Rows[i][8].ToString();//备案人
-                    create_s.Reak = t.Rows[i][9].ToString();//备注
-                    new_listStudent.Add(create_s);
-                }
-                DeleteFile();
-                SessionHelper.Session["ExcelData"] = new_listStudent;
-                return true;
-            }
-            else
-            {
-                DeleteFile();
-                return false;
-            }
-        }
         //文件上传页面
         public ActionResult ExcleIntoView()
         {
             return View();
         }
+
         //处理文件上传的方法
         public ActionResult IntoFunction()
         {
@@ -715,22 +591,128 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             }
 
         }
+
+        //获取已备案中的相似数据
+        public List<MyExcelClass> SercherStudent(List<MyExcelClass> ex)
+        {
+            //List<StudentPutOnRecord> s_list = s_Entity.GetAllStudentKeepData();
+            List<MyExcelClass> list = new List<MyExcelClass>();
+            foreach (MyExcelClass item1 in ex)
+           {
+               ExportStudentBeanData find= s_Entity.StudentOrrideData(item1.StuName, item1.StuPhone);
+                if (find!=null)
+                {
+                    MyExcelClass m = new MyExcelClass();
+                    m.StuSex = find.StuSex;
+                    m.StuName = find.StuName;
+                    m.StuPhone = find.Stuphone;
+                    m.StuSchoolName = find.StuSchoolName;
+                    m.StuInfomationType_Id = find.stuinfomation;
+                    m.Region_id = find.RegionName;
+                    m.StuEducational = find.StuEducational;
+                    m.StuAddress = find.StuAddress;
+                    m.Reak = find.Reak;
+                    m.EmployeesInfo_Id = find.empName;
+                    if (list.Where(s => s.StuName == m.StuName && s.StuPhone == m.StuPhone).FirstOrDefault() == null)
+                    {
+                        list.Add(m);
+                    }
+                }
+            //    foreach (StudentPutOnRecord item2 in s_list)
+            //    {
+            //        if (item2.StuName == item1.StuName && item2.StuPhone == item1.StuPhone)
+            //        {
+            //            MyExcelClass m = new MyExcelClass();
+            //            m.StuSex = item2.StuSex;
+            //            m.StuName = item2.StuName;
+            //            m.StuPhone = item2.StuPhone;
+            //            m.StuSchoolName = item2.StuSchoolName;
+            //            m.StuInfomationType_Id = StuInfomationType_Entity.GetEntity(item2.StuInfomationType_Id) == null ? null : StuInfomationType_Entity.GetEntity(item2.StuInfomationType_Id).Name;
+            //            m.Region_id = region_Entity.SerchRegionName(item2.Region_id.ToString(), true).RegionName;
+            //            m.StuEducational = item2.StuEducational;
+            //            m.StuAddress = item2.StuAddress;
+            //            m.Reak = item2.Reak;
+            //            m.EmployeesInfo_Id = s_Entity.GetEmployeeValue(item2.EmployeesInfo_Id, false);
+            //            if (list.Where(s => s.StuName == m.StuName && s.StuPhone == m.StuPhone).FirstOrDefault() == null)
+            //            {
+            //                list.Add(m);
+            //            }
+
+                //        }
+                //   }
+            }
+
+            return list;
+        }
+        ///一个删除文件的方法
+        public void DeleteFile()
+        {
+            var namef = SessionHelper.Session["filename"];
+            var namef2 = SessionHelper.Session["filename2"];
+            if (namef != null)
+            {
+                FileInfo fi = new FileInfo(namef.ToString());
+                bool ishave = fi.Exists;
+                if (ishave)
+                {
+                    fi.Delete();
+                }
+            }
+
+        }
+ 
+        //获取Excle表要导入的数据(目的:有些是区域外的，会被处理)
+        public bool GetExcel()
+        {
+            string namef = SessionHelper.Session["filename"].ToString();//获取要读取的Excel文件名称
+            System.Data.DataTable t = AsposeOfficeHelper.ReadExcel(namef, false);//从Excel文件拿值
+            List<MyExcelClass> new_listStudent = new List<MyExcelClass>();
+            if (t.Rows[0][0].ToString() == "姓名" && t.Rows[0][1].ToString() == "性别" && t.Rows[0][2].ToString() == "电话" && t.Rows[0][3].ToString() == "学校" && t.Rows[0][4].ToString() == "家庭住址" && t.Rows[0][5].ToString() == "区域" && t.Rows[0][6].ToString() == "信息来源" && t.Rows[0][7].ToString() == "学历" && t.Rows[0][8].ToString() == "备案人" && t.Rows[0][9].ToString() == "备注")
+            {
+                //直接设为Excel实体
+                for (int i = 1; i < (t.Rows.Count); i++)
+                {
+                    MyExcelClass create_s = new MyExcelClass();
+                    create_s.StuName = t.Rows[i][0].ToString();
+                    create_s.StuSex = t.Rows[i][1].ToString();
+                    create_s.StuPhone = t.Rows[i][2].ToString();
+                    create_s.StuSchoolName = t.Rows[i][3].ToString();//学校
+                    create_s.StuAddress = t.Rows[i][4].ToString();//家庭住址
+                    create_s.Region_id = t.Rows[i][5].ToString();//区域
+                    create_s.StuInfomationType_Id = t.Rows[i][6].ToString();//信息来源
+                    create_s.StuEducational = t.Rows[i][7].ToString();
+                    create_s.EmployeesInfo_Id = t.Rows[i][8].ToString();//备案人
+                    create_s.Reak = t.Rows[i][9].ToString();//备注
+                    new_listStudent.Add(create_s);
+                }
+                DeleteFile();
+                SessionHelper.Session["ExcelData"] = new_listStudent;
+                return true;
+            }
+            else
+            {
+                DeleteFile();
+                return false;
+            }
+        }
+                 
         //判断是否有重复的值
         public List<MyExcelClass> Repeatedly(bool IsRepea)
         {
             List<MyExcelClass> ExcelList = SessionHelper.Session["ExcelData"] as List<MyExcelClass>;//获取Excle文件数据     
-            List<StudentPutOnRecord> All_list = s_Entity.GetAllStudentKeepData();//获取备案数据
+            //List<StudentPutOnRecord> All_list = s_Entity.GetAllStudentKeepData();//获取备案数据
             List<MyExcelClass> result = new List<MyExcelClass>();
-            foreach (StudentPutOnRecord a1 in All_list)
-            {
+            //foreach (StudentPutOnRecord a1 in All_list)
+            //{
                 foreach (MyExcelClass a2 in ExcelList)
                 {
-                    if (a1.StuName == a2.StuName && a1.StuPhone == a2.StuPhone)
+                    bool s = s_Entity.StudentOrride(a2.StuName, a2.StuPhone);
+                    if (s)
                     {
                         result.Add(a2);
                     }
                 }
-            }
+            //}
             if (IsRepea)
             {
                 //获取冲突的数据
@@ -741,7 +723,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 //获取没有冲突的数据                
                 for (int i = 0; i < result.Count; i++)
                 {
-                    ExcelList.Remove(result[i]);
+                   // ExcelList.Remove(result[i]);
+                    ExcelList.RemoveAll(e => e.StuName == result[i].StuName);
                 }
                 return ExcelList;
             }
@@ -807,10 +790,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 List<MyExcelClass> equally_list = Repeatedly(true); //两个数据集合之间比较取交集(挑出相同的)
                 if (equally_list.Count > 0)
                 {
-                    //将未重复的数据添加到数据库中
-                    List<MyExcelClass> equally_list2 = Repeatedly(false);
-                    //添加数据
-                    bool mis = AddExcelToServer(equally_list2);
+                    
+                    List<MyExcelClass> equally_list2 = Repeatedly(false);//将未重复的数据添加到数据库中
+                  
+                    bool mis = AddExcelToServer(equally_list2);  //添加数据
                     if (mis)
                     {
                         //有重复的值                                
@@ -838,7 +821,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                         bool s = Excel_Entity.DaoruExcel(equally_list, Server.MapPath(path), Head);//将有重复的数据写入Excel表格中
                         if (s)
                         {
-                            //成功写入,两个数据进行对比
                             //获取已备案的数据集合
                             var datajson = new
                             {
@@ -1012,6 +994,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return Json(list, JsonRequestBehavior.AllowGet);
         }
         #endregion
+
 
         #region Excel数据导出
 
