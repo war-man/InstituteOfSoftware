@@ -452,8 +452,8 @@
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">确认续签时间:</label>
-                        <div class="layui-input-block">
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">确认续签时间:</label>
+                        <div class="layui-input-block" >
                             <input type="text" id="TransactionTime" name="TransactionTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
@@ -462,15 +462,15 @@
 
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">前合同起始时间:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">前合同起始时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="education" name="education" readonly class="layui-input" style="border:0px;" />
+                            <input type="text" id="BeforeContractStartTime" name="BeforeContractStartTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">前合同终止时间:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">前合同终止时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="positiveDate" name="positiveDate" readonly class="layui-input" style="border:0px;" />
+                            <input type="text" id="BeforeContractEndTime" name="BeforeContractEndTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
 
@@ -479,15 +479,15 @@
                 <div class="layui-row layui-form-item">
 
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">续签后起始时间:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">续签后起始时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="PreviousSalary" name="PreviousSalary" readonly class="layui-input" style="border:0px;" />
+                            <input type="text" id="AfterContractStartTime" name="AfterContractStartTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">续签后终止时间:</label>
+                        <label class="layui-form-label" style="width:120px;margin-left:-40px;">续签后终止时间:</label>
                         <div class="layui-input-block">
-                            <input type="text" id="balance" name="balance" readonly class="layui-input" style="border:0px;" />
+                            <input type="text" id="AfterContractEndTime" name="AfterContractEndTime" readonly class="layui-input" style="border:0px;" />
                         </div>
                     </div>
                 </div>
@@ -557,8 +557,11 @@
                         $("#ContractRenewal").show();
                         data.EntryTime = GetYMD(data.EntryTime);
                         data.TransactionTime = GetYMD(data.TransactionTime);
-                       // $("#balance").val(abs(data.PresentSalary - data.PreviousSalary));
-                        console.log(data);
+                        data.BeforeContractStartTime = GetYMD(data.BeforeContractStartTime);
+                        data.BeforeContractEndTime = GetYMD(data.BeforeContractEndTime);
+                        data.AfterContractStartTime = GetYMD(data.AfterContractStartTime);
+                        data.AfterContractEndTime = GetYMD(data.AfterContractEndTime);
+                        console.log(data.BeforeContractStartTime);
                         form.val("ContractRenewal", data);
                     }
                     

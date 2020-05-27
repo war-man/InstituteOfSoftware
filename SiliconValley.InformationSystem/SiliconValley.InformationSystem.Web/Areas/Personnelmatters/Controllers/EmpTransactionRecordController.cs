@@ -121,6 +121,10 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                 e.PreviousSalary,
                 e.PresentSalary,
                 e.Reason,
+                e.BeforeContractStartTime,
+                e.BeforeContractEndTime,
+                e.AfterContractStartTime,
+                e.AfterContractEndTime,
                 e.IsDel
                 #endregion
             };
