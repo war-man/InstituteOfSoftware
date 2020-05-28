@@ -191,6 +191,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     item.Course = int.Parse(course);
                     item.CreateTime = DateTime.Now;
                     item.IsUsing = true;
+                    item.Grand = int.Parse(grand);
                     item.Proposition = teacher.TeacherID;
                 }
 
@@ -216,6 +217,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     item.Course = int.Parse(course);
                     item.PropositionDate = DateTime.Now;
                     item.IsUsing = true;
+                    item.Grand = int.Parse(grand);
                     item.Proposition = teacher.TeacherID;
                     
                 }

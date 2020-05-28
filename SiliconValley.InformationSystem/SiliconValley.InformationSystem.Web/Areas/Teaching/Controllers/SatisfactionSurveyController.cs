@@ -459,20 +459,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             var skiplist = configList.OrderByDescending(d=>d.CreateTime).Skip((page - 1) * limit).Take(limit).ToList();
 
-            List<SatisfactionSurveyDetailView> detaillist = new List<SatisfactionSurveyDetailView>();
+            List<SatisficingConfigDataView> detaillist = new List<SatisficingConfigDataView>();
 
-            foreach (var item in skiplist)
+
+            skiplist.ForEach(d=>
             {
-              var tempObj =  db_survey.AllsatisficingResults().Where(d => d.SatisficingConfig == item.ID).FirstOrDefault();
+               var temobj = db_survey.ConvertToSatisficingConfigDataView(d);
+                if (temobj != null) detaillist.Add(temobj);
+            });
 
-                if (tempObj != null)
-                {
-                  var detail =  db_survey.ConvertToViewModel(tempObj);
-
-                    if (detail != null)
-                        detaillist.Add(detail);
-                }
-            }
             var obj = new {
                 code=0,
                 msg="",
@@ -965,11 +960,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
            var bbb = db_survey.SatisficingResults().Where(d => d.SatisficingConfig == sss.FirstOrDefault().ID).ToList();
 
             var ccc = db_survey.ConvertToViewModel(bbb.FirstOrDefault());
-
-            
-
-
-
 
             var dep = empmanage.GetDept(emp.PositionId);
 
@@ -1773,20 +1763,20 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="surveyResultID">ConfigiD</param>
+        /// <returns></returns>
 
         public ActionResult checkSurveyView(int surveyResultID)
         {
 
             //提供 JoinSurveyStudents
 
-           var surveyResult = db_survey.AllsatisficingResults().Where(d => d.ID == surveyResultID).FirstOrDefault();
+           var studentlist = db_survey.JoinSurveyStudents(surveyResultID);
 
-
-
-           var studentlist = db_survey.JoinSurveyStudents((int)surveyResult.SatisficingConfig);
-
-            ViewBag.SurveyConfigId = surveyResult.SatisficingConfig;
+            ViewBag.SurveyConfigId = surveyResultID;
 
             ViewBag.studentlist = studentlist;
 

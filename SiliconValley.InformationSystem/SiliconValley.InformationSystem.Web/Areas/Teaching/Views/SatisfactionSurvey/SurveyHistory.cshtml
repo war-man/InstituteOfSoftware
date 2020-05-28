@@ -134,7 +134,7 @@
                 , url: '/Teaching/SatisfactionSurvey/SurveyHistoryData'
                 , cols: [[
                     { type: 'checkbox' }
-                    , { field: 'SurveyResultID', width: 80, title: 'ID', sort: true }
+                    , { field: 'SatisficingConfigId', width: 80, title: 'ID', sort: true }
                     , {
                         field: 'EmpName', width: 150, title: '被调查对象', templet: '<div>{{d.Emp.EmpName}}</div>' }
                     , {
@@ -150,7 +150,24 @@
                     }
                     , { field: 'TotalScore', width: 150, title: '总分' }
                     , { field: 'ClassNumber', width:100 ,title: '班级',  templet: '<div>{{d.investigationClass.ClassNumber}}</div>' }
-                    , { field: 'CourseName', width: 150, title: '课程', templet: '<div>{{d.Curriculum.CourseName}}</div>'  }
+                    , {
+                        field: 'CourseName', width: 150, title: '课程', templet: function (cel) {
+
+
+                            '<div>{{d.Curriculum.CourseName}}</div>' 
+
+                            if (cel.Curriculum == null) {
+
+                                return "无"
+                            }
+                            else {
+                                return cel.Curriculum.CourseName
+                            }
+
+
+                        }
+                    }
+                    , , { field: 'Average', width: 80, title: '平均分', sort: true }
                    
                 ]]
                 , page: true
@@ -190,6 +207,7 @@
                 }
 
 
+
                 table.reload('dataTable', {
                     url: '/Teaching/SatisfactionSurvey/SurveyData_filter'
                     , where: {
@@ -215,7 +233,7 @@
                     type: 2,
                     title: "详细",
                     area: [window.innerWidth / 2 + 'px', window.innerHeight / 2 + 'px'],
-                    content: "/Teaching/SatisfactionSurvey/checkSurveyView?surveyResultID=" + obj.data.SurveyResultID
+                    content: "/Teaching/SatisfactionSurvey/checkSurveyView?surveyResultID=" + obj.data.SatisficingConfigId
                 });
             });
 

@@ -436,12 +436,12 @@ layui.use(["table", "layer", "element"], function () {
     });
 
     $(document).off("click", "#StuCommentList").on('click', '#StuCommentList', function () {
-
+        var studentnumber = $(this).attr("studentnumber");
         layer.open({
             type: 2,
             area: ["1000px", "900px;"],
             title: "大家对他（她）的评价",
-            content: '/Teaching/Class/StuCommentList'
+            content: '/Teaching/Class/StuCommentList?studentNumber=' + studentnumber
 
         });
 

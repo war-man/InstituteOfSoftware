@@ -631,25 +631,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
             var currentUser = Base_UserBusiness.GetCurrentUser();
 
-            EmployeesInfoManage dbemp = new EmployeesInfoManage();
             //获取学生信息
             BaseBusiness<StudentInformation> dbstu = new BaseBusiness<StudentInformation>();
 
             StudentInformation student = dbstu.GetEntity(studentNumber);
 
-            //获取对他的评价
-            BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
-
-            var stuCommentObj =  dbstucomment.GetList().Where(d => d.CommnetEr == currentUser.EmpNumber && d.CommnetObj == studentNumber).FirstOrDefault();
-
-            if (stuCommentObj == null)
-            {
-                stuCommentObj = new ThearToStuComment();
-                stuCommentObj.Commnet = string.Empty;
-            }
-
             ViewBag.student = student;
-            ViewBag.CommentObj = stuCommentObj;
 
             return View();
         }
@@ -663,11 +650,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
                 BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
                 var currentUser = Base_UserBusiness.GetCurrentUser();
 
-                var stuComment = dbstucomment.GetList().Where(d => d.CommnetEr == currentUser.EmpNumber && d.CommnetObj == studentNumber).FirstOrDefault();
+                ThearToStuComment stuComment = new ThearToStuComment();
 
-                if (stuComment == null)
-                {
-                    stuComment = new ThearToStuComment();
                     stuComment.Commnet = Comment;
                     stuComment.CommnetDate = DateTime.Now;
                     stuComment.CommnetEr = currentUser.EmpNumber;
@@ -675,13 +659,8 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
                     dbstucomment.Insert(stuComment);
 
-                }
-                else
-                {
-                    stuComment.Commnet = Comment;
-
-                    dbstucomment.Update(stuComment);
-                }
+            
+               
 
                 result.ErrorCode = 200;
                 result.Data = stuComment;
@@ -701,14 +680,38 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
-        public ActionResult StuCommentList()
+        public ActionResult StuCommentList(string studentNumber)
         {
+            //所有评价
+            //获取学生信息
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+            BaseBusiness<StudentInformation> dbstu = new BaseBusiness<StudentInformation>();
+            //获取对他的评价
+            BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
 
+            var list = dbstucomment.GetList().Where(d => d.CommnetObj == studentNumber).ToList();
+
+            if (list == null) list = new List<ThearToStuComment>();
+
+            List<ThearStuCommentView> resultlist = new List<ThearStuCommentView>();
+
+            list.ForEach(d=>
+            {
+                ThearStuCommentView  view = new ThearStuCommentView();
+
+                view.Commnet = d.Commnet;
+                view.CommnetDate = d.CommnetDate;
+                view.CommnetEr = dbemp.GetInfoByEmpID(d.CommnetEr);
+                view.CommnetObj = dbstu.GetEntity(d.CommnetObj);
+
+                resultlist.Add(view);
+            });
+
+
+            ViewBag.Commentlist = resultlist;
 
             return View();
 
         }
-
-
     }
 }

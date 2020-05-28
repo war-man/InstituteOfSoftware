@@ -449,7 +449,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 list.Add(obj);
             }
 
-            //阶段数据
+            //阶段数据、
             var grands = db_grand.GetList().Where(d => d.IsDelete == false).ToList();
 
 
@@ -787,7 +787,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
 
 
         }
-
+                            
 
         /// <summary>
         /// 报名考试

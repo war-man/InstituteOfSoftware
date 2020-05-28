@@ -389,6 +389,7 @@
     <Compile Include="ViewEntity\layuitableview.cs" />
     <Compile Include="ViewEntity\ListStockGoods.cs" />
     <Compile Include="ViewEntity\LoadTree_ZhurenView.cs" />
+    <Compile Include="ViewEntity\SatisficingConfigDataView.cs" />
     <Compile Include="ViewEntity\Sch_Market.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionAreaView.cs" />
     <Compile Include="ViewEntity\MarketView\DistributionView.cs" />
@@ -466,6 +467,7 @@
     <Compile Include="ViewEntity\TeacherDetailView.cs" />
     <Compile Include="ViewEntity\TeachingItem.cs" />
     <Compile Include="ViewEntity\TeamleaderdistributionView.cs" />
+    <Compile Include="ViewEntity\ThearStuCommentView.cs" />
     <Compile Include="ViewEntity\TotalcostView.cs" />
     <Compile Include="ViewEntity\TraineeDateVIew.cs" />
     <Compile Include="ViewEntity\TransactionView.cs" />
