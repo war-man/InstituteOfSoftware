@@ -383,72 +383,64 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                     }
                     #region 获取excel中的每一列数据
                     //获取第num行"姓名"列的数据
-                    string name = getrow.GetCell(1).StringCellValue;
+                    string name = getrow.GetCell(1).ToString();
                     //获取第num行"部门"列的数据
-                    string dept = getrow.GetCell(2).StringCellValue;
+                    string dept = getrow.GetCell(2).ToString();
                     //获取第num行"岗位"列的数据
-                    string position = getrow.GetCell(3).StringCellValue;
+                    string position = getrow.GetCell(3).ToString();
                     //获取第num行"工号"列的数据
-                    string ddid = getrow.GetCell(4) == null ? null : getrow.GetCell(4).NumericCellValue.ToString();
+                    string ddid = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(4))) ? null : getrow.GetCell(4).ToString();
                     //获取第num行"招聘来源"列的数据
-                    string original = getrow.GetCell(5) == null ? null : getrow.GetCell(5).StringCellValue;
+                    string original = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(5))) ? null : getrow.GetCell(5).ToString();
                     //获取第num行"身份证号码"列的数据
                     // var idnum = System.Text.RegularExpressions.Regex.Replace(getrow.GetCell(6).StringCellValue, @"[^0-9]+", "");
-                    string idcardnum = getrow.GetCell(6).StringCellValue;
+                    string idcardnum = getrow.GetCell(6).ToString();
                     //获取第num行"电话号码"列的数据
-                    string phonenum = getrow.GetCell(7).NumericCellValue.ToString();
+                    string phonenum = getrow.GetCell(7).ToString();
                     //获取第num行"性别"列的数据
-                    string empsex = getrow.GetCell(8).StringCellValue;
+                    string empsex = getrow.GetCell(8).ToString();
                     //获取第num行"年龄"列的数据
-                    string empage = getrow.GetCell(9).NumericCellValue.ToString();
+                    string empage = getrow.GetCell(9).ToString();
                     //获取第num行"民族"列的数据
-                    string nation = getrow.GetCell(10).StringCellValue;
+                    string nation = getrow.GetCell(10).ToString();
                     //获取第num行"入职时间"列的数据
-                    string entertime = getrow.GetCell(11).StringCellValue;
+                    string entertime = getrow.GetCell(11).ToString();
                     //获取第num行"转正时间"列的数据
-                    string positivetime = getrow.GetCell(12)?.StringCellValue ?? null;
+                    string positivetime = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(12))) ? null : getrow.GetCell(12).ToString();
+                  //  string positivetime = getrow.GetCell(12)?.StringCellValue ?? null;
                     //获取第num行"试用期工资"列的数据
-                    var sal = getrow.GetCell(13);
-                    string probationsalary = getrow.GetCell(13) == null ? null : getrow.GetCell(13).NumericCellValue.ToString();
+                    string probationsalary = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(13))) ? null : getrow.GetCell(13).ToString();
                     //获取第num行"转正后工资"列的数据
-                    string salary = getrow.GetCell(14).NumericCellValue.ToString();
+                    string salary = getrow.GetCell(14).ToString();
                     //获取第num行"学历"列的数据
-                    string education = getrow.GetCell(15) == null ? "大专" : getrow.GetCell(15).StringCellValue;
+                    string education = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(15))) ? "大专" : getrow.GetCell(15).ToString();
                     //获取第num行"合同起始日期"列的数据
-                    string contractStartTime = getrow.GetCell(17) == null ? null : getrow.GetCell(17).StringCellValue;
+                    string contractStartTime = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(17))) ? null : getrow.GetCell(17).ToString();
                     //获取第num行"合同终止日期"列的数据
-                    string contractEndTime = getrow.GetCell(18) == null ? null : getrow.GetCell(18).StringCellValue;
+                    string contractEndTime = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(18))) ? null : getrow.GetCell(18).ToString();
                     //获取第num行"生日"列的数据
-                    string birthday = getrow.GetCell(19) == null ? null : getrow.GetCell(19).StringCellValue;
+                    string birthday = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(19))) ? null : getrow.GetCell(19).ToString();
                     //获取第num行"紧急联系电话"列的数据
-                    string urgentphone = getrow.GetCell(20) == null ? null : getrow.GetCell(20).NumericCellValue.ToString();
+                    string urgentphone = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(20))) ? null : getrow.GetCell(20).ToString();
                     //获取第num行"户籍地址"列的数据
-                    string domicileAddress = getrow.GetCell(21) == null ? null : getrow.GetCell(21).StringCellValue;
+                    string domicileAddress = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(21))) ? null : getrow.GetCell(21).ToString();
                     //获取第num行"现地址"列的数据
-                    string address = getrow.GetCell(22) == null ? null : getrow.GetCell(22).StringCellValue;
+                    string address = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(22))) ? null : getrow.GetCell(22).ToString();
                     //获取第num行"婚姻状况"列的数据
-                    string maritalStatus = getrow.GetCell(23) == null ? "未婚" : getrow.GetCell(23).StringCellValue;
+                    string maritalStatus = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(23))) ? "未婚" : getrow.GetCell(23).ToString();
                     //获取第num行"身份证有效期"列的数据
-                    string idcardIndate = getrow.GetCell(24) == null ? null : getrow.GetCell(24).StringCellValue;
+                    string idcardIndate = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(24))) ? null : getrow.GetCell(24).ToString();
                     //获取第num行"政治面貌"列的数据
-                    string politicsStatus = getrow.GetCell(25) == null ? "党员" : getrow.GetCell(25).StringCellValue;
+                    string politicsStatus = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(25))) ? "党员" : getrow.GetCell(25).ToString();
                     //获取第num行"社保起始月份"列的数据
-                    string SSstartTime;
-                    if (getrow.GetCell(26) == null)
-                    {
-                         SSstartTime = null;
-                    }
-                    else {
-                         SSstartTime = string.IsNullOrEmpty(getrow.GetCell(26).ToString()) ? null : getrow.GetCell(26).NumericCellValue.ToString();
-                    }
-                  
+                    string SSstartTime= string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(26))) ?null:getrow.GetCell(26).ToString(); 
                     //获取第num行"银行卡号"列的数据
-                    string bankCardnum = getrow.GetCell(27) == null  ? null : getrow.GetCell(27).StringCellValue;
+                    string bankCardnum = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(27))) ? null : getrow.GetCell(27).ToString();
                     //获取第num行"纸质材料"列的数据
-                    string paperyMaterial = getrow.GetCell(28) == null ? null : getrow.GetCell(28).StringCellValue;
+                    string paperyMaterial = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(28))) ? null : getrow.GetCell(28).ToString();
                     // ICell leaveddays_cell = sheet.GetRow(num).GetCell(3);
                     //获取第num行"备注"列的数据
-                    string remark = getrow.GetCell(29) == null ? null : getrow.GetCell(14).StringCellValue;
+                    string remark = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(29))) ? null : getrow.GetCell(29).ToString();
                     #endregion
                     #region 将excel中拿过来的数据赋给员工视图对象
                     empview.name = name;
