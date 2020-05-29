@@ -34,6 +34,7 @@
         </button>
         <button class="layui-btn layui-btn-sm" onclick="ExcelExport()"> <i class="layui-icon">&#xe681;</i> Excel文件导出</button>
         <button class="layui-btn layui-btn-sm" onclick="ChangeGotoSchoolstate()"> <i class="layui-icon">&#xe714;</i> 转上门</button>
+        <button class="layui-btn layui-btn-sm" onclick="ZhuceClass()"> <i class="layui-icon">&#xe714;</i> 注册学号</button>
     </div>
 </script>
 <script type="text/html" id="barDemo1">
@@ -146,7 +147,7 @@
     function LoadTable() {
         layui.use('table', function () {
             var table = layui.table;
-            table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+            table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetTableData', where: { 'findNamevalue': null } });
         });
 
     }
@@ -197,14 +198,19 @@
             var findEndvalue = $("#findEndvalue").val();//获取结束时间
             var findAreavalue = $("#findAreavalue").val();//获取区域
             var findBeanManvalue = $("#findBeanManvalue").val();//获取备案人
+            var S_consultTeacher = $("#S_consultTeacher").val();
+            var S_status = $("#S_status").val();
+            var S_party = $("#S_party").val();
+            var S_intosysMan = $("#S_intosysMan").val();
+
             layui.use('table', function () {
                 var table = layui.table;
                 table.reload('tabletest1', {
-                    url: '/Market/StudentDataKeep/GetStudentPutOnRecordData'
-                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue } //设定异步数据接口的额外参数
+                    url: '/Market/StudentDataKeep/GetTableData'
+                    , where: { 'findNamevalue': findNamevalue, 'findPhonevalue': findPhonevalue, 'findInformationvalue': findInformationvalue, 'findStartvalue': findStartvalue, 'findEndvalue': findEndvalue, 'findAreavalue': findAreavalue, 'findBeanManvalue': findBeanManvalue, "S_consultTeacher": S_consultTeacher, "S_status": S_status, "S_party": S_party, "S_intosysMan": S_intosysMan} //设定异步数据接口的额外参数
                 });
             });
-        });
+        });        
     });
 
     //数据导出页面
@@ -407,7 +413,7 @@
                 layer.open({
                     type: 2,
                     content: '/Market/StudentDataKeep/LookDetailsView/' + data.Id
-                    , area: ['800px', '690px'],
+                    , area: ['800px', '740px'],
                     title: '备案数据详情'
                     , shade: 0.8
                     , anim: 4
@@ -430,11 +436,11 @@
 
         //双击获取跟踪详情
         //监听行双击事件
-        table.on('rowDouble(tabletest1)', function (obj) {
+        table.on('rowDouble(tabletest1)', function (obj) {            
             var id = obj.data.Id;
             layer.confirm("亲！是要查看跟踪信息吗?", { icon: 3, shade: 0.8, title: '温馨提示' }, function (index) {
                 layer.close(index);
-                if (obj.data.consultName == null) {
+                if (obj.data.ConsultTeacher == null) {
                     layer.msg("请先指派咨询师!!!", { icon: 6, shade:0.8 });
                 } else {
                     layer.open({
@@ -500,6 +506,35 @@
             }
             });
         }
+
+    //注册学生学号
+    function ZhuceClass() {
+        layui.use(['table', 'layer'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var checkStatus = table.checkStatus('tabletest1');
+            if (checkStatus.data.length <= 0) {
+                layer.msg('请选择备案数据', { icon: 2, shade: 0.8 });
+            } else {
+                var ids = "";
+                for (var i = 0; i < checkStatus.data.length; i++) {
+                    ids = ids + checkStatus.data[i].Id + ",";
+                }
+                //console.log(checkStatus.data);
+                //console.log(ids);
+                //alert(1);
+                layer.open({
+                    type: 2
+                    , content: '/Market/StudentDataKeep/Registeredstudentnumber/' + ids
+                    , area: ['800px', '420px']
+                    , title: '注册学号页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            }
+        });
+    }
 </script>
 
 

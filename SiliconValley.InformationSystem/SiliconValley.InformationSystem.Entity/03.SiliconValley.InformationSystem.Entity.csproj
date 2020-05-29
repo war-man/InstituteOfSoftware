@@ -325,6 +325,7 @@
     <Compile Include="SqlDate.cs" />
     <Compile Include="ViewEntity\AccdationView.cs" />
     <Compile Include="ViewEntity\AchievementView.cs" />
+    <Compile Include="ViewEntity\ADDdataview.cs" />
     <Compile Include="ViewEntity\AddEnterpriseView.cs" />
     <Compile Include="ViewEntity\AmountTopView.cs" />
     <Compile Include="ViewEntity\AnPaiData.cs" />
@@ -482,6 +483,7 @@
     <Compile Include="ViewEntity\UninhabitedList.cs" />
     <Compile Include="ViewEntity\vierprice.cs" />
     <Compile Include="ViewEntity\ZhuanghuanluData.cs" />
+    <Compile Include="ZhuceShowData.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

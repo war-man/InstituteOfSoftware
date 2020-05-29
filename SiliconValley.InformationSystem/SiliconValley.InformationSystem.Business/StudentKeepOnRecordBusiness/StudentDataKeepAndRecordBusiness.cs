@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using System.Data;
 using SiliconValley.InformationSystem.Business.StuInfomationType_Maneger;
 using SiliconValley.InformationSystem.Business.DepartmentBusiness;
+using SiliconValley.InformationSystem.Business.PositionBusiness;
 
 namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 {
@@ -25,7 +26,15 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         //创建一个用于查询数据的员工信息实体
         public EmployeesInfoManage Enplo_Entity = new EmployeesInfoManage();
         //创建一个用于查询区域的实体
-        RegionManeges region_Entity;
+        public RegionManeges region_Entity =new RegionManeges();
+        //创建一个用于查询数据的上门学生状态实体
+        public StuStateManeger Stustate_Entity =new StuStateManeger();
+        //创建一个用于查询数据的上门学生信息来源实体
+       public StuInfomationTypeManeger StuInfomationType_Entity = new StuInfomationTypeManeger();
+        //创建一个用于查询数据的部门信息实体
+       public DepartmentManage Department_Entity = new DepartmentManage();
+        //创建一个用于查询岗位信息实体
+       public PositionManage Position_Entity = new PositionManage();
 
         /// <summary>
         /// 获取所有备案数据
@@ -151,21 +160,11 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             AjaxResult a = new AjaxResult();
             try
-            {
-                //判断是否已备案
-                int count = GetAllStudentKeepData().Where(s => s.StuName == new_s.StuName && s.StuPhone == new_s.StuPhone).ToList().Count;
-                if (count <= 0)
-                {
+            {                 
                     this.Insert(new_s);
-                    redisCache.RemoveCache("StudentKeepList");
+                    //redisCache.RemoveCache("StudentKeepList");
                     a.Success = true;
-                    a.Msg = "备案成功";                  
-                }
-                else
-                {
-                    a.Success = false;
-                }
-
+                    a.Msg = "备案成功";                                  
             }
             catch (Exception ex)
             {
@@ -175,6 +174,26 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
             return a;
         }
+       
+        public AjaxResult Add_data(List<StudentPutOnRecord> new_s)
+        {
+            AjaxResult a = new AjaxResult();
+            try
+            {
+                this.Insert(new_s);
+                //redisCache.RemoveCache("StudentKeepList");
+                a.Success = true;
+                a.Msg = "备案成功";
+            }
+            catch (Exception ex)
+            {
+                a.Success = false;
+                a.Msg = ex.Message;
+            }
+
+            return a;
+        }
+        
         /// <summary>
         /// 编辑数据
         /// </summary>
@@ -186,36 +205,42 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
             AjaxResult a = new AjaxResult();
             try
             {
-                StudentPutOnRecord fins = this.GetAllStudentKeepData().Where(s => s.Id == olds.Id).FirstOrDefault();//找到要修改的实体
-                fins.StuSex = olds.StuSex;
-                fins.StuBirthy = olds.StuBirthy;
-                fins.StuSchoolName = olds.StuSchoolName;
-                fins.StuEducational = olds.StuEducational;
-                fins.StuAddress = olds.StuAddress;
-                fins.StuWeiXin = olds.StuWeiXin;
-                fins.StuQQ = olds.StuQQ;
-                fins.StuIsGoto = olds.StuIsGoto;
-                fins.StuVisit = olds.StuVisit;
-                fins.StuInfomationType_Id = olds.StuInfomationType_Id;
-                fins.Party = olds.Party;
-                if (olds.StuStatus_Id == -1 || olds.StuStatus_Id == null)
+                if (olds.Id>=54118)
                 {
-                    AjaxResult a1 = Stustate_Entity.GetIdGiveName("未报名", false);
-                    if (a1.Success == true)
-                    {
-                        StuStatus find_status = a1.Data as StuStatus;
-                        fins.StuStatus_Id = find_status.Id;
-                    }
+                    StudentPutOnRecord fins = this.whereStudentId(olds.Id);//找到要修改的实体
+                    fins.StuSex = olds.StuSex;
+                    fins.StuBirthy = olds.StuBirthy;
+                    fins.StuSchoolName = olds.StuSchoolName;
+                    fins.StuEducational = olds.StuEducational;
+                    fins.StuAddress = olds.StuAddress;
+                    fins.StuWeiXin = olds.StuWeiXin;
+                    fins.StuQQ = olds.StuQQ;
+                    fins.StuIsGoto = olds.StuIsGoto;
+                    fins.StuVisit = olds.StuVisit;
+                    fins.StuInfomationType_Id = olds.StuInfomationType_Id;
+                    fins.Party = olds.Party;
+                    fins.Region_id = olds.Region_id;
+                    fins.Reak = olds.Reak;
+                    this.Update(fins);
+                    //redisCache.RemoveCache("StudentKeepList");
+                    a.Success = true;
+                    a.Msg = "修改成功！";
                 }
                 else
                 {
-                    fins.StuStatus_Id = olds.StuStatus_Id;
+                    region_Entity = new RegionManeges();
+                    Sch_MarketManeger s_entity = new Sch_MarketManeger();
+                    Sch_Market finds = this.whereMarketId(olds.Id);
+                    finds.Area = olds.Region_id==null?finds.Area:region_Entity.GetEntity(olds.Region_id).RegionName;
+                    finds.Education = olds.StuEducational;
+                    finds.Remark = olds.Reak;
+                    finds.RelatedPerson = olds.Party;
+                    finds.School = olds.StuSchoolName;
+                    finds.Sex = olds.StuSex;
+                    finds.Source = olds.StuInfomationType_Id == null ? finds.Source : StuInfomationType_Entity.GetEntity(olds.StuInfomationType_Id).Name;
+                    a = s_entity.MyUpdate(finds);
                 }
-                fins.Region_id = olds.Region_id;
-                this.Update(fins);
-                redisCache.RemoveCache("StudentKeepList");
-                a.Success = true;
-                a.Msg = "修改成功！";
+               
             }
             catch (Exception ex)
             {
@@ -462,19 +487,18 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// 获取远程备案数据
         /// </summary>
         /// <returns></returns>
-        public List<Sch_Market> GetLongrageData()
+        public List<ADDdataview> GetLongrageData(string str)
         {
-            List<Sch_Market> list = new List<Sch_Market>();
+            List<ADDdataview> list = new List<ADDdataview>();
             string sql = "server=121.43.166.117;database=GUIGU;uid=sa;pwd=Guigu20202020;Max Pool Size = 512";
             SqlConnection con = new SqlConnection(sql);
             con.Open();
-            SqlCommand comm = new SqlCommand("select * from Sch_Market where CreateDate>='2017-01-01' and CreateDate<='2019-12-30'", con);
+            SqlCommand comm = new SqlCommand(str, con);
             DataSet ds = new DataSet();
             SqlDataAdapter da = new SqlDataAdapter(comm);
             da.Fill(ds);
             DataTable mm = ds.Tables[0];
-
-            list = mm.ToList<Sch_Market>();
+            list = mm.ToList<ADDdataview>();
             con.Close();
             return list;
         }
@@ -482,20 +506,30 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public void InServer()
         {
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            List<Sch_Market> all = GetLongrageData();
-            //List<Sch_Market> Onelist =all.Where(s => s.CreateDate >= Convert.ToDateTime("2017-01-01") && s.CreateDate <= Convert.ToDateTime("2017-12-31")).ToList();
-            //bool result1=  marketEntity.AddData(Onelist);
-            //if (result1)
-            //{
-                List<Sch_Market> Twolist= all.Where(s => s.CreateDate >= Convert.ToDateTime("2018-01-01") && s.CreateDate <= Convert.ToDateTime("2018-12-31")).ToList();
-                bool result2 = marketEntity.AddData(Twolist);
-                if (result2)
-                {
-                    List<Sch_Market> Threelist = all.Where(s => s.CreateDate >= Convert.ToDateTime("2019-01-01") && s.CreateDate <= Convert.ToDateTime("2019-12-31")).ToList();
-                    bool result3 = marketEntity.AddData(Threelist);
-                    
-                }
-            //}
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark from Sch_Market  where CreateDate >= '2020-01-01' and CreateDate<= '2020-01-30'";
+            List<ADDdataview> all = GetLongrageData(str);
+            List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
+            foreach (ADDdataview item in all)
+            {
+                StudentPutOnRecord one = new StudentPutOnRecord();
+                one.StuName = item.StudentName;
+                one.StuSex = item.Sex;
+                one.EmployeesInfo_Id = Enplo_Entity.FindEmpData(item.SalePerson, false)==null? Enplo_Entity.FindEmpData("何娉", false).EmployeeId : Enplo_Entity.FindEmpData(item.SalePerson, false).EmployeeId;
+                one.StuDateTime = item.CreateDate;
+                string date = item.CreateDate.Year + "-" + item.CreateDate.Month + "-" + item.CreateDate.Day;
+                one.BeanDate = Convert.ToDateTime(date);
+                one.Reak = item.Remark;
+                one.StuPhone = item.Phone;
+                one.StuQQ = item.QQ;
+                one.StuSchoolName = item.School;
+                one.StuEducational = item.Inquiry;
+                one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
+                one.Region_id = region_Entity.SerchRegionName(item.Area, false) == null ?Convert.ToInt32(null) : region_Entity.SerchRegionName(item.Area, false).ID;
+                one.Party = item.RelatedPerson;
+                studentlist.Add(one);
+            }
+
+            this.Add_data(studentlist);
         }
 
         /// <summary>
@@ -507,10 +541,10 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         {
             List<ExportStudentBeanData> newlist = list.Select(s2 => new ExportStudentBeanData
             {
+                Id=s2.Id,
                 StuName = s2.StudentName,
                 StuSex = s2.Sex,
                 StuBirthy = null,
-                IdCade = null,
                 Stuphone = s2.Phone,
                 StuSchoolName = s2.School,
                 StuEducational = s2.Education,
@@ -527,7 +561,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 StuEntering = s2.CreateUserName,
                 StatusTime = null,
                 RegionName = s2.Area,
-                Reak = null,
+                Reak = s2.Info+","+s2.Remark,
                 ConsultTeacher = s2.Inquiry
             }).ToList();
 
@@ -541,7 +575,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         /// <returns></returns>
         public List<ExportStudentBeanData> GETView()
         {
-             List<ExportStudentBeanData> listall= this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
+            List<ExportStudentBeanData> listall= this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView");
 
             List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView");
 
@@ -625,5 +659,65 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
 
             return listall.Count > 0 ? listall[0] : null;
         }
+
+        /// <summary>
+        /// 模糊查询
+        /// </summary>
+        /// <param name="str1"></param>
+        /// <param name="str2"></param>
+        /// <returns></returns>
+        public List<ExportStudentBeanData> Serch(string  str1,string str2)
+        {
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>(str1);
+
+            List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>(str2);
+
+            listall.AddRange(this.LongrageDataToViewmodel(old));
+            return listall;
+        }
+
+        /// <summary>
+        /// 根据Id获取备案视图数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ExportStudentBeanData findId(string id)
+        {
+            List<ExportStudentBeanData> listall = this.GetListBySql<ExportStudentBeanData>("select * from StudentBeanView where Id='"+id+"'");
+
+            if (listall.Count<=0)
+            {
+                List<Sch_MarketView> old = this.GetListBySql<Sch_MarketView>("select * from Sch_MarketView where Id='"+id+"'");
+                listall= LongrageDataToViewmodel(old);
+                return listall.Count <= 0 ? null : listall[0];
+            }
+            else
+            {
+                return listall[0];
+            }
+        }
+
+        /// <summary>
+        /// 根据Id获取StudentPutOnRecord表的备案数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public StudentPutOnRecord whereStudentId(int id)
+        {
+           return this.GetEntity(id);
+        }
+
+        /// <summary>
+        /// 根据Id获取Sch_Market表中的备案数据
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public Sch_Market whereMarketId(int id)
+        {
+            Sch_MarketManeger s_entity = new Sch_MarketManeger();
+            return s_entity.GetEntity(id);
+        }
+
+
     }
 }

@@ -42,8 +42,8 @@
     }
 
     .TextAreCss1 {
-        height: 38px;
-        width:200px;
+        height: 48px;
+        width:91%;
     }
 
     .butCss2{
@@ -187,10 +187,16 @@
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
+                    @*<div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+            <label class="LableCss1">学生状态:</label>
+            <div class="layui-input-block">
+                @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
+            </div>
+        </div>*@
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="LableCss1">学生状态:</label>
+                        <label class="layui-form-label">咨&nbsp;询 &nbsp; 师:</label>
                         <div class="layui-input-block">
-                            @Html.DropDownListFor(s => s.StuStatus_Id, ViewBag.state as IEnumerable<SelectListItem>)
+                            @Html.DropDownList("ConsultId", ViewBag.ConsultTeacher as List<SelectListItem>)
                         </div>
                     </div>
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -198,7 +204,7 @@
                         <div class="layui-input-block">
                             @Html.TextBoxFor(s => s.StuWeiXin, new Dictionary<string, object>() { { "placeholder", "微信" }, { "class", "layui-input linu" } })
                         </div>
-                    </div>                                        
+                    </div>
                 </div>
                 <div class="layui-row layui-form-item">
                     <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
@@ -215,13 +221,8 @@
                     </div>
                 </div>
                 <div class="layui-row layui-form-item">
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
-                        <label class="layui-form-label">咨&nbsp;询 &nbsp; 师:</label>
-                        <div class="layui-input-block">
-                           @Html.DropDownList("ConsultId", ViewBag.ConsultTeacher as List<SelectListItem>)
-                        </div>
-                    </div>
-                    <div class="layui-col-xs6 layui-col-sm6 layui-col-md6">
+                    
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
                         <label class="layui-form-label">其他说明:</label>
                         <div class="layui-input-block">
                             @Html.TextAreaFor(s => s.Reak, new Dictionary<string, object>() { { "placeholder", "备注" }, { "class", "layui-input TextAreCss1" } })
