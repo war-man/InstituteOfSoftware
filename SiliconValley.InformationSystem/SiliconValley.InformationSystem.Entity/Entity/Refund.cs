@@ -25,6 +25,10 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public string Reason { get; set; } 
         /// <summary>
+        /// 退款金额
+        /// </summary>
+        public decimal Amountofmoney { get; set; }
+        /// <summary>
         /// 操作时间
         /// </summary>
         public DateTime AddDate { get; set; }

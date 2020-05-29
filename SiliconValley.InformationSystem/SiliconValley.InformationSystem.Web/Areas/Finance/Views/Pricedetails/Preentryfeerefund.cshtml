@@ -1,0 +1,89 @@
+﻿
+@{
+    Layout = null;
+}
+@model SiliconValley.InformationSystem.Entity.Entity.Refund
+@using SiliconValley.InformationSystem.Entity.ViewEntity
+@using SiliconValley.InformationSystem.Entity.Entity
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Preentryfeerefund</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</head>
+<body>
+    <div>
+        <form class="layui-form" action="" lay-filter="example">
+            <div class="layui-container">
+
+
+
+                <div class="layui-row layui-form-item" style="margin-left:116px;">
+
+                    @{
+                        ExportStudentBeanData exportStudentBeanData = ViewBag.ExportStudentBeanData as ExportStudentBeanData;
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
+                            <label class="layui-form-label">姓名</label>
+                            <div class="layui-input-inline">
+
+                                <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.StuName" class="layui-input" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-inline">
+
+                                <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.StuSex" class="layui-input" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+
+                                <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.Stuphone" class="layui-input" />
+                            </div>
+                        </div>
+                    }
+                    @{
+                       
+                        var obj = ViewBag.obj as Preentryfee;
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                            <label class="layui-form-label">身份证号码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" style="border:0px;" readonly="readonly" value="@obj.identitydocument" class="layui-input" />*
+                            </div>
+                        </div>
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                            <label class="layui-form-label">班级</label>
+                            <div class="layui-input-inline">
+                                <input type="text" style="border:0px;" readonly="readonly" value="@ViewBag.ClassNumber" class="layui-input" />
+                            </div>
+                        </div>
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                            <label class="layui-form-label">退款金额</label>
+                            <div class="layui-input-inline">
+                                <input type="text" lay-verify="required|number" value="@obj.Amountofmoney" class="layui-input" />
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+
+                <div class="layui-row layui-form-item" style="margin-top:40px;">
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10" style="text-align:center;">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit="" type="button" lay-filter="demo1">立即提交</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

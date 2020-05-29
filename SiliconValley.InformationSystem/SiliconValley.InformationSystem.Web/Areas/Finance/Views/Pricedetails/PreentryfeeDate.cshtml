@@ -3,42 +3,16 @@
     ViewBag.Title = "Prepayments";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<form class="layui-form" action="">
-    <div class="layui-carousel-left">
-        <div class="layui-row ">
-
-
-            <div class="layui-row layui-form-item">
-
-
-
-                <div class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                    <label class="layui-form-label labels">姓名</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="Name" class="layui-input linu">
-                    </div>
-                </div>
-                <div style="margin-left:100px;" class="layui-col-xs2 layui-col-sm2 layui-col-md2">
-                    <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2"><i class="layui-icon">&#xe615;</i> 查询</button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-</form>
-
 <div>
     <table class="layui-hide" id="test" lay-filter="test"></table>
 </div>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="Paytheadvancefee"><i class="layui-icon">&#xe654;</i>预入费缴纳</button>
+        <button class="layui-btn layui-btn-sm" lay-event="Preentryfeerefund"><i class="layui-icon">&#xe67d;</i>退款</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe639;</i>作废</button>
     </div>
 </script>
-@section script{}
 <script>
-
     layui.use(['table', 'layer', 'tree', 'form'], function () {
         var table = layui.table;
         var layer = layui.layer;
@@ -47,7 +21,7 @@
         //表格渲染
         table.render({
             elem: '#test'
-            , url: '/Finance/Pricedetails/PrepaymentsDate'
+            , url: '/Finance/Pricedetails/PreentryfeeDates'
             , toolbar: '#toolbarDemo'
             , id: 'idTest'
             , page: true
@@ -57,10 +31,19 @@
                 , { field: 'StuName', title: '姓名', sort: true }
                 , { field: 'Stuphone', title: '电话' }
                 , { field: 'StuSex', title: '性别 ' }
-                , { field: 'RegionName', title: '家庭住址 ' }
+                , { field: 'identitydocument', title: '身份证号 ' }
                 , { field: 'StuEntering', title: '咨询师 ' }
                 , { field: 'empName', title: '招生老师 ' }
-                , { field: 'stuinfomation', title: '招生类型 ' }
+                , { field: 'Amountofmoney', title: '缴纳金额 ' }
+
+                , {
+                    field: 'Refundornot', title: '状态', templet: function (c) {
+                        if (c.Refundornot == null) {
+                            return "未报名";
+                        } else if (c.Refundornot == true) { return "已报名"; } else { return "已退款"; }
+                    }
+                }
+                , { field: 'ClassNumber', title: '班级 ' }
 
 
 
@@ -89,34 +72,33 @@
         table.on('toolbar(test)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
             switch (obj.event) {
-                case "Paytheadvancefee":
+                case "Preentryfeerefund":
 
                     if (checkStatus.data.length > 0) {
 
-                        var id = checkStatus.data[0].Id;
-                      
+                        var id = checkStatus.data[0].id;
+
                         layer.open({
-                            title: "预入费缴纳",
+                            title: "预入费退款",
                             type: 2,
                             area: ['600px', '500px']
-                            , content: "/Finance/Pricedetails/Paytheadvancefee/" + id
-                            , end: function () {  }
+                            , content: "/Finance/Pricedetails/Preentryfeerefund/" + id
+                            , end: function () { }
                             , anim: 1,
                             //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
                         });
-                       
+
                     } else {
                         layer.alert('请选择一条数据', { icon: 0 });
                     }
                     break;
 
                     break;
-              
+
 
             };
         });
 
 
     });
-
 </script>
