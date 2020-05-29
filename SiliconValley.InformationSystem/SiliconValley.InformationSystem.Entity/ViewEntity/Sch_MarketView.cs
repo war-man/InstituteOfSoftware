@@ -32,6 +32,14 @@ namespace SiliconValley.InformationSystem.Entity.ViewEntity
         /// </summary>
         public string  RelatedPerson { get; set; }
         public string MarketState { get; set; }
+        /// <summary>
+        /// 咨询信息
+        /// </summary>
+        public string Info { get; set; }
 
+        /// <summary>
+        /// 备注说明
+        /// </summary>
+        public string Remark { get; set; }
     }
 }

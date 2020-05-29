@@ -1,0 +1,203 @@
+﻿
+@{
+    Layout = null;
+}
+@using SiliconValley.InformationSystem.Entity;
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registeredstudentnumber</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <style>
+        .LableCss1
+        {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            float: left;
+            display: block;
+            padding: 9px 15px;
+            width: 80px;
+            line-height: 20px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="layui-tab" lay-filter="student_reg_Form">
+            <ul class="layui-tab-title">
+                @{
+                    List<ZhuceShowData> list = ViewBag.list as List<ZhuceShowData>;
+                    int i = 0;
+                    foreach (ZhuceShowData item in list)
+                    {
+                        if (i == 0)
+                        {
+                            <li class="layui-this">@item.stuName</li>
+                        }
+                        else
+                        {
+                            <li>@item.stuName</li>
+                        }
+                        i++;
+                    }
+                }
+            </ul>
+            <div class="layui-tab-content">
+                @{
+                    int j = 0;
+                    foreach (ZhuceShowData item in list)
+                    {
+                        if (j == 0)
+                        {
+                            <div class="layui-tab-item layui-show">
+                                <form class="layui-form">
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                            <label class="LableCss1">学生姓名:</label>
+                                            <div class="layui-input-block">
+                                                <input type="hidden" value="@item.Id" />
+                                                <input type="text" disabled="disabled" class="layui-input" value="@item.stuName" />
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                            <label class="LableCss1">联系电话:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" disabled="disabled" class="layui-input" value="@item.stuPhone" />
+                                            </div>
+                                        </div>
+                                        <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                            <label class="LableCss1">学生性别:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" disabled="disabled" class="layui-input" value="@item.stuSex" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                            <label class="LableCss1">身 &nbsp;份 &nbsp;证:</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" class="layui-input" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                            <label class="LableCss1">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
+                                            <div class="layui-input-block">
+                                                <i onclick="Iclick()" class="layui-icon" style="color:#009688;font-size: 30px;position:absolute;right:10px;top:5px;cursor:pointer">&#xe615;</i><input type="text" disabled="disabled" class="layui-input" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <br />
+                                    <div class="layui-row layui-form-item">
+                                        <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center">
+                                            <button type="button" class="layui-btn">确定</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="layui-tab-item">
+                                <div class="layui-tab-item layui-show">
+                                    <form class="layui-form">
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                                <input type="hidden" value="@item.Id" />
+                                                <label class="LableCss1">学生姓名:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="hidden" value="@item.Id" />
+                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuName" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                                <label class="LableCss1">联系电话:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuPhone" />
+                                                </div>
+                                            </div>
+                                            <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                                                <label class="LableCss1">学生性别:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" disabled="disabled" class="layui-input" value="@item.stuSex" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                <label class="LableCss1">身 &nbsp;份 &nbsp;证:</label>
+                                                <div class="layui-input-block">
+                                                    <input type="text" class="layui-input" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12">
+                                                <label class="LableCss1">班 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 级:</label>
+                                                <div class="layui-input-block">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <br />
+                                        <div class="layui-row layui-form-item">
+                                            <div class="layui-col-xs12 layui-col-sm12 layui-col-md12" style="text-align:center">
+                                                <button type="button" class="layui-btn">确定</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        j++;
+                    }
+                }
+
+
+            </div>
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'layer', 'element'], function () {
+            var form = layui.form;
+            var layer = layui.form;
+            var element = layui.element;
+
+            form.render();
+
+        });
+
+        function Iclick() {
+            layui.use(["layer"], function () {
+                var layer = layui.layer;
+                layer.open({
+                    type: 2
+                    , content: '/Teachingquality/StudentInformation/StudentClassView'
+                    , area: ['600px', '320px']
+                    , title: '班级选择页面'
+                    , shade: 0.8
+                    , anim: 4
+                    , skin: 'demo-class'
+                });
+            });
+        }
+
+        function GetPartsItmes(data) {
+            console.log(data);
+        }
+    </script>
+</body>
+</html>
