@@ -38,6 +38,5 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         /// </summary>
         public Nullable<System.DateTime> QuitDate { get; set; }
 
-
     }
 }

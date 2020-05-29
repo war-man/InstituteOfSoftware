@@ -57,13 +57,13 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
         public ActionResult QuestionsBankIndex()
         {
 
-            StudentExamBusiness studentExamBusiness = new StudentExamBusiness();
+            //StudentExamBusiness studentExamBusiness = new StudentExamBusiness();
 
-            ExaminationBusiness examinationBusiness = new ExaminationBusiness();
+            //ExaminationBusiness examinationBusiness = new ExaminationBusiness();
 
-            var e = examinationBusiness.GetList().Where(d => d.ID == 3012).FirstOrDefault();
+            //var e = examinationBusiness.GetList().Where(d => d.ID == 3012).FirstOrDefault();
 
-            studentExamBusiness.productAnswerQuestion(e, 10);
+            //studentExamBusiness.productAnswerQuestion(e, 10);
 
              return View();
         }
@@ -191,6 +191,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     item.Course = int.Parse(course);
                     item.CreateTime = DateTime.Now;
                     item.IsUsing = true;
+                    item.Grand = int.Parse(grand);
                     item.Proposition = teacher.TeacherID;
                 }
 
@@ -216,6 +217,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                     item.Course = int.Parse(course);
                     item.PropositionDate = DateTime.Now;
                     item.IsUsing = true;
+                    item.Grand = int.Parse(grand);
                     item.Proposition = teacher.TeacherID;
                     
                 }

@@ -130,10 +130,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
             }
 
-
-
-
-
             return resultlist;
 
 
@@ -235,6 +231,37 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
         }
 
+        public SatisficingConfigDataView ConvertToSatisficingConfigDataView(SatisficingConfig satisficingConfig)
+        {
+
+            SatisficingConfigDataView view = new SatisficingConfigDataView();
+            view.Curriculum = db_course.GetCurriculas().Where(d => d.CurriculumID == satisficingConfig.CurriculumID).FirstOrDefault();
+            view.Emp = db_emp.GetList().Where(d => d.EmployeeId == satisficingConfig.EmployeeId && d.IsDel == false).FirstOrDefault();
+            view.investigationClass = db_class.GetList().Where(d => d.id == satisficingConfig.ClassNumber).FirstOrDefault(); 
+            view.investigationDate = (DateTime)satisficingConfig.CreateTime;
+            view.SatisficingConfigId = satisficingConfig.ID;
+            //计算总分
+            var staresultlist = this.AllsatisficingResults().Where(d => d.SatisficingConfig == satisficingConfig.ID).ToList();
+
+            var total = 0;
+
+            staresultlist.ForEach(d=>
+            {
+                 var templist = db_satisresultdetail.GetList().Where(b => b.SatisficingBill == d.ID).ToList();
+
+                templist.ForEach(x=>
+                {
+                    total += (int)x.Scores;
+                });
+            });
+
+            view.TotalScore = total;
+
+            view.Average = total / staresultlist.Count;
+
+            return view;
+
+        }
 
 
         public SatisfactionSurveyDetailView ConvertToViewModel(SatisficingResult satisficingResult)
@@ -282,6 +309,10 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
 
 
             detailView.detailitem = templist1;
+
+            
+  
+
             return detailView;
 
         }

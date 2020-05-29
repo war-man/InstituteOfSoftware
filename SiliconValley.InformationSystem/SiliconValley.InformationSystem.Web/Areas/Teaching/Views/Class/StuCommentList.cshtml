@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>StuCommentList</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+</head>
+<body>
+    <div>
+
+ 
+        <div id="list">
+
+
+            @{ 
+
+                foreach (var item in ViewBag.Commentlist)
+                {
+
+            <div class="item" style="margin-top:40px;">
+
+                <h3 style="text-align:center; color:gray;">@item.CommnetEr.EmpName</h3>
+
+                <hr />
+                <div style="line-height:35px; background-color:#f6eeee;">
+
+                  @item.Commnet
+
+                </div>
+
+            </div>
+                }
+
+            }
+
+            
+
+        </div>
+
+    </div>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+</body>
+</html>

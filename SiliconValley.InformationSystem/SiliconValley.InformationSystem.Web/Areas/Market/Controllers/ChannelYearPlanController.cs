@@ -86,8 +86,14 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ShowTitle = a.Title
             }).ToList();
 
+            if (data == null)
+            {
+                data = new List<ShowyearnameView>();
+            }
+
             ViewBag.YearName = data;
             var nowyear = data.FirstOrDefault();
+
             ViewBag.NowYearName = nowyear;
             var nowpaln = dbschoolpaln.GetPlanByID(nowyear.SchoolPlanID);
             //加载该年的主任

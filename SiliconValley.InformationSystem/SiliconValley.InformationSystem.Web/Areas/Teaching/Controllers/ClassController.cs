@@ -9,7 +9,9 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
     using SiliconValley.InformationSystem.Business.Base_SysManage;
     using SiliconValley.InformationSystem.Business.ClassesBusiness;
     using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.EmployeesBusiness;
     using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
+    using SiliconValley.InformationSystem.Entity.Entity;
     using SiliconValley.InformationSystem.Entity.MyEntity;
     using SiliconValley.InformationSystem.Entity.ViewEntity;
     using SiliconValley.InformationSystem.Util;
@@ -624,6 +626,92 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teaching.Controllers
 
         }
 
+        public ActionResult CommnetView(string studentNumber)
+        {
 
+            var currentUser = Base_UserBusiness.GetCurrentUser();
+
+            //获取学生信息
+            BaseBusiness<StudentInformation> dbstu = new BaseBusiness<StudentInformation>();
+
+            StudentInformation student = dbstu.GetEntity(studentNumber);
+
+            ViewBag.student = student;
+
+            return View();
+        }
+
+        public ActionResult DoToComment(string studentNumber, string Comment)
+        {
+            AjaxResult result = new AjaxResult();
+
+            try
+            {
+                BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
+                var currentUser = Base_UserBusiness.GetCurrentUser();
+
+                ThearToStuComment stuComment = new ThearToStuComment();
+
+                    stuComment.Commnet = Comment;
+                    stuComment.CommnetDate = DateTime.Now;
+                    stuComment.CommnetEr = currentUser.EmpNumber;
+                    stuComment.CommnetObj = studentNumber;
+
+                    dbstucomment.Insert(stuComment);
+
+            
+               
+
+                result.ErrorCode = 200;
+                result.Data = stuComment;
+                result.Msg = "成功！";
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Data = null;
+                result.Msg = "失败！";
+            }
+
+
+            return Json(result);
+
+
+        }
+
+        public ActionResult StuCommentList(string studentNumber)
+        {
+            //所有评价
+            //获取学生信息
+            EmployeesInfoManage dbemp = new EmployeesInfoManage();
+            BaseBusiness<StudentInformation> dbstu = new BaseBusiness<StudentInformation>();
+            //获取对他的评价
+            BaseBusiness<ThearToStuComment> dbstucomment = new BaseBusiness<ThearToStuComment>();
+
+            var list = dbstucomment.GetList().Where(d => d.CommnetObj == studentNumber).ToList();
+
+            if (list == null) list = new List<ThearToStuComment>();
+
+            List<ThearStuCommentView> resultlist = new List<ThearStuCommentView>();
+
+            list.ForEach(d=>
+            {
+                ThearStuCommentView  view = new ThearStuCommentView();
+
+                view.Commnet = d.Commnet;
+                view.CommnetDate = d.CommnetDate;
+                view.CommnetEr = dbemp.GetInfoByEmpID(d.CommnetEr);
+                view.CommnetObj = dbstu.GetEntity(d.CommnetObj);
+
+                resultlist.Add(view);
+            });
+
+
+            ViewBag.Commentlist = resultlist;
+
+            return View();
+
+        }
     }
 }
