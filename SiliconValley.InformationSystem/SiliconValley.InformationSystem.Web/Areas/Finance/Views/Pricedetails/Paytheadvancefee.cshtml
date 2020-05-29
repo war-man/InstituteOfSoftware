@@ -2,7 +2,8 @@
 @{
     Layout = null;
 }
-
+@model SiliconValley.InformationSystem.Entity.Entity.Preentryfee
+ @using SiliconValley.InformationSystem.Entity.ViewEntity
 <!DOCTYPE html>
 
 <html>
@@ -12,44 +13,83 @@
     <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-3.3.1.min.js"></script>
     <script src="~/Scripts/layui/layui.js"></script>
+    <style>
+        #but1 {
+            position: absolute;
+            top: 9%;
+            left: 69%;
+            width: 36px;
+            height: 36px;
+            text-align: center;
+            line-height: 36px;
+        }
+        .widths{
+            margin-top:10px;
+        }
+    </style>
 </head>
 <body>
-    @*<div>
+    <div>
         <form class="layui-form" action="" lay-filter="example">
             <div class="layui-container">
-             
 
 
-                    <div class="layui-row layui-form-item">
 
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
-                            <label class="layui-form-label">身份证号码</label>
-                            <div class="layui-input-inline">
-                                @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required|Name" }, { "placeholder", "请填写班级名称" }, { "class", "layui-input " } })
-                            </div>
-                        </div>
+                <div class="layui-row layui-form-item" style="margin-left:116px;">
 
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
-                            <label class="layui-form-label">阶段</label>
+                    @{
+                        ExportStudentBeanData exportStudentBeanData = ViewBag.ExportStudentBeanData as ExportStudentBeanData;
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
+                            <label class="layui-form-label">姓名</label>
                             <div class="layui-input-inline">
 
-                                @Html.DropDownListFor(a => a.grade_Id, ViewBag.grade_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" }, { "lay-filter", "Stage" } })
+                                <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.StuName" class="layui-input" />
                             </div>
                         </div>
-
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths" style="display:none;" id="domes">
-
-                        </div>
-
-                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
-                            <label class="layui-form-label">专业课时段</label>
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
+                            <label class="layui-form-label">性别</label>
                             <div class="layui-input-inline">
-                                @Html.DropDownListFor(a => a.BaseDataEnum_Id, ViewBag.BaseDataEnum_Id as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "lay-verify", "required" } })
+
+                                <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.StuSex" class="layui-input" />
                             </div>
                         </div>
-
-
+                        <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 ">
+                            <label class="layui-form-label">联系电话</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="keeponrecordid" style="display:none" value="@exportStudentBeanData.Id" />
+                                <input type="text" style="border:0px;" readonly="readonly" value=" @exportStudentBeanData.Stuphone" class="layui-input" />
+                            </div>
+                        </div>
+                        
+                   
+                        
+                    }
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                        <label class="layui-form-label">身份证号码</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.identitydocument, new Dictionary<string, object>() { { "lay-verify", "required|identity" }, { "placeholder", "请输入身份证号码" }, { "class", "layui-input " } })
+                        </div>
                     </div>
+                    <div class="layui-col-xs12 layui-col-sm12 layui-col-md12 widths">
+                        <label class="layui-form-label">班级</label>
+                        @Html.HiddenFor(a => a.ClassID)
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="Lists" style="display:none; border:0px;" readonly="readonly" />
+                        </div>
+
+                        <div class="layui-input-inline" id="CLassNames">
+                            <button type="button" style="width:190px;height:38px;" class="layui-btn layui-btn-sm layui-btn-primary">
+                                <i class="layui-icon" id="ClassName" style="margin-left:156px;">&#xe615;</i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="layui-col-xs10 layui-col-sm10 layui-col-md10 widths">
+                        <label class="layui-form-label">缴费金额</label>
+                        <div class="layui-input-inline">
+                            @Html.TextBoxFor(a => a.Amountofmoney, new Dictionary<string, object>() { { "lay-verify", "required" }, { "placeholder", "请输入需要缴纳额度" }, { "class", "layui-input " } })
+                        </div>
+                    </div>
+                </div>
 
 
                 <div class="layui-row layui-form-item" style="margin-top:40px;">
@@ -62,12 +102,13 @@
                 </div>
             </div>
         </form>
-    </div>*@
+    </div>
 </body>
 </html>
+<script src="~/Areas/Teachingquality/js/AjaxAddupdate.js"></script>
 <script>
-    <script>
-        layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
+
+    layui.use(['form', 'layedit', 'laydate', 'layer'], function () {
 
         var layer = layui.layer;
         var form = layui.form;
@@ -97,14 +138,15 @@
             //return false;
 
             var datas = data.field;
-            if ($("#BoolClassName").val()=="") {
-            ajaxpost("/Teachingquality/ClassSchedule/AddClassSchedule", datas);
+          
+            if ($("#Lists").val() != "") {
+                ajaxpost("/Finance/Pricedetails/PaytheadvancefeeAdd", datas);
             }
         });
         //正在执行中
         function showLoad() {
 
-            return layer.msg('拼命执行中...', {icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
+            return layer.msg('拼命执行中...', { icon: 16, shade: [0.5, '#f5f5f5'], scrollbar: false, offset: 'auto', time: 100000 });
 
         }
         //关闭执行中的窗体
@@ -112,7 +154,7 @@
             layer.close(index);
 
         }
-        function ajaxpost(url, datae ) {
+        function ajaxpost(url, datae) {
             $.ajax({
                 url: url,
                 type: 'POST',
@@ -181,30 +223,24 @@
                 }
             })
         }
-        //验证专业名称
-        $("#ClassNumber").keyup(function () {      // 按键弹起时触发的事件；
-            if ($(this).val() != "") {
-            ClassNameCount($(this).val());
 
-            }
-
-        });
-
-        //监听阶段下拉框
-        form.on('select(Stage)', function (data) {
-            if ($(this).text() != "S1" && $(this).text() != "Y1") {
-            console.log("成功");
-                console.log($(this).text());
-                Tuition();
-            } else {
+        //拿到班级号
+        $("#ClassName").click(function () {
             console.log("aaa");
-                $($("#domes").children()).remove();
-                $("#domes").css("display", "none");
-            }
+            Popup("/Teachingquality/StudentInformation/StudentclassView", "获取新的班级", 588, 400);
+
         });
 
-
-
+       
     });
-</script>
+    function GetPartsItmes(data) {
+        $("#ClassID").val(data.id);
+        console.log(data);
+        $("#List").val(data.id);
+        $("#Lists").css("display", "block");
+
+        console.log(data.id);
+        $("#CLassNames").css("display", "none");
+        $("#Lists").val(data.ClassNumber);
+    }
 </script>

@@ -33,12 +33,16 @@ namespace SiliconValley.InformationSystem.Entity.Entity
         /// </summary>
         public int ClassID { get; set; }
         /// <summary>
-        /// 是否报名
+        /// 是否报名 null未报名，true已报名，float已退款
         /// </summary>
         public bool? Refundornot{ get; set; }
         /// <summary>
         /// 操作时间
         /// </summary>
         public DateTime AddDate { get; set; }
+        /// <summary>
+        /// 是否禁用
+        /// </summary>
+        public bool IsDit { get; set; }
     }
 }

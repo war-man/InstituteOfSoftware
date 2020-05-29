@@ -15,6 +15,7 @@ using SiliconValley.InformationSystem.Entity.ViewEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.EnrollmentBusiness;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
+using SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness;
 
 namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
 {
@@ -1052,6 +1053,87 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
             }
             return retus;
+        }
+        //预入费业务类
+        BaseBusiness<Preentryfee> Preentryfeebusenn = new BaseBusiness<Preentryfee>();
+        //备案业务类
+        StudentDataKeepAndRecordBusiness studentDataKeepAndRecordBusiness = new StudentDataKeepAndRecordBusiness();
+        /// <summary>
+        /// 预入费缴纳
+        /// </summary>
+        /// <param name="preentryfee">数据对象</param>
+        /// <returns></returns>
+        public object PaytheadvancefeeAdd(Preentryfee preentryfee)
+        {
+           AjaxResult retus = null;
+            try
+            {
+                preentryfee.AddDate = DateTime.Now;
+                preentryfee.IsDit = false;
+                Preentryfeebusenn.Insert(preentryfee);
+                retus = new SuccessResult();
+                retus.Success = true;
+                retus.Msg = "缴费成功";
+                BusHelper.WriteSysLog("审核缴费数据", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
+        }
+
+        public class Preeviews
+        {
+            public int id { get; set; }
+            public string StuName { get; set; }
+            public string Stuphone { get; set; }
+            public string StuSex { get; set; }
+            public string empName { get; set; }
+            public string StuEntering { get; set; }
+            public bool? Refundornot { get; set; }
+            public decimal Amountofmoney { get; set; }
+            public string identitydocument { get; set; }
+            public string ClassNumber { get; set; }
+        }
+        public object PreentryfeeDates(int page, int limit)
+        {
+            var preenlist = Preentryfeebusenn.GetList();
+            List<Preeviews> list = new List<Preeviews>();
+            foreach (var item in preenlist)
+            {
+              var Keep=  studentDataKeepAndRecordBusiness.GetSudentDataAll().Where(a=>a.Id==item.keeponrecordid).FirstOrDefault();
+                var x = new Preeviews()
+                {
+                    id= item.id,
+                    StuName= Keep.StuName,
+                    Stuphone=Keep.Stuphone,
+                    StuSex= Keep.StuSex,
+                    empName=Keep.empName,
+                    StuEntering=  Keep.StuEntering,
+                    Refundornot= item.Refundornot,
+                    Amountofmoney= item.Amountofmoney,
+                    identitydocument= item.identitydocument,
+                    ClassNumber= classschedu.GetEntity(item.ClassID).ClassNumber
+                };
+                list.Add(x);
+            }
+            var dataList = list.OrderBy(a => a.id).Skip((page - 1) * limit).Take(limit).ToList();
+            //  var x = dbtext.GetList();
+            var data = new
+            {
+                code = "",
+                msg = "",
+                count = list.Count,
+                data = dataList
+            };
+            return data;
+       
+
         }
     }
 }
