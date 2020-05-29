@@ -575,11 +575,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                                 emp.BCNum = item.bankCardnum;
                                 emp.Material = item.paperyMaterial;
                                 emp.Remark = item.Remark;
-                                if (!string.IsNullOrEmpty(emp.PositiveDate.ToString()))
-                                {
-                                    EmpTransactionManage etsmanage = new EmpTransactionManage();
-                                    bool etsresult = etsmanage.InsertETSData(emp.EmployeeId, Convert.ToDateTime(emp.PositiveDate));
-                                }
+                              
                                 this.Insert(emp);
                                 rc.RemoveCache("InRedisEmpInfoData");
                                 AddEmpToCorrespondingDept(emp);
