@@ -35,31 +35,6 @@ namespace SiliconValley.InformationSystem.Business.EmpTransactionBusiness
             return mtmanage.GetList().Where(s => s.MoveTypeName == tname).FirstOrDefault();
         }
 
-        /// <summary>
-        /// 员工信息录入包含转正时间时添加该员工的异动数据
-        /// </summary>
-        /// <param name="empid"></param>
-        /// <param name="positivetime"></param>
-        /// <returns></returns>
-        public bool InsertETSData(string empid,DateTime positivetime) {
-            bool result = false;
-            try
-            {
-                EmpTransaction ets = new EmpTransaction();
-                ets.EmployeeId = empid;
-                ets.TransactionTime = positivetime;
-                ets.TransactionType = GetTypeidByTname("转正").ID;
-                this.Insert(ets);
-                result = true;
-                BusHelper.WriteSysLog("异动表转正异动数据添加成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-            catch (Exception ex)
-            {
-                result = false;
-                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
-            }
-           
-            return result;
-        }
+       
     }
 }
