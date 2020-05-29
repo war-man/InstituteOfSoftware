@@ -203,7 +203,20 @@
                 { field: 'LevelName', width: 100, title: '难度指数', templet: '<div>{{d.Level.LevelName}}</div>' },
                 { field: 'Answer', width: 80, title: '答案' },
                 { field: 'EmpName', width: 80, title: '命题人', templet: '<div>{{d.Proposition.EmpName}}</div>' },
-                { field: 'CourseName', width: 120, title: '所属课程', templet: '<div>{{d.Course.CourseName}}</div>' },
+                {
+                    field: 'CourseName', width: 120, title: '所属课程', templet: function (res) {
+
+                    
+                        if (res.Course == null) {
+                            return "升学题目";
+                        }
+                        else {
+                            return res.Course.CourseName
+                        }
+
+
+                    }
+                },
                 {
                     field: 'Course', width: 120, title: '启用/禁用', templet: function (data) {
 
