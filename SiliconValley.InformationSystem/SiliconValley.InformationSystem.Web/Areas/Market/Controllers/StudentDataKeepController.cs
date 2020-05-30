@@ -32,6 +32,7 @@ using SiliconValley.InformationSystem.Depository.CellPhoneSMS;
 using SiliconValley.InformationSystem.Business.RegionManage;
 using SiliconValley.InformationSystem.Business.EmployeesBusiness;
 using System.Threading;
+using SiliconValley.InformationSystem.Business.StudentBusiness;
 
 namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
 {
@@ -1282,9 +1283,18 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             return View();
         }
         //注册方法
-        public ActionResult RegistersFunction()
+        [HttpPost]
+        public ActionResult RegistersFunction(ZhuceShowData data)
         {
-            return null;
+            StudentInformationBusiness informationBusiness = new StudentInformationBusiness();
+            StudentInformation student = new StudentInformation();
+            student.Name = data.stuName;
+            student.Sex = data.stuSex=="男"?true:false;
+            student.identitydocument = data.IdCare;
+            student.Telephone = data.stuPhone;
+
+            AjaxResult a=  informationBusiness.StudfentEnti(student, Convert.ToInt32(data.Class_ID), Convert.ToInt32(data.Id));
+            return Json(a,JsonRequestBehavior.AllowGet);
         }
         #endregion
     }

@@ -506,7 +506,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
         public void InServer()
         {
             Sch_MarketManeger marketEntity = new Sch_MarketManeger();
-            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark from Sch_Market  where CreateDate >= '2020-01-01' and CreateDate<= '2020-01-30'";
+            string str = "select StudentName,Sex,CreateUserName,CreateDate,Phone,QQ,School,Inquiry,Source,Area,SalePerson,RelatedPerson,Remark from Sch_Market  where CreateDate >= '2020-01-01' and CreateDate<= '2020-01-30' and SalePerson = '徐宝平'";
             List<ADDdataview> all = GetLongrageData(str);
             List<StudentPutOnRecord> studentlist = new List<StudentPutOnRecord>();
             foreach (ADDdataview item in all)
@@ -524,7 +524,7 @@ namespace SiliconValley.InformationSystem.Business.StudentKeepOnRecordBusiness
                 one.StuSchoolName = item.School;
                 one.StuEducational = item.Inquiry;
                 one.StuInfomationType_Id = StuInfomationType_Entity.SerchSingleData(item.Source, false) == null ? StuInfomationType_Entity.SerchSingleData("渠道", false).Id : StuInfomationType_Entity.SerchSingleData(item.Source, false).Id;
-                one.Region_id = region_Entity.SerchRegionName(item.Area, false) == null ?Convert.ToInt32(null) : region_Entity.SerchRegionName(item.Area, false).ID;
+                one.Region_id = region_Entity.SerchRegionName(item.Area, false)?.ID ?? null;
                 one.Party = item.RelatedPerson;
                 studentlist.Add(one);
             }
