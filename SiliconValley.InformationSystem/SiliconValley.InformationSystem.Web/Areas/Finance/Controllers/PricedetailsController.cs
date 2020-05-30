@@ -447,17 +447,31 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
         {
           return Json(dbtext.PaytheadvancefeeAdd(preentryfee));
         }
-
+        /// <summary>
+        /// 获取已交预入费的学员页面
+        /// </summary>
+        /// <returns></returns>
         public ActionResult PreentryfeeDate()
         {
             return View();
         }
+        /// <summary>
+        /// 获取已交预入费的学员数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         public ActionResult PreentryfeeDates(int page, int limit)
         {
             return Json(dbtext.PreentryfeeDates(page, limit), JsonRequestBehavior.AllowGet);
         }
         //预入费业务类
         BaseBusiness<Preentryfee> Preentryfeebusenn = new BaseBusiness<Preentryfee>();
+        /// <summary>
+        /// 退预入费页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Preentryfeerefund(int id)
         {
@@ -469,10 +483,16 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             ViewBag.ClassNumber = classScheduleBusiness.GetEntity(x.ClassID).ClassNumber;
             return View();
         }
+        /// <summary>
+        /// 退预入费数据业务操作
+        /// </summary>
+        /// <param name="refund">数据对象</param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Preentryfeerefund(Refund refund)
         {
-            return null;
+            return Json(dbtext.Preentryfeerefund(refund), JsonRequestBehavior.AllowGet);
+       
         }
     }
 }

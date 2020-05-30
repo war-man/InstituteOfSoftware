@@ -54,6 +54,8 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
         BaseBusiness<Paymentverification> PaymentverificationBusiness = new BaseBusiness<Paymentverification>();
         //审核缴费信息对应业务类
         BaseBusiness<PayviewPaymentver> PayviewPaymentverBusiness = new BaseBusiness<PayviewPaymentver>();
+        //预入费退费业务类
+        BaseBusiness<Refund> RefundBusiness = new BaseBusiness<Refund>();
         /// <summary>
         /// 获取所有学员数据
         /// </summary>
@@ -1100,6 +1102,12 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
             public string identitydocument { get; set; }
             public string ClassNumber { get; set; }
         }
+        /// <summary>
+        /// 获取已缴预入费数据
+        /// </summary>
+        /// <param name="page"></param>
+        /// <param name="limit"></param>
+        /// <returns></returns>
         public object PreentryfeeDates(int page, int limit)
         {
             var preenlist = Preentryfeebusenn.GetList();
@@ -1132,8 +1140,33 @@ namespace SiliconValley.InformationSystem.Business.StudentmanagementBusinsess
                 data = dataList
             };
             return data;
-       
-
+        }
+        /// <summary>
+        /// 预入费退费
+        /// </summary>
+        /// <param name="refund">数据对象</param>
+        /// <returns></returns>
+        public object Preentryfeerefund(Refund refund)
+        {
+            AjaxResult retus = null;
+            try
+            {
+                refund.AddDate = DateTime.Now;
+                RefundBusiness.Insert(refund);
+                retus = new SuccessResult();
+                retus.Success = true;
+                retus.Msg = "退费成功";
+                BusHelper.WriteSysLog("退预入费成功", Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            catch (Exception ex)
+            {
+                retus = new ErrorResult();
+                retus.Msg = "服务器错误";
+                retus.Success = false;
+                retus.ErrorCode = 500;
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.添加数据);
+            }
+            return retus;
         }
     }
 }

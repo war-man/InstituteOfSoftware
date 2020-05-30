@@ -265,7 +265,6 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
             }
 
         }
-
         /// <summary>
         /// 注册学员
         /// </summary>
@@ -277,7 +276,6 @@ namespace SiliconValley.InformationSystem.Business.StudentBusiness
         {
             //学员班级
             ClassScheduleBusiness classScheduleBusiness = new ClassScheduleBusiness();
-
             AjaxResult result = null;
             if (Isidentitydocument(studentInformation.identitydocument))
             {
