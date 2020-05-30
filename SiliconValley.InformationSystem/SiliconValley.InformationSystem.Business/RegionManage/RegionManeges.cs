@@ -31,7 +31,7 @@ namespace SiliconValley.InformationSystem.Business.RegionManage
             }
             if (R==null)
             {
-                R.RegionName = "区域外";
+                //R.RegionName = "区域外";
             }
             return R;          
         }
