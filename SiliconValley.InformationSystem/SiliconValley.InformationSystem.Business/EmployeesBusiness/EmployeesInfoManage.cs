@@ -567,7 +567,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                                 emp.BCNum = item.bankCardnum;
                                 emp.Material = item.paperyMaterial;
                                 emp.Remark = item.Remark;
-                              
+                                emp.IsDel = false;
                                 this.Insert(emp);
                                 rc.RemoveCache("InRedisEmpInfoData");
                                 AddEmpToCorrespondingDept(emp);
