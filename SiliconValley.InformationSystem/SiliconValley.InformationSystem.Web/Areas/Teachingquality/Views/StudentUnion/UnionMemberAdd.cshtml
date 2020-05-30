@@ -40,7 +40,7 @@
     <div>
         <form class="layui-form" action="" id="form">
             <div class="layui-container">
-                <fieldset style="height:430px;">
+                <fieldset >
 
                     <legend>基础数据</legend>
 
@@ -157,15 +157,12 @@
             if (button.length > 0) {
                 console.log(data.field);
                 layer.confirm('<br/>您真的要选择吗?', function (index) {
-              
                     $.ajax({
                         url: "/Teachingquality/StudentUnion/UnionMemberAdd?StudentID=" + button,
                         type: 'POST',
                         async: true,
                         cache: false,
-                        timeout: 2000,
                         data:  data.field,
-
                         beforeSend: function () {//执行中
                             i = showLoad();
                         },
@@ -205,24 +202,17 @@
                         }
                         , error: function (xmlhttprequest, textstatus, message) {
                             closeLoad(i);
-                            layer.msg("您的网络出现问题，请稍后再试！！！", {
-                                time: 8000, //20s后自动关闭
-
-                                btn: ['确定']
-                            });
                         }
                     });
                 });
             } else {
                 Errye("请使用小图标搜索班级选择学员！")
             }
-
             //if ($("#ID").val() != "")
             //    layer.confirm('<br/>您真的要选择吗?', function (index) {
             //        ajaxpostUpdata("/Teachingquality/InterviewStudents/StudIenterEntiy", data.field);
             //    }); else
             //    if (data.field.StudentNumberID != "") {
-
             //    } else {
             //        Errye("请使用小图标搜索班级选择学员！")
             //    }
@@ -253,14 +243,13 @@
         var form = layui.form;
         for (var i = 0; i < myname.length; i++) {
             cou++;
-            if (cou > 3) {
-                cou = 0;
+            if (cou == 1) {
+                xue.append($("<button type='button' style='width:100px;margin-top:10px;margin-left:8px;' class='layui-btn'><i class='layui-icon'>&#xe770;</i>" + myname[i] + " </button>"));
+            } else {
+                xue.append($("<button type='button' style='width:100px;margin-top:10px;' class='layui-btn'><i class='layui-icon'>&#xe770;</i>" + myname[i] + " </button>"));
 
-                xue.append($("<br/>"));
             }
-
-            xue.append($("<button type='button' style='width:100px;margin-top:10px;' class='layui-btn'><i class='layui-icon'>&#xe770;</i>" + myname[i] + " </button>"));
-        }
+          }
 
 
 

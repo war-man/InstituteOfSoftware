@@ -13,23 +13,21 @@
     </style>
     }
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left">
         <div class="layui-row ">
 
 
-            <div class="layui-row layui-form-item" style="width:100%;">
+            <div class="layui-form-item">
 
 
-                <div class="layui-col-xs4">
-                    <label class="layui-form-label" style="margin-left:6%;">姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名</label>
-                    <div class="layui-input-inline" style="margin-left:12%;">
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label" >姓名</label>
+                    <div class="layui-input-inline" >
                         <input type="tel" name="StuName" lay-verify="Name" id="StuName" autocomplete="off" class="layui-input linu">
                     </div>
                 </div>
-                <div class="layui-col-xs6">
-
-
-                    <div class="layui-inline" style="margin-left:20px;">
+                <div class="layui-col-xs4">
+                    <div class="layui-inline">
                         <label for="" class="layui-form-label" style="width:100px;">入职时间</label>
                         <div class="layui-input-inline startTime">
                             <input type="text" name="qBeginTime" id="qBeginTime" readonly="readonly" placeholder="年-月-日" autocomplete="off" class="layui-input">
@@ -40,11 +38,9 @@
                             <input type="text" name="qEndTime" id="qEndTime" readonly="readonly"  placeholder="年-月-日" autocomplete="off" class="layui-input">
                         </div>
                     </div>
-
                 </div>
-                <div class="layui-col-xs6  layui-col-sm6 layui-col-md6">
-
-                    <label class="layui-form-label title">学生会成员状态</label>
+                <div class="layui-col-xs3  layui-col-sm3 layui-col-md3">
+                    <label class="layui-form-label title">成员状态</label>
                     <div class="layui-input-inline">
                         <select name="quiz1">
                             <option value="0">全部</option>
@@ -53,23 +49,21 @@
 
                         </select>
                     </div>
-
                 </div>
-                <div class="layui-col-xs6" style="margin-left:-14%">
-
-                    <label class="layui-form-label">性&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;别</label>
+               
+            </div>
+            <div  class="layui-form-item">
+                <div class="layui-col-xs3">
+                    <label class="layui-form-label">性别</label>
                     <div class="layui-input-block">
-                        <input type="radio" name="sex" value="全部" title="全部" checked="">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="sex" value="true" title="男">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="sex" value="全部" title="全部" checked="">
+                        <input type="radio" name="sex" value="true" title="男">
                         <input type="radio" name="sex" value="false" title="女">
-
                     </div>
-
                 </div>
-
             </div>
 
-            <div style="position:absolute;left:85%;top:0%">
+            <div style="position:absolute;left:85%;top:17%">
                 <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
             </div>
 
@@ -86,7 +80,7 @@
     <script type="text/html" id="toolbarDemo">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="getAdd"><i class="layui-icon">&#xe654;</i>添加成员</button>
-            <button class="layui-btn layui-btn-sm" lay-event="GetUpdate"><i class="layui-icon">&#xe654;</i>学生会离职</button>
+            <button class="layui-btn layui-btn-sm" lay-event="GetUpdate"><i class="layui-icon">&#xe630;</i>学生会离职</button>
 
 
         </div>
