@@ -114,7 +114,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     ese.PositionSalary = emp.Salary - ese.BaseSalary ;
                 }
                 if (!string.IsNullOrEmpty(ese.PerformancePay.ToString())) {
-                    ese.PositionSalary = ese.PositionSalary - ese.PerformancePay;
+                    ese.PositionSalary =emp.Salary- ese.BaseSalary - ese.PerformancePay;
                 }
                 
                 ese.IsDel = myese.IsDel;
