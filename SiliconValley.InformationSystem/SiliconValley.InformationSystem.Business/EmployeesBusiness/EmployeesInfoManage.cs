@@ -377,7 +377,7 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                     num++;
                     //循环获取num行的数据
                     var getrow = sheet.GetRow(num);
-                    if (string.IsNullOrEmpty( Convert.ToString(getrow.GetCell(1))))
+                    if (string.IsNullOrEmpty( Convert.ToString(getrow)))
                     {
                         break;
                     }

@@ -213,7 +213,6 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             };
             return Json(newobj, JsonRequestBehavior.AllowGet);
         }
-
         [HttpPost]
         public ActionResult EditAttendanceInfo(AttendanceInfo att)
         {
@@ -306,6 +305,17 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             FirstTime = time;
             Firstshouldday = days;
             return Json(AjaxResultxx,JsonRequestBehavior.AllowGet);
+        }
+
+        /// <summary>
+        /// 模板下载 
+        /// </summary>
+        /// <returns></returns>        
+        public FileStreamResult DownFile()
+        {
+            string rr = Server.MapPath("/uploadXLSXfile/Template/AttendanceInfoTemp.xlsx");  //获取下载文件的路径         
+            FileStream stream = new FileStream(rr, FileMode.Open);
+            return File(stream, "application/octet-stream", Server.UrlEncode("ExcleTemplate.xls"));
         }
 
 
