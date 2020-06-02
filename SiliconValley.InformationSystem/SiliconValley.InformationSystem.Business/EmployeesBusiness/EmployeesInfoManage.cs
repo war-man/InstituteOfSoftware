@@ -382,36 +382,36 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                         break;
                     }
                     #region 获取excel中的每一列数据
-                    //获取第num行"姓名"列的数据
-                    string name = getrow.GetCell(1).ToString();
-                    //获取第num行"部门"列的数据
-                    string dept = getrow.GetCell(2).ToString();
-                    //获取第num行"岗位"列的数据
-                    string position = getrow.GetCell(3).ToString();
-                    //获取第num行"工号"列的数据
+                    //获取第num行"姓名"列的数据(必填)
+                    string name = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(1))) ?null:getrow.GetCell(1).ToString();
+                    //获取第num行"部门"列的数据(必填)
+                    string dept = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(2))) ? null : getrow.GetCell(2).ToString();
+                    //获取第num行"岗位"列的数据(必填)
+                    string position = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(3))) ? null : getrow.GetCell(3).ToString();
+                    //获取第num行"工号"列的数据(必填)
                     string ddid = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(4))) ? null : getrow.GetCell(4).ToString();
                     //获取第num行"招聘来源"列的数据
                     string original = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(5))) ? null : getrow.GetCell(5).ToString();
-                    //获取第num行"身份证号码"列的数据
+                    //获取第num行"身份证号码"列的数据(必填)
                     // var idnum = System.Text.RegularExpressions.Regex.Replace(getrow.GetCell(6).StringCellValue, @"[^0-9]+", "");
-                    string idcardnum = getrow.GetCell(6).ToString();
+                    string idcardnum = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(6))) ? null : getrow.GetCell(6).ToString();
                     //获取第num行"电话号码"列的数据
-                    string phonenum = getrow.GetCell(7).ToString();
+                    string phonenum = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(7))) ? null : getrow.GetCell(7).ToString();
                     //获取第num行"性别"列的数据
-                    string empsex = getrow.GetCell(8).ToString();
+                    string empsex = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(8))) ? "女" : getrow.GetCell(8).ToString();
                     //获取第num行"年龄"列的数据
-                    string empage = getrow.GetCell(9).ToString();
+                    string empage = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(9))) ? null : getrow.GetCell(9).ToString();
                     //获取第num行"民族"列的数据
-                    string nation = getrow.GetCell(10).ToString();
-                    //获取第num行"入职时间"列的数据
-                    string entertime = getrow.GetCell(11).ToString();
+                    string nation = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(10))) ? "汉" : getrow.GetCell(10).ToString();
+                    //获取第num行"入职时间"列的数据(必填)
+                    string entertime = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(11))) ? null : getrow.GetCell(11).ToString();
                     //获取第num行"转正时间"列的数据
                     string positivetime = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(12))) ? null : getrow.GetCell(12).ToString();
                   //  string positivetime = getrow.GetCell(12)?.StringCellValue ?? null;
                     //获取第num行"试用期工资"列的数据
                     string probationsalary = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(13))) ? null : getrow.GetCell(13).ToString();
-                    //获取第num行"转正后工资"列的数据
-                    string salary = getrow.GetCell(14).ToString();
+                    //获取第num行"转正后工资"列的数据（必填）
+                    string salary = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(14))) ? null : getrow.GetCell(14).ToString();
                     //获取第num行"学历"列的数据
                     string education = string.IsNullOrEmpty(Convert.ToString(getrow.GetCell(15))) ? "大专" : getrow.GetCell(15).ToString();
                     //获取第num行"合同起始日期"列的数据
@@ -567,11 +567,12 @@ namespace SiliconValley.InformationSystem.Business.EmployeesBusiness
                                 emp.BCNum = item.bankCardnum;
                                 emp.Material = item.paperyMaterial;
                                 emp.Remark = item.Remark;
+                                emp.RecruitSource = item.original;
                                 emp.IsDel = false;
                                 this.Insert(emp);
                                 rc.RemoveCache("InRedisEmpInfoData");
                                 AddEmpToCorrespondingDept(emp);
-
+                                
                             }
                         }
                       
