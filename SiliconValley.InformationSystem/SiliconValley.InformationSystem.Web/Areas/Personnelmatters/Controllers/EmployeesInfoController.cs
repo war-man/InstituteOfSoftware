@@ -978,8 +978,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
             int year = ChineseCalendar.GetYear(DateTime.Now);
             int day = ChineseCalendar.GetDayOfMonth(DateTime.Now);
             int month = ChineseCalendar.GetMonth(DateTime.Now);
-            //int leapMonth = ChineseCalendar.GetLeapMonth(year);
-
+            var isleapyear = ChineseCalendar.IsLeapYear(year);
+            if (isleapyear==true) {
+                var leapmonth = ChineseCalendar.GetLeapMonth(year);
+                month = leapmonth - 1;
+            }
+          
             string date = string.Format("{0}/{1}", month, day);
             return date;
         }
