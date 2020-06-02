@@ -1724,6 +1724,7 @@
     <Content Include="Areas\Finance\Views\Pricedetails\Entryreview.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\CommnetView.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\StuCommentList.cshtml" />
+    <Content Include="Areas\ExaminationSystem\Views\StudentExamSys\MockExaminationView.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
@@ -3366,6 +3367,7 @@
     <Content Include="Views\Login\SLogin.cshtml" />
     <Content Include="Views\WeiXin\BindingWX.cshtml" />
     <Content Include="Views\WeiXin\WXLoginError.cshtml" />
+    <Content Include="uploadXLSXfile\ExamtionQuestionBankTemplate\ClearQuestionTemplate.xls" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

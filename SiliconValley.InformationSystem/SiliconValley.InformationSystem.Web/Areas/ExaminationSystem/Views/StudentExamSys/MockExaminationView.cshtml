@@ -1,0 +1,523 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MockExaminationView</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/Areas/ExaminationSystem/js/trumbowyg/design/css/trumbowyg.css" rel="stylesheet" />
+    <style>
+
+
+        #warp {
+        }
+
+        #titleMsg {
+            width: 90%;
+            border-bottom: 1px solid gray;
+            margin: 20px auto;
+        }
+
+        .option {
+            font-size: 14px;
+            color: black;
+            margin-top: 10px;
+        }
+
+        .choiceItem {
+            margin-top: 30px;
+        }
+
+        #answerquestionlist {
+            margin-top:50px;
+        }
+
+        #download {
+            cursor:pointer;
+            color:gray;
+        }
+            #download:hover {
+                color:blue;
+            }
+      
+    </style>
+</head>
+<body>
+    <div id="warp" class="layui-container">
+
+        <div id="titleMsg">
+            <h3 style="text-align:center; color:gray;">考试模拟</h3>
+
+            <div style="margin-top:20px;">
+
+              
+                    <form class="layui-form">
+
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">姓名:</label>
+                            <div class="layui-input-inline" style="width:80px;">
+                                <input type="text" name="title" style="border:0px solid white;" readonly value="@ViewBag.student.Name" class="layui-input">
+                            </div>
+
+
+                            <label class="layui-form-label">考试类型:</label>
+                            <div class="layui-input-inline">
+                                <select class="formitem" lay-filter="examtype" name="examtype" id="examtype">
+                                    @{
+                                        foreach (var item in ViewBag.examtypelist)
+                                        {
+                                            <option grandid="@item.GrandID.Id" typeid="@item.TypeName.ID" value="@item.ID">@item.TypeName.TypeName (@item.GrandID.GrandName)</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+
+                            <div class="layui-inline" id="courseDiv" >
+                                <label class="layui-form-label">请选择课程</label>
+                                <div class="layui-input-inline">
+                                    <select class="formitem" name="course" id="course" disabled>
+                                        <option value="0" selected>--请选择--</option>
+                                        @{
+                                            foreach (var item in ViewBag.Courselist)
+                                            {
+                                                <option value="@item.CurriculumID">@item.CourseName</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        <div class="layui-form log-item">
+
+                            <label class="layui-form-label">级别:</label>
+                            <div class="layui-input-inline">
+                                <select class="formitem" name="level" id="level">
+                                    @{
+                                        foreach (var item in ViewBag.levellist)
+                                        {
+                                            <option value="@item.LevelID">@item.LevelName</option>
+                                        }
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="layui-input-inline" style="margin-left:30px;">
+                                <button type="button" id="begin" class="layui-btn layui-btn-primary formitem">开始模拟</button>
+                            </div>
+
+                            <div class="layui-input-inline" style="margin-left:30px;">
+                                <label id="download">下载机试题</label>
+                            </div>
+                            <div class="layui-input-inline" style="margin-left:30px;">
+                                <button type="button" id="ok" class="layui-btn layui-btn-primary">答题完成</button>
+                            </div>
+                        </div>
+                    </form>
+               
+              
+            </div>
+
+
+        </div>
+
+        <div id="questionlist">
+
+            <div id="choicequestionlist">
+
+
+            </div>
+
+            <div id="answerquestionlist">
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+    <script type="text/template" id="chiosequestionTemplate">
+        <div class="choiceItem">
+            <input type="hidden" class="answer" value="{{=answer}}"/>
+            <label class="choicetitle" style="font-size:16px; color: gray;">{{=title}}<span style="margin-left:10px;"></span></label>
+
+            <div style="margin-left:20px;">
+                <div class="option"><label>A<input type="checkbox" value="A" /></label> <label style="margin-left:10px;">{{=A}}</label></div>
+                <div class="option"><label>B<input type="checkbox" value="B" /></label> <label style="margin-left:10px;">{{=B}}</label> </div>
+                <div class="option"><label>C<input type="checkbox" value="C" /></label> <label style="margin-left:10px;">{{=C}}</label>  </div>
+                <div class="option"><label>D<input type="checkbox" value="D" /></label> <label style="margin-left:10px;">{{=D}}</label> </div>
+            </div>
+
+        </div>
+    </script>
+
+    <script type="text/template" id="answerquestionTemplate">
+        <div class="answerItem">
+            <label style="font-size:16px; color: gray;">{{=title}}</label>
+
+            <div class="simple-editor" style="margin-left:20px;">
+
+                <span style="font-size:14px; color:gray;">写下你的答案吧</span>
+
+            </div>
+        </div>
+    </script>
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+    <script src="~/Areas/ExaminationSystem/js/trumbowyg/trumbowyg.min.js"></script>
+    <script src="~/Areas/ExaminationSystem/js/trumbowyg/langs/fr.js"></script>
+    <script src="~/Areas/ExaminationSystem/js/trumbowyg/plugins/upload/trumbowyg.upload.min.js"></script>
+    <script src="~/Areas/ExaminationSystem/js/trumbowyg/plugins/base64/trumbowyg.base64.min.js"></script>
+    <script src="~/Areas/ExaminationSystem/js/jiami.js"></script>
+    <script src="~/Scripts/underscore.js"></script>
+    <script>
+
+        if (!document.HTMLDOMtoString) {
+            document.HTMLDOMtoString = function (HTMLDOM) {
+                const div = document.createElement("div")
+                div.appendChild(HTMLDOM)
+                return div.innerHTML
+            }
+        }
+
+        function initTextarea() {
+            $('.simple-editor').trumbowyg();
+            $.trumbowyg.btnsGrps.test = ['bold', 'link'];
+            $.extend(true, $.trumbowyg.langs, {
+
+                fr: {
+
+                    align: 'Alignement',
+
+                    image: 'Image'
+
+                }
+
+            });
+            $('#customized-buttonpane').trumbowyg({
+
+                lang: 'fr',
+
+                closable: true,
+
+                fixedBtnPane: true,
+
+                btnsDef: {
+
+                    // Customizables dropdowns
+
+                    align: {
+
+                        dropdown: ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+
+                        ico: 'justifyLeft'
+
+                    },
+
+                    image: {
+
+                        dropdown: ['insertImage', 'upload', 'base64'],
+
+                        ico: 'insertImage'
+
+                    }
+
+                },
+
+                btns: ['viewHTML',
+
+                    '|', 'formatting',
+
+                    '|', 'btnGrp-test',
+
+                    '|', 'align',
+
+                    '|', 'btnGrp-lists',
+
+                    '|', 'image']
+
+            });
+            $('#form-content').trumbowyg({
+
+                lang: 'fr',
+
+                closable: true,
+
+                mobile: true,
+
+                fixedBtnPane: true,
+
+                fixedFullWidth: true,
+
+                semantic: true,
+
+                resetCss: true,
+
+                autoAjustHeight: true,
+
+                autogrow: true
+
+            });
+            $('.editor').on('dblclick', function (e) {
+
+                $(this).trumbowyg({
+
+                    lang: 'fr',
+
+                    closable: true,
+
+                    fixedBtnPane: true
+
+                });
+
+            });
+        }
+        initTextarea();
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            $(document).off("click", ".option").on("click", ".option", function () {
+
+                $(this).find("input").click();
+
+            });
+
+            function loadchoicequestiondata(examtype, level, kecheng="0") {
+
+                var index = layer.load(2); //又换了种风格，并且设定最长等待10秒 
+
+                $.post("/ExaminationSystem/StudentExamSys/MockChoiceqestiondata", { examType: examtype, kecheng: kecheng, level }, function (result) {
+                    layer.close(index);
+                    if (result.ErrorCode == 200) {
+
+                        for (var i = 0; i < result.Data.data.length; i++) {
+
+                            var a = $("<label></label>");
+                            a.text(result.Data.data[i].OptionA);
+
+                            var b = $("<label></label>");
+                            b.text(result.Data.data[i].OptionB);
+
+                            var c = $("<label></label>");
+                            c.text(result.Data.data[i].OptionC);
+
+                            var d = $("<label></label>");
+                            d.text(result.Data.data[i].OptionD);
+
+                            var title = $("<label></label>");
+                            title.text(result.Data.data[i].Title);
+
+                            var html = _.template($("#chiosequestionTemplate").html());
+
+                            var htmldata = html({ answer: result.Data.data[i].Answer, title: document.HTMLDOMtoString(title[0]) , A: document.HTMLDOMtoString(a[0]), B: document.HTMLDOMtoString(b[0]), C: document.HTMLDOMtoString(c[0]), D: document.HTMLDOMtoString(d[0]) });
+
+                            $("#choicequestionlist").append($(htmldata));
+                        }
+
+                    }
+
+                });
+
+            }
+            function loadanswerquestiondata(examtype, level, kecheng = "0") {
+                var index = layer.load(2); //又换了种风格，并且设定最长等待10秒 
+                $.post("/ExaminationSystem/StudentExamSys/MockAnswerquestiondata", { examType: examtype, kecheng: kecheng, level }, function (result) {
+                    layer.close(index);
+                    if (result.ErrorCode == 200) {
+
+                        for (var i = 0; i < result.Data.data.length; i++) {
+
+
+                            var itemscores = 0;
+
+                            for (var j = 0; j < result.Data.scores.length; j++) {
+
+
+                                if (result.Data.scores[j].level == result.Data.data[i].Level.LevelID) {
+                                    itemscores = result.Data.scores[j].scores;
+                                }
+
+                            }
+
+                            var title = $("<label></label>");
+                            title.text(result.Data.data[i].Title);
+
+                            var html = _.template($("#answerquestionTemplate").html());
+                            var htmldata = html({ title: document.HTMLDOMtoString(title[0])});
+
+                            $("#answerquestionlist").append($(htmldata));
+                        }
+                        //渲染富文本框
+                        initTextarea();
+
+                    }
+
+
+
+                });
+
+            }
+
+            function downloadquestion(examtype, level, kecheng = "0") {
+
+                window.open("/ExaminationSystem/StudentExamSys/MockComputerquestion?examType=" + examtype + "&kecheng=" + kecheng + "&level=" + level);
+
+            }
+
+            function checkchoicequestion() {
+                
+                $("#choicequestionlist .choiceItem").each(function (index, elem) {
+
+                    var item = this;
+                    var curanswer = $(this).find(".answer").val();
+
+                    //获取学生选择的答案
+                    var stuanswer = "";
+                    $(this).find(".option input").each(function (i, op) {
+                       
+                        if (op.checked) {
+
+                            stuanswer += op.value + ',';
+                        }
+
+                    });
+
+                    
+                    stuanswer = stuanswer.substring(0, stuanswer.length - 1);
+                    //比较答案
+                    if (stuanswer != curanswer) {
+
+                        $(item).find(".choicetitle").css("color", "red");
+                        $(this).find(".option input").attr("disabled", "disabled");
+
+                        $(item).find(".choicetitle span").text(curanswer);
+
+                    }
+
+                });
+
+            }
+            var type;
+            form.on('select(examtype)', function (data) {
+           
+             
+                var grandid;
+
+                $(data.elem).children().each(function (index, elem) {
+
+                    var value = $(elem).val();
+
+                    if (value == data.value) {
+                        type = $(elem).attr("typeid");
+                        type = $(elem).attr("typeid");
+                        grandid = $(elem).attr("grandid")
+                    }
+
+                });
+
+
+                if (type == "2") {
+
+
+                    $.ajax({
+                        url: "/ExaminationSystem/ExamArrangement/GetCourseByGrand",
+                        data: { grandid: grandid },
+                        dataType: "json",
+                        success: function (resultData) {
+
+                            console.log(resultData);
+
+                            if (resultData.ErrorCode == 200) {
+                                //清空赋值
+                                $("#course").empty();
+
+                                $("#course").append(new Option("课程", ""));
+                                $.each(resultData.Data, function (index, item) {
+                                    //赋值
+                                    console.log(item.ClassNumber);
+                                    $('#course').append(new Option(item.CourseName, item.CurriculumID));
+                                });
+                            } else {
+                                layer.msg("数据加载错误！", { icon: 2 });
+                                $("#course").append(new Option("暂无数据", ""));
+                            }
+                            layui.form.render("select");
+                        }
+                    });
+
+                    $("#course").removeAttr("disabled");
+                    layui.form.render("select");
+
+                }
+                else {
+                    $("#course").attr("disabled","disabled");
+                    layui.form.render("select");
+                }
+
+
+
+            });      
+
+            $("#begin").click(function () {
+
+               
+                $(".formitem").attr("disabled", "disabled");
+                layui.form.render();
+
+                var level = $("#level").val();
+                var kecheng = "0";
+                
+                if (type == "2") {
+                    kecheng = $("#course").val();
+                }
+
+                var examtype = $("#examtype").val();
+
+
+                $("#choicequestionlist").html("");
+                $("#answerquestionlist").html("");
+                loadchoicequestiondata(examtype, level, kecheng);
+                loadanswerquestiondata(examtype, level, kecheng);
+
+
+
+            });
+
+
+            $("#download").click(function () {
+
+                var level = $("#level").val();
+                var kecheng = "0";
+
+                if (type == "2") {
+                    kecheng = $("#course").val();
+                }
+
+                var examtype = $("#examtype").val();
+                
+                downloadquestion(examtype, level, kecheng);
+            });
+
+            $("#ok").click(function () {
+
+                checkchoicequestion();
+            });
+
+
+        });
+    </script>
+</body>
+</html>

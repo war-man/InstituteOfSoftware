@@ -113,28 +113,29 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 list.ForEach(d=>
                 {
                     var tempobj = db_choiceQuestion.ConvertToChoiceQuestionTableView(d, false);
-                    if (tempobj != null) templist.Add(tempobj);
+
+                    if (tempobj != null) questionlist.Add(tempobj);
                 });
 
                 if (course != null) sourchlist.Add(course);
 
                 //筛选题目
-                foreach (var item in templist)
-                {
-                    foreach (var item1 in sourchlist)
-                    {
+                //foreach (var item in templist)
+                //{
+                //    foreach (var item1 in sourchlist)
+                //    {
 
-                        if (item.Course.CurriculumID == item1.CurriculumID)
-                        {
-                            //判断是否存在
-                            if (!IsContain(questionlist, item))
-                            {
-                                questionlist.Add(item);
-                            }
-                        }
+                //        if (item.Course.CurriculumID == item1.CurriculumID)
+                //        {
+                //            //判断是否存在
+                //            if (!IsContain(questionlist, item))
+                //            {
+                //                questionlist.Add(item);
+                //            }
+                //        }
 
-                    }
-                }
+                //    }
+                //}
 
 
             }
@@ -276,30 +277,11 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
                 {
                     var tempobj = db_answerQuextion.ConvertToAnswerQuestionView(d, false);
 
-                    if (tempobj != null) templist.Add(tempobj);
+                    if (tempobj != null) questionlist.Add(tempobj);
 
                 });
 
                 if (course != null) sourchlist.Add(course);
-
-                //筛选题目
-                foreach (var item in templist)
-                {
-                    foreach (var item1 in sourchlist)
-                    {
-
-                        if (item.Course.CurriculumID == item1.CurriculumID)
-                        {
-                            //判断是否存在
-                            if (!IsContain(questionlist, item))
-                            {
-                                questionlist.Add(item);
-                            }
-                        }
-
-                    }
-                }
-
             }
 
       
