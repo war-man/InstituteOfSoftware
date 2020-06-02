@@ -494,5 +494,15 @@ namespace SiliconValley.InformationSystem.Web.Areas.Finance.Controllers
             return Json(dbtext.Preentryfeerefund(refund), JsonRequestBehavior.AllowGet);
        
         }
+        /// <summary>
+        /// 预入费作废
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public ActionResult Preentryfezuofei(int id)
+        {
+            return Json(dbtext.Preentryfezuofei(id), JsonRequestBehavior.AllowGet);
+
+        }
     }
 }

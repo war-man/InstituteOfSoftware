@@ -10,7 +10,6 @@ using SiliconValley.InformationSystem.Entity.MyEntity;
 using SiliconValley.InformationSystem.Util;
 using SiliconValley.InformationSystem.Business.ClassesBusiness;
 using SiliconValley.InformationSystem.Business.ClassSchedule_Business;
-
 using SiliconValley.InformationSystem.Business.Common;
 using SiliconValley.InformationSystem.Business;
 using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
@@ -760,6 +759,61 @@ namespace SiliconValley.InformationSystem.Web.Areas.Teachingquality.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// 学员基本资料编辑
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult StudentEnll()
+        {
+            List<StudentInformation> studentlist = new List<StudentInformation>();
+            string studentid = Request.QueryString["studentid"];
+         
+            string[] stuid=  studentid.Split(',');
+            foreach (var item in stuid)
+            {
+                if (item!="")
+                {
+                    studentlist.Add(dbtext.GetEntity(item));
+                }
+                
+            }
+            ViewBag.studentlist = studentlist;
+            return View();
+        }
+        /// <summary>
+        /// 学员基本信息修改
+        /// </summary>
+        /// <param name="studentInformation"></param>
+        /// <returns></returns>
+        public ActionResult StudentEnll(StudentInformation studentInformation)
+        {
+            AjaxResult result = null;
+            try
+            {
+                StudentInformation x = dbtext.GetEntity(studentInformation.StudentNumber);
+                studentInformation.Password = x.Password;
+                studentInformation.StudentPutOnRecord_Id = x.StudentPutOnRecord_Id;
+                studentInformation.InsitDate = x.InsitDate;
+                studentInformation.IsDelete = false;
+                dbtext.Update(studentInformation);
+               
+                result = new SuccessResult();
+                result.Msg = "修改成功";
+                result.Success = true;
+                //   dbtext.Remove("StudentInformation");
+                BusHelper.WriteSysLog("修改学员信息成功", Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            catch (Exception ex)
+            {
 
+                result = new ErrorResult();
+                result.ErrorCode = 500;
+                result.Msg = "服务器错误";
+
+                BusHelper.WriteSysLog(ex.Message, Entity.Base_SysManage.EnumType.LogType.编辑数据);
+            }
+            return Json(result,JsonRequestBehavior.AllowGet);
+        }
     }
 }
