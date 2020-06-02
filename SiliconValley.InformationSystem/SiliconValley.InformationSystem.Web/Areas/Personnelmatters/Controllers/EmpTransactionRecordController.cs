@@ -367,6 +367,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Personnelmatters.Controllers
                     #region 员工表（及相关子表）修改（离职）
                     emp.IsDel = true;
                     empmanage.Update(emp);
+                    rc.RemoveCache("InRedisEmpInfoData");
                     ajaxresult = empmanage.Success();
 
                     if (ajaxresult.Success)
