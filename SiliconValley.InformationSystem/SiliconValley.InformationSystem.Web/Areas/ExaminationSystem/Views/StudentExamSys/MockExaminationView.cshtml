@@ -44,7 +44,22 @@
             #download:hover {
                 color:blue;
             }
-      
+
+        .refanswer {
+            display:none;
+        }
+        #refanswerdiv {
+
+            height:300px;
+            width:100%;
+            background-color:gray;
+            position:fixed;
+
+            bottom:10px;
+            display:none;
+            text-align:center;
+            
+        }
     </style>
 </head>
 <body>
@@ -144,6 +159,15 @@
             </div>
         </div>
 
+        <div id="refanswerdiv">
+
+            <div id="contentref" style="color:blue;">
+
+            </div>
+
+            <button style="margin-top:10px;" id="closeref" class="layui-btn layui-btn-primary">关闭</button>
+        </div>
+
 
     </div>
 
@@ -163,8 +187,8 @@
     </script>
 
     <script type="text/template" id="answerquestionTemplate">
-        <div class="answerItem">
-            <label style="font-size:16px; color: gray;">{{=title}}</label>
+        <div class="answerItem" questionid="{{=questionid}}">
+            <label style="font-size:16px; color: gray;">{{=title}} <span style="color:blue; display:none; margin-left:10px; cursor:pointer;" class="refanswer">参考答案</span></label>
 
             <div class="simple-editor" style="margin-left:20px;">
 
@@ -190,6 +214,10 @@
                 return div.innerHTML
             }
         }
+
+        var answerquestion = new Array();
+
+       
 
         function initTextarea() {
             $('.simple-editor').trumbowyg();
@@ -283,6 +311,7 @@
 
             });
         }
+
         initTextarea();
         layui.use(['form', 'layer'], function () {
 
@@ -332,6 +361,7 @@
                 });
 
             }
+
             function loadanswerquestiondata(examtype, level, kecheng = "0") {
                 var index = layer.load(2); //又换了种风格，并且设定最长等待10秒 
                 $.post("/ExaminationSystem/StudentExamSys/MockAnswerquestiondata", { examType: examtype, kecheng: kecheng, level }, function (result) {
@@ -341,22 +371,19 @@
                         for (var i = 0; i < result.Data.data.length; i++) {
 
 
-                            var itemscores = 0;
+                            var ref = $("<label></label>");
+                            ref.text(result.Data.data[i].ReferenceAnswer); 
 
-                            for (var j = 0; j < result.Data.scores.length; j++) {
+                            result.Data.data[i].ReferenceAnswer = document.HTMLDOMtoString(ref[0]);
 
+                            answerquestion.push(result.Data.data[i]);
 
-                                if (result.Data.scores[j].level == result.Data.data[i].Level.LevelID) {
-                                    itemscores = result.Data.scores[j].scores;
-                                }
-
-                            }
-
+                           
                             var title = $("<label></label>");
                             title.text(result.Data.data[i].Title);
 
                             var html = _.template($("#answerquestionTemplate").html());
-                            var htmldata = html({ title: document.HTMLDOMtoString(title[0])});
+                            var htmldata = html({ title: document.HTMLDOMtoString(title[0]), questionid: result.Data.data[i].ID });
 
                             $("#answerquestionlist").append($(htmldata));
                         }
@@ -364,8 +391,6 @@
                         initTextarea();
 
                     }
-
-
 
                 });
 
@@ -405,6 +430,7 @@
 
                         $(item).find(".choicetitle span").text(curanswer);
 
+                        $(".refanswer").css("display", "inline-block");
                     }
 
                 });
@@ -516,6 +542,30 @@
                 checkchoicequestion();
             });
 
+            $(document).off("click", ".refanswer").on("click", ".refanswer", function () {
+
+                var quid = $(this).parents(".answerItem").attr("questionid");
+
+                answerquestion.forEach(function (value, index) {
+
+                    if (quid == value.ID) {
+
+                        //获取答案
+                        $("#contentref").text(value.ReferenceAnswer);
+
+                        //$("#refanswer").slideUp("slow");
+
+                            layer.open({
+                                type: 1,
+                                area:['40%', '40%;'],
+                                content: value.ReferenceAnswer //这里content是一个普通的String
+                            });
+                     
+                    }
+
+                });
+
+            });
 
         });
     </script>

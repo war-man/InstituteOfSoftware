@@ -1,0 +1,140 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ExamquestionExplanation</title>
+    <link href="~/Scripts/layui/css/layui.css" rel="stylesheet" />
+
+    <style>
+
+        #curwarp {
+            
+         
+        }
+
+    </style>
+</head>
+<body>
+    <div id="curwarp" class="layui-container">
+
+        <div style="margin-top:20px;">
+            <button style="width:150px;height:40px; text-align:center;" id="searchbtn"  class="layui-btn layui-btn-radius layui-btn-primary">
+                搜索
+                <i style="font-size:20px;" class="icon layui-icon-search"></i>
+
+            </button>
+        </div>
+
+    </div>
+
+
+    <script type="text/template" id="searchTemplate">
+
+        <form class="layui-form">
+
+            <div class="layui-form-item">
+
+                <label class="layui-form-label">考试类型:</label>
+                <div class="layui-input-block">
+                    <select class="formitem" lay-filter="examtype" name="examtype" id="examtype">
+                        @{
+                            foreach (var item in ViewBag.examtypelist)
+                            {
+                                <option grandid="@item.GrandID.Id" typeid="@item.TypeName.ID" value="@item.ID">@item.TypeName.TypeName (@item.GrandID.GrandName)</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">级别:</label>
+                <div class="layui-input-block">
+                    <select class="formitem" name="level" id="level">
+                        @{
+                            foreach (var item in ViewBag.levellist)
+                            {
+                                <option value="@item.LevelID">@item.LevelName</option>
+                            }
+                        }
+                    </select>
+
+                </div>
+
+
+
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-block" id="courseDiv">
+                    <label class="layui-form-label">请选择课程</label>
+                    <div class="layui-input-block">
+                        <select class="formitem" name="course" id="course" disabled>
+                            <option value="0" selected>--请选择--</option>
+                            @{
+                                foreach (var item in ViewBag.Courselist)
+                                {
+                                    <option value="@item.CurriculumID">@item.CourseName</option>
+                                }
+                            }
+                        </select>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+          
+                <div  style="">
+                    <button type="button" id="search" style="width:100%;" class="layui-btn layui-btn-primary">搜索</button>
+                </div>
+          
+        </form>
+
+    </script>
+
+    <script src="~/Scripts/jquery-3.3.1.min.js"></script>
+    <script src="~/Scripts/layui/layui.js"></script>
+
+    <script>
+
+        layui.use(['form', 'layer'], function () {
+
+            var form = layui.form;
+            var layer = layui.layer;
+
+            function search() {
+
+                layer.open({
+
+                    type: 1,
+                    area: ['30%', '30%'],
+                    content: $("#searchTemplate").html()
+
+                });
+                form.render();
+            }
+
+            $("#searchbtn").click(function () {
+
+                search();
+            });
+
+          
+
+        });
+
+    </script>
+</body>
+</html>

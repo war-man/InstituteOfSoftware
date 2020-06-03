@@ -329,6 +329,7 @@
     <Compile Include="Areas\Teachingquality\Studentportfolio\StuportfolioController.cs" />
     <Compile Include="Areas\Teachingquality\TeachingqualityAreaRegistration.cs" />
     <Compile Include="Areas\Teaching\Controllers\ClassController.cs" />
+    <Compile Include="Areas\Teaching\Controllers\ExamController.cs" />
     <Compile Include="Areas\Teaching\Controllers\MajorController.cs" />
     <Compile Include="Areas\Teaching\Controllers\ProjectController.cs" />
     <Compile Include="Areas\Teaching\Controllers\RecordOfConversationController.cs" />
@@ -1725,6 +1726,8 @@
     <Content Include="Areas\Teaching\Views\Class\CommnetView.cshtml" />
     <Content Include="Areas\Teaching\Views\Class\StuCommentList.cshtml" />
     <Content Include="Areas\ExaminationSystem\Views\StudentExamSys\MockExaminationView.cshtml" />
+    <Content Include="Areas\Teaching\Views\Exam\Index.cshtml" />
+    <Content Include="Areas\Teaching\Views\Exam\ExamquestionExplanation.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile1.pubxml" />
     <Content Include="Scripts\dtree2.5.4\layui\font\iconfont.eot" />
