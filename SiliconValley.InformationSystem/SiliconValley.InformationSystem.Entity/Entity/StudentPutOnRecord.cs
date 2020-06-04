@@ -9,6 +9,7 @@
 
 namespace SiliconValley.InformationSystem.Entity.MyEntity
 {
+    using SiliconValley.InformationSystem.Entity.ViewEntity;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -142,5 +143,7 @@ namespace SiliconValley.InformationSystem.Entity.MyEntity
         {
             return 0;
         }
+
+        
     }
 }

@@ -168,13 +168,13 @@
     //柱状图初始化
     layui.use('layer', function () {
         var layer = layui.layer;
-        indexs = layer.load(1);
+       // indexs = layer.load(1);
 
         $.ajax({
             url: "/Market/FollwingInfo/GetImageData",
             success: function (Sucdata) {
                 myChart.setOption(optionData(Sucdata));
-                layer.close(indexs);
+               // layer.close(indexs);
             }
         });
     });

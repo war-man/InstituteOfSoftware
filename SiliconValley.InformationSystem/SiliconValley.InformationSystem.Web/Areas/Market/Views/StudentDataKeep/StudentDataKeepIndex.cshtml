@@ -171,6 +171,7 @@
             });
         });
     }
+
     $(function () {
         //这是一个键盘按下事件 ,如果按下Ctrl+Z就会弹出添加页面
         $(document).keydown(function (event) {
@@ -251,7 +252,7 @@
                                                 layer.msg('指派成功！！！', {
                                                     icon: 1, shade: 0.8
                                                 });
-                                                table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+                                                table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetTableData', where: { 'findNamevalue': null } });
                                             } else {
                                                 TiShi("系统异常，请刷新重试!!!");
                                             }
@@ -267,6 +268,7 @@
                         }
                     });
     }
+
     layui.use(['table', 'laydate', 'form', 'element'], function () {
         var table = layui.table;
         var laydate = layui.laydate;
@@ -342,6 +344,7 @@
                     }
                 }
                 , { field: 'StatusName', title: '学生状态' }
+                , { field: 'StuEducational', title: '学历' }
                 , { field: 'empName', title: '备案人' }
                 , { field: 'RegionName', title: '区域' }
                 , { field: 'ConsultTeacher', title: '咨询师' }
@@ -395,6 +398,7 @@
                     break;
             };
         });
+
         //监听行工具事件
         table.on('tool(tabletest1)', function (obj) {
             var data = obj.data;
@@ -434,7 +438,6 @@
             }
         });
 
-        //双击获取跟踪详情
         //监听行双击事件
         table.on('rowDouble(tabletest1)', function (obj) {            
             var id = obj.data.Id;
@@ -468,7 +471,11 @@
               success: function (suc) {
                   if (suc.Success) {
                       layer.msg('操作成功！！！', { icon: 1, shade: 0.8 });
-                      table.reload('tabletest1', { url:'/Market/StudentDataKeep/GetStudentPutOnRecordData', where: { 'findNamevalue': null } });
+                      layui.use('table', function () {
+                          var table = layui.table;
+                          table.reload('tabletest1', { url: '/Market/StudentDataKeep/GetTableData', where: { 'findNamevalue': null } });
+                      });
+                      
                   } else {
                       layer.msg('操作失败，请刷新重试！！！', { icon: 2, shade: 0.8 });
                   }
@@ -476,6 +483,7 @@
           });
     }
 
+    //转上门
     function ChangeGotoSchoolstate() {
         layui.use(['table', 'layer'], function () {
             var table = layui.table;

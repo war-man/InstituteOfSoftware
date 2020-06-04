@@ -123,7 +123,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
         //查看是否有这个学生
         public ActionResult SeracherIsno(string id)
         {
-            List<StudentPutOnRecord> find = CM_Entity.GetStudentPutRecored().Where(s => s.StuName == id).ToList();
+            List<ExportStudentBeanData> find = CM_Entity.GetStudentPutRecored(id,false);
             return Json(find, JsonRequestBehavior.AllowGet);
         }
         //获取学生综合数据的方法

@@ -260,7 +260,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             #endregion
 
             List<ExportStudentBeanData> list = s_Entity.GetSudentDataAll().OrderByDescending(s => s.Id).ToList();
-            if (page>1 || findNamevalue!=null)
+            if (page>1 || !string.IsNullOrEmpty(findNamevalue))
             {
                 list= s_Entity.Serch(str1,str2).OrderByDescending(s => s.Id).ToList();
 
@@ -389,12 +389,12 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                     if (a.Success == true)
                     {
                         //通知备案人备案成功
-                        //string number = "13204961361";//根据备案人查询电话号码
-                        //string smsText = "备案提示:已备案成功";
-                        //string t = PhoneMsgHelper.SendMsg(number, smsText);
+                        string phone= s_Entity.Enplo_Entity.GetEntity(news.EmployeesInfo_Id).Phone;
+                        // string number = "13204961361";//根据备案人查询电话号码
+                        string smsText = "备案提示:"+ news.StuName + "学生在"+ DateTime.Now + "已备案成功";
+                        string t = PhoneMsgHelper.SendMsg(phone, smsText);
 
                         //判断是否指派了咨询师  
-
 
                         if (news.ConsultId != "0")
                         {
@@ -487,7 +487,7 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
             AjaxResult a = s_Entity.UpdateGotoShcool(list, date);
             return Json(a, JsonRequestBehavior.AllowGet);
         }
-
+      
 
         //根据ID找到学生信息并赋值
         public ActionResult FindStudentInfomation(string id)
@@ -497,29 +497,29 @@ namespace SiliconValley.InformationSystem.Web.Areas.Market.Controllers
                 ExportStudentBeanData finds = s_Entity.findId(id);
                 var newdata = new
                 {
-                    //EmployeesInfo_Id = finds,
+                    EmployeesInfo_Id =s_Entity.GetEntity(finds.Id).EmployeesInfo_Id,
                     Id = finds.Id,
                     Reak = finds.Reak,
                     StuAddress = finds.StuAddress,
                     StuBirthy = finds.StuBirthy,
-                    StuDateTime = finds.BeanDate,
+                    StuDateTime =s_Entity.GetEntity(finds.Id).StuDateTime,
                     StuEducational = finds.StuEducational,
                     StuEntering = finds.StuEntering,
-                    //StuInfomationType_Id = finds.StuInfomationType_Id,
-                    StuIsGoto = finds.StuisGoto,
+                    StuInfomationType_Id =s_Entity.StuInfomationType_Entity.SerchSingleData(finds.stuinfomation,false).Id,
+                    Region_id =s_Entity.region_Entity.SerchRegionName(finds.RegionName,false)?.ID??null,
+                    StuIsGoto = finds.StuisGoto==null?false: finds.StuisGoto,
                     StuName = finds.StuName,
                     StuPhone = finds.Stuphone,
                     StuQQ = finds.StuQQ,
                     StuSchoolName = finds.StuSchoolName,
-                    StuSex = finds.StuSex,
-                    //StuStatus_Id = finds.StuStatus_Id,
+                    StuSex = finds.StuSex==null?"男": finds.StuSex,
                     StuVisit = finds.StuVisit,
                     StuWeiXin = finds.StuWeiXin,
                     e_Name = finds.empName,
                     StuEntering_1 = finds.StuEntering,
                     InfomationTypeName = finds.stuinfomation, /*StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id) == null ? "未定义" : StuInfomationType_Entity.GetEntity(finds.StuInfomationType_Id).Name,*/
                     StatusName = finds.StatusName,//Stustate_Entity.GetEntity(finds.StuStatus_Id) == null ? "未填写" : Stustate_Entity.GetEntity(finds.StuStatus_Id).StatusName,
-                    Region_id = finds.RegionName,//finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString(),
+                    Region_Name = finds.RegionName,//finds.Region_id == null ? "区域外" : region_Entity.GetEntity(finds.Region_id).ID.ToString(),
                     Party = finds.Party,
                     reamke=finds.Reak
                 };
