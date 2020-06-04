@@ -12,6 +12,9 @@ using System.Xml;
 namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controllers
 {
     using SiliconValley.InformationSystem.Business.Base_SysManage;
+    using SiliconValley.InformationSystem.Business.CourseSyllabusBusiness;
+    using SiliconValley.InformationSystem.Business.StudentBusiness;
+    using SiliconValley.InformationSystem.Business.TeachingDepBusiness;
     using SiliconValley.InformationSystem.Entity.MyEntity;
    
 
@@ -475,13 +478,156 @@ namespace SiliconValley.InformationSystem.Web.Areas.ExaminationSystem.Controller
                 result.Msg = "失败";
                 result.Data = null;
             }
-
-            
-
             return Json(result);
         }
 
 
+
+        public ActionResult MockExaminationView()
+        {
+            //提供数据 当前登录的学员、阶段、考试类型 难度级别
+
+            StudentInformationBusiness studentInformationBusiness = new StudentInformationBusiness();
+
+            var studentNumber = SessionHelper.Session["studentnumber"].ToString();
+            var student = studentInformationBusiness.StudentList().Where(d => d.StudentNumber == studentNumber).FirstOrDefault();
+            ViewBag.student = student;
+
+
+            GrandBusiness grandBusiness = new GrandBusiness();
+            var grandlist = grandBusiness.AllGrand();
+            ViewBag.grandlist = grandlist;
+
+
+            List<ExamType> list = db_exam.allExamType();
+
+            List<ExamTypeView> viewlist = new List<ExamTypeView>();
+            //转换类型
+            foreach (var item in list)
+            {
+                var tempobj = db_exam.ConvertToExamTypeView(item);
+
+                if (tempobj != null)
+                    viewlist.Add(tempobj);
+            }
+
+            ViewBag.examtypelist = viewlist;
+
+            //提供课程数据
+            CourseBusiness db_course = new CourseBusiness();
+
+            ViewBag.Courselist = db_course.GetCurriculas();
+
+            var levellist = db_exam.AllQuestionLevel();
+            ViewBag.levellist = levellist;
+
+            return View();
+        }
+
+        /// <summary>
+        /// 模拟选择题数据
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult MockChoiceqestiondata(string examType, string kecheng, string level)
+        {
+            AjaxResult result = new AjaxResult();
+
+            Examination examination = new Examination();
+
+            examination.ExamType = int.Parse(examType);
+            examination.ID = 0;
+            examination.PaperLevel = int.Parse(level);
+
+            try
+            {
+                var questiondata = db_stuExam.ProductChoiceQuestion(examination, int.Parse(kecheng));
+
+
+                var scores = db_stuExam.distributionScores(questiondata);
+
+                var res = new
+                {
+
+                    data = questiondata,
+                    scores = scores
+
+                };
+
+
+                result.ErrorCode = 200;
+                result.Msg = "成功";
+                result.Data = res;
+            }
+            catch (Exception ex)
+            {
+
+                result.ErrorCode = 500;
+                result.Msg = "失败";
+                result.Data = null;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MockAnswerquestiondata(string examType, string kecheng, string level)
+        {
+            AjaxResult result = new AjaxResult();
+
+            Examination examination = new Examination();
+
+            examination.ExamType = int.Parse(examType);
+            examination.ID = 0;
+            examination.PaperLevel = int.Parse(level);
+
+            try
+            {
+                var questiondata = db_stuExam.productAnswerQuestion(examination, int.Parse(kecheng));
+
+                var scores = db_stuExam.distributionScores(questiondata);
+
+                var res = new
+                {
+
+                    data = questiondata,
+                    scores = scores
+
+                };
+                result.Data = res;
+                result.Msg = "成功";
+                result.ErrorCode = 200;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult MockComputerquestion(string examType, string kecheng, string level)
+        {
+
+            AjaxResult result = new AjaxResult();
+
+            Examination examination = new Examination();
+
+            examination.ExamType = int.Parse(examType);
+            examination.ID = 0;
+            examination.PaperLevel = int.Parse(level);
+
+           
+                var questiondata = db_stuExam.productComputerQuestion(examination, int.Parse(kecheng));
+
+                var filename = Path.GetFileName(questiondata.SaveURL);
+
+                var path = Server.MapPath("/uploadXLSXfile/ComputerTestQuestionsWord/" + filename);
+
+                FileStream fileStream = new FileStream(path, FileMode.Open);
+
+                return File(fileStream, "application/octet-stream", Server.UrlEncode(filename));
+
+        }
 
 
     }

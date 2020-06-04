@@ -7,10 +7,10 @@
 
 }
 <form class="layui-form" action="">
-    <div class="layui-container">
+    <div class="layui-carousel-left">
         <div class="layui-row ">
             <div class="layui-row layui-form-item" >
-                <div class="layui-col-xs4  layui-col-sm4 layui-col-md4" style="margin-left:-40px;">
+                <div class="layui-col-xs2.5  layui-col-sm2.5 layui-col-md2.5" >
 
                     <label class="layui-form-label labels">姓名</label>
                     <div class="layui-input-inline">
@@ -18,20 +18,20 @@
                     </div>
 
                 </div>
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-col-xs2.5  layui-col-sm2.5 layui-col-md2.5">
                     <label class="layui-form-label labels">学号</label>
                     <div class="layui-input-inline">
                         @Html.TextBoxFor(a => a.Stidentid, new Dictionary<string, object>() { { "class", "layui-input" } })
                     </div>
                 </div>
-                <div class="layui-col-xs4 layui-col-sm4 layui-col-md4">
+                <div class="layui-col-xs2.5  layui-col-sm2.5 layui-col-md2.5">
                     <label class="layui-form-label labels">阶段</label>
                     <div class="layui-input-inline">
                         @Html.DropDownListFor(a => a.StagesID, ViewBag.Stages as IEnumerable<SelectListItem>, "----请选择----", new Dictionary<string, object>() { { "class", "layui-input labels" } })
                     </div>
                 </div>
             </div>
-            <div style="position:absolute;left:90%;top:1px;">
+            <div style="position:absolute;left:60%;top:66px;">
                 <button class="layui-btn" lay-submit="" type="button" lay-filter="demo2">查询</button>
             </div>
 

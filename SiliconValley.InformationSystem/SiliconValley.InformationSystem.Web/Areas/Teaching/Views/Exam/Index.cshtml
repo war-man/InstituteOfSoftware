@@ -1,0 +1,54 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section style
+{
+    <style>
+
+        #curwarp {
+            
+            margin:10% auto;
+            text-align:center;
+
+        }
+
+        .item {
+            display: inline-block;
+            width: 180px;
+            height: 180px;
+            cursor: pointer;
+            background-color: white;
+            font-size: 18px;
+            line-height: 182px;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
+
+            .item:hover {
+                width: 182px;
+                height: 182px;
+                color: red;
+                font-size: 20px;
+            }
+
+    </style>    
+}
+
+    <div id="curwarp">
+
+        <div class="item">
+
+            <a href="/Teaching/Exam/ExamquestionExplanation">考题讲解</a>
+           
+        </div>
+
+        <div class="item">
+
+           
+            <a href="/ExaminationSystem/ExamScores/Marking">阅卷</a>
+        </div>
+
+    </div>
+

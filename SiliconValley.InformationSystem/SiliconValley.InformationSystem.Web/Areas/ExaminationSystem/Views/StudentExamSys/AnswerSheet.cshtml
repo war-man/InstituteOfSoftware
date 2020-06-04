@@ -429,7 +429,6 @@
                 formData.append("AnswerCommit", str);
 
             }
-
             //点击提交
             $("#COMMIT").click(function () {
 
@@ -445,8 +444,6 @@
                         ids += $(elem).attr("questionid") + ',';
 
                     });
-
-
                     $.post('/ExaminationSystem/StudentExamSys/ChoiceQuestionAnswer', { questions: ids }, function (result) {
 
                         for (var i = 0; i < result.Data.length; i++) {
@@ -461,7 +458,8 @@
                                     //比较答案是否正确
                                     //首先截取出答案
                                     var arry_answer = result.Data[i].answer.split(',');
-                                    arry_answer.pop();
+
+                                   // arry_answer.pop();
                                     //获取学员选择的答案
                                     var arry_stuanswer = new Array();
                                     $(this).find(".layui-form-checked").each(function (index, elem) {

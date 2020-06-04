@@ -62,6 +62,7 @@ namespace SiliconValley.InformationSystem.Business.ExaminationSystemBusiness
             db_reconicle = new BaseBusiness<Reconcile>();
             db_computerQuestion = new ComputerTestQuestionsBusiness();
             db_grand = new GrandBusiness();
+            db_examtypename = new BaseBusiness<ExamTypeName>();
         }
 
         public List<Examination> AllExamination()

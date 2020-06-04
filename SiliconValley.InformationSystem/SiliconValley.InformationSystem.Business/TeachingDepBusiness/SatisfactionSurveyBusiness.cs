@@ -106,8 +106,6 @@ namespace SiliconValley.InformationSystem.Business.TeachingDepBusiness
                     {
                         resultlist.Add(item);
                     }
-
-
                 }
             }
             else

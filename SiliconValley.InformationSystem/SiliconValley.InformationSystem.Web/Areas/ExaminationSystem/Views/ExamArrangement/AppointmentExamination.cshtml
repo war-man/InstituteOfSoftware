@@ -327,11 +327,14 @@
                     }
                 });
 
+                if (checkExamin == "" || checkExamin == undefined) {
+                    layer.msg("请选择需要预约的考试！");
+                    return;
+                }
+
 
                 //首先确认 为正常还是重考
                 for (var i = 0; i < checkStatus.data.length; i++) {
-
-
 
                     $.ajax({
                         url: '/ExaminationSystem/ExamArrangement/StudentIsInExam',
@@ -365,9 +368,6 @@
 
 
                 $("#myfloat").slideDown();
-
-
-
 
 
                 //发送请求
